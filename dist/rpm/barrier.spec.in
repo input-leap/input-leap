@@ -6,7 +6,7 @@ Group: Applications/Productivity
 URL: https://github.com/debauchee/barrier/
 Source: https://github.com/debauchee/barrier/archive/v@BARRIER_VERSION@.tar.gz
 # workaround the git versionning and set to Release instead of the default Debug
-Source1: build_env.sh
+#Source1: build_env.sh
 Vendor: Debauchee ### FIXME ###
 Packager: Tru Huynh <tru@pasteur.fr>
 License: GPLv2
@@ -34,7 +34,7 @@ Work seamlessly across Windows, macOS and Linux.
 %setup -n %{name}-@BARRIER_VERSION@
 
 %build
-cp %{SOURCE1} .
+cp dist/rpm/build_env.sh .
 
 %if 0%{?rhel} == 6
 scl enable devtoolset-3 ./clean_build.sh 

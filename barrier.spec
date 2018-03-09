@@ -1,10 +1,10 @@
 Name: barrier
-Version: 1.9.0
-#Version: 1.9.0-snapshot ###FIXME can't have a dash - in the version string
+Version: 2.0.0
+#Version: 2.0.0-RC2 ###FIXME can't have a dash - in the version string
 Summary: Keyboard and mouse sharing solution
 Group: Applications/Productivity
 URL: https://github.com/debauchee/barrier/
-Source: https://github.com/debauchee/barrier/archive/v1.9.0-snapshot.tar.gz
+Source: https://github.com/debauchee/barrier/archive/v2.0.0-RC2.tar.gz
 # workaround the git versionning and set to Release instead of the default Debug
 #Source1: build_env.sh
 Vendor: Debauchee ### FIXME ###
@@ -31,7 +31,7 @@ Barrier allows you to share one mouse and keyboard between multiple computers.
 Work seamlessly across Windows, macOS and Linux.
 
 %prep
-%setup -n %{name}-1.9.0-snapshot
+%setup -n %{name}-2.0.0-RC2
 
 %build
 cp dist/rpm/build_env.sh .

@@ -56,9 +56,6 @@ binary-arch: build
 	$(MAKE_DIR) $(BIN_DIR)
 	cp build/bin/* $(BIN_DIR)
 
-	# Make DEBIAN/md5sums (thanks Helen)
-	cd $(DESTDIR) && find . -type f ! -regex '.*DEBIAN/.*' -printf '%P\0' | xargs -r0 md5sum > DEBIAN/md5sums
-
 	# Create the .deb package (thanks Helen)
 	dpkg-deb -b $(DESTDIR) ../
 

@@ -1,13 +1,11 @@
 /*
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2018 Debauchee Open Source Group
- * Copyright (C) 2012-2016 Symless Ltd.
- * Copyright (C) 2011 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -17,23 +15,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#if !defined(LOGWINDOW__H)
 
-#include "platform/synwinhk.h"
+#define LOGWINDOW__H
 
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include <QDialog>
 
-//! Loads and provides functions for the Windows hook
-class MSWindowsHook
+#include "ui_LogWindowBase.h"
+
+class LogWindow : public QDialog, public Ui::LogWindowBase
 {
-public:
-    void                setSides(UInt32 sides);
-    void                setZone(SInt32 x, SInt32 y, SInt32 w, SInt32 h, SInt32 jumpZoneSize);
-    void                setMode(EHookMode mode);
+    Q_OBJECT
 
-    static bool install();
-    static void uninstall();
-    static bool installScreenSaver();
-    static void uninstallScreenSaver();
+    public:
+        LogWindow(QWidget *parent);
+
+        void startNewInstance();
+
+        void appendRaw(const QString& text);
+        void appendInfo(const QString& text);
+        void appendDebug(const QString& text);
+        void appendError(const QString& text);
+
+    private slots:
+        void on_m_pButtonHide_clicked();
+        void on_m_pButtonClearLog_clicked();
+
 };
+
+#endif // LOGWINDOW__H

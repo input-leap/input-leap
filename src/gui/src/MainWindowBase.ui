@@ -18,8 +18,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>500</width>
-    <height>400</height>
+    <width>600</width>
+    <height>0</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -27,57 +27,6 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
-    <item>
-     <widget class="QWidget" name="m_pWidgetUpdate" native="true">
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <property name="leftMargin">
-        <number>2</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>8</number>
-       </property>
-       <item>
-        <widget class="QLabel" name="m_pIconUpdate">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="Barrier.qrc">:/res/icons/16x16/warning.png</pixmap>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="m_pLabelUpdate">
-         <property name="text">
-          <string notr="true">m_pLabelUpdate</string>
-         </property>
-         <property name="openExternalLinks">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="m_pSpacerUpdate">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>469</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </widget>
-    </item>
     <item>
      <widget class="QGroupBox" name="m_pGroupServer">
       <property name="sizePolicy">
@@ -291,42 +240,6 @@
      </widget>
     </item>
     <item>
-     <widget class="QGroupBox" name="m_pGroupLog">
-      <property name="title">
-       <string>Log</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QTextEdit" name="m_pLogOutput">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="font">
-          <font>
-           <family>Courier</family>
-          </font>
-         </property>
-         <property name="autoFillBackground">
-          <bool>false</bool>
-         </property>
-         <property name="undoRedoEnabled">
-          <bool>false</bool>
-         </property>
-         <property name="lineWrapMode">
-          <enum>QTextEdit::NoWrap</enum>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
@@ -429,14 +342,6 @@
     <string notr="true">Ctrl+T</string>
    </property>
   </action>
-  <action name="actionShowStatus">
-   <property name="text">
-    <string>S&amp;how Status</string>
-   </property>
-   <property name="shortcut">
-    <string notr="true">Ctrl+H</string>
-   </property>
-  </action>
   <action name="m_pActionMinimize">
    <property name="text">
     <string>&amp;Hide</string>
@@ -445,7 +350,7 @@
     <string>Hide</string>
    </property>
    <property name="shortcut">
-    <string notr="true"/>
+    <string notr="true">F5</string>
    </property>
   </action>
   <action name="m_pActionRestore">
@@ -461,7 +366,7 @@
   </action>
   <action name="m_pActionSave">
    <property name="text">
-    <string>Save configuration &amp;as...</string>
+    <string>S&amp;ave configuration</string>
    </property>
    <property name="statusTip">
     <string>Save the interactively generated server configuration to a file.</string>
@@ -472,13 +377,24 @@
   </action>
   <action name="m_pActionSettings">
    <property name="text">
-    <string>Settings</string>
+    <string>Change &amp;Settings</string>
    </property>
    <property name="statusTip">
     <string>Edit settings</string>
    </property>
    <property name="shortcut">
-    <string notr="true"/>
+    <string notr="true">F4</string>
+   </property>
+  </action>
+  <action name="m_pActionShowLog">
+   <property name="text">
+       <string>Show &amp;Log</string>
+   </property>
+   <property name="toolTip">
+    <string>Show Log</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">F2</string>
    </property>
   </action>
  </widget>

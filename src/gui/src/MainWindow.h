@@ -33,6 +33,7 @@
 #include "VersionChecker.h"
 #include "IpcClient.h"
 #include "Ipc.h"
+#include "LogWindow.h"
 
 #include <QMutex>
 
@@ -104,7 +105,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
         QString address();
         QString appPath(const QString& name);
         void open();
-        void clearLog();
         VersionChecker& versionChecker() { return m_VersionChecker; }
         QString getScreenName();
         ServerConfig& serverConfig() { return m_ServerConfig; }
@@ -113,7 +113,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
         void autoAddScreen(const QString name);
         void updateZeroconfService();
         void serverDetected(const QString name);
-        void updateLocalFingerprint();
 
 public slots:
         void appendLogRaw(const QString& text);
@@ -123,7 +122,6 @@ public slots:
         void startBarrier();
 
     protected slots:
-        void sslToggled(bool enabled);
         void on_m_pGroupClient_toggled(bool on);
         void on_m_pGroupServer_toggled(bool on);
         bool on_m_pButtonBrowseConfigFile_clicked();
@@ -136,8 +134,8 @@ public slots:
         void stopBarrier();
         void logOutput();
         void logError();
-        void updateFound(const QString& version);
         void bonjourInstallFinished();
+        void showLogWindow();
 
     protected:
         QSettings& settings() { return m_Settings; }
@@ -146,17 +144,14 @@ public slots:
         void setBarrierProcess(QProcess* p) { m_pBarrier = p; }
         void initConnections();
         void createMenuBar();
-        void createStatusBar();
         void createTrayIcon();
         void loadSettings();
         void saveSettings();
         void setIcon(qBarrierState state);
         void setBarrierState(qBarrierState state);
-        bool checkForApp(int which, QString& app);
         bool clientArgs(QStringList& args, QString& app);
         bool serverArgs(QStringList& args, QString& app);
         void setStatus(const QString& status);
-        void sendIpcMessage(qIpcMessageType type, const char* buffer, bool showErrors);
         void updateFromLogLine(const QString& line);
         QString getIPAddresses();
         void stopService();
@@ -174,14 +169,10 @@ public slots:
         QString getProfileRootForArg();
         void checkConnected(const QString& line);
         void checkFingerprint(const QString& line);
-        QString getTimeStamp();
         void restartBarrier();
         void proofreadInfo();
-
-        void showEvent (QShowEvent*);
-
         void windowStateChanged();
-
+        void updateSSLFingerprint();
 
     private:
         QSettings& m_Settings;
@@ -196,9 +187,7 @@ public slots:
         VersionChecker m_VersionChecker;
         IpcClient m_IpcClient;
         QMenuBar* m_pMenuBar;
-        QMenu* m_pMenuFile;
-        QMenu* m_pMenuEdit;
-        QMenu* m_pMenuWindow;
+        QMenu* m_pMenuBarrier;
         QMenu* m_pMenuHelp;
         ZeroconfService* m_pZeroconfService;
         DataDownloader* m_pDataDownloader;
@@ -212,16 +201,14 @@ public slots:
         QMutex m_StopDesktopMutex;
         SslCertificate* m_pSslCertificate;
         QStringList m_PendingClientNames;
+        LogWindow *m_pLogWindow;
 
 private slots:
     void on_m_pCheckBoxAutoConfig_toggled(bool checked);
     void on_m_pComboServerList_currentIndexChanged(QString );
     void on_m_pButtonApply_clicked();
     void installBonjour();
-    void on_windowShown();
 
-signals:
-    void windowShown();
 };
 
 #endif

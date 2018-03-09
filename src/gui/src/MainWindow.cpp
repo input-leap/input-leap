@@ -16,8 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define DOWNLOAD_URL "http://github.com/debauchee/barrier/"
-
 #include <iostream>
 
 #include "MainWindow.h"
@@ -85,9 +83,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     m_pTrayIconMenu(NULL),
     m_AlreadyHidden(false),
     m_pMenuBar(NULL),
-    m_pMenuFile(NULL),
-    m_pMenuEdit(NULL),
-    m_pMenuWindow(NULL),
+    m_pMenuBarrier(NULL),
     m_pMenuHelp(NULL),
     m_pZeroconfService(NULL),
     m_pDataDownloader(NULL),
@@ -97,16 +93,22 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     m_BonjourInstall(NULL),
     m_SuppressEmptyServerWarning(false),
     m_ExpectedRunningState(kStopped),
-    m_pSslCertificate(NULL)
+    m_pSslCertificate(NULL),
+    m_pLogWindow(new LogWindow(nullptr))
 {
+    // explicitly unset DeleteOnClose so the window can be show and hidden
+    // repeatedly until Barrier is finished
+    setAttribute(Qt::WA_DeleteOnClose, false);
+    // mark the windows as sort of "dialog" window so that tiling window
+    // managers will float it by default (X11)
+    setAttribute(Qt::WA_X11NetWmWindowTypeDialog, true);
+
     setupUi(this);
 
     createMenuBar();
     loadSettings();
     initConnections();
 
-    m_pWidgetUpdate->hide();
-    m_VersionChecker.setApp(appPath(appConfig.barriercName()));
     m_pLabelScreenName->setText(getScreenName());
     m_pLabelIpAddresses->setText(getIPAddresses());
 
@@ -121,10 +123,10 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     // change default size based on os
 #if defined(Q_OS_MAC)
     resize(720, 550);
-    setMinimumSize(size());
+    setMinimumSize(720, 0);
 #elif defined(Q_OS_LINUX)
     resize(700, 530);
-    setMinimumSize(size());
+    setMinimumSize(700, 0);
 #endif
 
     m_SuppressAutoConfigWarning = true;
@@ -134,13 +136,10 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     m_pComboServerList->hide();
     m_pLabelPadlock->hide();
 
-    sslToggled(appConfig.getCryptoEnabled());
+    updateSSLFingerprint();
 
-    connect (this, SIGNAL(windowShown()),
-             this, SLOT(on_windowShown()), Qt::QueuedConnection);
-
-    connect (m_AppConfig, SIGNAL(sslToggled(bool)),
-             this, SLOT(sslToggled(bool)), Qt::QueuedConnection);
+    // resize window to smallest reasonable size
+    resize(0, 0);
 }
 
 MainWindow::~MainWindow()
@@ -153,16 +152,16 @@ MainWindow::~MainWindow()
     saveSettings();
 
     delete m_pZeroconfService;
-
-    if (m_DownloadMessageBox != NULL) {
-        delete m_DownloadMessageBox;
-    }
-
-    if (m_BonjourInstall != NULL) {
-        delete m_BonjourInstall;
-    }
-
+    delete m_DownloadMessageBox;
+    delete m_BonjourInstall;
     delete m_pSslCertificate;
+
+    // LogWindow is created as a sibling of the MainWindow rather than a child
+    // so that the main window can be hidden without hiding the log. because of
+    // this it does not get properly cleaned up by the QObject system. also by
+    // the time this destructor is called the event loop will no longer be able
+    // to clean up the LogWindow so ->deleteLater() will not work
+    delete m_pLogWindow;
 }
 
 void MainWindow::open()
@@ -174,8 +173,6 @@ void MainWindow::open()
     } else {
         showNormal();
     }
-
-    m_VersionChecker.checkLatest();
 
     if (!appConfig().autoConfigPrompted()) {
         promptAutoConfig();
@@ -202,6 +199,7 @@ void MainWindow::createTrayIcon()
 
     m_pTrayIconMenu->addAction(m_pActionStartBarrier);
     m_pTrayIconMenu->addAction(m_pActionStopBarrier);
+    m_pTrayIconMenu->addAction(m_pActionShowLog);
     m_pTrayIconMenu->addSeparator();
 
     m_pTrayIconMenu->addAction(m_pActionMinimize);
@@ -223,37 +221,27 @@ void MainWindow::createTrayIcon()
 
 void MainWindow::retranslateMenuBar()
 {
-    m_pMenuFile->setTitle(tr("&File"));
-    m_pMenuEdit->setTitle(tr("&Edit"));
-    m_pMenuWindow->setTitle(tr("&Window"));
+    m_pMenuBarrier->setTitle(tr("&Barrier"));
     m_pMenuHelp->setTitle(tr("&Help"));
 }
 
 void MainWindow::createMenuBar()
 {
     m_pMenuBar = new QMenuBar(this);
-    m_pMenuFile = new QMenu("", m_pMenuBar);
-    m_pMenuEdit = new QMenu("", m_pMenuBar);
-    m_pMenuWindow = new QMenu("", m_pMenuBar);
+    m_pMenuBarrier = new QMenu("", m_pMenuBar);
     m_pMenuHelp = new QMenu("", m_pMenuBar);
     retranslateMenuBar();
 
-    m_pMenuBar->addAction(m_pMenuFile->menuAction());
-    m_pMenuBar->addAction(m_pMenuEdit->menuAction());
-#if !defined(Q_OS_MAC)
-    m_pMenuBar->addAction(m_pMenuWindow->menuAction());
-#endif
+    m_pMenuBar->addAction(m_pMenuBarrier->menuAction());
     m_pMenuBar->addAction(m_pMenuHelp->menuAction());
 
-    m_pMenuFile->addAction(m_pActionStartBarrier);
-    m_pMenuFile->addAction(m_pActionStopBarrier);
-    m_pMenuFile->addSeparator();
-    m_pMenuFile->addAction(m_pActionSave);
-    m_pMenuFile->addSeparator();
-    m_pMenuFile->addAction(m_pActionQuit);
-    m_pMenuEdit->addAction(m_pActionSettings);
-    m_pMenuWindow->addAction(m_pActionMinimize);
-    m_pMenuWindow->addAction(m_pActionRestore);
+    m_pMenuBarrier->addAction(m_pActionShowLog);
+    m_pMenuBarrier->addAction(m_pActionSettings);
+    m_pMenuBarrier->addAction(m_pActionMinimize);
+    m_pMenuBarrier->addSeparator();
+    m_pMenuBarrier->addAction(m_pActionSave);
+    m_pMenuBarrier->addSeparator();
+    m_pMenuBarrier->addAction(m_pActionQuit);
     m_pMenuHelp->addAction(m_pActionAbout);
 
     setMenuBar(m_pMenuBar);
@@ -278,8 +266,8 @@ void MainWindow::initConnections()
     connect(m_pActionRestore, SIGNAL(triggered()), this, SLOT(showNormal()));
     connect(m_pActionStartBarrier, SIGNAL(triggered()), this, SLOT(startBarrier()));
     connect(m_pActionStopBarrier, SIGNAL(triggered()), this, SLOT(stopBarrier()));
+    connect(m_pActionShowLog, SIGNAL(triggered()), this, SLOT(showLogWindow()));
     connect(m_pActionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
-    connect(&m_VersionChecker, SIGNAL(updateFound(const QString&)), this, SLOT(updateFound(const QString&)));
 }
 
 void MainWindow::saveSettings()
@@ -299,6 +287,8 @@ void MainWindow::setIcon(qBarrierState state)
 {
     QIcon icon;
     icon.addFile(barrierIconFiles[state]);
+
+    setWindowIcon(icon);
 
     if (m_pTrayIcon)
         m_pTrayIcon->setIcon(icon);
@@ -343,37 +333,27 @@ void MainWindow::logError()
     }
 }
 
-void MainWindow::updateFound(const QString &version)
-{
-    m_pWidgetUpdate->show();
-    m_pLabelUpdate->setText(
-        tr("<p>Your version of Barrier is out of date. "
-           "Version <b>%1</b> is now available to "
-           "<a href=\"%2\">download</a>.</p>")
-        .arg(version).arg(DOWNLOAD_URL));
-}
-
 void MainWindow::appendLogInfo(const QString& text)
 {
-    appendLogRaw(getTimeStamp() + " INFO: " + text);
+    m_pLogWindow->appendInfo(text);
 }
 
 void MainWindow::appendLogDebug(const QString& text) {
     if (appConfig().logLevel() >= 4) {
-        appendLogRaw(getTimeStamp() + " DEBUG: " + text);
+        m_pLogWindow->appendDebug(text);
     }
 }
 
 void MainWindow::appendLogError(const QString& text)
 {
-    appendLogRaw(getTimeStamp() + " ERROR: " + text);
+    m_pLogWindow->appendError(text);
 }
 
 void MainWindow::appendLogRaw(const QString& text)
 {
     foreach(QString line, text.split(QRegExp("\r|\n|\r\n"))) {
         if (!line.isEmpty()) {
-            m_pLogOutput->append(line);
+            m_pLogWindow->appendRaw(line);
             updateFromLogLine(line);
         }
     }
@@ -391,7 +371,7 @@ void MainWindow::checkConnected(const QString& line)
     // TODO: implement ipc connection state messages to replace this hack.
     if (line.contains("started server") ||
         line.contains("connected to server") ||
-        line.contains("watchdog status: ok"))
+        line.contains("server status: active"))
     {
         setBarrierState(barrierConnected);
 
@@ -451,12 +431,6 @@ void MainWindow::checkFingerprint(const QString& line)
     }
 }
 
-QString MainWindow::getTimeStamp()
-{
-    QDateTime current = QDateTime::currentDateTime();
-    return '[' + current.toString(Qt::ISODate) + ']';
-}
-
 void MainWindow::restartBarrier()
 {
     stopBarrier();
@@ -468,17 +442,6 @@ void MainWindow::proofreadInfo()
     int oldState = m_BarrierState;
     m_BarrierState = barrierDisconnected;
     setBarrierState((qBarrierState)oldState);
-}
-
-void MainWindow::showEvent(QShowEvent* event)
-{
-    QMainWindow::showEvent(event);
-    emit windowShown();
-}
-
-void MainWindow::clearLog()
-{
-    m_pLogOutput->clear();
 }
 
 void MainWindow::startBarrier()
@@ -557,9 +520,7 @@ void MainWindow::startBarrier()
         connect(barrierProcess(), SIGNAL(readyReadStandardError()), this, SLOT(logError()));
     }
 
-    // put a space between last log output and new instance.
-    if (!m_pLogOutput->toPlainText().isEmpty())
-        appendLogRaw("");
+    m_pLogWindow->startNewInstance();
 
     appendLogInfo("starting " + QString(barrierType() == barrierServer ? "server" : "client"));
 
@@ -592,16 +553,6 @@ void MainWindow::startBarrier()
         QString command(app + " " + args.join(" "));
         m_IpcClient.sendCommand(command, appConfig().elevateMode());
     }
-}
-
-void
-MainWindow::sslToggled (bool enabled)
-{
-    if (enabled) {
-        m_pSslCertificate = new SslCertificate(this);
-        m_pSslCertificate->generateCertificate();
-    }
-    updateLocalFingerprint();
 }
 
 bool MainWindow::clientArgs(QStringList& args, QString& app)
@@ -985,16 +936,16 @@ void MainWindow::serverDetected(const QString name)
     }
 }
 
-void MainWindow::updateLocalFingerprint()
+void MainWindow::updateSSLFingerprint()
 {
-    if (m_AppConfig->getCryptoEnabled() && Fingerprint::local().fileExists()) {
-        m_pLabelFingerprint->setVisible(true);
-        m_pLabelLocalFingerprint->setVisible(true);
-        m_pLabelLocalFingerprint->setText(Fingerprint::local().readFirst());
+    if (m_AppConfig->getCryptoEnabled() && m_pSslCertificate == nullptr) {
+        m_pSslCertificate = new SslCertificate(this);
+        m_pSslCertificate->generateCertificate();
     }
-    else {
-        m_pLabelFingerprint->setVisible(false);
-        m_pLabelLocalFingerprint->setVisible(false);
+    if (m_AppConfig->getCryptoEnabled() && Fingerprint::local().fileExists()) {
+        m_pLabelLocalFingerprint->setText(Fingerprint::local().readFirst());
+    } else {
+        m_pLabelLocalFingerprint->setText("Disabled");
     }
 }
 
@@ -1042,13 +993,13 @@ bool  MainWindow::on_m_pActionSave_triggered()
 
 void MainWindow::on_m_pActionAbout_triggered()
 {
-    AboutDialog dlg(this, appPath(appConfig().barriercName()));
-    dlg.exec();
+    AboutDialog(this, appPath(appConfig().barriercName())).exec();
 }
 
 void MainWindow::on_m_pActionSettings_triggered()
 {
-    SettingsDialog(this, appConfig()).exec();
+    if (SettingsDialog(this, appConfig()).exec() == QDialog::Accepted)
+        updateSSLFingerprint();
 }
 
 void MainWindow::autoAddScreen(const QString name)
@@ -1119,12 +1070,15 @@ bool MainWindow::isServiceRunning(QString name)
             return true;
         }
     }
+
+    return false;
+}
 #else
 bool MainWindow::isServiceRunning()
 {
-#endif
     return false;
 }
+#endif
 
 bool MainWindow::isBonjourRunning()
 {
@@ -1298,11 +1252,6 @@ void MainWindow::bonjourInstallFinished()
     m_pCheckBoxAutoConfig->setChecked(true);
 }
 
-void MainWindow::on_windowShown()
-{
-    // removed activation garbage; leaving stub to be optimized out
-}
-
 QString MainWindow::getProfileRootForArg()
 {
     CoreInterface coreInterface;
@@ -1322,4 +1271,9 @@ void MainWindow::windowStateChanged()
 {
     if (windowState() == Qt::WindowMinimized && appConfig().getMinimizeToTray())
         hide();
+}
+
+void MainWindow::showLogWindow()
+{
+    m_pLogWindow->show();
 }

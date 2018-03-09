@@ -54,6 +54,8 @@ binary-arch: build
 
 
 	$(MAKE_DIR) $(BIN_DIR)
+	$(MAKE_DIR) $(DESTDIR)/DEBIAN
+
 	cp build/bin/* $(BIN_DIR)
 
 	# Create the .deb package (thanks Helen)

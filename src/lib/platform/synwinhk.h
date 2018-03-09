@@ -1,5 +1,6 @@
 /*
  * barrier -- mouse and keyboard sharing utility
+ * Copyright (C) 2018 Debauchee Open Source Group
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -17,14 +18,6 @@
  */
 
 #pragma once
-
-// hack: vs2005 doesn't declare _WIN32_WINNT, so we need to hard code it.
-// however, some say that this should be hard coded since it defines the
-// target system, but since this is suposed to compile on pre-XP, maybe
-// we should just leave it like this.
-#if _MSC_VER == 1400
-#define _WIN32_WINNT 0x0400
-#endif
 
 #include "base/EventTypes.h"
 
@@ -55,41 +48,19 @@
 
 extern "C" {
 
-enum EHookResult {
-    kHOOK_FAILED,
-    kHOOK_OKAY,
-    kHOOK_OKAY_LL
-};
-
 enum EHookMode {
     kHOOK_DISABLE,
     kHOOK_WATCH_JUMP_ZONE,
     kHOOK_RELAY_EVENTS
 };
 
-typedef int                (*InitFunc)(DWORD targetQueueThreadID);
-typedef int                (*CleanupFunc)(void);
-typedef EHookResult        (*InstallFunc)(void);
-typedef int                (*UninstallFunc)(void);
-typedef int                (*InstallScreenSaverFunc)(void);
-typedef int                (*UninstallScreenSaverFunc)(void);
-typedef void            (*SetSidesFunc)(UInt32);
-typedef void            (*SetZoneFunc)(SInt32, SInt32, SInt32, SInt32, SInt32);
-typedef void            (*SetModeFunc)(int);
-typedef void            (*SetImmuneKeysFunc)(const DWORD*, std::size_t);
+/* REMOVED ImmuneKeys for migration of synwinhk out of DLL
 
-CBARRIERHOOK_API int    init(DWORD);
-CBARRIERHOOK_API int    cleanup(void);
-CBARRIERHOOK_API EHookResult    install(void);
-CBARRIERHOOK_API int    uninstall(void);
-CBARRIERHOOK_API int    installScreenSaver(void);
-CBARRIERHOOK_API int    uninstallScreenSaver(void);
-CBARRIERHOOK_API void    setSides(UInt32 sides);
-CBARRIERHOOK_API void    setZone(SInt32 x, SInt32 y, SInt32 w, SInt32 h,
-                            SInt32 jumpZoneSize);
-CBARRIERHOOK_API void    setMode(EHookMode mode);
+typedef void            (*SetImmuneKeysFunc)(const DWORD*, std::size_t);
 
 // do not call setImmuneKeys() while the hooks are active!
 CBARRIERHOOK_API void    setImmuneKeys(const DWORD *list, std::size_t size);
+
+*/
 
 }

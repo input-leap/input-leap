@@ -1,5 +1,5 @@
 #!/usr/bin/make -f
-
+# adapted from https://wiki.debian.org/Courses2005/BuildingWithoutHelper
 
 # Name of the package
 package=barrier
@@ -55,12 +55,6 @@ binary-arch: build
 
 	$(MAKE_DIR) $(BIN_DIR)
 	cp build/bin/* $(BIN_DIR)
-
-	# Work out the shared library dependancies (thanks Helen)
-	dpkg-shlibdeps $(BIN_DIR)/*
-
-	# Generate the control file (thanks Helen)
-	dpkg-gencontrol -isp -P$(DESTDIR)
 
 	# Make DEBIAN/md5sums (thanks Helen)
 	cd $(DESTDIR) && find . -type f ! -regex '.*DEBIAN/.*' -printf '%P\0' | xargs -r0 md5sum > DEBIAN/md5sums

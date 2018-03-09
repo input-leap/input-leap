@@ -13,7 +13,7 @@ License: GPLv2
 Release: @BARRIER_BUILD_NUMBER@%{?dist}
 
 # at least for CentOS-7 and CentOS-6
-BuildRequires: git cmake3 make gcc gcc-c++ curl-devel  openssl-devel
+BuildRequires: cmake3 make gcc gcc-c++ curl-devel  openssl-devel
 BuildRequires: qt5-qtbase-devel
 BuildRequires: avahi-compat-libdns_sd-devel
 BuildREquires: libXtst-devel libXinerama-devel libICE-devel libXrandr-devel

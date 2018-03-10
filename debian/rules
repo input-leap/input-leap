@@ -58,7 +58,8 @@ binary-arch: build
 
 	cp build/bin/* $(BIN_DIR)
 
-	# Create the .deb package (thanks Helen)
+	pkg-gencontrol -P$(DESTDIR)
+	cd $(DESTDIR) && find . -type f ! -regex '.*DEBIAN/.*' -printf '%P\0' | xargs -r0 md5sum > DEBIAN/md5sums
 	dpkg-deb -b $(DESTDIR) ../
 
 binary: binary-indep binary-arch

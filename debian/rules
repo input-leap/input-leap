@@ -1,5 +1,67 @@
 #!/usr/bin/make -f
+# adapted from https://wiki.debian.org/Courses2005/BuildingWithoutHelper
 
-%:
-	dh $@ --buildsystem=cmake --builddirectory=build -Pbuild/debian --parallel
+# Name of the package
+package=barrier
 
+
+# Top directory of the source code (thanks Manoj)
+SRCTOP    := $(shell if [ "$$PWD" != "" ]; then echo $$PWD; else pwd; fi)
+# Destination directory where files will be installed
+DESTDIR    = $(SRCTOP)/debian/$(package)
+
+# Definition of directories
+BIN_DIR = $(DESTDIR)/usr/bin
+GAMES_DIR = $(DESTDIR)/usr/games
+SHARE_DIR = $(DESTDIR)/usr/share/barrier
+DOCS_DIR = $(DESTDIR)/usr/share/doc/barrier
+MAN_DIR = $(DESTDIR)/usr/share/man/man1
+MAN_GAMES_DIR = $(DESTDIR)/usr/share/man/man6
+MENU_DIR = $(DESTDIR)/usr/lib/menu
+PIXMAPS_DIR = $(DESTDIR)/usr/share/pixmaps
+
+# Stamp Rules
+
+configure-stamp:
+	touch configure-stamp
+
+build-stamp: configure-stamp
+	cp dist/rpm/build_env.sh .
+	./clean_build.sh
+	-rm -f build-stamp
+	touch build-stamp
+
+# Debian rules
+
+build: build-stamp
+
+clean: configure-stamp
+	-rm -f *-stamp
+	-rm -rf debian/$(package)
+	-rm -f debian/files
+	-rm -f debian/substvars
+
+binary-indep: build
+
+# Definitions for install
+INST_OWN = -o root -g root
+MAKE_DIR  = install -p -d $(INST_OWN) -m 755
+INST_FILE = install -c    $(INST_OWN) -m 644
+INST_PROG = install -c    $(INST_OWN) -m 755 -s
+INST_SCRIPT = install -c  $(INST_OWN) -m 755
+
+binary-arch: build
+
+
+	$(MAKE_DIR) $(BIN_DIR)
+	$(MAKE_DIR) $(DESTDIR)/DEBIAN
+
+	cp build/bin/* $(BIN_DIR)
+
+	dpkg-gencontrol -P$(DESTDIR)
+	cd $(DESTDIR) && find . -type f ! -regex '.*DEBIAN/.*' -printf '%P\0' | xargs -r0 md5sum > DEBIAN/md5sums
+	dpkg-deb -b $(DESTDIR) ../
+
+binary: binary-indep binary-arch
+
+.PHONY: binary binary-arch binary-indep clean build

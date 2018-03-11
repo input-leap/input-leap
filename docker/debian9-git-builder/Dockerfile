@@ -10,15 +10,18 @@ RUN sed -i -e 's,http://deb.debian.org,http://cdn-fastly.deb.debian.org,g' /etc/
 RUN apt-get update && apt-get -y upgrade
 RUN apt-get -y install \
 build-essential cmake qt5-default \
-git \
+git dh-make \
 libxtst-dev libxinerama-dev libice-dev libxrandr-dev \
 libavahi-compat-libdnssd-dev \
 libcurl4-openssl-dev \
-libssl1.0-dev
+libssl1.0-dev 
 #libssl-dev  is causing these warnings -> using libssl1.0-dev instead
 #/usr/bin/ld: warning: libssl.so.1.0.2, needed by /usr/lib/gcc/x86_64-linux-gnu/6/../../../x86_64-linux-gnu/libcurl.so, may conflict with libssl.so.1.1
 #/usr/bin/ld: warning: libcrypto.so.1.0.2, needed by /usr/lib/gcc/x86_64-linux-gnu/6/../../../x86_64-linux-gnu/libcurl.so, may conflict with libcrypto.so.1.1
 #
-RUN git clone https://github.com/debauchee/barrier/
+RUN apt-get -y install dh-make
+#RUN git clone https://github.com/debauchee/barrier/
+RUN git clone https://github.com/truatpasteurdotfr/barrier/
+RUN cd barrier && dpkg-buildpackage -us -uc | tee debian.log 
 RUN cd barrier && ./clean_build.sh | tee clean_build.log && tar czvf build.tgz build clean_build.log
 

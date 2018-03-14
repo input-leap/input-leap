@@ -1,0 +1,55 @@
+#!/bin/sh
+
+# change this to rename the installer package
+B_TARGZ="Barrier-@BARRIER_VERSION@.tar.gz"
+
+# sanity check so we don't distribute packages full of debug symbols
+if [ "@CMAKE_BUILD_TYPE@" != "Release" ]; then
+    echo Will only build installers for Release builds
+    exit 1
+fi
+
+cd @CMAKE_CURRENT_SOURCE_DIR@/build/rpm || exit 1
+
+B_SPECFILE=@CMAKE_CURRENT_SOURCE_DIR@/barrier.spec
+if [ ! -f $B_SPECFILE ]; then
+    echo Missing spec file: $B_SPECFILE
+    exit 1
+fi
+
+# remove any old copies so there's no confusion about whether this
+# process completes successfully or not
+[ -f $B_TARGZ ] && rm -f $B_TARGZ
+
+cp build_env.sh $B_SPECFILE @CMAKE_CURRENT_SOURCE_DIR@ && 
+(cd @CMAKE_CURRENT_SOURCE_DIR@/.. && tar -czvf @CMAKE_CURRENT_SOURCE_DIR@/../$B_TARGZ \
+barrier/barrier.spec     \
+barrier/Build.properties \
+barrier/CMakeLists.txt \
+barrier/ChangeLog \
+barrier/LICENSE \
+barrier/README.md \
+barrier/build_env.sh \
+barrier/build_installer.bat \
+barrier/clean_build.bat \
+barrier/clean_build.sh \
+barrier/cmake \
+barrier/debian \
+barrier/dist \
+barrier/doc \
+barrier/ext \
+barrier/osx_environment.sh \
+barrier/res \
+barrier/src \
+
+
+)
+
+# copy all executables
+#cp @CMAKE_RUNTIME_OUTPUT_DIRECTORY@/* . || exit 1
+
+# copy the qt platform plugin
+# TODO: this is hacky and will probably break if there is more than one qt
+# version installed. need a better way to find this library
+
+echo "Installer created successfully"

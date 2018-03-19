@@ -24,3 +24,6 @@ RUN cd barrier-2.0.0-RC2 && cp dist/rpm/build_env.sh . &&  ./clean_build.sh | te
 # during the testing period using truatpasteurdotfr/barrier pre-released tarball
 # final version should use the https://github.com/debauchee/barrier release versions
 #RUN wget https://github.com/truatpasteurdotfr/barrier/archive/v2.0.0-RC2.tar.gz  && rpmbuild -ta v2.0.0-RC2.tar.gz  | tee rpmbuild.log
+# fix debian/changelog
+RUN apt-get -y install dh-make
+RUN cd barrier-2.0.0-RC2 && dpkg-buildpackage -us -uc | tee debian.log && tar czvf debian.tgz debian

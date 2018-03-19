@@ -4,7 +4,8 @@ Version: @BARRIER_VERSION_MAJOR@.@BARRIER_VERSION_MINOR@.@BARRIER_VERSION_PATCH@
 Summary: Keyboard and mouse sharing solution
 Group: Applications/Productivity
 URL: https://github.com/debauchee/barrier/
-Source: https://github.com/debauchee/barrier/archive/v@BARRIER_VERSION@.tar.gz
+Source: Barrier-@BARRIER_VERSION@.tar.gz
+#Source: https://github.com/debauchee/barrier/archive/v@BARRIER_VERSION@.tar.gz
 # workaround the git versionning and set to Release instead of the default Debug
 #Source1: build_env.sh
 Vendor: Debauchee ### FIXME ###
@@ -31,7 +32,8 @@ Barrier allows you to share one mouse and keyboard between multiple computers.
 Work seamlessly across Windows, macOS and Linux.
 
 %prep
-%setup -n %{name}-@BARRIER_VERSION@
+%setup -n %{name}
+#%setup -n %{name}-@BARRIER_VERSION@
 
 %build
 cp dist/rpm/build_env.sh .
@@ -50,14 +52,15 @@ scl enable devtoolset-3 ./clean_build.sh
 %{__mkdir} -p %{buildroot}%{_bindir} %{buildroot}%{_datarootdir}/applications %{buildroot}%{_datarootdir}/icons/hicolor/scalable/apps
 %{__install} -t %{buildroot}%{_datarootdir}/applications res/barrier.desktop
 %{__install} -t %{buildroot}%{_datarootdir}/icons/hicolor/scalable/apps res/barrier.svg
-%{__install} -t %{buildroot}%{_bindir} build/bin/{barrier,barrierc,barriers,barrierd,syntool}
+%{__install} -t %{buildroot}%{_bindir} build/bin/{barrier,barrierc,barriers,syntool}
+#%{__install} -t %{buildroot}%{_bindir} build/bin/{barrier,barrierc,barriers,barrierd,syntool}
 
 %files
 %defattr(755,root,root,-)
 %{_bindir}/barrier
 %{_bindir}/barrierc
 %{_bindir}/barriers
-%{_bindir}/barrierd
+#%{_bindir}/barrierd
 %{_bindir}/syntool
 %attr(644,-,-) %{_datarootdir}/applications/barrier.desktop
 %attr(644,-,-) %{_datarootdir}/icons/hicolor/scalable/apps/barrier.svg

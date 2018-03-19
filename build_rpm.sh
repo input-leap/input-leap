@@ -24,6 +24,5 @@ rm -rf build
 cd build || exit 1
 echo Starting Barrier $B_BUILD_TYPE build...
 $B_CMAKE $B_CMAKE_FLAGS .. || exit 1
-[ -f rpm/barrier.spec ] && [ -f rpm/build_installer.sh ] ) && \
-build/rpm/build_installer.sh &&
-rpmbuild -ta ../Barrier*.tar.gz
+[ -f rpm/barrier.spec ] && cp rpm/barrier.spec .. && make package_source && rpmbuild -ta barrier-*-Source.tar.gz ) 
+

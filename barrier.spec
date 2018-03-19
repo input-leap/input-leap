@@ -4,7 +4,8 @@ Version: 2.0.0
 Summary: Keyboard and mouse sharing solution
 Group: Applications/Productivity
 URL: https://github.com/debauchee/barrier/
-Source: https://github.com/debauchee/barrier/archive/v2.0.0-RC2.tar.gz
+Source: barrier-2.0.0-Source.tar.gz
+#Source: https://github.com/debauchee/barrier/archive/v2.0.0-RC2.tar.gz
 # workaround the git versionning and set to Release instead of the default Debug
 #Source1: build_env.sh
 Vendor: Debauchee ### FIXME ###
@@ -31,10 +32,17 @@ Barrier allows you to share one mouse and keyboard between multiple computers.
 Work seamlessly across Windows, macOS and Linux.
 
 %prep
-%setup -n %{name}-2.0.0-RC2
+%setup -n %{name}-2.0.0-Source
+#%setup -n %{name}-2.0.0-RC2
 
 %build
-cp dist/rpm/build_env.sh .
+echo "export B_BUILD_TYPE=Release"   > build_env.sh
+echo "export BARRIER_VERSION_MAJOR=2" >> build_env.sh
+echo "export BARRIER_VERSION_MINOR=0" >> build_env.sh
+echo "export BARRIER_VERSION_PATCH=0" >> build_env.sh
+echo "export BARRIER_REVISION=12345678"                     >> build_env.sh
+echo 'export B_CMAKE_FLAGS=" -D BARRIER_VERSION_MAJOR=${BARRIER_VERSION_MAJOR} -D BARRIER_VERSION_MINOR=${BARRIER_VERSION_MINOR} -D BARRIER_VERSION_PATCH=${BARRIER_VERSION_PATCH} -D BARRIER_VERSION_STAGE=${BARRIER_VERSION_STAGE} -D BARRIER_REVISION=${BARRIER_REVISION}"'  >> build_env.sh
+
 
 %if 0%{?rhel} == 6
 scl enable devtoolset-3 ./clean_build.sh 
@@ -50,14 +58,15 @@ scl enable devtoolset-3 ./clean_build.sh
 %{__mkdir} -p %{buildroot}%{_bindir} %{buildroot}%{_datarootdir}/applications %{buildroot}%{_datarootdir}/icons/hicolor/scalable/apps
 %{__install} -t %{buildroot}%{_datarootdir}/applications res/barrier.desktop
 %{__install} -t %{buildroot}%{_datarootdir}/icons/hicolor/scalable/apps res/barrier.svg
-%{__install} -t %{buildroot}%{_bindir} build/bin/{barrier,barrierc,barriers,barrierd,syntool}
+%{__install} -t %{buildroot}%{_bindir} build/bin/{barrier,barrierc,barriers,syntool}
+#%{__install} -t %{buildroot}%{_bindir} build/bin/{barrier,barrierc,barriers,barrierd,syntool}
 
 %files
 %defattr(755,root,root,-)
 %{_bindir}/barrier
 %{_bindir}/barrierc
 %{_bindir}/barriers
-%{_bindir}/barrierd
+#%{_bindir}/barrierd
 %{_bindir}/syntool
 %attr(644,-,-) %{_datarootdir}/applications/barrier.desktop
 %attr(644,-,-) %{_datarootdir}/icons/hicolor/scalable/apps/barrier.svg

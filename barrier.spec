@@ -24,12 +24,18 @@ BuildREquires: libXtst-devel libXinerama-devel libICE-devel libXrandr-devel
 
 # CXX14
 %if 0%{?rhel} == 6
-BuildRequires: centos-release-scl-rh devtoolset-3-gcc-c++.x86_64
+BuildRequires: centos-release-scl-rh
+BuildRequires: devtoolset-3-gcc-c++
 %endif
 
 %description
 Barrier allows you to share one mouse and keyboard between multiple computers.
 Work seamlessly across Windows, macOS and Linux.
+
+# fedora 27 not happy without this:
+%if 0%{?fedora} == 27
+%global debug_package %{nil}
+%endif
 
 %prep
 %setup -n %{name}-2.0.0-Source
@@ -51,6 +57,12 @@ scl enable devtoolset-3 ./clean_build.sh
 %if 0%{?rhel} == 7
 ./clean_build.sh 
 %endif
+
+%if 0%{?fedora} 
+./clean_build.sh 
+%endif
+
+
 # maybe need a default if/else for non rhel target :P
 
 %install
@@ -59,18 +71,16 @@ scl enable devtoolset-3 ./clean_build.sh
 %{__install} -t %{buildroot}%{_datarootdir}/applications res/barrier.desktop
 %{__install} -t %{buildroot}%{_datarootdir}/icons/hicolor/scalable/apps res/barrier.svg
 %{__install} -t %{buildroot}%{_bindir} build/bin/{barrier,barrierc,barriers,syntool}
-#%{__install} -t %{buildroot}%{_bindir} build/bin/{barrier,barrierc,barriers,barrierd,syntool}
 
 %files
 %defattr(755,root,root,-)
 %{_bindir}/barrier
 %{_bindir}/barrierc
 %{_bindir}/barriers
-#%{_bindir}/barrierd
 %{_bindir}/syntool
 %attr(644,-,-) %{_datarootdir}/applications/barrier.desktop
 %attr(644,-,-) %{_datarootdir}/icons/hicolor/scalable/apps/barrier.svg
 
 %changelog
-* Fri Mar  9 2018 Tru Huynh <tru@pasteur.fr> - barrier 2.0.0-1
+* Fri Mar 23 2018 Tru Huynh <tru@pasteur.fr> - 
 - Initial rpm package for barrier

@@ -24,7 +24,8 @@ BuildREquires: libXtst-devel libXinerama-devel libICE-devel libXrandr-devel
 
 # CXX14
 %if 0%{?rhel} == 6
-BuildRequires: centos-release-scl-rh devtoolset-3-gcc-c++.x86_64
+BuildRequires: centos-release-scl-rh
+BuildRequires: devtoolset-3-gcc-c++
 %endif
 
 %description

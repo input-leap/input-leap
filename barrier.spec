@@ -1,10 +1,10 @@
 Name: barrier
 Version: 2.0.0
-#Version: 2.0.0-RC2 ###FIXME can't have a dash - in the version string
 Summary: Keyboard and mouse sharing solution
 Group: Applications/Productivity
 URL: https://github.com/debauchee/barrier/
-Source: barrier-2.0.0-Source.tar.gz
+Source: barrier-2.0.0-RC2.tar.gz
+#Source: barrier-2.0.0-Source.tar.gz
 #Source: https://github.com/debauchee/barrier/archive/v2.0.0-RC2.tar.gz
 # workaround the git versionning and set to Release instead of the default Debug
 #Source1: build_env.sh
@@ -38,8 +38,8 @@ Work seamlessly across Windows, macOS and Linux.
 %endif
 
 %prep
-%setup -n %{name}-2.0.0-Source
-#%setup -n %{name}-2.0.0-RC2
+#%setup -n %{name}-2.0.0-Source
+%setup -n %{name}-2.0.0-RC2
 
 %build
 echo "export B_BUILD_TYPE=Release"   > build_env.sh

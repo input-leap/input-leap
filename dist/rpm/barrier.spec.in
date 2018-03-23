@@ -59,14 +59,12 @@ scl enable devtoolset-3 ./clean_build.sh
 %{__install} -t %{buildroot}%{_datarootdir}/applications res/barrier.desktop
 %{__install} -t %{buildroot}%{_datarootdir}/icons/hicolor/scalable/apps res/barrier.svg
 %{__install} -t %{buildroot}%{_bindir} build/bin/{barrier,barrierc,barriers,syntool}
-#%{__install} -t %{buildroot}%{_bindir} build/bin/{barrier,barrierc,barriers,barrierd,syntool}
 
 %files
 %defattr(755,root,root,-)
 %{_bindir}/barrier
 %{_bindir}/barrierc
 %{_bindir}/barriers
-#%{_bindir}/barrierd
 %{_bindir}/syntool
 %attr(644,-,-) %{_datarootdir}/applications/barrier.desktop
 %attr(644,-,-) %{_datarootdir}/icons/hicolor/scalable/apps/barrier.svg

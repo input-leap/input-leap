@@ -31,6 +31,11 @@ BuildRequires: centos-release-scl-rh devtoolset-3-gcc-c++.x86_64
 Barrier allows you to share one mouse and keyboard between multiple computers.
 Work seamlessly across Windows, macOS and Linux.
 
+# fedora 27 not happy without this:
+%if 0%{?fedora} == 27
+%global debug_package %{nil}
+%endif
+
 %prep
 %setup -n %{name}-@BARRIER_VERSION_MAJOR@.@BARRIER_VERSION_MINOR@.@BARRIER_VERSION_PATCH@-Source
 #%setup -n %{name}-@BARRIER_VERSION@

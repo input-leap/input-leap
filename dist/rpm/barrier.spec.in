@@ -51,6 +51,12 @@ scl enable devtoolset-3 ./clean_build.sh
 %if 0%{?rhel} == 7
 ./clean_build.sh 
 %endif
+
+%if 0%{?fedora} 
+./clean_build.sh 
+%endif
+
+
 # maybe need a default if/else for non rhel target :P
 
 %install

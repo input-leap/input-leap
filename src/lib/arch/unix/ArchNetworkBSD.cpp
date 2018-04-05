@@ -445,6 +445,18 @@ ArchNetworkBSD::listenOnSocket(ArchSocket s)
     if (listen(s->m_fd, 3) == -1) {
         throwError(errno);
     }
+
+#if HAVE_BLUETOOTH
+    if(s->m_family == kBLUETOOTH) {
+        struct sockaddr Addr;
+        memset(&Addr, 0, sizeof(Addr));
+        socklen_t size = sizeof(Addr);
+        getsockname(s->m_fd, &Addr, &size);
+        struct sockaddr_rc* BAddr =
+            reinterpret_cast<struct sockaddr_rc*>(&Addr);
+        register_service((uint8_t)BAddr->rc_channel);
+    }
+#endif
 }
 
 ArchSocket
@@ -827,6 +839,9 @@ ArchNetworkBSD::setNoDelayOnSocket(ArchSocket s, bool noDelay)
 {
     assert(s != NULL);
 
+    if(s->m_family == kBLUETOOTH)
+        return true;
+
     // get old state
     int oflag;
     socklen_t size = (socklen_t)sizeof(oflag);
@@ -946,6 +961,27 @@ ArchNetworkBSD::nameToAddr(const std::string& name)
     struct addrinfo hints;
     struct addrinfo *p;
     int ret;
+
+#if HAVE_BLUETOOTH
+    if (s->m_family == kBLUETOOTH) {
+        struct sockaddr_rc inaddr;
+        memset(&inaddr, 0, sizeof(inaddr));
+        if(str2ba(name.c_str(), &inaddr.rc_bdaddr) != 0) {
+            ARCH->unlockMutex(m_mutex);
+            delete addr;
+            throwNameError(ret);
+        }
+
+        addr->m_len = sizeof(struct sockaddr_rc);
+        inaddr.rc_family = AF_BLUETOOTH;
+        inaddr.rc_channel = (uint8_t) 0;
+        memcpy(&addr->m_addr, &inaddr, addr->m_len);
+
+        ARCH->unlockMutex(m_mutex);
+
+        return addr;
+    }
+#endif
 
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_UNSPEC;

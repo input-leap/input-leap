@@ -193,7 +193,7 @@ if (UNIX)
             message (FATAL_ERROR "Missing header: " ${XKBlib})
         endif()
 
-        if (NOT HAVE_DNSSD)
+        if (BARRIER_BUILD_GUI AND NOT HAVE_DNSSD)
             message (FATAL_ERROR "Missing header: dns_sd.h")
         endif()
 

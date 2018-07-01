@@ -2,7 +2,9 @@
 
 Eliminate the barrier between your machines.
 
-Master branch build status: &nbsp; [![Build Status](https://travis-ci.org/debauchee/barrier.svg?branch=master)](https://travis-ci.org/debauchee/barrier)
+Master branch build status: &nbsp;
+[![Build Status](https://travis-ci.org/debauchee/barrier.svg?branch=master)](https://travis-ci.org/debauchee/barrier)
+[![Appveyor build status](https://img.shields.io/appveyor/ci/walker0643/barrier/master.svg)](https://ci.appveyor.com/project/walker0643/barrier "Appveyor build status")
 
 ### What is it?
 

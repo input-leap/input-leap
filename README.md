@@ -12,6 +12,7 @@ Barrier is KVM software forked from Symless's synergy 1.9 codebase. Synergy was 
 
 Whereas synergy has moved beyond its goals from the 1.x era, barrier aims to maintain that simplicity.
 Barrier will let you use your keyboard and mouse from one computer to control one or more other computers.
+Clipboard sharing is supported.
 That's it.
 
 ### Project goals

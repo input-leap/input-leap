@@ -30,8 +30,7 @@
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include <wlanapi.h>
-#pragma comment(lib, "wlanapi.lib")
+#include "win32/DefaultInterfaceIP.h"
 #else
 #include <stdlib.h>
 #endif
@@ -120,75 +119,27 @@ void ZeroconfService::errorHandle(DNSServiceErrorType errorCode)
         tr("Error code: %1.").arg(errorCode));
 }
 
-#ifdef _WIN32
-static QString mac_to_string(DOT11_MAC_ADDRESS mac)
-{
-    char str[18];
-    snprintf(str, 18, "%.2X:%.2X:%.2X:%.2X:%.2X:%.2X",
-        mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-    return str;
-}
-
-static QList<QString> wireless_mac_strings()
-{
-    QList<QString> wlanMAC;
-    DWORD version;
-    HANDLE client;
-    if (WlanOpenHandle(2, NULL, &version, &client) == 0) {
-        WLAN_INTERFACE_INFO_LIST * list;
-        if (WlanEnumInterfaces(client, NULL, &list) == 0) {
-            for (DWORD idx = 0; idx < list->dwNumberOfItems; ++idx) {
-                const GUID * PGuid = &(list->InterfaceInfo[0].InterfaceGuid);
-                const WLAN_INTF_OPCODE OpCode = wlan_intf_opcode_current_connection;
-                WLAN_CONNECTION_ATTRIBUTES * attrs;
-                DWORD attrsSz;
-                if (WlanQueryInterface(client, PGuid, OpCode, NULL, &attrsSz,
-                    (void**)&attrs, NULL) == 0) {
-                    wlanMAC.append(mac_to_string(
-                        attrs->wlanAssociationAttributes.dot11Bssid));
-                    WlanFreeMemory(attrs);
-                }
-            }
-            WlanFreeMemory(list);
-        }
-        WlanCloseHandle(client, NULL);
-    }
-    return wlanMAC;
-}
-#else
-static QList<QString> wireless_mac_strings()
-{
-    // TODO
-    return QList<QString>();
-}
-#endif
-
 QString ZeroconfService::getLocalIPAddresses()
 {
+#ifdef _WIN32
+    return QString::fromStdString(Debauchee::default_interface_ip());
+#else
     const QString NonEthernetMAC = "00:00:00:00:00:00";
-    const auto wlanMAC = wireless_mac_strings();
-    QString wirelessIP = "";
     foreach(const auto qni, QNetworkInterface::allInterfaces()) {
         // weed out loopback, inactive, and non-ethernet interfaces
         if (!qni.flags().testFlag(QNetworkInterface::IsLoopBack) &&
             qni.flags().testFlag(QNetworkInterface::IsUp) &&
             qni.hardwareAddress() != NonEthernetMAC) {
-            bool isWireless = wlanMAC.contains(qni.hardwareAddress().toUpper());
             foreach(const auto address, qni.allAddresses()) {
                 if (address.protocol() == QAbstractSocket::IPv4Protocol) {
-                    // use the first non-wireless address we find
-                    if (!isWireless)
-                        return address.toString();
-                    // save the first wireless address we find
-                    if (wirelessIP.isEmpty())
-                        wirelessIP = address.toString();
+                    // use the first address we find
+                    return address.toString();
                 }
             }
         }
     }
-    // if no non-wireless address could be found use a wireless one
-    // if one was found. otherwise return an empty string
-    return wirelessIP;
+    return "";
+#endif
 }
 
 bool ZeroconfService::registerService(bool server)

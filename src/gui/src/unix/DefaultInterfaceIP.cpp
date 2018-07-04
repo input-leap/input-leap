@@ -3,10 +3,11 @@
 #include <sys/ioctl.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <net/if.h>
 
 #ifdef __linux__
 #include <linux/wireless.h>
+#else
+#include <net/if.h>
 #endif
 
 #include <string>

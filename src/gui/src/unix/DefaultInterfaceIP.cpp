@@ -1,6 +1,7 @@
 #include "IfAddrsResource.h"
 #include "SocketResource.h"
 #include <sys/ioctl.h>
+#include <netinet/in.h>
 #include <arpa/inet.h>
 #include <net/if.h>
 

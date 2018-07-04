@@ -20,6 +20,7 @@
 #include "MainWindow.h"
 #include "ZeroconfRegister.h"
 #include "ZeroconfBrowser.h"
+#include "DefaultInterfaceIP.h"
 
 #include <QtNetwork>
 #include <QMessageBox>
@@ -30,7 +31,6 @@
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include "win32/DefaultInterfaceIP.h"
 #else
 #include <stdlib.h>
 #endif
@@ -119,29 +119,6 @@ void ZeroconfService::errorHandle(DNSServiceErrorType errorCode)
         tr("Error code: %1.").arg(errorCode));
 }
 
-QString ZeroconfService::getLocalIPAddresses()
-{
-#ifdef _WIN32
-    return QString::fromStdString(Debauchee::default_interface_ip());
-#else
-    const QString NonEthernetMAC = "00:00:00:00:00:00";
-    foreach(const auto qni, QNetworkInterface::allInterfaces()) {
-        // weed out loopback, inactive, and non-ethernet interfaces
-        if (!qni.flags().testFlag(QNetworkInterface::IsLoopBack) &&
-            qni.flags().testFlag(QNetworkInterface::IsUp) &&
-            qni.hardwareAddress() != NonEthernetMAC) {
-            foreach(const auto address, qni.allAddresses()) {
-                if (address.protocol() == QAbstractSocket::IPv4Protocol) {
-                    // use the first address we find
-                    return address.toString();
-                }
-            }
-        }
-    }
-    return "";
-#endif
-}
-
 bool ZeroconfService::registerService(bool server)
 {
     bool result = true;
@@ -156,7 +133,7 @@ bool ZeroconfService::registerService(bool server)
         else {
             m_pZeroconfRegister = new ZeroconfRegister(this);
             if (server) {
-                QString localIP = getLocalIPAddresses();
+                QString localIP = QString::fromStdString(Debauchee::default_interface_ip());
                 if (localIP.isEmpty()) {
                     QMessageBox::warning(m_pMainWindow, tr("Barrier"),
                         tr("Failed to get local IP address. "

@@ -2,6 +2,7 @@
 #include "SocketResource.h"
 #include <sys/ioctl.h>
 #include <arpa/inet.h>
+#include <net/if.h>
 
 #ifdef __linux__
 #include <linux/wireless.h>

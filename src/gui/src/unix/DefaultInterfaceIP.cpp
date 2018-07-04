@@ -1,18 +1,23 @@
-#include <string>
-#include <cstring>
-#include <unistd.h>
-#include <sys/ioctl.h>
-#include <linux/wireless.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+#include <net/if.h>
 #include "SocketResource.h"
 #include "IfAddrsResource.h"
+#include <sys/ioctl.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+#ifdef __linux__
+#include <linux/wireless.h>
+#endif
+
+#include <string>
+#include <cstring>
 
 namespace Debauchee
 {
 
 static bool is_wireless(const char * ifname)
 {
+#ifdef __linux__
     if (ifname) {
         SocketResource fd(AF_INET, SOCK_STREAM, 0);
         if (fd.is_valid()) {
@@ -21,6 +26,7 @@ static bool is_wireless(const char * ifname)
             return ioctl(fd, SIOCGIWMODE, req) >= 0;
         }
     }
+#endif
     return false;
 }
 

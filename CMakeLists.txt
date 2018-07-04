@@ -63,6 +63,7 @@ if (UNIX)
     include (CheckIncludeFileCXX)
     include (CheckSymbolExists)
     include (CheckCSourceCompiles)
+    include (FindPkgConfig)
 
     check_include_file_cxx (istream HAVE_ISTREAM)
     check_include_file_cxx (ostream HAVE_OSTREAM)
@@ -162,6 +163,12 @@ if (UNIX)
             include_directories("/usr/local/include" "/usr/local/include/avahi-compat-libdns_sd")
             link_directories("/usr/local/lib")
         endif()
+
+        if (${PKG_CONFIG_FOUND})
+            pkg_check_modules (AVAHI_COMPAT REQUIRED avahi-compat-libdns_sd)
+            include_directories (BEFORE SYSTEM ${AVAHI_COMPAT_INCLUDE_DIRS})
+            set (CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${AVAHI_COMPAT_INCLUDE_DIRS}")
+        endif ()
 
         set (XKBlib "X11/Xlib.h;X11/XKBlib.h")
         set (CMAKE_EXTRA_INCLUDE_FILES "${XKBlib};X11/extensions/Xrandr.h")
@@ -302,13 +309,28 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         ${OPENSSL_ROOT}/lib/ssleay32.lib
     )
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    set (OPENSSL_ROOT /usr/local/opt/openssl)
 
-    include_directories (BEFORE SYSTEM ${OPENSSL_ROOT}/include)
-    set (OPENSSL_LIBS
-        ${OPENSSL_ROOT}/lib/libssl.a
-        ${OPENSSL_ROOT}/lib/libcrypto.a
-    )
+    if (IS_DIRECTORY /opt/local)
+        # macports
+        set (OPENSSL_ROOT /opt/local)
+
+        set (OPENSSL_LIBS
+            ${OPENSSL_ROOT}/lib/libssl.a
+            ${OPENSSL_ROOT}/lib/libcrypto.a
+            z
+        )
+    elseif (IS_DIRECTORY /usr/local/opt/openssl)
+        # brew
+        set (OPENSSL_ROOT /usr/local/opt/openssl)
+
+        include_directories (BEFORE SYSTEM ${OPENSSL_ROOT}/include)
+
+        set (OPENSSL_LIBS
+            ${OPENSSL_ROOT}/lib/libssl.a
+            ${OPENSSL_ROOT}/lib/libcrypto.a
+        )
+    endif()
+
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set (OPENSSL_LIBS ssl crypto)
 else()

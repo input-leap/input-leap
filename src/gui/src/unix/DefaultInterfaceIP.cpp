@@ -8,6 +8,7 @@
 #include <linux/wireless.h>
 #else
 #include <net/if.h>
+#include <net/if_media.h>
 #endif
 
 #include <string>
@@ -16,18 +17,34 @@
 namespace Debauchee
 {
 
-static bool is_wireless(const char * ifname)
+static bool is_wireless(const char * ifname, const SocketResource& sock)
 {
 #ifdef __linux__
+    struct iwreq req;
+    ::memset(&req, 0, sizeof(struct iwreq));
+    ::strncpy(req.ifr_name, ifname, IFNAMSIZ - 1);
+    return ioctl(sock, SIOCGIWMODE, &req) >= 0;
+#else
+    struct ifmediareq req;
+    ::memset(&req, 0, sizeof(struct ifmediareq));
+    ::strncpy(req.ifm_name, ifname, IFNAMSIZ - 1);
+    if (ioctl(sock, SIOCGIFMEDIA, &req) >= 0 &&
+        (req.ifm_status & IFM_AVALID)
+    ) {
+        return IFM_TYPE(req.ifm_active) == IFM_IEEE80211;
+    }
+    return false;
+#endif
+}
+
+static bool is_wireless(const char * ifname)
+{
     if (ifname) {
-        SocketResource fd(AF_INET, SOCK_STREAM, 0);
-        if (fd.is_valid()) {
-            struct iwreq req { 0 };
-            ::strncpy(req.ifr_name, ifname, IFNAMSIZ - 1);
-            return ioctl(fd, SIOCGIWMODE, req) >= 0;
+        SocketResource sock(AF_INET, SOCK_DGRAM, 0);
+        if (sock.is_valid()) {
+            return is_wireless(ifname, sock);
         }
     }
-#endif
     return false;
 }
 

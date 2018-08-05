@@ -49,7 +49,7 @@ static bool is_useable_interface(const IP_ADAPTER_ADDRESSES * ifa)
         // is an ethernet or wireless interface AND
         (ifa->IfType == IF_TYPE_ETHERNET_CSMACD || ifa->IfType == IF_TYPE_IEEE80211) &&
         // is up
-        ifa->OperStatus != IfOperStatusUp;
+        ifa->OperStatus == IfOperStatusUp;
 }
 
 static std::string default_ip_address(const IP_ADAPTER_ADDRESSES * next)

@@ -32,10 +32,14 @@ static const ButtonID    kButtonNone   = 0;
 static const ButtonID    kButtonLeft   = 1;
 static const ButtonID    kButtonMiddle = 2;
 static const ButtonID    kButtonRight  = 3;
-static const ButtonID    kButtonExtra0 = 4;
+// browser backwards - mouse4
+static const ButtonID	kButtonExtra0 = 4;
+// browser forwards - mouse5
+static const ButtonID   kButtonExtra1 = 5;
 
 static const ButtonID   kMacButtonRight = 2;
 static const ButtonID   kMacButtonMiddle = 3;
 //@}
 
-static const UInt8      NumButtonIDs  = 5;
+// XXX -- some osx stuff uses this and might expect it to be 5
+static const UInt8      NumButtonIDs  = 6;

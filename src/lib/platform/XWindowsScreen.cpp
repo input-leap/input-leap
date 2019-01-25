@@ -1548,6 +1548,11 @@ XWindowsScreen::onMouseMove(const XMotionEvent& xmotion)
 {
 	LOG((CLOG_DEBUG2 "event: MotionNotify %d,%d", xmotion.x_root, xmotion.y_root));
 
+
+	// only consider motion on the same X screen as we were started on
+	if (!xmotion.same_screen)
+		return;
+
 	// compute motion delta (relative to the last known
 	// mouse position)
 	SInt32 x = xmotion.x_root - m_xCursor;

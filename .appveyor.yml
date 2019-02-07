@@ -25,8 +25,8 @@ configuration:
 
 install:
   - echo The Install has started...
+  # The Linux setup stages
   - sh: echo ... for Linux
-  - cmd: echo ... for Windows
   - sh: sudo apt-get -y update && sudo apt-get -y install
         cmake
         g++
@@ -39,6 +39,12 @@ install:
         make
         qtbase5-dev
         xorg-dev
+  # The Windows setup stages
+  - cmd: echo ... for Windows
+#  - ps: (new-object net.webclient).DownloadFile('https://mysite.com/mypackage.msi', 'mypackage.msi')
+#  - ps: msiexec /i mypackage.msi /quiet /qn /norestart /log install.log PROPERTY1=value1 PROPERTY2=value2
+  # End of Install
+  - echo The Install has finished.
 
 ##### Build Phase #####
 

@@ -44,6 +44,7 @@ install:
 
 # Use build_script for our own build script
 build_script:
+  - cmd: ./clean_build.bat
   - sh: ./clean_build.sh
 
 ##### Test Phase #####

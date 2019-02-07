@@ -1,0 +1,53 @@
+# An AppVeyor build configuration file for the Barrier project
+
+
+##### General Configuiration #####
+version: '0.0.{build}'
+
+environment:
+  # these variables are common to all jobs
+#  common_var1: value1
+#  common_var2: value2
+
+image:
+  - Ubuntu
+
+platform:
+  - x86
+#  - Any CPU
+
+configuration:
+  - Debug
+#  - Release
+
+##### Setup Phase #####
+
+install:
+  - echo The Install has started...
+  - sh: echo ... for Linux
+  - cmd: echo ... for Windows
+  - sh sudo apt-get update && sudo apt-get install \
+      libxtst-dev
+      qtdeclarative5-dev
+      libavahi-compat-libdnssd-dev
+
+##### Build Phase #####
+
+# Use build_script for our Linux builds and build for .NET
+build_script:
+  - sh: ./clean_build.sh
+
+##### Test Phase #####
+
+# Use test_script for our Linux tests and test for .NET
+
+##### Deploy Phase #####
+
+##### Catching & Cleanup #####
+
+# Success
+
+# Failure
+
+# Finish
+

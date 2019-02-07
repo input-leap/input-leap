@@ -4,7 +4,7 @@
 ##### General Configuiration #####
 version: '0.0.{build}'
 
-environment:
+#environment:
   # these variables are common to all jobs
 #  common_var1: value1
 #  common_var2: value2

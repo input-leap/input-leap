@@ -10,6 +10,7 @@ version: '0.0.{build}'
 #  common_var2: value2
 
 image:
+  - Visual Studio 2015
   - Ubuntu
 
 platform:
@@ -41,12 +42,9 @@ install:
 
 ##### Build Phase #####
 
-# Use build_script for our Linux builds and build for .NET
+# Use build_script for our own build script
 build_script:
   - sh: ./clean_build.sh
-
-build:
-  - cmd: ./clean_build.bat
 
 ##### Test Phase #####
 

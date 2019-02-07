@@ -2,7 +2,7 @@
 
 
 ##### General Configuiration #####
-version: '0.0.{build}'
+version: '0.0.{APPVEYOR_REPO_COMMIT}.{build}'
 
 #environment:
   # these variables are common to all jobs

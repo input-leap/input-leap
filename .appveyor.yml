@@ -45,6 +45,9 @@ install:
 build_script:
   - sh: ./clean_build.sh
 
+build:
+  - cmd: ./clean_build.bat
+
 ##### Test Phase #####
 
 # Use test_script for our Linux tests and test for .NET

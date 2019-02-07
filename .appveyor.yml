@@ -26,7 +26,7 @@ install:
   - echo The Install has started...
   - sh: echo ... for Linux
   - cmd: echo ... for Windows
-  - sh sudo apt-get update && sudo apt-get install \
+  - sh: sudo apt-get update && sudo apt-get install \
       libxtst-dev
       qtdeclarative5-dev
       libavahi-compat-libdnssd-dev

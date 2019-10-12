@@ -93,10 +93,12 @@ XWindowsClipboard::XWindowsClipboard(IXWindowsImpl* impl, Display* display,
                                 "text/plain;charset=ISO-10646-UCS-2"));
     m_converters.push_back(new XWindowsClipboardUCS2Converter(m_display,
                                 "text/unicode"));
-    m_converters.push_back(new XWindowsClipboardTextConverter(m_display,
-                                "text/plain"));
-    m_converters.push_back(new XWindowsClipboardTextConverter(m_display,
-                                "STRING"));
+
+    // Commenting these plain text converters resolves encoding issues with Unicode characters being replaced by question marks (#344)
+    // m_converters.push_back(new XWindowsClipboardTextConverter(m_display,
+    //                             "text/plain"));
+    // m_converters.push_back(new XWindowsClipboardTextConverter(m_display,
+    //                             "STRING"));
 
     // we have no data
     clearCache();

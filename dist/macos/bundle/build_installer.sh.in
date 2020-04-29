@@ -37,7 +37,7 @@ cp @CMAKE_RUNTIME_OUTPUT_DIRECTORY@/* . || exit 1
 B_COCOA=$(DYLD_PRINT_LIBRARIES=1 \
     @CMAKE_RUNTIME_OUTPUT_DIRECTORY@/barrier 2>&1 \
     | grep --only-matching --max-count 1 '/.*libqcocoa.dylib$')
-if [ "x$B_COCOA" = "x" ]; then
+if [ ! -f "$B_COCOA" ]; then
     echo "Could not find cocoa platform plugin"
     exit 1
 fi

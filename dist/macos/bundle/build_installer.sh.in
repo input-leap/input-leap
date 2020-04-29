@@ -33,12 +33,10 @@ cd MacOS || exit 1
 cp @CMAKE_RUNTIME_OUTPUT_DIRECTORY@/* . || exit 1
 
 # copy the qt platform plugin
-# TODO: this is hacky and will probably break if there is more than one qt
-# version installed. need a better way to find this library
-B_COCOA=$(find /usr/local/Cellar/qt -type f -name libqcocoa.dylib | head -1)
-if [ "x$B_COCOA" = "x" ]; then
-    B_COCOA=$(find /opt/local/libexec/qt5/plugins -type f -name libqcocoa.dylib | head -1)
-fi
+# get the .dylib location from the DYLD output of running bin/barrier
+B_COCOA=$(DYLD_PRINT_LIBRARIES=1 \
+    @CMAKE_RUNTIME_OUTPUT_DIRECTORY@/barrier 2>&1 \
+    | grep --only-matching --max-count 1 '/.*libqcocoa.dylib$')
 if [ "x$B_COCOA" = "x" ]; then
     echo "Could not find cocoa platform plugin"
     exit 1

@@ -381,7 +381,8 @@ void MainWindow::checkConnected(const QString& line)
     // TODO: implement ipc connection state messages to replace this hack.
     if (line.contains("started server") ||
         line.contains("connected to server") ||
-        line.contains("server status: active"))
+        line.contains("server status: active") ||
+        line.contains("starting cocoa loop"))
     {
         setBarrierState(barrierConnected);
 

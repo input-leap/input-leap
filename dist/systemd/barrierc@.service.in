@@ -13,7 +13,7 @@
 #  Enabling:
 #   systemctl enable barrierc@myserver
 #
-#  SSL Fingerprints are stored in /var/db/barrier@<hostname> for each client 
+#  SSL Fingerprints are stored in /var/lib/barrier@<hostname> for each client 
 #  instance.
 
 [Unit]
@@ -25,8 +25,6 @@ After=network-online.target
 Wants=network-online.target
 # Don't run client if server is running
 Conflicts=barriers.service
-# Sanity check that /var/db exists
-ConditionPathExists=/var/db
 
 [Service]
 Type=exec
@@ -35,17 +33,19 @@ Environment=LOG_LEVEL=INFO
 # Default display is :0
 Environment=DISPLAY=:0
 # Store fingerprints in instnace specific directories
-Environment=XDG_DATA_HOME=/var/db/barrier@%i
+Environment=XDG_DATA_HOME=/var/lib/barrier@%i
 # TrustedServers.txt Directory
-Environment=FP_DIR=/var/db/barrier@%i/barrier/SSL/Fingerprints
+Environment=FP_DIR=/var/lib/barrier@%i/barrier/SSL/Fingerprints
 # Ensure the Fingerprints directory exists
 ExecStartPre=mkdir -p "${FP_DIR}"
 
 # This uses openssl commands and grep to get the server's key and 
 # store it in the TrustedServers.txt file. OpenSSL is a requirement
-# for barrier on Linux so these commands should exist.
+# for barrier on Linux so these commands should exist. This will only
+# work if using the default 24800 port (since the port number must be
+# specified for openssl)
 ExecStartPre=sh -c "[ -f "${FP_DIR}/TrustedServers.txt" ] ||\
-openssl s_client -connect big.home:24800 2>/dev/null |\
+openssl s_client -connect %i:24800 2>/dev/null |\
 openssl x509 -noout -sha1 -fingerprint |\
 grep -oE '([A-Z0-9]{2}:?){20}' > ${FP_DIR}/TrustedServers.txt"
 

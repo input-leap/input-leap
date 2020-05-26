@@ -4,7 +4,7 @@
 #
 #  This systemd service starts barrier on the default port 24800. 
 #
-#  SSL data is stored in /var/db/barrier:24800/barrier/SSL 
+#  SSL data is stored in /var/lib/barrier:24800/barrier/SSL 
 
 [Unit]
 Description=Barrier Server listening on 24800 (Open-source KVM software)
@@ -15,8 +15,6 @@ After=network-online.target
 Wants=network-online.target
 # Don't run server if client or another instance is running
 Conflicts=barrierc@.service barriers@.service
-# Sanity check that /var/db exists
-ConditionPathExists=/var/db
 
 [Service]
 Type=exec
@@ -25,9 +23,9 @@ Environment=LOG_LEVEL=INFO
 # Default display is :0
 Environment=DISPLAY=:0
 # Store SSL data in instance specific directories 
-Environment=XDG_DATA_HOME=/var/db/barrier:24800
+Environment=XDG_DATA_HOME=/var/lib/barrier:24800
 # SSL data directory
-Environment=CERT_DIR=/var/db/barrier:24800/barrier/SSL
+Environment=CERT_DIR=/var/lib/barrier:24800/barrier/SSL
 
 # Create the certificate directory
 ExecStartPre=mkdir -p ${CERT_DIR}

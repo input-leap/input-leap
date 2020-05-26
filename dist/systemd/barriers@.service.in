@@ -13,7 +13,7 @@
 #  Enabling:
 #   systemctl enable barriers@0.0.0.0:24800
 #
-#  SSL data is stored in /var/db/barrier<instance>/barrier/SSL for each
+#  SSL data is stored in /var/lib/barrier<instance>/barrier/SSL for each
 #  instance.
 
 [Unit]
@@ -25,8 +25,8 @@ After=network-online.target
 Wants=network-online.target
 # Don't run server if client or another server is running
 Conflicts=barrierc@.service barriers.service
-# Sanity check that /var/db exists
-ConditionPathExists=/var/db
+# Sanity check that /var/lib exists
+ConditionPathExists=/var/lib
 
 [Service]
 Type=exec
@@ -35,9 +35,9 @@ Environment=LOG_LEVEL=INFO
 # Default display is :0
 Environment=DISPLAY=:0
 # Store SSL data in instance specific directories 
-Environment=XDG_DATA_HOME=/var/db/barrier%i
+Environment=XDG_DATA_HOME=/var/lib/barrier%i
 # SSL data directory
-Environment=CERT_DIR=/var/db/barrier%i/barrier/SSL
+Environment=CERT_DIR=/var/lib/barrier%i/barrier/SSL
 
 # Create the certificate directory
 ExecStartPre=mkdir -p ${CERT_DIR}

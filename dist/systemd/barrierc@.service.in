@@ -33,9 +33,9 @@ Environment=LOG_LEVEL=INFO
 # Default display is :0
 Environment=DISPLAY=:0
 # Store fingerprints in instnace specific directories
-Environment=XDG_DATA_HOME=/var/lib/barrier@%i
+Environment=XDG_DATA_HOME=/var/lib/barrier/barrier@%i
 # TrustedServers.txt Directory
-Environment=FP_DIR=/var/lib/barrier@%i/barrier/SSL/Fingerprints
+Environment=FP_DIR=/var/lib/barrier/barrier@%i/barrier/SSL/Fingerprints
 # Ensure the Fingerprints directory exists
 ExecStartPre=mkdir -p "${FP_DIR}"
 

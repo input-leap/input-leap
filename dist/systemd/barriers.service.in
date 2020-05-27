@@ -23,9 +23,9 @@ Environment=LOG_LEVEL=INFO
 # Default display is :0
 Environment=DISPLAY=:0
 # Store SSL data in instance specific directories 
-Environment=XDG_DATA_HOME=/var/lib/barrier:24800
+Environment=XDG_DATA_HOME=/var/lib/barrier/barrier:24800
 # SSL data directory
-Environment=CERT_DIR=/var/lib/barrier:24800/barrier/SSL
+Environment=CERT_DIR=/var/lib/barrier/barrier:24800/barrier/SSL
 
 # Create the certificate directory
 ExecStartPre=mkdir -p ${CERT_DIR}

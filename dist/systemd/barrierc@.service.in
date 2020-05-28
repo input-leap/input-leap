@@ -32,7 +32,7 @@ Type=exec
 Environment=LOG_LEVEL=INFO
 # Default display is :0
 Environment=DISPLAY=:0
-# Store fingerprints in instnace specific directories
+# Store fingerprints in instance specific directories
 Environment=XDG_DATA_HOME=/var/lib/barrier/barrier@%i
 # TrustedServers.txt Directory
 Environment=FP_DIR=/var/lib/barrier/barrier@%i/barrier/SSL/Fingerprints

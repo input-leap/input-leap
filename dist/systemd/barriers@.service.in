@@ -13,7 +13,7 @@
 #  Enabling:
 #   systemctl enable barriers@0.0.0.0:24800
 #
-#  SSL data is stored in /var/lib/barrier<instance>/barrier/SSL for each
+#  SSL data is stored in /var/lib/barrier/barrier<instance>/barrier/SSL for each
 #  instance.
 
 [Unit]

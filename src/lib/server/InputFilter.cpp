@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2005 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -193,7 +193,7 @@ InputFilter::MouseButtonCondition::format() const
     return barrier::string::sprintf("mousebutton(%s%d)", key.c_str(), m_button);
 }
 
-InputFilter::EFilterStatus        
+InputFilter::EFilterStatus
 InputFilter::MouseButtonCondition::match(const Event& event)
 {
     static const KeyModifierMask s_ignoreMask =
@@ -255,7 +255,7 @@ InputFilter::EFilterStatus
 InputFilter::ScreenConnectedCondition::match(const Event& event)
 {
     if (event.getType() == m_events->forServer().connected()) {
-        Server::ScreenConnectedInfo* info = 
+        Server::ScreenConnectedInfo* info =
             static_cast<Server::ScreenConnectedInfo*>(event.getData());
         if (m_screen == info->m_screen || m_screen.empty()) {
             return kActivate;
@@ -316,7 +316,7 @@ InputFilter::LockCursorToScreenAction::perform(const Event& event)
     };
 
     // send event
-    Server::LockCursorToScreenInfo* info = 
+    Server::LockCursorToScreenInfo* info =
         Server::LockCursorToScreenInfo::alloc(s_state[m_mode]);
     m_events->addEvent(Event(m_events->forServer().lockCursorToScreen(),
                                 event.getTarget(), info,
@@ -356,7 +356,7 @@ InputFilter::SwitchToScreenAction::perform(const Event& event)
     // event if it has one.
     String screen = m_screen;
     if (screen.empty() && event.getType() == m_events->forServer().connected()) {
-        Server::ScreenConnectedInfo* info = 
+        Server::ScreenConnectedInfo* info =
             static_cast<Server::ScreenConnectedInfo*>(event.getData());
         screen = info->m_screen;
     }
@@ -367,6 +367,32 @@ InputFilter::SwitchToScreenAction::perform(const Event& event)
     m_events->addEvent(Event(m_events->forServer().switchToScreen(),
                                 event.getTarget(), info,
                                 Event::kDeliverImmediately));
+}
+
+InputFilter::ToggleScreenAction::ToggleScreenAction(IEventQueue* events) :
+    m_events(events)
+{
+    // do nothing
+}
+
+InputFilter::Action*
+InputFilter::ToggleScreenAction::clone() const
+{
+    return new ToggleScreenAction(*this);
+}
+
+String
+InputFilter::ToggleScreenAction::format() const
+{
+    return barrier::string::sprintf("toggleScreen");
+}
+
+void
+InputFilter::ToggleScreenAction::perform(const Event& event)
+{
+    m_events->addEvent(Event(m_events->forServer().toggleScreen(),
+                             event.getTarget(), nullptr,
+                             Event::kDeliverImmediately));
 }
 
 InputFilter::SwitchInDirectionAction::SwitchInDirectionAction(
@@ -478,7 +504,7 @@ InputFilter::KeyboardBroadcastAction::perform(const Event& event)
     };
 
     // send event
-    Server::KeyboardBroadcastInfo* info = 
+    Server::KeyboardBroadcastInfo* info =
         Server::KeyboardBroadcastInfo::alloc(s_state[m_mode], m_screens);
     m_events->addEvent(Event(m_events->forServer().keyboardBroadcast(),
                                 event.getTarget(), info,
@@ -555,7 +581,7 @@ InputFilter::KeystrokeAction::perform(const Event& event)
     Event::Type type = m_press ?
         m_events->forIKeyState().keyDown() :
         m_events->forIKeyState().keyUp();
-    
+
     m_events->addEvent(Event(m_events->forIPrimaryScreen().fakeInputBegin(),
                                 event.getTarget(), NULL,
                                 Event::kDeliverImmediately));

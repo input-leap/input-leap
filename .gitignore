@@ -32,3 +32,6 @@ CMakeCache.txt
 # Transient in-project-directory dependencies
 /deps/
 /out/build/x64-Debug
+.clangd/
+tags
+compile_commands.json

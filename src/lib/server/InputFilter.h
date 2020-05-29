@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2005 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -54,7 +54,7 @@ public:
         virtual void            enablePrimary(PrimaryClient*);
         virtual void            disablePrimary(PrimaryClient*);
     };
-    
+
     // KeystrokeCondition
     class KeystrokeCondition : public Condition {
     public:
@@ -119,7 +119,7 @@ public:
     // -------------------------------------------------------------------------
     // Input Filter Action Classes
     // -------------------------------------------------------------------------
-    
+
     class Action {
     public:
         Action();
@@ -130,7 +130,7 @@ public:
 
         virtual void            perform(const Event&) = 0;
     };
-    
+
     // LockCursorToScreenAction
     class LockCursorToScreenAction : public Action {
     public:
@@ -149,7 +149,7 @@ public:
         Mode                    m_mode;
         IEventQueue*            m_events;
     };
-    
+
     // SwitchToScreenAction
     class SwitchToScreenAction : public Action {
     public:
@@ -166,7 +166,22 @@ public:
         String                    m_screen;
         IEventQueue*            m_events;
     };
-    
+
+    // ToggleScreenAction
+    class ToggleScreenAction : public Action {
+    public:
+        ToggleScreenAction(IEventQueue* events);
+
+        // Action overrides
+        virtual Action*        clone() const;
+        virtual String            format() const;
+        virtual void            perform(const Event&);
+
+    private:
+        IEventQueue*            m_events;
+    };
+
+
     // SwitchInDirectionAction
     class SwitchInDirectionAction : public Action {
     public:
@@ -183,7 +198,7 @@ public:
         EDirection                m_direction;
         IEventQueue*            m_events;
     };
-    
+
     // KeyboardBroadcastAction
     class KeyboardBroadcastAction : public Action {
     public:

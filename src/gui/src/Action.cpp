@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -24,7 +24,8 @@
 const char* Action::m_ActionTypeNames[] =
 {
     "keyDown", "keyUp", "keystroke",
-    "switchToScreen", "switchInDirection", "lockCursorToScreen",
+    "switchToScreen", "toggleScreen",
+    "switchInDirection", "lockCursorToScreen",
     "mouseDown", "mouseUp", "mousebutton"
 };
 
@@ -45,7 +46,8 @@ Action::Action() :
 
 QString Action::text() const
 {
-    QString text = QString(m_ActionTypeNames[keySequence().isMouseButton() ? type() + 6 : type()  ]) + "(";
+    /* The server config parser don't support () with no argument inside, but support no () */
+    QString text = QString(m_ActionTypeNames[keySequence().isMouseButton() ? type() + 6 : type()  ]);
 
     switch (type())
     {
@@ -53,6 +55,7 @@ QString Action::text() const
         case keyUp:
         case keystroke:
             {
+                text += "(";
                 text += keySequence().toString();
 
                 if (!keySequence().isMouseButton())
@@ -72,19 +75,29 @@ QString Action::text() const
                     else
                         text += ",*";
                 }
+                text += ")";
             }
             break;
 
         case switchToScreen:
+            text += "(";
             text += switchScreenName();
+            text += ")";
+            break;
+
+        case toggleScreen:
             break;
 
         case switchInDirection:
+            text += "(";
             text += m_SwitchDirectionNames[m_SwitchDirection];
+            text += ")";
             break;
 
         case lockCursorToScreen:
+            text += "(";
             text += m_LockCursorModeNames[m_LockCursorMode];
+            text += ")";
             break;
 
         default:
@@ -92,7 +105,6 @@ QString Action::text() const
             break;
     }
 
-    text += ")";
 
     return text;
 }

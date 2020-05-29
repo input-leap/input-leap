@@ -1,11 +1,11 @@
 /*
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2013-2016 Symless Ltd.
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -133,6 +133,7 @@ REGISTER_EVENT(Server, error)
 REGISTER_EVENT(Server, connected)
 REGISTER_EVENT(Server, disconnected)
 REGISTER_EVENT(Server, switchToScreen)
+REGISTER_EVENT(Server, toggleScreen)
 REGISTER_EVENT(Server, switchInDirection)
 REGISTER_EVENT(Server, keyboardBroadcast)
 REGISTER_EVENT(Server, lockCursorToScreen)

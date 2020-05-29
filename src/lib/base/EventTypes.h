@@ -1,11 +1,11 @@
 /*
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2013-2016 Symless Ltd.
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -134,7 +134,7 @@ public:
     Event::Type        outputShutdown();
 
     //@}
-        
+
 private:
     Event::Type        m_inputReady;
     Event::Type        m_outputFlushed;
@@ -159,7 +159,7 @@ public:
     Event::Type        messageReceived();
 
     //@}
-    
+
 private:
     Event::Type        m_connected;
     Event::Type        m_messageReceived;
@@ -179,7 +179,7 @@ public:
 
     //! Raised when the client disconnects from the server.
     Event::Type        disconnected();
-        
+
     //@}
 
 private:
@@ -198,7 +198,7 @@ public:
 
     //! Raised when we have created the client proxy.
     Event::Type        clientConnected();
-    
+
     //! Raised when a message is received through a client proxy.
     Event::Type        messageReceived();
 
@@ -242,7 +242,7 @@ public:
     event when a remote connection has been established.
     */
     Event::Type        connected();
-    
+
     //! Get secure connected event type
     /*!
      Returns the secure socket connected event type.  A secure socket sends
@@ -342,14 +342,14 @@ public:
 
     //! @name accessors
     //@{
-    
+
     //! Get accepted event type
     /*!
      Returns the accepted event type.  This is sent whenever a server
      accepts a client.
      */
     Event::Type        accepted();
-    
+
     //! Get connected event type
     /*!
     Returns the connected event type.  This is sent whenever a
@@ -419,7 +419,7 @@ public:
     Event::Type        failure();
 
     //@}
-        
+
 private:
     Event::Type        m_success;
     Event::Type        m_failure;
@@ -432,6 +432,7 @@ public:
         m_connected(Event::kUnknown),
         m_disconnected(Event::kUnknown),
         m_switchToScreen(Event::kUnknown),
+        m_toggleScreen(Event::kUnknown),
         m_switchInDirection(Event::kUnknown),
         m_keyboardBroadcast(Event::kUnknown),
         m_lockCursorToScreen(Event::kUnknown),
@@ -470,6 +471,13 @@ public:
     */
     Event::Type        switchToScreen();
 
+    //! Get toggle screen event type
+    /*!
+    Returns the toggle screen event type.  The server responds to this
+    by toggling screens. There is no event data.
+    */
+    Event::Type        toggleScreen();
+
     //! Get switch in direction event type
     /*!
     Returns the switch in direction event type.  The server responds to this
@@ -502,12 +510,13 @@ public:
     Event::Type        screenSwitched();
 
     //@}
-        
+
 private:
     Event::Type        m_error;
     Event::Type        m_connected;
     Event::Type        m_disconnected;
     Event::Type        m_switchToScreen;
+    Event::Type        m_toggleScreen;
     Event::Type        m_switchInDirection;
     Event::Type        m_keyboardBroadcast;
     Event::Type        m_lockCursorToScreen;
@@ -520,16 +529,16 @@ public:
         m_reloadConfig(Event::kUnknown),
         m_forceReconnect(Event::kUnknown),
         m_resetServer(Event::kUnknown) { }
-        
+
     //! @name accessors
     //@{
-        
+
     Event::Type        reloadConfig();
     Event::Type        forceReconnect();
     Event::Type        resetServer();
 
     //@}
-        
+
 private:
     Event::Type        m_reloadConfig;
     Event::Type        m_forceReconnect;
@@ -556,7 +565,7 @@ public:
     Event::Type        keyRepeat();
 
     //@}
-        
+
 private:
     Event::Type        m_keyDown;
     Event::Type        m_keyUp;
@@ -580,7 +589,7 @@ public:
 
     //! @name accessors
     //@{
-    
+
     //!  button down event type.  Event data is ButtonInfo*.
     Event::Type        buttonDown();
 
@@ -668,7 +677,7 @@ public:
     to sleep or a user session is deactivated (fast user switching).
     */
     Event::Type        suspend();
-    
+
     //! Get resume event type
     /*!
     Returns the resume event type. This is sent whenever the system wakes
@@ -677,7 +686,7 @@ public:
     Event::Type        resume();
 
     //@}
-        
+
 private:
     Event::Type        m_error;
     Event::Type        m_shapeChanged;
@@ -713,7 +722,7 @@ public:
 
     //! Clipboard sending event type
     /*!
-    Returns the clipboard sending event type. This is used to send 
+    Returns the clipboard sending event type. This is used to send
     clipboard chunks.
     */
     Event::Type        clipboardSending();

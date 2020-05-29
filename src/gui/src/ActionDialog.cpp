@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -39,7 +39,7 @@ ActionDialog::ActionDialog(QWidget* parent, ServerConfig& config, Hotkey& hotkey
 
     // work around Qt Designer's lack of a QButtonGroup; we need it to get
     // at the button id of the checked radio button
-    QRadioButton* const typeButtons[] = { m_pRadioPress, m_pRadioRelease, m_pRadioPressAndRelease, m_pRadioSwitchToScreen, m_pRadioSwitchInDirection, m_pRadioLockCursorToScreen };
+    QRadioButton* const typeButtons[] = { m_pRadioPress, m_pRadioRelease, m_pRadioPressAndRelease, m_pRadioSwitchToScreen, m_pRadioToggleScreen, m_pRadioSwitchInDirection, m_pRadioLockCursorToScreen };
 
     for (unsigned int i = 0; i < sizeof(typeButtons) / sizeof(typeButtons[0]); i++)
         m_pButtonGroupType->addButton(typeButtons[i], i);

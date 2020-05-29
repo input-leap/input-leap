@@ -37,14 +37,14 @@ Environment=XDG_DATA_HOME=/var/lib/barrier/barrier@%i
 # TrustedServers.txt Directory
 Environment=FP_DIR=/var/lib/barrier/barrier@%i/barrier/SSL/Fingerprints
 # Ensure the Fingerprints directory exists
-ExecStartPre=mkdir -p "${FP_DIR}"
+ExecStartPre=/usr/bin/mkdir -p "${FP_DIR}"
 
 # This uses openssl commands and grep to get the server's key and 
 # store it in the TrustedServers.txt file. OpenSSL is a requirement
 # for barrier on Linux so these commands should exist. This will only
 # work if using the default 24800 port (since the port number must be
 # specified for openssl)
-ExecStartPre=sh -c "[ -f "${FP_DIR}/TrustedServers.txt" ] ||\
+ExecStartPre=/usr/bin/sh -c "[ -f "${FP_DIR}/TrustedServers.txt" ] ||\
 openssl s_client -connect %i:24800 2>/dev/null |\
 openssl x509 -noout -sha1 -fingerprint |\
 grep -oE '([A-Z0-9]{2}:?){20}' > ${FP_DIR}/TrustedServers.txt"

@@ -27,7 +27,7 @@ Wants=network-online.target
 Conflicts=barriers.service
 
 [Service]
-Type=exec
+Type=simple
 # Log level may be FATAL, ERROR, WARNING, NOTE, INFO, DEBUG, DEBUG1, DEBUG2
 Environment=LOG_LEVEL=INFO
 # Default display is :0

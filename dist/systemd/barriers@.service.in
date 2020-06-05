@@ -40,7 +40,7 @@ Environment=XDG_DATA_HOME=/var/lib/barrier/barrier%i
 Environment=CERT_DIR=/var/lib/barrier/barrier%i/barrier/SSL
 
 # Create the certificate directory
-ExecStartPre=/usr/bin/mkdir -p ${CERT_DIR}
+ExecStartPre=+/usr/bin/mkdir -p ${CERT_DIR}
 # Create the Barrier.pem certificate if it doesn't exist
 ExecStartPre=/usr/bin/sh -c "[ -f ${CERT_DIR}/Barrier.pem ] || openssl req -x509 -nodes -days 365 -subj '/CN=Barrier' -newkey rsa:2048 -text -keyout ${CERT_DIR}/Barrier.pem -out ${CERT_DIR}/Barrier.pem"
 

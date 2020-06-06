@@ -50,7 +50,7 @@ openssl x509 -noout -sha1 -fingerprint |\
 grep -oE '([A-Z0-9]{2}:?){20}' > ${FP_DIR}/TrustedServers.txt"
 
 # Main executable
-ExecStart=/usr/bin/barrierc --enable-crypto --display ${DISPLAY} --debug ${LOG_LEVEL} --no-daemon %i
+ExecStart=@SYSTEMD_EXEC_PATH_PREFIX@barrierc --enable-crypto --display ${DISPLAY} --debug ${LOG_LEVEL} --no-daemon %i
 # Restart on fail
 Restart=always
 

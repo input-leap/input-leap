@@ -45,7 +45,7 @@ ExecStartPre=+/usr/bin/mkdir -p ${CERT_DIR}
 ExecStartPre=/usr/bin/sh -c "[ -f ${CERT_DIR}/Barrier.pem ] || openssl req -x509 -nodes -days 365 -subj '/CN=Barrier' -newkey rsa:2048 -text -keyout ${CERT_DIR}/Barrier.pem -out ${CERT_DIR}/Barrier.pem"
 
 # Main executable
-ExecStart=/usr/bin/barriers --enable-crypto --display ${DISPLAY} --debug ${LOG_LEVEL} --config /etc/barrier.conf --no-daemon --address %i
+ExecStart=@SYSTEMD_EXEC_PATH_PREFIX@barriers --enable-crypto --display ${DISPLAY} --debug ${LOG_LEVEL} --config /etc/barrier.conf --no-daemon --address %i
 # Restart on fail
 Restart=always
 

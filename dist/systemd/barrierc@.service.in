@@ -37,7 +37,7 @@ Environment=XDG_DATA_HOME=/var/lib/barrier/barrier@%i
 # TrustedServers.txt Directory
 Environment=FP_DIR=/var/lib/barrier/barrier@%i/barrier/SSL/Fingerprints
 # Ensure the Fingerprints directory exists
-ExecStartPre=+/usr/bin/mkdir -p "${FP_DIR}"
+StateDirectory=barrier/barrier@%i/barrier/SSL/Fingerprints
 
 # This uses openssl commands and grep to get the server's key and 
 # store it in the TrustedServers.txt file. OpenSSL is a requirement

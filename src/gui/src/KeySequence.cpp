@@ -211,6 +211,10 @@ QString KeySequence::keyToString(int key)
     // treat key pad like normal keys (FIXME: we should have another lookup table for keypad keys instead)
      key &= ~Qt::KeypadModifier;
 
+    //escape comma
+    if (key == ',')
+      return QString("\\u%1").arg(QChar(key).toLower().unicode(), 4, 16, QChar('0'));
+
     // a printable 7 bit character?
      if (key < 0x80 && key != Qt::Key_Space)
          return QChar(key & 0x7f).toLower();

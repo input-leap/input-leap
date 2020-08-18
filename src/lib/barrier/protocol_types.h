@@ -30,6 +30,7 @@
 // 1.5:  adds file transfer and removes home brew crypto
 // 1.6:  adds clipboard streaming
 // 1.7:  adds focus/screen switch on local input
+//       adds screensaver sync on client local input
 // NOTE: with new version, barrier minor version should increment
 static const SInt16        kProtocolMajorVersion = 1;
 static const SInt16        kProtocolMinorVersion = 7;
@@ -130,8 +131,15 @@ extern const char*        kMsgCClose;
 // must return this number with some messages.  $4 = modifier key
 // mask.  this will have bits set for each toggle modifier key
 // that is activated on entry to the screen.  the secondary screen
-// should adjust its toggle modifiers to reflect that state.
+// should adjust its toggle modifiers to reflect that state. $5 =
+// forScreensaver flag which denotes whether the screen is only
+// entered for screensaver management purposes or not and thus
+// whether the client can change its screensaver state or should
+// not change the screensaver state
 extern const char*        kMsgCEnter;
+
+// enter screen 1.0: same as above but without respecting the screensaver state
+extern const char*        kMsgCEnter1_0;
 
 // leave screen:  primary -> secondary
 // leaving screen.  the secondary screen should send clipboard
@@ -149,8 +157,10 @@ extern const char*        kMsgCLeave;
 // most recent kMsgCEnter.  the primary always sends 0.
 extern const char*        kMsgCClipboard;
 
-// screensaver change:  primary -> secondary
-// screensaver on primary has started ($1 == 1) or closed ($1 == 0)
+// screensaver change:  primary <-> secondary
+// screensaver has started ($1 == 1) or closed ($1 == 0).
+// sync screensavers by dispatching information to all clients via
+// the server
 extern const char*        kMsgCScreenSaver;
 
 // reset options:  primary -> secondary

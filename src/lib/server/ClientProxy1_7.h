@@ -28,10 +28,14 @@ public:
     ClientProxy1_7(const String& name, barrier::IStream* adoptedStream, Server* server, IEventQueue* events);
     ~ClientProxy1_7();
 
+    virtual void        enter(SInt32 xAbs, SInt32 yAbs,
+                            UInt32 seqNum, KeyModifierMask mask,
+                            bool forScreensaver);
+
+protected:
     virtual bool        parseMessage(const UInt8* code);
 
-private:
-    void                handleClipboardSendingEvent(const Event&, void*);
+    virtual void        rcvScreensaver();
 
 private:
     IEventQueue*        m_events;

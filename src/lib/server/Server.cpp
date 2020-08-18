@@ -1599,56 +1599,69 @@ Server::onClipboardChanged(BaseClientProxy* sender,
 void
 Server::onScreensaver(bool activated)
 {
-	LOG((CLOG_DEBUG "onScreenSaver %s", activated ? "activated" : "deactivated"));
+    LOG((CLOG_DEBUG "onScreenSaver %s", activated ? "activated" : "deactivated"));
 
-	if (activated) {
-		// save current screen and position
-		m_activeSaver = m_active;
-		m_xSaver      = m_x;
-		m_ySaver      = m_y;
+    if (m_screensaverDelayTimer.getTime() > SCREENSAVER_DELAY_THRESHOLD) {
+        // The timer prevents flickering and erronous screensavers caused by a bad combination
+        // of internal events and XEvents => drop events in the range of a certain delay to
+        // prevent duplicate screensaver invocations
+        m_screensaverDelayTimer.reset();
 
-		// jump to primary screen
-		if (m_active != m_primaryClient) {
-			switchScreen(m_primaryClient, 0, 0, true);
-		}
-	}
-	else {
-		// jump back to previous screen and position.  we must check
-		// that the position is still valid since the screen may have
-		// changed resolutions while the screen saver was running.
-		if (m_activeSaver != NULL && m_activeSaver != m_primaryClient) {
-			// check position
-			BaseClientProxy* screen = m_activeSaver;
-			SInt32 x, y, w, h;
-			screen->getShape(x, y, w, h);
-			SInt32 zoneSize = getJumpZoneSize(screen);
-			if (m_xSaver < x + zoneSize) {
-				m_xSaver = x + zoneSize;
-			}
-			else if (m_xSaver >= x + w - zoneSize) {
-				m_xSaver = x + w - zoneSize - 1;
-			}
-			if (m_ySaver < y + zoneSize) {
-				m_ySaver = y + zoneSize;
-			}
-			else if (m_ySaver >= y + h - zoneSize) {
-				m_ySaver = y + h - zoneSize - 1;
-			}
+        if (activated) {
+            // save current screen and position
+            m_activeSaver = m_active;
+            m_xSaver      = m_x;
+            m_ySaver      = m_y;
 
-			// jump
-			switchScreen(screen, m_xSaver, m_ySaver, false);
-		}
+            // jump to primary screen
+            if (m_active != m_primaryClient) {
+                switchScreen(m_primaryClient, 0, 0, true);
+            }
+        }
+        else {
+            // jump back to previous screen and position.  we must check
+            // that the position is still valid since the screen may have
+            // changed resolutions while the screen saver was running.
+            // if (m_activeSaver != NULL && m_activeSaver != m_primaryClient) {
+            //     // check position
+            //     BaseClientProxy* screen = m_activeSaver;
+            //     SInt32 x, y, w, h;
+            //     screen->getShape(x, y, w, h);
+            //     SInt32 zoneSize = getJumpZoneSize(screen);
+            //     if (m_xSaver < x + zoneSize) {
+            //         m_xSaver = x + zoneSize;
+            //     }
+            //     else if (m_xSaver >= x + w - zoneSize) {
+            //         m_xSaver = x + w - zoneSize - 1;
+            //     }
+            //     if (m_ySaver < y + zoneSize) {
+            //         m_ySaver = y + zoneSize;
+            //     }
+            //     else if (m_ySaver >= y + h - zoneSize) {
+            //         m_ySaver = y + h - zoneSize - 1;
+            //     }
 
-		// reset state
-		m_activeSaver = NULL;
-	}
+            //     // jump
+            //     switchScreen(screen, m_xSaver, m_ySaver, false);
+            // }
 
-	// send message to all clients
-	for (ClientList::const_iterator index = m_clients.begin();
-								index != m_clients.end(); ++index) {
-		BaseClientProxy* client = index->second;
-		client->screensaver(activated);
-	}
+            // reset state
+            m_activeSaver = NULL;
+        }
+
+        // send message to all clients
+        for (ClientList::const_iterator index = m_clients.begin();
+                                    index != m_clients.end(); ++index) {
+            BaseClientProxy* client = index->second;
+            client->screensaver(activated);
+            if (!activated && client != m_active) {
+                // Leave all screens that are not the active screen. This ensures that the
+                // cursor does not appear on multiple screens again after deactivating the
+                // screensaver
+                client->leave();
+            }
+        }
+    }
 }
 
 void
@@ -2153,6 +2166,10 @@ Server::addClient(BaseClientProxy* client)
 							client->getEventTarget(),
 							new TMethodEventJob<Server>(this,
 								&Server::handleLocalInputEvent, client));
+	m_events->adoptHandler(m_events->forIPrimaryScreen().screensaverDeactivated(),
+							client->getEventTarget(),
+							new TMethodEventJob<Server>(this,
+								&Server::handleScreensaverDeactivatedEvent));
 
 	// add to list
 	m_clientSet.insert(client);
@@ -2186,6 +2203,8 @@ Server::removeClient(BaseClientProxy* client)
 	m_events->removeHandler(m_events->forClipboard().clipboardChanged(),
 							client->getEventTarget());
 	m_events->removeHandler(m_events->forIScreen().localInput(),
+							client->getEventTarget());
+	m_events->removeHandler(m_events->forIPrimaryScreen().screensaverDeactivated(),
 							client->getEventTarget());
 
 	// remove from list

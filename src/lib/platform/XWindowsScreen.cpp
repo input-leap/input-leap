@@ -244,8 +244,6 @@ XWindowsScreen::disable()
 void
 XWindowsScreen::enter()
 {
-	screensaver(false);
-
 	// release input context focus
 	if (m_ic != NULL) {
         m_impl->XUnsetICFocus(m_ic);
@@ -411,9 +409,11 @@ void
 XWindowsScreen::screensaver(bool activate)
 {
 	if (activate) {
+		m_screensaverNotificationTimer.reset();
 		m_screensaver->activate();
 	}
 	else {
+		m_screensaverNotificationTimer.reset();
 		m_screensaver->deactivate();
 	}
 }
@@ -2117,8 +2117,11 @@ XWindowsScreen::selectXIRawEventsSecondary()
 	mask.mask = (unsigned char*) calloc(mask.mask_len, sizeof(char));
 	LOGC((mask.mask == nullptr), (CLOG_ERR "Cannot listen on XI2 events due to memory error"));
 
-	// Detect mouse button press events on secondary screens (= clients)
+	// Detect mouse events (movement, button press) on secondary screens (= clients)
+	XISetMask(mask.mask, XI_RawMotion);
 	XISetMask(mask.mask, XI_RawButtonPress);
+	// Detect key press events on secondary screens (= clients)
+	XISetMask(mask.mask, XI_RawKeyPress);
 	// Detect touchscreen events on secondary screens (= clients)
 	XISetMask(mask.mask, XI_RawTouchBegin);
 	XISetMask(mask.mask, XI_RawTouchUpdate);

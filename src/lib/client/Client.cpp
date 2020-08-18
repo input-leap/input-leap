@@ -237,10 +237,13 @@ Client::getCursorPos(SInt32& x, SInt32& y) const
 }
 
 void
-Client::enter(SInt32 xAbs, SInt32 yAbs, UInt32, KeyModifierMask mask, bool)
+Client::enter(SInt32 xAbs, SInt32 yAbs, UInt32, KeyModifierMask mask, bool forScreensaver)
 {
     m_active = true;
     m_screen->mouseMove(xAbs, yAbs);
+    if (!forScreensaver) {
+        m_screen->screensaver(false);
+    }
     m_screen->enter(mask);
 
     if (m_sendFileThread != NULL) {
@@ -509,9 +512,17 @@ Client::setupScreen()
                             new TMethodEventJob<Client>(this,
                                 &Client::handleClipboardGrabbed));
     m_events->adoptHandler(m_events->forIScreen().localInput(),
-							getEventTarget(),
-							new TMethodEventJob<Client>(this,
-								&Client::handleLocalInputEvent));
+                            getEventTarget(),
+                            new TMethodEventJob<Client>(this,
+                                &Client::handleLocalInputEvent));
+    m_events->adoptHandler(m_events->forIPrimaryScreen().screensaverActivated(),
+                            getEventTarget(),
+                            new TMethodEventJob<Client>(this,
+                                &Client::handleScreensaverActivatedEvent));
+    m_events->adoptHandler(m_events->forIPrimaryScreen().screensaverDeactivated(),
+                            getEventTarget(),
+                            new TMethodEventJob<Client>(this,
+                                &Client::handleScreensaverDeactivatedEvent));
 }
 
 void
@@ -570,6 +581,11 @@ Client::cleanupScreen()
                             getEventTarget());
         m_events->removeHandler(m_events->forIScreen().localInput(),
                             getEventTarget());
+        m_events->removeHandler(m_events->forIPrimaryScreen().screensaverActivated(),
+                            getEventTarget());
+        m_events->removeHandler(m_events->forIPrimaryScreen().screensaverDeactivated(),
+                            getEventTarget());
+
         delete m_server;
         m_server = NULL;
     }
@@ -743,6 +759,18 @@ Client::handleResume(const Event&, void*)
         m_connectOnResume = false;
         connect();
     }
+}
+
+void
+Client::handleScreensaverActivatedEvent(const Event&, void*) {
+    LOG((CLOG_DEBUG "Client received screensaver activate"));
+    m_server->sendScreensaver(true);
+}
+
+void
+Client::handleScreensaverDeactivatedEvent(const Event&, void*) {
+    LOG((CLOG_DEBUG "Client received screensaver deactivate"));
+    m_server->sendScreensaver(false);
 }
 
 void

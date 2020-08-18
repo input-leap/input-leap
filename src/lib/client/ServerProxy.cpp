@@ -275,7 +275,7 @@ ServerProxy::parseMessage(const UInt8* code)
     }
 
     else if (memcmp(code, kMsgCScreenSaver, 4) == 0) {
-        screensaver();
+        rcvScreensaver();
     }
 
     else if (memcmp(code, kMsgQInfo, 4) == 0) {
@@ -524,11 +524,12 @@ void
 ServerProxy::enter()
 {
     // parse
+    SInt8 forScreensaver;
     SInt16 x, y;
     UInt16 mask;
     UInt32 seqNum;
-    ProtocolUtil::readf(m_stream, kMsgCEnter + 4, &x, &y, &seqNum, &mask);
-    LOG((CLOG_DEBUG1 "recv enter, %d,%d %d %04x", x, y, seqNum, mask));
+    ProtocolUtil::readf(m_stream, kMsgCEnter + 4, &x, &y, &seqNum, &mask, &forScreensaver);
+    LOG((CLOG_DEBUG1 "recv enter, %d,%d %d %04x, forScreensaver=%d", x, y, seqNum, mask, forScreensaver));
 
     // discard old compressed mouse motion, if any
     m_compressMouse         = false;
@@ -538,7 +539,7 @@ ServerProxy::enter()
     m_seqNum                = seqNum;
 
     // forward
-    m_client->enter(x, y, seqNum, static_cast<KeyModifierMask>(mask), false);
+    m_client->enter(x, y, seqNum, static_cast<KeyModifierMask>(mask), forScreensaver != 0);
 }
 
 void
@@ -777,7 +778,7 @@ ServerProxy::mouseWheel()
 }
 
 void
-ServerProxy::screensaver()
+ServerProxy::rcvScreensaver()
 {
     // parse
     SInt8 on;
@@ -786,6 +787,12 @@ ServerProxy::screensaver()
 
     // forward
     m_client->screensaver(on != 0);
+}
+
+void
+ServerProxy::sendScreensaver(bool activate) {
+    // Notify server about screensaver state of client
+    ProtocolUtil::writef(m_stream, kMsgCScreenSaver, activate ? 1 : 0);
 }
 
 void

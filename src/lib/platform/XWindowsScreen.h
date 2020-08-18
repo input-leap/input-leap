@@ -20,6 +20,7 @@
 
 #include "barrier/PlatformScreen.h"
 #include "barrier/KeyMap.h"
+#include "base/Stopwatch.h"
 #include "common/stdset.h"
 #include "common/stdvector.h"
 #include "XWindowsImpl.h"
@@ -231,6 +232,9 @@ private:
     // screen saver stuff
     XWindowsScreenSaver*    m_screensaver;
     bool                m_screensaverNotify;
+    // Timer for server notification to suppress screensaver if necessary
+    Stopwatch           m_screensaverNotificationTimer;
+    const double        NOTIFICATION_TIMEOUT = 10.0;
 
     // logical to physical button mapping.  m_buttons[i] gives the
     // physical button for logical button i+1.

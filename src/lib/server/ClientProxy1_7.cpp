@@ -39,6 +39,15 @@ ClientProxy1_7::~ClientProxy1_7()
 {
 }
 
+void
+ClientProxy1_7::enter(SInt32 xAbs, SInt32 yAbs,
+                UInt32 seqNum, KeyModifierMask mask, bool forScreensaver)
+{
+    LOG((CLOG_DEBUG1 "send enter to \"%s\", %d,%d %d %04x, forScreensaver=%d", getName().c_str(), xAbs, yAbs, seqNum, mask, forScreensaver ? 1 : 0));
+    ProtocolUtil::writef(getStream(), kMsgCEnter,
+                                xAbs, yAbs, seqNum, mask, forScreensaver ? 1 : 0);
+}
+
 bool
 ClientProxy1_7::parseMessage(const UInt8* code)
 {
@@ -51,9 +60,24 @@ ClientProxy1_7::parseMessage(const UInt8* code)
 
         m_events->addEvent(Event(m_events->forIScreen().localInput(), getEventTarget(), info));
     }
+    else if (memcmp(code, kMsgCScreenSaver, 4) == 0) {
+        rcvScreensaver();
+    }
     else {
         return ClientProxy1_6::parseMessage(code);
     }
 
     return true;
+}
+
+void
+ClientProxy1_7::rcvScreensaver()
+{
+    SInt8 activate;
+    ProtocolUtil::readf(getStream(), kMsgCScreenSaver + 4, &activate);
+    if (activate != 0) {
+        m_events->addEvent(Event(m_events->forIPrimaryScreen().screensaverActivated(), getEventTarget()));
+    } else {
+        m_events->addEvent(Event(m_events->forIPrimaryScreen().screensaverDeactivated(), getEventTarget()));
+    }
 }

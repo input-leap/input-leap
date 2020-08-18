@@ -29,9 +29,10 @@
 // 1.4:  adds crypto support
 // 1.5:  adds file transfer and removes home brew crypto
 // 1.6:  adds clipboard streaming
+// 1.7:  adds focus/screen switch on local input
 // NOTE: with new version, barrier minor version should increment
 static const SInt16        kProtocolMajorVersion = 1;
-static const SInt16        kProtocolMinorVersion = 6;
+static const SInt16        kProtocolMinorVersion = 7;
 
 // default contact port number
 static const UInt16        kDefaultPort = 24800;
@@ -171,6 +172,10 @@ extern const char*        kMsgCInfoAck;
 // should disconnect from the server.  the appropriate interval is
 // defined by an option.
 extern const char*        kMsgCKeepAlive;
+
+// Local input:  secondary -> primary
+// Inform primary about local input to request focus
+extern const char*        kMsgCLocalInput;
 
 //
 // data codes

@@ -191,6 +191,7 @@ private:
     void                handleFileChunkSending(const Event&, void*);
     void                handleFileRecieveCompleted(const Event&, void*);
     void                handleStopRetry(const Event&, void*);
+    void                handleLocalInputEvent(const Event&, void*);
     void                onFileRecieveCompleted();
     void                sendClipboardThread(void*);
 

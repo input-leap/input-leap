@@ -243,6 +243,14 @@ Server::~Server()
 							m_primaryClient->getEventTarget());
 	m_events->removeHandler(m_events->forIPrimaryScreen().screensaverDeactivated(),
 							m_primaryClient->getEventTarget());
+	m_events->removeHandler(m_events->forServer().switchToScreen(),
+							m_inputFilter);
+	m_events->removeHandler(m_events->forServer().switchInDirection(),
+							m_inputFilter);
+	m_events->removeHandler(m_events->forServer().keyboardBroadcast(),
+							m_inputFilter);
+	m_events->removeHandler(m_events->forServer().lockCursorToScreen(),
+							m_inputFilter);
 	m_events->removeHandler(m_events->forIPrimaryScreen().fakeInputBegin(),
 							m_inputFilter);
 	m_events->removeHandler(m_events->forIPrimaryScreen().fakeInputEnd(),
@@ -1426,6 +1434,20 @@ Server::handleToggleScreenEvent(const Event& event, void*)
   }
 }
 
+void
+Server::handleLocalInputEvent(const Event& event, void* vclient)
+{
+	BaseClientProxy* client = static_cast<BaseClientProxy*>(vclient);
+	IPlatformScreen::MotionInfo* info = static_cast<IPlatformScreen::MotionInfo*>(event.getData());
+	info = (info == nullptr) ? IPlatformScreen::MotionInfo::alloc(0, 0) : info;
+	LOG((CLOG_DEBUG "Trigger screen switching caused by local input on screen \"%s\", screen coordinates (%d, %d)", client->getName().c_str(), info->m_x, info->m_y));
+
+	// Record current cursor position on active screen
+	m_active->setJumpCursorPos(m_x, m_y);
+
+	// Do actual screen switching
+	switchScreen(client, info->m_x, info->m_y, false);
+}
 
 void
 Server::handleSwitchInDirectionEvent(const Event& event, void*)
@@ -2127,6 +2149,10 @@ Server::addClient(BaseClientProxy* client)
 							client->getEventTarget(),
 							new TMethodEventJob<Server>(this,
 								&Server::handleClipboardChanged, client));
+	m_events->adoptHandler(m_events->forIScreen().localInput(),
+							client->getEventTarget(),
+							new TMethodEventJob<Server>(this,
+								&Server::handleLocalInputEvent, client));
 
 	// add to list
 	m_clientSet.insert(client);
@@ -2158,6 +2184,8 @@ Server::removeClient(BaseClientProxy* client)
 	m_events->removeHandler(m_events->forClipboard().clipboardGrabbed(),
 							client->getEventTarget());
 	m_events->removeHandler(m_events->forClipboard().clipboardChanged(),
+							client->getEventTarget());
+	m_events->removeHandler(m_events->forIScreen().localInput(),
 							client->getEventTarget());
 
 	// remove from list

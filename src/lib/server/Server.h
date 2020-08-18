@@ -309,6 +309,7 @@ private:
     void                handleClientCloseTimeout(const Event&, void*);
     void                handleSwitchToScreenEvent(const Event&, void*);
     void                handleToggleScreenEvent(const Event&, void*);
+    void                handleLocalInputEvent(const Event&, void*);
     void                handleSwitchInDirectionEvent(const Event&, void*);
     void                handleKeyboardBroadcastEvent(const Event&,void*);
     void                handleLockCursorToScreenEvent(const Event&, void*);

@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -134,11 +134,11 @@ Client::connect()
         // being shuttled between various networks).  patch by Brent
         // Priddy.
         m_serverAddress.resolve();
-        
+
         // m_serverAddress will be null if the hostname address is not reolved
         if (m_serverAddress.getAddress() != NULL) {
           // to help users troubleshoot, show server host name (issue: 60)
-          LOG((CLOG_NOTE "connecting to '%s': %s:%i", 
+          LOG((CLOG_NOTE "connecting to '%s': %s:%i",
           m_serverAddress.getHostname().c_str(),
           ARCH->addrToString(m_serverAddress.getAddress()).c_str(),
           m_serverAddress.getPort()));
@@ -255,7 +255,7 @@ Client::leave()
     m_active = false;
 
     m_screen->leave();
-    
+
     if (m_enableClipboard) {
         // send clipboards that we own and that have changed
         for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
@@ -271,7 +271,7 @@ Client::leave()
 void
 Client::setClipboard(ClipboardID id, const IClipboard* clipboard)
 {
-     m_screen->setClipboard(id, clipboard);
+    m_screen->setClipboard(id, clipboard);
     m_ownClipboard[id]  = false;
     m_sentClipboard[id] = false;
 }
@@ -508,6 +508,10 @@ Client::setupScreen()
                             getEventTarget(),
                             new TMethodEventJob<Client>(this,
                                 &Client::handleClipboardGrabbed));
+    m_events->adoptHandler(m_events->forIScreen().localInput(),
+							getEventTarget(),
+							new TMethodEventJob<Client>(this,
+								&Client::handleLocalInputEvent));
 }
 
 void
@@ -563,6 +567,8 @@ Client::cleanupScreen()
         m_events->removeHandler(m_events->forIScreen().shapeChanged(),
                             getEventTarget());
         m_events->removeHandler(m_events->forClipboard().clipboardGrabbed(),
+                            getEventTarget());
+        m_events->removeHandler(m_events->forIScreen().localInput(),
                             getEventTarget());
         delete m_server;
         m_server = NULL;
@@ -768,6 +774,14 @@ Client::handleStopRetry(const Event&, void*)
 }
 
 void
+Client::handleLocalInputEvent(const Event& event, void*)
+{
+    IPlatformScreen::MotionInfo* info = static_cast<IPlatformScreen::MotionInfo*>(event.getData());
+    LOG((CLOG_DEBUG "Trigger screen switching caused by local input, screen coordinates (%d, %d)", info->m_x, info->m_y));
+    m_server->onLocalInput(info->m_x, info->m_y);
+}
+
+void
 Client::writeToDropDirThread(void*)
 {
     LOG((CLOG_DEBUG "starting write to drop dir thread"));
@@ -775,7 +789,7 @@ Client::writeToDropDirThread(void*)
     while (m_screen->isFakeDraggingStarted()) {
         ARCH->sleep(.1f);
     }
-    
+
     DropHelper::writeToDir(m_screen->getDropTarget(), m_dragFileList,
                     m_receivedFileData);
 }
@@ -790,7 +804,7 @@ Client::dragInfoReceived(UInt32 fileNum, std::string data)
     }
 
     DragInformation::parseDragInfo(m_dragFileList, fileNum, data);
-    
+
     m_screen->startDraggingFiles(m_dragFileList);
 }
 
@@ -806,7 +820,7 @@ Client::sendFileToServer(const char* filename)
     if (m_sendFileThread != NULL) {
         StreamChunker::interruptFile();
     }
-    
+
     m_sendFileThread = new Thread(
         new TMethodJob<Client>(
             this, &Client::sendFileThread,

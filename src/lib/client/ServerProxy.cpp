@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -368,6 +368,14 @@ ServerProxy::onClipboardChanged(ClipboardID id, const IClipboard* clipboard)
 }
 
 void
+ServerProxy::onLocalInput(SInt32 x, SInt32 y)
+{
+    // Coordinates as signed 32 bit integers don't make a lot of sense
+    // but are used for compatibility with e.g. IPlatformScreen::MotionInfo
+    ProtocolUtil::writef(m_stream, kMsgCLocalInput, x, y);
+}
+
+void
 ServerProxy::flushCompressedMouse()
 {
     if (m_compressMouse) {
@@ -553,7 +561,7 @@ ServerProxy::setClipboard()
     static std::string dataCached;
     ClipboardID id;
     UInt32 seq;
-    
+
     int r = ClipboardChunk::assemble(m_stream, dataCached, id, seq);
 
     if (r == kStart) {
@@ -562,7 +570,7 @@ ServerProxy::setClipboard()
     }
     else if (r == kFinish) {
         LOG((CLOG_DEBUG "received clipboard %d size=%d", id, dataCached.size()));
-        
+
         // forward
         Clipboard clipboard;
         clipboard.unmarshall(dataCached, 0);

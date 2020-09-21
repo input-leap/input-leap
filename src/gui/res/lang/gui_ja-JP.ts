@@ -157,7 +157,7 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="res/AddClientDialogBase.ui" line="83"/>
         <source>Ignore auto connect clients</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">自動接続クライアントを無視する</translation>
     </message>
 </context>
 <context>
@@ -299,12 +299,12 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="src/MainWindow.cpp" line="1165"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">キャンセル</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1189"/>
         <source>Failed to download Bonjour installer to location: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Bounjourのインストーラのダウンロードに失敗しました : %1</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1226"/>
@@ -318,7 +318,9 @@ This feature helps you establish the connection.</source>
         <source>Auto config feature requires Bonjour.
 
 Do you want to install Bonjour?</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">自動設定機能にはBonjourが必要です．
+
+Bonjourをインストールしてもよろしいですか？</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="815"/>
@@ -355,12 +357,12 @@ Do you want to install Bonjour?</source>
     <message>
         <location filename="src/MainWindow.cpp" line="408"/>
         <source>Barrier is now connected, You can close the config window. Barrier will remain connected in the background.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Barrierが接続されました．設定ウインドウを閉じても接続はバックグラウンドで維持されます．</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="434"/>
         <source>Security question</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">セキュリティの質問</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="435"/>
@@ -399,7 +401,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/MainWindowBase.ui" line="90"/>
         <source>Ser&amp;ver (share this computer's mouse and keyboard):</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">サーバー(このコンピュータのマウスとキーボードを共有):</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="243"/>
@@ -470,7 +472,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/MainWindowBase.ui" line="228"/>
         <source>&amp;Client (use another computer's mouse and keyboard):</source>
-        <translation type="finished">クライアント</translation>
+        <translation type="finished">クライアント(他のコンピュータのマウスとキーボードを使用):</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="270"/>
@@ -555,7 +557,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/MainWindowBase.ui" line="486"/>
         <source>Run Wizard</source>
-        <translation type="finished">ウィザードを実行する</translation>
+        <translation type="finished">ウィザードを実行</translation>
     </message>
 </context>
 <context>
@@ -677,7 +679,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="src/ScreenSettingsDialog.cpp" line="83"/>
         <source>Screen name matches alias</source>
-        <translation type="finished">画面の名前は別名と一致</translation>
+        <translation type="finished">画面の名前が別名と一致しています</translation>
     </message>
     <message>
         <location filename="src/ScreenSettingsDialog.cpp" line="84"/>
@@ -779,22 +781,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="150"/>
         <source>&amp;Ctrl:</source>
-        <translation type="finished">&amp;undefinedCtrl:</translation>
+        <translation type="finished">Ctrlキー</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="197"/>
         <source>Al&amp;t:</source>
-        <translation type="finished">&amp;undefinedl&amp;t:</translation>
+        <translation type="finished">Altキー</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="244"/>
         <source>M&amp;eta:</source>
-        <translation type="finished">&amp;undefined&amp;eta:</translation>
+        <translation type="finished">Metaキー</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="291"/>
         <source>S&amp;uper:</source>
-        <translation type="finished">&amp;undefined&amp;uper:</translation>
+        <translation type="finished">Superキー</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="358"/>
@@ -834,12 +836,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="437"/>
         <source>Fix CAPS LOCK key</source>
-        <translation type="finished">CAPSロックキーを固定</translation>
+        <translation type="finished">CapsLockキーを固定</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="444"/>
         <source>Fix NUM LOCK key</source>
-        <translation type="finished">NUMロックキーを固定</translation>
+        <translation type="finished">NumLockキーを固定</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="451"/>

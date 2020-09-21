@@ -147,7 +147,7 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="res/AddClientDialogBase.ui" line="20"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ダイアログ</translation>
     </message>
     <message>
         <location filename="res/AddClientDialogBase.ui" line="35"/>
@@ -350,7 +350,7 @@ Do you want to install Bonjour?</source>
     <message>
         <location filename="src/MainWindow.cpp" line="987"/>
         <source>Browse for a barriers config file</source>
-        <translation type="finished">Barrierの設定ファイルを参照</translation>
+        <translation type="finished">Barrierの設定ファイルを参照してください</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="408"/>
@@ -381,7 +381,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="src/MainWindow.cpp" line="1004"/>
         <source>Save failed</source>
-        <translation type="finished">保存できませんでした</translation>
+        <translation type="finished">保存に失敗しました</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1004"/>
@@ -470,12 +470,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/MainWindowBase.ui" line="228"/>
         <source>&amp;Client (use another computer's mouse and keyboard):</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">クライアント</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="270"/>
         <source>Auto config</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">自動設定</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="390"/>
@@ -515,12 +515,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/MainWindowBase.ui" line="442"/>
         <source>&amp;Hide</source>
-        <translation type="finished">隠す</translation>
+        <translation type="finished">非表示にする</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="445"/>
         <source>Hide</source>
-        <translation type="finished">隠す</translation>
+        <translation type="finished">非表示にする</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="453"/>
@@ -571,7 +571,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="src/PluginManager.cpp" line="58"/>
         <source>Failed to get plugin directory.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">プラグインのディレクトリの取得に失敗しました</translation>
     </message>
     <message>
         <location filename="src/PluginManager.cpp" line="63"/>
@@ -582,7 +582,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="src/PluginManager.cpp" line="136"/>
         <source>Failed to download plugin '%1' to: %2
 %3</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">プラグイン'%1'の%2へのダウンロードに失敗しました</translation>
     </message>
     <message>
         <location filename="src/PluginManager.cpp" line="167"/>
@@ -605,43 +605,43 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/PluginWizardPageBase.ui" line="101"/>
         <source>Please wait...</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">お待ちください...</translation>
     </message>
     <message>
         <location filename="src/PluginWizardPage.cpp" line="72"/>
         <source>Error: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">エラー: %1</translation>
     </message>
     <message>
         <location filename="src/PluginWizardPage.cpp" line="80"/>
         <location filename="src/PluginWizardPage.cpp" line="201"/>
         <source>Setup complete.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">セットアップ完了</translation>
     </message>
     <message>
         <location filename="src/PluginWizardPage.cpp" line="93"/>
         <source>Downloading '%1' plugin (%2/%3)...</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">'%1'プラグインをダウンロードしています (%2/%3)...</translation>
     </message>
     <message>
         <location filename="src/PluginWizardPage.cpp" line="104"/>
         <source>Plugins installed successfully.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">プラグインのインストールされました</translation>
     </message>
     <message>
         <location filename="src/PluginWizardPage.cpp" line="120"/>
         <source>Generating SSL certificate...</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">SSL証明書を生成しています...</translation>
     </message>
     <message>
         <location filename="src/PluginWizardPage.cpp" line="170"/>
         <source>Downloading plugin: %1 (1/%2)</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">プラグインをダウンロードしています: %1 (1/%2)</translation>
     </message>
     <message>
         <location filename="src/PluginWizardPage.cpp" line="239"/>
         <source>Getting plugin list...</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">プラグインのリストを取得しています...</translation>
     </message>
 </context>
 <context>
@@ -799,7 +799,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="358"/>
         <source>&amp;Dead corners</source>
-        <translation type="finished">無効とする角</translation>
+        <translation type="finished">無効な角</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="367"/>
@@ -1009,7 +1009,7 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="520"/>
         <source>&amp;Dead corners</source>
-        <translation type="finished">無効とする角</translation>
+        <translation type="finished">無効な角</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="529"/>
@@ -1088,7 +1088,7 @@ This allows Barrier to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/SettingsDialogBase.ui" line="127"/>
         <source>&amp;Hide on startup</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">起動時に非表示にする</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="146"/>
@@ -1224,7 +1224,7 @@ This allows Barrier to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/SetupWizardBase.ui" line="178"/>
         <source>Password:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">パスワード:</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="204"/>
@@ -1239,7 +1239,7 @@ This allows Barrier to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/SetupWizardBase.ui" line="277"/>
         <source>&amp;Server (share this computer's mouse and keyboard)</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">サーバー(このコンピュータのマウスとキーボードを共有)</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="290"/>
@@ -1253,7 +1253,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="res/SetupWizardBase.ui" line="326"/>
         <source>&amp;Client (use another computer's mouse and keyboard)</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">クライアント（他のコンピュータのマウスとキーボードを使用）</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="339"/>
@@ -1344,14 +1344,14 @@ Server response:
     <message>
         <location filename="src/WebClient.cpp" line="120"/>
         <source>Get plugin list failed, invalid user email or password.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">プラグインリストの取得に失敗しました．メールアドレスまたはパスワードが無効です．</translation>
     </message>
     <message>
         <location filename="src/WebClient.cpp" line="131"/>
         <source>Get plugin list failed, an error occurred.
 
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">プラグインリストの取得に失敗しました．エラーが発生しました．</translation>
     </message>
     <message>
         <location filename="src/WebClient.cpp" line="137"/>
@@ -1360,7 +1360,11 @@ Server response:
 Server response:
 
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">プラグインリストの取得に失敗しました．エラーが発生しました．
+
+サーバー応答:
+
+%1</translation>
     </message>
 </context>
 <context>
@@ -1399,7 +1403,7 @@ Server response:
     <message>
         <location filename="src/ZeroconfService.cpp" line="141"/>
         <source>Failed to get local IP address. Please manually type in server address on your clients</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">ローカルIPアドレスが取得できませんでした．サーバーのアドレスをクライアントに手入力してください．</translation>
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="147"/>

@@ -85,7 +85,7 @@ std::pair<bool, std::string> SslCertificate::runTool(const QStringList& args)
     if (!success || code != 0)
     {
         emit error(
-            QString("SSL tool failed: %1\n\nCode: %2\nError: %3")
+            QString("SSL/TLS tool failed: %1\n\nCode: %2\nError: %3")
                 .arg(program)
                 .arg(process.exitCode())
                 .arg(standardError.isEmpty() ? "Unknown" : standardError));
@@ -139,7 +139,7 @@ void SslCertificate::generateCertificate()
             return;
         }
 
-        emit info(tr("SSL certificate generated."));
+        emit info(tr("SSL/TLS certificate generated."));
     }
 
     generateFingerprint(filename);
@@ -173,10 +173,10 @@ void SslCertificate::generateFingerprint(const QString& certificateFilename)
             i, output.size() - i);
 
         Fingerprint::local().trust(QString::fromStdString(fingerprint), false);
-        emit info(tr("SSL fingerprint generated."));
+        emit info(tr("SSL/TLS fingerprint generated."));
     }
     else {
-        emit error(tr("Failed to find SSL fingerprint."));
+        emit error(tr("Failed to find SSL/TLS fingerprint."));
     }
 }
 

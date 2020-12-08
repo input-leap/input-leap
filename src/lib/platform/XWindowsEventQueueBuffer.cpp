@@ -154,13 +154,13 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
     FD_ZERO(&rfds);
     FD_SET(ConnectionNumber(m_display), &rfds);
     FD_SET(m_pipefd[0], &rfds);
-     int nfds;
-     if (ConnectionNumber(m_display) > m_pipefd[0]) {
-         nfds = ConnectionNumber(m_display) + 1;
-     }
-     else {
-         nfds = m_pipefd[0] + 1;
-     }
+    int nfds;
+    if (ConnectionNumber(m_display) > m_pipefd[0]) {
+        nfds = ConnectionNumber(m_display) + 1;
+    }
+    else {
+        nfds = m_pipefd[0] + 1;
+    }
 #endif
     // It's possible that the X server has queued events locally
     // in xlib's event buffer and not pushed on to the fd. Hence we
@@ -177,26 +177,25 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 
     while (((dtimeout < 0.0) || (remaining > 0)) && getPendingCountLocked() == 0 && retval == 0) {
 #if HAVE_POLL
-    retval = poll(pfds, 2, TIMEOUT_DELAY); //16ms = 60hz, but we make it > to play nicely with the cpu
-     if (pfds[1].revents & POLLIN) {
-        read_response = read(m_pipefd[0], buf, 15);
+        retval = poll(pfds, 2, TIMEOUT_DELAY); //16ms = 60hz, but we make it > to play nicely with the cpu
+        if (pfds[1].revents & POLLIN) {
+            read_response = read(m_pipefd[0], buf, 15);
 
-        // with linux automake, warnings are treated as errors by default
-        if (read_response < 0)
-        {
-            // todo: handle read response
+            // with linux automake, warnings are treated as errors by default
+            if (read_response < 0)
+            {
+                // todo: handle read response
+            }
         }
-
-     }
 #else
-    retval = select(nfds,
+        retval = select(nfds,
                         SELECT_TYPE_ARG234 &rfds,
                         SELECT_TYPE_ARG234 NULL,
                         SELECT_TYPE_ARG234 NULL,
                         SELECT_TYPE_ARG5   TIMEOUT_DELAY);
-    if (FD_SET(m_pipefd[0], &rfds)) {
-        read(m_pipefd[0], buf, 15);
-    }
+        if (FD_SET(m_pipefd[0], &rfds)) {
+            read(m_pipefd[0], buf, 15);
+        }
 #endif
         remaining-=TIMEOUT_DELAY;
     }

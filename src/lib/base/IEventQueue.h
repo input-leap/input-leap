@@ -63,7 +63,7 @@ public:
     class TimerEvent {
     public:
         EventQueueTimer*    m_timer;    //!< The timer
-        std::uint32_t m_count;    //!< Number of repeats
+        std::uint32_t       m_count;    //!< Number of repeats
     };
 
     //! @name manipulators
@@ -221,24 +221,24 @@ public:
     // Event type providers.
     //
 
-    virtual ClientEvents&                forClient() = 0;
-    virtual IStreamEvents&                forIStream() = 0;
+    virtual ClientEvents&               forClient() = 0;
+    virtual IStreamEvents&              forIStream() = 0;
     virtual IpcClientEvents&            forIpcClient() = 0;
-    virtual IpcClientProxyEvents&        forIpcClientProxy() = 0;
+    virtual IpcClientProxyEvents&       forIpcClientProxy() = 0;
     virtual IpcServerEvents&            forIpcServer() = 0;
-    virtual IpcServerProxyEvents&        forIpcServerProxy() = 0;
-    virtual IDataSocketEvents&            forIDataSocket() = 0;
+    virtual IpcServerProxyEvents&       forIpcServerProxy() = 0;
+    virtual IDataSocketEvents&          forIDataSocket() = 0;
     virtual IListenSocketEvents&        forIListenSocket() = 0;
-    virtual ISocketEvents&                forISocket() = 0;
+    virtual ISocketEvents&              forISocket() = 0;
     virtual OSXScreenEvents&            forOSXScreen() = 0;
-    virtual ClientListenerEvents&        forClientListener() = 0;
-    virtual ClientProxyEvents&            forClientProxy() = 0;
-    virtual ClientProxyUnknownEvents&    forClientProxyUnknown() = 0;
-    virtual ServerEvents&                forServer() = 0;
+    virtual ClientListenerEvents&       forClientListener() = 0;
+    virtual ClientProxyEvents&          forClientProxy() = 0;
+    virtual ClientProxyUnknownEvents&   forClientProxyUnknown() = 0;
+    virtual ServerEvents&               forServer() = 0;
     virtual ServerAppEvents&            forServerApp() = 0;
     virtual IKeyStateEvents&            forIKeyState() = 0;
-    virtual IPrimaryScreenEvents&        forIPrimaryScreen() = 0;
-    virtual IScreenEvents&                forIScreen() = 0;
+    virtual IPrimaryScreenEvents&       forIPrimaryScreen() = 0;
+    virtual IScreenEvents&              forIScreen() = 0;
     virtual ClipboardEvents&            forClipboard() = 0;
-    virtual FileEvents&                    forFile() = 0;
+    virtual FileEvents&                 forFile() = 0;
 };

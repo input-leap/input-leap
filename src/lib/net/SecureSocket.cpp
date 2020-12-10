@@ -24,6 +24,7 @@
 #include "arch/XArch.h"
 #include "base/Log.h"
 #include "base/String.h"
+#include "common/PathUtilities.h"
 #include "common/DataDirectories.h"
 
 #include <openssl/ssl.h>
@@ -46,7 +47,11 @@ enum {
     kMsgSize = 128
 };
 
+#ifdef _WIN32
+static const char kFingerprintDirName[] ="SSL\\Fingerprints";
+#else
 static const char kFingerprintDirName[] = "SSL/Fingerprints";
+#endif
 //static const char kFingerprintLocalFilename[] = "Local.txt";
 static const char kFingerprintTrustedServersFilename[] = "TrustedServers.txt";
 //static const char kFingerprintTrustedClientsFilename[] = "TrustedClients.txt";
@@ -695,15 +700,12 @@ SecureSocket::verifyCertFingerprint()
     formatFingerprint(fingerprint);
     LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
 
-    std::string trustedServersFilename;
-    trustedServersFilename = barrier::string::sprintf(
-        "%s/%s/%s",
-        DataDirectories::profile().c_str(),
-        kFingerprintDirName,
-        kFingerprintTrustedServersFilename);
+    std::string trustedServersFilename = PathUtilities::concat(DataDirectories::profile(),
+        barrier::string::sprintf("%s%c%s",
+            kFingerprintDirName, PathUtilities::DefaultDelimiter, kFingerprintTrustedServersFilename));
 
     // Provide debug hint as to what file is being used to verify fingerprint trust
-    LOG((CLOG_NOTE "trustedServersFilename: %s", trustedServersFilename.c_str() ));
+    LOG((CLOG_DEBUG "trustedServersFilename: %s", trustedServersFilename.c_str() ));
 
     // check if this fingerprint exist
     std::string fileLine;
@@ -711,9 +713,9 @@ SecureSocket::verifyCertFingerprint()
     file.open(trustedServersFilename.c_str());
 
     if (!file.is_open()) {
-        LOG((CLOG_NOTE "Unable to open trustedServersFile: %s", trustedServersFilename.c_str() ));
+        LOG((CLOG_ERR "unable to open trusted servers file: %s", trustedServersFilename.c_str() ));
     } else {
-        LOG((CLOG_NOTE "Opened trustedServersFilename: %s", trustedServersFilename.c_str() ));
+        LOG((CLOG_NOTE "reading trusted servers from: %s", trustedServersFilename.c_str() ));
     }
 
     bool isValid = false;
@@ -721,11 +723,11 @@ SecureSocket::verifyCertFingerprint()
         getline(file,fileLine);
         if (!fileLine.empty()) {
             if (fileLine.compare(fingerprint) == 0) {
-                LOG((CLOG_NOTE "Fingerprint matches trusted fingerprint"));
+                LOG((CLOG_NOTE "fingerprint is trusted"));
                 isValid = true;
                 break;
             } else {
-                LOG((CLOG_NOTE "Fingerprint does not match trusted fingerprint"));
+                LOG((CLOG_ERR "fingerprint is not trusted"));
             }
         }
     }

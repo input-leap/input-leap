@@ -22,6 +22,7 @@
 #include "net/SocketMultiplexer.h"
 #include "net/TSocketMultiplexerMethodJob.h"
 #include "arch/XArch.h"
+#include "common/PathUtilities.h"
 #include "common/DataDirectories.h"
 #include "base/String.h"
 
@@ -55,10 +56,9 @@ SecureListenSocket::accept()
             setListeningJob();
         }
 
-        std::string certificateFilename = barrier::string::sprintf("%s/%s/%s",
-                                        DataDirectories::profile().c_str(),
-                                        s_certificateDir,
-                                        s_certificateFilename);
+        std::string certificateFilename = PathUtilities::concat(DataDirectories::profile(),
+            barrier::string::sprintf("%s%c%s",
+                s_certificateDir, PathUtilities::DefaultDelimiter, s_certificateFilename));
 
         bool loaded = socket->loadCertificates(certificateFilename);
         if (!loaded) {

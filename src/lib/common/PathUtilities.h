@@ -25,6 +25,7 @@ public:
     static std::string basename(const std::string& path);
     static std::string concat(const std::string& left, const std::string& right);
 
+    static const char DefaultDelimiter;
 private:
     // static class
     PathUtilities() {}

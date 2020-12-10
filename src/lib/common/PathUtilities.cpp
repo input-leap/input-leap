@@ -37,7 +37,7 @@ static const char *Delimiters = "\\/";
 static const char *Delimiters = "/";
 #endif
 
-static const char DefaultDelimiter = Delimiters[0];
+const char PathUtilities::DefaultDelimiter = Delimiters[0];
 
 std::string PathUtilities::basename(const std::string& path)
 {

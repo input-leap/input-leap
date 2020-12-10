@@ -16,8 +16,8 @@
  */
 
 #include "barrier/DropHelper.h"
-
 #include "base/Log.h"
+#include "common/PathUtilities.h"
 
 #include <fstream>
 
@@ -28,13 +28,7 @@ DropHelper::writeToDir(const String& destination, DragFileList& fileList, String
 
     if (!destination.empty() && fileList.size() > 0) {
         std::fstream file;
-        String dropTarget = destination;
-#ifdef SYSAPI_WIN32
-        dropTarget.append("\\");
-#else
-        dropTarget.append("/");
-#endif
-        dropTarget.append(fileList.at(0).getFilename());
+        String dropTarget = PathUtilities::concat(destination, fileList.at(0).getFilename());
         file.open(dropTarget.c_str(), std::ios::out | std::ios::binary);
         if (!file.is_open()) {
             LOG((CLOG_ERR "drop file failed: can not open %s", dropTarget.c_str()));

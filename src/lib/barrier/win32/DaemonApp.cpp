@@ -33,6 +33,7 @@
 #include "base/EventQueue.h"
 #include "base/log_outputters.h"
 #include "base/Log.h"
+#include "common/PathUtilities.h"
 #include "common/DataDirectories.h"
 
 #include "arch/win32/ArchMiscWindows.h"
@@ -245,7 +246,7 @@ DaemonApp::logFilename()
 {
     string logFilename = ARCH->setting("LogFilename");
     if (logFilename.empty())
-        logFilename = DataDirectories::global() + "\\" + LOG_FILENAME;
+        logFilename = PathUtilities::concat(DataDirectories::global(), LOG_FILENAME);
     MSWindowsUtil::createDirectory(logFilename, true);
     return logFilename;
 }

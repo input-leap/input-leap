@@ -22,6 +22,7 @@
 #include "platform/ImmuneKeysReader.h"
 #include "barrier/protocol_types.h"
 #include "barrier/XScreen.h"
+#include "common/PathUtilities.h"
 #include "common/DataDirectories.h"
 #include "base/Log.h"
 
@@ -574,9 +575,9 @@ MSWindowsHook::install()
     g_fakeServerInput = false;
 
     // setup immune keys
-    g_immuneKeysPath = DataDirectories::profile() + "\\ImmuneKeys.txt";
+    g_immuneKeysPath = PathUtilities::concat(DataDirectories::profile(), "ImmuneKeys.txt");
     g_immuneKeys = immune_keys_list();
-    LOG((CLOG_DEBUG "Found %u immune keys in %s", g_immuneKeys.size(), g_immuneKeysPath.c_str()));
+    LOG((CLOG_DEBUG "Found %u immune keys in: %s", g_immuneKeys.size(), g_immuneKeysPath.c_str()));
 
 #if NO_GRAB_KEYBOARD
     // we only need the mouse hook

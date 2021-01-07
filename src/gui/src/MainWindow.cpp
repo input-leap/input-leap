@@ -74,6 +74,11 @@ static const char* barrierIconFiles[] =
     ":/res/icons/32x32/barrier-disconnected-mask.png",
     ":/res/icons/32x32/barrier-connected-mask.png",
     ":/res/icons/32x32/barrier-transfering-mask.png"
+#elif defined(Q_OS_WIN)
+    ":/res/icons/32x32/barrier-disconnected.png",
+    ":/res/icons/32x32/barrier-disconnected.png",
+    ":/res/icons/32x32/barrier-connected.png",
+    ":/res/icons/32x32/barrier-transfering.png"
 #else
     ":/res/icons/16x16/barrier-disconnected.png",
     ":/res/icons/16x16/barrier-disconnected.png",

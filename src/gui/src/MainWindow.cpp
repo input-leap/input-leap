@@ -1277,7 +1277,8 @@ void MainWindow::bonjourInstallFinished()
 
 void MainWindow::windowStateChanged()
 {
-    if (windowState() == Qt::WindowMinimized && appConfig().getMinimizeToTray())
+    // If we are minimising and minimise to tray is enabled and system tray is available then hide the window
+    if (windowState() == Qt::WindowMinimized && appConfig().getMinimizeToTray() && QSystemTrayIcon::isSystemTrayAvailable())
         hide();
 }
 

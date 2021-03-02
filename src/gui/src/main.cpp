@@ -91,13 +91,6 @@ int main(int argc, char* argv[])
 	QSettings settings;
 	AppConfig appConfig (&settings);
 
-	if (appConfig.getAutoHide() && !QSystemTrayIcon::isSystemTrayAvailable())
-	{
-		// force auto hide to false - otherwise there is no way to get the GUI back
-		fprintf(stdout, "System tray not available, force disabling auto hide!\n");
-		appConfig.setAutoHide(false);
-	}
-
 	app.switchTranslator(appConfig.language());
 
 	MainWindow mainWindow(settings, appConfig);

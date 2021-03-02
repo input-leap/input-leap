@@ -88,8 +88,6 @@ int main(int argc, char* argv[])
 	}
 #endif
 
-	QApplication::setQuitOnLastWindowClosed(false);
-
 	QSettings settings;
 	AppConfig appConfig (&settings);
 

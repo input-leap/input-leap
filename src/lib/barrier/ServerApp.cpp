@@ -267,6 +267,18 @@ ServerApp::handleClientConnected(const Event&, void* vlistener)
     if (client != NULL) {
         m_server->adoptClient(client);
         updateStatus();
+        if( args().m_headlessMode && m_server->isServerHoldFocus() ) {
+            std::string screen = args().m_config->getCanonicalName(client->getName());
+            if (screen.empty()) {
+                screen = client->getName();
+            }
+            if(screen.empty()) return;
+            // send event
+            Server::SwitchToScreenInfo* info =
+                Server::SwitchToScreenInfo::alloc(screen);
+            m_events->addEvent(Event(m_events->forServer().switchToScreen(),
+                                     args().m_config->getInputFilter(), info));
+        }
     }
 }
 

@@ -616,7 +616,7 @@ ServerApp::createScreen()
 {
 #if WINAPI_MSWINDOWS
     return new barrier::Screen(new MSWindowsScreen(
-        true, args().m_noHooks, args().m_stopOnDeskSwitch, m_events), m_events);
+        true, args().m_noHooks, args().m_stopOnDeskSwitch, args().m_headlessMode, m_events), m_events);
 #elif WINAPI_XWINDOWS
     return new barrier::Screen(new XWindowsScreen(
         new XWindowsImpl(),

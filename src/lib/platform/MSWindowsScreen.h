@@ -44,6 +44,7 @@ public:
         bool isPrimary,
         bool noHooks,
         bool stopOnDeskSwitch,
+        bool headlessMode,
         IEventQueue* events);
     virtual ~MSWindowsScreen();
 

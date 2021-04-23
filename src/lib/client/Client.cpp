@@ -240,7 +240,8 @@ void
 Client::enter(SInt32 xAbs, SInt32 yAbs, UInt32, KeyModifierMask mask, bool)
 {
     m_active = true;
-    m_screen->mouseMove(xAbs, yAbs);
+    if (!m_args.m_headlessMode)
+        m_screen->mouseMove(xAbs, yAbs);
     m_screen->enter(mask);
 
     if (m_sendFileThread != NULL) {

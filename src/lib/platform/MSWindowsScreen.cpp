@@ -93,6 +93,7 @@ MSWindowsScreen::MSWindowsScreen(
     bool isPrimary,
     bool noHooks,
     bool stopOnDeskSwitch,
+    bool headlessMode,
     IEventQueue* events) :
     PlatformScreen(events),
     m_isPrimary(isPrimary),
@@ -136,7 +137,8 @@ MSWindowsScreen::MSWindowsScreen(
                             m_events,
                             new TMethodJob<MSWindowsScreen>(
                                 this, &MSWindowsScreen::updateKeysCB),
-                            stopOnDeskSwitch);
+                            stopOnDeskSwitch,
+                            headlessMode);
         m_keyState    = new MSWindowsKeyState(m_desks, getEventTarget(), m_events);
 
         updateScreenShape();

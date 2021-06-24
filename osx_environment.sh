@@ -29,7 +29,7 @@ if [ ! $BARRIER_BUILD_ENV ]; then
 
     elif command -v brew; then
         printf "Detected Homebrew\n"
-        QT_PATH=$(brew --prefix qt5)
+        QT_PATH=$(brew --prefix qt@5)
 
         check_dir_exists "$QT_PATH" 'qt5'
 

@@ -56,10 +56,17 @@ XWindowsClipboardHTMLConverter::getDataSize() const
 
 std::string XWindowsClipboardHTMLConverter::fromIClipboard(const std::string& data) const
 {
-    return Unicode::UTF8ToUTF16(data);
+    return data;
 }
 
 std::string XWindowsClipboardHTMLConverter::toIClipboard(const std::string& data) const
 {
-    return Unicode::UTF16ToUTF8(data);
+    // Older Firefox [1] and possibly other applications use UTF-16 for text/html - handle both
+    // [1] https://bugzilla.mozilla.org/show_bug.cgi?id=1497580
+    if (Unicode::isUTF8(data)) {
+        return data;
+    } else {
+        return Unicode::UTF16ToUTF8(data);
+    }
+    return data;
 }

@@ -31,6 +31,6 @@
     <key>NSHumanReadableCopyright</key>
     <string>© 2018 Debauchee Open Source Group</string>
     <key>LSMinimumSystemVersion</key>
-    <string>10.9.0</string>
+    <string>10.12.0</string>
   </dict>
 </plist>

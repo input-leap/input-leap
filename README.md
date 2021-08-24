@@ -82,32 +82,52 @@ specific packages.
 
 [![Packaging status](https://repology.org/badge/vertical-allrepos/barrier.svg)](https://repology.org/project/barrier/versions)
 
-### FAQ
+## FAQ - Frequently Asked Questions
 
-Q: Does drag and drop work on linux?
+**Q: Does drag and drop work on linux?**
 
-A: No
+> A: No *(see [#855](https://github.com/debauchee/barrier/issues/544) if you'd like to change that)*
 
-Q: What OSes are supported?
 
-A:
-  - Windows 7, 8, 8.1, and 10
-  - MacOS/OS X
-  - Linux
-  - FreeBSD
-  - OpenBSD
+**Q: What OSes are supported?**
 
-Q: Are 32-bit versions of Windows supported?
+> A: The most recent release of Barrier is known to work on:
+>  - Windows 7, 8, 8.1, and 10
+>  - macOS *(previously known as OS X or Mac OS X)*  
+>    - _The current GUI does **not** work on OS versions prior to macOS 10.12 Sierra (but see the related answer below)_
+>  - Linux
+>  - FreeBSD
+>  - OpenBSD
 
-A: No
 
-Q: How do I load my configuration on startup?
+**Q: Are 32-bit versions of Windows supported?**
 
-A: Start the binary with the argument `--config <path_to_saved_configuration>`
+> A: No
 
-Q: After loading my configuration on the client the field 'Server IP' is still empty!
 
-A: Edit your configuration to include the servers ip adress manually with 
-	(...)
-	section: options
-		serverhostname=<AAA.BBB.CCC.DDD>
+__Q: Is it possible to use Barrier on Mac OS X / OS X versions prior to 10.12?__
+
+> A: Not officially.
+>   - For OS X 10.10 Yosemite and later:
+>     - [Barrier v2.1.0](https://github.com/debauchee/barrier/releases/tag/v2.1.0) or earlier _may_ work.
+>   - For Mac OS X 10.9 Mavericks _(and perhaps earlier)_:
+>     1. the command-line portions of the current release _should_ run fine.
+>     2. The GUI will _not_ run, as that OS version does not include Apple's *Metal* framework.
+>         - _(For a GUI workaround for Mac OS X 10.9, see the [discussion at issue #544](https://github.com/debauchee/barrier/issues/544))_
+
+
+**Q: How do I load my configuration on startup?**
+
+> A: Start the binary with the argument `--config <path_to_saved_configuration>`
+
+
+**Q: After loading my configuration on the client the field 'Server IP' is still empty!**
+
+> A: Edit your configuration to include the servers ip adress manually with 
+> 
+>```
+>(...)
+>
+>section: options
+>    serverhostname=<AAA.BBB.CCC.DDD>
+>```

@@ -133,10 +133,10 @@ ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
     return true;
 }
 
-bool
-ArgParser::parsePlatformArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i)
-{
 #if WINAPI_MSWINDOWS
+bool
+ArgParser::parseMSWindowsArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i)
+{
     if (isArg(i, argc, argv, NULL, "--service")) {
         LOG((CLOG_WARN "obsolete argument --service, use barrierd instead."));
         argsBase.m_shouldExit = true;
@@ -153,25 +153,46 @@ ArgParser::parsePlatformArg(ArgsBase& argsBase, const int& argc, const char* con
     }
 
     return true;
-#elif WINAPI_XWINDOWS
+}
+#endif
+
+#if WINAPI_CARBON
+bool
+ArgParser::parseCarbonArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i)
+{
+    // no options for carbon
+    return false;
+}
+#endif
+
+#if WINAPI_XWINDOWS
+bool
+ArgParser::parseXWindowsArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i)
+{
     if (isArg(i, argc, argv, "-display", "--display", 1)) {
         // use alternative display
         argsBase.m_display = argv[++i];
     }
-
     else if (isArg(i, argc, argv, NULL, "--no-xinitthreads")) {
         argsBase.m_disableXInitThreads = true;
-    }
-
-    else {
+    } else {
         // option not supported here
         return false;
     }
 
     return true;
+}
+#endif
+
+bool
+ArgParser::parsePlatformArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i)
+{
+#if WINAPI_MSWINDOWS
+    return parseMSWindowsArg(argsBase, argc, argv, i);
 #elif WINAPI_CARBON
-    // no options for carbon
-    return false;
+    return parseCarbonArg(argsBase, argc, argv, i);
+#elif WINAPI_XWINDOWS
+    return parseXWindowsArg(argsBase, argc, argv, i);
 #endif
 }
 

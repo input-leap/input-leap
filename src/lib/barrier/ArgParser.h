@@ -53,6 +53,9 @@ private:
     bool                checkUnexpectedArgs();
 
     static ArgsBase&    argsBase() { return *m_argsBase; }
+    bool                parseMSWindowsArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
+    bool                parseCarbonArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
+    bool                parseXWindowsArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
 
 private:
     App*                m_app;

@@ -1,5 +1,5 @@
 name: Bug Report
-description: File a bug report (ideally refrain from questions, please use IRC or Matrix for those)
+description: File a bug report (for questions, ideas & support, use the Discussions tab, or IRC for quick answers, but make sure to stay on the channel!)
 title: "[Bug]: "
 labels: [bug, triage]
 body:

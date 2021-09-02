@@ -38,11 +38,11 @@ body:
   - type: input
     id: git-commit-if
     attributes:
-        label: Git commit hash (if applicable)
-        description: "When building Barrier from Git, what commit hash did you checkout from?"
-        placeholder: b0c0b42b
+      label: Git commit hash (if applicable)
+      description: "When building Barrier from Git, what commit hash did you checkout from?"
+      placeholder: b0c0b42b
     validations:
-        required: false
+      required: false
   - type: dropdown
     id: os
     attributes:
@@ -53,18 +53,17 @@ body:
         - Windows
         - macOS
     validations:
-        required: true
+      required: true
   - type: textarea
     id: os-version
     attributes:
-        label: What OS versions are you using?
-        description: This applies to both client(s) and the server.
+      label: What OS versions are you using?
+      description: This applies to both client(s) and the server.
     validations:
-        required: true
-- type: textarea
+      required: true
+  - type: textarea
     id: logs
     attributes:
       label: Relevant log output
       description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
       render: shell
-

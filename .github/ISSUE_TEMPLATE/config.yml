@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discussions:
+    url: https://github.com/debauchee/barrier/discussions
+    about: Please use the discussions tab for support and ideas/suggestions.
+  - name: Pull requests:
+    url: https://github.com/debauchee/barrier/pulls
+    about: Please submit pull requests here.

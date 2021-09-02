@@ -43,6 +43,13 @@ body:
       placeholder: b0c0b42b
     validations:
       required: false
+  - type: textarea
+    id: pkg-mgr-origin
+    attributes:
+      label: If applicable, where did you install Barrier from?
+      description: This includes Snaps, Flatpaks, and self-built executables.
+    validations:
+      required: false
   - type: dropdown
     id: os
     attributes:

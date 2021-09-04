@@ -51,7 +51,7 @@ body:
   - type: dropdown
     id: os
     attributes:
-      label: What OSes are you seeing the problem on? (Check all that apply).
+      label: What OSes are you seeing the problem on? (Check all that apply)
       multiple: true
       options:
         - Linux

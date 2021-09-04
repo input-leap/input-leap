@@ -11,7 +11,7 @@ body:
     attributes:
       label: What happened?
       description: Also tell us, what did you expect to happen?
-      placeholder: Tell us what you see! Screenshots are also helpful - please attach to the issue, rather than linking to image hosting sites.
+      placeholder: Tell us what you see! Screenshots are also helpful - please attach to the issue (when created), rather than linking to image hosting sites.
     validations:
       required: true
   - type: dropdown

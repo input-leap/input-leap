@@ -124,27 +124,6 @@ void ZeroconfService::errorHandle(DNSServiceErrorType errorCode)
         tr("Error code: %1.").arg(errorCode));
 }
 
-QString ZeroconfService::getLocalIPAddresses()
-{
-    QStringList addresses;
-    for (const QHostAddress& address : QNetworkInterface::allAddresses()) {
-        if (address.protocol() == QAbstractSocket::IPv4Protocol &&
-            address != QHostAddress(QHostAddress::LocalHost)) {
-            addresses.append(address.toString());
-        }
-    }
-
-    for (const QString& preferedIP : preferedIPAddress) {
-        for (const QString& address : addresses) {
-            if (address.startsWith(preferedIP)) {
-                return address;
-            }
-        }
-    }
-
-    return "";
-}
-
 bool ZeroconfService::registerService(bool server)
 {
     bool result = true;
@@ -159,19 +138,10 @@ bool ZeroconfService::registerService(bool server)
         else {
             m_pZeroconfRegister = new ZeroconfRegister(this);
             if (server) {
-                QString localIP = getLocalIPAddresses();
-                if (localIP.isEmpty()) {
-                    QMessageBox::warning(m_pMainWindow, tr("Barrier"),
-                        tr("Failed to get local IP address. "
-                           "Please manually type in server address "
-                           "on your clients"));
-                }
-                else {
-                    m_pZeroconfRegister->registerService(
-                        ZeroconfRecord(tr("%1").arg(localIP),
-                        QLatin1String(m_ServerServiceName), QString()),
-                        m_zeroconfServer.serverPort());
-                }
+                m_pZeroconfRegister->registerService(
+                    ZeroconfRecord(tr("%1").arg(m_pMainWindow->getScreenName()),
+                    QLatin1String(m_ServerServiceName), QString()),
+                    m_zeroconfServer.serverPort());
             }
             else {
                 m_pZeroconfRegister->registerService(

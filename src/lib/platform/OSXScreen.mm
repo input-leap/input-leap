@@ -541,7 +541,7 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
     // This will allow for higher than triple click but the quartz documentation
     // does not specify that this should be limited to triple click
     if (press) {
-        if ((ARCH->time() - m_lastClickTime) <= clickTime && diff <= maxDiff){
+        if ((ARCH->time() - m_lastClickTime) <= clickTime && diff <= maxDiff) {
             m_clickState++;
         }
         else {
@@ -551,7 +551,7 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
         m_lastClickTime = ARCH->time();
     }
 
-    if (m_clickState == 1){
+    if (m_clickState == 1) {
         m_lastSingleClickXCursor = m_xCursor;
         m_lastSingleClickYCursor = m_yCursor;
     }

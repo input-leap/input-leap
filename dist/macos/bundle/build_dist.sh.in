@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Use the same verbose variable as CMake
-[ "$VERBOSE" == "1" ] && set -x
+[ "$VERBOSE" = "1" ] && set -x
 
 # Exit on unset variables or pipe errors
 set -uo pipefail
@@ -14,10 +14,10 @@ B_BARRIERC="Barrier.app/Contents/MacOS/barrierc"
 B_BARRIERS="Barrier.app/Contents/MacOS/barriers"
 
 # Colorized output
-function info() { tput bold; echo "$@" ; tput sgr0 ;}
-function error() { tput bold; tput setaf 1; echo "$@"; tput sgr0 ; }
-function success() { tput bold; tput setaf 2; echo "$@"; tput sgr0 ; }
-function warn() { tput bold; tput setaf 3; echo "$@"; tput sgr0 ; }
+info() { tput bold; echo "$@"; tput sgr0 ; }
+error() { tput bold; tput setaf 1; echo "$@"; tput sgr0 ; }
+success() { tput bold; tput setaf 2; echo "$@"; tput sgr0 ; }
+warn() { tput bold; tput setaf 3; echo "$@"; tput sgr0 ; }
 
 info "Checking for bundle contents"
 if [ ! -d "Barrier.app/Contents" ]; then
@@ -40,7 +40,7 @@ if which -s port ; then
     info "MacPorts found, searching for macdeployqt"
     DEPLOYQT="$(port contents qt5-qttools | grep --only --max-count 1 '/.*macdeployqt')"
     if [ ! -x "$DEPLOYQT" ]; then
-        error Please install package qt5-qttools
+        error "Please install package qt5-qttools"
         exit 1
     fi
 fi
@@ -50,13 +50,13 @@ if which -s brew ; then
     info "Homebrew found, searching for macdeployqt"
     DEPLOYQT="$(brew list qt@5 | grep --only '/.*macdeployqt' | head -1)"
     if [ ! -x "$DEPLOYQT" ]; then
-        error Please install package qt
+        error "Please install package qt"
         exit 1
     fi
 fi
 
 # Use macdeployqt to include libraries and create dmg
-if [ "$B_BUILDTYPE" == "Release" ]; then
+if [ "$B_BUILDTYPE" = "Release" ]; then
     info "Building Release disk image (dmg)"
     "$DEPLOYQT" Barrier.app -dmg \
     -executable="$B_BARRIERC" \

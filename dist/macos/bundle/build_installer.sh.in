@@ -1,30 +1,30 @@
 #!/bin/sh
 
 # add warning for users running manually
-function warn() { tput bold; tput setaf 3; echo "$@"; tput sgr0 ; }
+warn() { tput bold; tput setaf 3; echo "$@"; tput sgr0 ; }
 warn "The scripts build_installer.sh and reref_dylibs.sh have been deprecated."
 warn "Please use build_dist.sh instead to deploy using macdeployqt"
 
 # change this to rename the installer package
 B_DMG="Barrier-@BARRIER_VERSION@.dmg"
 
-cd "$( dirname '$0' )"
+cd "$( dirname "$0" )"
 OWNDIR="$( pwd )"
 
 B_REREF_SCRIPT="$OWNDIR/reref_dylibs.sh"
-if [ ! -x $B_REREF_SCRIPT ]; then
-    echo Missing script: $B_REREF_SCRIPT
+if [ ! -x "$B_REREF_SCRIPT" ]; then
+    echo "Missing script: $B_REREF_SCRIPT"
     exit 1
 fi
 
 # remove any old copies so there's no confusion about whether this
 # process completes successfully or not
-rm -rf temp.dmg $B_DMG
+rm -rf temp.dmg "$B_DMG"
 
 cd Barrier.app/Contents 2>/dev/null
 if [ $? -ne 0 ]; then
-    echo Please make sure that the build completed successfully
-    echo before trying to create the installer.
+    echo "Please make sure that the build completed successfully"
+    echo "before trying to create the installer."
     exit 1
 fi
 
@@ -77,7 +77,7 @@ hdiutil create -size 64m -fs HFS+ -volname "Barrier" temp.dmg || exit 1
 hdiutil attach temp.dmg -mountpoint mnt || exit 1
 cp -r Barrier.app mnt/ || exit 1
 hdiutil detach mnt || exit 1
-hdiutil convert temp.dmg -format UDZO -o $B_DMG || exit 1
+hdiutil convert temp.dmg -format UDZO -o "$B_DMG" || exit 1
 rm temp.dmg
 
-echo "dmg $B_DMB created successfully"
+echo "dmg $B_DMG created successfully"

@@ -108,6 +108,7 @@ A: Start the binary with the argument `--config <path_to_saved_configuration>`
 Q: After loading my configuration on the client the field 'Server IP' is still empty!
 
 A: Edit your configuration to include the server's ip address manually with
-	(...)
-	section: options
-		serverhostname=<AAA.BBB.CCC.DDD>
+
+    (...)
+    section: options
+        serverhostname=<AAA.BBB.CCC.DDD>

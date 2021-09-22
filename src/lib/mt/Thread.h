@@ -25,7 +25,7 @@ class IJob;
 //! Thread handle
 /*!
 Creating a Thread creates a new context of execution (i.e. thread) that
-runs simulatenously with the calling thread.  A Thread is only a handle
+runs simultaneously with the calling thread.  A Thread is only a handle
 to a thread;  deleting a Thread does not cancel or destroy the thread it
 refers to and multiple Thread objects can refer to the same thread.
 
@@ -122,7 +122,7 @@ public:
     /*!
     Change the priority of the thread.  Normal priority is 0, 1 is
     the next lower, etc.  -1 is the next higher, etc. but boosting
-    the priority may not be permitted and will be silenty ignored.
+    the priority may not be permitted and will be silently ignored.
     */
     void                setPriority(int n);
 

@@ -119,7 +119,7 @@ public:
     */
     NetworkAddress        getServerAddress() const;
 
-    //! Return true if recieved file size is valid
+    //! Return true if received file size is valid
     bool                isReceivedFileSizeValid();
 
     //! Return expected file size

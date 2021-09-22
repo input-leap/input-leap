@@ -62,7 +62,7 @@ Log::Log()
 {
     assert(s_log == NULL);
 
-    // other initalization
+    // other initialization
     m_maxPriority = g_defaultMaxPriority;
     m_maxNewlineLength = 0;
     insert(new ConsoleLogOutputter);

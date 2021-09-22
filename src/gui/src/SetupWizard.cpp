@@ -37,7 +37,7 @@ SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 
 #elif defined(Q_OS_WIN)
 
-    // when areo is disabled on windows, the next/back buttons
+    // when aero is disabled on windows, the next/back buttons
     // are hidden (must be a qt bug) -- resizing the window
     // to +1 of the original height seems to fix this.
     // NOTE: calling setMinimumSize after this will break

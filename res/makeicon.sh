@@ -1,7 +1,7 @@
 #!/bin/sh
 ICNS_BASE=../dist/macos/bundle/Barrier.app/Contents/Resources
 if ! which magick >/dev/null 2>&1; then
-    echo "Need ImageMagic for this"
+    echo "Need ImageMagick for this"
     exit 10
 fi
 cd "$(dirname "$0")" || exit $?

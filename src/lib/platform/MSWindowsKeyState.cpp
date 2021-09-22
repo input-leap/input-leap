@@ -1330,7 +1330,7 @@ MSWindowsKeyState::getKeyID(UINT virtualKey, KeyButton button) const
 	if ((LOWORD(m_keyLayout) & 0xffffu) == 0x0412u) {	// 0x0412 : Korean Locale ID
 		if (virtualKey == VK_HANGUL || virtualKey == VK_HANJA) {
 			// If shift-space is used to change the input mode,
-			// the extented bit is not set. So add it to get right key id.
+			// the extended bit is not set. So add it to get right key id.
 			button |= 0x100u;
 		}
 	}

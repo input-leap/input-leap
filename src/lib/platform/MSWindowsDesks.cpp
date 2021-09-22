@@ -803,7 +803,7 @@ MSWindowsDesks::checkDesk()
 
     // if active desktop changed then tell the old and new desk threads
     // about the change.  don't switch desktops when the screensaver is
-    // active becaue we'd most likely switch to the screensaver desktop
+    // active because we'd most likely switch to the screensaver desktop
     // which would have the side effect of forcing the screensaver to
     // stop.
     if (name != m_activeDeskName && !m_screensaver->isActive()) {

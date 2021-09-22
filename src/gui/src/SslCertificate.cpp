@@ -106,7 +106,7 @@ void SslCertificate::generateCertificate()
         arguments.append("-x509");
         arguments.append("-nodes");
 
-        // valide duration
+        // valid duration
         arguments.append("-days");
         arguments.append(kCertificateLifetime);
 

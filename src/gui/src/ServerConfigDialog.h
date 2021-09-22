@@ -63,4 +63,3 @@ class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase
 };
 
 #endif
-

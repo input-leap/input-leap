@@ -44,4 +44,3 @@ class QBarrierApplication : public QApplication
 };
 
 #endif
-

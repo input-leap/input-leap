@@ -1325,7 +1325,7 @@ p, li { white-space: pre-wrap; }
         <source>Login failed, an error occurred.
 
 %1</source>
-        <translation type="finished">Logowanie nie powiodło się, wystąpił błąd. 
+        <translation type="finished">Logowanie nie powiodło się, wystąpił błąd.
 %1</translation>
     </message>
     <message>
@@ -1335,7 +1335,7 @@ p, li { white-space: pre-wrap; }
 Server response:
 
 %1</source>
-        <translation type="finished">Logowanie nie powiodło się, wystąpił błąd. 
+        <translation type="finished">Logowanie nie powiodło się, wystąpił błąd.
 Odpowiedź serwera:
 %1</translation>
     </message>

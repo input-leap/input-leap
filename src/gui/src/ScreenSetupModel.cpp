@@ -141,4 +141,3 @@ bool ScreenSetupModel::dropMimeData(const QMimeData* data, Qt::DropAction action
 
     return true;
 }
-

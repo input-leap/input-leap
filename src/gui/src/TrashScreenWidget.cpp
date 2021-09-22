@@ -40,4 +40,3 @@ void TrashScreenWidget::dropEvent(QDropEvent* event)
     else
         event->ignore();
 }
-

@@ -40,4 +40,3 @@ class AboutDialog : public QDialog, public Ui::AboutDialogBase
 };
 
 #endif
-

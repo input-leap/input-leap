@@ -1136,9 +1136,9 @@ Server::processOptions()
 		return;
 	}
 
-	m_switchNeedsShift = false;		// it seems if i don't add these
+	m_switchNeedsShift = false;		// it seems if I don't add these
 	m_switchNeedsControl = false;	// lines, the 'reload config' option
-	m_switchNeedsAlt = false;		// doesnt' work correct.
+	m_switchNeedsAlt = false;		// doesn't work correct.
 
 	bool newRelativeMoves = m_relativeMoves;
 	for (Config::ScreenOptions::const_iterator index = options->begin();

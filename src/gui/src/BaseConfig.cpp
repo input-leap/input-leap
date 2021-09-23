@@ -44,4 +44,3 @@ const char* BaseConfig::m_SwitchCornerNames[] =
     "bottom-left",
     "bottom-right"
 };
-

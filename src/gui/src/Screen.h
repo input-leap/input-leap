@@ -105,4 +105,3 @@ QDataStream& operator<<(QDataStream& outStream, const Screen& screen);
 QDataStream& operator>>(QDataStream& inStream, Screen& screen);
 
 #endif
-

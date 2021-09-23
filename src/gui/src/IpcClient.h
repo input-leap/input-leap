@@ -28,7 +28,7 @@ class IpcReader;
 
 class IpcClient : public QObject
 {
-     Q_OBJECT
+    Q_OBJECT
 
 public:
     IpcClient();

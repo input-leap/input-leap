@@ -22,7 +22,7 @@
 
 class SslCertificate : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 
 public:
     explicit SslCertificate(QObject *parent = 0);

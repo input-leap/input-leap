@@ -94,7 +94,7 @@ MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = NULL)
     }
 
     std::string nameListJoin;
-    for(std::list<std::string>::iterator it = nameList.begin();
+    for (std::list<std::string>::iterator it = nameList.begin();
         it != nameList.end(); it++) {
             nameListJoin.append(*it);
             nameListJoin.append(", ");

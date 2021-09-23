@@ -68,4 +68,3 @@ class ScreenSetupModel : public QAbstractTableModel
 };
 
 #endif
-

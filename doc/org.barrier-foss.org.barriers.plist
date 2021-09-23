@@ -4,12 +4,12 @@
 <plist version="1.0">
 <!-- Mac OSX only: Copy this plist file into [~]/Library/LaunchAgents to start barrier server automatically. Make sure you change configuration file below -->
 <dict>
-     <key>Label</key>
-     <string>org.debauchee.com.barriers.plist</string>
-     <key>OnDemand</key>
-     <false/>
-     <key>ProgramArguments</key>
-     <array>
+    <key>Label</key>
+    <string>org.debauchee.com.barriers.plist</string>
+    <key>OnDemand</key>
+    <false/>
+    <key>ProgramArguments</key>
+    <array>
         <string>/usr/bin/barriers</string>
             <string>--no-daemon</string>
             <string>--config</string>

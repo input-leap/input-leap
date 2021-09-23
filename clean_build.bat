@@ -65,7 +65,7 @@ if exist bin\Debug (
     mkdir bin\Release\platforms
     copy %B_QT_FULLPATH%\plugins\platforms\qwindows.dll bin\Release\platforms\ > NUL
 ) else (
-    echo Remember to copy supporting binaries and confiuration files!
+    echo Remember to copy supporting binaries and configuration files!
 )
 
 echo Build completed successfully

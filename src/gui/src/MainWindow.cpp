@@ -624,7 +624,7 @@ QString MainWindow::configFilename()
     if (m_pRadioInternalConfig->isChecked())
     {
         // TODO: no need to use a temporary file, since we need it to
-        // be permenant (since it'll be used for Windows services, etc).
+        // be permanent (since it'll be used for Windows services, etc).
         m_pTempConfigFile = new QTemporaryFile();
         if (!m_pTempConfigFile->open())
         {
@@ -729,7 +729,7 @@ void MainWindow::stopBarrier()
 
 void MainWindow::stopService()
 {
-    // send empty command to stop service from laucning anything.
+    // send empty command to stop service from launching anything.
     m_IpcClient.sendCommand("", appConfig().elevateMode());
 }
 
@@ -1001,7 +1001,7 @@ bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
     return false;
 }
 
-bool  MainWindow::on_m_pActionSave_triggered()
+bool MainWindow::on_m_pActionSave_triggered()
 {
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save configuration as..."), QString(), barrierConfigSaveFilter);
 

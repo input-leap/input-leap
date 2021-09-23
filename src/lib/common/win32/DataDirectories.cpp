@@ -45,7 +45,7 @@ const std::string& DataDirectories::global(const std::string& path)
 const std::string& DataDirectories::systemconfig()
 {
     // systemconfig() is a special case in that it will track the current value
-    // of global() unless and until it is explictly set otherwise
+    // of global() unless and until it is explicitly set otherwise
     // previously it would default to the windows folder which was horrible!
     if (_systemconfig.empty())
         return global();

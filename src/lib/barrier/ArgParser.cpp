@@ -373,7 +373,7 @@ ArgParser::splitCommandString(String& command, std::vector<String>& argv)
         if (space > leftDoubleQuote && space < rightDoubleQuote) {
             ignoreThisSpace = true;
         }
-        else if (space > rightDoubleQuote){
+        else if (space > rightDoubleQuote) {
             searchDoubleQuotes(command, leftDoubleQuote, rightDoubleQuote, rightDoubleQuote + 1);
         }
 

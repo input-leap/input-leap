@@ -73,7 +73,7 @@ BEGIN
             VALUE "ProductName", "Barrier"
             VALUE "ProductVersion", BARRIER_VERSION
             VALUE "OriginalFilename", "barrierd.exe"
-            VALUE "FileDescription", "Open source KVM software deamon"
+            VALUE "FileDescription", "Open source KVM software daemon"
             VALUE "InternalName", "barrierd"
         END
     END

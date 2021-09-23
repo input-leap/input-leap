@@ -90,7 +90,7 @@ public:
 
     ARCH_APP_UTIL& appUtil() { return m_appUtil; }
 
-    virtual IArchTaskBarReceiver* taskBarReceiver() const  { return m_taskBarReceiver; }
+    virtual IArchTaskBarReceiver* taskBarReceiver() const { return m_taskBarReceiver; }
 
     virtual void setByeFunc(void(*bye)(int)) { m_bye = bye; }
     virtual void bye(int error) { m_bye(error); }

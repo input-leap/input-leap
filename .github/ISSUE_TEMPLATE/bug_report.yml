@@ -18,7 +18,7 @@ body:
     id: version
     attributes:
       label: Version
-      description: What version of Barrier are you runnning?
+      description: What version of Barrier are you running?
       options:
         - v2.0.0-RC1
         - v2.0.0-RC2

@@ -211,7 +211,7 @@ void AppConfig::setElevateMode(ElevateMode em) { m_ElevateMode = em; }
 
 void AppConfig::setAutoConfig(bool autoConfig) { m_AutoConfig = autoConfig; }
 
-bool AppConfig::autoConfigPrompted()  { return m_AutoConfigPrompted; }
+bool AppConfig::autoConfigPrompted() { return m_AutoConfigPrompted; }
 
 void AppConfig::setAutoConfigPrompted(bool prompted) { m_AutoConfigPrompted = prompted; }
 

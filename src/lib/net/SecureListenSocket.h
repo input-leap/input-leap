@@ -24,7 +24,7 @@ class IEventQueue;
 class SocketMultiplexer;
 class IDataSocket;
 
-class SecureListenSocket : public TCPListenSocket{
+class SecureListenSocket : public TCPListenSocket {
 public:
     SecureListenSocket(IEventQueue* events,
         SocketMultiplexer* socketMultiplexer,

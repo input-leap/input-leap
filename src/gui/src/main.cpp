@@ -97,6 +97,8 @@ int main(int argc, char* argv[])
 
 	QApplication::setQuitOnLastWindowClosed(false);
 
+    QApplication::setDesktopFileName(QStringLiteral("barrier"));  // For showing window icon in wayland.
+
 	QSettings settings;
 	AppConfig appConfig (&settings);
 

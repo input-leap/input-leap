@@ -95,6 +95,8 @@ jobs:
           imageName: "macOS-10.14"
           B_BUILD_TYPE: Release
           BARRIER_VERSION_STAGE: Release
+  pool:
+    vmImage: $(imageName)
   variables:
     VERBOSE: 1
     TERM: xterm-256color

@@ -16,17 +16,9 @@
 */
 
 #include "../DataDirectories.h"
+#include "encoding_utilities.h"
 
 #include <Shlobj.h>
-
-std::string unicode_to_mb(const WCHAR* utfStr)
-{
-    int utfLength = lstrlenW(utfStr);
-    int mbLength = WideCharToMultiByte(CP_UTF8, 0, utfStr, utfLength, NULL, 0, NULL, NULL);
-    std::string mbStr(mbLength, 0);
-    WideCharToMultiByte(CP_UTF8, 0, utfStr, utfLength, &mbStr[0], mbLength, NULL, NULL);
-    return mbStr;
-}
 
 std::string known_folder_path(const KNOWNFOLDERID& id)
 {
@@ -34,7 +26,7 @@ std::string known_folder_path(const KNOWNFOLDERID& id)
     WCHAR* buffer;
     HRESULT result = SHGetKnownFolderPath(id, 0, NULL, &buffer);
     if (result == S_OK) {
-        path = unicode_to_mb(buffer);
+        path = win_wchar_to_utf8(buffer);
         CoTaskMemFree(buffer);
     }
     return path;

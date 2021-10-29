@@ -15,14 +15,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BARRIER_LIB_COMMON_WIN32_ENCODING_UTILITIES_H
-#define BARRIER_LIB_COMMON_WIN32_ENCODING_UTILITIES_H
+#ifndef BARRIER_LIB_IO_FSTREAM_H
+#define BARRIER_LIB_IO_FSTREAM_H
 
-#include <windows.h>
-#include <string>
-#include <vector>
+#include <iosfwd>
+#include <ios>
 
-std::string win_wchar_to_utf8(const WCHAR* utfStr);
-std::vector<WCHAR> utf8_to_win_char(const std::string& str);
+namespace barrier {
+
+void open_utf8_path(std::ifstream& stream, const std::string& path,
+                    std::ios_base::openmode mode = std::ios_base::in);
+void open_utf8_path(std::ofstream& stream, const std::string& path,
+                    std::ios_base::openmode mode = std::ios_base::out);
+void open_utf8_path(std::fstream& stream, const std::string& path,
+                    std::ios_base::openmode mode = std::ios_base::in | std::ios_base::out);
+
+} // namespace barrier
 
 #endif

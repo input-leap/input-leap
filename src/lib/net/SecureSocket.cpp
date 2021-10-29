@@ -25,6 +25,7 @@
 #include "base/Log.h"
 #include "base/String.h"
 #include "common/DataDirectories.h"
+#include "io/fstream.h"
 
 #include <openssl/ssl.h>
 #include <openssl/err.h>
@@ -708,7 +709,7 @@ SecureSocket::verifyCertFingerprint()
     // check if this fingerprint exist
     std::string fileLine;
     std::ifstream file;
-    file.open(trustedServersFilename.c_str());
+    barrier::open_utf8_path(file, trustedServersFilename);
 
     if (!file.is_open()) {
         LOG((CLOG_NOTE "Unable to open trustedServersFile: %s", trustedServersFilename.c_str() ));

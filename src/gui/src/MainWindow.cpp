@@ -31,6 +31,7 @@
 #include "ProcessorArch.h"
 #include "SslCertificate.h"
 #include "ShutdownCh.h"
+#include "common/DataDirectories.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -524,7 +525,7 @@ void MainWindow::startBarrier()
     // launched the process (e.g. when launched with elevation). setting the
     // profile dir on launch ensures it uses the same profile dir is used
     // no matter how its relaunched.
-    args << "--profile-dir" << QString("\"%1\"").arg(profilePath());
+    args << "--profile-dir" << QString::fromStdString("\"" + DataDirectories::profile() + "\"");
 #endif
 
     if ((barrierType() == barrierClient && !clientArgs(args, app))

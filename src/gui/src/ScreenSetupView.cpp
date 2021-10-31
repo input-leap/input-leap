@@ -225,4 +225,3 @@ QStyleOptionViewItem ScreenSetupView::viewOptions() const
     option.textElideMode = Qt::ElideMiddle;
     return option;
 }
-

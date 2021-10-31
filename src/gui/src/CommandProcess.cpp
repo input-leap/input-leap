@@ -30,35 +30,34 @@ CommandProcess::CommandProcess(QString cmd, QStringList arguments, QString input
 QString CommandProcess::run()
 {
     QProcess process;
-    QString standardOutput, standardError;
     process.setReadChannel(QProcess::StandardOutput);
     process.start(m_Command, m_Arguments);
     bool success = process.waitForStarted();
 
+    QString output, error;
     if (success)
     {
         if (!m_Input.isEmpty()) {
-            process.write(m_Input.toLocal8Bit());
+            process.write(m_Input.toStdString().c_str());
         }
 
         if (process.waitForFinished()) {
-            standardOutput = QString::fromLocal8Bit(process.readAllStandardOutput().trimmed());
-            standardError = QString::fromLocal8Bit(process.readAllStandardError().trimmed());
+            output = process.readAllStandardOutput().trimmed();
+            error = process.readAllStandardError().trimmed();
         }
     }
 
     int code = process.exitCode();
-    if (!standardError.isEmpty() || !success || code != 0)
+    if (!error.isEmpty() || !success || code != 0)
     {
         throw std::runtime_error(
-            std::string(
-                QString("Code: %1\nError: %2")
-                    .arg(process.exitCode())
-                    .arg(standardError.isEmpty() ? "Unknown" : standardError)
-                .toLocal8Bit().constData()));
+            QString("Code: %1\nError: %2")
+                .arg(process.exitCode())
+                .arg(error.isEmpty() ? "Unknown" : error)
+                .toStdString());
     }
 
     emit finished();
 
-    return standardOutput;
+    return output;
 }

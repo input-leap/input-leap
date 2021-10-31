@@ -1,10 +1,10 @@
 #!/bin/sh
-cd "$(dirname $0)" || exit 1
+cd "$(dirname "$0")" || exit 1
 # some environments have cmake v2 as 'cmake' and v3 as 'cmake3'
 # check for cmake3 first then fallback to just cmake
 B_CMAKE=`type cmake3 2>/dev/null`
 if [ $? -eq 0 ]; then
-    B_CMAKE=`echo $B_CMAKE | cut -d' ' -f3`
+    B_CMAKE=`echo "$B_CMAKE" | cut -d' ' -f3`
 else
     B_CMAKE=cmake
 fi
@@ -26,7 +26,7 @@ B_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=$B_BUILD_TYPE $B_CMAKE_FLAGS"
 rm -rf build
 mkdir build || exit 1
 cd build || exit 1
-echo Starting Barrier $B_BUILD_TYPE build...
+echo "Starting Barrier $B_BUILD_TYPE build..."
 $B_CMAKE $B_CMAKE_FLAGS .. || exit 1
 make || exit 1
 echo "Build completed successfully"

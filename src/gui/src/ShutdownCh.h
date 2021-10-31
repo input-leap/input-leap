@@ -19,4 +19,3 @@
 
 // included in both the GUI and the child apps (server & client)
 const char ShutdownCh = 'S';
-

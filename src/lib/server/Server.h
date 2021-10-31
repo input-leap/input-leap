@@ -167,7 +167,7 @@ public:
     */
     void getClients(std::vector<std::string>& list) const;
 
-    //! Return true if recieved file size is valid
+    //! Return true if received file size is valid
     bool                isReceivedFileSizeValid();
 
     //! Return expected file data size
@@ -357,7 +357,7 @@ private:
     // force the cursor off of \p client
     void                forceLeaveClient(BaseClientProxy* client);
 
-    // thread funciton for sending file
+    // thread function for sending file
     void                sendFileThread(void*);
 
     // thread function for writing file to drop directory

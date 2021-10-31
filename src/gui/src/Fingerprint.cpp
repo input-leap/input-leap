@@ -16,7 +16,8 @@
  */
 
 #include "Fingerprint.h"
-#include "QUtility.h"
+
+#include "common/DataDirectories.h"
 
 #include <QDir>
 #include <QTextStream>
@@ -123,8 +124,10 @@ void Fingerprint::persistDirectory()
 
 QString Fingerprint::directoryPath()
 {
+    auto profileDir = QString::fromStdString(DataDirectories::profile());
+
     return QString("%1/%2")
-      .arg(profilePath())
+      .arg(profileDir)
       .arg(kDirName);
 }
 

@@ -905,8 +905,8 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <source>Drag new screens to the grid or move existing ones around.
 Drag a screen to the trashcan to delete it.
 Double click on a screen to edit its settings.</source>
-        <translation type="finished">Izgaraya yeni ekranları sürükleyin veya çevresinde mevcut olanları taşıyın. 
-Silmek için çöp tenekesine ekranı sürükleyin. 
+        <translation type="finished">Izgaraya yeni ekranları sürükleyin veya çevresinde mevcut olanları taşıyın.
+Silmek için çöp tenekesine ekranı sürükleyin.
 Kendi ayarlarınızı düzenlemek için bir ekran üzerine çift tıklayın.</translation>
     </message>
     <message>

@@ -50,4 +50,3 @@ class ScreenSettingsDialog : public QDialog, public Ui::ScreenSettingsDialogBase
 };
 
 #endif
-

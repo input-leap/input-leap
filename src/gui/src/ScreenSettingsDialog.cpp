@@ -152,4 +152,3 @@ void ScreenSettingsDialog::on_m_pListAliases_itemSelectionChanged()
 {
     m_pButtonRemoveAlias->setEnabled(!m_pListAliases->selectedItems().isEmpty());
 }
-

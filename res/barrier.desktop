@@ -5,6 +5,5 @@ Comment=Keyboard and mouse sharing solution
 Exec=barrier
 Icon=barrier
 Terminal=false
-Categories=Utility;DesktopUtility;
+Categories=Utility;RemoteAccess;
 Keywords=keyboard;mouse;sharing;network;share;
-

@@ -25,6 +25,7 @@
 #include "base/Log.h"
 #include "base/String.h"
 #include "common/DataDirectories.h"
+#include "io/fstream.h"
 
 #include <openssl/ssl.h>
 #include <openssl/err.h>
@@ -658,7 +659,7 @@ SecureSocket::disconnect()
 void SecureSocket::formatFingerprint(std::string& fingerprint, bool hex, bool separator)
 {
     if (hex) {
-        // to hexidecimal
+        // to hexadecimal
         barrier::string::toHex(fingerprint, 2);
     }
 
@@ -666,7 +667,7 @@ void SecureSocket::formatFingerprint(std::string& fingerprint, bool hex, bool se
     barrier::string::uppercase(fingerprint);
 
     if (separator) {
-        // add colon to separate each 2 charactors
+        // add colon to separate each 2 characters
         size_t separators = fingerprint.size() / 2;
         for (size_t i = 1; i < separators; i++) {
             fingerprint.insert(i * 3 - 1, ":");
@@ -708,7 +709,7 @@ SecureSocket::verifyCertFingerprint()
     // check if this fingerprint exist
     std::string fileLine;
     std::ifstream file;
-    file.open(trustedServersFilename.c_str());
+    barrier::open_utf8_path(file, trustedServersFilename);
 
     if (!file.is_open()) {
         LOG((CLOG_NOTE "Unable to open trustedServersFile: %s", trustedServersFilename.c_str() ));
@@ -830,7 +831,7 @@ SecureSocket::showSecureCipherInfo()
     }
 
 #if OPENSSL_VERSION_NUMBER < 0x10100000L
-	// m_ssl->m_ssl->session->ciphers is not forward compatable,
+	// m_ssl->m_ssl->session->ciphers is not forward compatible,
 	// In future release of OpenSSL, it's not visible,
     STACK_OF(SSL_CIPHER) * cStack = m_ssl->m_ssl->session->ciphers;
 #else

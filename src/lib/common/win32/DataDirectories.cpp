@@ -16,12 +16,26 @@
 */
 
 #include "../DataDirectories.h"
-#include "KnownFolderPaths.h"
+#include "encoding_utilities.h"
+
+#include <Shlobj.h>
+
+std::string known_folder_path(const KNOWNFOLDERID& id)
+{
+    std::string path;
+    WCHAR* buffer;
+    HRESULT result = SHGetKnownFolderPath(id, 0, NULL, &buffer);
+    if (result == S_OK) {
+        path = win_wchar_to_utf8(buffer);
+        CoTaskMemFree(buffer);
+    }
+    return path;
+}
 
 const std::string& DataDirectories::profile()
 {
     if (_profile.empty())
-        _profile = localAppDataPath() + "\\Barrier";
+        _profile = known_folder_path(FOLDERID_LocalAppData) + "\\Barrier";
     return _profile;
 }
 const std::string& DataDirectories::profile(const std::string& path)
@@ -33,7 +47,7 @@ const std::string& DataDirectories::profile(const std::string& path)
 const std::string& DataDirectories::global()
 {
     if (_global.empty())
-        _global = programDataPath() + "\\Barrier";
+        _global = known_folder_path(FOLDERID_ProgramData) + "\\Barrier";
     return _global;
 }
 const std::string& DataDirectories::global(const std::string& path)
@@ -45,7 +59,7 @@ const std::string& DataDirectories::global(const std::string& path)
 const std::string& DataDirectories::systemconfig()
 {
     // systemconfig() is a special case in that it will track the current value
-    // of global() unless and until it is explictly set otherwise
+    // of global() unless and until it is explicitly set otherwise
     // previously it would default to the windows folder which was horrible!
     if (_systemconfig.empty())
         return global();

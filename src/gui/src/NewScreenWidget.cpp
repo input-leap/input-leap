@@ -1,4 +1,4 @@
-﻿/*
+/*
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
@@ -45,4 +45,3 @@ void NewScreenWidget::mousePressEvent(QMouseEvent* event)
 
     pDrag->exec(Qt::CopyAction, Qt::CopyAction);
 }
-

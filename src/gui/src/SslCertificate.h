@@ -22,7 +22,7 @@
 
 class SslCertificate : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 
 public:
     explicit SslCertificate(QObject *parent = 0);
@@ -36,13 +36,13 @@ signals:
     void generateFinished();
 
 private:
-    std::pair<bool, QString> runTool(const QStringList& args);
+    std::pair<bool, std::string> runTool(const QStringList& args);
     void generateFingerprint(const QString& certificateFilename);
 
-    QString getCertificatePath();
-    QString getCertificateDirectory();
+    std::string getCertificatePath();
+    std::string getCertificateDirectory();
 
     bool isCertificateValid(const QString& path);
 private:
-    QString m_ProfileDir;
+    std::string m_ProfileDir;
 };

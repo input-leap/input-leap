@@ -81,7 +81,7 @@ private:
 
 //! Relauncher error
 /*!
-An error occured in the process watchdog.
+An error occurred in the process watchdog.
 */
 class XMSWindowsWatchdogError : public XBarrier {
 public:

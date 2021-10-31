@@ -164,4 +164,3 @@ QTextStream& operator<<(QTextStream& outStream, const Action& action)
 
     return outStream;
 }
-

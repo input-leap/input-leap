@@ -110,7 +110,7 @@ bool ScreenSetupModel::dropMimeData(const QMimeData* data, Qt::DropAction action
         return false;
 
      if (!parent.isValid() || row != -1 || column != -1)
-         return false;
+        return false;
 
     QByteArray encodedData = data->data(m_MimeType);
     QDataStream stream(&encodedData, QIODevice::ReadOnly);
@@ -141,4 +141,3 @@ bool ScreenSetupModel::dropMimeData(const QMimeData* data, Qt::DropAction action
 
     return true;
 }
-

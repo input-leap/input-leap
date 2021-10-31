@@ -76,7 +76,7 @@ void ServerConfigDialog::showEvent(QShowEvent* event)
 
     if (!m_Message.isEmpty())
     {
-        // TODO: ideally this massage box should pop up after the dialog is shown
+        // TODO: ideally this message box should pop up after the dialog is shown
         QMessageBox::information(this, tr("Configure server"), m_Message);
     }
 }

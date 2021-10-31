@@ -66,4 +66,3 @@ createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events
 {
     return new OSXClientTaskBarReceiver(logBuffer, events);
 }
-

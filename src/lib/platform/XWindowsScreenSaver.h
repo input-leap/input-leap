@@ -115,7 +115,7 @@ private:
     // the X display
     Display*            m_display;
 
-    // window to receive xscreensaver repsonses
+    // window to receive xscreensaver responses
     Window                m_xscreensaverSink;
 
     // the target for the events we generate

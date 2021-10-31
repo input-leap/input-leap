@@ -267,8 +267,8 @@ extern const char*        kMsgDSetOptions;
 // 2 means the file transfer is finished.
 extern const char*        kMsgDFileTransfer;
 
-// drag infomation:  primary <-> secondary
-// transfer drag infomation. The first 2 bytes are used for storing
+// drag information:  primary <-> secondary
+// transfer drag information. The first 2 bytes are used for storing
 // the number of dragging objects. Then the following string consists
 // of each object's directory.
 extern const char*        kMsgDDragInfo;

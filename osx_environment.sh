@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Checks if directory exists, otherwise asks to install package.
-function check_dir_exists() {
+check_dir_exists() {
     local path=$1
     local package=$2
 
@@ -11,7 +11,7 @@ function check_dir_exists() {
     fi
 }
 
-if [ ! $BARRIER_BUILD_ENV ]; then
+if [ -z "$BARRIER_BUILD_ENV" ]; then
     check_dir_exists '/Applications/Xcode.app' 'Xcode'
 
     printf "Modifying environment for Barrier build...\n"

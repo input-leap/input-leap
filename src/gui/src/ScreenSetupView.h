@@ -58,4 +58,3 @@ class ScreenSetupView : public QTableView
 };
 
 #endif
-

@@ -37,4 +37,3 @@ class NewScreenWidget : public QLabel
 };
 
 #endif
-

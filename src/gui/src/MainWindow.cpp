@@ -158,8 +158,21 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 
     m_pComboServerList->hide();
     m_pLabelPadlock->hide();
+    frame_fingerprint_details->hide();
 
     updateSSLFingerprint();
+
+    connect(toolbutton_show_fingerprint, &QToolButton::clicked, [this](bool checked)
+    {
+        m_fingerprint_expanded = !m_fingerprint_expanded;
+        if (m_fingerprint_expanded) {
+            frame_fingerprint_details->show();
+            toolbutton_show_fingerprint->setArrowType(Qt::ArrowType::UpArrow);
+        } else {
+            frame_fingerprint_details->hide();
+            toolbutton_show_fingerprint->setArrowType(Qt::ArrowType::DownArrow);
+        }
+    });
 
     // resize window to smallest reasonable size
     resize(0, 0);
@@ -414,25 +427,31 @@ void MainWindow::checkConnected(const QString& line)
 
 void MainWindow::checkFingerprint(const QString& line)
 {
-    QRegExp fingerprintRegex(".*server fingerprint: ([A-F0-9:]+)");
+    QRegExp fingerprintRegex(".*server fingerprint \\(SHA1\\): ([A-F0-9:]+) \\(SHA256\\): ([A-F0-9:]+)");
     if (!fingerprintRegex.exactMatch(line)) {
         return;
     }
 
-    barrier::FingerprintData fingerprint = {
+    barrier::FingerprintData fingerprint_sha1 = {
         barrier::fingerprint_type_to_string(barrier::FingerprintType::SHA1),
         barrier::string::from_hex(fingerprintRegex.cap(1).toStdString())
     };
 
+    barrier::FingerprintData fingerprint_sha256 = {
+        barrier::fingerprint_type_to_string(barrier::FingerprintType::SHA256),
+        barrier::string::from_hex(fingerprintRegex.cap(2).toStdString())
+    };
+
     auto db_path = DataDirectories::trusted_servers_ssl_fingerprints_path();
 
+    // We compare only SHA256 fingerprints, but show both SHA1 and SHA256 so that the users can
+    // still verify fingerprints on old Barrier servers. This way the only time when we are exposed
+    // to SHA1 vulnerabilities is when the user is reconnecting again.
     barrier::FingerprintDatabase db;
     db.read(db_path);
-    if (db.is_trusted(fingerprint)) {
+    if (db.is_trusted(fingerprint_sha256)) {
         return;
     }
-
-    auto formatted_fingerprint = barrier::format_ssl_fingerprint(fingerprint.data);
 
     static bool messageBoxAlreadyShown = false;
 
@@ -444,7 +463,11 @@ void MainWindow::checkFingerprint(const QString& line)
             QMessageBox::information(
             this, tr("Security question"),
             tr("Do you trust this fingerprint?\n\n"
-               "%1\n\n"
+               "SHA256:\n"
+               "%1\n"
+               "%2\n\n"
+               "SHA1 (obsolete, when using old Barrier server):\n"
+               "%3\n\n"
                "This is a server fingerprint. You should compare this "
                "fingerprint to the one on your server's screen. If the "
                "two don't match exactly, then it's probably not the server "
@@ -452,12 +475,15 @@ void MainWindow::checkFingerprint(const QString& line)
                "To automatically trust this fingerprint for future "
                "connections, click Yes. To reject this fingerprint and "
                "disconnect from the server, click No.")
-            .arg(QString::fromStdString(formatted_fingerprint)),
+            .arg(QString::fromStdString(barrier::format_ssl_fingerprint(fingerprint_sha256.data)))
+            .arg(QString::fromStdString(
+                     barrier::create_fingerprint_randomart(fingerprint_sha256.data)))
+            .arg(QString::fromStdString(barrier::format_ssl_fingerprint(fingerprint_sha1.data))),
             QMessageBox::Yes | QMessageBox::No);
 
         if (fingerprintReply == QMessageBox::Yes) {
             // restart core process after trusting fingerprint.
-            db.add_trusted(fingerprint);
+            db.add_trusted(fingerprint_sha256);
             db.write(db_path);
             startBarrier();
         }
@@ -987,6 +1013,7 @@ void MainWindow::updateSSLFingerprint()
         m_pSslCertificate->generateCertificate();
     }
 
+    toolbutton_show_fingerprint->setEnabled(false);
     m_pLabelLocalFingerprint->setText("Disabled");
 
     if (!m_AppConfig->getCryptoEnabled()) {
@@ -1000,15 +1027,32 @@ void MainWindow::updateSSLFingerprint()
 
     barrier::FingerprintDatabase db;
     db.read(local_path);
-    if (db.fingerprints().empty()) {
+    if (db.fingerprints().size() != 2) {
         return;
     }
 
-    const auto& fingerprint = db.fingerprints().front();
-    auto formatted_fingerprint = barrier::format_ssl_fingerprint(fingerprint.data);
+    for (const auto& fingerprint : db.fingerprints()) {
+        if (fingerprint.algorithm == "sha1") {
+            auto fingerprint_str = barrier::format_ssl_fingerprint(fingerprint.data);
+            label_sha1_fingerprint_full->setText(QString::fromStdString(fingerprint_str));
+            continue;
+        }
 
-    m_pLabelLocalFingerprint->setText(QString::fromStdString(formatted_fingerprint));
-    m_pLabelLocalFingerprint->setTextInteractionFlags(Qt::TextSelectableByMouse);
+        if (fingerprint.algorithm == "sha256") {
+            auto fingerprint_str = barrier::format_ssl_fingerprint(fingerprint.data);
+            fingerprint_str.resize(40);
+            fingerprint_str += " ...";
+
+            auto fingerprint_str_cols = barrier::format_ssl_fingerprint_columns(fingerprint.data);
+            auto fingerprint_randomart = barrier::create_fingerprint_randomart(fingerprint.data);
+
+            m_pLabelLocalFingerprint->setText(QString::fromStdString(fingerprint_str));
+            label_sha256_fingerprint_full->setText(QString::fromStdString(fingerprint_str_cols));
+            label_sha256_randomart->setText(QString::fromStdString(fingerprint_randomart));
+        }
+    }
+
+    toolbutton_show_fingerprint->setEnabled(true);
 }
 
 void MainWindow::on_m_pGroupClient_toggled(bool on)

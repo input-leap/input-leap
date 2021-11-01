@@ -657,17 +657,22 @@ bool
 SecureSocket::verifyCertFingerprint()
 {
     // calculate received certificate fingerprint
-    barrier::FingerprintData fingerprint;
+    barrier::FingerprintData fingerprint_sha1, fingerprint_sha256;
     try {
-        fingerprint = barrier::get_ssl_cert_fingerprint(SSL_get_peer_certificate(m_ssl->m_ssl),
-                                                        barrier::FingerprintType::SHA1);
+        auto* cert = SSL_get_peer_certificate(m_ssl->m_ssl);
+        fingerprint_sha1 = barrier::get_ssl_cert_fingerprint(cert,
+                                                             barrier::FingerprintType::SHA1);
+        fingerprint_sha256 = barrier::get_ssl_cert_fingerprint(cert,
+                                                               barrier::FingerprintType::SHA256);
     } catch (const std::exception& e) {
         LOG((CLOG_ERR "%s", e.what()));
         return false;
     }
 
-    LOG((CLOG_NOTE "server fingerprint: %s",
-         barrier::format_ssl_fingerprint(fingerprint.data).c_str()));
+    // note: the GUI parses the following two lines of logs, don't change unnecessarily
+    LOG((CLOG_NOTE "server fingerprint (SHA1): %s (SHA256): %s",
+         barrier::format_ssl_fingerprint(fingerprint_sha1.data).c_str(),
+         barrier::format_ssl_fingerprint(fingerprint_sha256.data).c_str()));
 
     auto fingerprint_db_path = DataDirectories::trusted_servers_ssl_fingerprints_path();
 
@@ -685,7 +690,7 @@ SecureSocket::verifyCertFingerprint()
              fingerprint_db_path.c_str()));
     }
 
-    if (db.is_trusted(fingerprint)) {
+    if (db.is_trusted(fingerprint_sha256)) {
         LOG((CLOG_NOTE "Fingerprint matches trusted fingerprint"));
         return true;
     } else {

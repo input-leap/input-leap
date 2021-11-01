@@ -203,6 +203,8 @@ public slots:
         QStringList m_PendingClientNames;
         LogWindow *m_pLogWindow;
 
+        bool m_fingerprint_expanded = false;
+
 private slots:
     void on_m_pCheckBoxAutoConfig_toggled(bool checked);
     void on_m_pComboServerList_currentIndexChanged(QString );

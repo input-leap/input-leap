@@ -28,6 +28,7 @@ namespace barrier {
 
 std::string format_ssl_fingerprint(const std::vector<std::uint8_t>& fingerprint,
                                    bool separator = true);
+std::string format_ssl_fingerprint_columns(const std::vector<uint8_t>& fingerprint);
 
 FingerprintData get_ssl_cert_fingerprint(X509* cert, FingerprintType type);
 

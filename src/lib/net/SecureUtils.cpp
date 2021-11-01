@@ -89,6 +89,29 @@ std::string format_ssl_fingerprint(const std::vector<uint8_t>& fingerprint, bool
     return result;
 }
 
+std::string format_ssl_fingerprint_columns(const std::vector<uint8_t>& fingerprint)
+{
+    auto max_columns = 8;
+
+    std::string hex = barrier::string::to_hex(fingerprint, 2);
+    barrier::string::uppercase(hex);
+    if (hex.empty() || hex.size() % 2 != 0) {
+        return hex;
+    }
+
+    std::string separated;
+    for (std::size_t i = 0; i < hex.size(); i += max_columns * 2) {
+        for (std::size_t j = i; j < i + 16 && j < hex.size() - 1; j += 2) {
+            separated.push_back(hex[j]);
+            separated.push_back(hex[j + 1]);
+            separated.push_back(':');
+        }
+        separated.push_back('\n');
+    }
+    separated.pop_back(); // we don't need last newline character
+    return separated;
+}
+
 FingerprintData get_ssl_cert_fingerprint(X509* cert, FingerprintType type)
 {
     if (!cert) {

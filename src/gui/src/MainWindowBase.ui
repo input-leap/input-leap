@@ -75,9 +75,86 @@
            <property name="text">
             <string/>
            </property>
+           <property name="textFormat">
+            <enum>Qt::PlainText</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolbutton_show_fingerprint">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="arrowType">
+            <enum>Qt::DownArrow</enum>
+           </property>
           </widget>
          </item>
         </layout>
+       </item>
+       <item>
+        <widget class="QFrame" name="frame_fingerprint_details">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMinimumSize</enum>
+          </property>
+          <item row="1" column="1">
+           <widget class="QLabel" name="label_sha256_randomart">
+            <property name="font">
+             <font>
+              <family>Courier</family>
+             </font>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="textInteractionFlags">
+             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="2">
+           <widget class="QLabel" name="label_sha1">
+            <property name="text">
+             <string>SHA1 (deprecated, compare to old clients only):</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0" colspan="2">
+           <widget class="QLabel" name="label_sha1_fingerprint_full">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="textInteractionFlags">
+             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" colspan="2">
+           <widget class="QLabel" name="label_sha256">
+            <property name="text">
+             <string>SHA256:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_sha256_fingerprint_full">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="textInteractionFlags">
+             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </item>
        <item>
         <widget class="QRadioButton" name="m_pRadioInternalConfig">
@@ -242,7 +319,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="Barrier.qrc">:/res/icons/16x16/padlock.png</pixmap>
+         <pixmap resource="../res/Barrier.qrc">:/res/icons/16x16/padlock.png</pixmap>
         </property>
        </widget>
       </item>
@@ -377,7 +454,7 @@
   </action>
   <action name="m_pActionShowLog">
    <property name="text">
-       <string>Show &amp;Log</string>
+    <string>Show &amp;Log</string>
    </property>
    <property name="toolTip">
     <string>Show Log</string>
@@ -388,7 +465,7 @@
   </action>
  </widget>
  <resources>
-  <include location="Barrier.qrc"/>
+  <include location="../res/Barrier.qrc"/>
  </resources>
  <connections>
   <connection>

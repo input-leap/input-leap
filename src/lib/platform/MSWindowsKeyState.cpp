@@ -21,7 +21,6 @@
 #include "platform/MSWindowsDesks.h"
 #include "mt/Thread.h"
 #include "arch/win32/ArchMiscWindows.h"
-#include "base/FunctionJob.h"
 #include "base/Log.h"
 #include "base/String.h"
 #include "base/IEventQueue.h"
@@ -804,15 +803,14 @@ MSWindowsKeyState::fakeCtrlAltDel()
 		CloseHandle(hEvtSendSas);
 	}
 	else {
-		Thread cad(new FunctionJob(&MSWindowsKeyState::ctrlAltDelThread));
+        Thread cad([this](){ ctrl_alt_del_thread(); });
 		cad.wait();
 	}
 
 	return true;
 }
 
-void
-MSWindowsKeyState::ctrlAltDelThread(void*)
+void MSWindowsKeyState::ctrl_alt_del_thread()
 {
 	// get the Winlogon desktop at whatever privilege we can
 	HDESK desk = OpenDesktop("Winlogon", 0, FALSE, MAXIMUM_ALLOWED);

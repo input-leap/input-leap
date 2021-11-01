@@ -38,7 +38,6 @@
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
-#include "base/TMethodJob.h"
 
 #include <math.h>
 #include <mach-o/dyld.h>
@@ -157,8 +156,7 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 		m_carbonLoopReady = new CondVar<bool>(m_carbonLoopMutex, false);
 #endif
 		LOG((CLOG_DEBUG "starting watchSystemPowerThread"));
-		m_pmWatchThread = new Thread(new TMethodJob<OSXScreen>
-								(this, &OSXScreen::watchSystemPowerThread));
+        m_pmWatchThread = new Thread([this](){ watchSystemPowerThread(); });
 	}
 	catch (...) {
 		m_events->removeHandler(m_events->forOSXScreen().confirmSleep(),
@@ -578,16 +576,14 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
 
 	if (!press && (id == kButtonLeft)) {
 		if (m_fakeDraggingStarted) {
-			m_getDropTargetThread = new Thread(new TMethodJob<OSXScreen>(
-				this, &OSXScreen::getDropTargetThread));
+            m_getDropTargetThread = new Thread([this](){ get_drop_target_thread(); });
 		}
 
 		m_draggingStarted = false;
 	}
 }
 
-void
-OSXScreen::getDropTargetThread(void*)
+void OSXScreen::get_drop_target_thread()
 {
 #if defined(MAC_OS_X_VERSION_10_7)
 	char* cstr = NULL;
@@ -1186,8 +1182,7 @@ OSXScreen::onMouseButton(bool pressed, UInt16 macButton)
 		}
 		else {
 			if (m_fakeDraggingStarted) {
-				m_getDropTargetThread = new Thread(new TMethodJob<OSXScreen>(
-																			   this, &OSXScreen::getDropTargetThread));
+                m_getDropTargetThread = new Thread([this](){ get_drop_target_thread(); });
 			}
 
 			m_draggingStarted = false;
@@ -1621,8 +1616,7 @@ OSXScreen::userSwitchCallback(EventHandlerCallRef nextHandler,
 // main of thread monitoring system power (sleep/wakeup) using a CFRunLoop
 //
 
-void
-OSXScreen::watchSystemPowerThread(void*)
+void OSXScreen::watchSystemPowerThread()
 {
 	io_object_t				notifier;
 	IONotificationPortRef	notificationPortRef;

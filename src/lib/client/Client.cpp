@@ -37,7 +37,6 @@
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
-#include "base/TMethodJob.h"
 
 #include <cstring>
 #include <cstdlib>
@@ -760,9 +759,7 @@ void
 Client::onFileRecieveCompleted()
 {
     if (isReceivedFileSizeValid()) {
-        m_writeToDropDirThread = new Thread(
-            new TMethodJob<Client>(
-                this, &Client::writeToDropDirThread));
+        m_writeToDropDirThread = new Thread([this](){ write_to_drop_dir_thread(); });
     }
 }
 
@@ -772,8 +769,7 @@ Client::handleStopRetry(const Event&, void*)
     m_args.m_restartable = false;
 }
 
-void
-Client::writeToDropDirThread(void*)
+void Client::write_to_drop_dir_thread()
 {
     LOG((CLOG_DEBUG "starting write to drop dir thread"));
 
@@ -812,18 +808,13 @@ Client::sendFileToServer(const char* filename)
         StreamChunker::interruptFile();
     }
 
-    m_sendFileThread = new Thread(
-        new TMethodJob<Client>(
-            this, &Client::sendFileThread,
-            static_cast<void*>(const_cast<char*>(filename))));
+    m_sendFileThread = new Thread([this, filename]() { send_file_thread(filename); });
 }
 
-void
-Client::sendFileThread(void* filename)
+void Client::send_file_thread(const char* filename)
 {
     try {
-        char* name  = static_cast<char*>(filename);
-        StreamChunker::sendFile(name, m_events, this);
+        StreamChunker::sendFile(filename, m_events, this);
     }
     catch (std::runtime_error& error) {
         LOG((CLOG_ERR "failed sending file chunks: %s", error.what()));

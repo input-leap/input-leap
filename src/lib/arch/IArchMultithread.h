@@ -19,6 +19,7 @@
 #pragma once
 
 #include "common/IInterface.h"
+#include <functional>
 
 /*!
 \class ArchCondImpl
@@ -71,7 +72,7 @@ barrier.  Each architecture must implement this interface.
 class IArchMultithread : public IInterface {
 public:
     //! Type of thread entry point
-    typedef void* (*ThreadFunc)(void*);
+    typedef void (*ThreadFunc)(void*);
     //! Type of thread identifier
     typedef unsigned int ThreadID;
     //! Types of signals
@@ -160,7 +161,7 @@ public:
     Creates and starts a new thread, using \c func as the entry point
     and passing it \c userData.  The thread is an opaque data type.
     */
-    virtual ArchThread    newThread(ThreadFunc func, void* userData) = 0;
+    virtual ArchThread newThread(const std::function<void()>& func) = 0;
 
     //! Get a reference to the calling thread
     /*!
@@ -234,15 +235,6 @@ public:
     Returns true iff \c thread has exited.
     */
     virtual bool        isExitedThread(ArchThread thread) = 0;
-
-    //! Returns the exit code of a thread
-    /*!
-    Waits indefinitely for \c thread to exit (if it hasn't yet) then
-    returns the thread's exit code.
-
-    (Cancellation point)
-    */
-    virtual void*        getResultOfThread(ArchThread thread) = 0;
 
     //! Returns an ID for a thread
     /*!

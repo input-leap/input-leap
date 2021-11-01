@@ -36,7 +36,6 @@
 #include "net/TCPSocketFactory.h"
 #include "mt/Thread.h"
 #include "base/TMethodEventJob.h"
-#include "base/TMethodJob.h"
 #include "base/Log.h"
 #include <stdexcept>
 

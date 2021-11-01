@@ -20,7 +20,7 @@
 #include "SecureSocket.h"
 #include "net/NetworkAddress.h"
 #include "net/SocketMultiplexer.h"
-#include "net/TSocketMultiplexerMethodJob.h"
+#include "arch/Arch.h"
 #include "arch/XArch.h"
 #include "common/DataDirectories.h"
 #include "base/String.h"

@@ -64,8 +64,8 @@ private:
     void                watchDesktop();
     void                watchProcess(HANDLE process);
     void                unwatchProcess();
-    void                watchDesktopThread(void*);
-    void                watchProcessThread(void*);
+    void watch_desktop_thread();
+    void watch_process_thread();
 
     void                setSecure(bool secure, bool saveSecureAsInt);
     bool                isSecure(bool* wasSecureAnInt) const;

@@ -49,12 +49,10 @@ public:
     int                    m_refCount;
     HANDLE                m_thread;
     DWORD                m_id;
-    IArchMultithread::ThreadFunc    m_func;
-    void*                m_userData;
+    std::function<void()> func_;
     HANDLE                m_cancel;
     bool                m_cancelling;
     HANDLE                m_exit;
-    void*                m_result;
     void*                m_networkData;
 };
 
@@ -62,10 +60,7 @@ ArchThreadImpl::ArchThreadImpl() :
     m_refCount(1),
     m_thread(NULL),
     m_id(0),
-    m_func(NULL),
-    m_userData(NULL),
     m_cancelling(false),
-    m_result(NULL),
     m_networkData(NULL)
 {
     m_exit   = CreateEvent(NULL, TRUE, FALSE, NULL);
@@ -292,15 +287,13 @@ ArchMultithreadWindows::unlockMutex(ArchMutex mutex)
     LeaveCriticalSection(&mutex->m_mutex);
 }
 
-ArchThread
-ArchMultithreadWindows::newThread(ThreadFunc func, void* data)
+ArchThread ArchMultithreadWindows::newThread(const std::function<void()>& func)
 {
     lockMutex(m_threadMutex);
 
     // create thread impl for new thread
     ArchThreadImpl* thread = new ArchThreadImpl;
-    thread->m_func          = func;
-    thread->m_userData      = data;
+    thread->func_ = func;
 
     // create thread
     unsigned int id = 0;
@@ -523,15 +516,6 @@ ArchMultithreadWindows::isExitedThread(ArchThread thread)
     return (WaitForSingleObject(thread->m_exit, 0) == WAIT_OBJECT_0);
 }
 
-void*
-ArchMultithreadWindows::getResultOfThread(ArchThread thread)
-{
-    lockMutex(m_threadMutex);
-    void* result = thread->m_result;
-    unlockMutex(m_threadMutex);
-    return result;
-}
-
 IArchMultithread::ThreadID
 ArchMultithreadWindows::getIDOfThread(ArchThread thread)
 {
@@ -678,10 +662,8 @@ ArchMultithreadWindows::doThreadFunc(ArchThread thread)
     lockMutex(m_threadMutex);
     unlockMutex(m_threadMutex);
 
-    void* result = NULL;
     try {
-        // go
-        result = (*thread->m_func)(thread->m_userData);
+        thread->func_();
     }
 
     catch (XThreadCancel&) {
@@ -695,9 +677,6 @@ ArchMultithreadWindows::doThreadFunc(ArchThread thread)
     }
 
     // thread has exited
-    lockMutex(m_threadMutex);
-    thread->m_result = result;
-    unlockMutex(m_threadMutex);
     SetEvent(thread->m_exit);
 
     // done with thread

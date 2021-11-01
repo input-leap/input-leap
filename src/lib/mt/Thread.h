@@ -19,8 +19,7 @@
 #pragma once
 
 #include "arch/IArchMultithread.h"
-
-class IJob;
+#include <functional>
 
 //! Thread handle
 /*!
@@ -44,10 +43,9 @@ class Thread {
 public:
     //! Run \c adoptedJob in a new thread
     /*!
-    Create and start a new thread executing the \c adoptedJob.  The
-    new thread takes ownership of \c adoptedJob and will delete it.
+    Create and start a new thread executing the \c fun.
     */
-    Thread(IJob* adoptedJob);
+    Thread(const std::function<void()>& fun);
 
     //! Duplicate a thread handle
     /*!
@@ -79,8 +77,7 @@ public:
     /*!
     Terminate the calling thread.  This function does not return but
     the stack is unwound and automatic objects are destroyed, as if
-    exit() threw an exception (which is, in fact, what it does).  The
-    argument is saved as the result returned by getResult().  If you
+    exit() threw an exception (which is, in fact, what it does). If you
     have \c catch(...) blocks then you should add the following before
     each to avoid catching the exit:
     \code
@@ -167,16 +164,6 @@ public:
     */
     bool                wait(double timeout = -1.0) const;
 
-    //! Get the exit result
-    /*!
-    Returns the exit result.  This does an implicit wait().  It returns
-    NULL immediately if called by a thread on itself or on a thread that
-    was cancelled.
-
-    (cancellation point)
-    */
-    void*                getResult() const;
-
     //! Get the thread id
     /*!
     Returns an integer id for this thread.  This id must not be used to
@@ -203,7 +190,7 @@ public:
 private:
     Thread(ArchThread);
 
-    static void*        threadFunc(void*);
+    static void threadFunc(const std::function<void()>& func);
 
 private:
     ArchThread            m_thread;

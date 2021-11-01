@@ -28,12 +28,10 @@
 // Thread
 //
 
-Thread::Thread(IJob* job)
+Thread::Thread(const std::function<void()>& fun)
 {
-    m_thread = ARCH->newThread(&Thread::threadFunc, job);
+    m_thread = ARCH->newThread([=](){ threadFunc(fun); });
     if (m_thread == NULL) {
-        // couldn't create thread
-        delete job;
         throw XMTThreadUnavailable();
     }
 }
@@ -69,7 +67,7 @@ Thread::operator=(const Thread& thread)
 void
 Thread::exit(void* result)
 {
-    throw XThreadExit(result);
+    throw XThreadExit();
 }
 
 void
@@ -108,15 +106,6 @@ Thread::wait(double timeout) const
     return ARCH->wait(m_thread, timeout);
 }
 
-void*
-Thread::getResult() const
-{
-    if (wait())
-        return ARCH->getResultOfThread(m_thread);
-    else
-        return NULL;
-}
-
 IArchMultithread::ThreadID
 Thread::getID() const
 {
@@ -135,8 +124,7 @@ Thread::operator!=(const Thread& thread) const
     return !ARCH->isSameThread(m_thread, thread.m_thread);
 }
 
-void*
-Thread::threadFunc(void* vjob)
+void Thread::threadFunc(const std::function<void()>& func)
 {
     // get this thread's id for logging
     IArchMultithread::ThreadID id;
@@ -146,42 +134,26 @@ Thread::threadFunc(void* vjob)
         ARCH->closeThread(thread);
     }
 
-    // get job
-    IJob* job = static_cast<IJob*>(vjob);
-
-    // run job
-    void* result = NULL;
     try {
         // go
         LOG((CLOG_DEBUG1 "thread 0x%08x entry", id));
-        job->run();
+        func();
         LOG((CLOG_DEBUG1 "thread 0x%08x exit", id));
     }
     catch (XThreadCancel&) {
         // client called cancel()
         LOG((CLOG_DEBUG1 "caught cancel on thread 0x%08x", id));
-        delete job;
         throw;
     }
-    catch (XThreadExit& e) {
-        // client called exit()
-        result = e.m_result;
-        LOG((CLOG_DEBUG1 "caught exit on thread 0x%08x, result %p", id, result));
+    catch (XThreadExit&) {
+        LOG((CLOG_DEBUG1 "caught exit on thread 0x%08x", id));
     }
     catch (XBase& e) {
         LOG((CLOG_ERR "exception on thread 0x%08x: %s", id, e.what()));
-        delete job;
         throw;
     }
     catch (...) {
         LOG((CLOG_ERR "exception on thread 0x%08x: <unknown>", id));
-        delete job;
         throw;
     }
-
-    // done with job
-    delete job;
-
-    // return exit result
-    return result;
 }

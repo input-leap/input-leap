@@ -34,7 +34,6 @@
 
 #if SYSAPI_WIN32
 #include "base/IEventQueue.h"
-#include "base/TMethodJob.h"
 #endif
 
 #include <iostream>
@@ -229,8 +228,7 @@ App::handleIpcMessage(const Event& e, void*)
     }
 }
 
-void
-App::runEventsLoop(void*)
+void App::run_events_loop()
 {
     m_events->loop();
 

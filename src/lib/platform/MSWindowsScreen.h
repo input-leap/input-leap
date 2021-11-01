@@ -199,7 +199,7 @@ private: // HACK
     bool                mapPressFromEvent(WPARAM msg, LPARAM button) const;
 
     // job to update the key state
-    void                updateKeysCB(void*);
+    void updateKeysCB();
 
     // determine whether the mouse is hidden by the system and force
     // it to be displayed if user has entered this secondary screen.
@@ -222,7 +222,7 @@ private: // HACK
                             KeyModifierMask state, WPARAM wParam) const;
 
     // send drag info and data back to server
-    void                sendDragThread(void*);
+    void send_drag_thread();
 
 private:
     struct HotKeyItem {

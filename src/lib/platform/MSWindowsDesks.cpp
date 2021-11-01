@@ -27,9 +27,7 @@
 #include "arch/win32/ArchMiscWindows.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
-#include "base/IJob.h"
 #include "base/TMethodEventJob.h"
-#include "base/TMethodJob.h"
 #include "base/IEventQueue.h"
 
 #include <malloc.h>
@@ -97,10 +95,9 @@
 // MSWindowsDesks
 //
 
-MSWindowsDesks::MSWindowsDesks(
-        bool isPrimary, bool noHooks,
+MSWindowsDesks::MSWindowsDesks(bool isPrimary, bool noHooks,
         const IScreenSaver* screensaver, IEventQueue* events,
-        IJob* updateKeys, bool stopOnDeskSwitch) :
+        const std::function<void()>& updateKeys, bool stopOnDeskSwitch) :
     m_isPrimary(isPrimary),
     m_noHooks(noHooks),
     m_isOnScreen(m_isPrimary),
@@ -130,7 +127,6 @@ MSWindowsDesks::~MSWindowsDesks()
     disable();
     destroyClass(m_deskClass);
     destroyCursor(m_cursor);
-    delete m_updateKeys;
 }
 
 void
@@ -602,13 +598,11 @@ MSWindowsDesks::deskLeave(Desk* desk, HKL keyLayout)
     }
 }
 
-void
-MSWindowsDesks::deskThread(void* vdesk)
+void MSWindowsDesks::desk_thread(Desk* desk)
 {
     MSG msg;
 
     // use given desktop for this thread
-    Desk* desk              = static_cast<Desk*>(vdesk);
     desk->m_threadID         = GetCurrentThreadId();
     desk->m_window           = NULL;
     desk->m_foregroundWindow = NULL;
@@ -709,7 +703,7 @@ MSWindowsDesks::deskThread(void* vdesk)
         }
 
         case BARRIER_MSG_SYNC_KEYS:
-            m_updateKeys->run();
+            m_updateKeys();
             break;
 
         case BARRIER_MSG_SCREENSAVER:
@@ -752,8 +746,7 @@ MSWindowsDesks::Desk* MSWindowsDesks::addDesk(const std::string& name, HDESK hde
     desk->m_name     = name;
     desk->m_desk     = hdesk;
     desk->m_targetID = GetCurrentThreadId();
-    desk->m_thread   = new Thread(new TMethodJob<MSWindowsDesks>(
-                        this, &MSWindowsDesks::deskThread, desk));
+    desk->m_thread   = new Thread([this, desk]() { desk_thread(desk); });
     waitForDesk();
     m_desks.insert(std::make_pair(name, desk));
     return desk;

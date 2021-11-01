@@ -169,7 +169,7 @@ private:
 	typedef std::vector<HKL> GroupList;
 
 	// send ctrl+alt+del hotkey event on NT family
-	static void			ctrlAltDelThread(void*);
+    static void ctrl_alt_del_thread();
 
 	bool				getGroups(GroupList&) const;
 	void				setWindowGroup(SInt32 group);

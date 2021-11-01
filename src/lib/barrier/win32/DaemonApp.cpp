@@ -28,7 +28,6 @@
 #include "net/SocketMultiplexer.h"
 #include "arch/XArch.h"
 #include "base/Log.h"
-#include "base/TMethodJob.h"
 #include "base/TMethodEventJob.h"
 #include "base/EventQueue.h"
 #include "base/log_outputters.h"

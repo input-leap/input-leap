@@ -34,7 +34,6 @@
 #include "base/EventQueue.h"
 #include "base/log_outputters.h"
 #include "base/FunctionEventJob.h"
-#include "base/TMethodJob.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
@@ -797,10 +796,7 @@ ServerApp::mainLoop()
 
 #if defined(MAC_OS_X_VERSION_10_7)
 
-    Thread thread(
-        new TMethodJob<ServerApp>(
-            this, &ServerApp::runEventsLoop,
-            NULL));
+    Thread thread([this](){ run_events_loop(); });
 
     // wait until carbon loop is ready
     OSXScreen* screen = dynamic_cast<OSXScreen*>(

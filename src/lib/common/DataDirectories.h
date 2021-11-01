@@ -38,6 +38,7 @@ public:
     static fs::path local_ssl_fingerprints_path();
     static fs::path trusted_servers_ssl_fingerprints_path();
     static fs::path trusted_clients_ssl_fingerprints_path();
+    static fs::path ssl_certificate_path();
 private:
     static fs::path _profile;
     static fs::path _global;

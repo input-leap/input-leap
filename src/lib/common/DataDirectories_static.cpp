@@ -48,4 +48,9 @@ fs::path DataDirectories::trusted_clients_ssl_fingerprints_path()
     return ssl_fingerprints_path() / kFingerprintsTrustedClientsFilename;
 }
 
+fs::path DataDirectories::ssl_certificate_path()
+{
+    return profile() / "SSL" / "Barrier.pem";
+}
+
 } // namespace barrier

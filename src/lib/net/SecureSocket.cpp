@@ -327,35 +327,35 @@ SecureSocket::initSsl(bool server)
     initContext(server);
 }
 
-bool SecureSocket::loadCertificates(const std::string& filename)
+bool SecureSocket::load_certificates(const barrier::fs::path& path)
 {
-    if (filename.empty()) {
+    if (path.empty()) {
         showError("ssl certificate is not specified");
         return false;
     }
     else {
-        if (!barrier::fs::is_regular_file(barrier::fs::u8path(filename))) {
-            showError("ssl certificate doesn't exist: " + filename);
+        if (!barrier::fs::is_regular_file(path)) {
+            showError("ssl certificate doesn't exist: " + path.u8string());
             return false;
         }
     }
 
     int r = 0;
-    r = SSL_CTX_use_certificate_file(m_ssl->m_context, filename.c_str(), SSL_FILETYPE_PEM);
+    r = SSL_CTX_use_certificate_file(m_ssl->m_context, path.u8string().c_str(), SSL_FILETYPE_PEM);
     if (r <= 0) {
-        showError("could not use ssl certificate: " + filename);
+        showError("could not use ssl certificate: " + path.u8string());
         return false;
     }
 
-    r = SSL_CTX_use_PrivateKey_file(m_ssl->m_context, filename.c_str(), SSL_FILETYPE_PEM);
+    r = SSL_CTX_use_PrivateKey_file(m_ssl->m_context, path.u8string().c_str(), SSL_FILETYPE_PEM);
     if (r <= 0) {
-        showError("could not use ssl private key: " + filename);
+        showError("could not use ssl private key: " + path.u8string());
         return false;
     }
 
     r = SSL_CTX_check_private_key(m_ssl->m_context);
     if (!r) {
-        showError("could not verify ssl private key: " + filename);
+        showError("could not verify ssl private key: " + path.u8string());
         return false;
     }
 

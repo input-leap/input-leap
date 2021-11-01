@@ -25,13 +25,6 @@
 #include "common/DataDirectories.h"
 #include "base/String.h"
 
-static const char s_certificateDir[] = { "SSL" };
-static const char s_certificateFilename[] = { "Barrier.pem" };
-
-//
-// SecureListenSocket
-//
-
 SecureListenSocket::SecureListenSocket(
         IEventQueue* events,
         SocketMultiplexer* socketMultiplexer,
@@ -55,12 +48,7 @@ SecureListenSocket::accept()
             setListeningJob();
         }
 
-        std::string certificateFilename = barrier::string::sprintf("%s/%s/%s",
-                                        barrier::DataDirectories::profile().c_str(),
-                                        s_certificateDir,
-                                        s_certificateFilename);
-
-        bool loaded = socket->loadCertificates(certificateFilename);
+        bool loaded = socket->load_certificates(barrier::DataDirectories::ssl_certificate_path());
         if (!loaded) {
             delete socket;
             return NULL;

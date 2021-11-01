@@ -19,6 +19,7 @@
 
 #include "net/TCPSocket.h"
 #include "net/XSocket.h"
+#include "io/filesystem.h"
 
 class IEventQueue;
 class SocketMultiplexer;
@@ -55,7 +56,7 @@ public:
     EJobResult            doRead() override;
     EJobResult            doWrite() override;
     void                initSsl(bool server);
-    bool loadCertificates(const std::string& filename);
+    bool load_certificates(const barrier::fs::path& path);
 
 private:
     // SSL

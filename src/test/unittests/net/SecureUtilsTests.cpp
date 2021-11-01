@@ -30,4 +30,44 @@ TEST(SecureUtilsTest, FormatSslFingerprintHexWithSeparators)
               "CA:B2:8E:49:25:94:90:25:26:05:8D:AF:63:ED:2E:30");
 }
 
+TEST(SecureUtilsTest, CreateFingerprintRandomArt)
+{
+    ASSERT_EQ(create_fingerprint_randomart(generate_pseudo_random_bytes(0, 32)),
+              "+-----------------+\n"
+              "|*X+. .           |\n"
+              "|*oo +            |\n"
+              "| + =             |\n"
+              "|  B  . .         |\n"
+              "|.+... o S        |\n"
+              "|E+ ++. .         |\n"
+              "|B*++..  .        |\n"
+              "|+o*o o .         |\n"
+              "|+o*Bo .          |\n"
+              "+-----------------+");
+    ASSERT_EQ(create_fingerprint_randomart(generate_pseudo_random_bytes(1, 32)),
+              "+-----------------+\n"
+              "|  .oo+ .    .B=. |\n"
+              "| .o.+ . o   o.=  |\n"
+              "|o..+.. o . E *   |\n"
+              "|oo..+ .   * *    |\n"
+              "|B o.....S. o .   |\n"
+              "|+=o.....         |\n"
+              "| + + .           |\n"
+              "|o. ..            |\n"
+              "|..o..            |\n"
+              "+-----------------+");
+    ASSERT_EQ(create_fingerprint_randomart(generate_pseudo_random_bytes(2, 32)),
+              "+-----------------+\n"
+              "|    ...     .o.o.|\n"
+              "|     o       .=.E|\n"
+              "|    . + o   ...+.|\n"
+              "|     * o = o ... |\n"
+              "|    * + S & .    |\n"
+              "|     = + % @     |\n"
+              "|    . . = X o    |\n"
+              "|     . . O .     |\n"
+              "|        . +      |\n"
+              "+-----------------+");
+}
+
 } // namespace barrier

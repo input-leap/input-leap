@@ -13,9 +13,36 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    -----------------------------------------------------------------------
+    create_fingerprint_randomart() has been taken from the OpenSSH project.
+    Copyright information follows.
+
+    Copyright (c) 2000, 2001 Markus Friedl.  All rights reserved.
+    Copyright (c) 2008 Alexander von Gernler.  All rights reserved.
+    Copyright (c) 2010,2011 Damien Miller.  All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions
+    are met:
+    1. Redistributions of source code must retain the above copyright
+       notice, this list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright
+       notice, this list of conditions and the following disclaimer in the
+       documentation and/or other materials provided with the distribution.
+
+    THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+    OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+    IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+    NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+    DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+    THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+    THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "FingerprintDatabase.h"
 #include "SecureUtils.h"
 #include "base/String.h"
 #include "base/finally.h"
@@ -25,7 +52,9 @@
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
 #include <openssl/pem.h>
+#include <algorithm>
 #include <cstdio>
+#include <cstring>
 #include <stdexcept>
 
 namespace barrier {
@@ -140,6 +169,115 @@ void generate_pem_self_signed_cert(const std::string& path)
 
     PEM_write_PrivateKey(fp, private_key, nullptr, nullptr, 0, nullptr, nullptr);
     PEM_write_X509(fp, cert);
+}
+
+/*
+    Draw an ASCII-Art representing the fingerprint so human brain can
+    profit from its built-in pattern recognition ability.
+    This technique is called "random art" and can be found in some
+    scientific publications like this original paper:
+
+    "Hash Visualization: a New Technique to improve Real-World Security",
+    Perrig A. and Song D., 1999, International Workshop on Cryptographic
+    Techniques and E-Commerce (CrypTEC '99)
+    sparrow.ece.cmu.edu/~adrian/projects/validation/validation.pdf
+
+    The subject came up in a talk by Dan Kaminsky, too.
+
+    If you see the picture is different, the key is different.
+    If the picture looks the same, you still know nothing.
+
+    The algorithm used here is a worm crawling over a discrete plane,
+    leaving a trace (augmenting the field) everywhere it goes.
+    Movement is taken from dgst_raw 2bit-wise.  Bumping into walls
+    makes the respective movement vector be ignored for this turn.
+    Graphs are not unambiguous, because circles in graphs can be
+walked in either direction.
+ */
+
+/*
+    Field sizes for the random art.  Have to be odd, so the starting point
+    can be in the exact middle of the picture, and FLDBASE should be >=8 .
+    Else pictures would be too dense, and drawing the frame would
+    fail, too, because the key type would not fit in anymore.
+*/
+#define	FLDBASE		8
+#define	FLDSIZE_Y	(FLDBASE + 1)
+#define	FLDSIZE_X	(FLDBASE * 2 + 1)
+
+std::string create_fingerprint_randomart(const std::vector<std::uint8_t>& dgst_raw)
+{
+    /*
+     * Chars to be used after each other every time the worm
+     * intersects with itself.  Matter of taste.
+     */
+    const char* augmentation_string = " .o+=*BOX@%&#/^SE";
+    char *p;
+    std::uint8_t field[FLDSIZE_X][FLDSIZE_Y];
+    std::size_t i;
+    std::uint32_t b;
+    int	 x, y;
+    std::size_t len = strlen(augmentation_string) - 1;
+
+    std::vector<char> retval;
+    retval.reserve((FLDSIZE_X + 3) * (FLDSIZE_Y + 2));
+
+    auto add_char = [&retval](char ch) { retval.push_back(ch); };
+
+    /* initialize field */
+    std::memset(field, 0, FLDSIZE_X * FLDSIZE_Y * sizeof(char));
+    x = FLDSIZE_X / 2;
+    y = FLDSIZE_Y / 2;
+
+    /* process raw key */
+    for (i = 0; i < dgst_raw.size(); i++) {
+        /* each byte conveys four 2-bit move commands */
+        int input = dgst_raw[i];
+        for (b = 0; b < 4; b++) {
+            /* evaluate 2 bit, rest is shifted later */
+            x += (input & 0x1) ? 1 : -1;
+            y += (input & 0x2) ? 1 : -1;
+
+            /* assure we are still in bounds */
+            x = std::max(x, 0);
+            y = std::max(y, 0);
+            x = std::min(x, FLDSIZE_X - 1);
+            y = std::min(y, FLDSIZE_Y - 1);
+
+            /* augment the field */
+            if (field[x][y] < len - 2)
+                field[x][y]++;
+            input = input >> 2;
+        }
+    }
+
+    /* mark starting point and end point*/
+    field[FLDSIZE_X / 2][FLDSIZE_Y / 2] = len - 1;
+    field[x][y] = len;
+
+    /* output upper border */
+    add_char('+');
+    for (i = 0; i < FLDSIZE_X; i++)
+        add_char('-');
+    add_char('+');
+    add_char('\n');
+
+    /* output content */
+    for (y = 0; y < FLDSIZE_Y; y++) {
+        add_char('|');
+        for (x = 0; x < FLDSIZE_X; x++)
+            add_char(augmentation_string[std::min<int>(field[x][y], len)]);
+        add_char('|');
+        add_char('\n');
+    }
+
+    /* output lower border */
+    add_char('+');
+    for (i = 0; i < FLDSIZE_X; i++)
+        add_char('-');
+    add_char('+');
+
+    return std::string{retval.data(), retval.size()};
 }
 
 } // namespace barrier

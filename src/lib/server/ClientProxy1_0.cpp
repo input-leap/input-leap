@@ -173,6 +173,8 @@ ClientProxy1_0::parseHandshakeMessage(const UInt8* code)
     }
     else if (memcmp(code, kMsgDInfo, 4) == 0) {
         // future messages get parsed by parseMessage
+        // NOTE: we're taking address of virtual function here,
+        // not ClientProxy1_0 implementation of it.
         m_parser = &ClientProxy1_0::parseMessage;
         if (recvInfo()) {
             m_events->addEvent(Event(m_events->forClientProxy().ready(), getEventTarget()));

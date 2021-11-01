@@ -22,41 +22,32 @@
 #include "net/FingerprintDatabase.h"
 #include "net/SecureUtils.h"
 
-#include <QProcess>
-#include <QDir>
-#include <QCoreApplication>
-
 #include <openssl/bio.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>
 #include <openssl/pem.h>
 #include <openssl/x509.h>
 
-static const char kCertificateFilename[] = "Barrier.pem";
-static const char kSslDir[] = "SSL";
-
 SslCertificate::SslCertificate(QObject *parent) :
     QObject(parent)
 {
-    m_ProfileDir = barrier::DataDirectories::profile();
-    if (m_ProfileDir.empty()) {
+    if (barrier::DataDirectories::profile().empty()) {
         emit error(tr("Failed to get profile directory."));
     }
 }
 
 void SslCertificate::generateCertificate()
 {
-    auto cert_path = getCertificatePath();
+    auto cert_path = barrier::DataDirectories::ssl_certificate_path();
 
-    QFile file(QString::fromStdString(cert_path));
-    if (!file.exists() || !isCertificateValid(cert_path)) {
-        QDir sslDir(QString::fromStdString(getCertificateDirectory()));
-        if (!sslDir.exists()) {
-            sslDir.mkpath(".");
-        }
-
+    if (!barrier::fs::exists(cert_path) || !is_certificate_valid(cert_path)) {
         try {
-            barrier::generate_pem_self_signed_cert(cert_path);
+            auto cert_dir = cert_path.parent_path();
+            if (!barrier::fs::exists(cert_dir)) {
+                barrier::fs::create_directories(cert_dir);
+            }
+
+            barrier::generate_pem_self_signed_cert(cert_path.u8string());
         }  catch (const std::exception& e) {
             emit error(QString("SSL tool failed: %1").arg(e.what()));
             return;
@@ -65,19 +56,19 @@ void SslCertificate::generateCertificate()
         emit info(tr("SSL certificate generated."));
     }
 
-    generateFingerprint(cert_path);
+    generate_fingerprint(cert_path);
 
     emit generateFinished();
 }
 
-void SslCertificate::generateFingerprint(const std::string& cert_path)
+void SslCertificate::generate_fingerprint(const barrier::fs::path& cert_path)
 {
     try {
         auto local_path = barrier::DataDirectories::local_ssl_fingerprints_path();
         barrier::FingerprintDatabase db;
-        db.add_trusted(barrier::get_pem_file_cert_fingerprint(cert_path,
+        db.add_trusted(barrier::get_pem_file_cert_fingerprint(cert_path.u8string(),
                                                               barrier::FingerprintType::SHA1));
-        db.add_trusted(barrier::get_pem_file_cert_fingerprint(cert_path,
+        db.add_trusted(barrier::get_pem_file_cert_fingerprint(cert_path.u8string(),
                                                               barrier::FingerprintType::SHA256));
         db.write(local_path);
 
@@ -87,17 +78,7 @@ void SslCertificate::generateFingerprint(const std::string& cert_path)
     }
 }
 
-std::string SslCertificate::getCertificatePath()
-{
-    return getCertificateDirectory() + QDir::separator().toLatin1() + kCertificateFilename;
-}
-
-std::string SslCertificate::getCertificateDirectory()
-{
-    return m_ProfileDir + QDir::separator().toLatin1() + kSslDir;
-}
-
-bool SslCertificate::isCertificateValid(const std::string& path)
+bool SslCertificate::is_certificate_valid(const barrier::fs::path& path)
 {
     OpenSSL_add_all_algorithms();
     ERR_load_crypto_strings();

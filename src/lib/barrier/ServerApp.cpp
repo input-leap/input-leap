@@ -655,11 +655,15 @@ ServerApp::handleResume(const Event&, void*)
 ClientListener*
 ServerApp::openClientListener(const NetworkAddress& address)
 {
+    auto security_level = ConnectionSecurityLevel::PLAINTEXT;
+    if (args().m_enableCrypto) {
+        security_level = ConnectionSecurityLevel::ENCRYPTED;
+    }
+
     ClientListener* listen = new ClientListener(
         address,
         new TCPSocketFactory(m_events, getSocketMultiplexer()),
-        m_events,
-        args().m_enableCrypto);
+        m_events, security_level);
 
     m_events->adoptHandler(
         m_events->forClientListener().connected(), listen,

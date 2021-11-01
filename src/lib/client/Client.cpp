@@ -127,6 +127,11 @@ Client::connect()
         return;
     }
 
+    auto security_level = ConnectionSecurityLevel::PLAINTEXT;
+    if (m_useSecureNetwork) {
+        security_level = ConnectionSecurityLevel::ENCRYPTED;
+    }
+
     try {
         // resolve the server hostname.  do this every time we connect
         // in case we couldn't resolve the address earlier or the address
@@ -145,9 +150,8 @@ Client::connect()
         }
 
         // create the socket
-        IDataSocket* socket = m_socketFactory->create(
-                ARCH->getAddrFamily(m_serverAddress.getAddress()),
-                m_useSecureNetwork);
+        IDataSocket* socket = m_socketFactory->create(ARCH->getAddrFamily(m_serverAddress.getAddress()),
+                                                      security_level);
         m_socket = dynamic_cast<TCPSocket*>(socket);
 
         // filter socket messages, including a packetizing filter

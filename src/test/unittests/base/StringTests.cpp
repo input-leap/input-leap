@@ -62,6 +62,20 @@ TEST(StringTests, toHex_plaintext_hexString)
     EXPECT_EQ("666f6f626172", string::to_hex(subject, width));
 }
 
+TEST(StringTests, fromhex_plaintext_string)
+{
+    auto result = string::from_hex("666f6f626172");
+    std::string expected = "foobar";
+    EXPECT_EQ(result, std::vector<std::uint8_t>(expected.begin(), expected.end()));
+}
+
+TEST(StringTests, fromhex_binary_string)
+{
+    auto result = string::from_hex("01020304050600fff9");
+    auto expected = std::vector<std::uint8_t>{1, 2, 3, 4, 5, 6, 0, 0xff, 0xf9};
+    EXPECT_EQ(result, expected);
+}
+
 TEST(StringTests, uppercase_lowercaseInput_uppercaseOutput)
 {
     String subject = "12foo3BaR";

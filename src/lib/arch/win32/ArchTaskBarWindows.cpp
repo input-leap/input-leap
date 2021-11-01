@@ -88,7 +88,7 @@ ArchTaskBarWindows::init()
     // create a window on the current desktop with the current
     // thread then the current thread won't be able to switch
     // desktops if it needs to.
-    m_thread      = ARCH->newThread(&ArchTaskBarWindows::threadEntry, this);
+    m_thread = ARCH->newThread([this]() { threadMainLoop(); });
 
     // wait for child thread
     while (!m_ready) {
@@ -499,11 +499,6 @@ ArchTaskBarWindows::threadMainLoop()
     removeAllIcons();
     DestroyWindow(m_hwnd);
     UnregisterClass(className, instanceWin32());
-}
-
-void ArchTaskBarWindows::threadEntry(void* self)
-{
-    static_cast<ArchTaskBarWindows*>(self)->threadMainLoop();
 }
 
 HINSTANCE ArchTaskBarWindows::instanceWin32()

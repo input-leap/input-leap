@@ -67,7 +67,7 @@ public:
     virtual void        closeMutex(ArchMutex);
     virtual void        lockMutex(ArchMutex);
     virtual void        unlockMutex(ArchMutex);
-    virtual ArchThread    newThread(ThreadFunc, void*);
+    virtual ArchThread newThread(const std::function<void()>& func);
     virtual ArchThread    newCurrentThread();
     virtual ArchThread    copyThread(ArchThread);
     virtual void        closeThread(ArchThread);

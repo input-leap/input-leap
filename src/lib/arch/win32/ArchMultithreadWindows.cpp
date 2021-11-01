@@ -49,8 +49,7 @@ public:
     int                    m_refCount;
     HANDLE                m_thread;
     DWORD                m_id;
-    IArchMultithread::ThreadFunc    m_func;
-    void*                m_userData;
+    std::function<void()> func_;
     HANDLE                m_cancel;
     bool                m_cancelling;
     HANDLE                m_exit;
@@ -61,8 +60,6 @@ ArchThreadImpl::ArchThreadImpl() :
     m_refCount(1),
     m_thread(NULL),
     m_id(0),
-    m_func(NULL),
-    m_userData(NULL),
     m_cancelling(false),
     m_networkData(NULL)
 {
@@ -290,15 +287,13 @@ ArchMultithreadWindows::unlockMutex(ArchMutex mutex)
     LeaveCriticalSection(&mutex->m_mutex);
 }
 
-ArchThread
-ArchMultithreadWindows::newThread(ThreadFunc func, void* data)
+ArchThread ArchMultithreadWindows::newThread(const std::function<void()>& func)
 {
     lockMutex(m_threadMutex);
 
     // create thread impl for new thread
     ArchThreadImpl* thread = new ArchThreadImpl;
-    thread->m_func          = func;
-    thread->m_userData      = data;
+    thread->func_ = func;
 
     // create thread
     unsigned int id = 0;
@@ -668,8 +663,7 @@ ArchMultithreadWindows::doThreadFunc(ArchThread thread)
     unlockMutex(m_threadMutex);
 
     try {
-        // go
-        (*thread->m_func)(thread->m_userData);
+        thread->func_();
     }
 
     catch (XThreadCancel&) {

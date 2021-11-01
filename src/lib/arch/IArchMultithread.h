@@ -19,6 +19,7 @@
 #pragma once
 
 #include "common/IInterface.h"
+#include <functional>
 
 /*!
 \class ArchCondImpl
@@ -160,7 +161,7 @@ public:
     Creates and starts a new thread, using \c func as the entry point
     and passing it \c userData.  The thread is an opaque data type.
     */
-    virtual ArchThread    newThread(ThreadFunc func, void* userData) = 0;
+    virtual ArchThread newThread(const std::function<void()>& func) = 0;
 
     //! Get a reference to the calling thread
     /*!

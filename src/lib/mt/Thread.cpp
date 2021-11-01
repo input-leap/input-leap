@@ -30,7 +30,7 @@
 
 Thread::Thread(IJob* job)
 {
-    m_thread = ARCH->newThread(&Thread::threadFunc, job);
+    m_thread = ARCH->newThread([job](){ threadFunc(job); });
     if (m_thread == NULL) {
         // couldn't create thread
         delete job;
@@ -126,7 +126,7 @@ Thread::operator!=(const Thread& thread) const
     return !ARCH->isSameThread(m_thread, thread.m_thread);
 }
 
-void Thread::threadFunc(void* vjob)
+void Thread::threadFunc(IJob* job)
 {
     // get this thread's id for logging
     IArchMultithread::ThreadID id;
@@ -135,9 +135,6 @@ void Thread::threadFunc(void* vjob)
         id = ARCH->getIDOfThread(thread);
         ARCH->closeThread(thread);
     }
-
-    // get job
-    IJob* job = static_cast<IJob*>(vjob);
 
     try {
         // go

@@ -464,6 +464,8 @@ SecureSocket::secureConnect(int socket)
 {
     createSSL();
 
+    load_certificates(barrier::DataDirectories::ssl_certificate_path());
+
     // attach the socket descriptor
     SSL_set_fd(m_ssl->m_ssl, socket);
 

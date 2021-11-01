@@ -19,6 +19,7 @@
 
 #include "net/TCPListenSocket.h"
 #include "common/stdset.h"
+#include "ConnectionSecurityLevel.h"
 
 class IEventQueue;
 class SocketMultiplexer;
@@ -26,11 +27,13 @@ class IDataSocket;
 
 class SecureListenSocket : public TCPListenSocket {
 public:
-    SecureListenSocket(IEventQueue* events,
-        SocketMultiplexer* socketMultiplexer,
-        IArchNetwork::EAddressFamily family);
+    SecureListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer,
+                       IArchNetwork::EAddressFamily family,
+                       ConnectionSecurityLevel security_level);
 
     // IListenSocket overrides
     virtual IDataSocket*
                         accept();
+private:
+    ConnectionSecurityLevel security_level_;
 };

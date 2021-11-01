@@ -30,4 +30,5 @@ public:
     String                m_configFile;
     Config*                m_config;
     String                m_screenChangeScript;
+    bool check_client_certificates = true;
 };

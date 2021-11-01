@@ -26,6 +26,7 @@
 #include "ZeroconfService.h"
 #include "DataDownloader.h"
 #include "CommandProcess.h"
+#include "FingerprintAcceptDialog.h"
 #include "QUtility.h"
 #include "ProcessorArch.h"
 #include "SslCertificate.h"
@@ -427,7 +428,7 @@ void MainWindow::checkConnected(const QString& line)
 
 void MainWindow::checkFingerprint(const QString& line)
 {
-    QRegExp fingerprintRegex(".*server fingerprint \\(SHA1\\): ([A-F0-9:]+) \\(SHA256\\): ([A-F0-9:]+)");
+    QRegExp fingerprintRegex(".*peer fingerprint \\(SHA1\\): ([A-F0-9:]+) \\(SHA256\\): ([A-F0-9:]+)");
     if (!fingerprintRegex.exactMatch(line)) {
         return;
     }
@@ -442,7 +443,16 @@ void MainWindow::checkFingerprint(const QString& line)
         barrier::string::from_hex(fingerprintRegex.cap(2).toStdString())
     };
 
-    auto db_path = barrier::DataDirectories::trusted_servers_ssl_fingerprints_path();
+    bool is_client = barrier_type() == BarrierType::Client;
+
+    auto db_path = is_client
+            ? barrier::DataDirectories::trusted_servers_ssl_fingerprints_path()
+            : barrier::DataDirectories::trusted_clients_ssl_fingerprints_path();
+
+    auto db_dir = db_path.parent_path();
+    if (!barrier::fs::exists(db_dir)) {
+        barrier::fs::create_directories(db_dir);
+    }
 
     // We compare only SHA256 fingerprints, but show both SHA1 and SHA256 so that the users can
     // still verify fingerprints on old Barrier servers. This way the only time when we are exposed
@@ -456,36 +466,19 @@ void MainWindow::checkFingerprint(const QString& line)
     static bool messageBoxAlreadyShown = false;
 
     if (!messageBoxAlreadyShown) {
-        stopBarrier();
+        if (is_client) {
+            stopBarrier();
+        }
 
         messageBoxAlreadyShown = true;
-        QMessageBox::StandardButton fingerprintReply =
-            QMessageBox::information(
-            this, tr("Security question"),
-            tr("Do you trust this fingerprint?\n\n"
-               "SHA256:\n"
-               "%1\n"
-               "%2\n\n"
-               "SHA1 (obsolete, when using old Barrier server):\n"
-               "%3\n\n"
-               "This is a server fingerprint. You should compare this "
-               "fingerprint to the one on your server's screen. If the "
-               "two don't match exactly, then it's probably not the server "
-               "you're expecting (it could be a malicious user).\n\n"
-               "To automatically trust this fingerprint for future "
-               "connections, click Yes. To reject this fingerprint and "
-               "disconnect from the server, click No.")
-            .arg(QString::fromStdString(barrier::format_ssl_fingerprint(fingerprint_sha256.data)))
-            .arg(QString::fromStdString(
-                     barrier::create_fingerprint_randomart(fingerprint_sha256.data)))
-            .arg(QString::fromStdString(barrier::format_ssl_fingerprint(fingerprint_sha1.data))),
-            QMessageBox::Yes | QMessageBox::No);
-
-        if (fingerprintReply == QMessageBox::Yes) {
+        FingerprintAcceptDialog dialog{this, barrier_type(), fingerprint_sha1, fingerprint_sha256};
+        if (dialog.exec() == QDialog::Accepted) {
             // restart core process after trusting fingerprint.
             db.add_trusted(fingerprint_sha256);
             db.write(db_path);
-            startBarrier();
+            if (is_client) {
+                startBarrier();
+            }
         }
 
         messageBoxAlreadyShown = false;
@@ -567,8 +560,8 @@ void MainWindow::startBarrier()
     args << "--profile-dir" << QString::fromStdString("\"" + barrier::DataDirectories::profile().u8string() + "\"");
 #endif
 
-    if ((barrierType() == barrierClient && !clientArgs(args, app))
-        || (barrierType() == barrierServer && !serverArgs(args, app)))
+    if ((barrier_type() == BarrierType::Client && !clientArgs(args, app))
+        || (barrier_type() == BarrierType::Server && !serverArgs(args, app)))
     {
         stopBarrier();
         return;
@@ -583,7 +576,7 @@ void MainWindow::startBarrier()
 
     m_pLogWindow->startNewInstance();
 
-    appendLogInfo("starting " + QString(barrierType() == barrierServer ? "server" : "client"));
+    appendLogInfo("starting " + QString(barrier_type() == BarrierType::Server ? "server" : "client"));
 
     qDebug() << args;
 
@@ -693,6 +686,11 @@ QString MainWindow::configFilename()
     return filename;
 }
 
+BarrierType MainWindow::barrier_type() const
+{
+    return m_pGroupClient->isChecked() ? BarrierType::Client : BarrierType::Server;
+}
+
 QString MainWindow::address()
 {
     QString address = appConfig().networkInterface();
@@ -727,6 +725,10 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
         appConfig().persistLogDir();
 
         args << "--log" << appConfig().logFilenameCmd();
+    }
+
+    if (!appConfig().getRequireClientCertificate()) {
+        args << "--disable-client-cert-checking";
     }
 
     QString configFilename = this->configFilename();
@@ -983,7 +985,7 @@ void MainWindow::updateZeroconfService()
                 m_pZeroconfService = NULL;
             }
 
-            if (m_AppConfig->autoConfig() || barrierType() == barrierServer) {
+            if (m_AppConfig->autoConfig() || barrier_type() == BarrierType::Server) {
                 m_pZeroconfService = new ZeroconfService(this);
             }
         }

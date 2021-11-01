@@ -1,0 +1,7 @@
+SECURITY ISSUE
+
+Barrier now supports client identity verification (fixes CVE-2021-42072, CVE-2021-42073).
+
+To support seamless upgrades from older versions of Barrier this is currently disabled by default.
+The feature can be enabled in the settings dialog. If enabled, older clients of Barrier will be
+rejected.

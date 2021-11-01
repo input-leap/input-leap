@@ -54,25 +54,24 @@ struct Ssl {
     SSL*        m_ssl;
 };
 
-SecureSocket::SecureSocket(
-        IEventQueue* events,
-        SocketMultiplexer* socketMultiplexer,
-        IArchNetwork::EAddressFamily family) :
+SecureSocket::SecureSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer,
+                           IArchNetwork::EAddressFamily family,
+                           ConnectionSecurityLevel security_level) :
     TCPSocket(events, socketMultiplexer, family),
     m_ssl(nullptr),
     m_secureReady(false),
-    m_fatal(false)
+    m_fatal(false),
+    security_level_{security_level}
 {
 }
 
-SecureSocket::SecureSocket(
-        IEventQueue* events,
-        SocketMultiplexer* socketMultiplexer,
-        ArchSocket socket) :
+SecureSocket::SecureSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer,
+                           ArchSocket socket, ConnectionSecurityLevel security_level) :
     TCPSocket(events, socketMultiplexer, socket),
     m_ssl(nullptr),
     m_secureReady(false),
-    m_fatal(false)
+    m_fatal(false),
+    security_level_{security_level}
 {
 }
 
@@ -362,6 +361,11 @@ bool SecureSocket::load_certificates(const barrier::fs::path& path)
     return true;
 }
 
+static int cert_verify_ignore_callback(X509_STORE_CTX*, void*)
+{
+    return 1;
+}
+
 void
 SecureSocket::initContext(bool server)
 {
@@ -396,6 +400,14 @@ SecureSocket::initContext(bool server)
 
     if (m_ssl->m_context == NULL) {
         showError("");
+    }
+
+    if (security_level_ == ConnectionSecurityLevel::ENCRYPTED_AUTHENTICATED) {
+        // We want to ask for peer certificate, but not verify it. If we don't ask for peer
+        // certificate, e.g. client won't send it.
+        SSL_CTX_set_verify(m_ssl->m_context, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT,
+                           nullptr);
+        SSL_CTX_set_cert_verify_callback(m_ssl->m_context, cert_verify_ignore_callback, nullptr);
     }
 }
 
@@ -437,6 +449,24 @@ SecureSocket::secureAccept(int socket)
 
     // If not fatal and no retry, state is good
     if (retry == 0) {
+        if (security_level_ == ConnectionSecurityLevel::ENCRYPTED_AUTHENTICATED) {
+            if (verify_cert_fingerprint(
+                        barrier::DataDirectories::trusted_clients_ssl_fingerprints_path())) {
+                LOG((CLOG_INFO "accepted secure socket"));
+                if (!ensure_peer_certificate()) {
+                    retry = 0;
+                    disconnect();
+                    return -1;// Cert fail, error
+                }
+            }
+            else {
+                LOG((CLOG_ERR "failed to verify server certificate fingerprint"));
+                retry = 0;
+                disconnect();
+                return -1; // Fingerprint failed, error
+            }
+        }
+
         m_secureReady = true;
         LOG((CLOG_INFO "accepted secure socket"));
         if (CLOG->getFilter() >= kDEBUG1) {
@@ -462,6 +492,12 @@ SecureSocket::secureAccept(int socket)
 int
 SecureSocket::secureConnect(int socket)
 {
+    if (!load_certificates(barrier::DataDirectories::ssl_certificate_path())) {
+        LOG((CLOG_ERR "could not load client certificates"));
+        // FIXME: this is fatal error, but we current don't disconnect because whole logic in this
+        // function needs to be cleaned up
+    }
+
     createSSL();
 
     // attach the socket descriptor
@@ -491,9 +527,9 @@ SecureSocket::secureConnect(int socket)
     retry = 0;
     // No error, set ready, process and return ok
     m_secureReady = true;
-    if (verifyCertFingerprint()) {
+    if (verify_cert_fingerprint(barrier::DataDirectories::trusted_servers_ssl_fingerprints_path())) {
         LOG((CLOG_INFO "connected to secure socket"));
-        if (!showCertificate()) {
+        if (!ensure_peer_certificate()) {
             disconnect();
             return -1;// Cert fail, error
         }
@@ -512,7 +548,7 @@ SecureSocket::secureConnect(int socket)
 }
 
 bool
-SecureSocket::showCertificate()
+SecureSocket::ensure_peer_certificate()
 {
     X509* cert;
     char* line;
@@ -521,12 +557,12 @@ SecureSocket::showCertificate()
     cert = SSL_get_peer_certificate(m_ssl->m_ssl);
     if (cert != NULL) {
         line = X509_NAME_oneline(X509_get_subject_name(cert), 0, 0);
-        LOG((CLOG_INFO "server ssl certificate info: %s", line));
+        LOG((CLOG_INFO "peer ssl certificate info: %s", line));
         OPENSSL_free(line);
         X509_free(cert);
     }
     else {
-        showError("server has no ssl certificate");
+        showError("peer has no ssl certificate");
         return false;
     }
 
@@ -649,8 +685,7 @@ SecureSocket::disconnect()
     sendEvent(getEvents()->forIStream().inputShutdown());
 }
 
-bool
-SecureSocket::verifyCertFingerprint()
+bool SecureSocket::verify_cert_fingerprint(const barrier::fs::path& fingerprint_db_path)
 {
     // calculate received certificate fingerprint
     barrier::FingerprintData fingerprint_sha1, fingerprint_sha256;
@@ -666,11 +701,9 @@ SecureSocket::verifyCertFingerprint()
     }
 
     // note: the GUI parses the following two lines of logs, don't change unnecessarily
-    LOG((CLOG_NOTE "server fingerprint (SHA1): %s (SHA256): %s",
+    LOG((CLOG_NOTE "peer fingerprint (SHA1): %s (SHA256): %s",
          barrier::format_ssl_fingerprint(fingerprint_sha1.data).c_str(),
          barrier::format_ssl_fingerprint(fingerprint_sha256.data).c_str()));
-
-    auto fingerprint_db_path = barrier::DataDirectories::trusted_servers_ssl_fingerprints_path();
 
     // Provide debug hint as to what file is being used to verify fingerprint trust
     LOG((CLOG_NOTE "fingerprint_db_path: %s", fingerprint_db_path.u8string().c_str()));

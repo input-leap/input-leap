@@ -65,7 +65,9 @@ ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
             // save screen change script path
             args.m_screenChangeScript = argv[++i];
         }
-        else {
+        else if (isArg(i, argc, argv, nullptr, "--disable-client-cert-checking")) {
+            args.check_client_certificates = false;
+        } else {
             LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE, args.m_exename.c_str(), argv[i], args.m_exename.c_str()));
             return false;
         }

@@ -142,6 +142,16 @@
       <string>Networking</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
+      <item row="1" column="0">
+       <widget class="QLabel" name="m_pLabel_21">
+        <property name="text">
+         <string>&amp;Address:</string>
+        </property>
+        <property name="buddy">
+         <cstring>m_pLineEditInterface</cstring>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="m_pLabel_20">
         <property name="text">
@@ -171,16 +181,6 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="m_pLabel_21">
-        <property name="text">
-         <string>&amp;Address:</string>
-        </property>
-        <property name="buddy">
-         <cstring>m_pLineEditInterface</cstring>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="1">
        <widget class="QLineEdit" name="m_pLineEditInterface">
         <property name="enabled">
@@ -188,10 +188,17 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="2" column="0" colspan="2">
        <widget class="QCheckBox" name="m_pCheckBoxEnableCrypto">
         <property name="text">
          <string>Enable &amp;SSL</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QCheckBox" name="checkbox_require_client_certificate">
+        <property name="text">
+         <string>Require client certificate</string>
         </property>
        </widget>
       </item>
@@ -216,19 +223,20 @@
       <bool>false</bool>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0">
-       <widget class="QLabel" name="m_pLabel_3">
-        <property name="minimumSize">
-         <size>
-          <width>75</width>
-          <height>0</height>
-         </size>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="m_pCheckBoxLogToFile">
+        <property name="text">
+         <string>Log to file:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="m_pButtonBrowseLog">
+        <property name="enabled">
+         <bool>false</bool>
         </property>
         <property name="text">
-         <string>&amp;Logging level:</string>
-        </property>
-        <property name="buddy">
-         <cstring>m_pComboLogLevel</cstring>
+         <string>Browse...</string>
         </property>
        </widget>
       </item>
@@ -271,10 +279,19 @@
         </item>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="m_pCheckBoxLogToFile">
+      <item row="0" column="0">
+       <widget class="QLabel" name="m_pLabel_3">
+        <property name="minimumSize">
+         <size>
+          <width>75</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
-         <string>Log to file:</string>
+         <string>&amp;Logging level:</string>
+        </property>
+        <property name="buddy">
+         <cstring>m_pComboLogLevel</cstring>
         </property>
        </widget>
       </item>
@@ -282,16 +299,6 @@
        <widget class="QLineEdit" name="m_pLineEditLogFilename">
         <property name="enabled">
          <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QPushButton" name="m_pButtonBrowseLog">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Browse...</string>
         </property>
        </widget>
       </item>

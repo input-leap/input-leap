@@ -148,7 +148,10 @@ ServerApp::help()
            << "Options:\n"
            << "  -a, --address <address>  listen for clients on the given address.\n"
            << "  -c, --config <pathname>  use the named configuration file instead.\n"
-           << HELP_COMMON_INFO_1 << WINAPI_INFO << HELP_SYS_INFO << HELP_COMMON_INFO_2 << "\n"
+           << HELP_COMMON_INFO_1
+           << "      --disable-client-cert-checking disable client SSL certificate \n"
+              "                                     checking (deprecated)\n"
+           << WINAPI_INFO << HELP_SYS_INFO << HELP_COMMON_INFO_2 << "\n"
            << "Default options are marked with a *\n"
            << "\n"
            << "The argument for --address is of the form: [<hostname>][:<port>].  The\n"
@@ -655,11 +658,18 @@ ServerApp::handleResume(const Event&, void*)
 ClientListener*
 ServerApp::openClientListener(const NetworkAddress& address)
 {
+    auto security_level = ConnectionSecurityLevel::PLAINTEXT;
+    if (args().m_enableCrypto) {
+        security_level = ConnectionSecurityLevel::ENCRYPTED;
+        if (args().check_client_certificates) {
+            security_level = ConnectionSecurityLevel::ENCRYPTED_AUTHENTICATED;
+        }
+    }
+
     ClientListener* listen = new ClientListener(
         address,
         new TCPSocketFactory(m_events, getSocketMultiplexer()),
-        m_events,
-        args().m_enableCrypto);
+        m_events, security_level);
 
     m_events->adoptHandler(
         m_events->forClientListener().connected(), listen,

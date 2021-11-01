@@ -65,6 +65,11 @@ void SslCertificate::generate_fingerprint(const barrier::fs::path& cert_path)
 {
     try {
         auto local_path = barrier::DataDirectories::local_ssl_fingerprints_path();
+        auto local_dir = local_path.parent_path();
+        if (!barrier::fs::exists(local_dir)) {
+            barrier::fs::create_directories(local_dir);
+        }
+
         barrier::FingerprintDatabase db;
         db.add_trusted(barrier::get_pem_file_cert_fingerprint(cert_path.u8string(),
                                                               barrier::FingerprintType::SHA1));

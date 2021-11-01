@@ -63,9 +63,15 @@ jobs:
         artifactName: Windows Release Installer
 
 - job: LinuxBuild
+  strategy:
+    matrix:
+      ubuntu-18.04:
+        imageName: 'ubuntu-18.04'
+      ubuntu-20.04:
+        imageName: 'ubuntu-20.04'
   displayName: Linux Build
   pool:
-    vmImage: 'ubuntu-16.04'
+    vmImage: $(imageName)
   steps:
     - script: sudo apt-get update -y
     - script: sudo apt-get install -y libxtst-dev qtdeclarative5-dev libavahi-compat-libdnssd-dev libcurl4-openssl-dev
@@ -75,13 +81,22 @@ jobs:
 
 - job: MacBuild
   displayName: Mac Build
-  pool:
-    vmImage: 'macOS-10.14'
   strategy:
     matrix:
-      Release:
-        B_BUILD_TYPE: Release
-        BARRIER_VERSION_STAGE: Release
+      big-sur-Release:
+          imageName: "macOS-11"
+          B_BUILD_TYPE: Release
+          BARRIER_VERSION_STAGE: Release
+      catalina-Release:
+          imageName: "macOS-10.15"
+          B_BUILD_TYPE: Release
+          BARRIER_VERSION_STAGE: Release
+      mojave-Release:
+          imageName: "macOS-10.14"
+          B_BUILD_TYPE: Release
+          BARRIER_VERSION_STAGE: Release
+  pool:
+    vmImage: $(imageName)
   variables:
     VERBOSE: 1
     TERM: xterm-256color

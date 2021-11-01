@@ -101,6 +101,8 @@ SecureSocket::close()
 
 void SecureSocket::freeSSLResources()
 {
+    std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
+
     if (m_ssl->m_ssl != NULL) {
         SSL_shutdown(m_ssl->m_ssl);
         SSL_free(m_ssl->m_ssl);
@@ -265,6 +267,8 @@ SecureSocket::doWrite()
 int
 SecureSocket::secureRead(void* buffer, int size, int& read)
 {
+    std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
+
     if (m_ssl->m_ssl != NULL) {
         LOG((CLOG_DEBUG2 "reading secure socket"));
         read = SSL_read(m_ssl->m_ssl, buffer, size);
@@ -291,6 +295,8 @@ SecureSocket::secureRead(void* buffer, int size, int& read)
 int
 SecureSocket::secureWrite(const void* buffer, int size, int& wrote)
 {
+    std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
+
     if (m_ssl->m_ssl != NULL) {
         LOG((CLOG_DEBUG2 "writing secure socket:%p", this));
 
@@ -324,6 +330,8 @@ SecureSocket::isSecureReady()
 void
 SecureSocket::initSsl(bool server)
 {
+    std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
+
     m_ssl = new Ssl();
     m_ssl->m_context = NULL;
     m_ssl->m_ssl = NULL;
@@ -333,6 +341,8 @@ SecureSocket::initSsl(bool server)
 
 bool SecureSocket::load_certificates(const barrier::fs::path& path)
 {
+    std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
+
     if (path.empty()) {
         showError("ssl certificate is not specified");
         return false;
@@ -374,6 +384,8 @@ static int cert_verify_ignore_callback(X509_STORE_CTX*, void*)
 void
 SecureSocket::initContext(bool server)
 {
+    // ssl_mutex_ is assumed to be acquired
+
     SSL_library_init();
 
     const SSL_METHOD* method;
@@ -419,6 +431,8 @@ SecureSocket::initContext(bool server)
 void
 SecureSocket::createSSL()
 {
+    // ssl_mutex_ is assumed to be acquired
+
     // I assume just one instance is needed
     // get new SSL state with context
     if (m_ssl->m_ssl == NULL) {
@@ -430,6 +444,8 @@ SecureSocket::createSSL()
 int
 SecureSocket::secureAccept(int socket)
 {
+    std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
+
     createSSL();
 
     // set connection socket to SSL state
@@ -497,11 +513,14 @@ SecureSocket::secureAccept(int socket)
 int
 SecureSocket::secureConnect(int socket)
 {
+    // note that load_certificates acquires ssl_mutex_
     if (!load_certificates(barrier::DataDirectories::ssl_certificate_path())) {
         LOG((CLOG_ERR "could not load client certificates"));
         // FIXME: this is fatal error, but we current don't disconnect because whole logic in this
         // function needs to be cleaned up
     }
+
+    std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
 
     createSSL();
 
@@ -555,6 +574,7 @@ SecureSocket::secureConnect(int socket)
 bool
 SecureSocket::ensure_peer_certificate()
 {
+    // ssl_mutex_ is assumed to be acquired
     X509* cert;
     char* line;
 
@@ -577,6 +597,8 @@ SecureSocket::ensure_peer_certificate()
 void
 SecureSocket::checkResult(int status, int& retry)
 {
+    // ssl_mutex_ is assumed to be acquired
+
     // ssl errors are a little quirky. the "want" errors are normal and
     // should result in a retry.
 
@@ -692,6 +714,8 @@ SecureSocket::disconnect()
 
 bool SecureSocket::verify_cert_fingerprint(const barrier::fs::path& fingerprint_db_path)
 {
+    // ssl_mutex_ is assumed to be acquired
+
     // calculate received certificate fingerprint
     barrier::FingerprintData fingerprint_sha1, fingerprint_sha256;
     try {
@@ -818,6 +842,8 @@ showCipherStackDesc(STACK_OF(SSL_CIPHER) * stack) {
 void
 SecureSocket::showSecureCipherInfo()
 {
+    // ssl_mutex_ is assumed to be acquired
+
     STACK_OF(SSL_CIPHER) * sStack = SSL_get_ciphers(m_ssl->m_ssl);
 
     if (sStack == NULL) {
@@ -860,6 +886,8 @@ SecureSocket::showSecureLibInfo()
 void
 SecureSocket::showSecureConnectInfo()
 {
+    // ssl_mutex_ is assumed to be acquired
+
     const SSL_CIPHER* cipher = SSL_get_current_cipher(m_ssl->m_ssl);
 
     if (cipher != NULL) {

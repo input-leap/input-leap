@@ -1,0 +1,4 @@
+SECURITY ISSUE
+
+Fixed a bug which caused Barrier to crash when disconnecting a TCP session just after sending Hello message.
+This bug allowed an unauthenticated attacker to crash Barrier with only network access.

@@ -27,7 +27,6 @@
 #include "arch/win32/ArchMiscWindows.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
-#include "base/IJob.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
 #include "base/IEventQueue.h"
@@ -97,10 +96,9 @@
 // MSWindowsDesks
 //
 
-MSWindowsDesks::MSWindowsDesks(
-        bool isPrimary, bool noHooks,
+MSWindowsDesks::MSWindowsDesks(bool isPrimary, bool noHooks,
         const IScreenSaver* screensaver, IEventQueue* events,
-        IJob* updateKeys, bool stopOnDeskSwitch) :
+        const std::function<void()>& updateKeys, bool stopOnDeskSwitch) :
     m_isPrimary(isPrimary),
     m_noHooks(noHooks),
     m_isOnScreen(m_isPrimary),
@@ -130,7 +128,6 @@ MSWindowsDesks::~MSWindowsDesks()
     disable();
     destroyClass(m_deskClass);
     destroyCursor(m_cursor);
-    delete m_updateKeys;
 }
 
 void
@@ -709,7 +706,7 @@ MSWindowsDesks::deskThread(void* vdesk)
         }
 
         case BARRIER_MSG_SYNC_KEYS:
-            m_updateKeys->run();
+            m_updateKeys();
             break;
 
         case BARRIER_MSG_SCREENSAVER:

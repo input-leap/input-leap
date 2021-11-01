@@ -134,8 +134,7 @@ MSWindowsScreen::MSWindowsScreen(
                             m_noHooks,
                             m_screensaver,
                             m_events,
-                            new TMethodJob<MSWindowsScreen>(
-                                this, &MSWindowsScreen::updateKeysCB),
+                                           [this]() { updateKeysCB(); },
                             stopOnDeskSwitch);
         m_keyState    = new MSWindowsKeyState(m_desks, getEventTarget(), m_events);
 
@@ -1713,7 +1712,7 @@ MSWindowsScreen::mapPressFromEvent(WPARAM msg, LPARAM) const
 }
 
 void
-MSWindowsScreen::updateKeysCB(void*)
+MSWindowsScreen::updateKeysCB()
 {
     // record which keys we think are down
     bool down[IKeyState::kNumButtons];

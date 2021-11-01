@@ -15,27 +15,40 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BARRIER_LIB_NET_SECUREUTILS_H
-#define BARRIER_LIB_NET_SECUREUTILS_H
+#ifndef BARRIER_LIB_NET_FINGERPRINT_TYPE_H
+#define BARRIER_LIB_NET_FINGERPRINT_TYPE_H
 
-#include "FingerprintType.h"
-#include <openssl/ossl_typ.h>
-#include <cstdint>
 #include <string>
-#include <vector>
 
 namespace barrier {
 
-std::string format_ssl_fingerprint(const std::vector<std::uint8_t>& fingerprint,
-                                   bool separator = true);
+enum FingerprintType {
+    INVALID,
+    SHA1, // deprecated
+    SHA256,
+};
 
-std::vector<std::uint8_t> get_ssl_cert_fingerprint(X509* cert, FingerprintType type);
+inline const char* fingerprint_type_to_string(FingerprintType type)
+{
+    switch (type) {
+        case FingerprintType::INVALID: return "invalid";
+        case FingerprintType::SHA1: return "sha1";
+        case FingerprintType::SHA256: return "sha256";
+    }
+    return "invalid";
+}
 
-std::vector<std::uint8_t> get_pem_file_cert_fingerprint(const std::string& path,
-                                                        FingerprintType type);
-
-void generate_pem_self_signed_cert(const std::string& path);
+inline FingerprintType fingerprint_type_from_string(const std::string& type)
+{
+    if (type == "sha1") {
+        return FingerprintType::SHA1;
+    }
+    if (type == "sha256") {
+        return FingerprintType::SHA256;
+    }
+    return FingerprintType::INVALID;
+}
 
 } // namespace barrier
 
-#endif // BARRIER_LIB_NET_SECUREUTILS_H
+#endif // BARRIER_LIB_NET_FINGERPRINT_TYPE_H

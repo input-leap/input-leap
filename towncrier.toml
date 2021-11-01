@@ -1,0 +1,39 @@
+[tool.towncrier]
+    package = ""
+    directory = "doc/newsfragments"
+    filename = "doc/release_notes/index.md"
+    template = "doc/release_notes/index.template.jinja"
+    title_format = "\nBarrier `{version}` ( `{project_date}` )\n================================\n"
+    start_string = "[comment]: <> (towncrier release notes start)"
+    [[tool.towncrier.section]]
+        path = ""
+
+    [[tool.towncrier.type]]
+        directory = "security"
+        name = "Security fixes"
+        showcontent = false
+
+    [[tool.towncrier.type]]
+        directory = "feature"
+        name = "Features"
+        showcontent = true
+
+    [[tool.towncrier.type]]
+        directory = "bugfix"
+        name = "Bug fixes"
+        showcontent = true
+
+    [[tool.towncrier.type]]
+        directory = "doc"
+        name = "Improved Documentation"
+        showcontent = true
+
+    [[tool.towncrier.type]]
+        directory = "removal"
+        name = "Deprecations and Removals"
+        showcontent = true
+
+    [[tool.towncrier.type]]
+        directory = "misc"
+        name = "Miscellaneous"
+        showcontent = false

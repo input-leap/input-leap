@@ -16,6 +16,7 @@
  */
 
 #include "SecureSocket.h"
+#include "SecureUtils.h"
 
 #include "net/TSocketMultiplexerMethodJob.h"
 #include "base/TMethodEventJob.h"
@@ -656,25 +657,6 @@ SecureSocket::disconnect()
     sendEvent(getEvents()->forIStream().inputShutdown());
 }
 
-void SecureSocket::formatFingerprint(std::string& fingerprint, bool hex, bool separator)
-{
-    if (hex) {
-        // to hexadecimal
-        barrier::string::toHex(fingerprint, 2);
-    }
-
-    // all uppercase
-    barrier::string::uppercase(fingerprint);
-
-    if (separator) {
-        // add colon to separate each 2 characters
-        size_t separators = fingerprint.size() / 2;
-        for (size_t i = 1; i < separators; i++) {
-            fingerprint.insert(i * 3 - 1, ":");
-        }
-    }
-}
-
 bool
 SecureSocket::verifyCertFingerprint()
 {
@@ -693,7 +675,7 @@ SecureSocket::verifyCertFingerprint()
 
     // format fingerprint into hexdecimal format with colon separator
     std::string fingerprint(reinterpret_cast<char*>(tempFingerprint), tempFingerprintLen);
-    formatFingerprint(fingerprint);
+    format_ssl_fingerprint(fingerprint);
     LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
 
     std::string trustedServersFilename;

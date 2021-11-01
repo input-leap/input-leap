@@ -68,7 +68,6 @@ private:
     void                showError(const std::string& reason);
     std::string getError();
     void                disconnect();
-    void formatFingerprint(std::string& fingerprint, bool hex = true, bool separator = true);
     bool                verifyCertFingerprint();
 
     MultiplexerJobStatus serviceConnect(ISocketMultiplexerJob*, bool, bool, bool);

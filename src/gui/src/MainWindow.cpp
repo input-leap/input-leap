@@ -442,7 +442,7 @@ void MainWindow::checkFingerprint(const QString& line)
         barrier::string::from_hex(fingerprintRegex.cap(2).toStdString())
     };
 
-    bool is_client = barrierType() == barrierClient;
+    bool is_client = barrier_type() == BarrierType::Client;
 
     auto db_path = is_client
             ? barrier::DataDirectories::trusted_servers_ssl_fingerprints_path()
@@ -600,8 +600,8 @@ void MainWindow::startBarrier()
     args << "--profile-dir" << QString::fromStdString("\"" + barrier::DataDirectories::profile().u8string() + "\"");
 #endif
 
-    if ((barrierType() == barrierClient && !clientArgs(args, app))
-        || (barrierType() == barrierServer && !serverArgs(args, app)))
+    if ((barrier_type() == BarrierType::Client && !clientArgs(args, app))
+        || (barrier_type() == BarrierType::Server && !serverArgs(args, app)))
     {
         stopBarrier();
         return;
@@ -616,7 +616,7 @@ void MainWindow::startBarrier()
 
     m_pLogWindow->startNewInstance();
 
-    appendLogInfo("starting " + QString(barrierType() == barrierServer ? "server" : "client"));
+    appendLogInfo("starting " + QString(barrier_type() == BarrierType::Server ? "server" : "client"));
 
     qDebug() << args;
 
@@ -724,6 +724,11 @@ QString MainWindow::configFilename()
         filename = m_pLineEditConfigFile->text();
     }
     return filename;
+}
+
+BarrierType MainWindow::barrier_type() const
+{
+    return m_pGroupClient->isChecked() ? BarrierType::Client : BarrierType::Server;
 }
 
 QString MainWindow::address()
@@ -1020,7 +1025,7 @@ void MainWindow::updateZeroconfService()
                 m_pZeroconfService = NULL;
             }
 
-            if (m_AppConfig->autoConfig() || barrierType() == barrierServer) {
+            if (m_AppConfig->autoConfig() || barrier_type() == BarrierType::Server) {
                 m_pZeroconfService = new ZeroconfService(this);
             }
         }

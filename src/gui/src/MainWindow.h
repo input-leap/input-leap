@@ -20,6 +20,8 @@
 
 #define MAINWINDOW__H
 
+#include "barrier/BarrierType.h"
+
 #include <QMainWindow>
 #include <QSystemTrayIcon>
 #include <QSettings>
@@ -76,12 +78,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
             barrierTransfering
         };
 
-        enum qBarrierType
-        {
-            barrierClient,
-            barrierServer
-        };
-
         enum qLevel {
             Error,
             Info
@@ -98,7 +94,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 
     public:
         void setVisible(bool visible);
-        int barrierType() const { return m_pGroupClient->isChecked() ? barrierClient : barrierServer; }
+        BarrierType barrier_type() const;
         int barrierState() const { return m_BarrierState; }
         QString hostname() const { return m_pLineEditHostname->text(); }
         QString configFilename();

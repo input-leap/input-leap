@@ -66,7 +66,7 @@ ZeroconfService::ZeroconfService(MainWindow* mainWindow) :
     m_ServiceRegistered(false)
 {
     silence_avahi_warning();
-    if (m_pMainWindow->barrierType() == MainWindow::barrierServer) {
+    if (m_pMainWindow->barrier_type() == BarrierType::Server) {
         if (registerService(true)) {
             m_pZeroconfBrowser = new ZeroconfBrowser(this);
             connect(m_pZeroconfBrowser, SIGNAL(

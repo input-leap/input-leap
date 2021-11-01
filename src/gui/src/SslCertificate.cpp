@@ -30,16 +30,8 @@
 #include <openssl/pem.h>
 #include <openssl/x509.h>
 
-static const char kCertificateLifetime[] = "365";
-static const char kCertificateSubjectInfo[] = "/CN=Barrier";
 static const char kCertificateFilename[] = "Barrier.pem";
 static const char kSslDir[] = "SSL";
-static const char kUnixOpenSslCommand[] = "openssl";
-
-#if defined(Q_OS_WIN)
-static const char kWinOpenSslBinary[] = "openssl.exe";
-static const char kConfigFile[] = "barrier.conf";
-#endif
 
 SslCertificate::SslCertificate(QObject *parent) :
     QObject(parent)
@@ -50,93 +42,21 @@ SslCertificate::SslCertificate(QObject *parent) :
     }
 }
 
-std::pair<bool, std::string> SslCertificate::runTool(const QStringList& args)
-{
-    QString program;
-#if defined(Q_OS_WIN)
-    program = QCoreApplication::applicationDirPath();
-    program.append("\\").append(kWinOpenSslBinary);
-#else
-    program = kUnixOpenSslCommand;
-#endif
-
-
-    QStringList environment;
-#if defined(Q_OS_WIN)
-    environment << QString("OPENSSL_CONF=%1\\%2")
-        .arg(QCoreApplication::applicationDirPath())
-        .arg(kConfigFile);
-#endif
-
-    QProcess process;
-    process.setEnvironment(environment);
-    process.start(program, args);
-
-    bool success = process.waitForStarted();
-    std::string output;
-
-    QString standardError;
-    if (success && process.waitForFinished())
-    {
-        output = process.readAllStandardOutput().trimmed().toStdString();
-        standardError = process.readAllStandardError().trimmed();
-    }
-
-    int code = process.exitCode();
-    if (!success || code != 0)
-    {
-        emit error(
-            QString("SSL tool failed: %1\n\nCode: %2\nError: %3")
-                .arg(program)
-                .arg(process.exitCode())
-                .arg(standardError.isEmpty() ? "Unknown" : standardError));
-        return {false, output};
-    }
-
-    return {true, output};
-}
-
 void SslCertificate::generateCertificate()
 {
     auto filename = QString::fromStdString(getCertificatePath());
 
     QFile file(filename);
     if (!file.exists() || !isCertificateValid(filename)) {
-        QStringList arguments;
-
-        // self signed certificate
-        arguments.append("req");
-        arguments.append("-x509");
-        arguments.append("-nodes");
-
-        // valid duration
-        arguments.append("-days");
-        arguments.append(kCertificateLifetime);
-
-        // subject information
-        arguments.append("-subj");
-
-        QString subInfo(kCertificateSubjectInfo);
-        arguments.append(subInfo);
-
-        // private key
-        arguments.append("-newkey");
-        arguments.append("rsa:2048");
-
         QDir sslDir(QString::fromStdString(getCertificateDirectory()));
         if (!sslDir.exists()) {
             sslDir.mkpath(".");
         }
 
-        // key output filename
-        arguments.append("-keyout");
-        arguments.append(filename);
-
-        // certificate output filename
-        arguments.append("-out");
-        arguments.append(filename);
-
-        if (!runTool(arguments).first) {
+        try {
+            barrier::generate_pem_self_signed_cert(filename.toStdString());
+        }  catch (const std::exception& e) {
+            emit error(QString("SSL tool failed: %1").arg(e.what()));
             return;
         }
 

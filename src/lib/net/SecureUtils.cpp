@@ -20,6 +20,7 @@
 #include "base/finally.h"
 #include "io/fstream.h"
 
+#include <openssl/evp.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
 #include <openssl/pem.h>
@@ -95,6 +96,50 @@ std::vector<std::uint8_t> get_pem_file_cert_fingerprint(const std::string& path,
     auto cert_free = finally([cert]() { X509_free(cert); });
 
     return get_ssl_cert_fingerprint(cert, type);
+}
+
+void generate_pem_self_signed_cert(const std::string& path)
+{
+    auto expiration_days = 365;
+
+    auto* private_key = EVP_PKEY_new();
+    if (!private_key) {
+        throw std::runtime_error("Could not allocate private key for certificate");
+    }
+    auto private_key_free = finally([private_key](){ EVP_PKEY_free(private_key); });
+
+    auto* rsa = RSA_generate_key(2048, RSA_F4, nullptr, nullptr);
+    if (!rsa) {
+        throw std::runtime_error("Failed to generate RSA key");
+    }
+    EVP_PKEY_assign_RSA(private_key, rsa);
+
+    auto* cert = X509_new();
+    if (!cert) {
+        throw std::runtime_error("Could not allocate certificate");
+    }
+    auto cert_free = finally([cert]() { X509_free(cert); });
+
+    ASN1_INTEGER_set(X509_get_serialNumber(cert), 1);
+    X509_gmtime_adj(X509_get_notBefore(cert), 0);
+    X509_gmtime_adj(X509_get_notAfter(cert), expiration_days * 24 * 3600);
+    X509_set_pubkey(cert, private_key);
+
+    auto* name = X509_get_subject_name(cert);
+    X509_NAME_add_entry_by_txt(name, "CN", MBSTRING_ASC,
+                               reinterpret_cast<const unsigned char *>("Barrier"), -1, -1, 0);
+    X509_set_issuer_name(cert, name);
+
+    X509_sign(cert, private_key, EVP_sha256());
+
+    auto fp = fopen_utf8_path(path.c_str(), "r");
+    if (!fp) {
+        throw std::runtime_error("Could not open certificate output path");
+    }
+    auto file_close = finally([fp]() { std::fclose(fp); });
+
+    PEM_write_PrivateKey(fp, private_key, nullptr, nullptr, 0, nullptr, nullptr);
+    PEM_write_X509(fp, cert);
 }
 
 } // namespace barrier

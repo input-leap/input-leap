@@ -38,6 +38,8 @@ std::vector<std::uint8_t> get_ssl_cert_fingerprint(X509* cert, FingerprintType t
 std::vector<std::uint8_t> get_pem_file_cert_fingerprint(const std::string& path,
                                                         FingerprintType type);
 
+void generate_pem_self_signed_cert(const std::string& path);
+
 } // namespace barrier
 
 #endif // BARRIER_LIB_NET_SECUREUTILS_H

@@ -23,7 +23,7 @@ std::string format_ssl_fingerprint(const std::string& fingerprint, bool hex, boo
     std::string result = fingerprint;
     if (hex) {
         // to hexadecimal
-        barrier::string::toHex(result, 2);
+        result = barrier::string::to_hex(result, 2);
     }
 
     // all uppercase
@@ -36,4 +36,5 @@ std::string format_ssl_fingerprint(const std::string& fingerprint, bool hex, boo
             result.insert(i * 3 - 1, ":");
         }
     }
+    return result;
 }

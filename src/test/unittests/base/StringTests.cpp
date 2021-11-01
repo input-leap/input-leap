@@ -59,9 +59,7 @@ TEST(StringTests, toHex_plaintext_hexString)
     String subject = "foobar";
     int width = 2;
 
-    string::toHex(subject, width);
-
-    EXPECT_EQ("666f6f626172", subject);
+    EXPECT_EQ("666f6f626172", string::to_hex(subject, width));
 }
 
 TEST(StringTests, uppercase_lowercaseInput_uppercaseOutput)

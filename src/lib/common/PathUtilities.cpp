@@ -44,32 +44,3 @@ std::string PathUtilities::basename(const std::string& path)
     return path.substr(path.find_last_of(Delimiters) + 1);
 }
 
-std::string PathUtilities::concat(const std::string& left, const std::string& right)
-{
-    // although npos is usually (-1) we can't count on that so handle it explicitly
-    auto leftEnd = left.find_last_not_of(Delimiters);
-    if (leftEnd == std::string::npos)
-        leftEnd = 0;
-    else
-        ++leftEnd;
-    auto rightStart = right.find_first_not_of(Delimiters, 0);
-    if (rightStart == std::string::npos) {
-        // both left/right are empty
-        if (left.size() == 0 && right.size() == 0)
-            return "";
-        // right is full of delims, left is okay
-        if (leftEnd > 0)
-            return left.substr(0, leftEnd);
-        // both left/right useless but at least one has delims
-        return std::string(1, DefaultDelimiter);
-    }
-    if (leftEnd == 0) {
-        // right is okay and not prefixed with delims, left is empty
-        if (left.size() == 0 && rightStart == 0)
-            return right.substr(rightStart);
-        // (right is okay and prefixed with delims) OR left is full of delims
-        return DefaultDelimiter + right.substr(rightStart);
-    }
-    // concatenation using both left and right
-    return left.substr(0, leftEnd) + DefaultDelimiter + right.substr(rightStart);
-}

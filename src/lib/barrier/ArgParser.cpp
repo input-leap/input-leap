@@ -288,10 +288,10 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
         argsBase().m_enableCrypto = false;
     }
     else if (isArg(i, argc, argv, NULL, "--profile-dir", 1)) {
-        argsBase().m_profileDirectory = argv[++i];
+        argsBase().m_profileDirectory = barrier::fs::u8path(argv[++i]);
     }
     else if (isArg(i, argc, argv, NULL, "--plugin-dir", 1)) {
-        argsBase().m_pluginDirectory = argv[++i];
+        argsBase().m_pluginDirectory = barrier::fs::u8path(argv[++i]);
     }
     else {
         // option not supported here

@@ -43,7 +43,7 @@ m_dropTarget(""),
 m_shouldExit(false),
 m_barrierAddress(),
     m_enableCrypto(true),
-m_profileDirectory(""),
+m_profileDirectory(),
 m_pluginDirectory("")
 {
 }

@@ -18,49 +18,7 @@
 
 #pragma once
 
-#include "common/common.h"
-
-//
-// pick types of particular sizes
-//
-
-#if !defined(TYPE_OF_SIZE_1)
-#    if SIZEOF_CHAR == 1
-#        define TYPE_OF_SIZE_1 char
-#    endif
-#endif
-
-#if !defined(TYPE_OF_SIZE_2)
-#    if SIZEOF_INT == 2
-#        define TYPE_OF_SIZE_2 int
-#    else
-#        define TYPE_OF_SIZE_2 short
-#    endif
-#endif
-
-#if !defined(TYPE_OF_SIZE_4)
-    // Carbon defines SInt32 and UInt32 in terms of long
-#    if SIZEOF_INT == 4 && !defined(__APPLE__)
-#        define TYPE_OF_SIZE_4 int
-#    else
-#        define TYPE_OF_SIZE_4 long
-#    endif
-#endif
-
-    //
-// verify existence of required types
-//
-
-#if !defined(TYPE_OF_SIZE_1)
-#    error No 1 byte integer type
-#endif
-#if !defined(TYPE_OF_SIZE_2)
-#    error No 2 byte integer type
-#endif
-#if !defined(TYPE_OF_SIZE_4)
-#    error No 4 byte integer type
-#endif
-
+#include <cstdint>
 
 //
 // make typedefs
@@ -75,18 +33,11 @@
 #if defined(__APPLE__)
 #include <CoreServices/CoreServices.h>
 #else
-typedef signed TYPE_OF_SIZE_1    SInt8;
-typedef signed TYPE_OF_SIZE_2    SInt16;
-typedef signed TYPE_OF_SIZE_4    SInt32;
-typedef unsigned TYPE_OF_SIZE_1    UInt8;
-typedef unsigned TYPE_OF_SIZE_2    UInt16;
-typedef unsigned TYPE_OF_SIZE_4    UInt32;
+using SInt8 = std::int8_t;
+using SInt16 = std::int16_t;
+using SInt32 = std::int32_t;
+using UInt8 = std::uint8_t;
+using UInt16 = std::uint16_t;
+using UInt32 = std::uint32_t;
 #endif
 #endif
-//
-// clean up
-//
-
-#undef TYPE_OF_SIZE_1
-#undef TYPE_OF_SIZE_2
-#undef TYPE_OF_SIZE_4

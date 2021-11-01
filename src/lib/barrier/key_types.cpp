@@ -17,6 +17,7 @@
  */
 
 #include "barrier/key_types.h"
+#include <cstddef>
 
 const KeyNameMapEntry kKeyNameMap[] = {
     { "AltGr",            kKeyAltGr },

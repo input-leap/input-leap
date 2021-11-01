@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "common/basic_types.h"
+#include <cstddef>
 
 class Chunk {
 public:

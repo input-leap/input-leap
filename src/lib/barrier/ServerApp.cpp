@@ -835,7 +835,7 @@ ServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc
     // general initialization
     m_barrierAddress = new NetworkAddress;
     args().m_config         = new Config(m_events);
-    args().m_exename = PathUtilities::basename(argv[0]);
+    args().m_exename = ArgParser::parse_exename(argv[0]);
 
     // install caller's output filter
     if (outputter != NULL) {

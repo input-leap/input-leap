@@ -19,11 +19,11 @@
 #define BARRIER_TEST_GLOBAL_TEST_UTILS_H
 
 #include <cstdint>
-#include <string>
+#include <vector>
 
 namespace barrier {
 
-std::string generate_pseudo_random_bytes(std::size_t seed, std::size_t size);
+std::vector<std::uint8_t> generate_pseudo_random_bytes(std::size_t seed, std::size_t size);
 
 } // namespace barrier
 

@@ -20,13 +20,9 @@
 
 namespace barrier {
 
-std::string format_ssl_fingerprint(const std::string& fingerprint, bool hex, bool separator)
+std::string format_ssl_fingerprint(const std::vector<uint8_t>& fingerprint, bool separator)
 {
-    std::string result = fingerprint;
-    if (hex) {
-        // to hexadecimal
-        result = barrier::string::to_hex(result, 2);
-    }
+    std::string result = barrier::string::to_hex(fingerprint, 2);
 
     // all uppercase
     barrier::string::uppercase(result);

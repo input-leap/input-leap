@@ -19,11 +19,12 @@
 #define BARRIER_LIB_NET_SECUREUTILS_H
 
 #include <string>
+#include <vector>
 
 namespace barrier {
 
-std::string format_ssl_fingerprint(const std::string& fingerprint,
-                                   bool hex = true, bool separator = true);
+std::string format_ssl_fingerprint(const std::vector<std::uint8_t>& fingerprint,
+                                   bool separator = true);
 
 } // namespace barrier
 

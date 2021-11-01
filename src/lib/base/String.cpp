@@ -221,12 +221,12 @@ removeFileExt(std::string filename)
     return filename.substr(0, dot);
 }
 
-std::string to_hex(const std::string& subject, int width, const char fill)
+std::string to_hex(const std::vector<std::uint8_t>& subject, int width, const char fill)
 {
     std::stringstream ss;
     ss << std::hex;
-    for (unsigned int i = 0; i < subject.length(); i++) {
-        ss << std::setw(width) << std::setfill(fill) << (int)(unsigned char)subject[i];
+    for (unsigned int i = 0; i < subject.size(); i++) {
+        ss << std::setw(width) << std::setfill(fill) << static_cast<int>(subject[i]);
     }
 
     return ss.str();

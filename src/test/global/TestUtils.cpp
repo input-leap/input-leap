@@ -20,18 +20,18 @@
 
 namespace barrier {
 
-std::string generate_pseudo_random_bytes(std::size_t seed, std::size_t size)
+std::vector<std::uint8_t> generate_pseudo_random_bytes(std::size_t seed, std::size_t size)
 {
     std::mt19937_64 engine{seed};
     std::uniform_int_distribution<int> dist{0, 255};
-    std::vector<char> bytes;
+    std::vector<std::uint8_t> bytes;
 
     bytes.reserve(size);
     for (std::size_t i = 0; i < size; ++i) {
         bytes.push_back(dist(engine));
     }
 
-    return std::string{bytes.data(), bytes.size()};
+    return bytes;
 }
 
 } // namespace barrier

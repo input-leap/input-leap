@@ -674,8 +674,10 @@ SecureSocket::verifyCertFingerprint()
     }
 
     // format fingerprint into hexdecimal format with colon separator
-    std::string fingerprint(reinterpret_cast<char*>(tempFingerprint), tempFingerprintLen);
-    fingerprint = barrier::format_ssl_fingerprint(fingerprint);
+    std::vector<std::uint8_t> fingerprint_raw;
+    fingerprint_raw.assign(reinterpret_cast<std::uint8_t*>(tempFingerprint),
+                           reinterpret_cast<std::uint8_t*>(tempFingerprint) + tempFingerprintLen);
+    auto fingerprint = barrier::format_ssl_fingerprint(fingerprint_raw);
     LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
 
     std::string trustedServersFilename;

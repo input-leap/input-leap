@@ -24,8 +24,8 @@ namespace barrier {
 
 TEST(SecureUtilsTest, FormatSslFingerprintHexWithSeparators)
 {
-    std::string fingerprint = generate_pseudo_random_bytes(0, 32);
-    ASSERT_EQ(format_ssl_fingerprint(fingerprint, true, true),
+    auto fingerprint = generate_pseudo_random_bytes(0, 32);
+    ASSERT_EQ(format_ssl_fingerprint(fingerprint, true),
               "28:FD:0A:98:8A:0E:A1:6C:D7:E8:6C:A7:EE:58:41:71:"
               "CA:B2:8E:49:25:94:90:25:26:05:8D:AF:63:ED:2E:30");
 }

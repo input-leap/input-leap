@@ -56,7 +56,7 @@ TEST(StringTests, sprintf_formatWithArgument_formatedString)
 
 TEST(StringTests, toHex_plaintext_hexString)
 {
-    String subject = "foobar";
+    std::vector<std::uint8_t> subject{'f', 'o', 'o', 'b', 'a', 'r'};
     int width = 2;
 
     EXPECT_EQ("666f6f626172", string::to_hex(subject, width));

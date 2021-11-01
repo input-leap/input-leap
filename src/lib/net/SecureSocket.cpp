@@ -497,7 +497,7 @@ SecureSocket::secureConnect(int socket)
     retry = 0;
     // No error, set ready, process and return ok
     m_secureReady = true;
-    if (verifyCertFingerprint()) {
+    if (verify_cert_fingerprint(barrier::DataDirectories::trusted_servers_ssl_fingerprints_path())) {
         LOG((CLOG_INFO "connected to secure socket"));
         if (!showCertificate()) {
             disconnect();
@@ -655,8 +655,7 @@ SecureSocket::disconnect()
     sendEvent(getEvents()->forIStream().inputShutdown());
 }
 
-bool
-SecureSocket::verifyCertFingerprint()
+bool SecureSocket::verify_cert_fingerprint(const barrier::fs::path& fingerprint_db_path)
 {
     // calculate received certificate fingerprint
     barrier::FingerprintData fingerprint_sha1, fingerprint_sha256;
@@ -675,8 +674,6 @@ SecureSocket::verifyCertFingerprint()
     LOG((CLOG_NOTE "server fingerprint (SHA1): %s (SHA256): %s",
          barrier::format_ssl_fingerprint(fingerprint_sha1.data).c_str(),
          barrier::format_ssl_fingerprint(fingerprint_sha256.data).c_str()));
-
-    auto fingerprint_db_path = barrier::DataDirectories::trusted_servers_ssl_fingerprints_path();
 
     // Provide debug hint as to what file is being used to verify fingerprint trust
     LOG((CLOG_NOTE "fingerprint_db_path: %s", fingerprint_db_path.u8string().c_str()));

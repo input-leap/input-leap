@@ -69,7 +69,7 @@ private:
     void                showError(const std::string& reason);
     std::string getError();
     void                disconnect();
-    bool                verifyCertFingerprint();
+    bool verify_cert_fingerprint(const barrier::fs::path& fingerprint_db_path);
 
     MultiplexerJobStatus serviceConnect(ISocketMultiplexerJob*, bool, bool, bool);
     MultiplexerJobStatus serviceAccept(ISocketMultiplexerJob*, bool, bool, bool);

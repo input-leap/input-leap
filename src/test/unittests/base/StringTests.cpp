@@ -69,11 +69,25 @@ TEST(StringTests, fromhex_plaintext_string)
     EXPECT_EQ(result, std::vector<std::uint8_t>(expected.begin(), expected.end()));
 }
 
+TEST(StringTests, fromhex_plaintext_string_colons)
+{
+    auto result = string::from_hex("66:6f:6f:62:61:72");
+    std::string expected = "foobar";
+    EXPECT_EQ(result, std::vector<std::uint8_t>(expected.begin(), expected.end()));
+}
+
 TEST(StringTests, fromhex_binary_string)
 {
     auto result = string::from_hex("01020304050600fff9");
     auto expected = std::vector<std::uint8_t>{1, 2, 3, 4, 5, 6, 0, 0xff, 0xf9};
     EXPECT_EQ(result, expected);
+}
+
+TEST(StringTests, fromhex_invalid_string)
+{
+    EXPECT_TRUE(string::from_hex("66:6").empty());
+    EXPECT_TRUE(string::from_hex("66:612").empty());
+    EXPECT_TRUE(string::from_hex("66:WW").empty());
 }
 
 TEST(StringTests, uppercase_lowercaseInput_uppercaseOutput)

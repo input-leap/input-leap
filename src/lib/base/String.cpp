@@ -234,20 +234,27 @@ std::string to_hex(const std::vector<std::uint8_t>& subject, int width, const ch
 
 std::vector<std::uint8_t> from_hex(const std::string& data)
 {
-    if ((data.size() % 2) != 0) {
-        return {};
-    }
-
     std::vector<std::uint8_t> result;
     result.reserve(data.size() / 2);
 
-    for (std::size_t i = 0; i < data.size(); i += 2) {
+    std::size_t i = 0;
+    while (i < data.size()) {
+        if (data[i] == ':') {
+            i++;
+            continue;
+        }
+
+        if (i + 2 > data.size()) {
+            return {}; // uneven character count follows, it's unclear how to interpret it
+        }
+
         auto high = hex_to_number(data[i]);
         auto low = hex_to_number(data[i + 1]);
         if (high < 0 || low < 0) {
             return {};
         }
         result.push_back(high * 16 + low);
+        i += 2;
     }
     return result;
 }

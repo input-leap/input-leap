@@ -29,7 +29,6 @@
 #include "arch/win32/XArchWindows.h"
 #include "arch/Arch.h"
 #include "base/log_outputters.h"
-#include "base/TMethodJob.h"
 #include "base/Log.h"
 #include "common/Version.h"
 
@@ -84,11 +83,8 @@ MSWindowsWatchdog::MSWindowsWatchdog(
 void
 MSWindowsWatchdog::startAsync()
 {
-    m_thread = new Thread(new TMethodJob<MSWindowsWatchdog>(
-        this, &MSWindowsWatchdog::mainLoop, nullptr));
-
-    m_outputThread = new Thread(new TMethodJob<MSWindowsWatchdog>(
-        this, &MSWindowsWatchdog::outputLoop, nullptr));
+    m_thread = new Thread([this](){ main_loop(); });
+    m_outputThread = new Thread([this](){ output_loop(); });
 }
 
 void
@@ -157,8 +153,7 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security)
     }
 }
 
-void
-MSWindowsWatchdog::mainLoop(void*)
+void MSWindowsWatchdog::main_loop()
 {
     shutdownExistingProcesses();
 
@@ -421,8 +416,7 @@ MSWindowsWatchdog::getCommand() const
     return cmd;
 }
 
-void
-MSWindowsWatchdog::outputLoop(void*)
+void MSWindowsWatchdog::output_loop()
 {
     // +1 char for \0
     CHAR buffer[kOutputBufferSize + 1];

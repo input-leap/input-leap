@@ -42,14 +42,13 @@ bool StreamChunker::s_interruptFile = false;
 Mutex* StreamChunker::s_interruptMutex = NULL;
 
 void
-StreamChunker::sendFile(
-                char* filename,
+StreamChunker::sendFile(const char* filename,
                 IEventQueue* events,
                 void* eventTarget)
 {
     s_isChunkingFile = true;
 
-    std::fstream file(static_cast<char*>(filename), std::ios::in | std::ios::binary);
+    std::fstream file(filename, std::ios::in | std::ios::binary);
 
     if (!file.is_open()) {
         throw runtime_error("failed to open file");

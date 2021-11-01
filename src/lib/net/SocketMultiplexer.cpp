@@ -26,7 +26,6 @@
 #include "arch/Arch.h"
 #include "arch/XArch.h"
 #include "base/Log.h"
-#include "base/TMethodJob.h"
 #include "common/stdvector.h"
 
 //
@@ -58,8 +57,7 @@ SocketMultiplexer::SocketMultiplexer() :
     m_jobListLockLocker(NULL)
 {
     // start thread
-    m_thread = new Thread(new TMethodJob<SocketMultiplexer>(
-                                this, &SocketMultiplexer::serviceThread));
+    m_thread = new Thread([this](){ service_thread(); });
 }
 
 SocketMultiplexer::~SocketMultiplexer()
@@ -95,7 +93,7 @@ void SocketMultiplexer::addSocket(ISocket* socket, std::unique_ptr<ISocketMultip
     if (i == m_socketJobMap.end()) {
         // we *must* put the job at the end so the order of jobs in
         // the list continue to match the order of jobs in pfds in
-        // serviceThread().
+        // service_thread().
         JobCursor j = m_socketJobs.insert(m_socketJobs.end(), std::move(job));
         m_update     = true;
         m_socketJobMap.insert(std::make_pair(socket, j));
@@ -125,7 +123,7 @@ SocketMultiplexer::removeSocket(ISocket* socket)
 
     // remove job.  rather than removing it from the map we put NULL
     // in the list instead so the order of jobs in the list continues
-    // to match the order of jobs in pfds in serviceThread().
+    // to match the order of jobs in pfds in service_thread().
     SocketJobMap::iterator i = m_socketJobMap.find(socket);
     if (i != m_socketJobMap.end()) {
         if (*(i->second)) {
@@ -138,8 +136,7 @@ SocketMultiplexer::removeSocket(ISocket* socket)
     unlockJobList();
 }
 
-void
-SocketMultiplexer::serviceThread(void*)
+void SocketMultiplexer::service_thread()
 {
     std::vector<IArchNetwork::PollEntry> pfds;
     IArchNetwork::PollEntry pfd;

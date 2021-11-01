@@ -31,7 +31,6 @@
 #include "net/SocketMultiplexer.h"
 #include "mt/Thread.h"
 #include "arch/Arch.h"
-#include "base/TMethodJob.h"
 #include "base/String.h"
 #include "base/Log.h"
 #include "base/EventQueue.h"

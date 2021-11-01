@@ -19,8 +19,7 @@
 #pragma once
 
 #include "arch/IArchMultithread.h"
-
-class IJob;
+#include <functional>
 
 //! Thread handle
 /*!
@@ -44,10 +43,9 @@ class Thread {
 public:
     //! Run \c adoptedJob in a new thread
     /*!
-    Create and start a new thread executing the \c adoptedJob.  The
-    new thread takes ownership of \c adoptedJob and will delete it.
+    Create and start a new thread executing the \c fun.
     */
-    Thread(IJob* adoptedJob);
+    Thread(const std::function<void()>& fun);
 
     //! Duplicate a thread handle
     /*!
@@ -192,7 +190,7 @@ public:
 private:
     Thread(ArchThread);
 
-    static void threadFunc(IJob*);
+    static void threadFunc(const std::function<void()>& func);
 
 private:
     ArchThread            m_thread;

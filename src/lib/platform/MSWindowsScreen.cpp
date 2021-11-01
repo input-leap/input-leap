@@ -36,11 +36,9 @@
 #include "mt/Thread.h"
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/Arch.h"
-#include "base/FunctionJob.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
-#include "base/TMethodJob.h"
 
 #include <string.h>
 #include <Shlobj.h>
@@ -354,17 +352,13 @@ MSWindowsScreen::leave()
     forceShowCursor();
 
     if (isDraggingStarted() && !m_isPrimary) {
-        m_sendDragThread = new Thread(
-            new TMethodJob<MSWindowsScreen>(
-                this,
-                &MSWindowsScreen::sendDragThread));
+        m_sendDragThread = new Thread([this](){ send_drag_thread(); });
     }
 
     return true;
 }
 
-void
-MSWindowsScreen::sendDragThread(void*)
+void MSWindowsScreen::send_drag_thread()
 {
     std::string& draggingFilename = getDraggingFilename();
     size_t size = draggingFilename.size();

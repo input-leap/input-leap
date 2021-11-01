@@ -108,7 +108,7 @@ private:
 protected:
     void                initIpcClient();
     void                cleanupIpcClient();
-    void                runEventsLoop(void*);
+    void run_events_loop();
 
     IArchTaskBarReceiver* m_taskBarReceiver;
     bool m_suspended;

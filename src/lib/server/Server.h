@@ -358,13 +358,13 @@ private:
     void                forceLeaveClient(BaseClientProxy* client);
 
     // thread function for sending file
-    void                sendFileThread(void*);
+    void send_file_thread(const char* filename);
 
     // thread function for writing file to drop directory
-    void                writeToDropDirThread(void*);
+    void write_to_drop_dir_thread();
 
     // thread function for sending drag information
-    void                sendDragInfoThread(void*);
+    void send_drag_info_thread(BaseClientProxy* newScreen);
 
     // send drag info to new client screen
     void                sendDragInfo(BaseClientProxy* newScreen);

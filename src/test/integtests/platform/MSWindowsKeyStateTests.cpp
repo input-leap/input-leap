@@ -24,7 +24,6 @@
 #include "platform/MSWindowsDesks.h"
 #include "platform/MSWindowsScreen.h"
 #include "platform/MSWindowsScreenSaver.h"
-#include "base/TMethodJob.h"
 
 #include "test/global/gtest.h"
 #include "test/global/gmock.h"

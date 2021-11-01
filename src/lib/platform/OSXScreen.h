@@ -174,7 +174,7 @@ private:
                            EventRef theEvent, void* inUserData);
 
     // sleep / wakeup support
-    void                watchSystemPowerThread(void*);
+    void watchSystemPowerThread();
     static void            testCanceled(CFRunLoopTimerRef timer, void*info);
     static void            powerChangeCallback(void* refcon, io_service_t service,
                             natural_t messageType, void* messageArgument);
@@ -201,7 +201,7 @@ private:
     // convert CFString to char*
     static char*        CFStringRefToUTF8String(CFStringRef aString);
 
-    void                getDropTargetThread(void*);
+    void get_drop_target_thread();
 
 private:
     struct HotKeyItem {

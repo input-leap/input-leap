@@ -222,7 +222,7 @@ private: // HACK
                             KeyModifierMask state, WPARAM wParam) const;
 
     // send drag info and data back to server
-    void                sendDragThread(void*);
+    void send_drag_thread();
 
 private:
     struct HotKeyItem {

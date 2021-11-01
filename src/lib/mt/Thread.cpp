@@ -28,12 +28,10 @@
 // Thread
 //
 
-Thread::Thread(IJob* job)
+Thread::Thread(const std::function<void()>& fun)
 {
-    m_thread = ARCH->newThread([job](){ threadFunc(job); });
+    m_thread = ARCH->newThread([=](){ threadFunc(fun); });
     if (m_thread == NULL) {
-        // couldn't create thread
-        delete job;
         throw XMTThreadUnavailable();
     }
 }
@@ -126,7 +124,7 @@ Thread::operator!=(const Thread& thread) const
     return !ARCH->isSameThread(m_thread, thread.m_thread);
 }
 
-void Thread::threadFunc(IJob* job)
+void Thread::threadFunc(const std::function<void()>& func)
 {
     // get this thread's id for logging
     IArchMultithread::ThreadID id;
@@ -139,13 +137,12 @@ void Thread::threadFunc(IJob* job)
     try {
         // go
         LOG((CLOG_DEBUG1 "thread 0x%08x entry", id));
-        job->run();
+        func();
         LOG((CLOG_DEBUG1 "thread 0x%08x exit", id));
     }
     catch (XThreadCancel&) {
         // client called cancel()
         LOG((CLOG_DEBUG1 "caught cancel on thread 0x%08x", id));
-        delete job;
         throw;
     }
     catch (XThreadExit&) {
@@ -153,15 +150,10 @@ void Thread::threadFunc(IJob* job)
     }
     catch (XBase& e) {
         LOG((CLOG_ERR "exception on thread 0x%08x: %s", id, e.what()));
-        delete job;
         throw;
     }
     catch (...) {
         LOG((CLOG_ERR "exception on thread 0x%08x: <unknown>", id));
-        delete job;
         throw;
     }
-
-    // done with job
-    delete job;
 }

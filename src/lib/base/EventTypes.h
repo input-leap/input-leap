@@ -133,6 +133,11 @@ public:
     */
     Event::Type        outputShutdown();
 
+    /** Get input format error event type
+
+        This is sent when a stream receives an irrecoverable input format error.
+    */
+    Event::Type inputFormatError();
     //@}
 
 private:
@@ -141,6 +146,7 @@ private:
     Event::Type        m_outputError;
     Event::Type        m_inputShutdown;
     Event::Type        m_outputShutdown;
+    Event::Type m_inputFormatError;
 };
 
 class IpcClientEvents : public EventTypes {

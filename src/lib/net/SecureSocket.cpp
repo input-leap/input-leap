@@ -27,6 +27,7 @@
 #include "base/String.h"
 #include "common/DataDirectories.h"
 #include "io/fstream.h"
+#include "net/FingerprintDatabase.h"
 
 #include <openssl/ssl.h>
 #include <openssl/err.h>
@@ -47,11 +48,6 @@ static const float s_retryDelay = 0.01f;
 enum {
     kMsgSize = 128
 };
-
-static const char kFingerprintDirName[] = "SSL/Fingerprints";
-//static const char kFingerprintLocalFilename[] = "Local.txt";
-static const char kFingerprintTrustedServersFilename[] = "TrustedServers.txt";
-//static const char kFingerprintTrustedClientsFilename[] = "TrustedClients.txt";
 
 struct Ssl {
     SSL_CTX*    m_context;
@@ -670,46 +666,33 @@ SecureSocket::verifyCertFingerprint()
         return false;
     }
 
-    auto fingerprint = barrier::format_ssl_fingerprint(fingerprint_raw);
-    LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
+    LOG((CLOG_NOTE "server fingerprint: %s",
+         barrier::format_ssl_fingerprint(fingerprint_raw).c_str()));
 
-    std::string trustedServersFilename;
-    trustedServersFilename = barrier::string::sprintf(
-        "%s/%s/%s",
-        DataDirectories::profile().c_str(),
-        kFingerprintDirName,
-        kFingerprintTrustedServersFilename);
+    auto fingerprint_db_path = DataDirectories::trusted_servers_ssl_fingerprints_path();
 
     // Provide debug hint as to what file is being used to verify fingerprint trust
-    LOG((CLOG_NOTE "trustedServersFilename: %s", trustedServersFilename.c_str() ));
+    LOG((CLOG_NOTE "fingerprint_db_path: %s", fingerprint_db_path.c_str()));
 
-    // check if this fingerprint exist
-    std::string fileLine;
-    std::ifstream file;
-    barrier::open_utf8_path(file, trustedServersFilename);
+    barrier::FingerprintDatabase db;
+    db.read(fingerprint_db_path);
 
-    if (!file.is_open()) {
-        LOG((CLOG_NOTE "Unable to open trustedServersFile: %s", trustedServersFilename.c_str() ));
+    if (!db.fingerprints().empty()) {
+        LOG((CLOG_NOTE "Read %d fingerprints from: %s", db.fingerprints().size(),
+             fingerprint_db_path.c_str()));
     } else {
-        LOG((CLOG_NOTE "Opened trustedServersFilename: %s", trustedServersFilename.c_str() ));
+        LOG((CLOG_NOTE "Could not read fingerprints from: %s",
+             fingerprint_db_path.c_str()));
     }
 
-    bool isValid = false;
-    while (!file.eof() && file.is_open()) {
-        getline(file,fileLine);
-        if (!fileLine.empty()) {
-            if (fileLine.compare(fingerprint) == 0) {
-                LOG((CLOG_NOTE "Fingerprint matches trusted fingerprint"));
-                isValid = true;
-                break;
-            } else {
-                LOG((CLOG_NOTE "Fingerprint does not match trusted fingerprint"));
-            }
-        }
+    barrier::FingerprintData fingerprint{"sha1", fingerprint_raw};
+    if (db.is_trusted(fingerprint)) {
+        LOG((CLOG_NOTE "Fingerprint matches trusted fingerprint"));
+        return true;
+    } else {
+        LOG((CLOG_NOTE "Fingerprint does not match trusted fingerprint"));
+        return false;
     }
-
-    file.close();
-    return isValid;
 }
 
 MultiplexerJobStatus SecureSocket::serviceConnect(ISocketMultiplexerJob* job,

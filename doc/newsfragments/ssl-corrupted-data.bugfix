@@ -1,0 +1,2 @@
+Fixed a bug in SSL implementation that caused invalid data occasionally being sent to clients
+under heavy load.

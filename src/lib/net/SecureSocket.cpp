@@ -101,6 +101,8 @@ SecureSocket::close()
 
 void SecureSocket::freeSSLResources()
 {
+    std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
+
     if (m_ssl->m_ssl != NULL) {
         SSL_shutdown(m_ssl->m_ssl);
         SSL_free(m_ssl->m_ssl);
@@ -154,7 +156,7 @@ SecureSocket::secureAccept()
 TCPSocket::EJobResult
 SecureSocket::doRead()
 {
-    static UInt8 buffer[4096];
+    UInt8 buffer[4096];
     memset(buffer, 0, sizeof(buffer));
     int bytesRead = 0;
     int status = 0;
@@ -213,11 +215,6 @@ SecureSocket::doRead()
 TCPSocket::EJobResult
 SecureSocket::doWrite()
 {
-    static bool s_retry = false;
-    static int s_retrySize = 0;
-    static std::unique_ptr<char[]> s_staticBuffer;
-    static std::size_t s_staticBufferSize = 0;
-
     // write data
     int bufferSize = 0;
     int bytesWrote = 0;
@@ -226,16 +223,16 @@ SecureSocket::doWrite()
     if (!isSecureReady())
         return kRetry;
 
-    if (s_retry) {
-        bufferSize = s_retrySize;
+    if (do_write_retry_) {
+        bufferSize = do_write_retry_size_;
     } else {
         bufferSize = m_outputBuffer.getSize();
-        if (bufferSize > s_staticBufferSize) {
-            s_staticBuffer.reset(new char[bufferSize]);
-            s_staticBufferSize = bufferSize;
+        if (bufferSize > do_write_retry_buffer_size_) {
+            do_write_retry_buffer_.reset(new char[bufferSize]);
+            do_write_retry_buffer_size_ = bufferSize;
         }
         if (bufferSize > 0) {
-            memcpy(s_staticBuffer.get(), m_outputBuffer.peek(bufferSize), bufferSize);
+            std::memcpy(do_write_retry_buffer_.get(), m_outputBuffer.peek(bufferSize), bufferSize);
         }
     }
 
@@ -243,14 +240,14 @@ SecureSocket::doWrite()
         return kRetry;
     }
 
-    status = secureWrite(s_staticBuffer.get(), bufferSize, bytesWrote);
+    status = secureWrite(do_write_retry_buffer_.get(), bufferSize, bytesWrote);
     if (status > 0) {
-        s_retry = false;
+        do_write_retry_ = false;
     } else if (status < 0) {
         return kBreak;
     } else if (status == 0) {
-        s_retry = true;
-        s_retrySize = bufferSize;
+        do_write_retry_ = true;
+        do_write_retry_size_ = bufferSize;
         return kNew;
     }
 
@@ -265,16 +262,16 @@ SecureSocket::doWrite()
 int
 SecureSocket::secureRead(void* buffer, int size, int& read)
 {
+    std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
+
     if (m_ssl->m_ssl != NULL) {
         LOG((CLOG_DEBUG2 "reading secure socket"));
         read = SSL_read(m_ssl->m_ssl, buffer, size);
 
-        static int retry;
-
         // Check result will cleanup the connection in the case of a fatal
-        checkResult(read, retry);
+        checkResult(read, secure_read_retry_);
 
-        if (retry) {
+        if (secure_read_retry_) {
             return 0;
         }
 
@@ -291,17 +288,17 @@ SecureSocket::secureRead(void* buffer, int size, int& read)
 int
 SecureSocket::secureWrite(const void* buffer, int size, int& wrote)
 {
+    std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
+
     if (m_ssl->m_ssl != NULL) {
         LOG((CLOG_DEBUG2 "writing secure socket:%p", this));
 
         wrote = SSL_write(m_ssl->m_ssl, buffer, size);
 
-        static int retry;
-
         // Check result will cleanup the connection in the case of a fatal
-        checkResult(wrote, retry);
+        checkResult(wrote, secure_write_retry_);
 
-        if (retry) {
+        if (secure_write_retry_) {
             return 0;
         }
 
@@ -324,6 +321,8 @@ SecureSocket::isSecureReady()
 void
 SecureSocket::initSsl(bool server)
 {
+    std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
+
     m_ssl = new Ssl();
     m_ssl->m_context = NULL;
     m_ssl->m_ssl = NULL;
@@ -333,6 +332,8 @@ SecureSocket::initSsl(bool server)
 
 bool SecureSocket::load_certificates(const barrier::fs::path& path)
 {
+    std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
+
     if (path.empty()) {
         showError("ssl certificate is not specified");
         return false;
@@ -374,6 +375,8 @@ static int cert_verify_ignore_callback(X509_STORE_CTX*, void*)
 void
 SecureSocket::initContext(bool server)
 {
+    // ssl_mutex_ is assumed to be acquired
+
     SSL_library_init();
 
     const SSL_METHOD* method;
@@ -419,6 +422,8 @@ SecureSocket::initContext(bool server)
 void
 SecureSocket::createSSL()
 {
+    // ssl_mutex_ is assumed to be acquired
+
     // I assume just one instance is needed
     // get new SSL state with context
     if (m_ssl->m_ssl == NULL) {
@@ -430,6 +435,8 @@ SecureSocket::createSSL()
 int
 SecureSocket::secureAccept(int socket)
 {
+    std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
+
     createSSL();
 
     // set connection socket to SSL state
@@ -438,9 +445,7 @@ SecureSocket::secureAccept(int socket)
     LOG((CLOG_DEBUG2 "accepting secure socket"));
     int r = SSL_accept(m_ssl->m_ssl);
 
-    static int retry;
-
-    checkResult(r, retry);
+    checkResult(r, secure_accept_retry_);
 
     if (isFatal()) {
         // tell user and sleep so the socket isn't hammered.
@@ -448,25 +453,25 @@ SecureSocket::secureAccept(int socket)
         LOG((CLOG_INFO "client connection may not be secure"));
         m_secureReady = false;
         ARCH->sleep(1);
-        retry = 0;
+        secure_accept_retry_ = 0;
         return -1; // Failed, error out
     }
 
     // If not fatal and no retry, state is good
-    if (retry == 0) {
+    if (secure_accept_retry_ == 0) {
         if (security_level_ == ConnectionSecurityLevel::ENCRYPTED_AUTHENTICATED) {
             if (verify_cert_fingerprint(
                         barrier::DataDirectories::trusted_clients_ssl_fingerprints_path())) {
                 LOG((CLOG_INFO "accepted secure socket"));
                 if (!ensure_peer_certificate()) {
-                    retry = 0;
+                    secure_accept_retry_ = 0;
                     disconnect();
                     return -1;// Cert fail, error
                 }
             }
             else {
                 LOG((CLOG_ERR "failed to verify server certificate fingerprint"));
-                retry = 0;
+                secure_accept_retry_ = 0;
                 disconnect();
                 return -1; // Fingerprint failed, error
             }
@@ -482,7 +487,7 @@ SecureSocket::secureAccept(int socket)
     }
 
     // If not fatal and retry is set, not ready, and return retry
-    if (retry > 0) {
+    if (secure_accept_retry_ > 0) {
         LOG((CLOG_DEBUG2 "retry accepting secure socket"));
         m_secureReady = false;
         ARCH->sleep(s_retryDelay);
@@ -497,11 +502,14 @@ SecureSocket::secureAccept(int socket)
 int
 SecureSocket::secureConnect(int socket)
 {
+    // note that load_certificates acquires ssl_mutex_
     if (!load_certificates(barrier::DataDirectories::ssl_certificate_path())) {
         LOG((CLOG_ERR "could not load client certificates"));
         // FIXME: this is fatal error, but we current don't disconnect because whole logic in this
         // function needs to be cleaned up
     }
+
+    std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
 
     createSSL();
 
@@ -511,25 +519,23 @@ SecureSocket::secureConnect(int socket)
     LOG((CLOG_DEBUG2 "connecting secure socket"));
     int r = SSL_connect(m_ssl->m_ssl);
 
-    static int retry;
-
-    checkResult(r, retry);
+    checkResult(r, secure_connect_retry_);
 
     if (isFatal()) {
         LOG((CLOG_ERR "failed to connect secure socket"));
-        retry = 0;
+        secure_connect_retry_ = 0;
         return -1;
     }
 
     // If we should retry, not ready and return 0
-    if (retry > 0) {
+    if (secure_connect_retry_ > 0) {
         LOG((CLOG_DEBUG2 "retry connect secure socket"));
         m_secureReady = false;
         ARCH->sleep(s_retryDelay);
         return 0;
     }
 
-    retry = 0;
+    secure_connect_retry_ = 0;
     // No error, set ready, process and return ok
     m_secureReady = true;
     if (verify_cert_fingerprint(barrier::DataDirectories::trusted_servers_ssl_fingerprints_path())) {
@@ -555,6 +561,7 @@ SecureSocket::secureConnect(int socket)
 bool
 SecureSocket::ensure_peer_certificate()
 {
+    // ssl_mutex_ is assumed to be acquired
     X509* cert;
     char* line;
 
@@ -577,6 +584,8 @@ SecureSocket::ensure_peer_certificate()
 void
 SecureSocket::checkResult(int status, int& retry)
 {
+    // ssl_mutex_ is assumed to be acquired
+
     // ssl errors are a little quirky. the "want" errors are normal and
     // should result in a retry.
 
@@ -692,6 +701,8 @@ SecureSocket::disconnect()
 
 bool SecureSocket::verify_cert_fingerprint(const barrier::fs::path& fingerprint_db_path)
 {
+    // ssl_mutex_ is assumed to be acquired
+
     // calculate received certificate fingerprint
     barrier::FingerprintData fingerprint_sha1, fingerprint_sha256;
     try {
@@ -818,6 +829,8 @@ showCipherStackDesc(STACK_OF(SSL_CIPHER) * stack) {
 void
 SecureSocket::showSecureCipherInfo()
 {
+    // ssl_mutex_ is assumed to be acquired
+
     STACK_OF(SSL_CIPHER) * sStack = SSL_get_ciphers(m_ssl->m_ssl);
 
     if (sStack == NULL) {
@@ -860,6 +873,8 @@ SecureSocket::showSecureLibInfo()
 void
 SecureSocket::showSecureConnectInfo()
 {
+    // ssl_mutex_ is assumed to be acquired
+
     const SSL_CIPHER* cipher = SSL_get_current_cipher(m_ssl->m_ssl);
 
     if (cipher != NULL) {

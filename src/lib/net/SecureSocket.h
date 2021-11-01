@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include "ConnectionSecurityLevel.h"
 #include "net/TCPSocket.h"
 #include "net/XSocket.h"
 #include "io/filesystem.h"
@@ -33,10 +34,10 @@ A secure socket using SSL.
 */
 class SecureSocket : public TCPSocket {
 public:
-    SecureSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family);
-    SecureSocket(IEventQueue* events,
-        SocketMultiplexer* socketMultiplexer,
-        ArchSocket socket);
+    SecureSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer,
+                 IArchNetwork::EAddressFamily family, ConnectionSecurityLevel security_level);
+    SecureSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer,
+                 ArchSocket socket, ConnectionSecurityLevel security_level);
     ~SecureSocket();
 
     // ISocket overrides
@@ -86,4 +87,5 @@ private:
     Ssl*                m_ssl;
     bool                m_secureReady;
     bool                m_fatal;
+    ConnectionSecurityLevel security_level_ = ConnectionSecurityLevel::ENCRYPTED;
 };

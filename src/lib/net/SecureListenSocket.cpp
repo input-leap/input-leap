@@ -25,11 +25,11 @@
 #include "common/DataDirectories.h"
 #include "base/String.h"
 
-SecureListenSocket::SecureListenSocket(
-        IEventQueue* events,
-        SocketMultiplexer* socketMultiplexer,
-        IArchNetwork::EAddressFamily family) :
-    TCPListenSocket(events, socketMultiplexer, family)
+SecureListenSocket::SecureListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer,
+                                       IArchNetwork::EAddressFamily family,
+                                       ConnectionSecurityLevel security_level) :
+    TCPListenSocket(events, socketMultiplexer, family),
+    security_level_{security_level}
 {
 }
 
@@ -38,10 +38,8 @@ SecureListenSocket::accept()
 {
     SecureSocket* socket = NULL;
     try {
-        socket = new SecureSocket(
-                        m_events,
-                        m_socketMultiplexer,
-                        ARCH->acceptSocket(m_socket, NULL));
+        socket = new SecureSocket(m_events, m_socketMultiplexer,
+                                  ARCH->acceptSocket(m_socket, NULL), security_level_);
         socket->initSsl(true);
 
         if (socket != NULL) {

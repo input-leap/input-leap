@@ -54,25 +54,24 @@ struct Ssl {
     SSL*        m_ssl;
 };
 
-SecureSocket::SecureSocket(
-        IEventQueue* events,
-        SocketMultiplexer* socketMultiplexer,
-        IArchNetwork::EAddressFamily family) :
+SecureSocket::SecureSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer,
+                           IArchNetwork::EAddressFamily family,
+                           ConnectionSecurityLevel security_level) :
     TCPSocket(events, socketMultiplexer, family),
     m_ssl(nullptr),
     m_secureReady(false),
-    m_fatal(false)
+    m_fatal(false),
+    security_level_{security_level}
 {
 }
 
-SecureSocket::SecureSocket(
-        IEventQueue* events,
-        SocketMultiplexer* socketMultiplexer,
-        ArchSocket socket) :
+SecureSocket::SecureSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer,
+                           ArchSocket socket, ConnectionSecurityLevel security_level) :
     TCPSocket(events, socketMultiplexer, socket),
     m_ssl(nullptr),
     m_secureReady(false),
-    m_fatal(false)
+    m_fatal(false),
+    security_level_{security_level}
 {
 }
 

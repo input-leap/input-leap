@@ -69,7 +69,7 @@ Thread::operator=(const Thread& thread)
 void
 Thread::exit(void* result)
 {
-    throw XThreadExit(result);
+    throw XThreadExit();
 }
 
 void
@@ -108,15 +108,6 @@ Thread::wait(double timeout) const
     return ARCH->wait(m_thread, timeout);
 }
 
-void*
-Thread::getResult() const
-{
-    if (wait())
-        return ARCH->getResultOfThread(m_thread);
-    else
-        return NULL;
-}
-
 IArchMultithread::ThreadID
 Thread::getID() const
 {
@@ -149,8 +140,6 @@ Thread::threadFunc(void* vjob)
     // get job
     IJob* job = static_cast<IJob*>(vjob);
 
-    // run job
-    void* result = NULL;
     try {
         // go
         LOG((CLOG_DEBUG1 "thread 0x%08x entry", id));
@@ -163,10 +152,8 @@ Thread::threadFunc(void* vjob)
         delete job;
         throw;
     }
-    catch (XThreadExit& e) {
-        // client called exit()
-        result = e.m_result;
-        LOG((CLOG_DEBUG1 "caught exit on thread 0x%08x, result %p", id, result));
+    catch (XThreadExit&) {
+        LOG((CLOG_DEBUG1 "caught exit on thread 0x%08x", id));
     }
     catch (XBase& e) {
         LOG((CLOG_ERR "exception on thread 0x%08x: %s", id, e.what()));
@@ -182,6 +169,5 @@ Thread::threadFunc(void* vjob)
     // done with job
     delete job;
 
-    // return exit result
-    return result;
+    return nullptr;
 }

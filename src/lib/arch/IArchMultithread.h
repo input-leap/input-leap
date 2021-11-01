@@ -235,15 +235,6 @@ public:
     */
     virtual bool        isExitedThread(ArchThread thread) = 0;
 
-    //! Returns the exit code of a thread
-    /*!
-    Waits indefinitely for \c thread to exit (if it hasn't yet) then
-    returns the thread's exit code.
-
-    (Cancellation point)
-    */
-    virtual void*        getResultOfThread(ArchThread thread) = 0;
-
     //! Returns an ID for a thread
     /*!
     Returns some ID number for \c thread.  This is for logging purposes.

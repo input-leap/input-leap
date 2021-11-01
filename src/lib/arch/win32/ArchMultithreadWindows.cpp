@@ -54,7 +54,6 @@ public:
     HANDLE                m_cancel;
     bool                m_cancelling;
     HANDLE                m_exit;
-    void*                m_result;
     void*                m_networkData;
 };
 
@@ -65,7 +64,6 @@ ArchThreadImpl::ArchThreadImpl() :
     m_func(NULL),
     m_userData(NULL),
     m_cancelling(false),
-    m_result(NULL),
     m_networkData(NULL)
 {
     m_exit   = CreateEvent(NULL, TRUE, FALSE, NULL);
@@ -523,15 +521,6 @@ ArchMultithreadWindows::isExitedThread(ArchThread thread)
     return (WaitForSingleObject(thread->m_exit, 0) == WAIT_OBJECT_0);
 }
 
-void*
-ArchMultithreadWindows::getResultOfThread(ArchThread thread)
-{
-    lockMutex(m_threadMutex);
-    void* result = thread->m_result;
-    unlockMutex(m_threadMutex);
-    return result;
-}
-
 IArchMultithread::ThreadID
 ArchMultithreadWindows::getIDOfThread(ArchThread thread)
 {
@@ -678,10 +667,9 @@ ArchMultithreadWindows::doThreadFunc(ArchThread thread)
     lockMutex(m_threadMutex);
     unlockMutex(m_threadMutex);
 
-    void* result = NULL;
     try {
         // go
-        result = (*thread->m_func)(thread->m_userData);
+        (*thread->m_func)(thread->m_userData);
     }
 
     catch (XThreadCancel&) {
@@ -695,9 +683,6 @@ ArchMultithreadWindows::doThreadFunc(ArchThread thread)
     }
 
     // thread has exited
-    lockMutex(m_threadMutex);
-    thread->m_result = result;
-    unlockMutex(m_threadMutex);
     SetEvent(thread->m_exit);
 
     // done with thread

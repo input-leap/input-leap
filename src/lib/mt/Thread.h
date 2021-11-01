@@ -79,8 +79,7 @@ public:
     /*!
     Terminate the calling thread.  This function does not return but
     the stack is unwound and automatic objects are destroyed, as if
-    exit() threw an exception (which is, in fact, what it does).  The
-    argument is saved as the result returned by getResult().  If you
+    exit() threw an exception (which is, in fact, what it does). If you
     have \c catch(...) blocks then you should add the following before
     each to avoid catching the exit:
     \code
@@ -166,16 +165,6 @@ public:
     (cancellation point)
     */
     bool                wait(double timeout = -1.0) const;
-
-    //! Get the exit result
-    /*!
-    Returns the exit result.  This does an implicit wait().  It returns
-    NULL immediately if called by a thread on itself or on a thread that
-    was cancelled.
-
-    (cancellation point)
-    */
-    void*                getResult() const;
 
     //! Get the thread id
     /*!

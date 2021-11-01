@@ -77,7 +77,6 @@ public:
     virtual bool        wait(ArchThread, double timeout);
     virtual bool        isSameThread(ArchThread, ArchThread);
     virtual bool        isExitedThread(ArchThread);
-    virtual void*        getResultOfThread(ArchThread);
     virtual ThreadID    getIDOfThread(ArchThread);
     virtual void        setSignalHandler(ESignal, SignalFunc, void*);
     virtual void        raiseSignal(ESignal);

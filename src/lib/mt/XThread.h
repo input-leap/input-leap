@@ -26,12 +26,4 @@ Thrown by Thread::exit() to exit a thread.  Clients of Thread
 must not throw this type but must rethrow it if caught (by
 XThreadExit, XThread, or ...).
 */
-class XThreadExit : public XThread {
-public:
-    //! \c result is the result of the thread
-    XThreadExit(void* result) : m_result(result) { }
-    ~XThreadExit() { }
-
-public:
-    void*                m_result;
-};
+class XThreadExit : public XThread {};

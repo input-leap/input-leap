@@ -64,7 +64,6 @@ public:
     bool                m_cancel;
     bool                m_cancelling;
     bool                m_exited;
-    void*                m_result;
     void*                m_networkData;
 };
 
@@ -76,7 +75,6 @@ ArchThreadImpl::ArchThreadImpl() :
     m_cancel(false),
     m_cancelling(false),
     m_exited(false),
-    m_result(NULL),
     m_networkData(NULL)
 {
     // do nothing
@@ -526,13 +524,6 @@ ArchMultithreadPosix::isExitedThread(ArchThread thread)
     return thread->m_exited;
 }
 
-void*
-ArchMultithreadPosix::getResultOfThread(ArchThread thread)
-{
-    std::lock_guard<std::mutex> lock(m_threadMutex);
-    return thread->m_result;
-}
-
 IArchMultithread::ThreadID
 ArchMultithreadPosix::getIDOfThread(ArchThread thread)
 {
@@ -699,10 +690,8 @@ ArchMultithreadPosix::doThreadFunc(ArchThread thread)
         std::lock_guard<std::mutex> lock(m_threadMutex);
     }
 
-    void* result = NULL;
     try {
-        // go
-        result = (*thread->m_func)(thread->m_userData);
+        (*thread->m_func)(thread->m_userData);
     }
 
     catch (XThreadCancel&) {
@@ -721,7 +710,6 @@ ArchMultithreadPosix::doThreadFunc(ArchThread thread)
     // thread has exited
     {
         std::lock_guard<std::mutex> lock(m_threadMutex);
-        thread->m_result = result;
         thread->m_exited = true;
     }
 

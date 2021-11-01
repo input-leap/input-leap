@@ -19,6 +19,8 @@
 #include "barrier/ProtocolUtil.h"
 #include "io/IStream.h"
 #include "base/Log.h"
+#include "barrier/protocol_types.h"
+#include "barrier/XBarrier.h"
 #include "common/stdvector.h"
 #include "base/String.h"
 
@@ -159,6 +161,10 @@ ProtocolUtil::vreadf(barrier::IStream* stream, const char* fmt, va_list args)
                            (static_cast<UInt32>(buffer[2]) <<  8) |
                             static_cast<UInt32>(buffer[3]);
 
+                if (n > PROTOCOL_MAX_LIST_LENGTH) {
+                    throw XBadClient("Too long message received");
+                }
+
                 // convert it
                 void* v = va_arg(args, void*);
                 switch (len) {
@@ -210,6 +216,10 @@ ProtocolUtil::vreadf(barrier::IStream* stream, const char* fmt, va_list args)
                              (static_cast<UInt32>(buffer[1]) << 16) |
                              (static_cast<UInt32>(buffer[2]) <<  8) |
                               static_cast<UInt32>(buffer[3]);
+
+                if (len > PROTOCOL_MAX_STRING_LENGTH) {
+                    throw XBadClient("Too long message received");
+                }
 
                 // use a fixed size buffer if its big enough
                 const bool useFixed = (len <= sizeof(buffer));

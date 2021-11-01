@@ -282,7 +282,10 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
         argsBase().m_dropTarget = argv[++i];
     }
     else if (isArg(i, argc, argv, NULL, "--enable-crypto")) {
-        argsBase().m_enableCrypto = true;
+        LOG((CLOG_INFO "--enable-crypto is used by default. The option is deprecated."));
+    }
+    else if (isArg(i, argc, argv, NULL, "--disable-crypto")) {
+        argsBase().m_enableCrypto = false;
     }
     else if (isArg(i, argc, argv, NULL, "--profile-dir", 1)) {
         argsBase().m_profileDirectory = argv[++i];

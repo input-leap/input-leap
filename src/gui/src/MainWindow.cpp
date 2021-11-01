@@ -516,8 +516,8 @@ void MainWindow::startBarrier()
 
 #endif
 
-    if (m_AppConfig->getCryptoEnabled()) {
-        args << "--enable-crypto";
+    if (!m_AppConfig->getCryptoEnabled()) {
+        args << "--disable-crypto";
     }
 
 #if defined(Q_OS_WIN)

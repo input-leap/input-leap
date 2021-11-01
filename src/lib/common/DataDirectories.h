@@ -32,9 +32,6 @@ public:
     static const std::string& systemconfig(const std::string& path);
 
 private:
-    // static class
-    DataDirectories() {}
-
     static std::string _profile;
     static std::string _global;
     static std::string _systemconfig;

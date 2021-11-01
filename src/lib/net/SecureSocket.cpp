@@ -661,22 +661,15 @@ bool
 SecureSocket::verifyCertFingerprint()
 {
     // calculate received certificate fingerprint
-    X509 *cert = cert = SSL_get_peer_certificate(m_ssl->m_ssl);
-    EVP_MD* tempDigest;
-    unsigned char tempFingerprint[EVP_MAX_MD_SIZE];
-    unsigned int tempFingerprintLen;
-    tempDigest = (EVP_MD*)EVP_sha1();
-    int digestResult = X509_digest(cert, tempDigest, tempFingerprint, &tempFingerprintLen);
-
-    if (digestResult <= 0) {
-        LOG((CLOG_ERR "failed to calculate fingerprint, digest result: %d", digestResult));
+    std::vector<std::uint8_t> fingerprint_raw;
+    try {
+        fingerprint_raw = barrier::get_ssl_cert_fingerprint(SSL_get_peer_certificate(m_ssl->m_ssl),
+                                                            barrier::FingerprintType::SHA1);
+    } catch (const std::exception& e) {
+        LOG((CLOG_ERR "%s", e.what()));
         return false;
     }
 
-    // format fingerprint into hexdecimal format with colon separator
-    std::vector<std::uint8_t> fingerprint_raw;
-    fingerprint_raw.assign(reinterpret_cast<std::uint8_t*>(tempFingerprint),
-                           reinterpret_cast<std::uint8_t*>(tempFingerprint) + tempFingerprintLen);
     auto fingerprint = barrier::format_ssl_fingerprint(fingerprint_raw);
     LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
 

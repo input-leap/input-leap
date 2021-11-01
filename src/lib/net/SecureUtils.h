@@ -18,13 +18,22 @@
 #ifndef BARRIER_LIB_NET_SECUREUTILS_H
 #define BARRIER_LIB_NET_SECUREUTILS_H
 
+#include <openssl/ossl_typ.h>
+#include <cstdint>
 #include <string>
 #include <vector>
 
 namespace barrier {
 
+enum FingerprintType {
+    SHA1, // deprecated
+    SHA256,
+};
+
 std::string format_ssl_fingerprint(const std::vector<std::uint8_t>& fingerprint,
                                    bool separator = true);
+
+std::vector<std::uint8_t> get_ssl_cert_fingerprint(X509* cert, FingerprintType type);
 
 } // namespace barrier
 

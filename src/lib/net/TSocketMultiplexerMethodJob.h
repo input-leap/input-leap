@@ -25,81 +25,43 @@
 /*!
 A socket multiplexer job class that invokes a member function.
 */
-template <class T>
 class TSocketMultiplexerMethodJob : public ISocketMultiplexerJob {
 public:
-    using Method = MultiplexerJobStatus (T::*)(ISocketMultiplexerJob*, bool, bool, bool);
+    using RunFunction = std::function<MultiplexerJobStatus(ISocketMultiplexerJob*, bool, bool, bool)>;
 
     //! run() invokes \c object->method(arg)
-    TSocketMultiplexerMethodJob(T* object, Method method,
-                            ArchSocket socket, bool readable, bool writeable);
-    virtual ~TSocketMultiplexerMethodJob();
+    TSocketMultiplexerMethodJob(const RunFunction& func,
+                                ArchSocket socket, bool readable, bool writable) :
+        func_{func},
+        m_socket(ARCH->copySocket(socket)),
+        m_readable(readable),
+        m_writable(writable)
+    {
+    }
+
+    ~TSocketMultiplexerMethodJob() override
+    {
+        ARCH->closeSocket(m_socket);
+    }
 
     // IJob overrides
-    virtual MultiplexerJobStatus run(bool readable, bool writable, bool error) override;
-    virtual ArchSocket getSocket() const override;
-    virtual bool isReadable() const override;
-    virtual bool isWritable() const override;
+    virtual MultiplexerJobStatus run(bool readable, bool writable, bool error) override
+    {
+        if (func_) {
+            return func_(this, readable, writable, error);
+        }
+        return {false, {}};
+    }
+
+    virtual ArchSocket getSocket() const override { return m_socket; }
+    virtual bool isReadable() const override { return m_readable; }
+    virtual bool isWritable() const override { return m_writable; }
 
 private:
-    T*                    m_object;
-    Method                m_method;
+    RunFunction func_;
     ArchSocket            m_socket;
     bool                m_readable;
     bool                m_writable;
-    void*                m_arg;
 };
 
-template <class T>
-inline
-TSocketMultiplexerMethodJob<T>::TSocketMultiplexerMethodJob(T* object,
-                Method method, ArchSocket socket,
-                bool readable, bool writable) :
-    m_object(object),
-    m_method(method),
-    m_socket(ARCH->copySocket(socket)),
-    m_readable(readable),
-    m_writable(writable)
-{
-    // do nothing
-}
 
-template <class T>
-inline
-TSocketMultiplexerMethodJob<T>::~TSocketMultiplexerMethodJob()
-{
-    ARCH->closeSocket(m_socket);
-}
-
-template <class T>
-inline MultiplexerJobStatus TSocketMultiplexerMethodJob<T>::run(bool read, bool write, bool error)
-{
-    if (m_object != NULL) {
-        return (m_object->*m_method)(this, read, write, error);
-    }
-    return {false, {}};
-}
-
-template <class T>
-inline
-ArchSocket
-TSocketMultiplexerMethodJob<T>::getSocket() const
-{
-    return m_socket;
-}
-
-template <class T>
-inline
-bool
-TSocketMultiplexerMethodJob<T>::isReadable() const
-{
-    return m_readable;
-}
-
-template <class T>
-inline
-bool
-TSocketMultiplexerMethodJob<T>::isWritable() const
-{
-    return m_writable;
-}

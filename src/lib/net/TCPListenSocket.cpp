@@ -70,8 +70,10 @@ TCPListenSocket::bind(const NetworkAddress& addr)
         ARCH->bindSocket(m_socket, addr.getAddress());
         ARCH->listenOnSocket(m_socket);
 
-        auto new_job = std::make_unique<TSocketMultiplexerMethodJob<TCPListenSocket>>(
-                this, &TCPListenSocket::serviceListening, m_socket, true, false);
+        auto new_job = std::make_unique<TSocketMultiplexerMethodJob>(
+                    [this](auto j, auto r, auto w, auto e)
+                    { return serviceListening(j, r, w, e); },
+                    m_socket, true, false);
 
         m_socketMultiplexer->addSocket(this, std::move(new_job));
     }
@@ -136,8 +138,10 @@ TCPListenSocket::accept()
 void
 TCPListenSocket::setListeningJob()
 {
-    auto new_job = std::make_unique<TSocketMultiplexerMethodJob<TCPListenSocket>>(
-        this, &TCPListenSocket::serviceListening, m_socket, true, false);
+    auto new_job = std::make_unique<TSocketMultiplexerMethodJob>(
+                [this](auto j, auto r, auto w, auto e)
+                { return serviceListening(j, r, w, e); },
+                m_socket, true, false);
     m_socketMultiplexer->addSocket(this, std::move(new_job));
 }
 

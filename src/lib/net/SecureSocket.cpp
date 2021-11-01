@@ -140,17 +140,17 @@ std::unique_ptr<ISocketMultiplexerJob> SecureSocket::newJob()
 void
 SecureSocket::secureConnect()
 {
-    setJob(std::make_unique<TSocketMultiplexerMethodJob<SecureSocket>>(
-                    this, &SecureSocket::serviceConnect,
-                    getSocket(), isReadable(), isWritable()));
+    setJob(std::make_unique<TSocketMultiplexerMethodJob>([this](auto j, auto r, auto w, auto e)
+                                                         { return serviceConnect(j, r, w, e); },
+                                                         getSocket(), isReadable(), isWritable()));
 }
 
 void
 SecureSocket::secureAccept()
 {
-    setJob(std::make_unique<TSocketMultiplexerMethodJob<SecureSocket>>(
-                    this, &SecureSocket::serviceAccept,
-                    getSocket(), isReadable(), isWritable()));
+    setJob(std::make_unique<TSocketMultiplexerMethodJob>([this](auto j, auto r, auto w, auto e)
+                                                         { return serviceAccept(j, r, w, e); },
+                                                         getSocket(), isReadable(), isWritable()));
 }
 
 TCPSocket::EJobResult
@@ -772,9 +772,9 @@ MultiplexerJobStatus SecureSocket::serviceConnect(ISocketMultiplexerJob* job,
     // Retry case
     return {
         true,
-        std::make_unique<TSocketMultiplexerMethodJob<SecureSocket>>(
-            this, &SecureSocket::serviceConnect,
-            getSocket(), isReadable(), isWritable())
+        std::make_unique<TSocketMultiplexerMethodJob>([this](auto j, auto r, auto w, auto e)
+                                                      { return serviceConnect(j, r, w, e); },
+                                                      getSocket(), isReadable(), isWritable())
     };
 }
 
@@ -802,9 +802,12 @@ MultiplexerJobStatus SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
     }
 
     // Retry case
-    return {true, std::make_unique<TSocketMultiplexerMethodJob<SecureSocket>>(
-            this, &SecureSocket::serviceAccept,
-            getSocket(), isReadable(), isWritable())};
+    return {
+        true,
+        std::make_unique<TSocketMultiplexerMethodJob>([this](auto j, auto r, auto w, auto e)
+                                                      { return serviceAccept(j, r, w, e); },
+                                                      getSocket(), isReadable(), isWritable())
+    };
 }
 
 void

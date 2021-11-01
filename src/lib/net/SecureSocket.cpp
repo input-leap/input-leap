@@ -462,9 +462,13 @@ SecureSocket::secureAccept(int socket)
 int
 SecureSocket::secureConnect(int socket)
 {
-    createSSL();
+    if (!load_certificates(barrier::DataDirectories::ssl_certificate_path())) {
+        LOG((CLOG_ERR "could not load client certificates"));
+        // FIXME: this is fatal error, but we current don't disconnect because whole logic in this
+        // function needs to be cleaned up
+    }
 
-    load_certificates(barrier::DataDirectories::ssl_certificate_path());
+    createSSL();
 
     // attach the socket descriptor
     SSL_set_fd(m_ssl->m_ssl, socket);

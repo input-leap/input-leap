@@ -26,11 +26,6 @@
 // ArchStringWindows
 //
 
-#include "arch/multibyte.h"
-#define HAVE_VSNPRINTF 1
-#define ARCH_VSNPRINTF _vsnprintf
-#include "arch/vsnprintf.h"
-
 ArchStringWindows::ArchStringWindows()
 {
 }

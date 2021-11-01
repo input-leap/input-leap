@@ -183,7 +183,6 @@ ClientListener::handleUnknownClient(const Event&, void* vclient)
 
     // get the real client proxy and install it
     ClientProxy* client = unknownClient->orphanClientProxy();
-    bool handshakeOk = true;
     if (client != NULL) {
         // handshake was successful
         m_waitingClients.push_back(client);
@@ -196,19 +195,11 @@ ClientListener::handleUnknownClient(const Event&, void* vclient)
                                 &ClientListener::handleClientDisconnected,
                                 client));
     }
-    else {
-        handshakeOk = false;
-    }
 
     // now finished with unknown client
     m_events->removeHandler(m_events->forClientProxyUnknown().success(), client);
     m_events->removeHandler(m_events->forClientProxyUnknown().failure(), client);
     m_newClients.erase(unknownClient);
-    PacketStreamFilter* streamFileter = dynamic_cast<PacketStreamFilter*>(unknownClient->getStream());
-    IDataSocket* socket = NULL;
-    if (streamFileter != NULL) {
-        socket = dynamic_cast<IDataSocket*>(streamFileter->getStream());
-    }
 
     delete unknownClient;
 }

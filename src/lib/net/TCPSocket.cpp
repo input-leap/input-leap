@@ -33,9 +33,7 @@
 #include <cstdlib>
 #include <memory>
 
-//
-// TCPSocket
-//
+static const std::size_t MAX_INPUT_BUFFER_SIZE = 1024 * 1024;
 
 TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family) :
     IDataSocket(events),
@@ -344,6 +342,10 @@ TCPSocket::doRead()
         // slurp up as much as possible
         do {
             m_inputBuffer.write(buffer, (UInt32)bytesRead);
+
+            if (m_inputBuffer.getSize() > MAX_INPUT_BUFFER_SIZE) {
+                break;
+            }
 
             bytesRead = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
         } while (bytesRead > 0);

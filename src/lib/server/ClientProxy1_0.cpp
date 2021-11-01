@@ -148,9 +148,18 @@ ClientProxy1_0::handleData(const Event&, void*)
         }
 
         // parse message
-        LOG((CLOG_DEBUG2 "msg from \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]));
-        if (!(this->*m_parser)(code)) {
-            LOG((CLOG_ERR "invalid message from client \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]));
+        try {
+            LOG((CLOG_DEBUG2 "msg from \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]));
+            if (!(this->*m_parser)(code)) {
+                LOG((CLOG_ERR "invalid message from client \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]));
+                disconnect();
+                return;
+            }
+        } catch (const XBadClient& e) {
+            // TODO: disconnect handling is currently dispersed across both parseMessage() and
+            // handleData() functions, we should collect that to a single place
+
+            LOG((CLOG_ERR "protocol error from client: %s", e.what()));
             disconnect();
             return;
         }

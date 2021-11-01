@@ -98,4 +98,16 @@ private:
     bool                m_secureReady;
     bool                m_fatal;
     ConnectionSecurityLevel security_level_ = ConnectionSecurityLevel::ENCRYPTED;
+
+    int secure_accept_retry_ = 0; // used only in secureAccept()
+    int secure_connect_retry_ = 0; // used only in secureConnect()
+    int secure_read_retry_ = 0; // used only in secureRead()
+    int secure_write_retry_ = 0; // used only in secureWrite()
+
+    // The following are used only from doWrite()
+    // FIXME: using std::vector would simplify logic significantly.
+    bool do_write_retry_ = false;
+    int do_write_retry_size_ = 0;
+    std::unique_ptr<char[]> do_write_retry_buffer_;
+    std::size_t do_write_retry_buffer_size_ = 0;
 };

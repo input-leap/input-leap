@@ -444,6 +444,11 @@ void MainWindow::checkFingerprint(const QString& line)
 
     auto db_path = barrier::DataDirectories::trusted_servers_ssl_fingerprints_path();
 
+    auto db_dir = db_path.parent_path();
+    if (!barrier::fs::exists(db_dir)) {
+        barrier::fs::create_directories(db_dir);
+    }
+
     // We compare only SHA256 fingerprints, but show both SHA1 and SHA256 so that the users can
     // still verify fingerprints on old Barrier servers. This way the only time when we are exposed
     // to SHA1 vulnerabilities is when the user is reconnecting again.

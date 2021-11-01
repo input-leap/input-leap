@@ -677,17 +677,17 @@ SecureSocket::verifyCertFingerprint()
     auto fingerprint_db_path = barrier::DataDirectories::trusted_servers_ssl_fingerprints_path();
 
     // Provide debug hint as to what file is being used to verify fingerprint trust
-    LOG((CLOG_NOTE "fingerprint_db_path: %s", fingerprint_db_path.c_str()));
+    LOG((CLOG_NOTE "fingerprint_db_path: %s", fingerprint_db_path.u8string().c_str()));
 
     barrier::FingerprintDatabase db;
     db.read(fingerprint_db_path);
 
     if (!db.fingerprints().empty()) {
         LOG((CLOG_NOTE "Read %d fingerprints from: %s", db.fingerprints().size(),
-             fingerprint_db_path.c_str()));
+             fingerprint_db_path.u8string().c_str()));
     } else {
         LOG((CLOG_NOTE "Could not read fingerprints from: %s",
-             fingerprint_db_path.c_str()));
+             fingerprint_db_path.u8string().c_str()));
     }
 
     if (db.is_trusted(fingerprint_sha256)) {

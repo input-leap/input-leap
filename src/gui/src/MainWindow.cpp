@@ -564,7 +564,7 @@ void MainWindow::startBarrier()
     // launched the process (e.g. when launched with elevation). setting the
     // profile dir on launch ensures it uses the same profile dir is used
     // no matter how its relaunched.
-    args << "--profile-dir" << QString::fromStdString("\"" + barrier::DataDirectories::profile() + "\"");
+    args << "--profile-dir" << QString::fromStdString("\"" + barrier::DataDirectories::profile().u8string() + "\"");
 #endif
 
     if ((barrierType() == barrierClient && !clientArgs(args, app))
@@ -1021,7 +1021,7 @@ void MainWindow::updateSSLFingerprint()
     }
 
     auto local_path = barrier::DataDirectories::local_ssl_fingerprints_path();
-    if (!QFile::exists(QString::fromStdString(local_path))) {
+    if (!barrier::fs::exists(local_path)) {
         return;
     }
 

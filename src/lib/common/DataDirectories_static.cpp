@@ -19,33 +19,33 @@
 
 namespace barrier {
 
-std::string DataDirectories::_profile;
-std::string DataDirectories::_global;
-std::string DataDirectories::_systemconfig;
+fs::path DataDirectories::_profile;
+fs::path DataDirectories::_global;
+fs::path DataDirectories::_systemconfig;
 
 static const char kFingerprintsDirName[] = "SSL/Fingerprints";
 static const char kFingerprintsLocalFilename[] = "Local.txt";
 static const char kFingerprintsTrustedServersFilename[] = "TrustedServers.txt";
 static const char kFingerprintsTrustedClientsFilename[] = "TrustedClients.txt";
 
-std::string DataDirectories::ssl_fingerprints_path()
+fs::path DataDirectories::ssl_fingerprints_path()
 {
-    return profile() + "/" + kFingerprintsDirName;
+    return profile() / kFingerprintsDirName;
 }
 
-std::string DataDirectories::local_ssl_fingerprints_path()
+fs::path DataDirectories::local_ssl_fingerprints_path()
 {
-    return ssl_fingerprints_path() + "/" + kFingerprintsLocalFilename;
+    return ssl_fingerprints_path() / kFingerprintsLocalFilename;
 }
 
-std::string DataDirectories::trusted_servers_ssl_fingerprints_path()
+fs::path DataDirectories::trusted_servers_ssl_fingerprints_path()
 {
-    return ssl_fingerprints_path() + "/" + kFingerprintsTrustedServersFilename;
+    return ssl_fingerprints_path() / kFingerprintsTrustedServersFilename;
 }
 
-std::string DataDirectories::trusted_clients_ssl_fingerprints_path()
+fs::path DataDirectories::trusted_clients_ssl_fingerprints_path()
 {
-    return ssl_fingerprints_path() + "/" + kFingerprintsTrustedClientsFilename;
+    return ssl_fingerprints_path() / kFingerprintsTrustedClientsFilename;
 }
 
 } // namespace barrier

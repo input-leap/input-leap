@@ -18,6 +18,7 @@
 #ifndef BARRIER_LIB_IO_FSTREAM_H
 #define BARRIER_LIB_IO_FSTREAM_H
 
+#include <cstdio>
 #include <iosfwd>
 #include <ios>
 
@@ -29,6 +30,8 @@ void open_utf8_path(std::ofstream& stream, const std::string& path,
                     std::ios_base::openmode mode = std::ios_base::out);
 void open_utf8_path(std::fstream& stream, const std::string& path,
                     std::ios_base::openmode mode = std::ios_base::in | std::ios_base::out);
+
+std::FILE* fopen_utf8_path(const std::string& path, const std::string& mode);
 
 } // namespace barrier
 

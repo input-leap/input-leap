@@ -129,7 +129,8 @@ Client::connect()
 
     auto security_level = ConnectionSecurityLevel::PLAINTEXT;
     if (m_useSecureNetwork) {
-        security_level = ConnectionSecurityLevel::ENCRYPTED;
+        // client always authenticates server
+        security_level = ConnectionSecurityLevel::ENCRYPTED_AUTHENTICATED;
     }
 
     try {

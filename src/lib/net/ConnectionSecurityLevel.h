@@ -21,6 +21,7 @@
 enum class ConnectionSecurityLevel {
     PLAINTEXT,
     ENCRYPTED,
+    ENCRYPTED_AUTHENTICATED
 };
 
 #endif // BARRIER_LIB_NET_CONNECTION_SECURITY_LEVEL_H

@@ -361,6 +361,11 @@ bool SecureSocket::load_certificates(const barrier::fs::path& path)
     return true;
 }
 
+static int cert_verify_ignore_callback(X509_STORE_CTX*, void*)
+{
+    return 1;
+}
+
 void
 SecureSocket::initContext(bool server)
 {
@@ -395,6 +400,14 @@ SecureSocket::initContext(bool server)
 
     if (m_ssl->m_context == NULL) {
         showError("");
+    }
+
+    if (security_level_ == ConnectionSecurityLevel::ENCRYPTED_AUTHENTICATED) {
+        // We want to ask for peer certificate, but not verify it. If we don't ask for peer
+        // certificate, e.g. client won't send it.
+        SSL_CTX_set_verify(m_ssl->m_context, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT,
+                           nullptr);
+        SSL_CTX_set_cert_verify_callback(m_ssl->m_context, cert_verify_ignore_callback, nullptr);
     }
 }
 
@@ -436,6 +449,24 @@ SecureSocket::secureAccept(int socket)
 
     // If not fatal and no retry, state is good
     if (retry == 0) {
+        if (security_level_ == ConnectionSecurityLevel::ENCRYPTED_AUTHENTICATED) {
+            if (verify_cert_fingerprint(
+                        barrier::DataDirectories::trusted_clients_ssl_fingerprints_path())) {
+                LOG((CLOG_INFO "accepted secure socket"));
+                if (!ensure_peer_certificate()) {
+                    retry = 0;
+                    disconnect();
+                    return -1;// Cert fail, error
+                }
+            }
+            else {
+                LOG((CLOG_ERR "failed to verify server certificate fingerprint"));
+                retry = 0;
+                disconnect();
+                return -1; // Fingerprint failed, error
+            }
+        }
+
         m_secureReady = true;
         LOG((CLOG_INFO "accepted secure socket"));
         if (CLOG->getFilter() >= kDEBUG1) {
@@ -670,7 +701,7 @@ bool SecureSocket::verify_cert_fingerprint(const barrier::fs::path& fingerprint_
     }
 
     // note: the GUI parses the following two lines of logs, don't change unnecessarily
-    LOG((CLOG_NOTE "server fingerprint (SHA1): %s (SHA256): %s",
+    LOG((CLOG_NOTE "peer fingerprint (SHA1): %s (SHA256): %s",
          barrier::format_ssl_fingerprint(fingerprint_sha1.data).c_str(),
          barrier::format_ssl_fingerprint(fingerprint_sha256.data).c_str()));
 

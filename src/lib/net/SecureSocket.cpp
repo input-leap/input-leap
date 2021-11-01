@@ -334,11 +334,7 @@ bool SecureSocket::loadCertificates(const std::string& filename)
         return false;
     }
     else {
-        std::ifstream file(filename.c_str());
-        bool exist = file.good();
-        file.close();
-
-        if (!exist) {
+        if (!barrier::fs::is_regular_file(barrier::fs::u8path(filename))) {
             showError("ssl certificate doesn't exist: " + filename);
             return false;
         }

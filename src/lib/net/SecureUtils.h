@@ -20,6 +20,7 @@
 
 #include <string>
 
-void format_ssl_fingerprint(std::string& fingerprint, bool hex = true, bool separator = true);
+std::string format_ssl_fingerprint(const std::string& fingerprint,
+                                   bool hex = true, bool separator = true);
 
 #endif // BARRIER_LIB_NET_SECUREUTILS_H

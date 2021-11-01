@@ -18,21 +18,22 @@
 #include "SecureUtils.h"
 #include "base/String.h"
 
-void format_ssl_fingerprint(std::string& fingerprint, bool hex, bool separator)
+std::string format_ssl_fingerprint(const std::string& fingerprint, bool hex, bool separator)
 {
+    std::string result = fingerprint;
     if (hex) {
         // to hexadecimal
-        barrier::string::toHex(fingerprint, 2);
+        barrier::string::toHex(result, 2);
     }
 
     // all uppercase
-    barrier::string::uppercase(fingerprint);
+    barrier::string::uppercase(result);
 
     if (separator) {
         // add colon to separate each 2 characters
-        size_t separators = fingerprint.size() / 2;
+        size_t separators = result.size() / 2;
         for (size_t i = 1; i < separators; i++) {
-            fingerprint.insert(i * 3 - 1, ":");
+            result.insert(i * 3 - 1, ":");
         }
     }
 }

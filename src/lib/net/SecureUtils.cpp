@@ -17,10 +17,13 @@
 
 #include "SecureUtils.h"
 #include "base/String.h"
+#include "base/finally.h"
+#include "io/fstream.h"
 
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
 #include <openssl/pem.h>
+#include <cstdio>
 #include <stdexcept>
 
 namespace barrier {
@@ -74,6 +77,24 @@ std::vector<std::uint8_t> get_ssl_cert_fingerprint(X509* cert, FingerprintType t
     digest_vec.assign(reinterpret_cast<std::uint8_t*>(digest),
                       reinterpret_cast<std::uint8_t*>(digest) + digest_length);
     return digest_vec;
+}
+
+std::vector<std::uint8_t> get_pem_file_cert_fingerprint(const std::string& path,
+                                                        FingerprintType type)
+{
+    auto fp = fopen_utf8_path(path, "r");
+    if (!fp) {
+        throw std::runtime_error("Could not open certificate path");
+    }
+    auto file_close = finally([fp]() { std::fclose(fp); });
+
+    X509* cert = PEM_read_X509(fp, nullptr, nullptr, nullptr);
+    if (!cert) {
+        throw std::runtime_error("Certificate could not be parsed");
+    }
+    auto cert_free = finally([cert]() { X509_free(cert); });
+
+    return get_ssl_cert_fingerprint(cert, type);
 }
 
 } // namespace barrier

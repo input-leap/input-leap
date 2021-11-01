@@ -35,6 +35,9 @@ std::string format_ssl_fingerprint(const std::vector<std::uint8_t>& fingerprint,
 
 std::vector<std::uint8_t> get_ssl_cert_fingerprint(X509* cert, FingerprintType type);
 
+std::vector<std::uint8_t> get_pem_file_cert_fingerprint(const std::string& path,
+                                                        FingerprintType type);
+
 } // namespace barrier
 
 #endif // BARRIER_LIB_NET_SECUREUTILS_H

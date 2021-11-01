@@ -18,6 +18,7 @@
 #include "SslCertificate.h"
 #include "Fingerprint.h"
 #include "common/DataDirectories.h"
+#include "net/SecureUtils.h"
 
 #include <QProcess>
 #include <QDir>
@@ -149,34 +150,14 @@ void SslCertificate::generateCertificate()
 
 void SslCertificate::generateFingerprint(const QString& certificateFilename)
 {
-    QStringList arguments;
-    arguments.append("x509");
-    arguments.append("-fingerprint");
-    arguments.append("-sha1");
-    arguments.append("-noout");
-    arguments.append("-in");
-    arguments.append(certificateFilename);
-
-    auto ret = runTool(arguments);
-    bool success = ret.first;
-    std::string output = ret.second;
-
-    if (!success) {
-        return;
-    }
-
-    // find the fingerprint from the tool output
-    auto i = output.find_first_of('=');
-    if (i != std::string::npos) {
-        i++;
-        auto fingerprint = output.substr(
-            i, output.size() - i);
-
-        Fingerprint::local().trust(QString::fromStdString(fingerprint), false);
+    try {
+        auto fingerprint = barrier::get_pem_file_cert_fingerprint(certificateFilename.toStdString(),
+                                                                  barrier::FingerprintType::SHA1);
+        Fingerprint::local().trust(QString::fromStdString(
+                                       barrier::format_ssl_fingerprint(fingerprint)), false);
         emit info(tr("SSL fingerprint generated."));
-    }
-    else {
-        emit error(tr("Failed to find SSL fingerprint."));
+    } catch (const std::exception& e) {
+        emit error(tr("Failed to find SSL fingerprint.") + e.what());
     }
 }
 

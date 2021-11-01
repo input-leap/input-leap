@@ -147,8 +147,8 @@ fakeNativeMediaKey(KeyID id)
 					data2:-1];
 	CGEventRef upEvent = [upRef CGEvent];
 	
-	CGEventPost(0, downEvent);
-	CGEventPost(0, upEvent);
+    CGEventPost(kCGHIDEventTap, downEvent);
+    CGEventPost(kCGHIDEventTap, upEvent);
 	
 	return true;
 }

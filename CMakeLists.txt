@@ -293,6 +293,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     add_definitions (
         /DSYSAPI_WIN32=1
         /DWINAPI_MSWINDOWS=1
+        /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING=1  # tr1 is used from gtest and gmock
         /DWIN32
         /D_WINDOWS
         /D_CRT_SECURE_NO_WARNINGS

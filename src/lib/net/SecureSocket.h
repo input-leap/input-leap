@@ -64,7 +64,7 @@ private:
     void                createSSL();
     int                    secureAccept(int s);
     int                    secureConnect(int s);
-    bool                showCertificate();
+    bool ensure_peer_certificate();
     void                checkResult(int n, int& retry);
     void                showError(const std::string& reason);
     std::string getError();

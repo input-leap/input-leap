@@ -499,7 +499,7 @@ SecureSocket::secureConnect(int socket)
     m_secureReady = true;
     if (verify_cert_fingerprint(barrier::DataDirectories::trusted_servers_ssl_fingerprints_path())) {
         LOG((CLOG_INFO "connected to secure socket"));
-        if (!showCertificate()) {
+        if (!ensure_peer_certificate()) {
             disconnect();
             return -1;// Cert fail, error
         }
@@ -518,7 +518,7 @@ SecureSocket::secureConnect(int socket)
 }
 
 bool
-SecureSocket::showCertificate()
+SecureSocket::ensure_peer_certificate()
 {
     X509* cert;
     char* line;
@@ -527,12 +527,12 @@ SecureSocket::showCertificate()
     cert = SSL_get_peer_certificate(m_ssl->m_ssl);
     if (cert != NULL) {
         line = X509_NAME_oneline(X509_get_subject_name(cert), 0, 0);
-        LOG((CLOG_INFO "server ssl certificate info: %s", line));
+        LOG((CLOG_INFO "peer ssl certificate info: %s", line));
         OPENSSL_free(line);
         X509_free(cert);
     }
     else {
-        showError("server has no ssl certificate");
+        showError("peer has no ssl certificate");
         return false;
     }
 

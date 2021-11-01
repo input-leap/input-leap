@@ -16,8 +16,8 @@
  */
 
 #include "SslCertificate.h"
-#include "Fingerprint.h"
 #include "common/DataDirectories.h"
+#include "net/FingerprintDatabase.h"
 #include "net/SecureUtils.h"
 
 #include <QProcess>
@@ -44,17 +44,17 @@ SslCertificate::SslCertificate(QObject *parent) :
 
 void SslCertificate::generateCertificate()
 {
-    auto filename = QString::fromStdString(getCertificatePath());
+    auto cert_path = getCertificatePath();
 
-    QFile file(filename);
-    if (!file.exists() || !isCertificateValid(filename)) {
+    QFile file(QString::fromStdString(cert_path));
+    if (!file.exists() || !isCertificateValid(cert_path)) {
         QDir sslDir(QString::fromStdString(getCertificateDirectory()));
         if (!sslDir.exists()) {
             sslDir.mkpath(".");
         }
 
         try {
-            barrier::generate_pem_self_signed_cert(filename.toStdString());
+            barrier::generate_pem_self_signed_cert(cert_path);
         }  catch (const std::exception& e) {
             emit error(QString("SSL tool failed: %1").arg(e.what()));
             return;
@@ -63,18 +63,22 @@ void SslCertificate::generateCertificate()
         emit info(tr("SSL certificate generated."));
     }
 
-    generateFingerprint(filename);
+    generateFingerprint(cert_path);
 
     emit generateFinished();
 }
 
-void SslCertificate::generateFingerprint(const QString& certificateFilename)
+void SslCertificate::generateFingerprint(const std::string& cert_path)
 {
     try {
-        auto fingerprint = barrier::get_pem_file_cert_fingerprint(certificateFilename.toStdString(),
+        auto fingerprint = barrier::get_pem_file_cert_fingerprint(cert_path,
                                                                   barrier::FingerprintType::SHA1);
-        Fingerprint::local().trust(QString::fromStdString(
-                                       barrier::format_ssl_fingerprint(fingerprint)), false);
+
+        auto local_path = DataDirectories::local_ssl_fingerprints_path();
+        barrier::FingerprintDatabase db;
+        db.add_trusted(barrier::FingerprintData{"sha1", fingerprint});
+        db.write(local_path);
+
         emit info(tr("SSL fingerprint generated."));
     } catch (const std::exception& e) {
         emit error(tr("Failed to find SSL fingerprint.") + e.what());
@@ -91,7 +95,7 @@ std::string SslCertificate::getCertificateDirectory()
     return m_ProfileDir + QDir::separator().toLatin1() + kSslDir;
 }
 
-bool SslCertificate::isCertificateValid(const QString& path)
+bool SslCertificate::isCertificateValid(const std::string& path)
 {
     OpenSSL_add_all_algorithms();
     ERR_load_BIO_strings();
@@ -99,7 +103,7 @@ bool SslCertificate::isCertificateValid(const QString& path)
 
     BIO* bio = BIO_new(BIO_s_file());
 
-    auto ret = BIO_read_filename(bio, path.toStdString().c_str());
+    auto ret = BIO_read_filename(bio, path.c_str());
     if (!ret) {
         emit info(tr("Could not read from default certificate file."));
         BIO_free_all(bio);

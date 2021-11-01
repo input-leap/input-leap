@@ -29,7 +29,6 @@ set(GUI_SOURCE_FILES
     src/CommandProcess.cpp
     src/DataDownloader.cpp
     src/DisplayIsValid.cpp
-    src/Fingerprint.cpp
     src/HotkeyDialog.cpp
     src/IpcClient.cpp
     src/Ipc.cpp
@@ -70,7 +69,6 @@ set(GUI_HEADER_FILES
     src/DataDownloader.h
     src/DisplayIsValid.h
     src/ElevateMode.h
-    src/Fingerprint.h
     src/HotkeyDialog.h
     src/IpcClient.h
     src/Ipc.h

@@ -20,7 +20,6 @@
 
 #include "MainWindow.h"
 
-#include "Fingerprint.h"
 #include "AboutDialog.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
@@ -31,7 +30,10 @@
 #include "ProcessorArch.h"
 #include "SslCertificate.h"
 #include "ShutdownCh.h"
+#include "base/String.h"
 #include "common/DataDirectories.h"
+#include "net/FingerprintDatabase.h"
+#include "net/SecureUtils.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -417,10 +419,20 @@ void MainWindow::checkFingerprint(const QString& line)
         return;
     }
 
-    QString fingerprint = fingerprintRegex.cap(1);
-    if (Fingerprint::trustedServers().isTrusted(fingerprint)) {
+    barrier::FingerprintData fingerprint = {
+        barrier::fingerprint_type_to_string(barrier::FingerprintType::SHA1),
+        barrier::string::from_hex(fingerprintRegex.cap(1).toStdString())
+    };
+
+    auto db_path = DataDirectories::trusted_servers_ssl_fingerprints_path();
+
+    barrier::FingerprintDatabase db;
+    db.read(db_path);
+    if (db.is_trusted(fingerprint)) {
         return;
     }
+
+    auto formatted_fingerprint = barrier::format_ssl_fingerprint(fingerprint.data);
 
     static bool messageBoxAlreadyShown = false;
 
@@ -440,12 +452,13 @@ void MainWindow::checkFingerprint(const QString& line)
                "To automatically trust this fingerprint for future "
                "connections, click Yes. To reject this fingerprint and "
                "disconnect from the server, click No.")
-            .arg(fingerprint),
+            .arg(QString::fromStdString(formatted_fingerprint)),
             QMessageBox::Yes | QMessageBox::No);
 
         if (fingerprintReply == QMessageBox::Yes) {
             // restart core process after trusting fingerprint.
-            Fingerprint::trustedServers().trust(fingerprint);
+            db.add_trusted(fingerprint);
+            db.write(db_path);
             startBarrier();
         }
 
@@ -965,12 +978,29 @@ void MainWindow::updateSSLFingerprint()
         });
         m_pSslCertificate->generateCertificate();
     }
-    if (m_AppConfig->getCryptoEnabled() && Fingerprint::local().fileExists()) {
-        m_pLabelLocalFingerprint->setText(Fingerprint::local().readFirst());
-        m_pLabelLocalFingerprint->setTextInteractionFlags(Qt::TextSelectableByMouse);
-    } else {
-        m_pLabelLocalFingerprint->setText("Disabled");
+
+    m_pLabelLocalFingerprint->setText("Disabled");
+
+    if (!m_AppConfig->getCryptoEnabled()) {
+        return;
     }
+
+    auto local_path = DataDirectories::local_ssl_fingerprints_path();
+    if (!QFile::exists(QString::fromStdString(local_path))) {
+        return;
+    }
+
+    barrier::FingerprintDatabase db;
+    db.read(local_path);
+    if (db.fingerprints().empty()) {
+        return;
+    }
+
+    const auto& fingerprint = db.fingerprints().front();
+    auto formatted_fingerprint = barrier::format_ssl_fingerprint(fingerprint.data);
+
+    m_pLabelLocalFingerprint->setText(QString::fromStdString(formatted_fingerprint));
+    m_pLabelLocalFingerprint->setTextInteractionFlags(Qt::TextSelectableByMouse);
 }
 
 void MainWindow::on_m_pGroupClient_toggled(bool on)

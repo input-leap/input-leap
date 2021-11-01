@@ -51,6 +51,10 @@ ClientProxy1_0::ClientProxy1_0(const std::string& name, barrier::IStream* stream
                             stream->getEventTarget(),
                             new TMethodEventJob<ClientProxy1_0>(this,
                                 &ClientProxy1_0::handleDisconnect, NULL));
+    m_events->adoptHandler(m_events->forIStream().inputFormatError(),
+                           stream->getEventTarget(),
+                           new TMethodEventJob<ClientProxy1_0>(this,
+                                &ClientProxy1_0::handleDisconnect, NULL));
     m_events->adoptHandler(m_events->forIStream().outputShutdown(),
                             stream->getEventTarget(),
                             new TMethodEventJob<ClientProxy1_0>(this,
@@ -89,6 +93,8 @@ ClientProxy1_0::removeHandlers()
     m_events->removeHandler(m_events->forIStream().inputShutdown(),
                             getStream()->getEventTarget());
     m_events->removeHandler(m_events->forIStream().outputShutdown(),
+                            getStream()->getEventTarget());
+    m_events->removeHandler(m_events->forIStream().inputFormatError(),
                             getStream()->getEventTarget());
     m_events->removeHandler(Event::kTimer, this);
 

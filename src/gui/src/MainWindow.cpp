@@ -26,6 +26,7 @@
 #include "ZeroconfService.h"
 #include "DataDownloader.h"
 #include "CommandProcess.h"
+#include "FingerprintAcceptDialog.h"
 #include "QUtility.h"
 #include "ProcessorArch.h"
 #include "SslCertificate.h"
@@ -469,50 +470,9 @@ void MainWindow::checkFingerprint(const QString& line)
             stopBarrier();
         }
 
-        QString message;
-        if (is_client) {
-            message = tr("Do you trust this fingerprint?\n\n"
-               "SHA256:\n"
-               "%1\n"
-               "%2\n\n"
-               "SHA1 (obsolete, when using old Barrier client):\n"
-               "%3\n\n"
-               "This is a server fingerprint. You should compare this "
-               "fingerprint to the one on your server's screen. If the "
-               "two don't match exactly, then it's probably not the server "
-               "you're expecting (it could be a malicious user).\n\n"
-               "To automatically trust this fingerprint for future "
-               "connections, click Yes. To reject this fingerprint and "
-               "disconnect from the server, click No.")
-            .arg(QString::fromStdString(barrier::format_ssl_fingerprint(fingerprint_sha256.data)))
-            .arg(QString::fromStdString(
-                     barrier::create_fingerprint_randomart(fingerprint_sha256.data)))
-            .arg(QString::fromStdString(barrier::format_ssl_fingerprint(fingerprint_sha1.data)));
-        } else {
-            message = tr("Do you trust this fingerprint?\n\n"
-               "SHA256:\n"
-               "%1\n"
-               "%2\n\n"
-               "This is a client fingerprint. You should compare this "
-               "fingerprint to the one on your client's screen. If the "
-               "two don't match exactly, then it's probably not the client "
-               "you're expecting (it could be a malicious user).\n\n"
-               "To automatically trust this fingerprint for future "
-               "connections, click Yes. To reject this fingerprint and "
-               "disconnect the client, click No.")
-            .arg(QString::fromStdString(barrier::format_ssl_fingerprint(fingerprint_sha256.data)))
-            .arg(QString::fromStdString(
-                     barrier::create_fingerprint_randomart(fingerprint_sha256.data)));
-        }
-
         messageBoxAlreadyShown = true;
-        QMessageBox::StandardButton fingerprintReply =
-            QMessageBox::information(
-            this, tr("Security question"),
-            message,
-            QMessageBox::Yes | QMessageBox::No);
-
-        if (fingerprintReply == QMessageBox::Yes) {
+        FingerprintAcceptDialog dialog{this, barrier_type(), fingerprint_sha1, fingerprint_sha256};
+        if (dialog.exec() == QDialog::Accepted) {
             // restart core process after trusting fingerprint.
             db.add_trusted(fingerprint_sha256);
             db.write(db_path);

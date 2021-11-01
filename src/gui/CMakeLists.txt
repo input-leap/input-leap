@@ -29,6 +29,7 @@ set(GUI_SOURCE_FILES
     src/CommandProcess.cpp
     src/DataDownloader.cpp
     src/DisplayIsValid.cpp
+    src/FingerprintAcceptDialog.cpp
     src/HotkeyDialog.cpp
     src/IpcClient.cpp
     src/Ipc.cpp
@@ -104,6 +105,7 @@ set(GUI_UI_FILES
     src/AboutDialogBase.ui
     src/ActionDialogBase.ui
     src/AddClientDialogBase.ui
+    src/FingerprintAcceptDialog.ui
     src/HotkeyDialogBase.ui
     src/LogWindowBase.ui
     src/MainWindowBase.ui

@@ -57,6 +57,12 @@
 #include <cstring>
 #include <stdexcept>
 
+#if SYSAPI_WIN32
+// Windows builds require a shim that makes it possible to link to different
+// versions of the Win32 C runtime. See OpenSSL FAQ.
+#include <openssl/applink.c>
+#endif
+
 namespace barrier {
 
 namespace {

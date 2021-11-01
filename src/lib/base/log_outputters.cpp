@@ -20,7 +20,7 @@
 #include "base/TMethodJob.h"
 #include "arch/Arch.h"
 #include "base/String.h"
-#include "io/fstream.h"
+#include "io/filesystem.h"
 #include <fstream>
 
 enum EFileLogOutputter {

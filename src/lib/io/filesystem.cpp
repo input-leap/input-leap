@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "fstream.h"
+#include "filesystem.h"
 #if SYSAPI_WIN32
 #include "common/win32/encoding_utilities.h"
 #endif

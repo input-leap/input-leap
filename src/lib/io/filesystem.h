@@ -15,8 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BARRIER_LIB_IO_FSTREAM_H
-#define BARRIER_LIB_IO_FSTREAM_H
+#ifndef BARRIER_LIB_IO_FILESYSTEM_H
+#define BARRIER_LIB_IO_FILESYSTEM_H
 
 #include <cstdio>
 #include <iosfwd>
@@ -35,4 +35,4 @@ std::FILE* fopen_utf8_path(const std::string& path, const std::string& mode);
 
 } // namespace barrier
 
-#endif
+#endif // BARRIER_LIB_IO_FILESYSTEM_H

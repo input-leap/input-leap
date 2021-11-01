@@ -18,7 +18,7 @@
 #include "barrier/DropHelper.h"
 
 #include "base/Log.h"
-#include "io/fstream.h"
+#include "io/filesystem.h"
 
 #include <fstream>
 

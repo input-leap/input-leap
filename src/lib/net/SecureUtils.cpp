@@ -46,7 +46,7 @@
 #include "SecureUtils.h"
 #include "base/String.h"
 #include "base/finally.h"
-#include "io/fstream.h"
+#include "io/filesystem.h"
 
 #include <openssl/evp.h>
 #include <openssl/x509.h>

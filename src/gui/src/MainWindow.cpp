@@ -442,7 +442,7 @@ void MainWindow::checkFingerprint(const QString& line)
         barrier::string::from_hex(fingerprintRegex.cap(2).toStdString())
     };
 
-    auto db_path = DataDirectories::trusted_servers_ssl_fingerprints_path();
+    auto db_path = barrier::DataDirectories::trusted_servers_ssl_fingerprints_path();
 
     // We compare only SHA256 fingerprints, but show both SHA1 and SHA256 so that the users can
     // still verify fingerprints on old Barrier servers. This way the only time when we are exposed
@@ -564,7 +564,7 @@ void MainWindow::startBarrier()
     // launched the process (e.g. when launched with elevation). setting the
     // profile dir on launch ensures it uses the same profile dir is used
     // no matter how its relaunched.
-    args << "--profile-dir" << QString::fromStdString("\"" + DataDirectories::profile() + "\"");
+    args << "--profile-dir" << QString::fromStdString("\"" + barrier::DataDirectories::profile() + "\"");
 #endif
 
     if ((barrierType() == barrierClient && !clientArgs(args, app))
@@ -1020,7 +1020,7 @@ void MainWindow::updateSSLFingerprint()
         return;
     }
 
-    auto local_path = DataDirectories::local_ssl_fingerprints_path();
+    auto local_path = barrier::DataDirectories::local_ssl_fingerprints_path();
     if (!QFile::exists(QString::fromStdString(local_path))) {
         return;
     }

@@ -56,7 +56,7 @@ SecureListenSocket::accept()
         }
 
         std::string certificateFilename = barrier::string::sprintf("%s/%s/%s",
-                                        DataDirectories::profile().c_str(),
+                                        barrier::DataDirectories::profile().c_str(),
                                         s_certificateDir,
                                         s_certificateFilename);
 

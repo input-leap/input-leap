@@ -22,6 +22,8 @@
 #include <sys/types.h> // getpwuid(_r)
 #include <pwd.h>       // getpwuid(_r)
 
+namespace barrier {
+
 const std::string ProfileSubdir = "/barrier";
 
 static std::string pw_dir(struct passwd* pwentp)
@@ -112,3 +114,5 @@ const std::string& DataDirectories::systemconfig(const std::string& path)
     _systemconfig = path;
     return _systemconfig;
 }
+
+} // namespace barrier

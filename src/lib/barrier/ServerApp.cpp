@@ -130,11 +130,11 @@ ServerApp::help()
     // refer to custom profile directory even if not saved yet
     barrier::fs::path profile_path = argsBase().m_profileDirectory;
     if (profile_path.empty()) {
-        profile_path = barrier::fs::u8path(DataDirectories::profile());
+        profile_path = barrier::fs::u8path(barrier::DataDirectories::profile());
     }
 
     auto usr_config_path = (profile_path / barrier::fs::u8path(USR_CONFIG_NAME)).u8string();
-    auto sys_config_path = (barrier::fs::u8path(DataDirectories::systemconfig()) /
+    auto sys_config_path = (barrier::fs::u8path(barrier::DataDirectories::systemconfig()) /
                             barrier::fs::u8path(SYS_CONFIG_NAME)).u8string();
 
     std::ostringstream buffer;
@@ -197,7 +197,7 @@ ServerApp::loadConfig()
 
     // load the default configuration if no explicit file given
     else {
-        auto path = barrier::fs::u8path(DataDirectories::profile());
+        auto path = barrier::fs::u8path(barrier::DataDirectories::profile());
         if (!path.empty()) {
             // complete path
             path /= barrier::fs::u8path(USR_CONFIG_NAME);
@@ -210,7 +210,7 @@ ServerApp::loadConfig()
         }
         if (!loaded) {
             // try the system-wide config file
-            path = barrier::fs::u8path(DataDirectories::systemconfig());
+            path = barrier::fs::u8path(barrier::DataDirectories::systemconfig());
             if (!path.empty()) {
                 path /= barrier::fs::u8path(SYS_CONFIG_NAME);
                 if (loadConfig(path.u8string())) {

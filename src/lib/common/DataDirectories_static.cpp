@@ -17,7 +17,8 @@
 
 #include "DataDirectories.h"
 
-// static member
+namespace barrier {
+
 std::string DataDirectories::_profile;
 std::string DataDirectories::_global;
 std::string DataDirectories::_systemconfig;
@@ -46,3 +47,5 @@ std::string DataDirectories::trusted_clients_ssl_fingerprints_path()
 {
     return ssl_fingerprints_path() + "/" + kFingerprintsTrustedClientsFilename;
 }
+
+} // namespace barrier

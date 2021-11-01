@@ -38,7 +38,7 @@ static const char kSslDir[] = "SSL";
 SslCertificate::SslCertificate(QObject *parent) :
     QObject(parent)
 {
-    m_ProfileDir = DataDirectories::profile();
+    m_ProfileDir = barrier::DataDirectories::profile();
     if (m_ProfileDir.empty()) {
         emit error(tr("Failed to get profile directory."));
     }
@@ -73,7 +73,7 @@ void SslCertificate::generateCertificate()
 void SslCertificate::generateFingerprint(const std::string& cert_path)
 {
     try {
-        auto local_path = DataDirectories::local_ssl_fingerprints_path();
+        auto local_path = barrier::DataDirectories::local_ssl_fingerprints_path();
         barrier::FingerprintDatabase db;
         db.add_trusted(barrier::get_pem_file_cert_fingerprint(cert_path,
                                                               barrier::FingerprintType::SHA1));

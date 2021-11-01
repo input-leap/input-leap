@@ -15,9 +15,12 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
+#ifndef BARRIER_LIB_COMMON_DATA_DIRECTORIES_H
+#define BARRIER_LIB_COMMON_DATA_DIRECTORIES_H
 
 #include <string>
+
+namespace barrier {
 
 class DataDirectories
 {
@@ -40,3 +43,7 @@ private:
     static std::string _global;
     static std::string _systemconfig;
 };
+
+} // namespace barrier
+
+#endif

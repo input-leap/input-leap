@@ -20,6 +20,8 @@
 
 #include <Shlobj.h>
 
+namespace barrier {
+
 std::string known_folder_path(const KNOWNFOLDERID& id)
 {
     std::string path;
@@ -71,3 +73,5 @@ const std::string& DataDirectories::systemconfig(const std::string& path)
     _systemconfig = path;
     return _systemconfig;
 }
+
+} // namespace barrier

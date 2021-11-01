@@ -674,7 +674,7 @@ SecureSocket::verifyCertFingerprint()
          barrier::format_ssl_fingerprint(fingerprint_sha1.data).c_str(),
          barrier::format_ssl_fingerprint(fingerprint_sha256.data).c_str()));
 
-    auto fingerprint_db_path = DataDirectories::trusted_servers_ssl_fingerprints_path();
+    auto fingerprint_db_path = barrier::DataDirectories::trusted_servers_ssl_fingerprints_path();
 
     // Provide debug hint as to what file is being used to verify fingerprint trust
     LOG((CLOG_NOTE "fingerprint_db_path: %s", fingerprint_db_path.c_str()));

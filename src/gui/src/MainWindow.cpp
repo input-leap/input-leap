@@ -938,6 +938,14 @@ void MainWindow::changeEvent(QEvent* event)
     QMainWindow::changeEvent(event);
 }
 
+bool MainWindow::event(QEvent* event)
+{
+    if (event->type() == QEvent::LayoutRequest) {
+        setFixedSize(sizeHint());
+    }
+    return QMainWindow::event(event);
+}
+
 void MainWindow::updateZeroconfService()
 {
     QMutexLocker locker(&m_UpdateZeroconfMutex);

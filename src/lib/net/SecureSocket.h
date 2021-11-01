@@ -19,6 +19,7 @@
 
 #include "net/TCPSocket.h"
 #include "net/XSocket.h"
+#include <mutex>
 
 class IEventQueue;
 class SocketMultiplexer;
@@ -59,31 +60,48 @@ public:
 
 private:
     // SSL
-    void                initContext(bool server);
-    void                createSSL();
+    void initContext(bool server); // may only be called with ssl_mutex_ acquired
+    void createSSL(); // may only be called with ssl_mutex_ acquired.
     int                    secureAccept(int s);
     int                    secureConnect(int s);
-    bool                showCertificate();
-    void                checkResult(int n, int& retry);
+    bool showCertificate(); // may only be called with ssl_mutex_ acquired
+    void checkResult(int n, int& retry); // may only be called with m_ssl_mutex_ acquired.
     void                showError(const char* reason = NULL);
     std::string getError();
     void                disconnect();
     void formatFingerprint(std::string& fingerprint, bool hex = true, bool separator = true);
-    bool                verifyCertFingerprint();
+    bool verifyCertFingerprint(); // may only be called with ssl_mutex_ acquired
 
     MultiplexerJobStatus serviceConnect(ISocketMultiplexerJob*, bool, bool, bool);
     MultiplexerJobStatus serviceAccept(ISocketMultiplexerJob*, bool, bool, bool);
 
-    void                showSecureConnectInfo();
-    void                showSecureLibInfo();
-    void                showSecureCipherInfo();
-    
+    void showSecureConnectInfo(); // may only be called with ssl_mutex_ acquired
+    void showSecureLibInfo();
+    void showSecureCipherInfo(); // may only be called with ssl_mutex_ acquired
+
     void                handleTCPConnected(const Event& event, void*);
 
     void freeSSLResources();
 
 private:
+    // all accesses to m_ssl must be protected by this mutex. The only function that is called
+    // from outside SocketMultiplexer thread is close(), so we mostly care about things accessed
+    // by it.
+    std::mutex ssl_mutex_;
+
     Ssl*                m_ssl;
     bool                m_secureReady;
     bool                m_fatal;
+
+    int secure_accept_retry_ = 0; // used only in secureAccept()
+    int secure_connect_retry_ = 0; // used only in secureConnect()
+    int secure_read_retry_ = 0; // used only in secureRead()
+    int secure_write_retry_ = 0; // used only in secureWrite()
+
+    // The following are used only from doWrite()
+    // FIXME: using std::vector would simplify logic significantly.
+    bool do_write_retry_ = false;
+    int do_write_retry_size_ = 0;
+    std::unique_ptr<char[]> do_write_retry_buffer_;
+    std::size_t do_write_retry_buffer_size_ = 0;
 };

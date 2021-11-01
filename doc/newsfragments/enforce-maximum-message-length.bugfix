@@ -1,0 +1,6 @@
+SECURITY ISSUE
+
+Barrier will now enforce a maximum length of input messages (fixes CVE-2021-42076).
+
+Previously it was possible for a malicious client or server to send excessive length messages
+leading to denial of service by resource exhaustion.

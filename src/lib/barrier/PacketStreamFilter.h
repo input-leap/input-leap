@@ -47,7 +47,9 @@ protected:
 
 private:
     bool                isReadyNoLock() const;
-    void                readPacketSize();
+
+    // returns false on erroneous packet size
+    bool readPacketSize();
     bool                readMore();
 
 private:

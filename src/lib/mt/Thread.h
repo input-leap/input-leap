@@ -192,7 +192,7 @@ public:
 private:
     Thread(ArchThread);
 
-    static void*        threadFunc(void*);
+    static void threadFunc(void*);
 
 private:
     ArchThread            m_thread;

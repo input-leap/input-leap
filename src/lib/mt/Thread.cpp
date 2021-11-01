@@ -126,8 +126,7 @@ Thread::operator!=(const Thread& thread) const
     return !ARCH->isSameThread(m_thread, thread.m_thread);
 }
 
-void*
-Thread::threadFunc(void* vjob)
+void Thread::threadFunc(void* vjob)
 {
     // get this thread's id for logging
     IArchMultithread::ThreadID id;
@@ -168,6 +167,4 @@ Thread::threadFunc(void* vjob)
 
     // done with job
     delete job;
-
-    return nullptr;
 }

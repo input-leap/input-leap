@@ -71,7 +71,7 @@ barrier.  Each architecture must implement this interface.
 class IArchMultithread : public IInterface {
 public:
     //! Type of thread entry point
-    typedef void* (*ThreadFunc)(void*);
+    typedef void (*ThreadFunc)(void*);
     //! Type of thread identifier
     typedef unsigned int ThreadID;
     //! Types of signals

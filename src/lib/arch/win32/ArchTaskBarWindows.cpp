@@ -501,11 +501,9 @@ ArchTaskBarWindows::threadMainLoop()
     UnregisterClass(className, instanceWin32());
 }
 
-void*
-ArchTaskBarWindows::threadEntry(void* self)
+void ArchTaskBarWindows::threadEntry(void* self)
 {
     static_cast<ArchTaskBarWindows*>(self)->threadMainLoop();
-    return NULL;
 }
 
 HINSTANCE ArchTaskBarWindows::instanceWin32()

@@ -84,7 +84,7 @@ private:
     static LRESULT CALLBACK
                         staticWndProc(HWND, UINT, WPARAM, LPARAM);
     void                threadMainLoop();
-    static void*        threadEntry(void*);
+    static void threadEntry(void*);
 
     HINSTANCE            instanceWin32();
 

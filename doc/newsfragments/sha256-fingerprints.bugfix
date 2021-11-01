@@ -1,4 +1,0 @@
-Barrier now uses SHA256 fingerprints for establishing security of encrypted SSL connections.
-After upgrading client to new version the existing server fingerprint will need to be approved again.
-Client and server will show both SHA1 and SHA256 server fingerprints to allow interoperability
-with older versions of Barrier.

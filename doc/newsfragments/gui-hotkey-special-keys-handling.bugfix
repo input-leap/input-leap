@@ -1,1 +1,0 @@
-Fixed setup of hotkeys with special characters such as comma and semicolon (https://github.com/debauchee/barrier/issues/778).

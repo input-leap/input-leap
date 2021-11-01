@@ -164,7 +164,7 @@ App::initApp(int argc, const char** argv)
     // parse command line
     parseArgs(argc, argv);
 
-    DataDirectories::profile(argsBase().m_profileDirectory);
+    barrier::DataDirectories::profile(argsBase().m_profileDirectory);
 
     // set log filter
     if (!CLOG->setFilter(argsBase().m_logFilter)) {

@@ -24,7 +24,7 @@
 #include "barrier/ArgsBase.h"
 #include "base/Log.h"
 #include "base/String.h"
-#include "common/PathUtilities.h"
+#include "io/filesystem.h"
 
 #ifdef WINAPI_MSWINDOWS
 #include <VersionHelpers.h>
@@ -288,10 +288,10 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
         argsBase().m_enableCrypto = false;
     }
     else if (isArg(i, argc, argv, NULL, "--profile-dir", 1)) {
-        argsBase().m_profileDirectory = argv[++i];
+        argsBase().m_profileDirectory = barrier::fs::u8path(argv[++i]);
     }
     else if (isArg(i, argc, argv, NULL, "--plugin-dir", 1)) {
-        argsBase().m_pluginDirectory = argv[++i];
+        argsBase().m_pluginDirectory = barrier::fs::u8path(argv[++i]);
     }
     else {
         // option not supported here
@@ -487,7 +487,13 @@ void
 ArgParser::updateCommonArgs(const char* const* argv)
 {
     argsBase().m_name = ARCH->getHostName();
-    argsBase().m_exename = PathUtilities::basename(argv[0]);
+    argsBase().m_exename = parse_exename(argv[0]);
+}
+
+std::string ArgParser::parse_exename(const char* arg)
+{
+    // FIXME: we assume UTF-8 encoding, but on Windows this is not correct
+    return barrier::fs::u8path(arg).filename().u8string();
 }
 
 bool

@@ -17,20 +17,20 @@
 
 #include "base/String.h"
 #include "FingerprintDatabase.h"
-#include "io/fstream.h"
+#include "io/filesystem.h"
 #include <algorithm>
 #include <fstream>
 
 namespace barrier {
 
-void FingerprintDatabase::read(const std::string& path)
+void FingerprintDatabase::read(const fs::path& path)
 {
     std::ifstream file;
     open_utf8_path(file, path, std::ios_base::in);
     read_stream(file);
 }
 
-void FingerprintDatabase::write(const std::string& path)
+void FingerprintDatabase::write(const fs::path& path)
 {
     std::ofstream file;
     open_utf8_path(file, path, std::ios_base::out);

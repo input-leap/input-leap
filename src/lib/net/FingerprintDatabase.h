@@ -19,6 +19,7 @@
 #define BARRIER_LIB_NET_FINGERPRINT_DATABASE_H
 
 #include "FingerprintData.h"
+#include "io/filesystem.h"
 #include <iosfwd>
 #include <string>
 #include <vector>
@@ -27,8 +28,8 @@ namespace barrier {
 
 class FingerprintDatabase {
 public:
-    void read(const std::string& path);
-    void write(const std::string& path);
+    void read(const fs::path& path);
+    void write(const fs::path& path);
 
     void read_stream(std::istream& stream);
     void write_stream(std::ostream& stream);

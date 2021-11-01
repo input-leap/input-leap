@@ -4,3 +4,6 @@
 [submodule "ext/gmock"]
 	path = ext/gmock
 	url = https://github.com/google/googlemock.git
+[submodule "ext/gulrak-filesystem"]
+	path = ext/gulrak-filesystem
+	url = https://github.com/gulrak/filesystem

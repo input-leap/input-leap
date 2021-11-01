@@ -40,7 +40,6 @@
 #include "base/TMethodJob.h"
 #include "base/Log.h"
 #include "common/Version.h"
-#include "common/PathUtilities.h"
 
 #if WINAPI_MSWINDOWS
 #include "platform/MSWindowsScreen.h"
@@ -522,7 +521,7 @@ ClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc
 {
     // general initialization
     m_serverAddress = new NetworkAddress;
-    args().m_exename = PathUtilities::basename(argv[0]);
+    argsBase().m_exename = ArgParser::parse_exename(argv[0]);
 
     // install caller's output filter
     if (outputter != NULL) {

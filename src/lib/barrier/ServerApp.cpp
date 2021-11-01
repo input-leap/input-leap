@@ -40,7 +40,6 @@
 #include "base/TMethodEventJob.h"
 #include "common/Version.h"
 #include "common/DataDirectories.h"
-#include "common/PathUtilities.h"
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
@@ -129,10 +128,14 @@ ServerApp::help()
 #endif
 
     // refer to custom profile directory even if not saved yet
-    String profilePath = argsBase().m_profileDirectory;
-    if (profilePath.empty()) {
-        profilePath = DataDirectories::profile();
+    barrier::fs::path profile_path = argsBase().m_profileDirectory;
+    if (profile_path.empty()) {
+        profile_path = barrier::DataDirectories::profile();
     }
+
+    auto usr_config_path = (profile_path / barrier::fs::u8path(USR_CONFIG_NAME)).u8string();
+    auto sys_config_path = (barrier::DataDirectories::systemconfig() /
+                            barrier::fs::u8path(SYS_CONFIG_NAME)).u8string();
 
     std::ostringstream buffer;
     buffer << "Start the barrier server component.\n"
@@ -156,8 +159,8 @@ ServerApp::help()
            << "\n"
            << "If no configuration file pathname is provided then the first of the\n"
            << "following to load successfully sets the configuration:\n"
-           << "  " << PathUtilities::concat(profilePath, USR_CONFIG_NAME) << "\n"
-           << "  " << PathUtilities::concat(DataDirectories::systemconfig(), SYS_CONFIG_NAME) << "\n";
+           << "  " << usr_config_path << "\n"
+           << "  " << sys_config_path << "\n";
 
     LOG((CLOG_PRINT "%s", buffer.str().c_str()));
 }
@@ -194,25 +197,25 @@ ServerApp::loadConfig()
 
     // load the default configuration if no explicit file given
     else {
-        String path = DataDirectories::profile();
+        auto path = barrier::DataDirectories::profile();
         if (!path.empty()) {
             // complete path
-            path = PathUtilities::concat(path, USR_CONFIG_NAME);
+            path /= barrier::fs::u8path(USR_CONFIG_NAME);
 
             // now try loading the user's configuration
-            if (loadConfig(path)) {
+            if (loadConfig(path.u8string())) {
                 loaded            = true;
-                args().m_configFile = path;
+                args().m_configFile = path.u8string();
             }
         }
         if (!loaded) {
             // try the system-wide config file
-            path = DataDirectories::systemconfig();
+            path = barrier::DataDirectories::systemconfig();
             if (!path.empty()) {
-                path = PathUtilities::concat(path, SYS_CONFIG_NAME);
-                if (loadConfig(path)) {
+                path /= barrier::fs::u8path(SYS_CONFIG_NAME);
+                if (loadConfig(path.u8string())) {
                     loaded            = true;
-                    args().m_configFile = path;
+                    args().m_configFile = path.u8string();
                 }
             }
         }
@@ -832,7 +835,7 @@ ServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc
     // general initialization
     m_barrierAddress = new NetworkAddress;
     args().m_config         = new Config(m_events);
-    args().m_exename = PathUtilities::basename(argv[0]);
+    args().m_exename = ArgParser::parse_exename(argv[0]);
 
     // install caller's output filter
     if (outputter != NULL) {

@@ -26,7 +26,7 @@
 #include "base/Log.h"
 #include "base/String.h"
 #include "common/DataDirectories.h"
-#include "io/fstream.h"
+#include "io/filesystem.h"
 #include "net/FingerprintDatabase.h"
 
 #include <openssl/ssl.h>
@@ -327,39 +327,35 @@ SecureSocket::initSsl(bool server)
     initContext(server);
 }
 
-bool SecureSocket::loadCertificates(const std::string& filename)
+bool SecureSocket::load_certificates(const barrier::fs::path& path)
 {
-    if (filename.empty()) {
+    if (path.empty()) {
         showError("ssl certificate is not specified");
         return false;
     }
     else {
-        std::ifstream file(filename.c_str());
-        bool exist = file.good();
-        file.close();
-
-        if (!exist) {
-            showError("ssl certificate doesn't exist: " + filename);
+        if (!barrier::fs::is_regular_file(path)) {
+            showError("ssl certificate doesn't exist: " + path.u8string());
             return false;
         }
     }
 
     int r = 0;
-    r = SSL_CTX_use_certificate_file(m_ssl->m_context, filename.c_str(), SSL_FILETYPE_PEM);
+    r = SSL_CTX_use_certificate_file(m_ssl->m_context, path.u8string().c_str(), SSL_FILETYPE_PEM);
     if (r <= 0) {
-        showError("could not use ssl certificate: " + filename);
+        showError("could not use ssl certificate: " + path.u8string());
         return false;
     }
 
-    r = SSL_CTX_use_PrivateKey_file(m_ssl->m_context, filename.c_str(), SSL_FILETYPE_PEM);
+    r = SSL_CTX_use_PrivateKey_file(m_ssl->m_context, path.u8string().c_str(), SSL_FILETYPE_PEM);
     if (r <= 0) {
-        showError("could not use ssl private key: " + filename);
+        showError("could not use ssl private key: " + path.u8string());
         return false;
     }
 
     r = SSL_CTX_check_private_key(m_ssl->m_context);
     if (!r) {
-        showError("could not verify ssl private key: " + filename);
+        showError("could not verify ssl private key: " + path.u8string());
         return false;
     }
 
@@ -674,20 +670,20 @@ SecureSocket::verifyCertFingerprint()
          barrier::format_ssl_fingerprint(fingerprint_sha1.data).c_str(),
          barrier::format_ssl_fingerprint(fingerprint_sha256.data).c_str()));
 
-    auto fingerprint_db_path = DataDirectories::trusted_servers_ssl_fingerprints_path();
+    auto fingerprint_db_path = barrier::DataDirectories::trusted_servers_ssl_fingerprints_path();
 
     // Provide debug hint as to what file is being used to verify fingerprint trust
-    LOG((CLOG_NOTE "fingerprint_db_path: %s", fingerprint_db_path.c_str()));
+    LOG((CLOG_NOTE "fingerprint_db_path: %s", fingerprint_db_path.u8string().c_str()));
 
     barrier::FingerprintDatabase db;
     db.read(fingerprint_db_path);
 
     if (!db.fingerprints().empty()) {
         LOG((CLOG_NOTE "Read %d fingerprints from: %s", db.fingerprints().size(),
-             fingerprint_db_path.c_str()));
+             fingerprint_db_path.u8string().c_str()));
     } else {
         LOG((CLOG_NOTE "Could not read fingerprints from: %s",
-             fingerprint_db_path.c_str()));
+             fingerprint_db_path.u8string().c_str()));
     }
 
     if (db.is_trusted(fingerprint_sha256)) {

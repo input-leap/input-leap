@@ -301,6 +301,8 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     )
 endif()
 
+include_directories("${CMAKE_SOURCE_DIR}/ext/gulrak-filesystem/include")
+
 #
 # OpenSSL
 #

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Checks if directory exists, otherwise asks to install package.
-function check_dir_exists() {
+check_dir_exists() {
     local path=$1
     local package=$2
 
@@ -11,7 +11,7 @@ function check_dir_exists() {
     fi
 }
 
-if [ ! $BARRIER_BUILD_ENV ]; then
+if [ -z "$BARRIER_BUILD_ENV" ]; then
     check_dir_exists '/Applications/Xcode.app' 'Xcode'
 
     printf "Modifying environment for Barrier build...\n"
@@ -29,18 +29,15 @@ if [ ! $BARRIER_BUILD_ENV ]; then
 
     elif command -v brew; then
         printf "Detected Homebrew\n"
-        QT_PATH=$(brew --prefix qt)
-        OPENSSL_PATH=$(brew --prefix openssl)
+        QT_PATH=$(brew --prefix qt@5)
 
-        check_dir_exists "$QT_PATH" 'qt'
-        check_dir_exists "$OPENSSL_PATH" 'openssl'
+        check_dir_exists "$QT_PATH" 'qt5'
 
         export BARRIER_BUILD_BREW=1
-        export CMAKE_PREFIX_PATH="$QT_PATH:$CMAKE_PREFIX_PATH"
-        export LD_LIBRARY_PATH="$OPENSSL_PATH/lib:$LD_LIBRARY_PATH"
-        export CPATH="$OPENSSL_PATH/include:$CPATH"
-        export PKG_CONFIG_PATH="$OPENSSL_PATH/lib/pkgconfig:$PKG_CONFIG_PATH"
-
+        export CMAKE_PREFIX_PATH="/opt/procursus:$QT_PATH:$CMAKE_PREFIX_PATH"
+        export LD_LIBRARY_PATH="/opt/procursus/lib:$LD_LIBRARY_PATH"
+        export CPATH="/opt/procursus/include:$CPATH"
+        export PKG_CONFIG_PATH="/opt/procursus/lib/pkgconfig:$PKG_CONFIG_PATH"
     else
         printf "Neither Homebrew nor Macports is installed. Can't get dependency paths\n"
         exit 1

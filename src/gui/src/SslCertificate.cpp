@@ -17,6 +17,8 @@
 
 #include "SslCertificate.h"
 #include "common/DataDirectories.h"
+#include "base/finally.h"
+#include "io/fstream.h"
 #include "net/FingerprintDatabase.h"
 #include "net/SecureUtils.h"
 
@@ -98,39 +100,32 @@ std::string SslCertificate::getCertificateDirectory()
 bool SslCertificate::isCertificateValid(const std::string& path)
 {
     OpenSSL_add_all_algorithms();
-    ERR_load_BIO_strings();
     ERR_load_crypto_strings();
 
-    BIO* bio = BIO_new(BIO_s_file());
-
-    auto ret = BIO_read_filename(bio, path.c_str());
-    if (!ret) {
+    auto fp = barrier::fopen_utf8_path(path, "r");
+    if (!fp) {
         emit info(tr("Could not read from default certificate file."));
-        BIO_free_all(bio);
         return false;
     }
+    auto file_close = barrier::finally([fp]() { std::fclose(fp); });
 
-    X509* cert = PEM_read_bio_X509(bio, NULL, 0, NULL);
+    auto* cert = PEM_read_X509(fp, nullptr, nullptr, nullptr);
     if (!cert) {
         emit info(tr("Error loading default certificate file to memory."));
-        BIO_free_all(bio);
         return false;
     }
+    auto cert_free = barrier::finally([cert]() { X509_free(cert); });
 
-    EVP_PKEY* pubkey = X509_get_pubkey(cert);
+    auto* pubkey = X509_get_pubkey(cert);
     if (!pubkey) {
         emit info(tr("Default certificate key file does not contain valid public key"));
-        X509_free(cert);
-        BIO_free_all(bio);
         return false;
     }
+    auto pubkey_free = barrier::finally([pubkey]() { EVP_PKEY_free(pubkey); });
 
     auto type = EVP_PKEY_type(EVP_PKEY_id(pubkey));
     if (type != EVP_PKEY_RSA && type != EVP_PKEY_DSA) {
         emit info(tr("Public key in default certificate key file is not RSA or DSA"));
-        EVP_PKEY_free(pubkey);
-        X509_free(cert);
-        BIO_free_all(bio);
         return false;
     }
 
@@ -138,14 +133,8 @@ bool SslCertificate::isCertificateValid(const std::string& path)
     if (bits < 2048) {
         // We could have small keys in old barrier installations
         emit info(tr("Public key in default certificate key file is too small."));
-        EVP_PKEY_free(pubkey);
-        X509_free(cert);
-        BIO_free_all(bio);
         return false;
     }
 
-    EVP_PKEY_free(pubkey);
-    X509_free(cert);
-    BIO_free_all(bio);
     return true;
 }

@@ -18,7 +18,7 @@
 #include "SslCertificate.h"
 #include "common/DataDirectories.h"
 #include "base/finally.h"
-#include "io/fstream.h"
+#include "io/filesystem.h"
 #include "net/FingerprintDatabase.h"
 #include "net/SecureUtils.h"
 

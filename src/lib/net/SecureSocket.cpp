@@ -26,7 +26,7 @@
 #include "base/Log.h"
 #include "base/String.h"
 #include "common/DataDirectories.h"
-#include "io/fstream.h"
+#include "io/filesystem.h"
 #include "net/FingerprintDatabase.h"
 
 #include <openssl/ssl.h>

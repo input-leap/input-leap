@@ -21,3 +21,28 @@
 std::string DataDirectories::_profile;
 std::string DataDirectories::_global;
 std::string DataDirectories::_systemconfig;
+
+static const char kFingerprintsDirName[] = "SSL/Fingerprints";
+static const char kFingerprintsLocalFilename[] = "Local.txt";
+static const char kFingerprintsTrustedServersFilename[] = "TrustedServers.txt";
+static const char kFingerprintsTrustedClientsFilename[] = "TrustedClients.txt";
+
+std::string DataDirectories::ssl_fingerprints_path()
+{
+    return profile() + "/" + kFingerprintsDirName;
+}
+
+std::string DataDirectories::local_ssl_fingerprints_path()
+{
+    return ssl_fingerprints_path() + "/" + kFingerprintsLocalFilename;
+}
+
+std::string DataDirectories::trusted_servers_ssl_fingerprints_path()
+{
+    return ssl_fingerprints_path() + "/" + kFingerprintsTrustedServersFilename;
+}
+
+std::string DataDirectories::trusted_clients_ssl_fingerprints_path()
+{
+    return ssl_fingerprints_path() + "/" + kFingerprintsTrustedClientsFilename;
+}

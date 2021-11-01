@@ -54,4 +54,16 @@ void open_utf8_path(std::fstream& stream, const std::string& path, std::ios_base
     open_utf8_path_impl(stream, path, mode);
 }
 
+std::FILE* fopen_utf8_path(const std::string& path, const std::string& mode)
+{
+#if SYSAPI_WIN32
+    auto wchar_path = utf8_to_win_char(path);
+    auto wchar_mode = utf8_to_win_char(mode);
+    return _wfopen(reinterpret_cast<wchar_t*>(wchar_path.data()),
+                   reinterpret_cast<wchar_t*>(wchar_mode.data()));
+#else
+    return std::fopen(path.c_str(), mode.c_str());
+#endif
+}
+
 } // namespace barrier

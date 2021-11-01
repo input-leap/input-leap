@@ -31,10 +31,11 @@ public:
     static const std::string& systemconfig();
     static const std::string& systemconfig(const std::string& path);
 
+    static std::string ssl_fingerprints_path();
+    static std::string local_ssl_fingerprints_path();
+    static std::string trusted_servers_ssl_fingerprints_path();
+    static std::string trusted_clients_ssl_fingerprints_path();
 private:
-    // static class
-    DataDirectories() {}
-
     static std::string _profile;
     static std::string _global;
     static std::string _systemconfig;

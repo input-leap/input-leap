@@ -157,6 +157,7 @@ public slots:
         void stopService();
         void stopDesktop();
         void changeEvent(QEvent* event);
+        bool event(QEvent* event);
         void retranslateMenuBar();
 #if defined(Q_OS_WIN)
         bool isServiceRunning(QString name);
@@ -201,6 +202,8 @@ public slots:
         SslCertificate* m_pSslCertificate;
         QStringList m_PendingClientNames;
         LogWindow *m_pLogWindow;
+
+        bool m_fingerprint_expanded = false;
 
 private slots:
     void on_m_pCheckBoxAutoConfig_toggled(bool checked);

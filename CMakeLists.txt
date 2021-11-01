@@ -91,7 +91,6 @@ if (UNIX)
     check_function_exists (poll HAVE_POLL)
     check_function_exists (sigwait HAVE_POSIX_SIGWAIT)
     check_function_exists (strftime HAVE_STRFTIME)
-    check_function_exists (vsnprintf HAVE_VSNPRINTF)
     check_function_exists (inet_aton HAVE_INET_ATON)
 
     # For some reason, the check_function_exists macro doesn't detect

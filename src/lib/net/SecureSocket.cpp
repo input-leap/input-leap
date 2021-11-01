@@ -16,6 +16,7 @@
  */
 
 #include "SecureSocket.h"
+#include "SecureUtils.h"
 
 #include "net/TSocketMultiplexerMethodJob.h"
 #include "base/TMethodEventJob.h"
@@ -26,6 +27,7 @@
 #include "base/String.h"
 #include "common/DataDirectories.h"
 #include "io/fstream.h"
+#include "net/FingerprintDatabase.h"
 
 #include <openssl/ssl.h>
 #include <openssl/err.h>
@@ -46,11 +48,6 @@ static const float s_retryDelay = 0.01f;
 enum {
     kMsgSize = 128
 };
-
-static const char kFingerprintDirName[] = "SSL/Fingerprints";
-//static const char kFingerprintLocalFilename[] = "Local.txt";
-static const char kFingerprintTrustedServersFilename[] = "TrustedServers.txt";
-//static const char kFingerprintTrustedClientsFilename[] = "TrustedClients.txt";
 
 struct Ssl {
     SSL_CTX*    m_context;
@@ -656,83 +653,50 @@ SecureSocket::disconnect()
     sendEvent(getEvents()->forIStream().inputShutdown());
 }
 
-void SecureSocket::formatFingerprint(std::string& fingerprint, bool hex, bool separator)
-{
-    if (hex) {
-        // to hexadecimal
-        barrier::string::toHex(fingerprint, 2);
-    }
-
-    // all uppercase
-    barrier::string::uppercase(fingerprint);
-
-    if (separator) {
-        // add colon to separate each 2 characters
-        size_t separators = fingerprint.size() / 2;
-        for (size_t i = 1; i < separators; i++) {
-            fingerprint.insert(i * 3 - 1, ":");
-        }
-    }
-}
-
 bool
 SecureSocket::verifyCertFingerprint()
 {
     // calculate received certificate fingerprint
-    X509 *cert = cert = SSL_get_peer_certificate(m_ssl->m_ssl);
-    EVP_MD* tempDigest;
-    unsigned char tempFingerprint[EVP_MAX_MD_SIZE];
-    unsigned int tempFingerprintLen;
-    tempDigest = (EVP_MD*)EVP_sha1();
-    int digestResult = X509_digest(cert, tempDigest, tempFingerprint, &tempFingerprintLen);
-
-    if (digestResult <= 0) {
-        LOG((CLOG_ERR "failed to calculate fingerprint, digest result: %d", digestResult));
+    barrier::FingerprintData fingerprint_sha1, fingerprint_sha256;
+    try {
+        auto* cert = SSL_get_peer_certificate(m_ssl->m_ssl);
+        fingerprint_sha1 = barrier::get_ssl_cert_fingerprint(cert,
+                                                             barrier::FingerprintType::SHA1);
+        fingerprint_sha256 = barrier::get_ssl_cert_fingerprint(cert,
+                                                               barrier::FingerprintType::SHA256);
+    } catch (const std::exception& e) {
+        LOG((CLOG_ERR "%s", e.what()));
         return false;
     }
 
-    // format fingerprint into hexdecimal format with colon separator
-    std::string fingerprint(reinterpret_cast<char*>(tempFingerprint), tempFingerprintLen);
-    formatFingerprint(fingerprint);
-    LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
+    // note: the GUI parses the following two lines of logs, don't change unnecessarily
+    LOG((CLOG_NOTE "server fingerprint (SHA1): %s (SHA256): %s",
+         barrier::format_ssl_fingerprint(fingerprint_sha1.data).c_str(),
+         barrier::format_ssl_fingerprint(fingerprint_sha256.data).c_str()));
 
-    std::string trustedServersFilename;
-    trustedServersFilename = barrier::string::sprintf(
-        "%s/%s/%s",
-        DataDirectories::profile().c_str(),
-        kFingerprintDirName,
-        kFingerprintTrustedServersFilename);
+    auto fingerprint_db_path = DataDirectories::trusted_servers_ssl_fingerprints_path();
 
     // Provide debug hint as to what file is being used to verify fingerprint trust
-    LOG((CLOG_NOTE "trustedServersFilename: %s", trustedServersFilename.c_str() ));
+    LOG((CLOG_NOTE "fingerprint_db_path: %s", fingerprint_db_path.c_str()));
 
-    // check if this fingerprint exist
-    std::string fileLine;
-    std::ifstream file;
-    barrier::open_utf8_path(file, trustedServersFilename);
+    barrier::FingerprintDatabase db;
+    db.read(fingerprint_db_path);
 
-    if (!file.is_open()) {
-        LOG((CLOG_NOTE "Unable to open trustedServersFile: %s", trustedServersFilename.c_str() ));
+    if (!db.fingerprints().empty()) {
+        LOG((CLOG_NOTE "Read %d fingerprints from: %s", db.fingerprints().size(),
+             fingerprint_db_path.c_str()));
     } else {
-        LOG((CLOG_NOTE "Opened trustedServersFilename: %s", trustedServersFilename.c_str() ));
+        LOG((CLOG_NOTE "Could not read fingerprints from: %s",
+             fingerprint_db_path.c_str()));
     }
 
-    bool isValid = false;
-    while (!file.eof() && file.is_open()) {
-        getline(file,fileLine);
-        if (!fileLine.empty()) {
-            if (fileLine.compare(fingerprint) == 0) {
-                LOG((CLOG_NOTE "Fingerprint matches trusted fingerprint"));
-                isValid = true;
-                break;
-            } else {
-                LOG((CLOG_NOTE "Fingerprint does not match trusted fingerprint"));
-            }
-        }
+    if (db.is_trusted(fingerprint_sha256)) {
+        LOG((CLOG_NOTE "Fingerprint matches trusted fingerprint"));
+        return true;
+    } else {
+        LOG((CLOG_NOTE "Fingerprint does not match trusted fingerprint"));
+        return false;
     }
-
-    file.close();
-    return isValid;
 }
 
 MultiplexerJobStatus SecureSocket::serviceConnect(ISocketMultiplexerJob* job,

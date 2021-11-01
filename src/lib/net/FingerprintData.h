@@ -15,10 +15,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BARRIER_LIB_NET_FINGERPRINT_TYPE_H
-#define BARRIER_LIB_NET_FINGERPRINT_TYPE_H
+#ifndef BARRIER_LIB_NET_FINGERPRINT_DATA_H
+#define BARRIER_LIB_NET_FINGERPRINT_DATA_H
 
 #include <string>
+#include <vector>
 
 namespace barrier {
 
@@ -28,26 +29,17 @@ enum FingerprintType {
     SHA256,
 };
 
-inline const char* fingerprint_type_to_string(FingerprintType type)
-{
-    switch (type) {
-        case FingerprintType::INVALID: return "invalid";
-        case FingerprintType::SHA1: return "sha1";
-        case FingerprintType::SHA256: return "sha256";
-    }
-    return "invalid";
-}
+struct FingerprintData {
+    std::string algorithm;
+    std::vector<std::uint8_t> data;
 
-inline FingerprintType fingerprint_type_from_string(const std::string& type)
-{
-    if (type == "sha1") {
-        return FingerprintType::SHA1;
-    }
-    if (type == "sha256") {
-        return FingerprintType::SHA256;
-    }
-    return FingerprintType::INVALID;
-}
+    bool valid() const { return !algorithm.empty(); }
+
+    bool operator==(const FingerprintData& other) const;
+};
+
+const char* fingerprint_type_to_string(FingerprintType type);
+FingerprintType fingerprint_type_from_string(const std::string& type);
 
 } // namespace barrier
 

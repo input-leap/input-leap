@@ -18,21 +18,12 @@
 #ifndef BARRIER_LIB_NET_FINGERPRINT_DATABASE_H
 #define BARRIER_LIB_NET_FINGERPRINT_DATABASE_H
 
-#include "FingerprintType.h"
+#include "FingerprintData.h"
 #include <iosfwd>
 #include <string>
 #include <vector>
 
 namespace barrier {
-
-struct FingerprintData {
-    std::string algorithm;
-    std::vector<std::uint8_t> data;
-
-    bool valid() const { return !algorithm.empty(); }
-
-    bool operator==(const FingerprintData& other) const;
-};
 
 class FingerprintDatabase {
 public:

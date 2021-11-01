@@ -15,6 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "FingerprintDatabase.h"
 #include "SecureUtils.h"
 #include "base/String.h"
 #include "base/finally.h"
@@ -59,7 +60,7 @@ std::string format_ssl_fingerprint(const std::vector<uint8_t>& fingerprint, bool
     return result;
 }
 
-std::vector<std::uint8_t> get_ssl_cert_fingerprint(X509* cert, FingerprintType type)
+FingerprintData get_ssl_cert_fingerprint(X509* cert, FingerprintType type)
 {
     if (!cert) {
         throw std::runtime_error("certificate is null");
@@ -77,11 +78,10 @@ std::vector<std::uint8_t> get_ssl_cert_fingerprint(X509* cert, FingerprintType t
     std::vector<std::uint8_t> digest_vec;
     digest_vec.assign(reinterpret_cast<std::uint8_t*>(digest),
                       reinterpret_cast<std::uint8_t*>(digest) + digest_length);
-    return digest_vec;
+    return {fingerprint_type_to_string(type), digest_vec};
 }
 
-std::vector<std::uint8_t> get_pem_file_cert_fingerprint(const std::string& path,
-                                                        FingerprintType type)
+FingerprintData get_pem_file_cert_fingerprint(const std::string& path, FingerprintType type)
 {
     auto fp = fopen_utf8_path(path, "r");
     if (!fp) {

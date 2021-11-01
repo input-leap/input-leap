@@ -23,11 +23,6 @@
 
 namespace barrier {
 
-bool FingerprintData::operator==(const FingerprintData& other) const
-{
-    return algorithm == other.algorithm && data == other.data;
-}
-
 void FingerprintDatabase::read(const std::string& path)
 {
     std::ifstream file;

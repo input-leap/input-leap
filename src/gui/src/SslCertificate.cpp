@@ -76,7 +76,7 @@ void SslCertificate::generateFingerprint(const std::string& cert_path)
 
         auto local_path = DataDirectories::local_ssl_fingerprints_path();
         barrier::FingerprintDatabase db;
-        db.add_trusted(barrier::FingerprintData{"sha1", fingerprint});
+        db.add_trusted(fingerprint);
         db.write(local_path);
 
         emit info(tr("SSL fingerprint generated."));

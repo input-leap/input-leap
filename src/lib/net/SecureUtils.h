@@ -20,7 +20,11 @@
 
 #include <string>
 
+namespace barrier {
+
 std::string format_ssl_fingerprint(const std::string& fingerprint,
                                    bool hex = true, bool separator = true);
+
+} // namespace barrier
 
 #endif // BARRIER_LIB_NET_SECUREUTILS_H

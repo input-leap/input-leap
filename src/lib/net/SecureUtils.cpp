@@ -18,6 +18,8 @@
 #include "SecureUtils.h"
 #include "base/String.h"
 
+namespace barrier {
+
 std::string format_ssl_fingerprint(const std::string& fingerprint, bool hex, bool separator)
 {
     std::string result = fingerprint;
@@ -38,3 +40,5 @@ std::string format_ssl_fingerprint(const std::string& fingerprint, bool hex, boo
     }
     return result;
 }
+
+} // namespace barrier

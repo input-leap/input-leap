@@ -114,4 +114,4 @@ jobs:
       condition: eq(variables['B_BUILD_TYPE'], 'Release')
       inputs:
         pathtoPublish: build/bundle
-        artifactName: Mac Release Disk Image and App
+        artifactName: Mac Release Disk Image and App $(imageName)

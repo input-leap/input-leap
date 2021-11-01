@@ -1,6 +1,0 @@
-SECURITY ISSUE
-
-Barrier will now correctly close connections when the app-level handshake fails (fixes CVE-2021-42075).
-
-Previously repeated failing connections would leak file descriptors leading to Barrier being unable
-to receive new connections from clients.

@@ -159,7 +159,7 @@ SecureSocket::secureAccept()
 TCPSocket::EJobResult
 SecureSocket::doRead()
 {
-    static UInt8 buffer[4096];
+    UInt8 buffer[4096];
     memset(buffer, 0, sizeof(buffer));
     int bytesRead = 0;
     int status = 0;
@@ -218,11 +218,6 @@ SecureSocket::doRead()
 TCPSocket::EJobResult
 SecureSocket::doWrite()
 {
-    static bool s_retry = false;
-    static int s_retrySize = 0;
-    static std::unique_ptr<char[]> s_staticBuffer;
-    static std::size_t s_staticBufferSize = 0;
-
     // write data
     int bufferSize = 0;
     int bytesWrote = 0;
@@ -231,16 +226,16 @@ SecureSocket::doWrite()
     if (!isSecureReady())
         return kRetry;
 
-    if (s_retry) {
-        bufferSize = s_retrySize;
+    if (do_write_retry_) {
+        bufferSize = do_write_retry_size_;
     } else {
         bufferSize = m_outputBuffer.getSize();
-        if (bufferSize > s_staticBufferSize) {
-            s_staticBuffer.reset(new char[bufferSize]);
-            s_staticBufferSize = bufferSize;
+        if (bufferSize > do_write_retry_buffer_size_) {
+            do_write_retry_buffer_.reset(new char[bufferSize]);
+            do_write_retry_buffer_size_ = bufferSize;
         }
         if (bufferSize > 0) {
-            memcpy(s_staticBuffer.get(), m_outputBuffer.peek(bufferSize), bufferSize);
+            std::memcpy(do_write_retry_buffer_.get(), m_outputBuffer.peek(bufferSize), bufferSize);
         }
     }
     
@@ -248,14 +243,14 @@ SecureSocket::doWrite()
         return kRetry;
     }
 
-    status = secureWrite(s_staticBuffer.get(), bufferSize, bytesWrote);
+    status = secureWrite(do_write_retry_buffer_.get(), bufferSize, bytesWrote);
     if (status > 0) {
-        s_retry = false;
+        do_write_retry_ = false;
     } else if (status < 0) {
         return kBreak;
     } else if (status == 0) {
-        s_retry = true;
-        s_retrySize = bufferSize;
+        do_write_retry_ = true;
+        do_write_retry_size_ = bufferSize;
         return kNew;
     }
     
@@ -275,13 +270,11 @@ SecureSocket::secureRead(void* buffer, int size, int& read)
     if (m_ssl->m_ssl != NULL) {
         LOG((CLOG_DEBUG2 "reading secure socket"));
         read = SSL_read(m_ssl->m_ssl, buffer, size);
-        
-        static int retry;
 
         // Check result will cleanup the connection in the case of a fatal
-        checkResult(read, retry);
-        
-        if (retry) {
+        checkResult(read, secure_read_retry_);
+
+        if (secure_read_retry_) {
             return 0;
         }
 
@@ -304,13 +297,11 @@ SecureSocket::secureWrite(const void* buffer, int size, int& wrote)
         LOG((CLOG_DEBUG2 "writing secure socket:%p", this));
 
         wrote = SSL_write(m_ssl->m_ssl, buffer, size);
-        
-        static int retry;
 
         // Check result will cleanup the connection in the case of a fatal
-        checkResult(wrote, retry);
+        checkResult(wrote, secure_write_retry_);
 
-        if (retry) {
+        if (secure_write_retry_) {
             return 0;
         }
 
@@ -449,10 +440,8 @@ SecureSocket::secureAccept(int socket)
     
     LOG((CLOG_DEBUG2 "accepting secure socket"));
     int r = SSL_accept(m_ssl->m_ssl);
-    
-    static int retry;
 
-    checkResult(r, retry);
+    checkResult(r, secure_accept_retry_);
 
     if (isFatal()) {
         // tell user and sleep so the socket isn't hammered.
@@ -460,12 +449,12 @@ SecureSocket::secureAccept(int socket)
         LOG((CLOG_INFO "client connection may not be secure"));
         m_secureReady = false;
         ARCH->sleep(1);
-        retry = 0;
+        secure_accept_retry_ = 0;
         return -1; // Failed, error out
     }
 
     // If not fatal and no retry, state is good
-    if (retry == 0) {
+    if (secure_accept_retry_ == 0) {
         m_secureReady = true;
         LOG((CLOG_INFO "accepted secure socket"));
         if (CLOG->getFilter() >= kDEBUG1) {
@@ -476,7 +465,7 @@ SecureSocket::secureAccept(int socket)
     }
 
     // If not fatal and retry is set, not ready, and return retry
-    if (retry > 0) {
+    if (secure_accept_retry_ > 0) {
         LOG((CLOG_DEBUG2 "retry accepting secure socket"));
         m_secureReady = false;
         ARCH->sleep(s_retryDelay);
@@ -500,26 +489,24 @@ SecureSocket::secureConnect(int socket)
     
     LOG((CLOG_DEBUG2 "connecting secure socket"));
     int r = SSL_connect(m_ssl->m_ssl);
-    
-    static int retry;
 
-    checkResult(r, retry);
+    checkResult(r, secure_connect_retry_);
 
     if (isFatal()) {
         LOG((CLOG_ERR "failed to connect secure socket"));
-        retry = 0;
+        secure_connect_retry_ = 0;
         return -1;
     }
 
     // If we should retry, not ready and return 0
-    if (retry > 0) {
+    if (secure_connect_retry_ > 0) {
         LOG((CLOG_DEBUG2 "retry connect secure socket"));
         m_secureReady = false;
         ARCH->sleep(s_retryDelay);
         return 0;
     }
 
-    retry = 0;
+    secure_connect_retry_ = 0;
     // No error, set ready, process and return ok
     m_secureReady = true;
     if (verifyCertFingerprint()) {

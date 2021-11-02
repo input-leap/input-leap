@@ -25,6 +25,9 @@ Security fixes
   again. Client and server will show both SHA1 and SHA256 server fingerprints to allow
   interoperability with older versions of Barrier.
 
+All of the above security issues have been reported by Matthias Gerstner who was really helpful
+resolving them.
+
 Bug fixes
 ---------
 
@@ -81,7 +84,8 @@ Security fixes
   Previously it was possible for a malicious client or server to send excessive length messages
   leading to denial of service by resource exhaustion.
 
-- Fixed a bug which caused Barrier to crash when disconnecting a TCP session just after sending Hello message.
+- Fixed a bug which caused Barrier to crash when disconnecting a TCP session just after sending
+  Hello message (fixes CVE-2021-42074).
   This bug allowed an unauthenticated attacker to crash Barrier with only network access.
 
 All of the above security issues have been reported by Matthias Gerstner who was really helpful

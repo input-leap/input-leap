@@ -8,34 +8,25 @@
         <source>About Barrier</source>
         <translation>Barrier について</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="res/AboutDialogBase.ui" line="53"/>
         <source>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
+Copyright © 2018 Debauchee Open Source Group&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Barrier is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Barrier is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Barrier GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (symless.com).
+The Barrier GUI is based on QSynergy by Volker Lanz.
 &lt;/p&gt;</source>
-        <oldsource>&lt;p&gt;
-Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
-Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
-Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Barrier is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
-Barrier is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Barrier GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (symless.com).
-&lt;/p&gt;</oldsource>
-        <translation type="unfinished">&lt;p&gt;
+        <translation>&lt;p&gt;
 キーボードとマウスの共有ソフトウェアです。クロスプラットフォームでオープンソースです。&lt;br /&gt;&lt;br /&gt;
+Copyright © 2018 Debauchee Open Source Group&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Barrier は GNU General Public (GPLv2). のライセンスで公開されています。&lt;br /&gt;&lt;br /&gt;
-Barrier のベースは CosmoSynergy (Richard Lee, Adam Feder 開発) です。&lt;br /&gt;
-Barrier の GUI は QSynergy (Volker Lanz 開発) がベースです。&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (symless.com).
+Barrier は GNU General Public (GPLv2) のライセンスで公開されています。&lt;br /&gt;&lt;br /&gt;
+Barrier のベースは CosmoSynergyで、これは Richard Lee と Adam Feder の開発です。&lt;br /&gt;
+Barrier の GUI のベースは QSynergy で、これは Volker Lanz 開発です。
 &lt;/p&gt;</translation>
     </message>
     <message>
@@ -47,6 +38,11 @@ Visit our website for help and info (symless.com).
         <location filename="res/AboutDialogBase.ui" line="124"/>
         <source>Version:</source>
         <translation>バージョン:</translation>
+    </message>
+    <message>
+        <location filename="res/AboutDialogBase.ui" line="167"/>
+        <source>Build Date: </source>
+        <translation>ビルド日: </translation>
     </message>
     <message>
         <location filename="res/AboutDialogBase.ui" line="163"/>
@@ -89,7 +85,7 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="res/ActionDialogBase.ui" line="119"/>
         <source>Switch to screen</source>
-        <translation>モニターを切り替え</translation>
+        <translation>次のモニターに切り替え</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="150"/>
@@ -151,18 +147,23 @@ Visit our website for help and info (symless.com).
         <source>the hotkey is released</source>
         <translation>ホットキーを離したとき</translation>
     </message>
+    <message>
+        <location filename="res/ActionDialogBase.ui" line="148"/>
+        <source>Toggle screen</source>
+        <translation>モニターを切り替え</translation>
+    </message>
 </context>
 <context>
     <name>AddClientDialog</name>
     <message>
         <location filename="res/AddClientDialogBase.ui" line="20"/>
         <source>Dialog</source>
-        <translation type="unfinished">ダイアログ</translation>
+        <translation>ダイアログ</translation>
     </message>
     <message>
         <location filename="res/AddClientDialogBase.ui" line="35"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="res/AddClientDialogBase.ui" line="83"/>
@@ -184,29 +185,11 @@ Visit our website for help and info (symless.com).
     </message>
 </context>
 <context>
-    <name>LogWindowBase</name>
-    <message>
-        <location filename="res/LogWindowBase.ui" line="26"/>
-        <source>Log - Barrier</source>
-        <translation>ログ - Barrier</translation>
-    </message>
-    <message>
-        <location filename="res/LogWindowBase.ui" line="71"/>
-        <source>&amp;Clear Log</source>
-        <translation>ログ消去(&amp;C)</translation>
-    </message>
-    <message>
-        <location filename="res/LogWindowBase.ui" line="78"/>
-        <source>&amp;Hide</source>
-        <translation>閉じる</translation>
-    </message>
-</context>
-<context>
     <name>MainWindow</name>
     <message>
         <location filename="src/MainWindow.cpp" line="790"/>
         <source>&amp;Start</source>
-        <translation type="unfinished">開始(&amp;S)</translation>
+        <translation>開始(&amp;S)</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="237"/>
@@ -226,13 +209,13 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="src/MainWindow.cpp" line="240"/>
         <source>&amp;Help</source>
-        <translation type="unfinished">ヘルプ(&amp;H)</translation>
+        <translation>ヘルプ(&amp;H)</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="364"/>
         <source>&lt;p&gt;Your version of Barrier is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</source>
         <oldsource>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</oldsource>
-        <translation type="unfinished">&lt;p&gt;お使いの Barrier のバージョンが古くなっています。 新しいバージョン &lt;b&gt;%1&lt;/b&gt; が&lt;a href=&quot;%2&quot;&gt;ダウンロード&lt;/a&gt;できます。&lt;/p&gt;</translation>
+        <translation type="unfinished">&lt;p&gt;お使いの Barrier は最新版ではありません。 新しいバージョン &lt;b&gt;%1&lt;/b&gt; が&lt;a href=&quot;%2&quot;&gt;ダウンロード&lt;/a&gt;できます。&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="577"/>
@@ -317,7 +300,7 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="src/MainWindow.cpp" line="1044"/>
         <source>Please drag the new client screen (%1) to the desired position on the grid.</source>
-        <translation type="unfinished">グリッド上の希望する位置に新しいクライアントのモニタ (%1) をドラッグしてください。</translation>
+        <translation type="unfinished">グリッド上の希望する位置に新しいクライアントのモニター (%1) をドラッグしてください。</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1147"/>
@@ -355,12 +338,12 @@ Bonjour をインストールしますか?</translation>
     <message>
         <location filename="src/MainWindow.cpp" line="815"/>
         <source>Barrier is starting.</source>
-        <translation>Barrier を開始中です。</translation>
+        <translation>Barrier 開始中...</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="809"/>
         <source>Barrier is running.</source>
-        <translation>Barrier は動作中です。</translation>
+        <translation>Barrier 動作中</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="819"/>
@@ -386,7 +369,7 @@ Bonjour をインストールしますか?</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="408"/>
-        <source>Barrier is now connected, You can close the config window. Barrier will remain connected in the background.</source>
+        <source>Barrier is now connected. You can close the config window and Barrier will remain connected in the background.</source>
         <translation>ただいま Barrier は接続されました。設定ウインドウを閉じることができます。それでもバックグラウンドで接続を維持します。</translation>
     </message>
     <message>
@@ -400,14 +383,14 @@ Bonjour をインストールしますか?</translation>
 
 %1
 
-This is a server fingerprint. You should compare this fingerprint to the one on your server&apos;s screen. If the two don&apos;t match exactly, then it&apos;s probably not the server you&apos;re expecting (it could be a malicious user).
+This is a server fingerprint. You should compare this fingerprint to the one on your server's screen. If the two don't match exactly, then it's probably not the server you're expecting (it could be a malicious user).
 
 To automatically trust this fingerprint for future connections, click Yes. To reject this fingerprint and disconnect from the server, click No.</source>
         <translation type="unfinished">このフィンガープリントを信頼しますか？
 
 %1
 
-これはサーバーのフィンガープリントです。 このフィンガープリントを、サーバー側のモニタに表示されているフィンガープリントとで確認してください。その2つが一致しない場合、接続したいサーバーではありません (悪意のあるサーバの可能性があります)。
+これはサーバーのフィンガープリントです。 このフィンガープリントを、サーバー側のモニターに表示されているフィンガープリントとで確認してください。その2つが一致しない場合、接続したいサーバーではありません (悪意のあるサーバの可能性があります)。
 
 「はい」で、今後の接続でも、このフィンガープリントを自動的に信頼します。「いいえ」で、このフィンガープリントを拒否しサーバーから接続を切断します。</translation>
     </message>
@@ -437,7 +420,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/MainWindowBase.ui" line="90"/>
         <source>Ser&amp;ver (share this computer&apos;s mouse and keyboard):</source>
-        <translation>サーバー (このコンピューターのキーボードとマウスを共有する)(&amp;V):</translation>
+        <translation>サーバー (このコンピューターのキーボードとマウスを共有)(&amp;V):</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="243"/>
@@ -461,6 +444,11 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <translation>既存の構成設定を使用:</translation>
     </message>
     <message>
+        <location filename="res/MainWindowBase.ui" line="218"/>
+        <source>SSL Fingerprint:</source>
+        <translation>SSLフィンガープリント:</translation>
+    </message>
+    <message>
         <location filename="res/MainWindowBase.ui" line="190"/>
         <source>&amp;Configuration file:</source>
         <translation type="unfinished">構成ファイル:(&amp;C):</translation>
@@ -478,7 +466,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/MainWindowBase.ui" line="159"/>
         <source>&amp;Configure Server...</source>
-        <translation>サーバーの構成設定(&amp;S)...</translation>
+        <translation>サーバーの構成設定(&amp;C)...</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="350"/>
@@ -493,7 +481,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/MainWindowBase.ui" line="373"/>
         <source>&amp;Reload</source>
-        <translation type="unfinished">適用(&amp;R)</translation>
+        <translation>再読込(&amp;R)</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="107"/>
@@ -538,12 +526,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/MainWindowBase.ui" line="423"/>
         <source>S&amp;top</source>
-        <translation>停止(&amp;S)</translation>
+        <translation>停止(&amp;T)</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="426"/>
         <source>Stop</source>
-        <translation>停止(&amp;S)</translation>
+        <translation>停止(&amp;T)</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="434"/>
@@ -553,27 +541,27 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/MainWindowBase.ui" line="442"/>
         <source>&amp;Hide</source>
-        <translation>隠す(&amp;H)</translation>
+        <translation>非表示(&amp;H)</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="445"/>
         <source>Hide</source>
-        <translation>隠す(&amp;H)</translation>
+        <translation>非表示(&amp;H)</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="453"/>
         <source>&amp;Show</source>
-        <translation>表示(&amp;S)</translation>
+        <translation>表示(&amp;W)</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="456"/>
         <source>Show</source>
-        <translation>表示(&amp;S)</translation>
+        <translation>表示(&amp;W)</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="464"/>
         <source>Save configuration &amp;as...</source>
-        <translation>構成設定に名前をつけて保存</translation>
+        <translation>構成設定に名前をつけて保存...</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="467"/>
@@ -596,29 +584,24 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <translation>ウィザードを実行</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="367"/>
+        <location filename="res/MainWindowBase.ui" line="435"/>
         <source>S&amp;ave configuration</source>
         <translation>構成設定の保存(&amp;A)</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="380"/>
+        <location filename="res/MainWindowBase.ui" line="446"/>
         <source>Change &amp;Settings</source>
         <translation>設定の変更(&amp;S)</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="391"/>
+        <location filename="res/MainWindowBase.ui" line="457"/>
         <source>Show &amp;Log</source>
         <translation>ログを表示(&amp;L)</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="394"/>
+        <location filename="res/MainWindowBase.ui" line="457"/>
         <source>Show Log</source>
         <translation>ログを表示(&amp;L)</translation>
-    </message>
-    <message>
-        <location filename="res/MainWindowBase.ui" line="132"/>
-        <source>SSL Fingerprint:</source>
-        <translation>SSLフィンガープリント:</translation>
     </message>
 </context>
 <context>
@@ -712,13 +695,13 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <name>QObject</name>
     <message>
         <location filename="src/MainWindow.cpp" line="60"/>
-        <source>Barrier Configurations (*.sgc)</source>
-        <translation>Barrier 構成設定 (*.sgc)</translation>
+        <source>Barrier Configurations (*.sgc);;All files (*.*)</source>
+        <translation>Barrier 構成設定 (*.sgc);;すべてのファイル(*.*)</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="67"/>
-        <source>Barrier Configurations (*.conf)</source>
-        <translation>Barrier 構成設定 (*.conf)</translation>
+        <source>Barrier Configurations (*.conf);;All files (*.*)</source>
+        <translation>Barrier 構成設定 (*.conf);;すべてのファイル(*.*)</translation>
     </message>
     <message>
         <location filename="src/main.cpp" line="119"/>
@@ -764,7 +747,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="42"/>
         <source>A&amp;liases</source>
-        <translation>別名(&amp;A)</translation>
+        <translation>別名(&amp;L)</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="57"/>
@@ -858,7 +841,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="291"/>
         <source>S&amp;uper:</source>
-        <translation>スーパー (&amp;S):</translation>
+        <translation>スーパー (&amp;U):</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="358"/>
@@ -898,17 +881,17 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="437"/>
         <source>Fix CAPS LOCK key</source>
-        <translation>CAPS ロックキーを固定</translation>
+        <translation>CAPS ロックキーを修正</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="444"/>
         <source>Fix NUM LOCK key</source>
-        <translation>NUM ロックキーを固定</translation>
+        <translation>NUM ロックキーを修正</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="451"/>
         <source>Fix SCROLL LOCK key</source>
-        <translation>SCROLL ロックキーを固定</translation>
+        <translation>SCROLL ロックキーを修正</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="458"/>
@@ -918,7 +901,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="468"/>
         <source>Fix Preserve Focus</source>
-        <translation>フォーカスの維持を修正</translation>
+        <translation>フォーカスの維持を固定</translation>
     </message>
 </context>
 <context>
@@ -947,7 +930,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="24"/>
         <source>Screens and links</source>
-        <translation>モニタの結びつき</translation>
+        <translation>モニターの結びつき</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="35"/>
@@ -962,7 +945,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="73"/>
         <source>Drag this button to the grid to add a new screen.</source>
-        <translation>新規モニターの追加するには、このボタンをグリッド内にドラッグします。</translation>
+        <translation>新規モニターを追加するには、このボタンをグリッド内にドラッグします。</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="128"/>
@@ -1046,9 +1029,24 @@ Double click on a screen to edit its settings.</source>
         <translation>次の時間内のダブルタップで切り替え(&amp;T)</translation>
     </message>
     <message>
+        <location filename="res/ServerConfigDialogBase.ui" line="394"/>
+        <source>Bump against the screen edge with the mouse pointer twice in quick succession.</source>
+        <translation>マウスポインターが画面の端に続けて2回当たることです。</translation>
+    </message>
+    <message>
         <location filename="res/ServerConfigDialogBase.ui" line="408"/>
         <source>&amp;Options</source>
         <translation>オプション(&amp;O)</translation>
+    </message>
+    <message>
+        <location filename="res/ServerConfigDialogBase.ui" line="416"/>
+        <source>Enable clipboard sharing</source>
+        <translation>クリップボードを共有</translation>
+    </message>
+    <message>
+        <location filename="res/ServerConfigDialogBase.ui" line="461"/>
+        <source>Enable drag and drop file transfers</source>
+        <translation>ドラッグアンドドロップでファイル転送</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="419"/>
@@ -1105,23 +1103,13 @@ Double click on a screen to edit its settings.</source>
         <source>Cor&amp;ner Size:</source>
         <translation>隅の大きさ(&amp;N):</translation>
     </message>
-    <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="510"/>
-        <source>Enable drag and drop file transfers</source>
-        <translation>ドラッグアンドドロップでファイル転送する</translation>
-    </message>
-    <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="524"/>
-        <source>Enable clipboard sharing</source>
-        <translation>クリップボードを共有</translation>
-    </message>
 </context>
 <context>
     <name>SettingsDialog</name>
     <message>
         <location filename="src/SettingsDialog.cpp" line="131"/>
         <source>Save log file to...</source>
-        <translation>ログファイルの保存先</translation>
+        <translation>ログファイルの保存先...</translation>
     </message>
     <message>
         <location filename="src/SettingsDialog.cpp" line="151"/>
@@ -1133,8 +1121,8 @@ Double click on a screen to edit its settings.</source>
         <source>Are you sure you want to elevate Barrier?
 
 This allows Barrier to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate Barrier only if you really need to.</source>
-        <translation type="unfinished">Barrier を昇格させてもよろしいですか？
-この許可により Barrier は権限を持つプロセスや UAC ダイアログやりとりできます。一方で、昇格されていないプロセスとのやり取りに問題が起こることもあります。確かに必要である場合にのみ Barrier を昇格させてください。</translation>
+        <translation type="unfinished">Barrier の権限を昇格しますか？
+この許可により Barrier は権限を持つプロセスや UAC ダイアログとやりとりできます。一方で、昇格されていないプロセスとのやり取りに問題が起こることもあります。確かに必要である場合にのみ Barrier を昇格させてください。</translation>
     </message>
 </context>
 <context>
@@ -1167,7 +1155,7 @@ This allows Barrier to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/SettingsDialogBase.ui" line="127"/>
         <source>&amp;Hide on startup</source>
-        <translation>起動時に隠す(&amp;H)</translation>
+        <translation>非表示で起動(&amp;H)</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="146"/>
@@ -1187,7 +1175,7 @@ This allows Barrier to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/SettingsDialogBase.ui" line="202"/>
         <source>&amp;Logging level:</source>
-        <translation type="unfinished">ログ対象(&amp;L):</translation>
+        <translation>ログ対象(&amp;L):</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="251"/>
@@ -1297,7 +1285,30 @@ This allows Barrier to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/SettingsDialogBase.ui" line="132"/>
         <source>Start &amp;Barrier on startup</source>
-        <translation type="unfinished">起動時に Barrier を開始する (&amp;B)</translation>
+        <translation>起動時に Barrier を開始(&amp;B)</translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="201"/>
+        <source>Require client certificate</source>
+        <translation>クライアント証明書を要求</translation>
+    </message>
+</context>
+<context>
+    <name>LogWindowBase</name>
+    <message>
+        <location filename="res/LogWindowBase.ui" line="26"/>
+        <source>Log - Barrier</source>
+        <translation>ログ - Barrier</translation>
+    </message>
+    <message>
+        <location filename="res/LogWindowBase.ui" line="71"/>
+        <source>&amp;Clear Log</source>
+        <translation>ログ消去(&amp;C)</translation>
+    </message>
+    <message>
+        <location filename="res/LogWindowBase.ui" line="78"/>
+        <source>&amp;Hide</source>
+        <translation>閉じる</translation>
     </message>
 </context>
 <context>
@@ -1338,7 +1349,7 @@ This allows Barrier to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/SetupWizardBase.ui" line="114"/>
         <source>Barrier lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Barrier is cross-platform (works on Windows, Mac OS X and Linux).</source>
-        <translation>Barrier によって、複数のデスクトップパソコン間でマウスとキーボードを簡単に共有することができます。そしてこれは無料でオープンソースのソフトウェアです。あるコンピュータの画面の端にマウスを移動するだけで、別のコンピュータの画面に移ることができます。クリップボードを共有することもできます。必要なのはネットワーク接続だけです。 Barrier はクロスプラットフォームで Windows, Mac OS X, Linux で動作します。</translation>
+        <translation>Barrier によって、複数のデスクトップパソコン間でマウスとキーボードを簡単に共有することができます。そしてこれは無料でオープンソースのソフトウェアです。あるコンピュータの画面の端にマウスを移動するだけで、別のコンピュータの画面に移ることができます。クリップボードを共有することもできます。必要なのはネットワーク接続だけです。 Barrier はクロスプラットフォームで Windows、Mac OS X、Linux で動作します。</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="125"/>
@@ -1373,7 +1384,7 @@ This allows Barrier to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/SetupWizardBase.ui" line="277"/>
         <source>&amp;Server (share this computer&apos;s mouse and keyboard)</source>
-        <translation>サーバー (このコンピューターのキーボードとマウスを共有する)(&amp;V)</translation>
+        <translation>サーバー (このコンピューターのキーボードとマウスを共有)(&amp;V)</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="290"/>
@@ -1386,7 +1397,7 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;使いたいマウスとキーボードがこのパソコンに接続されている場合、こちらを選択することで、別のパソコンのモニタへとマウスを移動することができます。サーバーは1つしか設置できません。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;使いたいマウスとキーボードがこのパソコンに接続されている場合、こちらを選択することで、別のパソコンのモニターへとマウスを移動することができます。サーバーは1つしか設置できません。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="326"/>
@@ -1404,7 +1415,7 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;既にサーバーを設置してある場合、このパソコンをサーバーに接続されたマウスとキーボードで制御できます。複数の数のクライアントを配置できます。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;既にサーバーを設置してある場合、このパソコンをサーバーに接続されたマウスとキーボードで制御できます。クライアントは複数配置できます。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="262"/>

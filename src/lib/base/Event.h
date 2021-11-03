@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include "common/basic_types.h"
 #include "common/stdmap.h"
 

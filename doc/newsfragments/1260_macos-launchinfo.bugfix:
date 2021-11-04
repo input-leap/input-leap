@@ -1,0 +1,1 @@
+Corrected macOS packaging to provide a better error message when a user attempts to launch Barrier on an incompatible macOS version. (https://github.com/debauchee/barrier/issues/1260).

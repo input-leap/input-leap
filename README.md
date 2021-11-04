@@ -91,8 +91,8 @@ specific packages.
 
 **Q: What OSes are supported?**
 
-> A: The most recent release of Barrier is known to work on:
->  - Windows 7, 8, 8.1, and 10
+> A: The [most recent release](https://github.com/debauchee/barrier/releases/latest) of Barrier is known to work on:
+>  - Windows 7, 8, 8.1, 10, and 11
 >  - macOS *(previously known as OS X or Mac OS X)*  
 >    - _The current GUI does **not** work on OS versions prior to macOS 10.12 Sierra (but see the related answer below)_
 >  - Linux
@@ -111,9 +111,13 @@ __Q: Is it possible to use Barrier on Mac OS X / OS X versions prior to 10.12?__
 >   - For OS X 10.10 Yosemite and later:
 >     - [Barrier v2.1.0](https://github.com/debauchee/barrier/releases/tag/v2.1.0) or earlier _may_ work.
 >   - For Mac OS X 10.9 Mavericks _(and perhaps earlier)_:
->     1. the command-line portions of the current release _should_ run fine.
+>     1. the command-line portions of the [current release](https://github.com/debauchee/barrier/releases/latest) _should_ run fine.
 >     2. The GUI will _not_ run, as that OS version does not include Apple's *Metal* framework.
 >         - _(For a GUI workaround for Mac OS X 10.9, see the [discussion at issue #544](https://github.com/debauchee/barrier/issues/544))_
+
+> Note: Only versions [v2.3.4](https://github.com/debauchee/barrier/releases/tag/v2.3.4) and [later](https://github.com/debauchee/barrier/releases/latest) of Barrier can be supported by this project.
+>  - Anyone using an earlier version is advised to upgrade due to recently-addressed security vulnerabilities *(and other bug fixes)*. 
+>    - This is especially important for computers accessible from the public Internet *(or from other shared/untrusted networks, such as when using shared WiFi)*.
 
 
 **Q: How do I load my configuration on startup?**
@@ -131,3 +135,14 @@ __Q: Is it possible to use Barrier on Mac OS X / OS X versions prior to 10.12?__
 >section: options
 >    serverhostname=<AAA.BBB.CCC.DDD>
 >```
+
+**Q: Are there any other significant limitations with the current version of Barrier?**
+
+> A: Currently:
+>    - Barrier currently has limited UTF-8 support; issues have been reported with processing various languages.
+>      - *(see [#860](https://github.com/debauchee/barrier/issues/860))*
+>    - There is interest in future support for the Wayland compositor/display server protocol *([official site](https://wayland.freedesktop.org/) | [Wikipedia article](https://en.wikipedia.org/wiki/Wayland_(display_server_protocol)))* on Linux.
+>      - As of late 2021, there is no expected completion date for *Wayland* support.
+>      - *(see [#109](https://github.com/debauchee/barrier/issues/109) and [#1251](https://github.com/debauchee/barrier/issues/1251) for status or to volunteer your talents)*
+>
+> The complete list of open issues can be found in the ['Issues' tab on GitHub](https://github.com/debauchee/barrier/issues?q=is%3Aissue+is%3Aopen). Help is always appreciated.

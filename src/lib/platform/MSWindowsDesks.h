@@ -26,15 +26,16 @@
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
 #include "common/stdmap.h"
+#include <functional>
 #include <string>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+
 class Event;
 class EventQueueTimer;
 class Thread;
-class IJob;
 class IScreenSaver;
 class IEventQueue;
 
@@ -68,7 +69,7 @@ public:
     MSWindowsDesks(
         bool isPrimary, bool noHooks,
         const IScreenSaver* screensaver, IEventQueue* events,
-        IJob* updateKeys, bool stopOnDeskSwitch);
+        const std::function<void()>& updateKeys, bool stopOnDeskSwitch);
     ~MSWindowsDesks();
 
     //! @name manipulators
@@ -219,7 +220,7 @@ private:
     void                deskMouseRelativeMove(SInt32 dx, SInt32 dy) const;
     void                deskEnter(Desk* desk);
     void                deskLeave(Desk* desk, HKL keyLayout);
-    void                deskThread(void* vdesk);
+    void desk_thread(Desk* desk);
 
     // desk switch checking and handling
     Desk* addDesk(const std::string& name, HDESK hdesk);
@@ -284,7 +285,7 @@ private:
     Desks                m_desks;
 
     // keyboard stuff
-    IJob*                m_updateKeys;
+    std::function<void()> m_updateKeys;
     HKL                    m_keyLayout;
 
     // options

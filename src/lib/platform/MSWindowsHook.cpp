@@ -574,7 +574,7 @@ MSWindowsHook::install()
     g_fakeServerInput = false;
 
     // setup immune keys
-    g_immuneKeysPath = DataDirectories::profile() + "\\ImmuneKeys.txt";
+    g_immuneKeysPath = (barrier::DataDirectories::profile() / "ImmuneKeys.txt").u8string();
     g_immuneKeys = immune_keys_list();
     LOG((CLOG_DEBUG "Found %u immune keys in %s", g_immuneKeys.size(), g_immuneKeysPath.c_str()));
 

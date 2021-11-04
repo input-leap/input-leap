@@ -48,11 +48,17 @@ public:
     static String        assembleCommand(std::vector<String>& argsArray,
                             String ignoreArg = "", int parametersRequired = 0);
 
+    static std::string parse_exename(const char* arg);
+
 private:
     void                updateCommonArgs(const char* const* argv);
     bool                checkUnexpectedArgs();
 
     static ArgsBase&    argsBase() { return *m_argsBase; }
+
+    bool                parseMSWindowsArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
+    bool                parseCarbonArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
+    bool                parseXWindowsArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
 
 private:
     App*                m_app;

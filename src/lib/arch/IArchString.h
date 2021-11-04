@@ -46,16 +46,6 @@ public:
     //! @name manipulators
     //@{
 
-    //! printf() to limited size buffer with va_list
-    /*!
-    This method is equivalent to vsprintf() except it will not write
-    more than \c n bytes to the buffer, returning -1 if the output
-    was truncated and the number of bytes written not including the
-    trailing NUL otherwise.
-    */
-    virtual int            vsnprintf(char* str,
-                            int size, const char* fmt, va_list ap);
-
     //! Convert multibyte string to wide character string
     virtual int            convStringMBToWC(wchar_t*,
                             const char*, UInt32 n, bool* errors);

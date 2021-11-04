@@ -23,7 +23,6 @@
 #include "arch/Arch.h"
 #include "arch/win32/ArchMiscWindows.h"
 #include "base/Log.h"
-#include "base/TMethodJob.h"
 
 #include <malloc.h>
 #include <tchar.h>
@@ -223,8 +222,7 @@ MSWindowsScreenSaver::watchDesktop()
     // watch desktop in another thread
     LOG((CLOG_DEBUG "watching screen saver desktop"));
     m_active = true;
-    m_watch  = new Thread(new TMethodJob<MSWindowsScreenSaver>(this,
-                                &MSWindowsScreenSaver::watchDesktopThread));
+    m_watch  = new Thread([this](){ watch_desktop_thread(); });
 }
 
 void
@@ -238,8 +236,7 @@ MSWindowsScreenSaver::watchProcess(HANDLE process)
         LOG((CLOG_DEBUG "watching screen saver process"));
         m_process = process;
         m_active  = true;
-        m_watch   = new Thread(new TMethodJob<MSWindowsScreenSaver>(this,
-                                &MSWindowsScreenSaver::watchProcessThread));
+        m_watch   = new Thread([this](){ watch_process_thread(); });
     }
 }
 
@@ -260,8 +257,7 @@ MSWindowsScreenSaver::unwatchProcess()
     }
 }
 
-void
-MSWindowsScreenSaver::watchDesktopThread(void*)
+void MSWindowsScreenSaver::watch_desktop_thread()
 {
     DWORD reserved = 0;
     TCHAR* name    = NULL;
@@ -283,8 +279,7 @@ MSWindowsScreenSaver::watchDesktopThread(void*)
     }
 }
 
-void
-MSWindowsScreenSaver::watchProcessThread(void*)
+void MSWindowsScreenSaver::watch_process_thread()
 {
     for (;;) {
         Thread::testCancel();

@@ -36,7 +36,6 @@
 #include "net/TCPSocketFactory.h"
 #include "mt/Thread.h"
 #include "base/TMethodEventJob.h"
-#include "base/TMethodJob.h"
 #include "base/Log.h"
 #include <stdexcept>
 
@@ -115,7 +114,8 @@ TEST_F(NetworkTests, sendToClient_mockData)
     // server
     SocketMultiplexer serverSocketMultiplexer;
     TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
-    ClientListener listener(serverAddress, serverSocketFactory, &m_events, false);
+    ClientListener listener(serverAddress, serverSocketFactory, &m_events,
+                            ConnectionSecurityLevel::PLAINTEXT);
     NiceMock<MockScreen> serverScreen;
     NiceMock<MockPrimaryClient> primaryClient;
     NiceMock<MockConfig> serverConfig;
@@ -173,7 +173,8 @@ TEST_F(NetworkTests, sendToClient_mockFile)
     // server
     SocketMultiplexer serverSocketMultiplexer;
     TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
-    ClientListener listener(serverAddress, serverSocketFactory, &m_events, false);
+    ClientListener listener(serverAddress, serverSocketFactory, &m_events,
+                            ConnectionSecurityLevel::PLAINTEXT);
     NiceMock<MockScreen> serverScreen;
     NiceMock<MockPrimaryClient> primaryClient;
     NiceMock<MockConfig> serverConfig;
@@ -230,7 +231,8 @@ TEST_F(NetworkTests, sendToServer_mockData)
     // server
     SocketMultiplexer serverSocketMultiplexer;
     TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
-    ClientListener listener(serverAddress, serverSocketFactory, &m_events, false);
+    ClientListener listener(serverAddress, serverSocketFactory, &m_events,
+                            ConnectionSecurityLevel::PLAINTEXT);
     NiceMock<MockScreen> serverScreen;
     NiceMock<MockPrimaryClient> primaryClient;
     NiceMock<MockConfig> serverConfig;
@@ -287,7 +289,8 @@ TEST_F(NetworkTests, sendToServer_mockFile)
     // server
     SocketMultiplexer serverSocketMultiplexer;
     TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
-    ClientListener listener(serverAddress, serverSocketFactory, &m_events, false);
+    ClientListener listener(serverAddress, serverSocketFactory, &m_events,
+                            ConnectionSecurityLevel::PLAINTEXT);
     NiceMock<MockScreen> serverScreen;
     NiceMock<MockPrimaryClient> primaryClient;
     NiceMock<MockConfig> serverConfig;

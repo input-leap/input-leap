@@ -17,6 +17,7 @@
  */
 
 #include "barrier/PacketStreamFilter.h"
+#include "barrier/protocol_types.h"
 #include "base/IEventQueue.h"
 #include "mt/Lock.h"
 #include "base/TMethodEventJob.h"
@@ -133,8 +134,7 @@ PacketStreamFilter::isReadyNoLock() const
     return (m_size != 0 && m_buffer.getSize() >= m_size);
 }
 
-void
-PacketStreamFilter::readPacketSize()
+bool PacketStreamFilter::readPacketSize()
 {
     // note -- m_mutex must be locked on entry
 
@@ -146,7 +146,13 @@ PacketStreamFilter::readPacketSize()
                  ((UInt32)buffer[1] << 16) |
                  ((UInt32)buffer[2] <<  8) |
                   (UInt32)buffer[3];
+
+        if (m_size > PROTOCOL_MAX_MESSAGE_LENGTH) {
+            m_events->addEvent(Event(m_events->forIStream().inputFormatError(), getEventTarget()));
+            return false;
+        }
     }
+    return true;
 }
 
 bool
@@ -160,12 +166,16 @@ PacketStreamFilter::readMore()
     UInt32 n = getStream()->read(buffer, sizeof(buffer));
     while (n > 0) {
         m_buffer.write(buffer, n);
+
+        // if we don't yet have the next packet size then get it, if possible.
+        // Note that we can't wait for whole pending data to arrive because it may be huge in
+        // case of malicious or erroneous peer.
+        if (!readPacketSize()) {
+            break;
+        }
+
         n = getStream()->read(buffer, sizeof(buffer));
     }
-
-    // if we don't yet have the next packet size then get it,
-    // if possible.
-    readPacketSize();
 
     // note if we now have a whole packet
     bool isReady = isReadyNoLock();

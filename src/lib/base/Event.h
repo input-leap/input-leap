@@ -21,6 +21,8 @@
 #include "common/basic_types.h"
 #include "common/stdmap.h"
 
+#include <cstddef>
+
 class EventData {
 public:
     EventData() { }

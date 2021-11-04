@@ -443,7 +443,7 @@ ArchMiscWindows::wasLaunchedAsService()
 bool ArchMiscWindows::getParentProcessName(std::string &name)
 {
     PROCESSENTRY32 parentEntry;
-    if (!getParentProcessEntry(parentEntry)){
+    if (!getParentProcessEntry(parentEntry)) {
         LOG((CLOG_ERR "could not get entry for parent process"));
         return false;
     }

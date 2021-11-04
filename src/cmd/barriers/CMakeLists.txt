@@ -46,5 +46,3 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     install (TARGETS barriers DESTINATION bin)
 endif()
-
-

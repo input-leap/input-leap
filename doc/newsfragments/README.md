@@ -1,12 +1,13 @@
-This is the directory for news snippets used by towncrier: https://github.com/twisted/towncrier
+This is the directory for release note fragments processed by
+[towncrier](https://github.com/hawkowl/towncrier).
 
-When changing code in a way that's visible to an end user please make a new file in this directory.
-It will be removed and integrated into release notes document upon a release of a new version of
-Barrier.
+When making a user-visible change create a file in this directory and it will be automatically be
+included into the release note document when the next release is published.
 
-towncrier has a few standard types of news fragments, signified by the file extension. These are:
+The file extension specifies the type of a change. The following are currently supported:
 
-.feature: Signifying a new feature.
-.bugfix: Signifying a bug fix.
-.doc: Signifying a documentation improvement.
-.removal: Signifying a deprecation or removal of public API.
+ - .feature: a new feature.
+ - .bugfix: a bug fix.
+ - .security: a fix for security issue.
+ - .doc: a documentation improvement.
+ - .removal: a deprecation or removal of functionality.

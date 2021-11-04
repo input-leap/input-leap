@@ -20,23 +20,16 @@
 #include "SecureSocket.h"
 #include "net/NetworkAddress.h"
 #include "net/SocketMultiplexer.h"
-#include "net/TSocketMultiplexerMethodJob.h"
+#include "arch/Arch.h"
 #include "arch/XArch.h"
 #include "common/DataDirectories.h"
 #include "base/String.h"
 
-static const char s_certificateDir[] = { "SSL" };
-static const char s_certificateFilename[] = { "Barrier.pem" };
-
-//
-// SecureListenSocket
-//
-
-SecureListenSocket::SecureListenSocket(
-        IEventQueue* events,
-        SocketMultiplexer* socketMultiplexer,
-        IArchNetwork::EAddressFamily family) :
-    TCPListenSocket(events, socketMultiplexer, family)
+SecureListenSocket::SecureListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer,
+                                       IArchNetwork::EAddressFamily family,
+                                       ConnectionSecurityLevel security_level) :
+    TCPListenSocket(events, socketMultiplexer, family),
+    security_level_{security_level}
 {
 }
 
@@ -45,22 +38,15 @@ SecureListenSocket::accept()
 {
     SecureSocket* socket = NULL;
     try {
-        socket = new SecureSocket(
-                        m_events,
-                        m_socketMultiplexer,
-                        ARCH->acceptSocket(m_socket, NULL));
+        socket = new SecureSocket(m_events, m_socketMultiplexer,
+                                  ARCH->acceptSocket(m_socket, NULL), security_level_);
         socket->initSsl(true);
 
         if (socket != NULL) {
             setListeningJob();
         }
 
-        std::string certificateFilename = barrier::string::sprintf("%s/%s/%s",
-                                        DataDirectories::profile().c_str(),
-                                        s_certificateDir,
-                                        s_certificateFilename);
-
-        bool loaded = socket->loadCertificates(certificateFilename);
+        bool loaded = socket->load_certificates(barrier::DataDirectories::ssl_certificate_path());
         if (!loaded) {
             delete socket;
             return NULL;

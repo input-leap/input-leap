@@ -72,7 +72,7 @@ std::string ArchInternetWindows::urlEncode(const std::string& url)
 
     std::string result(buffer);
 
-    // the win32 url encoding funcitons are pretty useless (to us) and only
+    // the win32 url encoding functions are pretty useless (to us) and only
     // escape "unsafe" chars, but not + or =, so we need to replace these
     // manually (and probably many other chars).
     barrier::string::findReplaceAll(result, "+", "%2B");

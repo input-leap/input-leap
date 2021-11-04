@@ -33,9 +33,7 @@
 #include <cstdlib>
 #include <memory>
 
-//
-// TCPSocket
-//
+static const std::size_t MAX_INPUT_BUFFER_SIZE = 1024 * 1024;
 
 TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family) :
     IDataSocket(events),
@@ -345,6 +343,10 @@ TCPSocket::doRead()
         do {
             m_inputBuffer.write(buffer, (UInt32)bytesRead);
 
+            if (m_inputBuffer.getSize() > MAX_INPUT_BUFFER_SIZE) {
+                break;
+            }
+
             bytesRead = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
         } while (bytesRead > 0);
 
@@ -424,18 +426,20 @@ std::unique_ptr<ISocketMultiplexerJob> TCPSocket::newJob()
         if (!(m_readable || m_writable)) {
             return {};
         }
-        return std::make_unique<TSocketMultiplexerMethodJob<TCPSocket>>(
-                                this, &TCPSocket::serviceConnecting,
-                                m_socket, m_readable, m_writable);
+        return std::make_unique<TSocketMultiplexerMethodJob>(
+                    [this](auto j, auto r, auto w, auto e)
+                    { return serviceConnecting(j, r, w, e); },
+                    m_socket, m_readable, m_writable);
     }
     else {
-        if (!(m_readable || (m_writable && (m_outputBuffer.getSize() > 0)))) {
+        auto writable = m_writable && (m_outputBuffer.getSize() > 0);
+        if (!(m_readable || writable)) {
             return {};
         }
-        return std::make_unique<TSocketMultiplexerMethodJob<TCPSocket>>(
-                                this, &TCPSocket::serviceConnected,
-                                m_socket, m_readable,
-                                m_writable && (m_outputBuffer.getSize() > 0));
+        return std::make_unique<TSocketMultiplexerMethodJob>(
+                    [this](auto j, auto r, auto w, auto e)
+                    { return serviceConnected(j, r, w, e); },
+                    m_socket, m_readable, writable);
     }
 }
 

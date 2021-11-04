@@ -16,12 +16,11 @@
  */
 
 #include "SslCertificate.h"
-#include "Fingerprint.h"
-#include "QUtility.h"
-
-#include <QProcess>
-#include <QDir>
-#include <QCoreApplication>
+#include "common/DataDirectories.h"
+#include "base/finally.h"
+#include "io/filesystem.h"
+#include "net/FingerprintDatabase.h"
+#include "net/SecureUtils.h"
 
 #include <openssl/bio.h>
 #include <openssl/err.h>
@@ -29,198 +28,90 @@
 #include <openssl/pem.h>
 #include <openssl/x509.h>
 
-static const char kCertificateLifetime[] = "365";
-static const char kCertificateSubjectInfo[] = "/CN=Barrier";
-static const char kCertificateFilename[] = "Barrier.pem";
-static const char kSslDir[] = "SSL";
-static const char kUnixOpenSslCommand[] = "openssl";
-
-#if defined(Q_OS_WIN)
-static const char kWinOpenSslBinary[] = "openssl.exe";
-static const char kConfigFile[] = "barrier.conf";
-#endif
-
 SslCertificate::SslCertificate(QObject *parent) :
     QObject(parent)
 {
-    m_ProfileDir = profilePath();
-    if (m_ProfileDir.isEmpty()) {
+    if (barrier::DataDirectories::profile().empty()) {
         emit error(tr("Failed to get profile directory."));
     }
 }
 
-std::pair<bool, QString> SslCertificate::runTool(const QStringList& args)
-{
-    QString program;
-#if defined(Q_OS_WIN)
-    program = QCoreApplication::applicationDirPath();
-    program.append("\\").append(kWinOpenSslBinary);
-#else
-    program = kUnixOpenSslCommand;
-#endif
-
-
-    QStringList environment;
-#if defined(Q_OS_WIN)
-    environment << QString("OPENSSL_CONF=%1\\%2")
-        .arg(QCoreApplication::applicationDirPath())
-        .arg(kConfigFile);
-#endif
-
-    QProcess process;
-    QString standardOutput, standardError;
-    process.setEnvironment(environment);
-    process.start(program, args);
-    bool success = process.waitForStarted();
-
-    if (success && process.waitForFinished())
-    {
-        standardOutput = QString::fromLocal8Bit(process.readAllStandardOutput().trimmed());
-        standardError = QString::fromLocal8Bit(process.readAllStandardError().trimmed());
-    }
-
-    int code = process.exitCode();
-    if (!success || code != 0)
-    {
-        emit error(
-            QString("SSL tool failed: %1\n\nCode: %2\nError: %3")
-                .arg(program)
-                .arg(process.exitCode())
-                .arg(standardError.isEmpty() ? "Unknown" : standardError));
-        return {false, standardOutput};
-    }
-
-    return {true, standardOutput};
-}
-
 void SslCertificate::generateCertificate()
 {
-    auto filename = getCertificatePath();
+    auto cert_path = barrier::DataDirectories::ssl_certificate_path();
 
-    QFile file(filename);
-    if (!file.exists() || !isCertificateValid(filename)) {
-        QStringList arguments;
+    if (!barrier::fs::exists(cert_path) || !is_certificate_valid(cert_path)) {
+        try {
+            auto cert_dir = cert_path.parent_path();
+            if (!barrier::fs::exists(cert_dir)) {
+                barrier::fs::create_directories(cert_dir);
+            }
 
-        // self signed certificate
-        arguments.append("req");
-        arguments.append("-x509");
-        arguments.append("-nodes");
-
-        // valide duration
-        arguments.append("-days");
-        arguments.append(kCertificateLifetime);
-
-        // subject information
-        arguments.append("-subj");
-
-        QString subInfo(kCertificateSubjectInfo);
-        arguments.append(subInfo);
-
-        // private key
-        arguments.append("-newkey");
-        arguments.append("rsa:2048");
-
-        QDir sslDir(getCertificateDirectory());
-        if (!sslDir.exists()) {
-            sslDir.mkpath(".");
-        }
-
-        // key output filename
-        arguments.append("-keyout");
-        arguments.append(filename);
-
-        // certificate output filename
-        arguments.append("-out");
-        arguments.append(filename);
-
-        if (!runTool(arguments).first) {
+            barrier::generate_pem_self_signed_cert(cert_path.u8string());
+        }  catch (const std::exception& e) {
+            emit error(QString("SSL tool failed: %1").arg(e.what()));
             return;
         }
 
         emit info(tr("SSL certificate generated."));
     }
 
-    generateFingerprint(filename);
+    generate_fingerprint(cert_path);
 
     emit generateFinished();
 }
 
-void SslCertificate::generateFingerprint(const QString& certificateFilename)
+void SslCertificate::generate_fingerprint(const barrier::fs::path& cert_path)
 {
-    QStringList arguments;
-    arguments.append("x509");
-    arguments.append("-fingerprint");
-    arguments.append("-sha1");
-    arguments.append("-noout");
-    arguments.append("-in");
-    arguments.append(certificateFilename);
+    try {
+        auto local_path = barrier::DataDirectories::local_ssl_fingerprints_path();
+        auto local_dir = local_path.parent_path();
+        if (!barrier::fs::exists(local_dir)) {
+            barrier::fs::create_directories(local_dir);
+        }
 
-    auto ret = runTool(arguments);
-    bool success = ret.first;
-    if (!success) {
-        return;
-    }
+        barrier::FingerprintDatabase db;
+        db.add_trusted(barrier::get_pem_file_cert_fingerprint(cert_path.u8string(),
+                                                              barrier::FingerprintType::SHA1));
+        db.add_trusted(barrier::get_pem_file_cert_fingerprint(cert_path.u8string(),
+                                                              barrier::FingerprintType::SHA256));
+        db.write(local_path);
 
-    // find the fingerprint from the tool output
-    QString fingerprint = ret.second;
-    auto i = fingerprint.indexOf('=');
-    if (i != -1) {
-        fingerprint.remove(0, i+1);
-
-        Fingerprint::local().trust(fingerprint, false);
         emit info(tr("SSL fingerprint generated."));
+    } catch (const std::exception& e) {
+        emit error(tr("Failed to find SSL fingerprint.") + e.what());
     }
-    else {
-        emit error(tr("Failed to find SSL fingerprint."));
-    }
 }
 
-QString SslCertificate::getCertificatePath()
-{
-    return getCertificateDirectory() + QDir::separator() + kCertificateFilename;
-}
-
-QString SslCertificate::getCertificateDirectory()
-{
-    return m_ProfileDir + QDir::separator() + kSslDir;
-}
-
-bool SslCertificate::isCertificateValid(const QString& path)
+bool SslCertificate::is_certificate_valid(const barrier::fs::path& path)
 {
     OpenSSL_add_all_algorithms();
-    ERR_load_BIO_strings();
     ERR_load_crypto_strings();
 
-    BIO* bio = BIO_new(BIO_s_file());
-
-    auto ret = BIO_read_filename(bio, path.toLocal8Bit().constData());
-    if (!ret) {
+    auto fp = barrier::fopen_utf8_path(path, "r");
+    if (!fp) {
         emit info(tr("Could not read from default certificate file."));
-        BIO_free_all(bio);
         return false;
     }
+    auto file_close = barrier::finally([fp]() { std::fclose(fp); });
 
-    X509* cert = PEM_read_bio_X509(bio, NULL, 0, NULL);
+    auto* cert = PEM_read_X509(fp, nullptr, nullptr, nullptr);
     if (!cert) {
         emit info(tr("Error loading default certificate file to memory."));
-        BIO_free_all(bio);
         return false;
     }
+    auto cert_free = barrier::finally([cert]() { X509_free(cert); });
 
-    EVP_PKEY* pubkey = X509_get_pubkey(cert);
+    auto* pubkey = X509_get_pubkey(cert);
     if (!pubkey) {
         emit info(tr("Default certificate key file does not contain valid public key"));
-        X509_free(cert);
-        BIO_free_all(bio);
         return false;
     }
+    auto pubkey_free = barrier::finally([pubkey]() { EVP_PKEY_free(pubkey); });
 
     auto type = EVP_PKEY_type(EVP_PKEY_id(pubkey));
     if (type != EVP_PKEY_RSA && type != EVP_PKEY_DSA) {
         emit info(tr("Public key in default certificate key file is not RSA or DSA"));
-        EVP_PKEY_free(pubkey);
-        X509_free(cert);
-        BIO_free_all(bio);
         return false;
     }
 
@@ -228,14 +119,8 @@ bool SslCertificate::isCertificateValid(const QString& path)
     if (bits < 2048) {
         // We could have small keys in old barrier installations
         emit info(tr("Public key in default certificate key file is too small."));
-        EVP_PKEY_free(pubkey);
-        X509_free(cert);
-        BIO_free_all(bio);
         return false;
     }
 
-    EVP_PKEY_free(pubkey);
-    X509_free(cert);
-    BIO_free_all(bio);
     return true;
 }

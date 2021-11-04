@@ -24,7 +24,7 @@
 #include "barrier/ArgsBase.h"
 #include "base/Log.h"
 #include "base/String.h"
-#include "common/PathUtilities.h"
+#include "io/filesystem.h"
 
 #ifdef WINAPI_MSWINDOWS
 #include <VersionHelpers.h>
@@ -65,7 +65,9 @@ ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
             // save screen change script path
             args.m_screenChangeScript = argv[++i];
         }
-        else {
+        else if (isArg(i, argc, argv, nullptr, "--disable-client-cert-checking")) {
+            args.check_client_certificates = false;
+        } else {
             LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE, args.m_exename.c_str(), argv[i], args.m_exename.c_str()));
             return false;
         }
@@ -133,10 +135,10 @@ ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
     return true;
 }
 
-bool
-ArgParser::parsePlatformArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i)
-{
 #if WINAPI_MSWINDOWS
+bool
+ArgParser::parseMSWindowsArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i)
+{
     if (isArg(i, argc, argv, NULL, "--service")) {
         LOG((CLOG_WARN "obsolete argument --service, use barrierd instead."));
         argsBase.m_shouldExit = true;
@@ -153,25 +155,46 @@ ArgParser::parsePlatformArg(ArgsBase& argsBase, const int& argc, const char* con
     }
 
     return true;
-#elif WINAPI_XWINDOWS
+}
+#endif
+
+#if WINAPI_CARBON
+bool
+ArgParser::parseCarbonArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i)
+{
+    // no options for carbon
+    return false;
+}
+#endif
+
+#if WINAPI_XWINDOWS
+bool
+ArgParser::parseXWindowsArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i)
+{
     if (isArg(i, argc, argv, "-display", "--display", 1)) {
         // use alternative display
         argsBase.m_display = argv[++i];
     }
-
     else if (isArg(i, argc, argv, NULL, "--no-xinitthreads")) {
         argsBase.m_disableXInitThreads = true;
-    }
-
-    else {
+    } else {
         // option not supported here
         return false;
     }
 
     return true;
+}
+#endif
+
+bool
+ArgParser::parsePlatformArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i)
+{
+#if WINAPI_MSWINDOWS
+    return parseMSWindowsArg(argsBase, argc, argv, i);
 #elif WINAPI_CARBON
-    // no options for carbon
-    return false;
+    return parseCarbonArg(argsBase, argc, argv, i);
+#elif WINAPI_XWINDOWS
+    return parseXWindowsArg(argsBase, argc, argv, i);
 #endif
 }
 
@@ -261,13 +284,16 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
         argsBase().m_dropTarget = argv[++i];
     }
     else if (isArg(i, argc, argv, NULL, "--enable-crypto")) {
-        argsBase().m_enableCrypto = true;
+        LOG((CLOG_INFO "--enable-crypto is used by default. The option is deprecated."));
+    }
+    else if (isArg(i, argc, argv, NULL, "--disable-crypto")) {
+        argsBase().m_enableCrypto = false;
     }
     else if (isArg(i, argc, argv, NULL, "--profile-dir", 1)) {
-        argsBase().m_profileDirectory = argv[++i];
+        argsBase().m_profileDirectory = barrier::fs::u8path(argv[++i]);
     }
     else if (isArg(i, argc, argv, NULL, "--plugin-dir", 1)) {
-        argsBase().m_pluginDirectory = argv[++i];
+        argsBase().m_pluginDirectory = barrier::fs::u8path(argv[++i]);
     }
     else {
         // option not supported here
@@ -352,7 +378,7 @@ ArgParser::splitCommandString(String& command, std::vector<String>& argv)
         if (space > leftDoubleQuote && space < rightDoubleQuote) {
             ignoreThisSpace = true;
         }
-        else if (space > rightDoubleQuote){
+        else if (space > rightDoubleQuote) {
             searchDoubleQuotes(command, leftDoubleQuote, rightDoubleQuote, rightDoubleQuote + 1);
         }
 
@@ -463,7 +489,13 @@ void
 ArgParser::updateCommonArgs(const char* const* argv)
 {
     argsBase().m_name = ARCH->getHostName();
-    argsBase().m_exename = PathUtilities::basename(argv[0]);
+    argsBase().m_exename = parse_exename(argv[0]);
+}
+
+std::string ArgParser::parse_exename(const char* arg)
+{
+    // FIXME: we assume UTF-8 encoding, but on Windows this is not correct
+    return barrier::fs::u8path(arg).filename().u8string();
 }
 
 bool

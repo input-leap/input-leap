@@ -24,7 +24,6 @@
 #include "platform/MSWindowsDesks.h"
 #include "platform/MSWindowsScreen.h"
 #include "platform/MSWindowsScreenSaver.h"
-#include "base/TMethodJob.h"
 
 #include "test/global/gtest.h"
 #include "test/global/gmock.h"
@@ -50,10 +49,7 @@ protected:
 
 	MSWindowsDesks* newDesks(IEventQueue* eventQueue)
 	{
-		return new MSWindowsDesks(
-			true, false, m_screensaver, eventQueue,
-			new TMethodJob<MSWindowsKeyStateTests>(
-				this, &MSWindowsKeyStateTests::updateKeysCB), false);
+		return new MSWindowsDesks(true, false, m_screensaver, eventQueue, [](){}, false);
 	}
 
 	void* getEventTarget() const
@@ -62,9 +58,7 @@ protected:
 	}
 
 private:
-	void updateKeysCB(void*) { }
 	IScreenSaver* m_screensaver;
-	MSWindowsHook m_hook;
 };
 
 TEST_F(MSWindowsKeyStateTests, disable_eventQueueNotUsed)

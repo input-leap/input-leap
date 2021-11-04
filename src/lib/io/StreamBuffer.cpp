@@ -22,6 +22,8 @@
 // StreamBuffer
 //
 
+#include <cassert>
+
 const UInt32            StreamBuffer::kChunkSize = 4096;
 
 StreamBuffer::StreamBuffer() :

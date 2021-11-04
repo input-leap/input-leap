@@ -36,18 +36,17 @@
 ClientListener::ClientListener(const NetworkAddress& address,
                 ISocketFactory* socketFactory,
                 IEventQueue* events,
-                bool enableCrypto) :
+                               ConnectionSecurityLevel security_level) :
     m_socketFactory(socketFactory),
     m_server(NULL),
     m_events(events),
-    m_useSecureNetwork(enableCrypto)
+    security_level_{security_level}
 {
     assert(m_socketFactory != NULL);
 
     try {
-        m_listen = m_socketFactory->createListen(
-                ARCH->getAddrFamily(address.getAddress()),
-                m_useSecureNetwork);
+        m_listen = m_socketFactory->createListen(ARCH->getAddrFamily(address.getAddress()),
+                                                 security_level);
 
         // setup event handler
         m_events->adoptHandler(m_events->forIListenSocket().connecting(),
@@ -140,7 +139,7 @@ ClientListener::handleClientConnecting(const Event&, void*)
 
     // When using non SSL, server accepts clients immediately, while SSL
     // has to call secure accept which may require retry
-    if (!m_useSecureNetwork) {
+    if (security_level_ == ConnectionSecurityLevel::PLAINTEXT) {
         m_events->addEvent(Event(m_events->forClientListener().accepted(),
                                 socket->getEventTarget()));
     }
@@ -184,7 +183,6 @@ ClientListener::handleUnknownClient(const Event&, void* vclient)
 
     // get the real client proxy and install it
     ClientProxy* client = unknownClient->orphanClientProxy();
-    bool handshakeOk = true;
     if (client != NULL) {
         // handshake was successful
         m_waitingClients.push_back(client);
@@ -196,20 +194,17 @@ ClientListener::handleUnknownClient(const Event&, void* vclient)
                             new TMethodEventJob<ClientListener>(this,
                                 &ClientListener::handleClientDisconnected,
                                 client));
-    }
-    else {
-        handshakeOk = false;
+    } else {
+        auto* stream = unknownClient->getStream();
+        if (stream) {
+            stream->close();
+        }
     }
 
     // now finished with unknown client
     m_events->removeHandler(m_events->forClientProxyUnknown().success(), client);
     m_events->removeHandler(m_events->forClientProxyUnknown().failure(), client);
     m_newClients.erase(unknownClient);
-    PacketStreamFilter* streamFileter = dynamic_cast<PacketStreamFilter*>(unknownClient->getStream());
-    IDataSocket* socket = NULL;
-    if (streamFileter != NULL) {
-        socket = dynamic_cast<IDataSocket*>(streamFileter->getStream());
-    }
 
     delete unknownClient;
 }

@@ -1334,7 +1334,7 @@ p, li { white-space: pre-wrap; }
 Server response:
 
 %1</source>
-        <translation type="finished">Inloggen mislukt, er is een fout opgetreden. 
+        <translation type="finished">Inloggen mislukt, er is een fout opgetreden.
 Foutmelding:
 %1</translation>
     </message>

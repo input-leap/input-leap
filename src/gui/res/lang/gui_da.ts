@@ -1334,7 +1334,7 @@ p, li { white-space: pre-wrap; }
 Server response:
 
 %1</source>
-        <translation type="finished">Fejl i login, en fejl opstod. 
+        <translation type="finished">Fejl i login, en fejl opstod.
 Server svar:
 %1</translation>
     </message>

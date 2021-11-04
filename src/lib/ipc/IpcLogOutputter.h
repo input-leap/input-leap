@@ -92,7 +92,7 @@ public:
 
 private:
     void                init();
-    void                bufferThread(void*);
+    void buffer_thread();
     std::string getChunk(size_t count);
     void appendBuffer(const std::string& text);
     bool                isRunning();

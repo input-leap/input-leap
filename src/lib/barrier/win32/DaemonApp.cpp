@@ -28,13 +28,11 @@
 #include "net/SocketMultiplexer.h"
 #include "arch/XArch.h"
 #include "base/Log.h"
-#include "base/TMethodJob.h"
 #include "base/TMethodEventJob.h"
 #include "base/EventQueue.h"
 #include "base/log_outputters.h"
 #include "base/Log.h"
 #include "common/DataDirectories.h"
-#include "base/Unicode.h"
 
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/XArchWindows.h"
@@ -246,7 +244,7 @@ DaemonApp::logFilename()
 {
     string logFilename = ARCH->setting("LogFilename");
     if (logFilename.empty())
-        logFilename = DataDirectories::global() + "\\" + LOG_FILENAME;
+        logFilename = (barrier::DataDirectories::global() / LOG_FILENAME).u8string();
     MSWindowsUtil::createDirectory(logFilename, true);
     return logFilename;
 }
@@ -258,7 +256,7 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
     switch (m->type()) {
         case kIpcCommand: {
             IpcCommandMessage* cm = static_cast<IpcCommandMessage*>(m);
-            String command = Unicode::UTF8ToText(cm->command());
+            String command = cm->command();
 
             // if empty quotes, clear.
             if (command == "\"\"") {

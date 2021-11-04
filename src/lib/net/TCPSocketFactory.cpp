@@ -40,11 +40,12 @@ TCPSocketFactory::~TCPSocketFactory()
     // do nothing
 }
 
-IDataSocket*
-TCPSocketFactory::create(IArchNetwork::EAddressFamily family, bool secure) const
+IDataSocket* TCPSocketFactory::create(IArchNetwork::EAddressFamily family,
+                                      ConnectionSecurityLevel security_level) const
 {
-    if (secure) {
-        SecureSocket* secureSocket = new SecureSocket(m_events, m_socketMultiplexer, family);
+    if (security_level != ConnectionSecurityLevel::PLAINTEXT) {
+        SecureSocket* secureSocket = new SecureSocket(m_events, m_socketMultiplexer, family,
+                                                      security_level);
         secureSocket->initSsl (false);
         return secureSocket;
     }
@@ -53,12 +54,12 @@ TCPSocketFactory::create(IArchNetwork::EAddressFamily family, bool secure) const
     }
 }
 
-IListenSocket*
-TCPSocketFactory::createListen(IArchNetwork::EAddressFamily family, bool secure) const
+IListenSocket* TCPSocketFactory::createListen(IArchNetwork::EAddressFamily family,
+                                              ConnectionSecurityLevel security_level) const
 {
     IListenSocket* socket = NULL;
-    if (secure) {
-        socket = new SecureListenSocket(m_events, m_socketMultiplexer, family);
+    if (security_level != ConnectionSecurityLevel::PLAINTEXT) {
+        socket = new SecureListenSocket(m_events, m_socketMultiplexer, family, security_level);
     }
     else {
         socket = new TCPListenSocket(m_events, m_socketMultiplexer, family);

@@ -37,7 +37,6 @@
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
-#include "base/TMethodJob.h"
 
 #include <cstring>
 #include <cstdlib>
@@ -127,6 +126,12 @@ Client::connect()
         return;
     }
 
+    auto security_level = ConnectionSecurityLevel::PLAINTEXT;
+    if (m_useSecureNetwork) {
+        // client always authenticates server
+        security_level = ConnectionSecurityLevel::ENCRYPTED_AUTHENTICATED;
+    }
+
     try {
         // resolve the server hostname.  do this every time we connect
         // in case we couldn't resolve the address earlier or the address
@@ -145,9 +150,8 @@ Client::connect()
         }
 
         // create the socket
-        IDataSocket* socket = m_socketFactory->create(
-                ARCH->getAddrFamily(m_serverAddress.getAddress()),
-                m_useSecureNetwork);
+        IDataSocket* socket = m_socketFactory->create(ARCH->getAddrFamily(m_serverAddress.getAddress()),
+                                                      security_level);
         m_socket = dynamic_cast<TCPSocket*>(socket);
 
         // filter socket messages, including a packetizing filter
@@ -755,9 +759,7 @@ void
 Client::onFileRecieveCompleted()
 {
     if (isReceivedFileSizeValid()) {
-        m_writeToDropDirThread = new Thread(
-            new TMethodJob<Client>(
-                this, &Client::writeToDropDirThread));
+        m_writeToDropDirThread = new Thread([this](){ write_to_drop_dir_thread(); });
     }
 }
 
@@ -767,8 +769,7 @@ Client::handleStopRetry(const Event&, void*)
     m_args.m_restartable = false;
 }
 
-void
-Client::writeToDropDirThread(void*)
+void Client::write_to_drop_dir_thread()
 {
     LOG((CLOG_DEBUG "starting write to drop dir thread"));
 
@@ -807,18 +808,13 @@ Client::sendFileToServer(const char* filename)
         StreamChunker::interruptFile();
     }
 
-    m_sendFileThread = new Thread(
-        new TMethodJob<Client>(
-            this, &Client::sendFileThread,
-            static_cast<void*>(const_cast<char*>(filename))));
+    m_sendFileThread = new Thread([this, filename]() { send_file_thread(filename); });
 }
 
-void
-Client::sendFileThread(void* filename)
+void Client::send_file_thread(const char* filename)
 {
     try {
-        char* name  = static_cast<char*>(filename);
-        StreamChunker::sendFile(name, m_events, this);
+        StreamChunker::sendFile(filename, m_events, this);
     }
     catch (std::runtime_error& error) {
         LOG((CLOG_ERR "failed sending file chunks: %s", error.what()));

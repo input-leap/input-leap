@@ -23,6 +23,7 @@
 #include "base/Event.h"
 #include "common/stddeque.h"
 #include "common/stdset.h"
+#include "net/ConnectionSecurityLevel.h"
 
 class ClientProxy;
 class ClientProxyUnknown;
@@ -36,10 +37,8 @@ class IDataSocket;
 class ClientListener {
 public:
     // The factories are adopted.
-    ClientListener(const NetworkAddress&,
-                            ISocketFactory*,
-                            IEventQueue* events,
-                            bool enableCrypto);
+    ClientListener(const NetworkAddress&, ISocketFactory*, IEventQueue* events,
+                   ConnectionSecurityLevel security_level);
     ~ClientListener();
 
     //! @name manipulators
@@ -86,6 +85,6 @@ private:
     WaitingClients        m_waitingClients;
     Server*                m_server;
     IEventQueue*        m_events;
-    bool                m_useSecureNetwork;
+    ConnectionSecurityLevel security_level_;
     ClientSockets      m_clientSockets;
 };

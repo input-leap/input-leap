@@ -19,10 +19,11 @@
 
 #include <QObject>
 #include <string>
+#include "io/filesystem.h"
 
 class SslCertificate : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 
 public:
     explicit SslCertificate(QObject *parent = 0);
@@ -36,13 +37,7 @@ signals:
     void generateFinished();
 
 private:
-    std::pair<bool, QString> runTool(const QStringList& args);
-    void generateFingerprint(const QString& certificateFilename);
+    void generate_fingerprint(const barrier::fs::path& cert_path);
 
-    QString getCertificatePath();
-    QString getCertificateDirectory();
-
-    bool isCertificateValid(const QString& path);
-private:
-    QString m_ProfileDir;
+    bool is_certificate_valid(const barrier::fs::path& path);
 };

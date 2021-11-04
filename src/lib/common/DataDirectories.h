@@ -15,27 +15,36 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
+#ifndef BARRIER_LIB_COMMON_DATA_DIRECTORIES_H
+#define BARRIER_LIB_COMMON_DATA_DIRECTORIES_H
 
-#include <string>
+#include "io/filesystem.h"
+
+namespace barrier {
 
 class DataDirectories
 {
 public:
-    static const std::string& profile();
-    static const std::string& profile(const std::string& path);
+    static const fs::path& profile();
+    static const fs::path& profile(const fs::path& path);
 
-    static const std::string& global();
-    static const std::string& global(const std::string& path);
+    static const fs::path& global();
+    static const fs::path& global(const fs::path& path);
 
-    static const std::string& systemconfig();
-    static const std::string& systemconfig(const std::string& path);
+    static const fs::path& systemconfig();
+    static const fs::path& systemconfig(const fs::path& path);
 
+    static fs::path ssl_fingerprints_path();
+    static fs::path local_ssl_fingerprints_path();
+    static fs::path trusted_servers_ssl_fingerprints_path();
+    static fs::path trusted_clients_ssl_fingerprints_path();
+    static fs::path ssl_certificate_path();
 private:
-    // static class
-    DataDirectories() {}
-
-    static std::string _profile;
-    static std::string _global;
-    static std::string _systemconfig;
+    static fs::path _profile;
+    static fs::path _global;
+    static fs::path _systemconfig;
 };
+
+} // namespace barrier
+
+#endif

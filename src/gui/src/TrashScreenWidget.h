@@ -39,4 +39,3 @@ class TrashScreenWidget : public QLabel
 };
 
 #endif
-

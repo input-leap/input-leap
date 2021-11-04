@@ -19,6 +19,7 @@
 #pragma once
 
 #include "base/String.h"
+#include "io/filesystem.h"
 
 class ArgsBase {
 public:
@@ -50,6 +51,6 @@ public:
     bool                m_shouldExit;
     String                m_barrierAddress;
     bool                m_enableCrypto;
-    String                m_profileDirectory;
-    String                m_pluginDirectory;
+    barrier::fs::path m_profileDirectory;
+    barrier::fs::path m_pluginDirectory;
 };

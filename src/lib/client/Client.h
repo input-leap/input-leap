@@ -119,7 +119,7 @@ public:
     */
     NetworkAddress        getServerAddress() const;
 
-    //! Return true if recieved file size is valid
+    //! Return true if received file size is valid
     bool                isReceivedFileSizeValid();
 
     //! Return expected file size
@@ -167,8 +167,8 @@ private:
     void                sendEvent(Event::Type, void*);
     void                sendConnectionFailedEvent(const char* msg);
     void                sendFileChunk(const void* data);
-    void                sendFileThread(void*);
-    void                writeToDropDirThread(void*);
+    void send_file_thread(const char* filename);
+    void write_to_drop_dir_thread();
     void                setupConnecting();
     void                setupConnection();
     void                setupScreen();

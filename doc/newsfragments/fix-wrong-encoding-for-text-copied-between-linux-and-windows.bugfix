@@ -1,0 +1,2 @@
+Fix wrong encoding for text copied between Linux and Windows
+(https://github.com/debauchee/barrier/issues/1037, https://github.com/debauchee/barrier/issues/1137).

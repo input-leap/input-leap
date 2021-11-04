@@ -20,4 +20,3 @@ add_subdirectory(barriers)
 if (WIN32)
     add_subdirectory(barrierd)
 endif()
-

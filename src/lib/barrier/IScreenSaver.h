@@ -56,7 +56,7 @@ public:
 
     //! Deactivate screen saver
     /*!
-    Deactivate (i.e. hide) the screen saver, reseting the screen saver
+    Deactivate (i.e. hide) the screen saver, resetting the screen saver
     timer.
     */
     virtual void        deactivate() = 0;

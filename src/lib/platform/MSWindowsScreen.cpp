@@ -36,14 +36,12 @@
 #include "mt/Thread.h"
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/Arch.h"
-#include "base/FunctionJob.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
-#include "base/TMethodJob.h"
-#include "common/win32/KnownFolderPaths.h"
 
 #include <string.h>
+#include <Shlobj.h>
 #include <comutil.h>
 #include <algorithm>
 
@@ -134,8 +132,7 @@ MSWindowsScreen::MSWindowsScreen(
                             m_noHooks,
                             m_screensaver,
                             m_events,
-                            new TMethodJob<MSWindowsScreen>(
-                                this, &MSWindowsScreen::updateKeysCB),
+                                           [this]() { updateKeysCB(); },
                             stopOnDeskSwitch);
         m_keyState    = new MSWindowsKeyState(m_desks, getEventTarget(), m_events);
 
@@ -355,17 +352,13 @@ MSWindowsScreen::leave()
     forceShowCursor();
 
     if (isDraggingStarted() && !m_isPrimary) {
-        m_sendDragThread = new Thread(
-            new TMethodJob<MSWindowsScreen>(
-                this,
-                &MSWindowsScreen::sendDragThread));
+        m_sendDragThread = new Thread([this](){ send_drag_thread(); });
     }
 
     return true;
 }
 
-void
-MSWindowsScreen::sendDragThread(void*)
+void MSWindowsScreen::send_drag_thread()
 {
     std::string& draggingFilename = getDraggingFilename();
     size_t size = draggingFilename.size();
@@ -1713,7 +1706,7 @@ MSWindowsScreen::mapPressFromEvent(WPARAM msg, LPARAM) const
 }
 
 void
-MSWindowsScreen::updateKeysCB(void*)
+MSWindowsScreen::updateKeysCB()
 {
     // record which keys we think are down
     bool down[IKeyState::kNumButtons];
@@ -1916,12 +1909,14 @@ const std::string&
 MSWindowsScreen::getDropTarget() const
 {
     if (m_dropTargetPath.empty()) {
-        m_dropTargetPath = desktopPath();
-        if (!m_dropTargetPath.empty()) {
-            LOG((CLOG_DEBUG "using desktop for drop target: %s", m_dropTargetPath.c_str()));
+        // SHGetFolderPath is deprecated in vista, but use it for xp support.
+        char desktopPath[MAX_PATH];
+        if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, desktopPath))) {
+            m_dropTargetPath = std::string(desktopPath);
+            LOG((CLOG_INFO "using desktop for drop target: %s", m_dropTargetPath.c_str()));
         }
         else {
-            LOG((CLOG_ERR "failed to get desktop path, no drop target available"));
+            LOG((CLOG_ERR "failed to get desktop path, no drop target available, error=%d", GetLastError()));
         }
     }
     return m_dropTargetPath;

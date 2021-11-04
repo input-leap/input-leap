@@ -27,8 +27,4 @@ class ImmuneKeysReader
 {
 public:
     static bool get_list(const char * const path, std::vector<DWORD> &keys, std::string &badLine);
-
-private:
-    // static class
-    explicit ImmuneKeysReader() {}
 };

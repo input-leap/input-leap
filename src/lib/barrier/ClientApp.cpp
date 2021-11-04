@@ -37,10 +37,8 @@
 #include "base/TMethodEventJob.h"
 #include "base/log_outputters.h"
 #include "base/EventQueue.h"
-#include "base/TMethodJob.h"
 #include "base/Log.h"
 #include "common/Version.h"
-#include "common/PathUtilities.h"
 
 #if WINAPI_MSWINDOWS
 #include "platform/MSWindowsScreen.h"
@@ -466,10 +464,7 @@ ClientApp::mainLoop()
 
 #if defined(MAC_OS_X_VERSION_10_7)
 
-    Thread thread(
-        new TMethodJob<ClientApp>(
-            this, &ClientApp::runEventsLoop,
-            NULL));
+    Thread thread([this](){ run_events_loop(); });
 
     // wait until carbon loop is ready
     OSXScreen* screen = dynamic_cast<OSXScreen*>(
@@ -522,7 +517,7 @@ ClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc
 {
     // general initialization
     m_serverAddress = new NetworkAddress;
-    args().m_exename = PathUtilities::basename(argv[0]);
+    argsBase().m_exename = ArgParser::parse_exename(argv[0]);
 
     // install caller's output filter
     if (outputter != NULL) {

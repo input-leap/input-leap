@@ -42,8 +42,8 @@ m_enableDragDrop(false),
 m_dropTarget(""),
 m_shouldExit(false),
 m_barrierAddress(),
-m_enableCrypto(false),
-m_profileDirectory(""),
+    m_enableCrypto(true),
+m_profileDirectory(),
 m_pluginDirectory("")
 {
 }

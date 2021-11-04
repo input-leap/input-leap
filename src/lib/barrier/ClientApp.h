@@ -24,7 +24,6 @@ namespace barrier { class Screen; }
 class Event;
 class Client;
 class NetworkAddress;
-class Thread;
 class ClientArgs;
 
 class ClientApp : public App {

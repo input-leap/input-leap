@@ -29,7 +29,7 @@ set(GUI_SOURCE_FILES
     src/CommandProcess.cpp
     src/DataDownloader.cpp
     src/DisplayIsValid.cpp
-    src/Fingerprint.cpp
+    src/FingerprintAcceptDialog.cpp
     src/HotkeyDialog.cpp
     src/IpcClient.cpp
     src/Ipc.cpp
@@ -70,7 +70,6 @@ set(GUI_HEADER_FILES
     src/DataDownloader.h
     src/DisplayIsValid.h
     src/ElevateMode.h
-    src/Fingerprint.h
     src/HotkeyDialog.h
     src/IpcClient.h
     src/Ipc.h
@@ -106,6 +105,7 @@ set(GUI_UI_FILES
     src/AboutDialogBase.ui
     src/ActionDialogBase.ui
     src/AddClientDialogBase.ui
+    src/FingerprintAcceptDialog.ui
     src/HotkeyDialogBase.ui
     src/LogWindowBase.ui
     src/MainWindowBase.ui
@@ -131,7 +131,7 @@ add_executable (barrier WIN32
 
 include_directories (./src)
 
-target_link_libraries (barrier Qt5::Core Qt5::Widgets Qt5::Network ${OPENSSL_LIBS})
+target_link_libraries(barrier net base io Qt5::Core Qt5::Widgets Qt5::Network ${OPENSSL_LIBS})
 target_compile_definitions (barrier PRIVATE -DBARRIER_VERSION_STAGE="${BARRIER_VERSION_STAGE}")
 target_compile_definitions (barrier PRIVATE -DBARRIER_REVISION="${BARRIER_REVISION}")
 

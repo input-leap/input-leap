@@ -123,7 +123,7 @@ __Q: Is it possible to use Barrier on Mac OS X / OS X versions prior to 10.12?__
 
 **Q: After loading my configuration on the client the field 'Server IP' is still empty!**
 
-> A: Edit your configuration to include the servers ip adress manually with 
+> A: Edit your configuration to include the server's ip address manually with
 > 
 >```
 >(...)

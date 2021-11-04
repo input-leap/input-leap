@@ -39,7 +39,6 @@
 #include "net/XSocket.h"
 #include "mt/Thread.h"
 #include "arch/Arch.h"
-#include "base/TMethodJob.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
@@ -1136,9 +1135,9 @@ Server::processOptions()
 		return;
 	}
 
-	m_switchNeedsShift = false;		// it seems if i don't add these
+	m_switchNeedsShift = false;		// it seems if I don't add these
 	m_switchNeedsControl = false;	// lines, the 'reload config' option
-	m_switchNeedsAlt = false;		// doesnt' work correct.
+	m_switchNeedsAlt = false;		// doesn't work correct.
 
 	bool newRelativeMoves = m_relativeMoves;
 	for (Config::ScreenOptions::const_iterator index = options->begin();
@@ -1824,10 +1823,8 @@ Server::onMouseMovePrimary(SInt32 x, SInt32 y)
 				&& m_active != newScreen
 				&& m_waitDragInfoThread) {
 				if (m_sendDragInfoThread == NULL) {
-					m_sendDragInfoThread = new Thread(
-						new TMethodJob<Server>(
-							this,
-							&Server::sendDragInfoThread, newScreen));
+                    m_sendDragInfoThread = new Thread([this, newScreen]()
+                                                      { send_drag_info_thread(newScreen); });
 				}
 
 				return false;
@@ -1843,11 +1840,8 @@ Server::onMouseMovePrimary(SInt32 x, SInt32 y)
 	return false;
 }
 
-void
-Server::sendDragInfoThread(void* arg)
+void Server::send_drag_info_thread(BaseClientProxy* newScreen)
 {
-	BaseClientProxy* newScreen = static_cast<BaseClientProxy*>(arg);
-
 	m_dragFileList.clear();
     std::string& dragFileList = m_screen->getDraggingFilename();
 	if (!dragFileList.empty()) {
@@ -2087,14 +2081,11 @@ void
 Server::onFileRecieveCompleted()
 {
 	if (isReceivedFileSizeValid()) {
-		m_writeToDropDirThread = new Thread(
-									   new TMethodJob<Server>(
-															   this, &Server::writeToDropDirThread));
+        m_writeToDropDirThread = new Thread([this]() { write_to_drop_dir_thread(); });
 	}
 }
 
-void
-Server::writeToDropDirThread(void*)
+void Server::write_to_drop_dir_thread()
 {
 	LOG((CLOG_DEBUG "starting write to drop dir thread"));
 
@@ -2394,17 +2385,12 @@ Server::sendFileToClient(const char* filename)
 		StreamChunker::interruptFile();
 	}
 
-	m_sendFileThread = new Thread(
-		new TMethodJob<Server>(
-			this, &Server::sendFileThread,
-			static_cast<void*>(const_cast<char*>(filename))));
+    m_sendFileThread = new Thread([this, filename]() { send_file_thread(filename); });
 }
 
-void
-Server::sendFileThread(void* data)
+void Server::send_file_thread(const char* filename)
 {
 	try {
-		char* filename = static_cast<char*>(data);
 		LOG((CLOG_DEBUG "sending file to client, filename=%s", filename));
 		StreamChunker::sendFile(filename, m_events, this);
 	}

@@ -28,8 +28,6 @@
 #include "base/Event.h"
 #include "base/EventQueue.h"
 #include "base/TMethodEventJob.h"
-#include "base/TMethodJob.h"
-#include "base/Unicode.h"
 
 enum EIpcLogOutputter {
     kBufferMaxSize = 1000,
@@ -55,8 +53,7 @@ IpcLogOutputter::IpcLogOutputter(IpcServer& ipcServer, EIpcClientType clientType
     m_clientType(clientType)
 {
     if (useThread) {
-        m_bufferThread = new Thread(new TMethodJob<IpcLogOutputter>(
-            this, &IpcLogOutputter::bufferThread));
+        m_bufferThread = new Thread([this](){ buffer_thread(); });
     }
 }
 
@@ -143,8 +140,7 @@ IpcLogOutputter::isRunning()
     return m_running;
 }
 
-void
-IpcLogOutputter::bufferThread(void*)
+void IpcLogOutputter::buffer_thread()
 {
     m_bufferThreadId = m_bufferThread->getID();
     m_running = true;
@@ -197,7 +193,7 @@ IpcLogOutputter::sendBuffer()
         return;
     }
 
-    IpcLogLineMessage message(Unicode::textToUTF8(getChunk(kMaxSendLines)));
+    IpcLogLineMessage message(getChunk(kMaxSendLines));
     m_sending = true;
     m_ipcServer.send(message, kIpcClientGui);
     m_sending = false;

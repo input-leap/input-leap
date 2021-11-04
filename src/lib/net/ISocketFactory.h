@@ -20,6 +20,7 @@
 
 #include "common/IInterface.h"
 #include "arch/IArchNetwork.h"
+#include "net/ConnectionSecurityLevel.h"
 
 class IDataSocket;
 class IListenSocket;
@@ -35,14 +36,12 @@ public:
     //@{
 
     //! Create data socket
-    virtual IDataSocket*    create(
-            IArchNetwork::EAddressFamily family,
-            bool secure) const = 0;
+    virtual IDataSocket* create(IArchNetwork::EAddressFamily family,
+                                ConnectionSecurityLevel security_level) const = 0;
 
     //! Create listen socket
-    virtual IListenSocket*    createListen(
-            IArchNetwork::EAddressFamily family,
-            bool secure) const = 0;
+    virtual IListenSocket* createListen(IArchNetwork::EAddressFamily family,
+                                        ConnectionSecurityLevel security_level) const = 0;
 
     //@}
 };

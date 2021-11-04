@@ -52,7 +52,7 @@ OSXClipboard::OSXClipboard() :
 
     OSStatus syncErr = PasteboardSynchronize(m_pboard);
     if (syncErr != noErr) {
-        LOG((CLOG_DEBUG "failed to syncronize clipboard: error %i", syncErr));
+        LOG((CLOG_DEBUG "failed to synchronize clipboard: error %i", syncErr));
     }
 }
 

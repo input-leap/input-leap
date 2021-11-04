@@ -90,7 +90,7 @@ public:
 
     ARCH_APP_UTIL& appUtil() { return m_appUtil; }
 
-    virtual IArchTaskBarReceiver* taskBarReceiver() const  { return m_taskBarReceiver; }
+    virtual IArchTaskBarReceiver* taskBarReceiver() const { return m_taskBarReceiver; }
 
     virtual void setByeFunc(void(*bye)(int)) { m_bye = bye; }
     virtual void bye(int error) { m_bye(error); }
@@ -108,7 +108,7 @@ private:
 protected:
     void                initIpcClient();
     void                cleanupIpcClient();
-    void                runEventsLoop(void*);
+    void run_events_loop();
 
     IArchTaskBarReceiver* m_taskBarReceiver;
     bool m_suspended;
@@ -166,7 +166,8 @@ private:
     "  -l  --log <file>         write log messages to file.\n" \
     "      --no-tray            disable the system tray icon.\n" \
     "      --enable-drag-drop   enable file drag & drop.\n" \
-    "      --enable-crypto      enable the crypto (ssl) plugin.\n" \
+    "      --enable-crypto      enable the crypto (ssl) plugin (default, deprecated).\n" \
+    "      --disable-crypto     disable the crypto (ssl) plugin.\n" \
     "      --profile-dir <path> use named profile directory instead.\n" \
     "      --drop-dir <path>    use named drop target directory instead.\n"
 

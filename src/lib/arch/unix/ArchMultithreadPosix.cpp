@@ -59,24 +59,19 @@ public:
     int                    m_refCount;
     IArchMultithread::ThreadID        m_id;
     pthread_t            m_thread;
-    IArchMultithread::ThreadFunc    m_func;
-    void*                m_userData;
+    std::function<void()> func_;;
     bool                m_cancel;
     bool                m_cancelling;
     bool                m_exited;
-    void*                m_result;
     void*                m_networkData;
 };
 
 ArchThreadImpl::ArchThreadImpl() :
     m_refCount(1),
     m_id(0),
-    m_func(NULL),
-    m_userData(NULL),
     m_cancel(false),
     m_cancelling(false),
     m_exited(false),
-    m_result(NULL),
     m_networkData(NULL)
 {
     // do nothing
@@ -319,11 +314,8 @@ ArchMultithreadPosix::unlockMutex(ArchMutex mutex)
     }
 }
 
-ArchThread
-ArchMultithreadPosix::newThread(ThreadFunc func, void* data)
+ArchThread ArchMultithreadPosix::newThread(const std::function<void()>& func)
 {
-    assert(func != NULL);
-
     // initialize signal handler.  we do this here instead of the
     // constructor so we can avoid daemonizing (using fork())
     // when there are multiple threads.  clients can safely
@@ -341,8 +333,7 @@ ArchMultithreadPosix::newThread(ThreadFunc func, void* data)
 
     // create thread impl for new thread
     ArchThreadImpl* thread = new ArchThreadImpl;
-    thread->m_func          = func;
-    thread->m_userData      = data;
+    thread->func_ = func;
 
     // create the thread.  pthread_create() on RedHat 7.2 smp fails
     // if passed a NULL attr so use a default attr.
@@ -389,7 +380,7 @@ ArchMultithreadPosix::closeThread(ArchThread thread)
     // decrement ref count and clean up thread if no more references
     if (--thread->m_refCount == 0) {
         // detach from thread (unless it's the main thread)
-        if (thread->m_func != NULL) {
+        if (thread->func_) {
             pthread_detach(thread->m_thread);
         }
 
@@ -524,13 +515,6 @@ ArchMultithreadPosix::isExitedThread(ArchThread thread)
 {
     std::lock_guard<std::mutex> lock(m_threadMutex);
     return thread->m_exited;
-}
-
-void*
-ArchMultithreadPosix::getResultOfThread(ArchThread thread)
-{
-    std::lock_guard<std::mutex> lock(m_threadMutex);
-    return thread->m_result;
 }
 
 IArchMultithread::ThreadID
@@ -699,10 +683,8 @@ ArchMultithreadPosix::doThreadFunc(ArchThread thread)
         std::lock_guard<std::mutex> lock(m_threadMutex);
     }
 
-    void* result = NULL;
     try {
-        // go
-        result = (*thread->m_func)(thread->m_userData);
+        thread->func_();
     }
 
     catch (XThreadCancel&) {
@@ -721,7 +703,6 @@ ArchMultithreadPosix::doThreadFunc(ArchThread thread)
     // thread has exited
     {
         std::lock_guard<std::mutex> lock(m_threadMutex);
-        thread->m_result = result;
         thread->m_exited = true;
     }
 

@@ -20,17 +20,21 @@
 
 #include "MainWindow.h"
 
-#include "Fingerprint.h"
 #include "AboutDialog.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
 #include "ZeroconfService.h"
 #include "DataDownloader.h"
 #include "CommandProcess.h"
+#include "FingerprintAcceptDialog.h"
 #include "QUtility.h"
 #include "ProcessorArch.h"
 #include "SslCertificate.h"
 #include "ShutdownCh.h"
+#include "base/String.h"
+#include "common/DataDirectories.h"
+#include "net/FingerprintDatabase.h"
+#include "net/SecureUtils.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -155,8 +159,21 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 
     m_pComboServerList->hide();
     m_pLabelPadlock->hide();
+    frame_fingerprint_details->hide();
 
     updateSSLFingerprint();
+
+    connect(toolbutton_show_fingerprint, &QToolButton::clicked, [this](bool checked)
+    {
+        m_fingerprint_expanded = !m_fingerprint_expanded;
+        if (m_fingerprint_expanded) {
+            frame_fingerprint_details->show();
+            toolbutton_show_fingerprint->setArrowType(Qt::ArrowType::UpArrow);
+        } else {
+            frame_fingerprint_details->hide();
+            toolbutton_show_fingerprint->setArrowType(Qt::ArrowType::DownArrow);
+        }
+    });
 
     // resize window to smallest reasonable size
     resize(0, 0);
@@ -411,41 +428,57 @@ void MainWindow::checkConnected(const QString& line)
 
 void MainWindow::checkFingerprint(const QString& line)
 {
-    QRegExp fingerprintRegex(".*server fingerprint: ([A-F0-9:]+)");
+    QRegExp fingerprintRegex(".*peer fingerprint \\(SHA1\\): ([A-F0-9:]+) \\(SHA256\\): ([A-F0-9:]+)");
     if (!fingerprintRegex.exactMatch(line)) {
         return;
     }
 
-    QString fingerprint = fingerprintRegex.cap(1);
-    if (Fingerprint::trustedServers().isTrusted(fingerprint)) {
+    barrier::FingerprintData fingerprint_sha1 = {
+        barrier::fingerprint_type_to_string(barrier::FingerprintType::SHA1),
+        barrier::string::from_hex(fingerprintRegex.cap(1).toStdString())
+    };
+
+    barrier::FingerprintData fingerprint_sha256 = {
+        barrier::fingerprint_type_to_string(barrier::FingerprintType::SHA256),
+        barrier::string::from_hex(fingerprintRegex.cap(2).toStdString())
+    };
+
+    bool is_client = barrier_type() == BarrierType::Client;
+
+    auto db_path = is_client
+            ? barrier::DataDirectories::trusted_servers_ssl_fingerprints_path()
+            : barrier::DataDirectories::trusted_clients_ssl_fingerprints_path();
+
+    auto db_dir = db_path.parent_path();
+    if (!barrier::fs::exists(db_dir)) {
+        barrier::fs::create_directories(db_dir);
+    }
+
+    // We compare only SHA256 fingerprints, but show both SHA1 and SHA256 so that the users can
+    // still verify fingerprints on old Barrier servers. This way the only time when we are exposed
+    // to SHA1 vulnerabilities is when the user is reconnecting again.
+    barrier::FingerprintDatabase db;
+    db.read(db_path);
+    if (db.is_trusted(fingerprint_sha256)) {
         return;
     }
 
     static bool messageBoxAlreadyShown = false;
 
     if (!messageBoxAlreadyShown) {
-        stopBarrier();
+        if (is_client) {
+            stopBarrier();
+        }
 
         messageBoxAlreadyShown = true;
-        QMessageBox::StandardButton fingerprintReply =
-            QMessageBox::information(
-            this, tr("Security question"),
-            tr("Do you trust this fingerprint?\n\n"
-               "%1\n\n"
-               "This is a server fingerprint. You should compare this "
-               "fingerprint to the one on your server's screen. If the "
-               "two don't match exactly, then it's probably not the server "
-               "you're expecting (it could be a malicious user).\n\n"
-               "To automatically trust this fingerprint for future "
-               "connections, click Yes. To reject this fingerprint and "
-               "disconnect from the server, click No.")
-            .arg(fingerprint),
-            QMessageBox::Yes | QMessageBox::No);
-
-        if (fingerprintReply == QMessageBox::Yes) {
+        FingerprintAcceptDialog dialog{this, barrier_type(), fingerprint_sha1, fingerprint_sha256};
+        if (dialog.exec() == QDialog::Accepted) {
             // restart core process after trusting fingerprint.
-            Fingerprint::trustedServers().trust(fingerprint);
-            startBarrier();
+            db.add_trusted(fingerprint_sha256);
+            db.write(db_path);
+            if (is_client) {
+                startBarrier();
+            }
         }
 
         messageBoxAlreadyShown = false;
@@ -515,8 +548,8 @@ void MainWindow::startBarrier()
 
 #endif
 
-    if (m_AppConfig->getCryptoEnabled()) {
-        args << "--enable-crypto";
+    if (!m_AppConfig->getCryptoEnabled()) {
+        args << "--disable-crypto";
     }
 
 #if defined(Q_OS_WIN)
@@ -524,11 +557,11 @@ void MainWindow::startBarrier()
     // launched the process (e.g. when launched with elevation). setting the
     // profile dir on launch ensures it uses the same profile dir is used
     // no matter how its relaunched.
-    args << "--profile-dir" << QString("\"%1\"").arg(profilePath());
+    args << "--profile-dir" << QString::fromStdString("\"" + barrier::DataDirectories::profile().u8string() + "\"");
 #endif
 
-    if ((barrierType() == barrierClient && !clientArgs(args, app))
-        || (barrierType() == barrierServer && !serverArgs(args, app)))
+    if ((barrier_type() == BarrierType::Client && !clientArgs(args, app))
+        || (barrier_type() == BarrierType::Server && !serverArgs(args, app)))
     {
         stopBarrier();
         return;
@@ -543,7 +576,7 @@ void MainWindow::startBarrier()
 
     m_pLogWindow->startNewInstance();
 
-    appendLogInfo("starting " + QString(barrierType() == barrierServer ? "server" : "client"));
+    appendLogInfo("starting " + QString(barrier_type() == BarrierType::Server ? "server" : "client"));
 
     qDebug() << args;
 
@@ -624,7 +657,7 @@ QString MainWindow::configFilename()
     if (m_pRadioInternalConfig->isChecked())
     {
         // TODO: no need to use a temporary file, since we need it to
-        // be permenant (since it'll be used for Windows services, etc).
+        // be permanent (since it'll be used for Windows services, etc).
         m_pTempConfigFile = new QTemporaryFile();
         if (!m_pTempConfigFile->open())
         {
@@ -651,6 +684,11 @@ QString MainWindow::configFilename()
         filename = m_pLineEditConfigFile->text();
     }
     return filename;
+}
+
+BarrierType MainWindow::barrier_type() const
+{
+    return m_pGroupClient->isChecked() ? BarrierType::Client : BarrierType::Server;
 }
 
 QString MainWindow::address()
@@ -687,6 +725,10 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
         appConfig().persistLogDir();
 
         args << "--log" << appConfig().logFilenameCmd();
+    }
+
+    if (!appConfig().getRequireClientCertificate()) {
+        args << "--disable-client-cert-checking";
     }
 
     QString configFilename = this->configFilename();
@@ -729,7 +771,7 @@ void MainWindow::stopBarrier()
 
 void MainWindow::stopService()
 {
-    // send empty command to stop service from laucning anything.
+    // send empty command to stop service from launching anything.
     m_IpcClient.sendCommand("", appConfig().elevateMode());
 }
 
@@ -924,6 +966,14 @@ void MainWindow::changeEvent(QEvent* event)
     QMainWindow::changeEvent(event);
 }
 
+bool MainWindow::event(QEvent* event)
+{
+    if (event->type() == QEvent::LayoutRequest) {
+        setFixedSize(sizeHint());
+    }
+    return QMainWindow::event(event);
+}
+
 void MainWindow::updateZeroconfService()
 {
     QMutexLocker locker(&m_UpdateZeroconfMutex);
@@ -935,7 +985,7 @@ void MainWindow::updateZeroconfService()
                 m_pZeroconfService = NULL;
             }
 
-            if (m_AppConfig->autoConfig() || barrierType() == barrierServer) {
+            if (m_AppConfig->autoConfig() || barrier_type() == BarrierType::Server) {
                 m_pZeroconfService = new ZeroconfService(this);
             }
         }
@@ -964,12 +1014,47 @@ void MainWindow::updateSSLFingerprint()
         });
         m_pSslCertificate->generateCertificate();
     }
-    if (m_AppConfig->getCryptoEnabled() && Fingerprint::local().fileExists()) {
-        m_pLabelLocalFingerprint->setText(Fingerprint::local().readFirst());
-        m_pLabelLocalFingerprint->setTextInteractionFlags(Qt::TextSelectableByMouse);
-    } else {
-        m_pLabelLocalFingerprint->setText("Disabled");
+
+    toolbutton_show_fingerprint->setEnabled(false);
+    m_pLabelLocalFingerprint->setText("Disabled");
+
+    if (!m_AppConfig->getCryptoEnabled()) {
+        return;
     }
+
+    auto local_path = barrier::DataDirectories::local_ssl_fingerprints_path();
+    if (!barrier::fs::exists(local_path)) {
+        return;
+    }
+
+    barrier::FingerprintDatabase db;
+    db.read(local_path);
+    if (db.fingerprints().size() != 2) {
+        return;
+    }
+
+    for (const auto& fingerprint : db.fingerprints()) {
+        if (fingerprint.algorithm == "sha1") {
+            auto fingerprint_str = barrier::format_ssl_fingerprint(fingerprint.data);
+            label_sha1_fingerprint_full->setText(QString::fromStdString(fingerprint_str));
+            continue;
+        }
+
+        if (fingerprint.algorithm == "sha256") {
+            auto fingerprint_str = barrier::format_ssl_fingerprint(fingerprint.data);
+            fingerprint_str.resize(40);
+            fingerprint_str += " ...";
+
+            auto fingerprint_str_cols = barrier::format_ssl_fingerprint_columns(fingerprint.data);
+            auto fingerprint_randomart = barrier::create_fingerprint_randomart(fingerprint.data);
+
+            m_pLabelLocalFingerprint->setText(QString::fromStdString(fingerprint_str));
+            label_sha256_fingerprint_full->setText(QString::fromStdString(fingerprint_str_cols));
+            label_sha256_randomart->setText(QString::fromStdString(fingerprint_randomart));
+        }
+    }
+
+    toolbutton_show_fingerprint->setEnabled(true);
 }
 
 void MainWindow::on_m_pGroupClient_toggled(bool on)
@@ -1001,7 +1086,7 @@ bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
     return false;
 }
 
-bool  MainWindow::on_m_pActionSave_triggered()
+bool MainWindow::on_m_pActionSave_triggered()
 {
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save configuration as..."), QString(), barrierConfigSaveFilter);
 

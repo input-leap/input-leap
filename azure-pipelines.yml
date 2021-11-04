@@ -9,14 +9,19 @@ trigger:
 jobs:
 - job: WinBuild
   displayName: Windows Build
-  pool:
-    vmImage: 'vs2017-win2016'
   strategy:
     matrix:
-      Debug:
-        CI_ENV_BUILD_TYPE: Debug
-      Release with Release Installer:
-        CI_ENV_BUILD_TYPE: Release
+#        windows-2022-Release:
+#            imageName: "windows-2022"
+#            CI_ENV_BUILD_TYPE: Release
+#        windows-2019-Release:
+#            imageName: "windows-2019"
+#            CI_ENV_BUILD_TYPE: Release
+        windows-2016-Release:
+            CI_ENV_BUILD_TYPE: Release
+            imageName: "vs2017-win2016"
+  pool:
+    vmImage: $(imageName)
   steps:
     # Gather Dependencies
     - task: PowerShell@2

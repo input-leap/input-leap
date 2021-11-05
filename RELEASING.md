@@ -27,10 +27,27 @@ Check `newsfragments` directory for any forgotten release notes
 Step 3: Merge the release notes PR
 ----------------------------------
 
-Step 4: Push git tag
---------------------
+Step 4: Bump the version number
+-------------------------------
 
 Pull the merge commit created on the `master` branch during the step 2.
+
+Edit the following files and update the version numbers:
+
+ - `Build.properties`
+ - `cmake/Version.cmake`
+ - `doc/barrierc.1`
+ - `doc/barriers.1`
+ - `.github/ISSUE_TEMPLATE/bug_report.yml`
+
+Commit to the release branch with the following message `Barrier x.y.z`.
+
+Push the commit:
+
+    git push origin master
+
+Step 5: Push git tag
+--------------------
 
 Create a tag:
 
@@ -41,7 +58,7 @@ Push the tag:
     git push origin master --tags
 
 
-Step 5: Draft a new release on Github
+Step 6: Draft a new release on Github
 -------------------------------------
 
 Go to https://github.com/buildbot/buildbot/releases and draft a new release.

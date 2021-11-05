@@ -30,6 +30,8 @@ body:
         - v2.3.2-alpha
         - v2.3.2
         - v2.3.3
+        - v2.3.4
+        - v2.4.0
         - From Git HEAD or commit (specify below)
     validations:
       required: true

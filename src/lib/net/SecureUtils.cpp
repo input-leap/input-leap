@@ -190,7 +190,7 @@ void generate_pem_self_signed_cert(const std::string& path)
 
     X509_sign(cert, private_key, EVP_sha256());
 
-    auto fp = fopen_utf8_path(path.c_str(), "r");
+    auto fp = fopen_utf8_path(path.c_str(), "w");
     if (!fp) {
         throw std::runtime_error("Could not open certificate output path");
     }

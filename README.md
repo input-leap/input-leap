@@ -86,7 +86,7 @@ specific packages.
 
 **Q: Does drag and drop work on linux?**
 
-> A: No *(see [#855](https://github.com/debauchee/barrier/issues/544) if you'd like to change that)*
+> A: No *(see [#855](https://github.com/debauchee/barrier/issues/855) if you'd like to change that)*
 
 
 **Q: What OSes are supported?**

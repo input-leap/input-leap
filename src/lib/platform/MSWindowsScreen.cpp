@@ -52,6 +52,7 @@
 #if defined(_MSC_VER)
 #pragma warning(push)
 #pragma warning(disable: 4706) // assignment within conditional
+#pragma warning(disable: 4996) // GetVersionExA was declared deprecated
 #define COMPILE_MULTIMON_STUBS
 #include <multimon.h>
 #pragma warning(pop)

@@ -91,10 +91,6 @@ jobs:
           imageName: "macOS-10.15"
           B_BUILD_TYPE: Release
           BARRIER_VERSION_STAGE: Release
-      mojave-Release:
-          imageName: "macOS-10.14"
-          B_BUILD_TYPE: Release
-          BARRIER_VERSION_STAGE: Release
   pool:
     vmImage: $(imageName)
   variables:

@@ -241,7 +241,6 @@ std::string create_fingerprint_randomart(const std::vector<std::uint8_t>& dgst_r
      * intersects with itself.  Matter of taste.
      */
     const char* augmentation_string = " .o+=*BOX@%&#/^SE";
-    char *p;
     std::uint8_t field[FLDSIZE_X][FLDSIZE_Y];
     std::size_t i;
     std::uint32_t b;

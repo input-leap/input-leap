@@ -15,14 +15,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BARRIER_LIB_COMMON_WIN32_ENCODING_UTILITIES_H
-#define BARRIER_LIB_COMMON_WIN32_ENCODING_UTILITIES_H
+#ifndef BARRIER_LIB_COMMON_WIN32_WINAPI_H
+#define BARRIER_LIB_COMMON_WIN32_WINAPI_H
 
-#include "winapi.h"
-#include <string>
-#include <vector>
-
-std::string win_wchar_to_utf8(const WCHAR* utfStr);
-std::vector<WCHAR> utf8_to_win_char(const std::string& str);
-
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
 #endif
+
+#ifndef STRICT
+#define STRICT
+#endif
+
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
+#include <Windows.h>
+
+#endif // BARRIER_LIB_COMMON_WIN32_WINAPI_H

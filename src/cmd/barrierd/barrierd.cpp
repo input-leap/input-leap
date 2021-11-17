@@ -31,8 +31,7 @@ main(int argc, char** argv)
 
 #elif SYSAPI_WIN32
 
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include "common/win32/winapi.h"
 
 int WINAPI
 WinMain(HINSTANCE, HINSTANCE, LPSTR, int)

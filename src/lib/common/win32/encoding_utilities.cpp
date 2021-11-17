@@ -17,6 +17,7 @@
 
 #include "encoding_utilities.h"
 #include <stringapiset.h>
+#include <limits>
 
 std::string win_wchar_to_utf8(const WCHAR* utfStr)
 {
@@ -29,9 +30,12 @@ std::string win_wchar_to_utf8(const WCHAR* utfStr)
 
 std::vector<WCHAR> utf8_to_win_char(const std::string& str)
 {
-    int result_len = MultiByteToWideChar(CP_UTF8, 0, str.data(), str.size(), NULL, 0);
+    if (str.size() > std::numeric_limits<int>::max())
+        return {};
+    int input_len = static_cast<int>(str.size());
+    int result_len = MultiByteToWideChar(CP_UTF8, 0, str.data(), input_len, NULL, 0);
     std::vector<WCHAR> result;
     result.resize(result_len + 1, 0);
-    MultiByteToWideChar(CP_UTF8, 0, str.data(), str.size(), result.data(), result_len);
+    MultiByteToWideChar(CP_UTF8, 0, str.data(), input_len, result.data(), result_len);
     return result;
 }

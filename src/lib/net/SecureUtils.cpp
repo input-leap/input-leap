@@ -241,12 +241,13 @@ std::string create_fingerprint_randomart(const std::vector<std::uint8_t>& dgst_r
      * intersects with itself.  Matter of taste.
      */
     const char* augmentation_string = " .o+=*BOX@%&#/^SE";
-    char *p;
     std::uint8_t field[FLDSIZE_X][FLDSIZE_Y];
     std::size_t i;
     std::uint32_t b;
     int	 x, y;
-    std::size_t len = strlen(augmentation_string) - 1;
+
+    // avoid compiler warning when comparing len to items in field array
+    std::uint8_t len = static_cast<uint8_t>(strlen(augmentation_string) - 1);
 
     std::vector<char> retval;
     retval.reserve((FLDSIZE_X + 3) * (FLDSIZE_Y + 2));

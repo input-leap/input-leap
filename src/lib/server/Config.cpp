@@ -2070,7 +2070,7 @@ ConfigReadContext::parseInterval(const ArgList& args) const
 		throw XConfigRead(*this, "invalid interval \"%{1}\"", concatArgs(args));
 	}
 
-	return Config::Interval(startValue / 100.0f, endValue / 100.0f);
+	return Config::Interval(static_cast<float>(startValue / 100.0), static_cast<float>(endValue / 100.0));
 }
 
 void ConfigReadContext::parseNameWithArgs(const std::string& type, const std::string& line,

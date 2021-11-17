@@ -9,6 +9,7 @@ config.h
 /bin
 /lib
 /build
+/out
 /CMakeFiles
 /ext/cryptopp562
 /ext/openssl
@@ -24,6 +25,8 @@ Makefile
 *.cmake
 **/CMakeFiles/
 CMakeCache.txt
+CMakePresets.json
+CMakeUserPresets.json
 /rpm
 # Visual Studio 2015/2017 cache/options directory
 .vs/

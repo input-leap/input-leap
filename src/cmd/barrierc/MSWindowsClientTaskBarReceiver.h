@@ -19,9 +19,7 @@
 #pragma once
 
 #include "barrier/ClientTaskBarReceiver.h"
-
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include "common/win32/winapi.h"
 
 class BufferedLogOutputter;
 class IEventQueue;

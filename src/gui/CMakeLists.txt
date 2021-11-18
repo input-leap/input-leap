@@ -117,6 +117,7 @@ set(GUI_UI_FILES
 
 if (WIN32)
     set (GUI_RC_FILES res/win/Barrier.rc)
+    set_property(SOURCE res/win/Barrier.rc PROPERTY COMPILE_FLAGS /nologo)
 endif()
 
 add_executable (barrier WIN32

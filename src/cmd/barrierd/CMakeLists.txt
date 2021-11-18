@@ -18,6 +18,7 @@ file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 if (WIN32)
     list(APPEND sources barrierd.rc)
+    set_property(SOURCE barrierd.rc PROPERTY COMPILE_FLAGS /nologo)
 endif()
 
 if (WIN32)

@@ -461,17 +461,12 @@ SecureSocket::secureAccept(int socket)
     // If not fatal and no retry, state is good
     if (secure_accept_retry_ == 0) {
         if (security_level_ == ConnectionSecurityLevel::ENCRYPTED_AUTHENTICATED) {
-            if (verify_cert_fingerprint(
+            if (verify_peer_certificate(
                         barrier::DataDirectories::trusted_clients_ssl_fingerprints_path())) {
                 LOG((CLOG_INFO "accepted secure socket"));
-                if (!ensure_peer_certificate()) {
-                    secure_accept_retry_ = 0;
-                    disconnect();
-                    return -1;// Cert fail, error
-                }
             }
             else {
-                LOG((CLOG_ERR "failed to verify server certificate fingerprint"));
+                LOG((CLOG_ERR "failed to verify client certificate fingerprint"));
                 secure_accept_retry_ = 0;
                 disconnect();
                 return -1; // Fingerprint failed, error
@@ -539,12 +534,8 @@ SecureSocket::secureConnect(int socket)
     secure_connect_retry_ = 0;
     // No error, set ready, process and return ok
     m_secureReady = true;
-    if (verify_cert_fingerprint(barrier::DataDirectories::trusted_servers_ssl_fingerprints_path())) {
+    if (verify_peer_certificate(barrier::DataDirectories::trusted_servers_ssl_fingerprints_path())) {
         LOG((CLOG_INFO "connected to secure socket"));
-        if (!ensure_peer_certificate()) {
-            disconnect();
-            return -1;// Cert fail, error
-        }
     }
     else {
         LOG((CLOG_ERR "failed to verify server certificate fingerprint"));
@@ -557,29 +548,6 @@ SecureSocket::secureConnect(int socket)
     }
     showSecureConnectInfo();
     return 1;
-}
-
-bool
-SecureSocket::ensure_peer_certificate()
-{
-    // ssl_mutex_ is assumed to be acquired
-    X509* cert;
-    char* line;
-
-    // get the server's certificate
-    cert = SSL_get_peer_certificate(m_ssl->m_ssl);
-    if (cert != NULL) {
-        line = X509_NAME_oneline(X509_get_subject_name(cert), 0, 0);
-        LOG((CLOG_INFO "peer ssl certificate info: %s", line));
-        OPENSSL_free(line);
-        X509_free(cert);
-    }
-    else {
-        showError("peer has no ssl certificate");
-        return false;
-    }
-
-    return true;
 }
 
 void
@@ -700,19 +668,23 @@ SecureSocket::disconnect()
     sendEvent(getEvents()->forIStream().inputShutdown());
 }
 
-bool SecureSocket::verify_cert_fingerprint(const barrier::fs::path& fingerprint_db_path)
+bool SecureSocket::verify_peer_certificate(const barrier::fs::path& fingerprint_db_path)
 {
     // ssl_mutex_ is assumed to be acquired
 
-    // calculate received certificate fingerprint
-    barrier::FingerprintData fingerprint_sha1, fingerprint_sha256;
-
-    auto* cert = SSL_get_peer_certificate(m_ssl->m_ssl);
+    // ensure peer presented a certificate
+    X509* cert = SSL_get_peer_certificate(m_ssl->m_ssl);
     if (cert == nullptr) {
-        LOG((CLOG_NOTE "peer has no ssl certificate"));
+        showError("peer has no ssl certificate");
         return false;
     }
     auto cert_free = barrier::finally([cert]() { X509_free(cert); });
+    char* line = X509_NAME_oneline(X509_get_subject_name(cert), 0, 0);
+    LOG((CLOG_INFO "peer ssl certificate info: %s", line));
+    OPENSSL_free(line);
+
+    // calculate received certificate fingerprint
+    barrier::FingerprintData fingerprint_sha1, fingerprint_sha256;
     try {
         fingerprint_sha1 = barrier::get_ssl_cert_fingerprint(cert,
                                                              barrier::FingerprintType::SHA1);
@@ -722,7 +694,6 @@ bool SecureSocket::verify_cert_fingerprint(const barrier::fs::path& fingerprint_
         LOG((CLOG_ERR "%s", e.what()));
         return false;
     }
-
 
     // note: the GUI parses the following two lines of logs, don't change unnecessarily
     LOG((CLOG_NOTE "peer fingerprint (SHA1): %s (SHA256): %s",

@@ -66,7 +66,6 @@ private:
     void createSSL(); // may only be called with ssl_mutex_ acquired.
     int                    secureAccept(int s);
     int                    secureConnect(int s);
-    bool ensure_peer_certificate(); // may only be called with ssl_mutex_ acquired
 
     void checkResult(int n, int& retry); // may only be called with m_ssl_mutex_ acquired.
 
@@ -75,7 +74,7 @@ private:
     void                disconnect();
 
     // may only be called with ssl_mutex_ acquired
-    bool verify_cert_fingerprint(const barrier::fs::path& fingerprint_db_path);
+    bool verify_peer_certificate(const barrier::fs::path& fingerprint_db_path);
 
     MultiplexerJobStatus serviceConnect(ISocketMultiplexerJob*, bool, bool, bool);
     MultiplexerJobStatus serviceAccept(ISocketMultiplexerJob*, bool, bool, bool);

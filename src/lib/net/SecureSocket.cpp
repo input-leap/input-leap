@@ -25,6 +25,7 @@
 #include "arch/XArch.h"
 #include "base/Log.h"
 #include "base/String.h"
+#include "base/finally.h"
 #include "common/DataDirectories.h"
 #include "io/filesystem.h"
 #include "net/FingerprintDatabase.h"
@@ -705,8 +706,14 @@ bool SecureSocket::verify_cert_fingerprint(const barrier::fs::path& fingerprint_
 
     // calculate received certificate fingerprint
     barrier::FingerprintData fingerprint_sha1, fingerprint_sha256;
+
+    auto* cert = SSL_get_peer_certificate(m_ssl->m_ssl);
+    if (cert == nullptr) {
+        LOG((CLOG_NOTE "peer has no ssl certificate"));
+        return false;
+    }
+    auto cert_free = barrier::finally([cert]() { X509_free(cert); });
     try {
-        auto* cert = SSL_get_peer_certificate(m_ssl->m_ssl);
         fingerprint_sha1 = barrier::get_ssl_cert_fingerprint(cert,
                                                              barrier::FingerprintType::SHA1);
         fingerprint_sha256 = barrier::get_ssl_cert_fingerprint(cert,
@@ -715,6 +722,7 @@ bool SecureSocket::verify_cert_fingerprint(const barrier::fs::path& fingerprint_
         LOG((CLOG_ERR "%s", e.what()));
         return false;
     }
+
 
     // note: the GUI parses the following two lines of logs, don't change unnecessarily
     LOG((CLOG_NOTE "peer fingerprint (SHA1): %s (SHA256): %s",

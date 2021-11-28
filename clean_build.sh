@@ -1,12 +1,20 @@
 #!/bin/sh
+
 cd "$(dirname "$0")" || exit 1
+
 # some environments have cmake v2 as 'cmake' and v3 as 'cmake3'
 # check for cmake3 first then fallback to just cmake
-B_CMAKE=`type cmake3 2>/dev/null`
-if [ $? -eq 0 ]; then
-    B_CMAKE=`echo "$B_CMAKE" | cut -d' ' -f3`
+
+B_CMAKE=$(command -v cmake3 2>/dev/null)
+if [ "$?" -eq 0 ]; then
+    continue
 else
-    B_CMAKE=cmake
+    if command -v cmake 2>/dev/null; then
+        B_CMAKE=$(command -v cmake)
+    else
+        echo "ERROR: CMake not in $PATH, cannot build! Please install CMake, or if this persists, file a bug report."
+        exit 1
+    fi
 fi
 # default build configuration
 B_BUILD_TYPE=${B_BUILD_TYPE:-Debug}

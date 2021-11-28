@@ -16,12 +16,14 @@ else
         exit 1
     fi
 fi
-# default build configuration
-B_BUILD_TYPE=${B_BUILD_TYPE:-Debug}
+
+B_BUILD_TYPE="${B_BUILD_TYPE:-Debug}"
+B_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=${B_BUILD_TYPE} ${B_CMAKE_FLAGS:-}"
+
 if [ "$(uname)" = "Darwin" ]; then
     # macOS needs a little help, so we source this environment script to fix paths.
     . ./macos_environment.sh
-    B_CMAKE_FLAGS="-DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 $B_CMAKE_FLAGS"
+    B_CMAKE_FLAGS="${B_CMAKE_FLAGS} -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9"
 fi
 # allow local customizations to build environment
 [ -r ./build_env.sh ] && . ./build_env.sh
@@ -29,11 +31,10 @@ fi
 # Initialise Git submodules
 git submodule update --init --recursive
 
-B_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=$B_BUILD_TYPE $B_CMAKE_FLAGS"
 rm -rf build
 mkdir build || exit 1
 cd build || exit 1
 echo "Starting Barrier $B_BUILD_TYPE build..."
-$B_CMAKE $B_CMAKE_FLAGS .. || exit 1
+"$B_CMAKE" "$B_CMAKE_FLAGS" .. || exit 1
 make || exit 1
 echo "Build completed successfully"

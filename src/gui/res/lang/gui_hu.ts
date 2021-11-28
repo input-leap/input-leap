@@ -1,47 +1,57 @@
-<?xml version="1.0" encoding="utf-8"?><!DOCTYPE TS><TS language="hu-HU" sourcelanguage="en" version="2.0">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="hu" sourcelanguage="en">
 <context>
     <name>AboutDialogBase</name>
     <message>
         <location filename="res/AboutDialogBase.ui" line="38"/>
         <source>About Barrier</source>
-        <translation type="finished">Barrier névjegy</translation>
+        <translation>Névjegy</translation>
     </message>
     <message utf8="true">
         <location filename="res/AboutDialogBase.ui" line="53"/>
         <source>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
+Copyright © 2018 Debauchee Open Source Group&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Barrier is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Barrier is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Barrier GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (symless.com).
+The Barrier GUI is based on QSynergy by Volker Lanz.
 &lt;/p&gt;</source>
         <oldsource>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
+Copyright © 2018 Debauchee Open Source Group&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Barrier is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Barrier is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Barrier GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (symless.com).
+The Barrier GUI is based on QSynergy by Volker Lanz.
 &lt;/p&gt;</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;
+Alkalmazás egér és billentyűzet megosztásához. Rendszerfüggetlen és nyílt forráskódú.&lt;br /&gt;&lt;br /&gt;
+Szerzői jog © 2018 Debauchee Open Source Group&lt;br /&gt;
+Szerzői jog © 2012-2016 Symless Ltd.&lt;br /&gt;
+Szerzői jog © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+A Barrier a GNU Általános Nyilvános Licenc (GPLv2) oltalma alatt áll.&lt;br /&gt;&lt;br /&gt;
+A Barrier a CosmoSynergy alapjaira épül Richard Lee és Adam Feder jóvoltából.&lt;br /&gt;
+A grafikus felületet Volker Lanz QSynergy alkalmazása alapján készült.
+&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="res/AboutDialogBase.ui" line="140"/>
         <source>Unknown</source>
-        <translation type="finished">Ismeretlen</translation>
+        <translation>Ismeretlen</translation>
     </message>
     <message>
         <location filename="res/AboutDialogBase.ui" line="124"/>
         <source>Version:</source>
-        <translation type="finished">Verzió:</translation>
+        <translation>Verzió:</translation>
     </message>
     <message>
         <location filename="res/AboutDialogBase.ui" line="163"/>
         <source>&amp;Ok</source>
-        <translation type="finished">&amp;Ok</translation>
+        <translation>&amp;Rendben</translation>
     </message>
 </context>
 <context>
@@ -49,97 +59,97 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="res/ActionDialogBase.ui" line="14"/>
         <source>Configure Action</source>
-        <translation type="finished">Beállítás</translation>
+        <translation>Művelet beállítása</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="20"/>
         <source>Choose the action to perform</source>
-        <translation type="finished">Válasszon egy műveletet</translation>
+        <translation>Válasszon egy műveletet</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="26"/>
         <source>Press a hotkey</source>
-        <translation type="finished">Nyomjon le egy gyorsbillentyűt</translation>
+        <translation>Gyorsbillentyű lenyomása</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="36"/>
         <source>Release a hotkey</source>
-        <translation type="finished">Engedje fel a gyorsbillentyűt</translation>
+        <translation>Gyorsbillentyű felengedése</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="43"/>
         <source>Press and release a hotkey</source>
-        <translation type="finished">Nyomja le, majd engedje fel a gyorsbillentyűt</translation>
+        <translation>Gyorsbillentyű lenyomása és felengedése</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="69"/>
         <source>only on these screens</source>
-        <translation type="finished">csak ezeken a képernyőkön</translation>
+        <translation>alkalmazás csak eze(ke)n a gépe(ke)n</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="119"/>
         <source>Switch to screen</source>
-        <translation type="finished">Képernyőváltás</translation>
+        <translation>Váltás másik gépre</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="150"/>
         <source>Switch in direction</source>
-        <translation type="finished">Irányváltás</translation>
+        <translation>Irányváltás</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="174"/>
         <source>left</source>
-        <translation type="finished">bal</translation>
+        <translation>bal</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="179"/>
         <source>right</source>
-        <translation type="finished">jobb</translation>
+        <translation>jobb</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="184"/>
         <source>up</source>
-        <translation type="finished">fel</translation>
+        <translation>fel</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="189"/>
         <source>down</source>
-        <translation type="finished">le</translation>
+        <translation>le</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="201"/>
         <source>Lock cursor to screen</source>
-        <translation type="finished">Kurzor zárolása a képernyőn</translation>
+        <translation>Kurzor zárolása adott gépen</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="225"/>
         <source>toggle</source>
-        <translation type="finished">váltó</translation>
+        <translation>váltás</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="230"/>
         <source>on</source>
-        <translation type="finished">BE</translation>
+        <translation>be</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="235"/>
         <source>off</source>
-        <translation type="finished">KI</translation>
+        <translation>ki</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="248"/>
         <source>This action is performed when</source>
-        <translation type="finished">Ez a művelet történik amikor</translation>
+        <translation>Művelet végrehajtása a gyorsbillentyű...</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="254"/>
         <source>the hotkey is pressed</source>
-        <translation type="finished">a gyorsgomb lenyomva</translation>
+        <translation>lenyomása esetén</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="264"/>
         <source>the hotkey is released</source>
-        <translation type="finished">a gyorsgomb felengedve</translation>
+        <translation>felengedése esetén</translation>
     </message>
 </context>
 <context>
@@ -157,7 +167,7 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="res/AddClientDialogBase.ui" line="83"/>
         <source>Ignore auto connect clients</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatikus konfigurációt használó gépek elutasítása</translation>
     </message>
 </context>
 <context>
@@ -165,12 +175,12 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="res/HotkeyDialogBase.ui" line="14"/>
         <source>Hotkey</source>
-        <translation type="finished">Gyorsgomb</translation>
+        <translation>Gyorsbillentyűk</translation>
     </message>
     <message>
         <location filename="res/HotkeyDialogBase.ui" line="20"/>
         <source>Enter the specification for the hotkey:</source>
-        <translation type="finished">Adjon meg leírást a gyorsgombhoz:</translation>
+        <translation>Adjon hozzá egy gyorsbillentyűt:</translation>
     </message>
 </context>
 <context>
@@ -178,189 +188,193 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="src/MainWindow.cpp" line="790"/>
         <source>&amp;Start</source>
-        <translation type="finished">&amp;Start</translation>
+        <translation>&amp;Indítás</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="237"/>
         <source>&amp;File</source>
-        <translation type="finished">Fájl</translation>
+        <translation>&amp;Fájl</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="238"/>
         <source>&amp;Edit</source>
-        <translation type="finished">Szerkeszt</translation>
+        <translation>&amp;Módosítás</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="239"/>
         <source>&amp;Window</source>
-        <translation type="finished">Ablak</translation>
+        <translation>&amp;Ablak</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="240"/>
         <source>&amp;Help</source>
-        <translation type="finished">Súgó</translation>
+        <translation>&amp;Súgó</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="364"/>
         <source>&lt;p&gt;Your version of Barrier is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</source>
         <oldsource>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;A Barrier elavult. A legújabb &lt;b&gt;%1&lt;/b&gt; verzió &lt;a href=&quot;%2&quot;&gt;innét&lt;/a&gt; tölthető le.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="577"/>
         <source>Program can not be started</source>
-        <translation type="finished">A program nem tud elindulni</translation>
+        <translation>A program nem tud elindulni</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="577"/>
         <source>The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
-        <translation type="finished">A végrehajtandó&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;nem indul, esetleg nem létezik. Kérjük ellenőrizze, hogy rendelkezik-e a szükséges engedélyekkel a futtatáshoz.</translation>
+        <translation>A végrehajtandó&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;nem indul, esetleg nem található. Kérem, ellenőrizze, hogy rendelkezik-e a szükséges jogosultságokkal a futtatáshoz!</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="596"/>
         <source>Barrier client not found</source>
-        <translation type="finished">Barrier kliens nem található</translation>
+        <translation>Barrier ügyfél nem található</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="597"/>
         <source>The executable for the barrier client does not exist.</source>
-        <translation type="finished">A Barrier kliens futtatható állománya nem található.</translation>
+        <translation>A Barrier ügyfél futtatható állománya nem található.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="625"/>
         <source>Hostname is empty</source>
-        <translation type="finished">A gépnév üres.</translation>
+        <translation>Nincs megnevezés</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="626"/>
         <source>Please fill in a hostname for the barrier client to connect to.</source>
-        <translation type="finished">Kérjük adja meg a Barrier kliens gép nevét a csatlakozáshoz.</translation>
+        <translation>Kérem, adja meg az elérni kívánt Barrier kiszolgáló nevét!</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="646"/>
         <source>Cannot write configuration file</source>
-        <translation type="finished">A konfigurációs fájl nem írható.</translation>
+        <translation>A konfigurációs fájl nem írható</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="646"/>
         <source>The temporary configuration file required to start barrier can not be written.</source>
-        <translation type="finished">Az ideiglenes konfigurációs fájl, amely szükséges a Barrier indításához, nem jött létre.</translation>
+        <translation>Az ideiglenes konfigurációs fájl, amely szükséges a Barrier indításához, nem jött létre.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="659"/>
         <source>Configuration filename invalid</source>
-        <translation type="finished">Konfigurációs fájlnév érvénytelen</translation>
+        <translation>Konfigurációs fájlnév érvénytelen</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="660"/>
         <source>You have not filled in a valid configuration file for the barrier server. Do you want to browse for the configuration file now?</source>
-        <translation type="finished">Nem adott meg érvényes konfigurációs fájlnevet a barrier szerveren. Meg akarja keresni a konfigurációs fájlt most?</translation>
+        <translation>Nem adott meg érvényes konfigurációs fájlnevet a barrier szerveren. Meg akarja keresni a konfigurációs fájlt most?</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="688"/>
         <source>Barrier server not found</source>
-        <translation type="finished">Barrier szerver nem elérhető</translation>
+        <translation>Barrier kiszolgáló nem található</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="689"/>
         <source>The executable for the barrier server does not exist.</source>
-        <translation type="finished">A Barrier szerver futtatható állománya nem található.</translation>
+        <translation>A Barrier kiszolgáló futtatható állománya nem található.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="764"/>
         <source>Barrier terminated with an error</source>
-        <translation type="finished">A Barrier hibát jelzett, ezért leállt</translation>
+        <translation>A Barrier hibát jelzett, ezért leállt</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="764"/>
         <source>Barrier terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
-        <translation type="finished">A Barrier a következő hibakóddal lépet ki: %1.&lt;br&gt;&lt;br&gt;A részletekért tekintse meg a naplót.</translation>
+        <translation>A Barrier a következő hibakóddal leállt: %1.&lt;br&gt;&lt;br&gt;Részletekért tekintse meg a naplót!</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="783"/>
         <source>&amp;Stop</source>
-        <translation type="finished">Stop</translation>
+        <translation>&amp;Leállítás</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1038"/>
         <source>Please add the server (%1) to the grid.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kérem, adja hozzá a(z) %1 kiszolgálót a táblázathoz!</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1044"/>
         <source>Please drag the new client screen (%1) to the desired position on the grid.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kérem, adja hozzá a(z) %1 ügyfelet a táblázathoz!</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1147"/>
         <source>Failed to detect system architecture.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem sikerült beazonosítani a rendszert.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1165"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Mégse</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1189"/>
         <source>Failed to download Bonjour installer to location: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem sikerült letölteni a Bonjour telepítőjét: %1</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1226"/>
         <source>Do you want to enable auto config and install Bonjour?
 
 This feature helps you establish the connection.</source>
-        <translation type="unfinished"></translation>
+        <translation>Biztos benne, hogy telepíti a Bonjour szolgáltatást az automatikus hálózati konfiguráláshoz?
+
+Ez megkönnyítheti a számítógépei összehangolását.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1270"/>
         <source>Auto config feature requires Bonjour.
 
 Do you want to install Bonjour?</source>
-        <translation type="unfinished"></translation>
+        <translation>Az automatikus hálózati konfiguráláshoz a Bonjour szolgáltatás telepítése szükséges.
+
+Biztos benne, hogy telepíti a Bonjour-t?</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="815"/>
         <source>Barrier is starting.</source>
-        <translation type="finished">A Barrier indul.</translation>
+        <translation>Barrier indítása folyamatban.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="809"/>
         <source>Barrier is running.</source>
-        <translation type="finished">A Barrier fut</translation>
+        <translation>A Barrier fut.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="819"/>
         <source>Barrier is not running.</source>
-        <translation type="finished">A Barrier nem fut.</translation>
+        <translation>A Barrier nem fut.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="870"/>
         <source>Unknown</source>
-        <translation type="finished">Ismeretlen</translation>
+        <translation>Ismeretlen</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1146"/>
         <location filename="src/MainWindow.cpp" line="1225"/>
         <location filename="src/MainWindow.cpp" line="1269"/>
         <source>Barrier</source>
-        <translation type="finished">Barrier</translation>
+        <translation>Barrier</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="987"/>
         <source>Browse for a barriers config file</source>
-        <translation type="finished">A Barrier konfigurációs fájl kijelölése</translation>
+        <translation>Barrier konfigurációs fájl tallózása</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="408"/>
         <source>Barrier is now connected, You can close the config window. Barrier will remain connected in the background.</source>
-        <translation type="unfinished"></translation>
+        <translation>A kapcsolat létrejött. Most már bezárhatja az ablakot. A Barrier továbbiakban a háttérben fog futni.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="434"/>
         <source>Security question</source>
-        <translation type="unfinished"></translation>
+        <translation>Biztonsági kérdés</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="435"/>
@@ -368,25 +382,31 @@ Do you want to install Bonjour?</source>
 
 %1
 
-This is a server fingerprint. You should compare this fingerprint to the one on your server's screen. If the two don't match exactly, then it's probably not the server you're expecting (it could be a malicious user).
+This is a server fingerprint. You should compare this fingerprint to the one on your server&apos;s screen. If the two don&apos;t match exactly, then it&apos;s probably not the server you&apos;re expecting (it could be a malicious user).
 
 To automatically trust this fingerprint for future connections, click Yes. To reject this fingerprint and disconnect from the server, click No.</source>
-        <translation type="unfinished"></translation>
+        <translation>Elfogadja ezt az ujjlenyomatot?
+
+%1
+
+Ez egy Barrier kiszolgáló ujjlenyomata. Biztonsági okok miatt javasolt lehet összehasonlítani a kiszolgáló gépen látható ujjlenyomattal. Ha a két ujjlenyomat nem egyezik, akkor valószínűleg nem a megfelelő kiszolgálóhoz próbál csatlakozni.
+
+A jövőbeni kapcsolódási kísérletek automatikus jóváhagyáshoz kattintson az „Igen” gombra! Ha ezt nem szeretné, kattintson a „Nem” gombra!</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1000"/>
         <source>Save configuration as...</source>
-        <translation type="finished">Mentse másként a konfigurációt...</translation>
+        <translation>Konfiguráció mentése másként...</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1004"/>
         <source>Save failed</source>
-        <translation type="finished">Mentés sikertelen</translation>
+        <translation>Mentés sikertelen</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1004"/>
         <source>Could not save configuration to file.</source>
-        <translation type="finished">A konfigurációs fájlt nem lehet menteni.</translation>
+        <translation>A konfigurációs fájlt nem lehet menteni.</translation>
     </message>
 </context>
 <context>
@@ -394,168 +414,168 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/MainWindowBase.ui" line="26"/>
         <source>Barrier</source>
-        <translation type="finished">Barrier</translation>
+        <translation>Barrier</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="90"/>
-        <source>Ser&amp;ver (share this computer's mouse and keyboard):</source>
-        <translation type="unfinished"></translation>
+        <source>Ser&amp;ver (share this computer&apos;s mouse and keyboard):</source>
+        <translation>&amp;Kiszolgáló (jelen gép eszközeinek megosztása):</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="243"/>
         <source>Screen name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Megnevezés:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="257"/>
         <source>&amp;Server IP:</source>
-        <translation type="unfinished"></translation>
+        <translation>Kiszolgáló IP-&amp;címe:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="380"/>
         <location filename="res/MainWindowBase.ui" line="409"/>
         <source>&amp;Start</source>
-        <translation type="finished">&amp;Start</translation>
+        <translation>&amp;Indítás</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="181"/>
         <source>Use existing configuration:</source>
-        <translation type="finished">A létező konfiguráció használata:</translation>
+        <translation>Meglévő konfiguráció használata:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="190"/>
         <source>&amp;Configuration file:</source>
-        <translation type="finished">Konfigurációs fájl:</translation>
+        <translation>&amp;Elérési útvonal:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="210"/>
         <source>&amp;Browse...</source>
-        <translation type="finished">Tallózás...</translation>
+        <translation>&amp;Tallózás...</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="147"/>
         <source>Configure interactively:</source>
-        <translation type="finished">Interaktív konfiguráció:</translation>
+        <translation>Interaktív beállítás:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="159"/>
         <source>&amp;Configure Server...</source>
-        <translation type="finished">Szerver konfiguráció...</translation>
+        <translation>Ki&amp;szolgáló konfigurálása...</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="350"/>
         <source>Ready</source>
-        <translation type="finished">Kész</translation>
+        <translation>Kész</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="296"/>
         <source>Log</source>
-        <translation type="finished">Napló</translation>
+        <translation>Napló</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="373"/>
         <source>&amp;Reload</source>
-        <translation type="finished">Alkalmaz</translation>
+        <translation>&amp;Alkalmazás</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="107"/>
         <source>IP addresses:</source>
-        <translation type="unfinished"></translation>
+        <translation>IP-cím(ek):</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="131"/>
         <source>Fingerprint:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ujjlenyomat:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="228"/>
-        <source>&amp;Client (use another computer's mouse and keyboard):</source>
-        <translation type="unfinished"></translation>
+        <source>&amp;Client (use another computer&apos;s mouse and keyboard):</source>
+        <translation>&amp;Ügyfél (eszközök megosztása ezzel a géppel):</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="270"/>
         <source>Auto config</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatikus konfiguráció használata</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="390"/>
         <source>&amp;About Barrier...</source>
-        <translation type="finished">Barrier névjegy...</translation>
+        <translation>&amp;Névjegy...</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="398"/>
         <source>&amp;Quit</source>
-        <translation type="finished">Kilépés</translation>
+        <translation>&amp;Kilépés</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="401"/>
         <source>Quit</source>
-        <translation type="finished">Kilépés</translation>
+        <translation>Kilépés</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="412"/>
         <source>Run</source>
-        <translation type="finished">Fut :-)</translation>
+        <translation>Fut</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="423"/>
         <source>S&amp;top</source>
-        <translation type="finished">S&amp;top</translation>
+        <translation>&amp;Leállítás</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="426"/>
         <source>Stop</source>
-        <translation type="finished">Stop</translation>
+        <translation>Leállítás</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="434"/>
         <source>S&amp;how Status</source>
-        <translation type="finished">S&amp;how Status</translation>
+        <translation>&amp;Állapot mutatása</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="442"/>
         <source>&amp;Hide</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Elrejtés</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="445"/>
         <source>Hide</source>
-        <translation type="unfinished"></translation>
+        <translation>Elrejtés</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="453"/>
         <source>&amp;Show</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Megnyitás</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="456"/>
         <source>Show</source>
-        <translation type="unfinished"></translation>
+        <translation>Megnyitás</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="464"/>
         <source>Save configuration &amp;as...</source>
-        <translation type="finished">Konfig mentése mint...</translation>
+        <translation>&amp;Konfiguráció mentése másként...</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="467"/>
         <source>Save the interactively generated server configuration to a file.</source>
-        <translation type="finished">Mentse az interaktívan létrehozott szerver konfigurációt fájlba.</translation>
+        <translation>Interaktívan létrehozott konfiguráció mentése fájlba.</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="475"/>
         <source>Settings</source>
-        <translation type="finished">Beállítások</translation>
+        <translation>Beállítások</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="478"/>
         <source>Edit settings</source>
-        <translation type="finished">Beállítások módosítása</translation>
+        <translation>Beállítások módosítása</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="486"/>
         <source>Run Wizard</source>
-        <translation type="finished">Varázsló futtatása</translation>
+        <translation>Varázsló futtatása</translation>
     </message>
 </context>
 <context>
@@ -563,7 +583,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="src/NewScreenWidget.cpp" line="32"/>
         <source>Unnamed</source>
-        <translation type="finished">Névtelen</translation>
+        <translation>Névtelen</translation>
     </message>
 </context>
 <context>
@@ -580,19 +600,20 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
     <message>
         <location filename="src/PluginManager.cpp" line="136"/>
-        <source>Failed to download plugin '%1' to: %2
+        <source>Failed to download plugin &apos;%1&apos; to: %2
 %3</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem sikerült a(z) „%1” bővítmény letöltése: %2
+%3</translation>
     </message>
     <message>
         <location filename="src/PluginManager.cpp" line="167"/>
         <source>Could not get Windows architecture type.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem sikerült a Windows rendszer beazonosítása.</translation>
     </message>
     <message>
         <location filename="src/PluginManager.cpp" line="191"/>
         <source>Could not get Linux architecture type.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem sikerült a Linux rendszer beazonosítása.</translation>
     </message>
 </context>
 <context>
@@ -600,48 +621,48 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/PluginWizardPageBase.ui" line="14"/>
         <source>Setup Barrier</source>
-        <translation type="finished">Barrier beállítás</translation>
+        <translation>Barrier beállítása</translation>
     </message>
     <message>
         <location filename="res/PluginWizardPageBase.ui" line="101"/>
         <source>Please wait...</source>
-        <translation type="unfinished"></translation>
+        <translation>Kérem, várjon...</translation>
     </message>
     <message>
         <location filename="src/PluginWizardPage.cpp" line="72"/>
         <source>Error: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Hiba: %1</translation>
     </message>
     <message>
         <location filename="src/PluginWizardPage.cpp" line="80"/>
         <location filename="src/PluginWizardPage.cpp" line="201"/>
         <source>Setup complete.</source>
-        <translation type="unfinished"></translation>
+        <translation>Beállítás befejeződött.</translation>
     </message>
     <message>
         <location filename="src/PluginWizardPage.cpp" line="93"/>
-        <source>Downloading '%1' plugin (%2/%3)...</source>
-        <translation type="unfinished"></translation>
+        <source>Downloading &apos;%1&apos; plugin (%2/%3)...</source>
+        <translation>%1 bővítmény letöltése (%2/%3)...</translation>
     </message>
     <message>
         <location filename="src/PluginWizardPage.cpp" line="104"/>
         <source>Plugins installed successfully.</source>
-        <translation type="unfinished"></translation>
+        <translation>Bővítmény telepítése befejeződött.</translation>
     </message>
     <message>
         <location filename="src/PluginWizardPage.cpp" line="120"/>
         <source>Generating SSL certificate...</source>
-        <translation type="unfinished"></translation>
+        <translation>SSL tanúsítvány létrehozása...</translation>
     </message>
     <message>
         <location filename="src/PluginWizardPage.cpp" line="170"/>
         <source>Downloading plugin: %1 (1/%2)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 bővítmény letöltése (1/%2)</translation>
     </message>
     <message>
         <location filename="src/PluginWizardPage.cpp" line="239"/>
         <source>Getting plugin list...</source>
-        <translation type="unfinished"></translation>
+        <translation>Bővítmények listájának letöltése...</translation>
     </message>
 </context>
 <context>
@@ -649,22 +670,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="src/MainWindow.cpp" line="60"/>
         <source>All files (*.*)</source>
-        <translation type="finished">Minden fájl (*.*)</translation>
+        <translation>Minden fájl (*.*)</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="60"/>
         <source>Barrier Configurations (*.sgc)</source>
-        <translation type="finished">Barrier konfiguráció (*.sgc)</translation>
+        <translation>Barrier konfiguráció (*.sgc)</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="67"/>
         <source>Barrier Configurations (*.conf)</source>
-        <translation type="finished">Barrier konfiguráció (*.conf)</translation>
+        <translation>Barrier konfiguráció (*.conf)</translation>
     </message>
     <message>
         <location filename="src/main.cpp" line="119"/>
         <source>System tray is unavailable, quitting.</source>
-        <translation type="finished">Rendszer tálca nem elérhető, kilépés.</translation>
+        <translation>Értesítési terület nem elérhető, kilépés.</translation>
     </message>
 </context>
 <context>
@@ -672,22 +693,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="src/ScreenSettingsDialog.cpp" line="67"/>
         <source>Screen name is empty</source>
-        <translation type="finished">Képernyőnév üres.</translation>
+        <translation>Nincs megadva megnevezés</translation>
     </message>
     <message>
         <location filename="src/ScreenSettingsDialog.cpp" line="68"/>
         <source>The screen name cannot be empty. Please either fill in a name or cancel the dialog.</source>
-        <translation type="unfinished"></translation>
+        <translation>A megnevezés nem lehet üres. Kérem, adjon meg egy nevet vagy szakítsa meg a folyamatot!</translation>
     </message>
     <message>
         <location filename="src/ScreenSettingsDialog.cpp" line="83"/>
         <source>Screen name matches alias</source>
-        <translation type="unfinished"></translation>
+        <translation>A megnevezés és az álnév azonos</translation>
     </message>
     <message>
         <location filename="src/ScreenSettingsDialog.cpp" line="84"/>
         <source>The screen name cannot be the same as an alias. Please either remove the alias or change the screen name.</source>
-        <translation type="unfinished"></translation>
+        <translation>A gép megnevezése és álneve nem lehet azonos. Kérem, módosítsa valamelyiket!</translation>
     </message>
 </context>
 <context>
@@ -695,37 +716,37 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="14"/>
         <source>Screen Settings</source>
-        <translation type="finished">Képernyő beállítások</translation>
+        <translation>Gép beállításai</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="22"/>
         <source>Screen &amp;name:</source>
-        <translation type="finished">Képernyőnév:</translation>
+        <translation>Meg&amp;nevezés:</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="42"/>
         <source>A&amp;liases</source>
-        <translation type="finished">Álnevek</translation>
+        <translation>&amp;Álnevek</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="57"/>
         <source>&amp;Add</source>
-        <translation type="finished">Hozzáad</translation>
+        <translation>&amp;Hozzáadás</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="74"/>
         <source>&amp;Remove</source>
-        <translation type="finished">Eltávolít</translation>
+        <translation>&amp;Eltávolítás</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="97"/>
         <source>&amp;Modifier keys</source>
-        <translation type="finished">Módosító billentyűk</translation>
+        <translation>&amp;Módosító billentyűk</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="106"/>
         <source>&amp;Shift:</source>
-        <translation type="finished">&amp;Shift:</translation>
+        <translation>&amp;Shift:</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="117"/>
@@ -734,7 +755,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="res/ScreenSettingsDialogBase.ui" line="258"/>
         <location filename="res/ScreenSettingsDialogBase.ui" line="305"/>
         <source>Shift</source>
-        <translation type="finished">Shift</translation>
+        <translation>Shift</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="122"/>
@@ -743,7 +764,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="res/ScreenSettingsDialogBase.ui" line="263"/>
         <location filename="res/ScreenSettingsDialogBase.ui" line="310"/>
         <source>Ctrl</source>
-        <translation type="finished">Ctrl</translation>
+        <translation>Ctrl</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="127"/>
@@ -752,7 +773,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="res/ScreenSettingsDialogBase.ui" line="268"/>
         <location filename="res/ScreenSettingsDialogBase.ui" line="315"/>
         <source>Alt</source>
-        <translation type="finished">Alt</translation>
+        <translation>Alt</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="132"/>
@@ -761,7 +782,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="res/ScreenSettingsDialogBase.ui" line="273"/>
         <location filename="res/ScreenSettingsDialogBase.ui" line="320"/>
         <source>Meta</source>
-        <translation type="finished">Meta</translation>
+        <translation>Meta</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="137"/>
@@ -770,7 +791,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="res/ScreenSettingsDialogBase.ui" line="278"/>
         <location filename="res/ScreenSettingsDialogBase.ui" line="325"/>
         <source>Super</source>
-        <translation type="finished">Super</translation>
+        <translation>Super</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="142"/>
@@ -779,82 +800,82 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="res/ScreenSettingsDialogBase.ui" line="283"/>
         <location filename="res/ScreenSettingsDialogBase.ui" line="330"/>
         <source>None</source>
-        <translation type="finished">None</translation>
+        <translation>None</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="150"/>
         <source>&amp;Ctrl:</source>
-        <translation type="finished">&amp;Ctrl:</translation>
+        <translation>&amp;Ctrl:</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="197"/>
         <source>Al&amp;t:</source>
-        <translation type="finished">Al&amp;t:</translation>
+        <translation>&amp;Alt:</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="244"/>
         <source>M&amp;eta:</source>
-        <translation type="finished">M&amp;eta:</translation>
+        <translation>Me&amp;ta:</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="291"/>
         <source>S&amp;uper:</source>
-        <translation type="finished">S&amp;uper:</translation>
+        <translation>S&amp;uper:</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="358"/>
         <source>&amp;Dead corners</source>
-        <translation type="finished">&amp;Dead corners</translation>
+        <translation>H&amp;olt sarkok</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="367"/>
         <source>Top-left</source>
-        <translation type="finished">Bal-felső</translation>
+        <translation>Bal felső</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="374"/>
         <source>Top-right</source>
-        <translation type="finished">Jobb-felső</translation>
+        <translation>Jobb felső</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="381"/>
         <source>Bottom-left</source>
-        <translation type="finished">Bal-alsó</translation>
+        <translation>Bal alsó</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="388"/>
         <source>Bottom-right</source>
-        <translation type="finished">Jobb-alsó</translation>
+        <translation>Jobb alsó</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="397"/>
         <source>Corner Si&amp;ze:</source>
-        <translation type="finished">Sarokméret:</translation>
+        <translation>Sarkok m&amp;érete:</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="428"/>
         <source>&amp;Fixes</source>
-        <translation type="finished">Rögzít</translation>
+        <translation>Rögzít</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="437"/>
         <source>Fix CAPS LOCK key</source>
-        <translation type="finished">Rögzíti a CAPS LOCK-ot</translation>
+        <translation>Rögzíti a CAPS LOCK-ot</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="444"/>
         <source>Fix NUM LOCK key</source>
-        <translation type="finished">Rögzíti a NUM LOCK-ot</translation>
+        <translation>Rögzíti a NUM LOCK-ot</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="451"/>
         <source>Fix SCROLL LOCK key</source>
-        <translation type="finished">Rögzíti a SCROLL LOCK-ot</translation>
+        <translation>Rögzíti a SCROLL LOCK-ot</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="458"/>
         <source>Fix XTest for Xinerama</source>
-        <translation type="finished">Fix XTest for Xinerama</translation>
+        <translation>Fix XTest for Xinerama</translation>
     </message>
 </context>
 <context>
@@ -862,7 +883,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="src/ScreenSetupModel.cpp" line="51"/>
         <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</source>
-        <translation type="finished">&lt;center&gt;Képernyő: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Dupla klikk a módosításhoz&lt;br&gt;Húzd a szemetesre a törléshez</translation>
+        <translation>&lt;center&gt;Gép: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Módosításhoz kattintson kétszer&lt;br&gt;Eltávolításhoz vontassa a szemetesre</translation>
     </message>
 </context>
 <context>
@@ -870,7 +891,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="src/ServerConfigDialog.cpp" line="75"/>
         <source>Configure server</source>
-        <translation type="unfinished"></translation>
+        <translation>Kiszolgáló konfigurálása</translation>
     </message>
 </context>
 <context>
@@ -878,168 +899,168 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="14"/>
         <source>Server Configuration</source>
-        <translation type="finished">Szerver konfiguráció</translation>
+        <translation>Kiszolgáló konfigurálása</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="24"/>
         <source>Screens and links</source>
-        <translation type="finished">Képernyők és kapcsolatok</translation>
+        <translation>Gépek és kapcsolatok</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="35"/>
         <source>Drag a screen from the grid to the trashcan to remove it.</source>
-        <translation type="finished">Húzd a képernyőt a listából a szemetesre, hogy eltávolítsd.</translation>
+        <translation>Eltávolításhoz vontassa a táblázatról a szemetesre a gép kijelzőjét!</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="60"/>
         <source>Configure the layout of your barrier server configuration.</source>
-        <translation type="finished">Configure the layout of your barrier server configuration.</translation>
+        <translation>Itt konfigurálhatja a Barrier kiszolgálóhoz kapcsolódó gépeit.</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="73"/>
         <source>Drag this button to the grid to add a new screen.</source>
-        <translation type="finished">Húzd ezt a gombot a listába, hogy új képernyőt adj hozzá.</translation>
+        <translation>Gép hozzáadásához vontassa a kijelzőt a táblázatra!</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="128"/>
         <source>Drag new screens to the grid or move existing ones around.
 Drag a screen to the trashcan to delete it.
 Double click on a screen to edit its settings.</source>
-        <translation type="finished">Húzza az új képernyőket a listába vagy mozgassa a meglévőket.
-Húzza a képernyőt a szemetesre, hogy törlődjön.
-Dupla kattintással szerkesztheti a beállításokat.</translation>
+        <translation>Kapcsolatok létrehozásához helyezzen el kijelzőket a táblázaton!
+Eltávolításhoz vontassa a táblázatból a szemetesre a gép kijelzőjét!
+Konfiguráláshoz kattintson kétszer az adott gép kijelzőjére!</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="157"/>
         <source>Hotkeys</source>
-        <translation type="finished">Gyorsgombok</translation>
+        <translation>Gyorsbillentyűk</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="163"/>
         <source>&amp;Hotkeys</source>
-        <translation type="finished">Gyorsgombok</translation>
+        <translation>&amp;Gyorsbillentyűk</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="175"/>
         <source>&amp;New</source>
-        <translation type="finished">Új</translation>
+        <translation>&amp;Új</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="185"/>
         <source>&amp;Edit</source>
-        <translation type="finished">Szerkeszt</translation>
+        <translation>&amp;Módosítás</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="195"/>
         <source>&amp;Remove</source>
-        <translation type="finished">Eltávolít</translation>
+        <translation>&amp;Eltávolítás</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="218"/>
         <source>A&amp;ctions</source>
-        <translation type="finished">A&amp;ctions</translation>
+        <translation>Mű&amp;veletek</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="230"/>
         <source>Ne&amp;w</source>
-        <translation type="finished">Ne&amp;w</translation>
+        <translation>Ú&amp;j</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="240"/>
         <source>E&amp;dit</source>
-        <translation type="finished">E&amp;dit</translation>
+        <translation>M&amp;ódosítás</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="250"/>
         <source>Re&amp;move</source>
-        <translation type="finished">Re&amp;move</translation>
+        <translation>E&amp;ltávolítás</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="274"/>
         <source>Advanced server settings</source>
-        <translation type="finished">További szerver beállítások</translation>
+        <translation>Haladó beállítások</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="280"/>
         <source>&amp;Switch</source>
-        <translation type="finished">&amp;Switch</translation>
+        <translation>&amp;Váltás a gépek között</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="291"/>
         <source>Switch &amp;after waiting</source>
-        <translation type="finished">Váltás a várakozás után</translation>
+        <translation>Váltás &amp;késleltetéssel</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="330"/>
         <location filename="res/ServerConfigDialogBase.ui" line="383"/>
         <location filename="res/ServerConfigDialogBase.ui" line="458"/>
         <source>ms</source>
-        <translation type="finished">ms</translation>
+        <translation>ms</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="344"/>
         <source>Switch on double &amp;tap within</source>
-        <translation type="finished">Switch on double &amp;tap within</translation>
+        <translation>Váltás két „érintést” követően</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="408"/>
         <source>&amp;Options</source>
-        <translation type="finished">Beállítások</translation>
+        <translation>&amp;Beállítások</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="419"/>
         <source>&amp;Check clients every</source>
-        <translation type="finished">Kliensek ellenőrzése</translation>
+        <translation>Ügyfelek &amp;ütemezett keresése</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="470"/>
         <source>Use &amp;relative mouse moves</source>
-        <translation type="finished">Relatív egér mozgás használata</translation>
+        <translation>&amp;Relatív egér mozgás használata</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="480"/>
         <source>S&amp;ynchronize screen savers</source>
-        <translation type="finished">Képernyővédők szinkronizálása</translation>
+        <translation>Képernyő&amp;védők szinkronizálása</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="490"/>
-        <source>Don't take &amp;foreground window on Windows servers</source>
-        <translation type="finished">Don't take &amp;foreground window on Windows servers</translation>
+        <source>Don&apos;t take &amp;foreground window on Windows servers</source>
+        <translation>Don&apos;t take &amp;foreground window on Windows servers</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="510"/>
         <source>Ignore auto config clients</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatikus konfigurációt használó gépek elutasítása</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="520"/>
         <source>&amp;Dead corners</source>
-        <translation type="finished">&amp;Dead corners</translation>
+        <translation>&amp;Holt sarkok</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="529"/>
         <source>To&amp;p-left</source>
-        <translation type="finished">Bal-felső</translation>
+        <translation>B&amp;al felső</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="536"/>
         <source>Top-rig&amp;ht</source>
-        <translation type="finished">Jobb-felső</translation>
+        <translation>&amp;Jobb felső</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="543"/>
         <source>&amp;Bottom-left</source>
-        <translation type="finished">Bal-alsó</translation>
+        <translation>Ba&amp;l alsó</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="550"/>
         <source>Bottom-ri&amp;ght</source>
-        <translation type="finished">Jobb-alsó</translation>
+        <translation>J&amp;obb alsó</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="572"/>
         <source>Cor&amp;ner Size:</source>
-        <translation type="finished">Sarok méret</translation>
+        <translation>Sarkok m&amp;érete:</translation>
     </message>
 </context>
 <context>
@@ -1047,19 +1068,21 @@ Dupla kattintással szerkesztheti a beállításokat.</translation>
     <message>
         <location filename="src/SettingsDialog.cpp" line="131"/>
         <source>Save log file to...</source>
-        <translation type="finished">Napló mentése mint...</translation>
+        <translation>Napló mentése másként...</translation>
     </message>
     <message>
         <location filename="src/SettingsDialog.cpp" line="151"/>
         <source>Elevate Barrier</source>
-        <translation type="unfinished"></translation>
+        <translation>Barrier futtatása rendszergazdaként</translation>
     </message>
     <message>
         <location filename="src/SettingsDialog.cpp" line="152"/>
         <source>Are you sure you want to elevate Barrier?
 
 This allows Barrier to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate Barrier only if you really need to.</source>
-        <translation type="unfinished"></translation>
+        <translation>Biztos benne, hogy rendszergazdaként futtatja a Barrier-t?
+
+Ez a beállítás lehetővé teszi a Barrier számára más rendszergazdaként futó folyamatokhoz való hozzáférést, ugyanakkor ütközhet egyes felhasználói programokkal. Használja felelősen!</translation>
     </message>
 </context>
 <context>
@@ -1067,107 +1090,107 @@ This allows Barrier to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/SettingsDialogBase.ui" line="14"/>
         <source>Settings</source>
-        <translation type="finished">Beállítások</translation>
+        <translation>Beállítások</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="32"/>
         <source>Sc&amp;reen name:</source>
-        <translation type="finished">Képernyő neve:</translation>
+        <translation>&amp;Megnevezés:</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="49"/>
         <source>P&amp;ort:</source>
-        <translation type="finished">P&amp;ort:</translation>
+        <translation>&amp;Port:</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="78"/>
         <source>&amp;Interface:</source>
-        <translation type="finished">&amp;Interface:</translation>
+        <translation>&amp;Kezelőfelület:</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="120"/>
         <source>Elevate mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Futtatás rendszergazdaként</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="127"/>
         <source>&amp;Hide on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Indítás a &amp;háttérben</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="146"/>
         <source>&amp;Network Security</source>
-        <translation type="unfinished"></translation>
+        <translation>Hálózati &amp;biztonság</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="155"/>
         <source>Use &amp;SSL encryption (unique certificate)</source>
-        <translation type="unfinished"></translation>
+        <translation>SSL &amp;titkosítás használata (egyedi tanúsítvány)</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="184"/>
         <source>Logging</source>
-        <translation type="finished">Naplózás</translation>
+        <translation>Naplózás</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="202"/>
         <source>&amp;Logging level:</source>
-        <translation type="finished">Naplózási szint:</translation>
+        <translation>Naplózási &amp;szint:</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="251"/>
         <source>Log to file:</source>
-        <translation type="finished">Napló fájlba:</translation>
+        <translation>Napló elérési útvonala:</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="268"/>
         <source>Browse...</source>
-        <translation type="finished">Tallózás...</translation>
+        <translation>Tallózás...</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="213"/>
         <source>Error</source>
-        <translation type="finished">Hiba</translation>
+        <translation>Hiba</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="107"/>
         <source>&amp;Language:</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Nyelv:</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="20"/>
         <source>&amp;Miscellaneous</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Egyéb</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="218"/>
         <source>Warning</source>
-        <translation type="finished">Figyelmeztetés</translation>
+        <translation>Figyelmeztetések</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="223"/>
         <source>Note</source>
-        <translation type="finished">Jegyzet</translation>
+        <translation>Megjegyzések</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="228"/>
         <source>Info</source>
-        <translation type="finished">Infó</translation>
+        <translation>Információ</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="233"/>
         <source>Debug</source>
-        <translation type="finished">Debug</translation>
+        <translation>Hibák (1. szint)</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="238"/>
         <source>Debug1</source>
-        <translation type="finished">Debug1</translation>
+        <translation>Hibák (2. szint)</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="243"/>
         <source>Debug2</source>
-        <translation type="finished">Debug2</translation>
+        <translation>Hibák (3. szint)</translation>
     </message>
 </context>
 <context>
@@ -1175,17 +1198,17 @@ This allows Barrier to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="src/SetupWizard.cpp" line="72"/>
         <source>Setup Barrier</source>
-        <translation type="finished">Barrier beállítás</translation>
+        <translation>Barrier beállítása</translation>
     </message>
     <message>
         <location filename="src/SetupWizard.cpp" line="113"/>
         <source>Please select an option.</source>
-        <translation type="finished">Kérem válaszon egy opciót.</translation>
+        <translation>Kérem, válasszon konfigurációt!</translation>
     </message>
     <message>
         <location filename="src/SetupWizard.cpp" line="80"/>
         <source>Please enter your email address and password.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kérem, adja meg e-mail címét és jelszavát!</translation>
     </message>
 </context>
 <context>
@@ -1193,85 +1216,93 @@ This allows Barrier to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/SetupWizardBase.ui" line="26"/>
         <source>Setup Barrier</source>
-        <translation type="finished">Barrier beállítás</translation>
+        <translation>Barrier beállítás</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="30"/>
         <source>Welcome</source>
-        <translation type="unfinished"></translation>
+        <translation>Üdvözüljük</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="39"/>
         <source>Thanks for installing Barrier!</source>
-        <translation type="unfinished"></translation>
+        <translation>Köszönjük, hogy a Barrier-t választotta!</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="114"/>
-        <source>Barrier lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Barrier is cross-platform (works on Windows, Mac OS X and Linux).</source>
-        <translation type="finished">A Barrier lehetővé teszi a billentyűzet és egér megosztását több számítógép között és ráadásul Ingyenes és nyílt forráskódú. Csak mozgassa az egeret a képernyő szélére, hogy átkerüljön a másik számítógépe monitorára. A számítógépek között a vágólap is megosztásra kerül. Nincs másra szüksége csak hálózati kapcsolatra a két számítógép között. A Barrier operációs rendszer független, így használhatja Windows, Mac OS X és Linux rendszerű számítógéppel.</translation>
+        <source>Barrier lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Barrier is cross-platform (works on Windows, Mac OS X and Linux).</source>
+        <translation>A Barrier lehetővé teszi az egér és billentyűzet megosztását több számítógép között és mindemellett ingyenes és nyílt forráskódú. Csak mozgassa a kurzort a kijelző szélére, hogy átkerüljön a másik gép kijelzőjére. A gépek között a vágólap is megosztásra kerül. Ehhez csupán hálózati kapcsolatra van szükség gépei között. A Barrier rendszerfüggetlen (tehát egyaránt elérhető Windows, Mac OS X és Linux rendszerekre).</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="125"/>
         <source>Activate</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktiválás</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="131"/>
         <source>&amp;Activate now...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Aktiválás most...</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="152"/>
         <source>Email:</source>
-        <translation type="unfinished"></translation>
+        <translation>E-mail:</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="178"/>
         <source>Password:</source>
-        <translation type="unfinished"></translation>
+        <translation>Jelszó:</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="204"/>
         <source>&lt;a href=&quot;https://symless.com/account/reset/&quot;&gt;Forgot password&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;a href=&quot;https://symless.com/account/reset/&quot;&gt;Elfelejtett jelszó&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="232"/>
         <source>&amp;Skip activation</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktiválás &amp;kihagyása</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="277"/>
-        <source>&amp;Server (share this computer's mouse and keyboard)</source>
-        <translation type="unfinished"></translation>
+        <source>&amp;Server (share this computer&apos;s mouse and keyboard)</source>
+        <translation>&amp;Kiszolgáló (jelen gép eszközeinek megosztása)</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="290"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;My main mouse and keyboard are connected to this computer. This will allow you to move your mouse over to another computer's screen. There can only be one server in your setup.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;My main mouse and keyboard are connected to this computer. This will allow you to move your mouse over to another computer&apos;s screen. There can only be one server in your setup.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Az egér és a billentyűzet ehhez a géphez csatlakozik. Ezzel a beállítással lehetővé válik más gépek kezelése. Kiszolgáló kizárólag egyetlen gép lehet.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="326"/>
-        <source>&amp;Client (use another computer's mouse and keyboard)</source>
-        <translation type="unfinished"></translation>
+        <source>&amp;Client (use another computer&apos;s mouse and keyboard)</source>
+        <translation>&amp;Ügyfél (eszközök megosztása ezzel a géppel)</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="339"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;You have already set up a server. This computer will be controlled using the server's mouse and keyboard. There can be many clients in your setup.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;You have already set up a server. This computer will be controlled using the server&apos;s mouse and keyboard. There can be many clients in your setup.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Egy másik gép a kiszolgáló. Ez a gép a kiszolgálóhoz csatlakoztatott egér és billentyűzet segítségével lesz kezelhető. Ügyfél több gép is lehet.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="262"/>
         <source>Server or Client?</source>
-        <translation type="finished">Szerver vagy kliens?</translation>
+        <translation>Kiszolgáló vagy ügyfél?</translation>
     </message>
 </context>
 <context>
@@ -1279,22 +1310,22 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="src/SslCertificate.cpp" line="42"/>
         <source>Failed to get profile directory.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem található a profil útvonala.</translation>
     </message>
     <message>
         <location filename="src/SslCertificate.cpp" line="141"/>
         <source>SSL certificate generated.</source>
-        <translation type="unfinished"></translation>
+        <translation>SSL tanúsítvány létrehozva.</translation>
     </message>
     <message>
         <location filename="src/SslCertificate.cpp" line="170"/>
         <source>SSL fingerprint generated.</source>
-        <translation type="unfinished"></translation>
+        <translation>SSL ujjlenyomat létrehozva.</translation>
     </message>
     <message>
         <location filename="src/SslCertificate.cpp" line="173"/>
         <source>Failed to find SSL fingerprint.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem található SSL ujjlenyomat.</translation>
     </message>
 </context>
 <context>
@@ -1302,7 +1333,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="src/VersionChecker.cpp" line="102"/>
         <source>Unknown</source>
-        <translation type="finished">Ismeretlen</translation>
+        <translation>Ismeretlen</translation>
     </message>
 </context>
 <context>
@@ -1312,19 +1343,23 @@ p, li { white-space: pre-wrap; }
         <source>An error occurred while trying to sign in. Please contact the helpdesk, and provide the following details.
 
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Hiba történt bejelentkezés közben. Kérem, vegye fel a kapcsolatot a terméktámogatással és továbbítsa az alábbi részleteket!
+
+%1</translation>
     </message>
     <message>
         <location filename="src/WebClient.cpp" line="65"/>
         <source>Login failed, invalid email or password.</source>
-        <translation type="unfinished"></translation>
+        <translation>Bejelentkezés sikertelen. Hibás e-mail cím vagy jelszó.</translation>
     </message>
     <message>
         <location filename="src/WebClient.cpp" line="78"/>
         <source>Login failed, an error occurred.
 
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Bejelentkezés sikertelen. Hiba történt.
+
+%1</translation>
     </message>
     <message>
         <location filename="src/WebClient.cpp" line="86"/>
@@ -1333,26 +1368,34 @@ p, li { white-space: pre-wrap; }
 Server response:
 
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Bejelentkezés sikertelen. Hiba történt.
+
+A kiszolgáló válasza:
+
+%1</translation>
     </message>
     <message>
         <location filename="src/WebClient.cpp" line="101"/>
         <source>An error occurred while trying to query the plugin list. Please contact the help desk, and provide the following details.
 
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Hiba történt a bővítmények lekérdezése során. Kérem, vegye fel a kapcsolatot a terméktámogatással és továbbítsa az alábbi részleteket!
+
+%1</translation>
     </message>
     <message>
         <location filename="src/WebClient.cpp" line="120"/>
         <source>Get plugin list failed, invalid user email or password.</source>
-        <translation type="unfinished"></translation>
+        <translation>Bővítmények lekérdezése sikertelen. Hibás e-mail cím vagy jelszó.</translation>
     </message>
     <message>
         <location filename="src/WebClient.cpp" line="131"/>
         <source>Get plugin list failed, an error occurred.
 
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Bővítmények lekérdezése sikertelen. Hiba történt.
+
+%1</translation>
     </message>
     <message>
         <location filename="src/WebClient.cpp" line="137"/>
@@ -1361,7 +1404,11 @@ Server response:
 Server response:
 
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Bővítmények lekérdezése sikertelen. Hiba történt.
+
+A kiszolgáló válasza:
+
+%1</translation>
     </message>
 </context>
 <context>
@@ -1369,44 +1416,44 @@ Server response:
     <message>
         <location filename="src/ZeroconfService.cpp" line="82"/>
         <source>zeroconf server detected: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>konfigurált kiszolgáló észlelve: %1</translation>
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="91"/>
         <source>zeroconf client detected: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>konfigurált ügyfél észlelve: %1</translation>
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="99"/>
         <location filename="src/ZeroconfService.cpp" line="130"/>
         <source>Zero configuration service</source>
-        <translation type="unfinished"></translation>
+        <translation>Konfigurációs szolgáltatás</translation>
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="100"/>
         <source>Error code: %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Hibakód: %1.</translation>
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="131"/>
         <source>Unable to start the zeroconf: %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeroconf elindítása sikertelen: %1.</translation>
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="140"/>
         <source>Barrier</source>
-        <translation type="finished">Barrier</translation>
+        <translation>Barrier</translation>
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="141"/>
         <source>Failed to get local IP address. Please manually type in server address on your clients</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem sikerült alhálózati IP-címet lefoglalni. Kérem, állítsa be kézileg az ügyfél gépeken</translation>
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="147"/>
         <location filename="src/ZeroconfService.cpp" line="154"/>
         <source>%1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1</translation>
     </message>
 </context>
 </TS>

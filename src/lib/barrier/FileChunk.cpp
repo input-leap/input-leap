@@ -98,7 +98,7 @@ FileChunk::assemble(barrier::IStream* stream, String& dataReceived, size_t& expe
     case kDataChunk:
         dataReceived.append(content);
         if (CLOG->getFilter() >= kDEBUG2) {
-                LOG((CLOG_DEBUG2 "recv file chunck size=%i", content.size()));
+                LOG((CLOG_DEBUG2 "recv file chunk size=%i", content.size()));
                 double interval = stopwatch.getTime();
                 receivedDataSize += content.size();
                 LOG((CLOG_DEBUG2 "recv file interval=%f s", interval));

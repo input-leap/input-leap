@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 cmake_minimum_required (VERSION 3.4)
-project (barrier C CXX)
+project(InputLeap C CXX)
 
 option (BARRIER_BUILD_GUI "Build the GUI" ON)
 option (BARRIER_BUILD_INSTALLER "Build the installer" ON)

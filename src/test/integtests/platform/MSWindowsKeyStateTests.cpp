@@ -29,7 +29,7 @@
 #include "test/global/gmock.h"
 
 // wParam = flags, HIBYTE(lParam) = virtual key, LOBYTE(lParam) = scan code
-#define BARRIER_MSG_FAKE_KEY		BARRIER_HOOK_LAST_MSG + 4
+#define INPUTLEAP_MSG_FAKE_KEY		INPUTLEAP_HOOK_LAST_MSG + 4
 
 using ::testing::_;
 using ::testing::NiceMock;

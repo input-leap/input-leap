@@ -85,7 +85,7 @@ jobs:
       displayName: Clean Build
 
 - job: MacBuild
-  displayName: Mac Build
+  displayName: macOS builds
   strategy:
     matrix:
       big-sur-Release:
@@ -115,4 +115,4 @@ jobs:
       condition: eq(variables['B_BUILD_TYPE'], 'Release')
       inputs:
         pathtoPublish: build/bundle
-        artifactName: Mac Release Disk Image and App $(imageName)
+        artifactName: Mac Release DMG and App $(imageName)

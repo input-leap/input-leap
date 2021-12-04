@@ -1,8 +1,8 @@
-%global barrier_revision @BARRIER_REVISION@
+%global barrier_revision @INPUTLEAP_REVISION@
 Summary: Keyboard and mouse sharing solution
 Name: barrier
-Version: @BARRIER_VERSION@
-Release: @BARRIER_BUILD_NUMBER@%{?dist}
+Version: @INPUTLEAP_VERSION@
+Release: @INPUTLEAP_BUILD_NUMBER@%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 URL: https://github.com/debauchee/barrier
@@ -26,7 +26,7 @@ Work seamlessly across Windows, macOS and Linux.
 
 
 %build
-%{cmake3} -DSYNERGY_VERSION_STAGE:STRING=@BARRIER_VERSION_STAGE@ -DSYNERGY_REVISION:STRING=%{barrier_revision} .
+%{cmake3} -DSYNERGY_VERSION_STAGE:STRING=@INPUTLEAP_VERSION_STAGE@ -DSYNERGY_REVISION:STRING=%{barrier_revision} .
 make %{?_smp_mflags}
 
 

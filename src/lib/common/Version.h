@@ -21,7 +21,7 @@
 #include "common/common.h"
 
 // set version macro if not set yet
-#if !defined(BARRIER_VERSION)
+#if !defined(INPUTLEAP_VERSION)
 #error Version was not set (should be passed to compiler).
 #endif
 

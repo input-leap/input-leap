@@ -1,6 +1,6 @@
 #define MyAppName "Barrier"
-#define MyAppVersion "@BARRIER_VERSION_MAJOR@.@BARRIER_VERSION_MINOR@.@BARRIER_VERSION_PATCH@.@BARRIER_BUILD_NUMBER@"
-#define MyAppTextVersion "@BARRIER_VERSION@"
+#define MyAppVersion "@INPUTLEAP_VERSION_MAJOR@.@INPUTLEAP_VERSION_MINOR@.@INPUTLEAP_VERSION_PATCH@.@INPUTLEAP_BUILD_NUMBER@"
+#define MyAppTextVersion "@INPUTLEAP_VERSION@"
 #define MyAppPublisher "Debauchee Open Source Group"
 #define MyAppURL "https://github.com/debauchee/barrier/wiki"
 #define MyAppCopyright "Copyright (C) 2018 Debauchee Open Source Group"

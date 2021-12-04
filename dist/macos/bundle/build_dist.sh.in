@@ -7,7 +7,7 @@
 set -uo pipefail
 
 B_MACOS="Barrier.app/Contents/MacOS"
-B_VERSION="@BARRIER_VERSION@"
+B_VERSION="@INPUTLEAP_VERSION@"
 B_BINDIR="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@"
 B_BUILDTYPE="@CMAKE_BUILD_TYPE@"
 B_BARRIERC="Barrier.app/Contents/MacOS/barrierc"

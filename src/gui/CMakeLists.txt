@@ -133,8 +133,8 @@ add_executable (barrier WIN32
 include_directories (./src)
 
 target_link_libraries(barrier net base io Qt5::Core Qt5::Widgets Qt5::Network ${OPENSSL_LIBS})
-target_compile_definitions (barrier PRIVATE -DBARRIER_VERSION_STAGE="${BARRIER_VERSION_STAGE}")
-target_compile_definitions (barrier PRIVATE -DBARRIER_REVISION="${BARRIER_REVISION}")
+target_compile_definitions (barrier PRIVATE -DINPUTLEAP_VERSION_STAGE="${INPUTLEAP_VERSION_STAGE}")
+target_compile_definitions (barrier PRIVATE -DINPUTLEAP_REVISION="${INPUTLEAP_REVISION}")
 
 if (WIN32)
     include_directories ($ENV{BONJOUR_SDK_HOME}/Include)

@@ -51,8 +51,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION BARRIER_VERSION_MAJOR, BARRIER_VERSION_MINOR, BARRIER_VERSION_PATCH, BARRIER_BUILD_NUMBER
- PRODUCTVERSION BARRIER_VERSION_MAJOR, BARRIER_VERSION_MINOR, BARRIER_VERSION_PATCH, BARRIER_BUILD_NUMBER
+ FILEVERSION INPUTLEAP_VERSION_MAJOR, INPUTLEAP_VERSION_MINOR, INPUTLEAP_VERSION_PATCH, INPUTLEAP_BUILD_NUMBER
+ PRODUCTVERSION INPUTLEAP_VERSION_MAJOR, INPUTLEAP_VERSION_MINOR, INPUTLEAP_VERSION_PATCH, INPUTLEAP_BUILD_NUMBER
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -69,10 +69,10 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Debauchee Open Source Group"
             VALUE "CompanyWeb", "https://github.com/debauchee/barrier/"
-            VALUE "FileVersion", BARRIER_VERSION
+            VALUE "FileVersion", INPUTLEAP_VERSION
             VALUE "LegalCopyright", "Copyright (C) 2018 Debauchee Open Source Group\nCopyright (C) 2012-2016 Symless Ltd.\nCopyright (C) 2008-2014 Nick Bolton\nCopyright (C) 2002-2014 Chris Schoeneman"
             VALUE "ProductName", "Barrier"
-            VALUE "ProductVersion", BARRIER_VERSION
+            VALUE "ProductVersion", INPUTLEAP_VERSION
             VALUE "OriginalFilename", "barrierc.exe"
             VALUE "FileDescription", "Open source KVM software client"
             VALUE "InternalName", "barrierc"

@@ -29,10 +29,10 @@ AboutDialog::AboutDialog(QWidget* parent, const QString& barrierApp) :
 
 	m_versionChecker.setApp(barrierApp);
 	QString version = m_versionChecker.getVersion();
-	version = version + '-' + BARRIER_VERSION_STAGE;
-#ifdef BARRIER_REVISION
+	version = version + '-' + INPUTLEAP_VERSION_STAGE;
+#ifdef INPUTLEAP_REVISION
     version +=  '-';
-    version += BARRIER_REVISION;
+    version += INPUTLEAP_REVISION;
 #endif
 	m_pLabelBarrierVersion->setText(version);
 

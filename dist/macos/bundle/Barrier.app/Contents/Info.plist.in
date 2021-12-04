@@ -21,9 +21,9 @@
     <key>CFBundleSignature</key>
     <string>SYN1</string>
     <key>CFBundleShortVersionString</key>
-    <string>@BARRIER_VERSION@</string>
+    <string>@INPUTLEAP_VERSION@</string>
     <key>CFBundleVersion</key>
-    <string>@BARRIER_VERSION@</string>
+    <string>@INPUTLEAP_VERSION@</string>
     <key>NSPrincipalClass</key>
     <string>NSApplication</string>
     <key>NSHighResolutionCapable</key>

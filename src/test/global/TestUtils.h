@@ -15,8 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BARRIER_TEST_GLOBAL_TEST_UTILS_H
-#define BARRIER_TEST_GLOBAL_TEST_UTILS_H
+#ifndef INPUTLEAP_TEST_GLOBAL_TEST_UTILS_H
+#define INPUTLEAP_TEST_GLOBAL_TEST_UTILS_H
 
 #include <cstdint>
 #include <vector>
@@ -27,4 +27,4 @@ std::vector<std::uint8_t> generate_pseudo_random_bytes(std::size_t seed, std::si
 
 } // namespace inputleap
 
-#endif // BARRIER_TEST_GLOBAL_TEST_UTILS_H
+#endif // INPUTLEAP_TEST_GLOBAL_TEST_UTILS_H

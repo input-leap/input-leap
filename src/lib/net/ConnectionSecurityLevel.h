@@ -15,8 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BARRIER_LIB_NET_CONNECTION_SECURITY_LEVEL_H
-#define BARRIER_LIB_NET_CONNECTION_SECURITY_LEVEL_H
+#ifndef INPUTLEAP_LIB_NET_CONNECTION_SECURITY_LEVEL_H
+#define INPUTLEAP_LIB_NET_CONNECTION_SECURITY_LEVEL_H
 
 enum class ConnectionSecurityLevel {
     PLAINTEXT,
@@ -24,4 +24,4 @@ enum class ConnectionSecurityLevel {
     ENCRYPTED_AUTHENTICATED
 };
 
-#endif // BARRIER_LIB_NET_CONNECTION_SECURITY_LEVEL_H
+#endif // INPUTLEAP_LIB_NET_CONNECTION_SECURITY_LEVEL_H

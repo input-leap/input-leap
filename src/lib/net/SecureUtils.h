@@ -15,8 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BARRIER_LIB_NET_SECUREUTILS_H
-#define BARRIER_LIB_NET_SECUREUTILS_H
+#ifndef INPUTLEAP_LIB_NET_SECUREUTILS_H
+#define INPUTLEAP_LIB_NET_SECUREUTILS_H
 
 #include "FingerprintData.h"
 #include <openssl/ossl_typ.h>
@@ -40,4 +40,4 @@ std::string create_fingerprint_randomart(const std::vector<std::uint8_t>& dgst_r
 
 } // namespace inputleap
 
-#endif // BARRIER_LIB_NET_SECUREUTILS_H
+#endif // INPUTLEAP_LIB_NET_SECUREUTILS_H

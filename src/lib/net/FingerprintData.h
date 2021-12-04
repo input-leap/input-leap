@@ -15,8 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BARRIER_LIB_NET_FINGERPRINT_DATA_H
-#define BARRIER_LIB_NET_FINGERPRINT_DATA_H
+#ifndef INPUTLEAP_LIB_NET_FINGERPRINT_DATA_H
+#define INPUTLEAP_LIB_NET_FINGERPRINT_DATA_H
 
 #include <string>
 #include <vector>
@@ -43,4 +43,4 @@ FingerprintType fingerprint_type_from_string(const std::string& type);
 
 } // namespace inputleap
 
-#endif // BARRIER_LIB_NET_FINGERPRINT_TYPE_H
+#endif // INPUTLEAP_LIB_NET_FINGERPRINT_DATA_H

@@ -15,8 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BARRIER_GUI_FINGERPRINT_ACCEPT_DIALOG_H
-#define BARRIER_GUI_FINGERPRINT_ACCEPT_DIALOG_H
+#ifndef INPUTLEAP_GUI_FINGERPRINT_ACCEPT_DIALOG_H
+#define INPUTLEAP_GUI_FINGERPRINT_ACCEPT_DIALOG_H
 
 #include "net/FingerprintData.h"
 #include "barrier/BarrierType.h"
@@ -42,4 +42,4 @@ private:
     std::unique_ptr<Ui::FingerprintAcceptDialog> ui_;
 };
 
-#endif // BARRIER_GUI_FINGERPRINT_ACCEPT_DIALOG_H
+#endif // INPUTLEAP_GUI_FINGERPRINT_ACCEPT_DIALOG_H

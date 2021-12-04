@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
  * Patch by Ryan Chapman
  *

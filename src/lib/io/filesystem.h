@@ -1,6 +1,6 @@
 /*
-    barrier -- mouse and keyboard sharing utility
-    Copyright (C) Barrier contributors
+    InputLeap -- mouse and keyboard sharing utility
+    Copyright (C) InputLeap contributors
 
     This package is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License

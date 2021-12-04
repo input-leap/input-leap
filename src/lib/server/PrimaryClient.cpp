@@ -18,8 +18,8 @@
 
 #include "server/PrimaryClient.h"
 
-#include "barrier/Screen.h"
-#include "barrier/Clipboard.h"
+#include "inputleap/Screen.h"
+#include "inputleap/Clipboard.h"
 #include "base/Log.h"
 
 //

@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include "barrier/key_types.h"
-#include "barrier/mouse_types.h"
-#include "barrier/protocol_types.h"
-#include "barrier/IPlatformScreen.h"
+#include "inputleap/key_types.h"
+#include "inputleap/mouse_types.h"
+#include "inputleap/protocol_types.h"
+#include "inputleap/IPlatformScreen.h"
 #include "common/stdmap.h"
 #include "common/stdset.h"
 

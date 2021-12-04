@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "barrier/clipboard_types.h"
-#include "barrier/key_types.h"
+#include "inputleap/clipboard_types.h"
+#include "inputleap/key_types.h"
 #include "base/Event.h"
 #include "base/Stopwatch.h"
 

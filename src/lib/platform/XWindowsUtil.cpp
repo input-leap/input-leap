@@ -18,7 +18,7 @@
 
 #include "platform/XWindowsUtil.h"
 
-#include "barrier/key_types.h"
+#include "inputleap/key_types.h"
 #include "mt/Thread.h"
 #include "base/Log.h"
 #include "base/String.h"

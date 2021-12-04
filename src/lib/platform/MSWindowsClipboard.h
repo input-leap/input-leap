@@ -19,7 +19,7 @@
 #pragma once
 
 #include "platform/MSWindowsClipboardFacade.h"
-#include "barrier/IClipboard.h"
+#include "inputleap/IClipboard.h"
 #include "common/stdvector.h"
 
 #define WIN32_LEAN_AND_MEAN

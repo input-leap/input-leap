@@ -19,7 +19,7 @@
 #pragma once
 
 #include "server/BaseClientProxy.h"
-#include "barrier/protocol_types.h"
+#include "inputleap/protocol_types.h"
 
 namespace inputleap { class Screen; }
 

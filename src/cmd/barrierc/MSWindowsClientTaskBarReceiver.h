@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "barrier/ClientTaskBarReceiver.h"
+#include "inputleap/ClientTaskBarReceiver.h"
 #include "common/win32/winapi.h"
 
 class BufferedLogOutputter;

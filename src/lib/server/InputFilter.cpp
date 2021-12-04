@@ -19,7 +19,7 @@
 #include "server/InputFilter.h"
 #include "server/Server.h"
 #include "server/PrimaryClient.h"
-#include "barrier/KeyMap.h"
+#include "inputleap/KeyMap.h"
 #include "base/EventQueue.h"
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"

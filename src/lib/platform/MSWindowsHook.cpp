@@ -20,8 +20,8 @@
 #include "platform/MSWindowsHook.h"
 #include "platform/MSWindowsHookResource.h"
 #include "platform/ImmuneKeysReader.h"
-#include "barrier/protocol_types.h"
-#include "barrier/XScreen.h"
+#include "inputleap/protocol_types.h"
+#include "inputleap/XScreen.h"
 #include "common/DataDirectories.h"
 #include "base/Log.h"
 

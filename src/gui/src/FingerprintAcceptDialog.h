@@ -19,7 +19,7 @@
 #define INPUTLEAP_GUI_FINGERPRINT_ACCEPT_DIALOG_H
 
 #include "net/FingerprintData.h"
-#include "barrier/BarrierType.h"
+#include "inputleap/BarrierType.h"
 #include <QDialog>
 #include <memory>
 

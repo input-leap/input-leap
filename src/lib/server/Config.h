@@ -19,9 +19,9 @@
 #pragma once
 
 #include "server/InputFilter.h"
-#include "barrier/option_types.h"
-#include "barrier/protocol_types.h"
-#include "barrier/IPlatformScreen.h"
+#include "inputleap/option_types.h"
+#include "inputleap/protocol_types.h"
+#include "inputleap/IPlatformScreen.h"
 #include "net/NetworkAddress.h"
 #include "base/XBase.h"
 #include "common/stdmap.h"

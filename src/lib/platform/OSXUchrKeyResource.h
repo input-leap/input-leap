@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "barrier/KeyState.h"
+#include "inputleap/KeyState.h"
 #include "platform/IOSXKeyResource.h"
 
 #include <Carbon/Carbon.h>

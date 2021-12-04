@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "barrier/KeyState.h"
+#include "inputleap/KeyState.h"
 #include "common/stdmap.h"
 #include "common/stdvector.h"
 #include "XWindowsImpl.h"

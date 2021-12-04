@@ -20,7 +20,7 @@
 
 #define MAINWINDOW__H
 
-#include "barrier/BarrierType.h"
+#include "inputleap/BarrierType.h"
 
 #include <QMainWindow>
 #include <QSystemTrayIcon>

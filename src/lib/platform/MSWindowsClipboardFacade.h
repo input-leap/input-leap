@@ -20,7 +20,7 @@
 
 #include "platform/IMSWindowsClipboardFacade.h"
 
-#include "barrier/IClipboard.h"
+#include "inputleap/IClipboard.h"
 
 class MSWindowsClipboardFacade : public IMSWindowsClipboardFacade
 {

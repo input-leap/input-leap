@@ -20,9 +20,9 @@
 #pragma once
 
 #include "platform/synwinhk.h"
-#include "barrier/key_types.h"
-#include "barrier/mouse_types.h"
-#include "barrier/option_types.h"
+#include "inputleap/key_types.h"
+#include "inputleap/mouse_types.h"
+#include "inputleap/option_types.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
 #include "common/stdmap.h"

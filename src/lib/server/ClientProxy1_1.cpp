@@ -18,7 +18,7 @@
 
 #include "server/ClientProxy1_1.h"
 
-#include "barrier/ProtocolUtil.h"
+#include "inputleap/ProtocolUtil.h"
 #include "base/Log.h"
 
 #include <cstring>

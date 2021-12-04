@@ -20,7 +20,7 @@
 
 #include "ipc/IpcMessage.h"
 #include "ipc/Ipc.h"
-#include "barrier/ProtocolUtil.h"
+#include "inputleap/ProtocolUtil.h"
 #include "io/IStream.h"
 #include "base/TMethodEventJob.h"
 #include "base/Log.h"

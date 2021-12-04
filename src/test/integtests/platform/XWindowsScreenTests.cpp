@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "test/mock/barrier/MockEventQueue.h"
+#include "test/mock/inputleap/MockEventQueue.h"
 #include "platform/XWindowsScreen.h"
 
 #include "test/global/gtest.h"

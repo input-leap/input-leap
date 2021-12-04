@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "barrier/IClient.h"
+#include "inputleap/IClient.h"
 
 namespace inputleap { class IStream; }
 

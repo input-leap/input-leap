@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "barrier/IScreenSaver.h"
+#include "inputleap/IScreenSaver.h"
 #include "base/IEventQueue.h"
 #include "common/stdmap.h"
 #include "XWindowsImpl.h"

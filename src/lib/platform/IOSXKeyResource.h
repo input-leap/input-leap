@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "barrier/KeyState.h"
+#include "inputleap/KeyState.h"
 
 class IOSXKeyResource : public IInterface {
 public:

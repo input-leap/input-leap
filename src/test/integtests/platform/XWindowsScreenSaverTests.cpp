@@ -19,7 +19,7 @@
 // TODO: fix tests
 #if 0
 
-#include "test/mock/barrier/MockEventQueue.h"
+#include "test/mock/inputleap/MockEventQueue.h"
 #include "platform/XWindowsScreenSaver.h"
 
 #include "test/global/gtest.h"

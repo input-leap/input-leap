@@ -18,7 +18,7 @@
 
 #include "server/ClientProxy1_3.h"
 
-#include "barrier/ProtocolUtil.h"
+#include "inputleap/ProtocolUtil.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"

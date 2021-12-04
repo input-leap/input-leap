@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "barrier/PlatformScreen.h"
-#include "barrier/KeyMap.h"
+#include "inputleap/PlatformScreen.h"
+#include "inputleap/KeyMap.h"
 #include "common/stdset.h"
 #include "common/stdvector.h"
 #include "XWindowsImpl.h"

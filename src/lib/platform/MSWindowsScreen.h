@@ -20,8 +20,8 @@
 #pragma once
 
 #include "platform/MSWindowsHook.h"
-#include "barrier/PlatformScreen.h"
-#include "barrier/DragInformation.h"
+#include "inputleap/PlatformScreen.h"
+#include "inputleap/DragInformation.h"
 #include "platform/synwinhk.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"

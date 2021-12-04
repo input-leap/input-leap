@@ -18,12 +18,12 @@
 
 #pragma once
 
-#include "barrier/IClient.h"
+#include "inputleap/IClient.h"
 
-#include "barrier/Clipboard.h"
-#include "barrier/DragInformation.h"
-#include "barrier/INode.h"
-#include "barrier/ClientArgs.h"
+#include "inputleap/Clipboard.h"
+#include "inputleap/DragInformation.h"
+#include "inputleap/INode.h"
+#include "inputleap/ClientArgs.h"
 #include "net/NetworkAddress.h"
 #include "base/EventTypes.h"
 #include "mt/CondVar.h"

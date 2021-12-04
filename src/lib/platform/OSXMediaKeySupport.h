@@ -20,7 +20,7 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import <Carbon/Carbon.h>
 
-#include "barrier/key_types.h"
+#include "inputleap/key_types.h"
 
 #if defined(__cplusplus)
 extern "C" {

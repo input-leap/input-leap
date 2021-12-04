@@ -16,10 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#import "inputleap/IPrimaryScreen.h"
 #import "platform/OSXScreenSaver.h"
 
 #import "platform/OSXScreenSaverUtil.h"
-#import "barrier/IPrimaryScreen.h"
 #import "base/Log.h"
 #import "base/IEventQueue.h"
 

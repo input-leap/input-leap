@@ -19,7 +19,7 @@
 #pragma once
 
 #include "platform/MSWindowsSession.h"
-#include "barrier/XBarrier.h"
+#include "inputleap/XBarrier.h"
 #include "arch/IArchMultithread.h"
 
 #define WIN32_LEAN_AND_MEAN

@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "barrier/clipboard_types.h"
-#include "barrier/IClipboard.h"
+#include "inputleap/clipboard_types.h"
+#include "inputleap/IClipboard.h"
 #include "common/stdmap.h"
 #include "common/stdlist.h"
 #include "common/stdvector.h"

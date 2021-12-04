@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "barrier/IScreenSaver.h"
+#include "inputleap/IScreenSaver.h"
 
 #include <Carbon/Carbon.h>
 

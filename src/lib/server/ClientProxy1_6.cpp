@@ -18,9 +18,9 @@
 #include "server/ClientProxy1_6.h"
 
 #include "server/Server.h"
-#include "barrier/ProtocolUtil.h"
-#include "barrier/StreamChunker.h"
-#include "barrier/ClipboardChunk.h"
+#include "inputleap/ProtocolUtil.h"
+#include "inputleap/StreamChunker.h"
+#include "inputleap/ClipboardChunk.h"
 #include "io/IStream.h"
 #include "base/TMethodEventJob.h"
 #include "base/Log.h"

@@ -19,8 +19,8 @@
 #pragma once
 
 #include "server/ClientProxy.h"
-#include "barrier/Clipboard.h"
-#include "barrier/protocol_types.h"
+#include "inputleap/Clipboard.h"
+#include "inputleap/protocol_types.h"
 
 class Event;
 class EventQueueTimer;

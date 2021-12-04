@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "barrier/KeyState.h"
+#include "inputleap/KeyState.h"
 #include "common/stdvector.h"
 
 #define WIN32_LEAN_AND_MEAN

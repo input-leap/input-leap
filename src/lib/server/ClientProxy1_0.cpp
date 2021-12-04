@@ -18,8 +18,8 @@
 
 #include "server/ClientProxy1_0.h"
 
-#include "barrier/ProtocolUtil.h"
-#include "barrier/XBarrier.h"
+#include "inputleap/ProtocolUtil.h"
+#include "inputleap/XBarrier.h"
 #include "io/IStream.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"

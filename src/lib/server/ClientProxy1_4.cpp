@@ -19,7 +19,7 @@
 #include "server/ClientProxy1_4.h"
 
 #include "server/Server.h"
-#include "barrier/ProtocolUtil.h"
+#include "inputleap/ProtocolUtil.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"

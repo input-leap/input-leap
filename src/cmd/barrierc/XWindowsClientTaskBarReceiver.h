@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "barrier/ClientTaskBarReceiver.h"
+#include "inputleap/ClientTaskBarReceiver.h"
 
 class BufferedLogOutputter;
 class IEventQueue;

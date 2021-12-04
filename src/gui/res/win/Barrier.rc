@@ -92,7 +92,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_BARRIER             ICON                    "../icons/256x256/barrier.ico"
+IDI_INPUTLEAP             ICON                    "../icons/256x256/barrier.ico"
 
 
 #endif    // English (U.S.) resources

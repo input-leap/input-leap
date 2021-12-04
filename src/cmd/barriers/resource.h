@@ -5,7 +5,7 @@
 #define IDS_FAILED                      1
 #define IDS_INIT_FAILED                 2
 #define IDS_UNCAUGHT_EXCEPTION          3
-#define IDI_BARRIER                     101
+#define IDI_INPUTLEAP                   101
 #define IDI_TASKBAR_NOT_RUNNING         102
 #define IDI_TASKBAR_NOT_WORKING         103
 #define IDI_TASKBAR_NOT_CONNECTED       104
@@ -27,8 +27,8 @@
 #define IDC_TASKBAR_LOG_LEVEL_DEBUG     40013
 #define IDC_TASKBAR_LOG_LEVEL_DEBUG1    40014
 #define IDC_TASKBAR_LOG_LEVEL_DEBUG2    40015
-#define ID_BARRIER_RELOADSYSTEM         40016
-#define ID_BARRIER_RESETSERVER          40017
+#define ID_INPUTLEAP_RELOADSYSTEM         40016
+#define ID_INPUTLEAP_RESETSERVER          40017
 
 // Next default values for new objects
 //

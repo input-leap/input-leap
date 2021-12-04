@@ -157,7 +157,7 @@ endif()
 target_link_libraries (barrier common)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    install (TARGETS barrier DESTINATION ${BARRIER_BUNDLE_BINARY_DIR})
+    install(TARGETS barrier DESTINATION ${INPUTLEAP_BUNDLE_BINARY_DIR})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "BSD")
     install (TARGETS barrier DESTINATION bin)
 endif()

@@ -415,17 +415,17 @@ if (${INPUTLEAP_BUILD_INSTALLER})
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set (CMAKE_INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks")
-    set (BARRIER_BUNDLE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dist/macos/bundle)
-    set (BARRIER_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
-    set (BARRIER_BUNDLE_APP_DIR ${BARRIER_BUNDLE_DIR}/Barrier.app)
-    set (BARRIER_BUNDLE_BINARY_DIR ${BARRIER_BUNDLE_APP_DIR}/Contents/MacOS)
+    set(INPUTLEAP_BUNDLE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dist/macos/bundle)
+    set(INPUTLEAP_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
+    set(INPUTLEAP_BUNDLE_APP_DIR ${INPUTLEAP_BUNDLE_DIR}/Barrier.app)
+    set(INPUTLEAP_BUNDLE_BINARY_DIR ${INPUTLEAP_BUNDLE_APP_DIR}/Contents/MacOS)
 
-    configure_files (${BARRIER_BUNDLE_SOURCE_DIR} ${BARRIER_BUNDLE_DIR})
+    configure_files(${INPUTLEAP_BUNDLE_SOURCE_DIR} ${INPUTLEAP_BUNDLE_DIR})
 
     add_custom_target(Barrier_MacOS ALL
                       bash build_dist.sh
                       DEPENDS barrier barriers barrierc
-                      WORKING_DIRECTORY ${BARRIER_BUNDLE_DIR})
+                      WORKING_DIRECTORY ${INPUTLEAP_BUNDLE_DIR})
 endif()
 
 #

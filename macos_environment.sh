@@ -21,7 +21,7 @@ if [ -z "$INPUTLEAP_BUILD_ENV" ]; then
 
         check_dir_exists '/opt/local/lib/cmake/Qt5' 'qt5-qtbase port'
 
-        export BARRIER_BUILD_MACPORTS=1
+        export INPUTLEAP_BUILD_MACPORTS=1
         export CMAKE_PREFIX_PATH="/opt/local/lib/cmake/Qt5:$CMAKE_PREFIX_PATH"
         export LD_LIBRARY_PATH="/opt/local/lib:$LD_LIBRARY_PATH"
         export CPATH="/opt/local/include:$CPATH"
@@ -33,7 +33,7 @@ if [ -z "$INPUTLEAP_BUILD_ENV" ]; then
 
         check_dir_exists "$QT_PATH" 'qt5'
 
-        export BARRIER_BUILD_BREW=1
+        export INPUTLEAP_BUILD_BREW=1
         export CMAKE_PREFIX_PATH="/opt/procursus:$QT_PATH:$CMAKE_PREFIX_PATH"
         export LD_LIBRARY_PATH="/opt/procursus/lib:$LD_LIBRARY_PATH"
         export CPATH="/opt/procursus/include:$CPATH"

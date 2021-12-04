@@ -11,7 +11,7 @@ check_dir_exists() {
     fi
 }
 
-if [ -z "$BARRIER_BUILD_ENV" ]; then
+if [ -z "$INPUTLEAP_BUILD_ENV" ]; then
     check_dir_exists '/Applications/Xcode.app' 'Xcode'
 
     printf "Modifying environment for Barrier build...\n"
@@ -43,7 +43,7 @@ if [ -z "$BARRIER_BUILD_ENV" ]; then
         exit 1
     fi
 
-    export BARRIER_BUILD_ENV=1
+    export INPUTLEAP_BUILD_ENV=1
 
     printf "done\n"
 fi

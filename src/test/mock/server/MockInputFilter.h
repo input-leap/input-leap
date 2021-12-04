@@ -17,7 +17,7 @@
 
 #pragma once
 
-#define BARRIER_TEST_ENV
+#define INPUTLEAP_TEST_ENV
 
 #include "server/InputFilter.h"
 

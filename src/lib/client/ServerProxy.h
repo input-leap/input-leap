@@ -59,7 +59,7 @@ public:
     // sending dragging information to server
     void                sendDragInfo(UInt32 fileCount, const char* info, size_t size);
 
-#ifdef BARRIER_TEST_ENV
+#ifdef INPUTLEAP_TEST_ENV
     void                handleDataForTest() { handleData(Event(), NULL); }
 #endif
 

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define BARRIER_TEST_ENV
+#define INPUTLEAP_TEST_ENV
 
 #include "test/mock/ipc/MockIpcServer.h"
 

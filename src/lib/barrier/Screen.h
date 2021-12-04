@@ -42,7 +42,7 @@ public:
     Screen(IPlatformScreen* platformScreen, IEventQueue* events);
     virtual ~Screen();
 
-#ifdef BARRIER_TEST_ENV
+#ifdef INPUTLEAP_TEST_ENV
     Screen() : m_mock(true) { }
 #endif
 

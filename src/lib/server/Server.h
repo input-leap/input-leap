@@ -110,7 +110,7 @@ public:
         inputleap::Screen* screen, IEventQueue* events, ServerArgs const& args);
     ~Server();
 
-#ifdef BARRIER_TEST_ENV
+#ifdef INPUTLEAP_TEST_ENV
     Server() : m_mock(true), m_config(NULL) { }
     void setActive(BaseClientProxy* active) {    m_active = active; }
 #endif

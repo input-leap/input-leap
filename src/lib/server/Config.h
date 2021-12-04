@@ -174,7 +174,7 @@ public:
     Config(IEventQueue* events);
     virtual ~Config();
 
-#ifdef BARRIER_TEST_ENV
+#ifdef INPUTLEAP_TEST_ENV
     Config() : m_inputFilter(NULL) { }
 #endif
 

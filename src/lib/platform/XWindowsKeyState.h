@@ -128,7 +128,7 @@ private:
         bool            m_lock;
     };
 
-#ifdef BARRIER_TEST_ENV
+#ifdef INPUTLEAP_TEST_ENV
 public: // yuck
 #endif
     typedef std::vector<KeyModifierMask> KeyModifierMaskList;
@@ -161,7 +161,7 @@ private:
     // autorepeat state
     XKeyboardState        m_keyboardState;
 
-#ifdef BARRIER_TEST_ENV
+#ifdef INPUTLEAP_TEST_ENV
 public:
     SInt32                  group() const { return m_group; }
     void                    group(const SInt32& group) { m_group = group; }

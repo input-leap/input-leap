@@ -37,7 +37,7 @@ public:
     PrimaryClient(const std::string& name, inputleap::Screen* screen);
     ~PrimaryClient();
 
-#ifdef BARRIER_TEST_ENV
+#ifdef INPUTLEAP_TEST_ENV
     PrimaryClient() : BaseClientProxy("") { }
 #endif
 

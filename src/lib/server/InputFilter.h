@@ -333,7 +333,7 @@ public:
     InputFilter(const InputFilter&);
     virtual ~InputFilter();
 
-#ifdef BARRIER_TEST_ENV
+#ifdef INPUTLEAP_TEST_ENV
     InputFilter() : m_primaryClient(NULL) { }
 #endif
 

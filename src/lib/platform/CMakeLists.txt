@@ -25,7 +25,7 @@ elseif (UNIX)
     file(GLOB sources "XWindows*.cpp")
 endif()
 
-if (BARRIER_ADD_HEADERS)
+if(INPUTLEAP_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 

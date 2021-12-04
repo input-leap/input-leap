@@ -18,10 +18,10 @@
 cmake_minimum_required (VERSION 3.4)
 project(InputLeap C CXX)
 
-option (BARRIER_BUILD_GUI "Build the GUI" ON)
-option (BARRIER_BUILD_INSTALLER "Build the installer" ON)
-option (BARRIER_BUILD_TESTS "Build the tests" ON)
-option (BARRIER_USE_EXTERNAL_GTEST "Use external installation of Google Test framework" OFF)
+option(INPUTLEAP_BUILD_GUI "Build the GUI" ON)
+option(INPUTLEAP_BUILD_INSTALLER "Build the installer" ON)
+option(INPUTLEAP_BUILD_TESTS "Build the tests" ON)
+option(INPUTLEAP_USE_EXTERNAL_GTEST "Use external installation of Google Test framework" OFF)
 
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set (CMAKE_CXX_STANDARD 14)
@@ -45,9 +45,9 @@ endif()
 
 # Add headers to source list
 if (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
-    set (BARRIER_ADD_HEADERS FALSE)
+    set(INPUTLEAP_ADD_HEADERS FALSE)
 else()
-    set (BARRIER_ADD_HEADERS TRUE)
+    set(INPUTLEAP_ADD_HEADERS TRUE)
 endif()
 
 set (libs)
@@ -173,7 +173,7 @@ if (UNIX)
             link_directories("/usr/X11R6/lib")
         endif()
 
-        if (BARRIER_BUILD_GUI AND ${PKG_CONFIG_FOUND})
+        if(INPUTLEAP_BUILD_GUI AND ${PKG_CONFIG_FOUND})
             pkg_check_modules (AVAHI_COMPAT REQUIRED avahi-compat-libdns_sd)
             include_directories (BEFORE SYSTEM ${AVAHI_COMPAT_INCLUDE_DIRS})
             set (CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${AVAHI_COMPAT_INCLUDE_DIRS}")
@@ -202,7 +202,7 @@ if (UNIX)
             message (FATAL_ERROR "Missing header: " ${XKBlib})
         endif()
 
-        if (BARRIER_BUILD_GUI AND NOT HAVE_DNSSD)
+        if(INPUTLEAP_BUILD_GUI AND NOT HAVE_DNSSD)
             message (FATAL_ERROR "Missing header: dns_sd.h")
         endif()
 
@@ -409,7 +409,7 @@ macro (configure_files srcDir destDir)
     endforeach (templateFile)
 endmacro (configure_files)
 
-if (${BARRIER_BUILD_INSTALLER})
+if (${INPUTLEAP_BUILD_INSTALLER})
 #
 # macOS app Bundle
 #

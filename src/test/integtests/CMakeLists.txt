@@ -62,7 +62,7 @@ file(GLOB_RECURSE mock_sources "../../test/mock/*.cpp")
 list(APPEND headers ${mock_headers})
 list(APPEND sources ${mock_sources})
 
-if (BARRIER_ADD_HEADERS)
+if(INPUTLEAP_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 

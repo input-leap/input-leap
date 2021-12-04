@@ -162,7 +162,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "BS
     install (TARGETS barrier DESTINATION bin)
 endif()
 
-if (BARRIER_BUILD_TESTS)
+if(INPUTLEAP_BUILD_TESTS)
     set(GUI_TEST_SOURCE_FILES
         test/KeySequenceTests.cpp
         test/HotkeyTests.cpp

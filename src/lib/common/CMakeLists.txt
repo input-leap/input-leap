@@ -28,7 +28,7 @@ endif()
 list(APPEND headers ${arch_headers})
 list(APPEND sources ${arch_sources})
 
-if (BARRIER_ADD_HEADERS)
+if(INPUTLEAP_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 

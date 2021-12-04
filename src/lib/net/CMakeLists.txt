@@ -17,7 +17,7 @@
 file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
-if (BARRIER_ADD_HEADERS)
+if(INPUTLEAP_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 

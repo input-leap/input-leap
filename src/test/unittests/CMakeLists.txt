@@ -59,7 +59,7 @@ if (UNIX)
     )
 endif()
 
-if (BARRIER_ADD_HEADERS)
+if(INPUTLEAP_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 

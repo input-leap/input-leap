@@ -29,11 +29,11 @@
 #include "mt/CondVar.h"
 
 class EventQueueTimer;
-namespace barrier { class Screen; }
+namespace inputleap { class Screen; }
 class ServerProxy;
 class IDataSocket;
 class ISocketFactory;
-namespace barrier { class IStream; }
+namespace inputleap { class IStream; }
 class IEventQueue;
 class Thread;
 class TCPSocket;
@@ -59,7 +59,7 @@ public:
     */
     Client(IEventQueue* events, const std::string& name,
            const NetworkAddress& address, ISocketFactory* socketFactory,
-           barrier::Screen* screen, ClientArgs const& args);
+           inputleap::Screen* screen, ClientArgs const& args);
 
     ~Client();
 
@@ -201,8 +201,8 @@ private:
     std::string                m_name;
     NetworkAddress        m_serverAddress;
     ISocketFactory*        m_socketFactory;
-    barrier::Screen*    m_screen;
-    barrier::IStream*    m_stream;
+    inputleap::Screen* m_screen;
+    inputleap::IStream* m_stream;
     EventQueueTimer*    m_timer;
     ServerProxy*        m_server;
     bool                m_ready;

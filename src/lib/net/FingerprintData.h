@@ -21,7 +21,7 @@
 #include <string>
 #include <vector>
 
-namespace barrier {
+namespace inputleap {
 
 enum FingerprintType {
     INVALID,
@@ -41,6 +41,6 @@ struct FingerprintData {
 const char* fingerprint_type_to_string(FingerprintType type);
 FingerprintType fingerprint_type_from_string(const std::string& type);
 
-} // namespace barrier
+} // namespace inputleap
 
 #endif // BARRIER_LIB_NET_FINGERPRINT_TYPE_H

@@ -31,7 +31,7 @@
 // ClientProxy1_4
 //
 
-ClientProxy1_4::ClientProxy1_4(const std::string& name, barrier::IStream* stream, Server* server,
+ClientProxy1_4::ClientProxy1_4(const std::string& name, inputleap::IStream* stream, Server* server,
                                IEventQueue* events) :
     ClientProxy1_3(name, stream, events), m_server(server)
 {

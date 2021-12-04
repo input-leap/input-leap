@@ -21,7 +21,7 @@
 
 #include "test/global/gtest.h"
 
-using namespace barrier;
+using namespace inputleap;
 using ::testing::_;
 using ::testing::Invoke;
 using ::testing::NiceMock;

@@ -46,7 +46,7 @@ SecureListenSocket::accept()
             setListeningJob();
         }
 
-        bool loaded = socket->load_certificates(barrier::DataDirectories::ssl_certificate_path());
+        bool loaded = socket->load_certificates(inputleap::DataDirectories::ssl_certificate_path());
         if (!loaded) {
             delete socket;
             return NULL;

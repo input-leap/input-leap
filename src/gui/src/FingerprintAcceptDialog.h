@@ -34,8 +34,8 @@ class FingerprintAcceptDialog : public QDialog
 public:
     explicit FingerprintAcceptDialog(QWidget* parent,
                                      BarrierType type,
-                                     const barrier::FingerprintData& fingerprint_sha1,
-                                     const barrier::FingerprintData& fingerprint_sha256);
+                                     const inputleap::FingerprintData& fingerprint_sha1,
+                                     const inputleap::FingerprintData& fingerprint_sha256);
     ~FingerprintAcceptDialog() override;
 
 private:

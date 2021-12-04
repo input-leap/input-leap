@@ -20,7 +20,7 @@
 
 #include "barrier/App.h"
 
-namespace barrier { class Screen; }
+namespace inputleap { class Screen; }
 class Event;
 class Client;
 class NetworkAddress;
@@ -50,21 +50,21 @@ public:
     int foregroundStartup(int argc, char** argv);
     int standardStartup(int argc, char** argv);
     int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup);
-    barrier::Screen* createScreen();
+    inputleap::Screen* createScreen();
     void updateStatus();
     void updateStatus(const String& msg);
     void resetRestartTimeout();
     double nextRestartTimeout();
     void handleScreenError(const Event&, void*);
-    barrier::Screen* openClientScreen();
-    void closeClientScreen(barrier::Screen* screen);
+    inputleap::Screen* openClientScreen();
+    void closeClientScreen(inputleap::Screen* screen);
     void handleClientRestart(const Event&, void* vtimer);
     void scheduleClientRestart(double retryTime);
     void handleClientConnected(const Event&, void*);
     void handleClientFailed(const Event& e, void*);
     void handleClientDisconnected(const Event&, void*);
     Client* openClient(const String& name, const NetworkAddress& address,
-                barrier::Screen* screen);
+                inputleap::Screen* screen);
     void closeClient(Client* client);
     bool startClient();
     void stopClient();
@@ -77,6 +77,6 @@ public:
 
 private:
     Client*            m_client;
-    barrier::Screen*m_clientScreen;
+    inputleap::Screen*m_clientScreen;
     NetworkAddress*    m_serverAddress;
 };

@@ -127,14 +127,14 @@ ServerApp::help()
 #endif
 
     // refer to custom profile directory even if not saved yet
-    barrier::fs::path profile_path = argsBase().m_profileDirectory;
+    inputleap::fs::path profile_path = argsBase().m_profileDirectory;
     if (profile_path.empty()) {
-        profile_path = barrier::DataDirectories::profile();
+        profile_path = inputleap::DataDirectories::profile();
     }
 
-    auto usr_config_path = (profile_path / barrier::fs::u8path(USR_CONFIG_NAME)).u8string();
-    auto sys_config_path = (barrier::DataDirectories::systemconfig() /
-                            barrier::fs::u8path(SYS_CONFIG_NAME)).u8string();
+    auto usr_config_path = (profile_path / inputleap::fs::u8path(USR_CONFIG_NAME)).u8string();
+    auto sys_config_path = (inputleap::DataDirectories::systemconfig() /
+                            inputleap::fs::u8path(SYS_CONFIG_NAME)).u8string();
 
     std::ostringstream buffer;
     buffer << "Start the barrier server component. The server shares the keyboard &\n"
@@ -201,10 +201,10 @@ ServerApp::loadConfig()
 
     // load the default configuration if no explicit file given
     else {
-        auto path = barrier::DataDirectories::profile();
+        auto path = inputleap::DataDirectories::profile();
         if (!path.empty()) {
             // complete path
-            path /= barrier::fs::u8path(USR_CONFIG_NAME);
+            path /= inputleap::fs::u8path(USR_CONFIG_NAME);
 
             // now try loading the user's configuration
             if (loadConfig(path.u8string())) {
@@ -214,9 +214,9 @@ ServerApp::loadConfig()
         }
         if (!loaded) {
             // try the system-wide config file
-            path = barrier::DataDirectories::systemconfig();
+            path = inputleap::DataDirectories::systemconfig();
             if (!path.empty()) {
-                path /= barrier::fs::u8path(SYS_CONFIG_NAME);
+                path /= inputleap::fs::u8path(SYS_CONFIG_NAME);
                 if (loadConfig(path.u8string())) {
                     loaded            = true;
                     args().m_configFile = path.u8string();
@@ -369,7 +369,7 @@ ServerApp::closePrimaryClient(PrimaryClient* primaryClient)
 }
 
 void
-ServerApp::closeServerScreen(barrier::Screen* screen)
+ServerApp::closeServerScreen(inputleap::Screen* screen)
 {
     if (screen != NULL) {
         m_events->removeHandler(m_events->forIScreen().error(),
@@ -457,7 +457,7 @@ bool ServerApp::initServer()
     }
 
     double retryTime;
-    barrier::Screen* serverScreen         = NULL;
+    inputleap::Screen* serverScreen = NULL;
     PrimaryClient* primaryClient = NULL;
     try {
         String name    = args().m_config->getCanonicalName(args().m_name);
@@ -505,10 +505,10 @@ bool ServerApp::initServer()
     }
 }
 
-barrier::Screen*
+inputleap::Screen*
 ServerApp::openServerScreen()
 {
-    barrier::Screen* screen = createScreen();
+    inputleap::Screen* screen = createScreen();
     if (!argsBase().m_dropTarget.empty()) {
         screen->setDropTarget(argsBase().m_dropTarget);
     }
@@ -606,23 +606,23 @@ ServerApp::startServer()
     }
 }
 
-barrier::Screen*
+inputleap::Screen*
 ServerApp::createScreen()
 {
 #if WINAPI_MSWINDOWS
-    return new barrier::Screen(new MSWindowsScreen(
+    return new inputleap::Screen(new MSWindowsScreen(
         true, args().m_noHooks, args().m_stopOnDeskSwitch, m_events), m_events);
 #elif WINAPI_XWINDOWS
-    return new barrier::Screen(new XWindowsScreen(
+    return new inputleap::Screen(new XWindowsScreen(
         new XWindowsImpl(),
         args().m_display, true, args().m_disableXInitThreads, 0, m_events), m_events);
 #elif WINAPI_CARBON
-    return new barrier::Screen(new OSXScreen(m_events, true), m_events);
+    return new inputleap::Screen(new OSXScreen(m_events, true), m_events);
 #endif
 }
 
 PrimaryClient*
-ServerApp::openPrimaryClient(const String& name, barrier::Screen* screen)
+ServerApp::openPrimaryClient(const String& name, inputleap::Screen* screen)
 {
     LOG((CLOG_DEBUG1 "creating primary screen"));
     return new PrimaryClient(name, screen);

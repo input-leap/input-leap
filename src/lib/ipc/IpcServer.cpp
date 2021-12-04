@@ -95,7 +95,7 @@ IpcServer::listen()
 void
 IpcServer::handleClientConnecting(const Event&, void*)
 {
-    barrier::IStream* stream = m_socket->accept();
+    inputleap::IStream* stream = m_socket->accept();
     if (stream == NULL) {
         return;
     }

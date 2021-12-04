@@ -138,8 +138,8 @@ private:
     public:
         ScreenOptions    m_options;
     };
-    typedef std::map<std::string, Cell, barrier::string::CaselessCmp> CellMap;
-    typedef std::map<std::string, std::string, barrier::string::CaselessCmp> NameMap;
+    typedef std::map<std::string, Cell, inputleap::string::CaselessCmp> CellMap;
+    typedef std::map<std::string, std::string, inputleap::string::CaselessCmp> NameMap;
 
 public:
     typedef Cell::const_iterator link_const_iterator;

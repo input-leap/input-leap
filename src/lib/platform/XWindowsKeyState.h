@@ -46,7 +46,7 @@ public:
     XWindowsKeyState(IXWindowsImpl* impl, Display*, bool useXKB,
                      IEventQueue* events);
     XWindowsKeyState(IXWindowsImpl* impl, Display*, bool useXKB,
-                     IEventQueue* events, barrier::KeyMap& keyMap);
+                     IEventQueue* events, inputleap::KeyMap& keyMap);
     ~XWindowsKeyState();
 
     //! @name modifiers
@@ -106,19 +106,19 @@ public:
 
 protected:
     // KeyState overrides
-    virtual void        getKeyMap(barrier::KeyMap& keyMap);
+    virtual void        getKeyMap(inputleap::KeyMap& keyMap);
     virtual void        fakeKey(const Keystroke& keystroke);
 
 private:
     void                init(Display* display, bool useXKB);
-    void                updateKeysymMap(barrier::KeyMap&);
-    void                updateKeysymMapXKB(barrier::KeyMap&);
+    void                updateKeysymMap(inputleap::KeyMap&);
+    void                updateKeysymMapXKB(inputleap::KeyMap&);
     bool                hasModifiersXKB() const;
     int                    getEffectiveGroup(KeyCode, int group) const;
     UInt32                getGroupFromState(unsigned int state) const;
 
     static void            remapKeyModifiers(KeyID, SInt32,
-                            barrier::KeyMap::KeyItem&, void*);
+                            inputleap::KeyMap::KeyItem&, void*);
 
 private:
     struct XKBModifierInfo {

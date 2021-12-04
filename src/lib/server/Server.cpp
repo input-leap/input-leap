@@ -56,7 +56,7 @@
 Server::Server(
 		Config& config,
 		PrimaryClient* primaryClient,
-		barrier::Screen* screen,
+		inputleap::Screen* screen,
 		IEventQueue* events,
 		ServerArgs const& args) :
 	m_mock(false),

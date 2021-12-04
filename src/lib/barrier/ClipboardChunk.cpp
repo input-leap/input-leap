@@ -84,7 +84,7 @@ ClipboardChunk::end(ClipboardID id, UInt32 sequence)
 }
 
 int
-ClipboardChunk::assemble(barrier::IStream* stream,
+ClipboardChunk::assemble(inputleap::IStream* stream,
                     String& dataCached,
                     ClipboardID& id,
                     UInt32& sequence)
@@ -97,7 +97,7 @@ ClipboardChunk::assemble(barrier::IStream* stream,
     }
 
     if (mark == kDataStart) {
-        s_expectedSize = barrier::string::stringToSizeType(data);
+        s_expectedSize = inputleap::string::stringToSizeType(data);
         LOG((CLOG_DEBUG "start receiving clipboard data"));
         dataCached.clear();
         return kStart;
@@ -123,7 +123,7 @@ ClipboardChunk::assemble(barrier::IStream* stream,
 }
 
 void
-ClipboardChunk::send(barrier::IStream* stream, void* data)
+ClipboardChunk::send(inputleap::IStream* stream, void* data)
 {
     ClipboardChunk* clipboardData = static_cast<ClipboardChunk*>(data);
 

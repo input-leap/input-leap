@@ -256,7 +256,7 @@ private:
     int                 m_xrandrEventBase;
 
     IEventQueue*        m_events;
-    barrier::KeyMap                m_keyMap;
+    inputleap::KeyMap m_keyMap;
 
     // pointer to (singleton) screen.  this is only needed by
     // ioErrorHandler().

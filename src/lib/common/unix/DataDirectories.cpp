@@ -22,7 +22,7 @@
 #include <sys/types.h> // getpwuid(_r)
 #include <pwd.h>       // getpwuid(_r)
 
-namespace barrier {
+namespace inputleap {
 
 static std::string pw_dir(struct passwd* pwentp)
 {
@@ -113,4 +113,4 @@ const fs::path& DataDirectories::systemconfig(const fs::path& path)
     return _systemconfig;
 }
 
-} // namespace barrier
+} // namespace inputleap

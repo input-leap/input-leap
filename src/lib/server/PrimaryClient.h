@@ -21,7 +21,7 @@
 #include "server/BaseClientProxy.h"
 #include "barrier/protocol_types.h"
 
-namespace barrier { class Screen; }
+namespace inputleap { class Screen; }
 
 //! Primary screen as pseudo-client
 /*!
@@ -34,7 +34,7 @@ public:
     /*!
     \c name is the name of the server and \p screen is primary screen.
     */
-    PrimaryClient(const std::string& name, barrier::Screen* screen);
+    PrimaryClient(const std::string& name, inputleap::Screen* screen);
     ~PrimaryClient();
 
 #ifdef BARRIER_TEST_ENV
@@ -146,11 +146,11 @@ public:
     virtual void        sendDragInfo(UInt32 fileCount, const char* info, size_t size);
     virtual void        fileChunkSending(UInt8 mark, char* data, size_t dataSize);
 
-    virtual barrier::IStream*
+    virtual inputleap::IStream*
                         getStream() const { return NULL; }
     bool                isPrimary() const { return true; }
 private:
-    barrier::Screen*    m_screen;
+    inputleap::Screen* m_screen;
     bool                m_clipboardDirty[kClipboardEnd];
     SInt32                m_fakeInputCount;
 };

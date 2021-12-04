@@ -23,7 +23,7 @@
 
 #define FILE_CHUNK_META_SIZE 2
 
-namespace barrier {
+namespace inputleap {
 class IStream;
 };
 
@@ -35,11 +35,11 @@ public:
     static FileChunk*    data(UInt8* data, size_t dataSize);
     static FileChunk*    end();
     static int            assemble(
-                            barrier::IStream* stream,
+                            inputleap::IStream* stream,
                             String& dataCached,
                             size_t& expectedSize);
     static void            send(
-                            barrier::IStream* stream,
+                            inputleap::IStream* stream,
                             UInt8 mark,
                             char* data,
                             size_t dataSize);

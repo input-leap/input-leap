@@ -1661,10 +1661,10 @@ std::string XWindowsUtil::atomToString(Display* display, Atom atom)
     XWindowsUtil::ErrorLock lock(display, &error);
     char* name = XGetAtomName(display, atom);
     if (error) {
-        return barrier::string::sprintf("<UNKNOWN> (%d)", (int)atom);
+        return inputleap::string::sprintf("<UNKNOWN> (%d)", (int)atom);
     }
     else {
-        std::string msg = barrier::string::sprintf("%s (%d)", name, (int)atom);
+        std::string msg = inputleap::string::sprintf("%s (%d)", name, (int)atom);
         XFree(name);
         return msg;
     }
@@ -1679,12 +1679,12 @@ std::string XWindowsUtil::atomsToString(Display* display, const Atom* atom, UInt
     std::string msg;
     if (error) {
         for (UInt32 i = 0; i < num; ++i) {
-            msg += barrier::string::sprintf("<UNKNOWN> (%d), ", (int)atom[i]);
+            msg += inputleap::string::sprintf("<UNKNOWN> (%d), ", (int)atom[i]);
         }
     }
     else {
         for (UInt32 i = 0; i < num; ++i) {
-            msg += barrier::string::sprintf("%s (%d), ", names[i], (int)atom[i]);
+            msg += inputleap::string::sprintf("%s (%d), ", names[i], (int)atom[i]);
             XFree(names[i]);
         }
     }

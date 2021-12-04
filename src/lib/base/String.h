@@ -27,7 +27,7 @@
 // use standard C++ string class for our string class
 typedef std::string String;
 
-namespace barrier {
+namespace inputleap {
 
 //! std::string utilities
 /*!

@@ -153,7 +153,7 @@ ClientListener::handleClientAccepted(const Event&, void* vsocket)
     IDataSocket* socket = static_cast<IDataSocket*>(vsocket);
 
     // filter socket messages, including a packetizing filter
-    barrier::IStream* stream = new PacketStreamFilter(m_events, socket, false);
+    inputleap::IStream* stream = new PacketStreamFilter(m_events, socket, false);
     assert(m_server != NULL);
 
     // create proxy for unknown client

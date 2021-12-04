@@ -32,7 +32,7 @@
 //
 
 void
-ProtocolUtil::writef(barrier::IStream* stream, const char* fmt, ...)
+ProtocolUtil::writef(inputleap::IStream* stream, const char* fmt, ...)
 {
     assert(stream != NULL);
     assert(fmt != NULL);
@@ -48,7 +48,7 @@ ProtocolUtil::writef(barrier::IStream* stream, const char* fmt, ...)
 }
 
 bool
-ProtocolUtil::readf(barrier::IStream* stream, const char* fmt, ...)
+ProtocolUtil::readf(inputleap::IStream* stream, const char* fmt, ...)
 {
     assert(stream != NULL);
     assert(fmt != NULL);
@@ -69,7 +69,7 @@ ProtocolUtil::readf(barrier::IStream* stream, const char* fmt, ...)
 }
 
 void
-ProtocolUtil::vwritef(barrier::IStream* stream,
+ProtocolUtil::vwritef(inputleap::IStream* stream,
                 const char* fmt, UInt32 size, va_list args)
 {
     assert(stream != NULL);
@@ -98,7 +98,7 @@ ProtocolUtil::vwritef(barrier::IStream* stream,
 }
 
 void
-ProtocolUtil::vreadf(barrier::IStream* stream, const char* fmt, va_list args)
+ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
 {
     assert(stream != NULL);
     assert(fmt != NULL);
@@ -521,7 +521,7 @@ ProtocolUtil::eatLength(const char** pfmt)
 }
 
 void
-ProtocolUtil::read(barrier::IStream* stream, void* vbuffer, UInt32 count)
+ProtocolUtil::read(inputleap::IStream* stream, void* vbuffer, UInt32 count)
 {
     assert(stream != NULL);
     assert(vbuffer != NULL);

@@ -40,7 +40,7 @@ enum EServerState {
 };
 
 class Server;
-namespace barrier { class Screen; }
+namespace inputleap { class Screen; }
 class ClientListener;
 class EventQueueTimer;
 class ILogOutputter;
@@ -81,13 +81,13 @@ public:
     void closeClientListener(ClientListener* listen);
     void stopServer();
     void closePrimaryClient(PrimaryClient* primaryClient);
-    void closeServerScreen(barrier::Screen* screen);
+    void closeServerScreen(inputleap::Screen* screen);
     void cleanupServer();
     bool initServer();
     void retryHandler(const Event&, void*);
-    barrier::Screen* openServerScreen();
-    barrier::Screen* createScreen();
-    PrimaryClient* openPrimaryClient(const String& name, barrier::Screen* screen);
+    inputleap::Screen* openServerScreen();
+    inputleap::Screen* createScreen();
+    PrimaryClient* openPrimaryClient(const String& name, inputleap::Screen* screen);
     void handleScreenError(const Event&, void*);
     void handleSuspend(const Event&, void*);
     void handleResume(const Event&, void*);
@@ -107,7 +107,7 @@ public:
 
     Server*                m_server;
     EServerState        m_serverState;
-    barrier::Screen*    m_serverScreen;
+    inputleap::Screen* m_serverScreen;
     PrimaryClient*        m_primaryClient;
     ClientListener*        m_listener;
     EventQueueTimer*    m_timer;

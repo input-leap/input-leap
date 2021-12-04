@@ -39,7 +39,7 @@
 // ClientProxyUnknown
 //
 
-ClientProxyUnknown::ClientProxyUnknown(barrier::IStream* stream, double timeout, Server* server, IEventQueue* events) :
+ClientProxyUnknown::ClientProxyUnknown(inputleap::IStream* stream, double timeout, Server* server, IEventQueue* events) :
     m_stream(stream),
     m_proxy(NULL),
     m_ready(false),

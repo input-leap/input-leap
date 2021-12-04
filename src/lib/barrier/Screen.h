@@ -30,7 +30,7 @@ class IClipboard;
 class IPlatformScreen;
 class IEventQueue;
 
-namespace barrier {
+namespace inputleap {
 
 //! Platform independent screen
 /*!

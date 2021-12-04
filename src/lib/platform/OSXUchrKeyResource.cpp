@@ -201,7 +201,7 @@ OSXUchrKeyResource::getDeadKey(
 
     // convert keys to their dead counterparts
     for (KeySequence::iterator i = keys.begin(); i != keys.end(); ++i) {
-        *i = barrier::KeyMap::getDeadKey(*i);
+        *i = inputleap::KeyMap::getDeadKey(*i);
     }
 
     return true;

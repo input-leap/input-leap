@@ -24,7 +24,7 @@
 #include <cctype>
 #include <cstdlib>
 
-namespace barrier {
+namespace inputleap {
 
 KeyMap::NameToKeyMap*            KeyMap::s_nameToKeyMap      = NULL;
 KeyMap::NameToModifierMap*        KeyMap::s_nameToModifierMap = NULL;
@@ -1174,7 +1174,7 @@ KeyMap::formatKey(KeyID key, KeyModifierMask mask)
             x += (char)key;
         }
         else {
-            x += barrier::string::sprintf("\\u%04x", key);
+            x += inputleap::string::sprintf("\\u%04x", key);
         }
     }
     else if (!x.empty()) {

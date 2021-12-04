@@ -37,7 +37,7 @@ signals:
     void generateFinished();
 
 private:
-    void generate_fingerprint(const barrier::fs::path& cert_path);
+    void generate_fingerprint(const inputleap::fs::path& cert_path);
 
-    bool is_certificate_valid(const barrier::fs::path& path);
+    bool is_certificate_valid(const inputleap::fs::path& path);
 };

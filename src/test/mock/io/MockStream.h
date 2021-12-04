@@ -24,7 +24,7 @@
 
 class IEventQueue;
 
-class MockStream : public barrier::IStream
+class MockStream : public inputleap::IStream
 {
 public:
     MockStream() { }

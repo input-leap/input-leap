@@ -23,7 +23,7 @@
 
 #include <stdarg.h>
 
-namespace barrier { class IStream; }
+namespace inputleap { class IStream; }
 
 //! Barrier protocol utilities
 /*!
@@ -50,8 +50,7 @@ public:
     - \%s   -- converts std::string* to stream of bytes
     - \%S   -- converts integer N and const UInt8* to stream of N bytes
     */
-    static void            writef(barrier::IStream*,
-                            const char* fmt, ...);
+    static void writef(inputleap::IStream*, const char* fmt, ...);
 
     //! Read formatted data
     /*!
@@ -69,19 +68,16 @@ public:
     - \%4I  -- reads NBO 4 byte integers;  arg is std::vector<UInt32>*
     - \%s   -- reads bytes;  argument must be a std::string*, \b not a char*
     */
-    static bool            readf(barrier::IStream*,
-                            const char* fmt, ...);
+    static bool readf(inputleap::IStream*, const char* fmt, ...);
 
 private:
-    static void            vwritef(barrier::IStream*,
-                            const char* fmt, UInt32 size, va_list);
-    static void            vreadf(barrier::IStream*,
-                            const char* fmt, va_list);
+    static void vwritef(inputleap::IStream*, const char* fmt, UInt32 size, va_list);
+    static void vreadf(inputleap::IStream*, const char* fmt, va_list);
 
     static UInt32        getLength(const char* fmt, va_list);
     static void            writef_void(void*, const char* fmt, va_list);
     static UInt32        eatLength(const char** fmt);
-    static void            read(barrier::IStream*, void*, UInt32);
+    static void            read(inputleap::IStream*, void*, UInt32);
 };
 
 //! Mismatched read exception

@@ -21,7 +21,7 @@
 #include <algorithm>
 #include <fstream>
 
-namespace barrier {
+namespace inputleap {
 
 void FingerprintDatabase::read(const fs::path& path)
 {
@@ -132,4 +132,4 @@ std::string FingerprintDatabase::to_db_line(const FingerprintData& fingerprint)
     return "v2:" + fingerprint.algorithm + ":" + string::to_hex(fingerprint.data, 2);
 }
 
-} // namespace barrier
+} // namespace inputleap

@@ -30,7 +30,7 @@ Filters a stream to read and write packets.
 */
 class PacketStreamFilter : public StreamFilter {
 public:
-    PacketStreamFilter(IEventQueue* events, barrier::IStream* stream, bool adoptStream = true);
+    PacketStreamFilter(IEventQueue* events, inputleap::IStream* stream, bool adoptStream = true);
     ~PacketStreamFilter();
 
     // IStream overrides

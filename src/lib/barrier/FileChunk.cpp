@@ -68,7 +68,7 @@ FileChunk::end()
 }
 
 int
-FileChunk::assemble(barrier::IStream* stream, String& dataReceived, size_t& expectedSize)
+FileChunk::assemble(inputleap::IStream* stream, String& dataReceived, size_t& expectedSize)
 {
     // parse
     UInt8 mark = 0;
@@ -84,7 +84,7 @@ FileChunk::assemble(barrier::IStream* stream, String& dataReceived, size_t& expe
     switch (mark) {
     case kDataStart:
         dataReceived.clear();
-        expectedSize = barrier::string::stringToSizeType(content);
+        expectedSize = inputleap::string::stringToSizeType(content);
         receivedDataSize = 0;
         elapsedTime = 0;
         stopwatch.reset();
@@ -134,7 +134,7 @@ FileChunk::assemble(barrier::IStream* stream, String& dataReceived, size_t& expe
 }
 
 void
-FileChunk::send(barrier::IStream* stream, UInt8 mark, char* data, size_t dataSize)
+FileChunk::send(inputleap::IStream* stream, UInt8 mark, char* data, size_t dataSize)
 {
     String chunk(data, dataSize);
 

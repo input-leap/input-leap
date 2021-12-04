@@ -18,7 +18,7 @@
 #include "net/FingerprintDatabase.h"
 #include "test/global/gtest.h"
 
-namespace barrier {
+namespace inputleap {
 
 TEST(FingerprintDatabase, parse_db_line)
 {
@@ -92,4 +92,4 @@ TEST(FingerprintDatabase, is_trusted)
     ASSERT_FALSE(db.is_trusted({ "algo1", { 1, 2, 3, 4, 0xac } }));
 }
 
-} // namespace barrier
+} // namespace inputleap

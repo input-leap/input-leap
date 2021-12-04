@@ -36,7 +36,7 @@ This class maps KeyIDs to keystrokes.
 class MSWindowsKeyState : public KeyState {
 public:
 	MSWindowsKeyState(MSWindowsDesks* desks, void* eventTarget, IEventQueue* events);
-	MSWindowsKeyState(MSWindowsDesks* desks, void* eventTarget, IEventQueue* events, barrier::KeyMap& keyMap);
+	MSWindowsKeyState(MSWindowsDesks* desks, void* eventTarget, IEventQueue* events, inputleap::KeyMap& keyMap);
 	virtual ~MSWindowsKeyState();
 
 	//! @name manipulators
@@ -160,7 +160,7 @@ public:
 
 protected:
 	// KeyState overrides
-	virtual void		getKeyMap(barrier::KeyMap& keyMap);
+	virtual void		getKeyMap(inputleap::KeyMap& keyMap);
 	virtual void		fakeKey(const Keystroke& keystroke);
 	virtual KeyModifierMask&
 						getActiveModifiersRValue();
@@ -174,11 +174,11 @@ private:
 	bool				getGroups(GroupList&) const;
 	void				setWindowGroup(SInt32 group);
 
-	KeyID				getIDForKey(barrier::KeyMap::KeyItem& item,
+	KeyID				getIDForKey(inputleap::KeyMap::KeyItem& item,
 							KeyButton button, UINT virtualKey,
 							PBYTE keyState, HKL hkl) const;
 
-	void				addKeyEntry(barrier::KeyMap& keyMap, barrier::KeyMap::KeyItem& item);
+	void				addKeyEntry(inputleap::KeyMap& keyMap, inputleap::KeyMap::KeyItem& item);
 
 	void				init();
 

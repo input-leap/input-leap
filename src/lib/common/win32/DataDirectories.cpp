@@ -20,7 +20,7 @@
 
 #include <Shlobj.h>
 
-namespace barrier {
+namespace inputleap {
 
 fs::path known_folder_path(const KNOWNFOLDERID& id)
 {
@@ -74,4 +74,4 @@ const fs::path& DataDirectories::systemconfig(const fs::path& path)
     return _systemconfig;
 }
 
-} // namespace barrier
+} // namespace inputleap

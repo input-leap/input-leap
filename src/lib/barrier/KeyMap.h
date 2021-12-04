@@ -28,7 +28,7 @@
 #include <gtest/gtest_prod.h>
 #endif
 
-namespace barrier {
+namespace inputleap {
 
 //! Key map
 /*!
@@ -485,9 +485,9 @@ private:
 
     // Key maps for parsing/formatting
     typedef std::map<String, KeyID,
-                            barrier::string::CaselessCmp> NameToKeyMap;
+                            inputleap::string::CaselessCmp> NameToKeyMap;
     typedef std::map<String, KeyModifierMask,
-                            barrier::string::CaselessCmp> NameToModifierMap;
+                            inputleap::string::CaselessCmp> NameToModifierMap;
     typedef std::map<KeyID, String> KeyToNameMap;
     typedef std::map<KeyModifierMask, String> ModifierToNameMap;
 

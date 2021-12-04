@@ -20,7 +20,7 @@
 
 #include "barrier/IClient.h"
 
-namespace barrier { class IStream; }
+namespace inputleap { class IStream; }
 
 //! Generic proxy for client or primary
 class BaseClientProxy : public IClient {
@@ -89,7 +89,7 @@ public:
                             size_t size) = 0;
     virtual void        fileChunkSending(UInt8 mark, char* data, size_t dataSize) = 0;
     virtual std::string getName() const;
-    virtual barrier::IStream*
+    virtual inputleap::IStream*
                         getStream() const = 0;
 
 private:

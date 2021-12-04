@@ -23,7 +23,7 @@
 #include <ios>
 #include <ghc/fs_fwd.hpp>
 
-namespace barrier {
+namespace inputleap {
 
 namespace fs = ghc::filesystem;
 
@@ -36,6 +36,6 @@ void open_utf8_path(std::fstream& stream, const fs::path& path,
 
 std::FILE* fopen_utf8_path(const fs::path& path, const std::string& mode);
 
-} // namespace barrier
+} // namespace inputleap
 
 #endif // BARRIER_LIB_IO_FILESYSTEM_H

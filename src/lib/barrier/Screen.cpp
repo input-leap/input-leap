@@ -24,7 +24,7 @@
 #include "server/ClientProxy.h"
 #include "base/TMethodEventJob.h"
 
-namespace barrier {
+namespace inputleap {
 
 //
 // Screen

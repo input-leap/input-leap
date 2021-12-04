@@ -163,7 +163,7 @@ App::initApp(int argc, const char** argv)
     // parse command line
     parseArgs(argc, argv);
 
-    barrier::DataDirectories::profile(argsBase().m_profileDirectory);
+    inputleap::DataDirectories::profile(argsBase().m_profileDirectory);
 
     // set log filter
     if (!CLOG->setFilter(argsBase().m_logFilter)) {
@@ -283,7 +283,7 @@ MinimalApp::foregroundStartup(int argc, char** argv)
     return 0;
 }
 
-barrier::Screen*
+inputleap::Screen*
 MinimalApp::createScreen()
 {
     return NULL;

@@ -36,14 +36,14 @@ public:
     }
 
     MockKeyState(const MockEventQueue& eventQueue, const MockKeyMap& keyMap) :
-        KeyState((IEventQueue*)&eventQueue, (barrier::KeyMap&)keyMap)
+        KeyState((IEventQueue*)&eventQueue, (inputleap::KeyMap&)keyMap)
     {
     }
 
     MOCK_CONST_METHOD0(pollActiveGroup, SInt32());
     MOCK_CONST_METHOD0(pollActiveModifiers, KeyModifierMask());
     MOCK_METHOD0(fakeCtrlAltDel, bool());
-    MOCK_METHOD1(getKeyMap, void(barrier::KeyMap&));
+    MOCK_METHOD1(getKeyMap, void(inputleap::KeyMap&));
     MOCK_METHOD1(fakeKey, void(const Keystroke&));
     MOCK_METHOD1(fakeMediaKey, bool(KeyID));
     MOCK_CONST_METHOD1(pollPressedKeys, void(KeyButtonSet&));
@@ -54,4 +54,4 @@ typedef ::testing::NiceMock<MockKeyState> KeyStateImpl;
 typedef UInt32 KeyID;
 
 typedef void (*ForeachKeyCallback)(
-        KeyID, SInt32 group, barrier::KeyMap::KeyItem&, void* userData);
+        KeyID, SInt32 group, inputleap::KeyMap::KeyItem&, void* userData);

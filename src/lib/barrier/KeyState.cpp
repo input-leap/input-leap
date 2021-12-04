@@ -385,7 +385,7 @@ static const KeyID s_numpadTable[] = {
 
 KeyState::KeyState(IEventQueue* events) :
     IKeyState(events),
-    m_keyMapPtr(new barrier::KeyMap()),
+    m_keyMapPtr(new inputleap::KeyMap()),
     m_keyMap(*m_keyMapPtr),
     m_mask(0),
     m_events(events)
@@ -393,7 +393,7 @@ KeyState::KeyState(IEventQueue* events) :
     init();
 }
 
-KeyState::KeyState(IEventQueue* events, barrier::KeyMap& keyMap) :
+KeyState::KeyState(IEventQueue* events, inputleap::KeyMap& keyMap) :
     IKeyState(events),
     m_keyMapPtr(0),
     m_keyMap(keyMap),
@@ -479,7 +479,7 @@ void
 KeyState::updateKeyMap()
 {
     // get the current keyboard map
-    barrier::KeyMap keyMap;
+    inputleap::KeyMap keyMap;
     getKeyMap(keyMap);
     m_keyMap.swap(keyMap);
     m_keyMap.finish();
@@ -521,7 +521,7 @@ KeyState::updateKeyState()
 
 void
 KeyState::addActiveModifierCB(KeyID, SInt32 group,
-                barrier::KeyMap::KeyItem& keyItem, void* vcontext)
+                inputleap::KeyMap::KeyItem& keyItem, void* vcontext)
 {
     AddActiveModifierContext* context =
         static_cast<AddActiveModifierContext*>(vcontext);
@@ -567,7 +567,7 @@ KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
     // get keys for key press
     Keystrokes keys;
     ModifierToKeys oldActiveModifiers = m_activeModifiers;
-    const barrier::KeyMap::KeyItem* keyItem =
+    const inputleap::KeyMap::KeyItem* keyItem =
         m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers,
                                 getActiveModifiersRValue(), mask, false);
     if (keyItem == NULL) {
@@ -615,7 +615,7 @@ KeyState::fakeKeyRepeat(
     // get keys for key repeat
     Keystrokes keys;
     ModifierToKeys oldActiveModifiers = m_activeModifiers;
-    const barrier::KeyMap::KeyItem* keyItem =
+    const inputleap::KeyMap::KeyItem* keyItem =
         m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers,
                                 getActiveModifiersRValue(), mask, true);
     if (keyItem == NULL) {
@@ -770,7 +770,7 @@ KeyState::isIgnoredKey(KeyID key, KeyModifierMask) const
 KeyButton
 KeyState::getButton(KeyID id, SInt32 group) const
 {
-    const barrier::KeyMap::KeyItemList* items =
+    const inputleap::KeyMap::KeyItemList* items =
         m_keyMap.findCompatibleKey(id, group, 0, 0);
     if (items == NULL) {
         return 0;
@@ -882,7 +882,7 @@ KeyState::updateModifierKeyState(KeyButton button,
                 const ModifierToKeys& newModifiers)
 {
     // get the pressed modifier buttons before and after
-    barrier::KeyMap::ButtonToKeyMap oldKeys, newKeys;
+    inputleap::KeyMap::ButtonToKeyMap oldKeys, newKeys;
     for (ModifierToKeys::const_iterator i = oldModifiers.begin();
                                 i != oldModifiers.end(); ++i) {
         oldKeys.insert(std::make_pair(i->second.m_button, &i->second));
@@ -893,7 +893,7 @@ KeyState::updateModifierKeyState(KeyButton button,
     }
 
     // get the modifier buttons that were pressed or released
-    barrier::KeyMap::ButtonToKeyMap pressed, released;
+    inputleap::KeyMap::ButtonToKeyMap pressed, released;
     std::set_difference(oldKeys.begin(), oldKeys.end(),
                         newKeys.begin(), newKeys.end(),
                         std::inserter(released, released.end()),
@@ -904,14 +904,14 @@ KeyState::updateModifierKeyState(KeyButton button,
                         ButtonToKeyLess());
 
     // update state
-    for (barrier::KeyMap::ButtonToKeyMap::const_iterator i = released.begin();
+    for (inputleap::KeyMap::ButtonToKeyMap::const_iterator i = released.begin();
                                 i != released.end(); ++i) {
         if (i->first != button) {
             m_keys[i->first]          = 0;
             m_syntheticKeys[i->first] = 0;
         }
     }
-    for (barrier::KeyMap::ButtonToKeyMap::const_iterator i = pressed.begin();
+    for (inputleap::KeyMap::ButtonToKeyMap::const_iterator i = pressed.begin();
                                 i != pressed.end(); ++i) {
         if (i->first != button) {
             m_keys[i->first]          = 1;

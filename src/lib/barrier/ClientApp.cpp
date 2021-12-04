@@ -157,19 +157,19 @@ ClientApp::daemonInfo() const
 #endif
 }
 
-barrier::Screen*
+inputleap::Screen*
 ClientApp::createScreen()
 {
 #if WINAPI_MSWINDOWS
-    return new barrier::Screen(new MSWindowsScreen(
+    return new inputleap::Screen(new MSWindowsScreen(
         false, args().m_noHooks, args().m_stopOnDeskSwitch, m_events), m_events);
 #elif WINAPI_XWINDOWS
-    return new barrier::Screen(new XWindowsScreen(
+    return new inputleap::Screen(new XWindowsScreen(
         new XWindowsImpl(),
         args().m_display, false, args().m_disableXInitThreads,
         args().m_yscroll, m_events), m_events);
 #elif WINAPI_CARBON
-    return new barrier::Screen(new OSXScreen(m_events, false), m_events);
+    return new inputleap::Screen(new OSXScreen(m_events, false), m_events);
 #endif
 }
 
@@ -229,10 +229,10 @@ ClientApp::handleScreenError(const Event&, void*)
 }
 
 
-barrier::Screen*
+inputleap::Screen*
 ClientApp::openClientScreen()
 {
-    barrier::Screen* screen = createScreen();
+    inputleap::Screen* screen = createScreen();
     if (!argsBase().m_dropTarget.empty()) {
         screen->setDropTarget(argsBase().m_dropTarget);
     }
@@ -246,7 +246,7 @@ ClientApp::openClientScreen()
 
 
 void
-ClientApp::closeClientScreen(barrier::Screen* screen)
+ClientApp::closeClientScreen(inputleap::Screen* screen)
 {
     if (screen != NULL) {
         m_events->removeHandler(m_events->forIScreen().error(),
@@ -327,7 +327,7 @@ ClientApp::handleClientDisconnected(const Event&, void*)
 
 Client*
 ClientApp::openClient(const String& name, const NetworkAddress& address,
-                barrier::Screen* screen)
+                inputleap::Screen* screen)
 {
     Client* client = new Client(
         m_events,
@@ -388,7 +388,7 @@ bool
 ClientApp::startClient()
 {
     double retryTime;
-    barrier::Screen* clientScreen = NULL;
+    inputleap::Screen* clientScreen = NULL;
     try {
         if (m_clientScreen == NULL) {
             clientScreen = openClientScreen();

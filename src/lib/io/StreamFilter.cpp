@@ -24,7 +24,7 @@
 // StreamFilter
 //
 
-StreamFilter::StreamFilter(IEventQueue* events, barrier::IStream* stream, bool adoptStream) :
+StreamFilter::StreamFilter(IEventQueue* events, inputleap::IStream* stream, bool adoptStream) :
     m_stream(stream),
     m_adopted(adoptStream),
     m_events(events)
@@ -98,7 +98,7 @@ StreamFilter::getSize() const
     return getStream()->getSize();
 }
 
-barrier::IStream*
+inputleap::IStream*
 StreamFilter::getStream() const
 {
     return m_stream;

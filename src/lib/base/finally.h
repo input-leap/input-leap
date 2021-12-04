@@ -20,7 +20,7 @@
 
 #include <utility>
 
-namespace barrier {
+namespace inputleap {
 
 // this implements a common pattern of executing an action at the end of function
 
@@ -56,6 +56,6 @@ inline final_action<Callable> finally(Callable&& callable) noexcept
     return final_action<Callable>(std::forward<Callable>(callable));
 }
 
-} // namespace barrier
+} // namespace inputleap
 
 #endif // BARRIER_LIB_BASE_FINALLY_H

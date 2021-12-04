@@ -36,16 +36,16 @@ stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys);
 void
 assertMaskIsOne(ForeachKeyCallback cb, void* userData);
 
-const barrier::KeyMap::KeyItem*
+const inputleap::KeyMap::KeyItem*
 stubMapKey(
-           barrier::KeyMap::Keystrokes& keys, KeyID id, SInt32 group,
-           barrier::KeyMap::ModifierToKeys& activeModifiers,
+           inputleap::KeyMap::Keystrokes& keys, KeyID id, SInt32 group,
+           inputleap::KeyMap::ModifierToKeys& activeModifiers,
            KeyModifierMask& currentState,
            KeyModifierMask desiredMask,
            bool isAutoRepeat);
 
-barrier::KeyMap::Keystroke s_stubKeystroke(1, false, false);
-barrier::KeyMap::KeyItem s_stubKeyItem;
+inputleap::KeyMap::Keystroke s_stubKeystroke(1, false, false);
+inputleap::KeyMap::KeyItem s_stubKeyItem;
 
 TEST(CKeyStateTests, onKey_aKeyDown_keyStateOne)
 {
@@ -324,14 +324,14 @@ TEST(KeyStateTests, fakeKeyRepeat_nullKey_returnsFalse)
     KeyStateImpl keyState(eventQueue, keyMap);
 
     // set the key to down (we need to make mapKey return a valid key to do this).
-    barrier::KeyMap::KeyItem keyItem;
+    inputleap::KeyMap::KeyItem keyItem;
     keyItem.m_client = 0;
     keyItem.m_button = 1;
     ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
     keyState.fakeKeyDown(1, 0, 0);
 
     // change mapKey to return NULL so that fakeKeyRepeat exits early.
-    barrier::KeyMap::KeyItem* nullKeyItem = NULL;
+    inputleap::KeyMap::KeyItem* nullKeyItem = NULL;
     ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(nullKeyItem));
 
     bool actual = keyState.fakeKeyRepeat(1, 0, 0, 0);
@@ -346,7 +346,7 @@ TEST(KeyStateTests, fakeKeyRepeat_invalidButton_returnsFalse)
     KeyStateImpl keyState(eventQueue, keyMap);
 
     // set the key to down (we need to make mapKey return a valid key to do this).
-    barrier::KeyMap::KeyItem keyItem;
+    inputleap::KeyMap::KeyItem keyItem;
     keyItem.m_client = 0;
     keyItem.m_button = 1; // set to 1 to make fakeKeyDown work.
     ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
@@ -367,7 +367,7 @@ TEST(KeyStateTests, fakeKeyRepeat_validKey_returnsTrue)
     MockEventQueue eventQueue;
     KeyStateImpl keyState(eventQueue, keyMap);
     s_stubKeyItem.m_client = 0;
-    s_stubKeystroke.m_type = barrier::KeyMap::Keystroke::kButton;
+    s_stubKeystroke.m_type = inputleap::KeyMap::Keystroke::kButton;
     s_stubKeystroke.m_data.m_button.m_button = 2;
 
     // set the button to 1 for fakeKeyDown call
@@ -475,10 +475,10 @@ assertMaskIsOne(ForeachKeyCallback cb, void* userData)
     ASSERT_EQ(1, ((KeyState::AddActiveModifierContext*)userData)->m_mask);
 }
 
-const barrier::KeyMap::KeyItem*
+const inputleap::KeyMap::KeyItem*
 stubMapKey(
-    barrier::KeyMap::Keystrokes& keys, KeyID id, SInt32 group,
-    barrier::KeyMap::ModifierToKeys& activeModifiers,
+    inputleap::KeyMap::Keystrokes& keys, KeyID id, SInt32 group,
+    inputleap::KeyMap::ModifierToKeys& activeModifiers,
     KeyModifierMask& currentState,
     KeyModifierMask desiredMask,
     bool isAutoRepeat)

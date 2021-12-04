@@ -27,7 +27,7 @@ class Client;
 class ClientInfo;
 class EventQueueTimer;
 class IClipboard;
-namespace barrier { class IStream; }
+namespace inputleap { class IStream; }
 class IEventQueue;
 
 //! Proxy for server
@@ -41,7 +41,7 @@ public:
     Process messages from the server on \p stream and forward to
     \p client.
     */
-    ServerProxy(Client* client, barrier::IStream* stream, IEventQueue* events);
+    ServerProxy(Client* client, inputleap::IStream* stream, IEventQueue* events);
     ~ServerProxy();
 
     //! @name manipulators
@@ -111,7 +111,7 @@ private:
     typedef EResult (ServerProxy::*MessageParser)(const UInt8*);
 
     Client*            m_client;
-    barrier::IStream*    m_stream;
+    inputleap::IStream* m_stream;
 
     UInt32                m_seqNum;
 

@@ -20,7 +20,7 @@
 
 #include "io/filesystem.h"
 
-namespace barrier {
+namespace inputleap {
 
 class DataDirectories
 {
@@ -45,6 +45,6 @@ private:
     static fs::path _systemconfig;
 };
 
-} // namespace barrier
+} // namespace inputleap
 
 #endif

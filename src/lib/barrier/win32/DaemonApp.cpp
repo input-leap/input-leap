@@ -244,7 +244,7 @@ DaemonApp::logFilename()
 {
     string logFilename = ARCH->setting("LogFilename");
     if (logFilename.empty())
-        logFilename = (barrier::DataDirectories::global() / LOG_FILENAME).u8string();
+        logFilename = (inputleap::DataDirectories::global() / LOG_FILENAME).u8string();
     MSWindowsUtil::createDirectory(logFilename, true);
     return logFilename;
 }

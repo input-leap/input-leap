@@ -20,7 +20,7 @@
 #include "test/global/gtest.h"
 #include "test/global/TestUtils.h"
 
-namespace barrier {
+namespace inputleap {
 
 TEST(SecureUtilsTest, FormatSslFingerprintHexWithSeparators)
 {
@@ -70,4 +70,4 @@ TEST(SecureUtilsTest, CreateFingerprintRandomArt)
               "+-----------------+");
 }
 
-} // namespace barrier
+} // namespace inputleap

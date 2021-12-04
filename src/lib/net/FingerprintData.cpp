@@ -21,7 +21,7 @@
 #include <algorithm>
 #include <fstream>
 
-namespace barrier {
+namespace inputleap {
 
 bool FingerprintData::operator==(const FingerprintData& other) const
 {
@@ -49,4 +49,4 @@ FingerprintType fingerprint_type_from_string(const std::string& type)
     return FingerprintType::INVALID;
 }
 
-} // namespace barrier
+} // namespace inputleap

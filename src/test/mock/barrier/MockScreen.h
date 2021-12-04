@@ -23,10 +23,10 @@
 
 #include "test/global/gmock.h"
 
-class MockScreen : public barrier::Screen
+class MockScreen : public inputleap::Screen
 {
 public:
-    MockScreen() : barrier::Screen() { }
+    MockScreen() : inputleap::Screen() { }
     MOCK_METHOD0(disable, void());
     MOCK_CONST_METHOD4(getShape, void(SInt32&, SInt32&, SInt32&, SInt32&));
     MOCK_CONST_METHOD2(getCursorPos, void(SInt32&, SInt32&));

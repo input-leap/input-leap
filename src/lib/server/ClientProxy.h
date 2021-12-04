@@ -22,7 +22,7 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 
-namespace barrier { class IStream; }
+namespace inputleap { class IStream; }
 
 //! Generic proxy for client
 class ClientProxy : public BaseClientProxy {
@@ -30,7 +30,7 @@ public:
     /*!
     \c name is the name of the client.
     */
-    ClientProxy(const std::string& name, barrier::IStream* adoptedStream);
+    ClientProxy(const std::string& name, inputleap::IStream* adoptedStream);
     ~ClientProxy();
 
     //! @name manipulators
@@ -50,7 +50,7 @@ public:
     /*!
     Returns the original stream passed to the c'tor.
     */
-    barrier::IStream*    getStream() const;
+    inputleap::IStream* getStream() const;
 
     //@}
 
@@ -86,5 +86,5 @@ public:
     virtual void        fileChunkSending(UInt8 mark, char* data, size_t dataSize) = 0;
 
 private:
-    barrier::IStream*    m_stream;
+    inputleap::IStream* m_stream;
 };

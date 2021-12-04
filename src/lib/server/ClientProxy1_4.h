@@ -25,7 +25,7 @@ class Server;
 //! Proxy for client implementing protocol version 1.4
 class ClientProxy1_4 : public ClientProxy1_3 {
 public:
-    ClientProxy1_4(const std::string& name, barrier::IStream* adoptedStream, Server* server,
+    ClientProxy1_4(const std::string& name, inputleap::IStream* adoptedStream, Server* server,
                    IEventQueue* events);
     ~ClientProxy1_4();
 

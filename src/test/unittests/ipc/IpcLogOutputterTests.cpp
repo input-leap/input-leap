@@ -38,7 +38,7 @@ using ::testing::Property;
 using ::testing::StrEq;
 using ::testing::AtLeast;
 
-using namespace barrier;
+using namespace inputleap;
 
 inline const Matcher<const IpcMessage&> IpcLogLineMessageEq(const String& s) {
     const Matcher<const IpcLogLineMessage&> m(

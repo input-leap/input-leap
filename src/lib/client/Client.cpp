@@ -50,7 +50,7 @@
 
 Client::Client(IEventQueue* events, const std::string& name, const NetworkAddress& address,
                ISocketFactory* socketFactory,
-               barrier::Screen* screen,
+               inputleap::Screen* screen,
                ClientArgs const& args) :
     m_mock(false),
     m_name(name),

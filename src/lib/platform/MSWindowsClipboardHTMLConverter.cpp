@@ -62,11 +62,11 @@ std::string MSWindowsClipboardHTMLConverter::doFromIClipboard(const std::string&
     UInt32 EndHTML = EndFragment + (UInt32)suffix.size();
 
     prefix.replace(prefix.find("XXXXXXXXXX"), 10,
-                            barrier::string::sprintf("%010u", StartFragment));
+                            inputleap::string::sprintf("%010u", StartFragment));
     prefix.replace(prefix.find("YYYYYYYYYY"), 10,
-                            barrier::string::sprintf("%010u", EndFragment));
+                            inputleap::string::sprintf("%010u", EndFragment));
     prefix.replace(prefix.find("ZZZZZZZZZZ"), 10,
-                            barrier::string::sprintf("%010u", EndHTML));
+                            inputleap::string::sprintf("%010u", EndHTML));
 
     // concatenate
     prefix += data;

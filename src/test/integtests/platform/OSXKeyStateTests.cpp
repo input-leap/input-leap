@@ -40,7 +40,7 @@ public:
 
 TEST_F(OSXKeyStateTests, fakeAndPoll_shift)
 {
-    barrier::KeyMap keyMap;
+    inputleap::KeyMap keyMap;
     MockEventQueue eventQueue;
     OSXKeyState keyState(&eventQueue, keyMap);
     keyState.updateKeyMap();
@@ -60,7 +60,7 @@ TEST_F(OSXKeyStateTests, fakeAndPoll_shift)
 
 TEST_F(OSXKeyStateTests, fakeAndPoll_charKey)
 {
-    barrier::KeyMap keyMap;
+    inputleap::KeyMap keyMap;
     MockEventQueue eventQueue;
     OSXKeyState keyState(&eventQueue, keyMap);
     keyState.updateKeyMap();
@@ -79,7 +79,7 @@ TEST_F(OSXKeyStateTests, fakeAndPoll_charKey)
 
 TEST_F(OSXKeyStateTests, fakeAndPoll_charKeyAndModifier)
 {
-    barrier::KeyMap keyMap;
+    inputleap::KeyMap keyMap;
     MockEventQueue eventQueue;
     OSXKeyState keyState(&eventQueue, keyMap);
     keyState.updateKeyMap();

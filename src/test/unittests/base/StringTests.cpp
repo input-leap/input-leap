@@ -19,7 +19,7 @@
 
 #include "test/global/gtest.h"
 
-using namespace barrier;
+using namespace inputleap;
 
 TEST(StringTests, format_formatWithArguments_formatedString)
 {

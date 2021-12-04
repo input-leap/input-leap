@@ -30,7 +30,7 @@
 // IpcClientProxy
 //
 
-IpcClientProxy::IpcClientProxy(barrier::IStream& stream, IEventQueue* events) :
+IpcClientProxy::IpcClientProxy(inputleap::IStream& stream, IEventQueue* events) :
     m_stream(stream),
     m_clientType(kIpcClientUnknown),
     m_disconnecting(false),

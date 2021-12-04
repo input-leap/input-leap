@@ -29,7 +29,7 @@ using ::testing::Return;
 using ::testing::ReturnRef;
 using ::testing::SaveArg;
 
-namespace barrier {
+namespace inputleap {
 
 TEST(KeyMapTests, findBestKey_requiredDown_matchExactFirstItem)
 {

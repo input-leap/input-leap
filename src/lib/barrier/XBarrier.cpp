@@ -53,8 +53,8 @@ int XIncompatibleClient::getMinor() const noexcept
 String XIncompatibleClient::getWhat() const noexcept
 {
     return format("XIncompatibleClient", "incompatible client %{1}.%{2}",
-                                barrier::string::sprintf("%d", m_major).c_str(),
-                                barrier::string::sprintf("%d", m_minor).c_str());
+                                inputleap::string::sprintf("%d", m_major).c_str(),
+                                inputleap::string::sprintf("%d", m_minor).c_str());
 }
 
 
@@ -119,5 +119,5 @@ String XExitApp::getWhat() const noexcept
 {
     return format(
         "XExitApp", "exiting with code %{1}",
-        barrier::string::sprintf("%d", m_code).c_str());
+        inputleap::string::sprintf("%d", m_code).c_str());
 }

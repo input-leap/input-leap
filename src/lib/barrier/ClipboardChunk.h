@@ -24,7 +24,7 @@
 
 #define CLIPBOARD_CHUNK_META_SIZE 7
 
-namespace barrier {
+namespace inputleap {
 class IStream;
 };
 
@@ -46,12 +46,12 @@ public:
                         end(ClipboardID id, UInt32 sequence);
 
     static int            assemble(
-                            barrier::IStream* stream,
+                            inputleap::IStream* stream,
                             String& dataCached,
                             ClipboardID& id,
                             UInt32& sequence);
 
-    static void            send(barrier::IStream* stream, void* data);
+    static void            send(inputleap::IStream* stream, void* data);
 
     static size_t        getExpectedSize() { return s_expectedSize; }
 

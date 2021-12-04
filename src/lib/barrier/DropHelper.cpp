@@ -36,7 +36,7 @@ DropHelper::writeToDir(const String& destination, DragFileList& fileList, String
         dropTarget.append("/");
 #endif
         dropTarget.append(fileList.at(0).getFilename());
-        barrier::open_utf8_path(file, dropTarget, std::ios::out | std::ios::binary);
+        inputleap::open_utf8_path(file, dropTarget, std::ios::out | std::ios::binary);
         if (!file.is_open()) {
             LOG((CLOG_ERR "drop file failed: can not open %s", dropTarget.c_str()));
         }

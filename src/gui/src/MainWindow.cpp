@@ -433,31 +433,31 @@ void MainWindow::checkFingerprint(const QString& line)
         return;
     }
 
-    barrier::FingerprintData fingerprint_sha1 = {
-        barrier::fingerprint_type_to_string(barrier::FingerprintType::SHA1),
-        barrier::string::from_hex(fingerprintRegex.cap(1).toStdString())
+    inputleap::FingerprintData fingerprint_sha1 = {
+        inputleap::fingerprint_type_to_string(inputleap::FingerprintType::SHA1),
+        inputleap::string::from_hex(fingerprintRegex.cap(1).toStdString())
     };
 
-    barrier::FingerprintData fingerprint_sha256 = {
-        barrier::fingerprint_type_to_string(barrier::FingerprintType::SHA256),
-        barrier::string::from_hex(fingerprintRegex.cap(2).toStdString())
+    inputleap::FingerprintData fingerprint_sha256 = {
+        inputleap::fingerprint_type_to_string(inputleap::FingerprintType::SHA256),
+        inputleap::string::from_hex(fingerprintRegex.cap(2).toStdString())
     };
 
     bool is_client = barrier_type() == BarrierType::Client;
 
     auto db_path = is_client
-            ? barrier::DataDirectories::trusted_servers_ssl_fingerprints_path()
-            : barrier::DataDirectories::trusted_clients_ssl_fingerprints_path();
+            ? inputleap::DataDirectories::trusted_servers_ssl_fingerprints_path()
+            : inputleap::DataDirectories::trusted_clients_ssl_fingerprints_path();
 
     auto db_dir = db_path.parent_path();
-    if (!barrier::fs::exists(db_dir)) {
-        barrier::fs::create_directories(db_dir);
+    if (!inputleap::fs::exists(db_dir)) {
+        inputleap::fs::create_directories(db_dir);
     }
 
     // We compare only SHA256 fingerprints, but show both SHA1 and SHA256 so that the users can
     // still verify fingerprints on old Barrier servers. This way the only time when we are exposed
     // to SHA1 vulnerabilities is when the user is reconnecting again.
-    barrier::FingerprintDatabase db;
+    inputleap::FingerprintDatabase db;
     db.read(db_path);
     if (db.is_trusted(fingerprint_sha256)) {
         return;
@@ -557,7 +557,7 @@ void MainWindow::startBarrier()
     // launched the process (e.g. when launched with elevation). setting the
     // profile dir on launch ensures it uses the same profile dir is used
     // no matter how its relaunched.
-    args << "--profile-dir" << QString::fromStdString("\"" + barrier::DataDirectories::profile().u8string() + "\"");
+    args << "--profile-dir" << QString::fromStdString("\"" + inputleap::DataDirectories::profile().u8string() + "\"");
 #endif
 
     if ((barrier_type() == BarrierType::Client && !clientArgs(args, app))
@@ -1022,12 +1022,12 @@ void MainWindow::updateSSLFingerprint()
         return;
     }
 
-    auto local_path = barrier::DataDirectories::local_ssl_fingerprints_path();
-    if (!barrier::fs::exists(local_path)) {
+    auto local_path = inputleap::DataDirectories::local_ssl_fingerprints_path();
+    if (!inputleap::fs::exists(local_path)) {
         return;
     }
 
-    barrier::FingerprintDatabase db;
+    inputleap::FingerprintDatabase db;
     db.read(local_path);
     if (db.fingerprints().size() != 2) {
         return;
@@ -1035,18 +1035,18 @@ void MainWindow::updateSSLFingerprint()
 
     for (const auto& fingerprint : db.fingerprints()) {
         if (fingerprint.algorithm == "sha1") {
-            auto fingerprint_str = barrier::format_ssl_fingerprint(fingerprint.data);
+            auto fingerprint_str = inputleap::format_ssl_fingerprint(fingerprint.data);
             label_sha1_fingerprint_full->setText(QString::fromStdString(fingerprint_str));
             continue;
         }
 
         if (fingerprint.algorithm == "sha256") {
-            auto fingerprint_str = barrier::format_ssl_fingerprint(fingerprint.data);
+            auto fingerprint_str = inputleap::format_ssl_fingerprint(fingerprint.data);
             fingerprint_str.resize(40);
             fingerprint_str += " ...";
 
-            auto fingerprint_str_cols = barrier::format_ssl_fingerprint_columns(fingerprint.data);
-            auto fingerprint_randomart = barrier::create_fingerprint_randomart(fingerprint.data);
+            auto fingerprint_str_cols = inputleap::format_ssl_fingerprint_columns(fingerprint.data);
+            auto fingerprint_randomart = inputleap::create_fingerprint_randomart(fingerprint.data);
 
             m_pLabelLocalFingerprint->setText(QString::fromStdString(fingerprint_str));
             label_sha256_fingerprint_full->setText(QString::fromStdString(fingerprint_str_cols));

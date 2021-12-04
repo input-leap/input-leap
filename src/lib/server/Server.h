@@ -37,7 +37,7 @@ class BaseClientProxy;
 class EventQueueTimer;
 class PrimaryClient;
 class InputFilter;
-namespace barrier { class Screen; }
+namespace inputleap { class Screen; }
 class IEventQueue;
 class Thread;
 class ClientListener;
@@ -107,7 +107,7 @@ public:
     ownership of \p primaryClient.
     */
     Server(Config& config, PrimaryClient* primaryClient,
-        barrier::Screen* screen, IEventQueue* events, ServerArgs const& args);
+        inputleap::Screen* screen, IEventQueue* events, ServerArgs const& args);
     ~Server();
 
 #ifdef BARRIER_TEST_ENV
@@ -461,7 +461,7 @@ private:
     bool                m_lockedToScreen;
 
     // server screen
-    barrier::Screen*    m_screen;
+    inputleap::Screen* m_screen;
 
     IEventQueue*        m_events;
 

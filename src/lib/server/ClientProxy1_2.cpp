@@ -25,7 +25,7 @@
 // ClientProxy1_1
 //
 
-ClientProxy1_2::ClientProxy1_2(const std::string& name, barrier::IStream* stream,
+ClientProxy1_2::ClientProxy1_2(const std::string& name, inputleap::IStream* stream,
                                IEventQueue* events) :
     ClientProxy1_1(name, stream, events)
 {

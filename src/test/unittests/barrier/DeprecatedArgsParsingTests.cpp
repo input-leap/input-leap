@@ -19,7 +19,7 @@
 
 #include "test/global/gtest.h"
 
-using namespace barrier;
+using namespace inputleap;
 
 TEST(DeprecatedArgsParsingTests, parseDeprecatedArgs_cryptoPass_returnTrue)
 {

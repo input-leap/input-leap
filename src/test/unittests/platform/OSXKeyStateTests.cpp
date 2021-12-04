@@ -25,7 +25,7 @@
 
 TEST(OSXKeyStateTests, mapModifiersFromOSX_OSXMask_returnBarrierMask)
 {
-    barrier::KeyMap keyMap;
+    inputleap::KeyMap keyMap;
     MockEventQueue eventQueue;
     OSXKeyState keyState(&eventQueue, keyMap);
 

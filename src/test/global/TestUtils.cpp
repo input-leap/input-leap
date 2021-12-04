@@ -18,7 +18,7 @@
 #include "TestUtils.h"
 #include <random>
 
-namespace barrier {
+namespace inputleap {
 
 std::vector<std::uint8_t> generate_pseudo_random_bytes(std::size_t seed, std::size_t size)
 {
@@ -34,4 +34,4 @@ std::vector<std::uint8_t> generate_pseudo_random_bytes(std::size_t seed, std::si
     return bytes;
 }
 
-} // namespace barrier
+} // namespace inputleap

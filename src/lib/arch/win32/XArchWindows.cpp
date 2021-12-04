@@ -38,7 +38,7 @@ XArchEvalWindows::eval() const noexcept
                             0,
                             NULL) == 0) {
         cmsg = NULL;
-        return barrier::string::sprintf("Unknown error, code %d", m_error);
+        return inputleap::string::sprintf("Unknown error, code %d", m_error);
     }
     std::string smsg(cmsg);
     LocalFree(cmsg);

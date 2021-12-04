@@ -24,7 +24,7 @@
 #include <string>
 #include <vector>
 
-namespace barrier {
+namespace inputleap {
 
 std::string format_ssl_fingerprint(const std::vector<std::uint8_t>& fingerprint,
                                    bool separator = true);
@@ -38,6 +38,6 @@ void generate_pem_self_signed_cert(const std::string& path);
 
 std::string create_fingerprint_randomart(const std::vector<std::uint8_t>& dgst_raw);
 
-} // namespace barrier
+} // namespace inputleap
 
 #endif // BARRIER_LIB_NET_SECUREUTILS_H

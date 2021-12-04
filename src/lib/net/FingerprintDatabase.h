@@ -24,7 +24,7 @@
 #include <string>
 #include <vector>
 
-namespace barrier {
+namespace inputleap {
 
 class FingerprintDatabase {
 public:
@@ -48,6 +48,6 @@ private:
     std::vector<FingerprintData> fingerprints_;
 };
 
-} // namespace barrier
+} // namespace inputleap
 
 #endif // BARRIER_LIB_NET_FINGERPRINT_DATABASE_H

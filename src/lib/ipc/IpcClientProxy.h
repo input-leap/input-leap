@@ -25,7 +25,7 @@
 
 #include <mutex>
 
-namespace barrier { class IStream; }
+namespace inputleap { class IStream; }
 class IpcMessage;
 class IpcCommandMessage;
 class IpcHelloMessage;
@@ -35,7 +35,7 @@ class IpcClientProxy {
     friend class IpcServer;
 
 public:
-    IpcClientProxy(barrier::IStream& stream, IEventQueue* events);
+    IpcClientProxy(inputleap::IStream& stream, IEventQueue* events);
     virtual ~IpcClientProxy();
 
 private:
@@ -48,7 +48,7 @@ private:
     void                disconnect();
 
 private:
-    barrier::IStream&    m_stream;
+    inputleap::IStream& m_stream;
     EIpcClientType        m_clientType;
     bool                m_disconnecting;
     std::mutex m_readMutex;

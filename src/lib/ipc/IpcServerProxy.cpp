@@ -29,7 +29,7 @@
 // IpcServerProxy
 //
 
-IpcServerProxy::IpcServerProxy(barrier::IStream& stream, IEventQueue* events) :
+IpcServerProxy::IpcServerProxy(inputleap::IStream& stream, IEventQueue* events) :
     m_stream(stream),
     m_events(events)
 {

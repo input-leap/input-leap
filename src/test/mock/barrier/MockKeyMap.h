@@ -22,7 +22,7 @@
 
 #include "test/global/gmock.h"
 
-class MockKeyMap : public barrier::KeyMap
+class MockKeyMap : public inputleap::KeyMap
 {
 public:
     MOCK_METHOD1(swap, void(KeyMap&));

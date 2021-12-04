@@ -120,17 +120,17 @@ ServerTaskBarReceiver::getToolTip() const
 {
     switch (m_state) {
     case kNotRunning:
-        return barrier::string::sprintf("%s:  Not running", kAppVersion);
+        return inputleap::string::sprintf("%s:  Not running", kAppVersion);
 
     case kNotWorking:
-        return barrier::string::sprintf("%s:  %s",
+        return inputleap::string::sprintf("%s:  %s",
                                 kAppVersion, m_errorMessage.c_str());
 
     case kNotConnected:
-        return barrier::string::sprintf("%s:  Waiting for clients", kAppVersion);
+        return inputleap::string::sprintf("%s:  Waiting for clients", kAppVersion);
 
     case kConnected:
-        return barrier::string::sprintf("%s:  Connected", kAppVersion);
+        return inputleap::string::sprintf("%s:  Connected", kAppVersion);
 
     default:
         return "";

@@ -39,7 +39,7 @@
 // ServerProxy
 //
 
-ServerProxy::ServerProxy(Client* client, barrier::IStream* stream, IEventQueue* events) :
+ServerProxy::ServerProxy(Client* client, inputleap::IStream* stream, IEventQueue* events) :
     m_client(client),
     m_stream(stream),
     m_seqNum(0),

@@ -32,7 +32,7 @@
 #include <algorithm>
 #include <cerrno>
 
-namespace barrier {
+namespace inputleap {
 namespace string {
 
 namespace {
@@ -334,7 +334,7 @@ CaselessCmp::less(const std::string& a, const std::string& b)
     return std::lexicographical_compare(
         a.begin(), a.end(),
         b.begin(), b.end(),
-        &barrier::string::CaselessCmp::cmpLess);
+        &inputleap::string::CaselessCmp::cmpLess);
 }
 
 bool

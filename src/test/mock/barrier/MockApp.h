@@ -40,5 +40,5 @@ public:
     MOCK_METHOD0(startNode, void());
     MOCK_METHOD0(mainLoop, int());
     MOCK_METHOD2(foregroundStartup, int(int, char**));
-    MOCK_METHOD0(createScreen, barrier::Screen*());
+    MOCK_METHOD0(createScreen, inputleap::Screen*());
 };

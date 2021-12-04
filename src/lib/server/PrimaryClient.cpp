@@ -26,7 +26,7 @@
 // PrimaryClient
 //
 
-PrimaryClient::PrimaryClient(const std::string& name, barrier::Screen* screen) :
+PrimaryClient::PrimaryClient(const std::string& name, inputleap::Screen* screen) :
     BaseClientProxy(name),
     m_screen(screen),
     m_fakeInputCount(0)

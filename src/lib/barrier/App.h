@@ -37,7 +37,7 @@ class IArchTaskBarReceiver;
 class BufferedLogOutputter;
 class ILogOutputter;
 class FileLogOutputter;
-namespace barrier { class Screen; }
+namespace inputleap { class Screen; }
 class IEventQueue;
 class SocketMultiplexer;
 
@@ -135,7 +135,7 @@ public:
     virtual void        startNode();
     virtual int            mainLoop();
     virtual int            foregroundStartup(int argc, char** argv);
-    virtual barrier::Screen*
+    virtual inputleap::Screen*
                         createScreen();
     virtual void        loadConfig();
     virtual bool        loadConfig(const String& pathname);

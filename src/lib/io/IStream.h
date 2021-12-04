@@ -25,7 +25,7 @@
 
 class IEventQueue;
 
-namespace barrier {
+namespace inputleap {
 
 //! Bidirectional stream interface
 /*!

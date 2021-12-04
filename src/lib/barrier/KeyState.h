@@ -29,7 +29,7 @@ platform specific methods.
 class KeyState : public IKeyState {
 public:
     KeyState(IEventQueue* events);
-    KeyState(IEventQueue* events, barrier::KeyMap& keyMap);
+    KeyState(IEventQueue* events, inputleap::KeyMap& keyMap);
     virtual ~KeyState();
 
     //! @name manipulators
@@ -86,7 +86,7 @@ public:
     SInt32 getKeyState(KeyButton keyButton) { return m_keys[keyButton]; }
 
 protected:
-    typedef barrier::KeyMap::Keystroke Keystroke;
+    typedef inputleap::KeyMap::Keystroke Keystroke;
 
     //! @name protected manipulators
     //@{
@@ -95,7 +95,7 @@ protected:
     /*!
     Fills \p keyMap with the current keyboard map.
     */
-    virtual void        getKeyMap(barrier::KeyMap& keyMap) = 0;
+    virtual void        getKeyMap(inputleap::KeyMap& keyMap) = 0;
 
     //! Fake a key event
     /*!
@@ -138,8 +138,8 @@ protected:
     //@}
 
 private:
-    typedef barrier::KeyMap::Keystrokes Keystrokes;
-    typedef barrier::KeyMap::ModifierToKeys ModifierToKeys;
+    typedef inputleap::KeyMap::Keystrokes Keystrokes;
+    typedef inputleap::KeyMap::ModifierToKeys ModifierToKeys;
 public:
     struct AddActiveModifierContext {
     public:
@@ -160,8 +160,8 @@ private:
 
     class ButtonToKeyLess {
     public:
-        bool operator()(const barrier::KeyMap::ButtonToKeyMap::value_type& a,
-                        const barrier::KeyMap::ButtonToKeyMap::value_type b) const
+        bool operator()(const inputleap::KeyMap::ButtonToKeyMap::value_type& a,
+                        const inputleap::KeyMap::ButtonToKeyMap::value_type b) const
         {
             return (a.first < b.first);
         }
@@ -195,14 +195,14 @@ private:
 
     // active modifiers collection callback
     static void            addActiveModifierCB(KeyID id, SInt32 group,
-                            barrier::KeyMap::KeyItem& keyItem, void* vcontext);
+                            inputleap::KeyMap::KeyItem& keyItem, void* vcontext);
 
 private:
     // must be declared before m_keyMap. used when this class owns the key map.
-    barrier::KeyMap*            m_keyMapPtr;
+    inputleap::KeyMap* m_keyMapPtr;
 
     // the keyboard map
-    barrier::KeyMap&            m_keyMap;
+    inputleap::KeyMap& m_keyMap;
 
     // current modifier state
     KeyModifierMask        m_mask;

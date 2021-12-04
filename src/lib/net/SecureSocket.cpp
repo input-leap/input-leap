@@ -331,7 +331,7 @@ SecureSocket::initSsl(bool server)
     initContext(server);
 }
 
-bool SecureSocket::load_certificates(const barrier::fs::path& path)
+bool SecureSocket::load_certificates(const inputleap::fs::path& path)
 {
     std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
 
@@ -340,7 +340,7 @@ bool SecureSocket::load_certificates(const barrier::fs::path& path)
         return false;
     }
     else {
-        if (!barrier::fs::is_regular_file(path)) {
+        if (!inputleap::fs::is_regular_file(path)) {
             showError("ssl certificate doesn't exist: " + path.u8string());
             return false;
         }
@@ -462,7 +462,7 @@ SecureSocket::secureAccept(int socket)
     if (secure_accept_retry_ == 0) {
         if (security_level_ == ConnectionSecurityLevel::ENCRYPTED_AUTHENTICATED) {
             if (verify_peer_certificate(
-                        barrier::DataDirectories::trusted_clients_ssl_fingerprints_path())) {
+                        inputleap::DataDirectories::trusted_clients_ssl_fingerprints_path())) {
                 LOG((CLOG_INFO "accepted secure socket"));
             }
             else {
@@ -499,7 +499,7 @@ int
 SecureSocket::secureConnect(int socket)
 {
     // note that load_certificates acquires ssl_mutex_
-    if (!load_certificates(barrier::DataDirectories::ssl_certificate_path())) {
+    if (!load_certificates(inputleap::DataDirectories::ssl_certificate_path())) {
         LOG((CLOG_ERR "could not load client certificates"));
         // FIXME: this is fatal error, but we current don't disconnect because whole logic in this
         // function needs to be cleaned up
@@ -534,7 +534,7 @@ SecureSocket::secureConnect(int socket)
     secure_connect_retry_ = 0;
     // No error, set ready, process and return ok
     m_secureReady = true;
-    if (verify_peer_certificate(barrier::DataDirectories::trusted_servers_ssl_fingerprints_path())) {
+    if (verify_peer_certificate(inputleap::DataDirectories::trusted_servers_ssl_fingerprints_path())) {
         LOG((CLOG_INFO "connected to secure socket"));
     }
     else {
@@ -668,7 +668,7 @@ SecureSocket::disconnect()
     sendEvent(getEvents()->forIStream().inputShutdown());
 }
 
-bool SecureSocket::verify_peer_certificate(const barrier::fs::path& fingerprint_db_path)
+bool SecureSocket::verify_peer_certificate(const inputleap::fs::path& fingerprint_db_path)
 {
     // ssl_mutex_ is assumed to be acquired
 
@@ -678,18 +678,18 @@ bool SecureSocket::verify_peer_certificate(const barrier::fs::path& fingerprint_
         showError("peer has no ssl certificate");
         return false;
     }
-    auto cert_free = barrier::finally([cert]() { X509_free(cert); });
+    auto cert_free = inputleap::finally([cert]() { X509_free(cert); });
     char* line = X509_NAME_oneline(X509_get_subject_name(cert), 0, 0);
     LOG((CLOG_INFO "peer ssl certificate info: %s", line));
     OPENSSL_free(line);
 
     // calculate received certificate fingerprint
-    barrier::FingerprintData fingerprint_sha1, fingerprint_sha256;
+    inputleap::FingerprintData fingerprint_sha1, fingerprint_sha256;
     try {
-        fingerprint_sha1 = barrier::get_ssl_cert_fingerprint(cert,
-                                                             barrier::FingerprintType::SHA1);
-        fingerprint_sha256 = barrier::get_ssl_cert_fingerprint(cert,
-                                                               barrier::FingerprintType::SHA256);
+        fingerprint_sha1 = inputleap::get_ssl_cert_fingerprint(cert,
+                                                             inputleap::FingerprintType::SHA1);
+        fingerprint_sha256 = inputleap::get_ssl_cert_fingerprint(cert,
+                                                               inputleap::FingerprintType::SHA256);
     } catch (const std::exception& e) {
         LOG((CLOG_ERR "%s", e.what()));
         return false;
@@ -697,13 +697,13 @@ bool SecureSocket::verify_peer_certificate(const barrier::fs::path& fingerprint_
 
     // note: the GUI parses the following two lines of logs, don't change unnecessarily
     LOG((CLOG_NOTE "peer fingerprint (SHA1): %s (SHA256): %s",
-         barrier::format_ssl_fingerprint(fingerprint_sha1.data).c_str(),
-         barrier::format_ssl_fingerprint(fingerprint_sha256.data).c_str()));
+         inputleap::format_ssl_fingerprint(fingerprint_sha1.data).c_str(),
+         inputleap::format_ssl_fingerprint(fingerprint_sha256.data).c_str()));
 
     // Provide debug hint as to what file is being used to verify fingerprint trust
     LOG((CLOG_NOTE "fingerprint_db_path: %s", fingerprint_db_path.u8string().c_str()));
 
-    barrier::FingerprintDatabase db;
+    inputleap::FingerprintDatabase db;
     db.read(fingerprint_db_path);
 
     if (!db.fingerprints().empty()) {

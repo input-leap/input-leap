@@ -25,7 +25,7 @@ class IEventQueue;
 //! Proxy for client implementing protocol version 1.6
 class ClientProxy1_6 : public ClientProxy1_5 {
 public:
-    ClientProxy1_6(const std::string& name, barrier::IStream* adoptedStream, Server* server,
+    ClientProxy1_6(const std::string& name, inputleap::IStream* adoptedStream, Server* server,
                    IEventQueue* events);
     ~ClientProxy1_6();
 

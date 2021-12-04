@@ -49,7 +49,7 @@ XWindowsKeyState::XWindowsKeyState(IXWindowsImpl* impl,
 
 XWindowsKeyState::XWindowsKeyState(IXWindowsImpl* impl,
     Display* display, bool useXKB,
-    IEventQueue* events, barrier::KeyMap& keyMap) :
+    IEventQueue* events, inputleap::KeyMap& keyMap) :
     KeyState(events, keyMap),
     m_display(display),
     m_modifierFromX(ModifiersFromXDefaultSize)
@@ -218,7 +218,7 @@ XWindowsKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
 }
 
 void
-XWindowsKeyState::getKeyMap(barrier::KeyMap& keyMap)
+XWindowsKeyState::getKeyMap(inputleap::KeyMap& keyMap)
 {
     // get autorepeat info.  we must use the global_auto_repeat told to
     // us because it may have modified by barrier.
@@ -300,7 +300,7 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
 }
 
 void
-XWindowsKeyState::updateKeysymMap(barrier::KeyMap& keyMap)
+XWindowsKeyState::updateKeysymMap(inputleap::KeyMap& keyMap)
 {
     // there are up to 4 keysyms per keycode
     static const int maxKeysyms = 4;
@@ -394,7 +394,7 @@ XWindowsKeyState::updateKeysymMap(barrier::KeyMap& keyMap)
     }
 
     // add entries for each keycode
-    barrier::KeyMap::KeyItem item;
+    inputleap::KeyMap::KeyItem item;
     for (int i = 0; i < numKeycodes; ++i) {
         KeySym* keysyms = allKeysyms + maxKeysyms * i;
         KeyCode keycode = static_cast<KeyCode>(i + minKeycode);
@@ -498,7 +498,7 @@ XWindowsKeyState::updateKeysymMap(barrier::KeyMap& keyMap)
             item.m_lock      = false;
             if (modifierButtons.count(keycode) > 0) {
                 // get flags for modifier keys
-                barrier::KeyMap::initModifierKey(item);
+                inputleap::KeyMap::initModifierKey(item);
 
                 // add mapping from X (unless we already have)
                 if (item.m_generates != 0) {
@@ -546,7 +546,7 @@ XWindowsKeyState::updateKeysymMap(barrier::KeyMap& keyMap)
 
 #if HAVE_XKB_EXTENSION
 void
-XWindowsKeyState::updateKeysymMapXKB(barrier::KeyMap& keyMap)
+XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
 {
     static const XkbKTMapEntryRec defMapEntry = {
         True,        // active
@@ -592,7 +592,7 @@ XWindowsKeyState::updateKeysymMapXKB(barrier::KeyMap& keyMap)
 
     // check every button.  on this pass we save all modifiers as native
     // X modifier masks.
-    barrier::KeyMap::KeyItem item;
+    inputleap::KeyMap::KeyItem item;
     for (int i = m_xkb->min_key_code; i <= m_xkb->max_key_code; ++i) {
         KeyCode keycode = static_cast<KeyCode>(i);
         item.m_button   = static_cast<KeyButton>(keycode);
@@ -789,7 +789,7 @@ XWindowsKeyState::updateKeysymMapXKB(barrier::KeyMap& keyMap)
 
 void
 XWindowsKeyState::remapKeyModifiers(KeyID id, SInt32 group,
-                            barrier::KeyMap::KeyItem& item, void* vself)
+                            inputleap::KeyMap::KeyItem& item, void* vself)
 {
     XWindowsKeyState* self = static_cast<XWindowsKeyState*>(vself);
     item.m_required  =

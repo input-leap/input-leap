@@ -29,7 +29,7 @@
 // PacketStreamFilter
 //
 
-PacketStreamFilter::PacketStreamFilter(IEventQueue* events, barrier::IStream* stream, bool adoptStream) :
+PacketStreamFilter::PacketStreamFilter(IEventQueue* events, inputleap::IStream* stream, bool adoptStream) :
     StreamFilter(events, stream, adoptStream),
     m_size(0),
     m_inputShutdown(false),

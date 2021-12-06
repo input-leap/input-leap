@@ -8,7 +8,7 @@
         <source>About Barrier</source>
         <translation>Névjegy</translation>
     </message>
-    <message utf8="true">
+    <message>
         <location filename="res/AboutDialogBase.ui" line="53"/>
         <source>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
@@ -259,12 +259,12 @@ A grafikus felületet Volker Lanz QSynergy alkalmazása alapján készült.
     <message>
         <location filename="src/MainWindow.cpp" line="659"/>
         <source>Configuration filename invalid</source>
-        <translation>Konfigurációs fájlnév érvénytelen</translation>
+        <translation>A fájl neve érvénytelen</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="660"/>
         <source>You have not filled in a valid configuration file for the barrier server. Do you want to browse for the configuration file now?</source>
-        <translation>Nem adott meg érvényes konfigurációs fájlnevet a barrier szerveren. Meg akarja keresni a konfigurációs fájlt most?</translation>
+        <translation>Nem adott meg érvényes konfigurációs fájlt a Barrier számára. Szeretne megnyitni egy meglévő konfigurációs fájlt?</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="688"/>
@@ -545,7 +545,7 @@ A jövőbeni kapcsolódási kísérletek automatikus jóváhagyáshoz kattintson
     <message>
         <location filename="res/MainWindowBase.ui" line="453"/>
         <source>&amp;Show</source>
-        <translation>&amp;Megnyitás</translation>
+        <translation>Barrier &amp;megnyitása</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="456"/>

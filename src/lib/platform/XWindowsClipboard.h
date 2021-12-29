@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "barrier/clipboard_types.h"
-#include "barrier/IClipboard.h"
+#include "inputleap/clipboard_types.h"
+#include "inputleap/IClipboard.h"
 #include "common/stdmap.h"
 #include "common/stdlist.h"
 #include "common/stdvector.h"

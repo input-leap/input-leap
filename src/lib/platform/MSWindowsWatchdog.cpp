@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2009 Chris Schoeneman
  *
@@ -22,8 +22,8 @@
 #include "ipc/IpcServer.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/Ipc.h"
-#include "barrier/App.h"
-#include "barrier/ArgsBase.h"
+#include "inputleap/App.h"
+#include "inputleap/ArgsBase.h"
 #include "mt/Thread.h"
 #include "arch/win32/ArchDaemonWindows.h"
 #include "arch/win32/XArchWindows.h"

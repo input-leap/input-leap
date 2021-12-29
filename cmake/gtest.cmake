@@ -1,4 +1,4 @@
-# barrier -- mouse and keyboard sharing utility
+# InputLeap -- mouse and keyboard sharing utility
 # Copyright (C) 2012-2016 Symless Ltd.
 # Copyright (C) 2011 Nick Bolton
 #
@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if (BARRIER_USE_EXTERNAL_GTEST)
+if(INPUTLEAP_USE_EXTERNAL_GTEST)
     include (FindPkgConfig)
     find_package(GTest REQUIRED)
     pkg_check_modules(GMOCK REQUIRED gmock)

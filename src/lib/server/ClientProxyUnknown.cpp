@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  *
@@ -26,9 +26,9 @@
 #include "server/ClientProxy1_4.h"
 #include "server/ClientProxy1_5.h"
 #include "server/ClientProxy1_6.h"
-#include "barrier/protocol_types.h"
-#include "barrier/ProtocolUtil.h"
-#include "barrier/XBarrier.h"
+#include "inputleap/protocol_types.h"
+#include "inputleap/ProtocolUtil.h"
+#include "inputleap/XBarrier.h"
 #include "io/IStream.h"
 #include "io/XIO.h"
 #include "base/Log.h"
@@ -39,7 +39,7 @@
 // ClientProxyUnknown
 //
 
-ClientProxyUnknown::ClientProxyUnknown(barrier::IStream* stream, double timeout, Server* server, IEventQueue* events) :
+ClientProxyUnknown::ClientProxyUnknown(inputleap::IStream* stream, double timeout, Server* server, IEventQueue* events) :
     m_stream(stream),
     m_proxy(NULL),
     m_ready(false),

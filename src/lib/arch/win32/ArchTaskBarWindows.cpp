@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  *
@@ -21,7 +21,7 @@
 #include "arch/IArchTaskBarReceiver.h"
 #include "arch/Arch.h"
 #include "arch/XArch.h"
-#include "barrier/win32/AppUtilWindows.h"
+#include "inputleap/win32/AppUtilWindows.h"
 
 #include <string.h>
 #include <shellapi.h>

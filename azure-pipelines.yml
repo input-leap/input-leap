@@ -91,11 +91,11 @@ jobs:
       big-sur-Release:
           imageName: "macOS-11"
           B_BUILD_TYPE: Release
-          BARRIER_VERSION_STAGE: Release
+          INPUTLEAP_VERSION_STAGE: Release
       catalina-Release:
           imageName: "macOS-10.15"
           B_BUILD_TYPE: Release
-          BARRIER_VERSION_STAGE: Release
+          INPUTLEAP_VERSION_STAGE: Release
   pool:
     vmImage: $(imageName)
   variables:

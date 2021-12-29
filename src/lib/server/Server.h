@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -19,13 +19,13 @@
 #pragma once
 
 #include "server/Config.h"
-#include "barrier/clipboard_types.h"
-#include "barrier/Clipboard.h"
-#include "barrier/key_types.h"
-#include "barrier/mouse_types.h"
-#include "barrier/INode.h"
-#include "barrier/DragInformation.h"
-#include "barrier/ServerArgs.h"
+#include "inputleap/clipboard_types.h"
+#include "inputleap/Clipboard.h"
+#include "inputleap/key_types.h"
+#include "inputleap/mouse_types.h"
+#include "inputleap/INode.h"
+#include "inputleap/DragInformation.h"
+#include "inputleap/ServerArgs.h"
 #include "base/Event.h"
 #include "base/Stopwatch.h"
 #include "base/EventTypes.h"
@@ -37,7 +37,7 @@ class BaseClientProxy;
 class EventQueueTimer;
 class PrimaryClient;
 class InputFilter;
-namespace barrier { class Screen; }
+namespace inputleap { class Screen; }
 class IEventQueue;
 class Thread;
 class ClientListener;
@@ -107,10 +107,10 @@ public:
     ownership of \p primaryClient.
     */
     Server(Config& config, PrimaryClient* primaryClient,
-        barrier::Screen* screen, IEventQueue* events, ServerArgs const& args);
+        inputleap::Screen* screen, IEventQueue* events, ServerArgs const& args);
     ~Server();
 
-#ifdef BARRIER_TEST_ENV
+#ifdef INPUTLEAP_TEST_ENV
     Server() : m_mock(true), m_config(NULL) { }
     void setActive(BaseClientProxy* active) {    m_active = active; }
 #endif
@@ -461,7 +461,7 @@ private:
     bool                m_lockedToScreen;
 
     // server screen
-    barrier::Screen*    m_screen;
+    inputleap::Screen* m_screen;
 
     IEventQueue*        m_events;
 

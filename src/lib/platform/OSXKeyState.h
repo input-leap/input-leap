@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  *
@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "barrier/KeyState.h"
+#include "inputleap/KeyState.h"
 #include "common/stdmap.h"
 #include "common/stdset.h"
 #include "common/stdvector.h"
@@ -37,7 +37,7 @@ public:
     typedef std::vector<KeyID> KeyIDs;
 
     OSXKeyState(IEventQueue* events);
-    OSXKeyState(IEventQueue* events, barrier::KeyMap& keyMap);
+    OSXKeyState(IEventQueue* events, inputleap::KeyMap& keyMap);
     virtual ~OSXKeyState();
 
     //! @name modifiers
@@ -101,19 +101,19 @@ public:
     CGEventFlags getModifierStateAsOSXFlags();
 protected:
     // KeyState overrides
-    virtual void        getKeyMap(barrier::KeyMap& keyMap);
+    virtual void        getKeyMap(inputleap::KeyMap& keyMap);
     virtual void        fakeKey(const Keystroke& keystroke);
 
 private:
     class KeyResource;
     typedef std::vector<KeyLayout> GroupList;
 
-    // Add hard coded special keys to a barrier::KeyMap.
+    // Add hard coded special keys to a inputleap::KeyMap.
     void                getKeyMapForSpecialKeys(
-                            barrier::KeyMap& keyMap, SInt32 group) const;
+                            inputleap::KeyMap& keyMap, SInt32 group) const;
 
     // Convert keyboard resource to a key map
-    bool                getKeyMap(barrier::KeyMap& keyMap,
+    bool                getKeyMap(inputleap::KeyMap& keyMap,
                             SInt32 group, const IOSXKeyResource& r) const;
 
     // Get the available keyboard groups

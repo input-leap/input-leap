@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "barrier/PlatformScreen.h"
-#include "barrier/KeyMap.h"
+#include "inputleap/PlatformScreen.h"
+#include "inputleap/KeyMap.h"
 #include "common/stdset.h"
 #include "common/stdvector.h"
 #include "XWindowsImpl.h"
@@ -256,7 +256,7 @@ private:
     int                 m_xrandrEventBase;
 
     IEventQueue*        m_events;
-    barrier::KeyMap                m_keyMap;
+    inputleap::KeyMap m_keyMap;
 
     // pointer to (singleton) screen.  this is only needed by
     // ioErrorHandler().

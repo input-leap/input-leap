@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  *
@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "barrier/KeyState.h"
+#include "inputleap/KeyState.h"
 #include "common/stdmap.h"
 #include "common/stdvector.h"
 #include "XWindowsImpl.h"
@@ -46,7 +46,7 @@ public:
     XWindowsKeyState(IXWindowsImpl* impl, Display*, bool useXKB,
                      IEventQueue* events);
     XWindowsKeyState(IXWindowsImpl* impl, Display*, bool useXKB,
-                     IEventQueue* events, barrier::KeyMap& keyMap);
+                     IEventQueue* events, inputleap::KeyMap& keyMap);
     ~XWindowsKeyState();
 
     //! @name modifiers
@@ -106,19 +106,19 @@ public:
 
 protected:
     // KeyState overrides
-    virtual void        getKeyMap(barrier::KeyMap& keyMap);
+    virtual void        getKeyMap(inputleap::KeyMap& keyMap);
     virtual void        fakeKey(const Keystroke& keystroke);
 
 private:
     void                init(Display* display, bool useXKB);
-    void                updateKeysymMap(barrier::KeyMap&);
-    void                updateKeysymMapXKB(barrier::KeyMap&);
+    void                updateKeysymMap(inputleap::KeyMap&);
+    void                updateKeysymMapXKB(inputleap::KeyMap&);
     bool                hasModifiersXKB() const;
     int                    getEffectiveGroup(KeyCode, int group) const;
     UInt32                getGroupFromState(unsigned int state) const;
 
     static void            remapKeyModifiers(KeyID, SInt32,
-                            barrier::KeyMap::KeyItem&, void*);
+                            inputleap::KeyMap::KeyItem&, void*);
 
 private:
     struct XKBModifierInfo {
@@ -128,7 +128,7 @@ private:
         bool            m_lock;
     };
 
-#ifdef BARRIER_TEST_ENV
+#ifdef INPUTLEAP_TEST_ENV
 public: // yuck
 #endif
     typedef std::vector<KeyModifierMask> KeyModifierMaskList;
@@ -161,7 +161,7 @@ private:
     // autorepeat state
     XKeyboardState        m_keyboardState;
 
-#ifdef BARRIER_TEST_ENV
+#ifdef INPUTLEAP_TEST_ENV
 public:
     SInt32                  group() const { return m_group; }
     void                    group(const SInt32& group) { m_group = group; }

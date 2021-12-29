@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  *
@@ -146,7 +146,7 @@ OSXKeyState::OSXKeyState(IEventQueue* events) :
     init();
 }
 
-OSXKeyState::OSXKeyState(IEventQueue* events, barrier::KeyMap& keyMap) :
+OSXKeyState::OSXKeyState(IEventQueue* events, inputleap::KeyMap& keyMap) :
     KeyState(events, keyMap)
 {
     init();
@@ -437,7 +437,7 @@ OSXKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
 }
 
 void
-OSXKeyState::getKeyMap(barrier::KeyMap& keyMap)
+OSXKeyState::getKeyMap(inputleap::KeyMap& keyMap)
 {
     // update keyboard groups
     if (getGroups(m_groups)) {
@@ -615,10 +615,10 @@ OSXKeyState::fakeKey(const Keystroke& keystroke)
 }
 
 void
-OSXKeyState::getKeyMapForSpecialKeys(barrier::KeyMap& keyMap, SInt32 group) const
+OSXKeyState::getKeyMapForSpecialKeys(inputleap::KeyMap& keyMap, SInt32 group) const
 {
     // special keys are insensitive to modifers and none are dead keys
-    barrier::KeyMap::KeyItem item;
+    inputleap::KeyMap::KeyItem item;
     for (size_t i = 0; i < sizeof(s_controlKeys) /
                                 sizeof(s_controlKeys[0]); ++i) {
         const KeyEntry& entry = s_controlKeys[i];
@@ -629,7 +629,7 @@ OSXKeyState::getKeyMapForSpecialKeys(barrier::KeyMap& keyMap, SInt32 group) cons
         item.m_sensitive = 0;
         item.m_dead      = false;
         item.m_client    = 0;
-        barrier::KeyMap::initModifierKey(item);
+        inputleap::KeyMap::initModifierKey(item);
         keyMap.addKeyEntry(item);
 
         if (item.m_lock) {
@@ -646,7 +646,7 @@ OSXKeyState::getKeyMapForSpecialKeys(barrier::KeyMap& keyMap, SInt32 group) cons
 }
 
 bool
-OSXKeyState::getKeyMap(barrier::KeyMap& keyMap,
+OSXKeyState::getKeyMap(inputleap::KeyMap& keyMap,
                 SInt32 group, const IOSXKeyResource& r) const
 {
     if (!r.isValid()) {
@@ -660,7 +660,7 @@ OSXKeyState::getKeyMap(barrier::KeyMap& keyMap,
     std::vector<std::pair<KeyID, bool> > buttonKeys(r.getNumTables());
 
     // iterate over each button
-    barrier::KeyMap::KeyItem item;
+    inputleap::KeyMap::KeyItem item;
     for (UInt32 i = 0; i < r.getNumButtons(); ++i) {
         item.m_button = mapVirtualKeyToKeyButton(i);
 
@@ -670,7 +670,7 @@ OSXKeyState::getKeyMap(barrier::KeyMap& keyMap,
         // convert the entry in each table for this button to a KeyID
         for (UInt32 j = 0; j < r.getNumTables(); ++j) {
             buttonKeys[j].first  = r.getKey(j, i);
-            buttonKeys[j].second = barrier::KeyMap::isDeadKey(buttonKeys[j].first);
+            buttonKeys[j].second = inputleap::KeyMap::isDeadKey(buttonKeys[j].first);
         }
 
         // iterate over each character table
@@ -693,7 +693,7 @@ OSXKeyState::getKeyMap(barrier::KeyMap& keyMap,
             item.m_group  = group;
             item.m_dead   = buttonKeys[j].second;
             item.m_client = buttonKeys[j].second ? 1 : 0;
-            barrier::KeyMap::initModifierKey(item);
+            inputleap::KeyMap::initModifierKey(item);
             if (item.m_lock) {
                 // all locking keys are half duplex on OS X
                 keyMap.addHalfDuplexButton(i);

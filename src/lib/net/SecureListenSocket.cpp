@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2015-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -46,7 +46,7 @@ SecureListenSocket::accept()
             setListeningJob();
         }
 
-        bool loaded = socket->load_certificates(barrier::DataDirectories::ssl_certificate_path());
+        bool loaded = socket->load_certificates(inputleap::DataDirectories::ssl_certificate_path());
         if (!loaded) {
             delete socket;
             return NULL;

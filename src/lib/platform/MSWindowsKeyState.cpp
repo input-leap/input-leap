@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  *
@@ -592,7 +592,7 @@ MSWindowsKeyState::MSWindowsKeyState(
 }
 
 MSWindowsKeyState::MSWindowsKeyState(
-	MSWindowsDesks* desks, void* eventTarget, IEventQueue* events, barrier::KeyMap& keyMap) :
+	MSWindowsDesks* desks, void* eventTarget, IEventQueue* events, inputleap::KeyMap& keyMap) :
 	KeyState(events, keyMap),
 	m_eventTarget(eventTarget),
 	m_desks(desks),
@@ -903,7 +903,7 @@ MSWindowsKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
 }
 
 void
-MSWindowsKeyState::getKeyMap(barrier::KeyMap& keyMap)
+MSWindowsKeyState::getKeyMap(inputleap::KeyMap& keyMap)
 {
 	// update keyboard groups
 	if (getGroups(m_groups)) {
@@ -919,7 +919,7 @@ MSWindowsKeyState::getKeyMap(barrier::KeyMap& keyMap)
 	memset(m_virtualKeyToButton, 0, sizeof(m_virtualKeyToButton));
 	m_keyToVKMap.clear();
 
-	barrier::KeyMap::KeyItem item;
+	inputleap::KeyMap::KeyItem item;
 	SInt32 numGroups = (SInt32)m_groups.size();
 	for (SInt32 g = 0; g < numGroups; ++g) {
 		item.m_group = g;
@@ -1098,7 +1098,7 @@ MSWindowsKeyState::getKeyMap(barrier::KeyMap& keyMap)
 				item.m_client    = m_buttonToVK[i];
 
 				// get flags for modifier keys
-				barrier::KeyMap::initModifierKey(item);
+				inputleap::KeyMap::initModifierKey(item);
 
 				if (item.m_id == 0) {
 					// translate virtual key to a character with and without
@@ -1346,7 +1346,7 @@ MSWindowsKeyState::mapButtonToVirtualKey(KeyButton button) const
 }
 
 KeyID
-MSWindowsKeyState::getIDForKey(barrier::KeyMap::KeyItem& item,
+MSWindowsKeyState::getIDForKey(inputleap::KeyMap::KeyItem& item,
 				KeyButton button, UINT virtualKey,
 				PBYTE keyState, HKL hkl) const
 {
@@ -1358,7 +1358,7 @@ MSWindowsKeyState::getIDForKey(barrier::KeyMap::KeyItem& item,
 
 	switch (n) {
 	case -1:
-		return barrier::KeyMap::getDeadKey(id);
+		return inputleap::KeyMap::getDeadKey(id);
 
 	default:
 	case 0:
@@ -1377,7 +1377,7 @@ MSWindowsKeyState::getIDForKey(barrier::KeyMap::KeyItem& item,
 }
 
 void
-MSWindowsKeyState::addKeyEntry(barrier::KeyMap& keyMap, barrier::KeyMap::KeyItem& item)
+MSWindowsKeyState::addKeyEntry(inputleap::KeyMap& keyMap, inputleap::KeyMap::KeyItem& item)
 {
 	keyMap.addKeyEntry(item);
 	if (item.m_group == 0) {

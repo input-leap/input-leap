@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -19,9 +19,9 @@
 #pragma once
 
 #include "server/InputFilter.h"
-#include "barrier/option_types.h"
-#include "barrier/protocol_types.h"
-#include "barrier/IPlatformScreen.h"
+#include "inputleap/option_types.h"
+#include "inputleap/protocol_types.h"
+#include "inputleap/IPlatformScreen.h"
 #include "net/NetworkAddress.h"
 #include "base/XBase.h"
 #include "common/stdmap.h"
@@ -138,8 +138,8 @@ private:
     public:
         ScreenOptions    m_options;
     };
-    typedef std::map<std::string, Cell, barrier::string::CaselessCmp> CellMap;
-    typedef std::map<std::string, std::string, barrier::string::CaselessCmp> NameMap;
+    typedef std::map<std::string, Cell, inputleap::string::CaselessCmp> CellMap;
+    typedef std::map<std::string, std::string, inputleap::string::CaselessCmp> NameMap;
 
 public:
     typedef Cell::const_iterator link_const_iterator;
@@ -174,7 +174,7 @@ public:
     Config(IEventQueue* events);
     virtual ~Config();
 
-#ifdef BARRIER_TEST_ENV
+#ifdef INPUTLEAP_TEST_ENV
     Config() : m_inputFilter(NULL) { }
 #endif
 

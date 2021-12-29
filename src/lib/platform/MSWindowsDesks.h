@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2018 Debauchee Open Source Group
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
@@ -20,9 +20,9 @@
 #pragma once
 
 #include "platform/synwinhk.h"
-#include "barrier/key_types.h"
-#include "barrier/mouse_types.h"
-#include "barrier/option_types.h"
+#include "inputleap/key_types.h"
+#include "inputleap/mouse_types.h"
+#include "inputleap/option_types.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
 #include "common/stdmap.h"

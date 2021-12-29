@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -18,7 +18,7 @@
 
 #include "server/ClientProxy.h"
 
-#include "barrier/ProtocolUtil.h"
+#include "inputleap/ProtocolUtil.h"
 #include "io/IStream.h"
 #include "base/Log.h"
 #include "base/EventQueue.h"
@@ -27,7 +27,7 @@
 // ClientProxy
 //
 
-ClientProxy::ClientProxy(const std::string& name, barrier::IStream* stream) :
+ClientProxy::ClientProxy(const std::string& name, inputleap::IStream* stream) :
     BaseClientProxy(name),
     m_stream(stream)
 {
@@ -48,7 +48,7 @@ ClientProxy::close(const char* msg)
     getStream()->flush();
 }
 
-barrier::IStream*
+inputleap::IStream*
 ClientProxy::getStream() const
 {
     return m_stream;

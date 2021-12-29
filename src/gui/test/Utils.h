@@ -1,4 +1,4 @@
-/*  barrier -- mouse and keyboard sharing utility
+/*  InputLeap -- mouse and keyboard sharing utility
     Copyright (C) 2021 Povilas Kanapickas <povilas@radix.lt>
 
     This package is free software; you can redistribute it and/or
@@ -14,8 +14,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BARRIER_GUI_TEST_UTILS_H
-#define BARRIER_GUI_TEST_UTILS_H
+#ifndef INPUTLEAP_GUI_TEST_UTILS_H
+#define INPUTLEAP_GUI_TEST_UTILS_H
 
 #include <QtCore/QFile>
 #include <QtCore/QTemporaryFile>
@@ -35,4 +35,4 @@ inline QString getTemporaryFilename()
     return temp_file.fileName();
 }
 
-#endif // BARRIER_GUI_TEST_UTILS_H
+#endif // INPUTLEAP_GUI_TEST_UTILS_H

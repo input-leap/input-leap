@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -64,7 +64,7 @@ std::string XSocketAddress::getWhat() const noexcept
     };
     return format(s_errorID[m_error], s_errorMsg[m_error],
                                 m_hostname.c_str(),
-                                barrier::string::sprintf("%d", m_port).c_str());
+                                inputleap::string::sprintf("%d", m_port).c_str());
 }
 
 

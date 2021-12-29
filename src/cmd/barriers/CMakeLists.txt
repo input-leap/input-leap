@@ -1,4 +1,4 @@
-# barrier -- mouse and keyboard sharing utility
+# InputLeap -- mouse and keyboard sharing utility
 # Copyright (C) 2012-2016 Symless Ltd.
 # Copyright (C) 2009 Nick Bolton
 #
@@ -34,7 +34,7 @@ endif()
 list(APPEND sources ${arch_sources})
 list(APPEND headers ${arch_headers})
 
-if (BARRIER_ADD_HEADERS)
+if(INPUTLEAP_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 
@@ -43,7 +43,7 @@ target_link_libraries(barriers
     arch base client common io mt net ipc platform server synlib ${libs} ${OPENSSL_LIBS})
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    install (TARGETS barriers DESTINATION ${BARRIER_BUNDLE_BINARY_DIR})
+    install(TARGETS barriers DESTINATION ${INPUTLEAP_BUNDLE_BINARY_DIR})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     install (TARGETS barriers DESTINATION bin)
 endif()

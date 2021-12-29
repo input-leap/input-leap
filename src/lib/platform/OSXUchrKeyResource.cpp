@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -201,7 +201,7 @@ OSXUchrKeyResource::getDeadKey(
 
     // convert keys to their dead counterparts
     for (KeySequence::iterator i = keys.begin(); i != keys.end(); ++i) {
-        *i = barrier::KeyMap::getDeadKey(*i);
+        *i = inputleap::KeyMap::getDeadKey(*i);
     }
 
     return true;

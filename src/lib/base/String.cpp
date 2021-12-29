@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@
 #include <algorithm>
 #include <cerrno>
 
-namespace barrier {
+namespace inputleap {
 namespace string {
 
 namespace {
@@ -334,7 +334,7 @@ CaselessCmp::less(const std::string& a, const std::string& b)
     return std::lexicographical_compare(
         a.begin(), a.end(),
         b.begin(), b.end(),
-        &barrier::string::CaselessCmp::cmpLess);
+        &inputleap::string::CaselessCmp::cmpLess);
 }
 
 bool

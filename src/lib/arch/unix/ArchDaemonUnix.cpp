@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -54,14 +54,14 @@ execSelfNonDaemonized()
     extern char** NXArgv;
     char** selfArgv = NXArgv;
 
-    setenv("_BARRIER_DAEMONIZED", "", 1);
+    setenv("_INPUTLEAP_DAEMONIZED", "", 1);
 
     execvp(selfArgv[0], selfArgv);
     return 0;
 }
 
 bool alreadyDaemonized() {
-    return std::getenv("_BARRIER_DAEMONIZED") != NULL;
+    return std::getenv("_INPUTLEAP_DAEMONIZED") != NULL;
 }
 
 #endif

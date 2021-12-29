@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -18,22 +18,22 @@
 
 #pragma once
 
-#include "barrier/IClient.h"
+#include "inputleap/IClient.h"
 
-#include "barrier/Clipboard.h"
-#include "barrier/DragInformation.h"
-#include "barrier/INode.h"
-#include "barrier/ClientArgs.h"
+#include "inputleap/Clipboard.h"
+#include "inputleap/DragInformation.h"
+#include "inputleap/INode.h"
+#include "inputleap/ClientArgs.h"
 #include "net/NetworkAddress.h"
 #include "base/EventTypes.h"
 #include "mt/CondVar.h"
 
 class EventQueueTimer;
-namespace barrier { class Screen; }
+namespace inputleap { class Screen; }
 class ServerProxy;
 class IDataSocket;
 class ISocketFactory;
-namespace barrier { class IStream; }
+namespace inputleap { class IStream; }
 class IEventQueue;
 class Thread;
 class TCPSocket;
@@ -59,7 +59,7 @@ public:
     */
     Client(IEventQueue* events, const std::string& name,
            const NetworkAddress& address, ISocketFactory* socketFactory,
-           barrier::Screen* screen, ClientArgs const& args);
+           inputleap::Screen* screen, ClientArgs const& args);
 
     ~Client();
 
@@ -201,8 +201,8 @@ private:
     std::string                m_name;
     NetworkAddress        m_serverAddress;
     ISocketFactory*        m_socketFactory;
-    barrier::Screen*    m_screen;
-    barrier::IStream*    m_stream;
+    inputleap::Screen* m_screen;
+    inputleap::IStream* m_stream;
     EventQueueTimer*    m_timer;
     ServerProxy*        m_server;
     bool                m_ready;

@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2012 Nick Bolton
  *
@@ -19,7 +19,7 @@
 // TODO: fix, tests failing intermittently on mac.
 #ifndef WINAPI_CARBON
 
-#define BARRIER_TEST_ENV
+#define INPUTLEAP_TEST_ENV
 
 #include "test/global/TestEventQueue.h"
 #include "ipc/IpcServer.h"

@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2015-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define BARRIER_TEST_ENV
+#define INPUTLEAP_TEST_ENV
 
 #include "test/mock/ipc/MockIpcServer.h"
 
@@ -38,7 +38,7 @@ using ::testing::Property;
 using ::testing::StrEq;
 using ::testing::AtLeast;
 
-using namespace barrier;
+using namespace inputleap;
 
 inline const Matcher<const IpcMessage&> IpcLogLineMessageEq(const String& s) {
     const Matcher<const IpcLogLineMessage&> m(

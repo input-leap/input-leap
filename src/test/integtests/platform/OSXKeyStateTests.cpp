@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2011 Nick Bolton
  *
@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "test/mock/barrier/MockKeyMap.h"
-#include "test/mock/barrier/MockEventQueue.h"
+#include "test/mock/inputleap/MockKeyMap.h"
+#include "test/mock/inputleap/MockEventQueue.h"
 #include "platform/OSXKeyState.h"
 #include "base/Log.h"
 
@@ -40,7 +40,7 @@ public:
 
 TEST_F(OSXKeyStateTests, fakeAndPoll_shift)
 {
-    barrier::KeyMap keyMap;
+    inputleap::KeyMap keyMap;
     MockEventQueue eventQueue;
     OSXKeyState keyState(&eventQueue, keyMap);
     keyState.updateKeyMap();
@@ -60,7 +60,7 @@ TEST_F(OSXKeyStateTests, fakeAndPoll_shift)
 
 TEST_F(OSXKeyStateTests, fakeAndPoll_charKey)
 {
-    barrier::KeyMap keyMap;
+    inputleap::KeyMap keyMap;
     MockEventQueue eventQueue;
     OSXKeyState keyState(&eventQueue, keyMap);
     keyState.updateKeyMap();
@@ -79,7 +79,7 @@ TEST_F(OSXKeyStateTests, fakeAndPoll_charKey)
 
 TEST_F(OSXKeyStateTests, fakeAndPoll_charKeyAndModifier)
 {
-    barrier::KeyMap keyMap;
+    inputleap::KeyMap keyMap;
     MockEventQueue eventQueue;
     OSXKeyState keyState(&eventQueue, keyMap);
     keyState.updateKeyMap();

@@ -1,6 +1,6 @@
 /*
-    barrier -- mouse and keyboard sharing utility
-    Copyright (C) Barrier contributors
+    InputLeap -- mouse and keyboard sharing utility
+    Copyright (C) InputLeap contributors
 
     This package is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -15,15 +15,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BARRIER_LIB_IO_FILESYSTEM_H
-#define BARRIER_LIB_IO_FILESYSTEM_H
+#ifndef INPUTLEAP_LIB_IO_FILESYSTEM_H
+#define INPUTLEAP_LIB_IO_FILESYSTEM_H
 
 #include <cstdio>
 #include <iosfwd>
 #include <ios>
 #include <ghc/fs_fwd.hpp>
 
-namespace barrier {
+namespace inputleap {
 
 namespace fs = ghc::filesystem;
 
@@ -36,6 +36,6 @@ void open_utf8_path(std::fstream& stream, const fs::path& path,
 
 std::FILE* fopen_utf8_path(const fs::path& path, const std::string& mode);
 
-} // namespace barrier
+} // namespace inputleap
 
-#endif // BARRIER_LIB_IO_FILESYSTEM_H
+#endif // INPUTLEAP_LIB_IO_FILESYSTEM_H

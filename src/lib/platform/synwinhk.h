@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2018 Debauchee Open Source Group
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
@@ -30,21 +30,21 @@
 #define CBARRIERHOOK_API __declspec(dllimport)
 #endif
 
-#define BARRIER_MSG_MARK            WM_APP + 0x0011    // mark id; <unused>
-#define BARRIER_MSG_KEY                WM_APP + 0x0012    // vk code; key data
-#define BARRIER_MSG_MOUSE_BUTTON    WM_APP + 0x0013    // button msg; <unused>
-#define BARRIER_MSG_MOUSE_WHEEL        WM_APP + 0x0014    // delta; <unused>
-#define BARRIER_MSG_MOUSE_MOVE        WM_APP + 0x0015    // x; y
-#define BARRIER_MSG_POST_WARP        WM_APP + 0x0016    // <unused>; <unused>
-#define BARRIER_MSG_PRE_WARP        WM_APP + 0x0017    // x; y
-#define BARRIER_MSG_SCREEN_SAVER    WM_APP + 0x0018    // activated; <unused>
-#define BARRIER_MSG_DEBUG            WM_APP + 0x0019    // data, data
-#define BARRIER_MSG_INPUT_FIRST        BARRIER_MSG_KEY
-#define BARRIER_MSG_INPUT_LAST        BARRIER_MSG_PRE_WARP
-#define BARRIER_HOOK_LAST_MSG        BARRIER_MSG_DEBUG
+#define INPUTLEAP_MSG_MARK            WM_APP + 0x0011    // mark id; <unused>
+#define INPUTLEAP_MSG_KEY             WM_APP + 0x0012    // vk code; key data
+#define INPUTLEAP_MSG_MOUSE_BUTTON    WM_APP + 0x0013    // button msg; <unused>
+#define INPUTLEAP_MSG_MOUSE_WHEEL     WM_APP + 0x0014    // delta; <unused>
+#define INPUTLEAP_MSG_MOUSE_MOVE      WM_APP + 0x0015    // x; y
+#define INPUTLEAP_MSG_POST_WARP       WM_APP + 0x0016    // <unused>; <unused>
+#define INPUTLEAP_MSG_PRE_WARP        WM_APP + 0x0017    // x; y
+#define INPUTLEAP_MSG_SCREEN_SAVER    WM_APP + 0x0018    // activated; <unused>
+#define INPUTLEAP_MSG_DEBUG           WM_APP + 0x0019    // data, data
+#define INPUTLEAP_MSG_INPUT_FIRST INPUTLEAP_MSG_KEY
+#define INPUTLEAP_MSG_INPUT_LAST INPUTLEAP_MSG_PRE_WARP
+#define INPUTLEAP_HOOK_LAST_MSG INPUTLEAP_MSG_DEBUG
 
-#define BARRIER_HOOK_FAKE_INPUT_VIRTUAL_KEY    VK_CANCEL
-#define BARRIER_HOOK_FAKE_INPUT_SCANCODE    0
+#define INPUTLEAP_HOOK_FAKE_INPUT_VIRTUAL_KEY    VK_CANCEL
+#define INPUTLEAP_HOOK_FAKE_INPUT_SCANCODE    0
 
 extern "C" {
 

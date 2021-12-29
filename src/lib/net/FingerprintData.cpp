@@ -1,6 +1,6 @@
 /*
-    barrier -- mouse and keyboard sharing utility
-    Copyright (C) Barrier contributors
+    InputLeap -- mouse and keyboard sharing utility
+    Copyright (C) InputLeap contributors
 
     This package is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -21,7 +21,7 @@
 #include <algorithm>
 #include <fstream>
 
-namespace barrier {
+namespace inputleap {
 
 bool FingerprintData::operator==(const FingerprintData& other) const
 {
@@ -49,4 +49,4 @@ FingerprintType fingerprint_type_from_string(const std::string& type)
     return FingerprintType::INVALID;
 }
 
-} // namespace barrier
+} // namespace inputleap

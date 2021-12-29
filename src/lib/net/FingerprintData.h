@@ -1,6 +1,6 @@
 /*
-    barrier -- mouse and keyboard sharing utility
-    Copyright (C) Barrier contributors
+    InputLeap -- mouse and keyboard sharing utility
+    Copyright (C) InputLeap contributors
 
     This package is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -15,13 +15,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BARRIER_LIB_NET_FINGERPRINT_DATA_H
-#define BARRIER_LIB_NET_FINGERPRINT_DATA_H
+#ifndef INPUTLEAP_LIB_NET_FINGERPRINT_DATA_H
+#define INPUTLEAP_LIB_NET_FINGERPRINT_DATA_H
 
 #include <string>
 #include <vector>
 
-namespace barrier {
+namespace inputleap {
 
 enum FingerprintType {
     INVALID,
@@ -41,6 +41,6 @@ struct FingerprintData {
 const char* fingerprint_type_to_string(FingerprintType type);
 FingerprintType fingerprint_type_from_string(const std::string& type);
 
-} // namespace barrier
+} // namespace inputleap
 
-#endif // BARRIER_LIB_NET_FINGERPRINT_TYPE_H
+#endif // INPUTLEAP_LIB_NET_FINGERPRINT_DATA_H

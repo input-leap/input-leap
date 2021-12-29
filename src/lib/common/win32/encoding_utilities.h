@@ -1,6 +1,6 @@
 /*
-    barrier -- mouse and keyboard sharing utility
-    Copyright (C) Barrier contributors
+    InputLeap -- mouse and keyboard sharing utility
+    Copyright (C) InputLeap contributors
 
     This package is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -15,8 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BARRIER_LIB_COMMON_WIN32_ENCODING_UTILITIES_H
-#define BARRIER_LIB_COMMON_WIN32_ENCODING_UTILITIES_H
+#ifndef INPUTLEAP_LIB_COMMON_WIN32_ENCODING_UTILITIES_H
+#define INPUTLEAP_LIB_COMMON_WIN32_ENCODING_UTILITIES_H
 
 #include "winapi.h"
 #include <string>

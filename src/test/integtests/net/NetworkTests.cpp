@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2013-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -18,19 +18,19 @@
 // TODO: fix, tests failing intermittently on mac.
 #ifndef WINAPI_CARBON
 
-#define BARRIER_TEST_ENV
+#define INPUTLEAP_TEST_ENV
 
 #include "test/mock/server/MockConfig.h"
 #include "test/mock/server/MockPrimaryClient.h"
-#include "test/mock/barrier/MockScreen.h"
+#include "test/mock/inputleap/MockScreen.h"
 #include "test/mock/server/MockInputFilter.h"
 #include "test/global/TestEventQueue.h"
 #include "server/Server.h"
 #include "server/ClientListener.h"
 #include "server/ClientProxy.h"
 #include "client/Client.h"
-#include "barrier/FileChunk.h"
-#include "barrier/StreamChunker.h"
+#include "inputleap/FileChunk.h"
+#include "inputleap/StreamChunker.h"
 #include "net/SocketMultiplexer.h"
 #include "net/NetworkAddress.h"
 #include "net/TCPSocketFactory.h"
@@ -427,7 +427,7 @@ void
 NetworkTests::sendMockData(void* eventTarget)
 {
     // send first message (file size)
-    String size = barrier::string::sizeTypeToString(kMockDataSize);
+    String size = inputleap::string::sizeTypeToString(kMockDataSize);
     FileChunk* sizeMessage = FileChunk::start(size);
 
     m_events.addEvent(Event(m_events.forFile().fileChunkSending(), eventTarget, sizeMessage));

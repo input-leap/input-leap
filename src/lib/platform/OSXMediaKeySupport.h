@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2016 Symless.
  *
  * This package is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import <Carbon/Carbon.h>
 
-#include "barrier/key_types.h"
+#include "inputleap/key_types.h"
 
 #if defined(__cplusplus)
 extern "C" {

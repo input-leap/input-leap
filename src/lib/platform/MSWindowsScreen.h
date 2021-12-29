@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2018 Debauchee Open Source Group
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
@@ -20,8 +20,8 @@
 #pragma once
 
 #include "platform/MSWindowsHook.h"
-#include "barrier/PlatformScreen.h"
-#include "barrier/DragInformation.h"
+#include "inputleap/PlatformScreen.h"
+#include "inputleap/DragInformation.h"
 #include "platform/synwinhk.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"

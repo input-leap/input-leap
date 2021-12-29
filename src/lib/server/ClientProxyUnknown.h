@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  *
@@ -23,13 +23,13 @@
 
 class ClientProxy;
 class EventQueueTimer;
-namespace barrier { class IStream; }
+namespace inputleap { class IStream; }
 class Server;
 class IEventQueue;
 
 class ClientProxyUnknown {
 public:
-    ClientProxyUnknown(barrier::IStream* stream, double timeout, Server* server, IEventQueue* events);
+    ClientProxyUnknown(inputleap::IStream* stream, double timeout, Server* server, IEventQueue* events);
     ~ClientProxyUnknown();
 
     //! @name manipulators
@@ -44,7 +44,7 @@ public:
     ClientProxy*        orphanClientProxy();
 
     //! Get the stream
-    barrier::IStream*    getStream() { return m_stream; }
+    inputleap::IStream*    getStream() { return m_stream; }
 
     //@}
 
@@ -62,7 +62,7 @@ private:
     void                handleReady(const Event&, void*);
 
 private:
-    barrier::IStream*    m_stream;
+    inputleap::IStream*    m_stream;
     EventQueueTimer*    m_timer;
     ClientProxy*        m_proxy;
     bool                m_ready;

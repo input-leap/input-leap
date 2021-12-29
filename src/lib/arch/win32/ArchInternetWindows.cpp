@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -75,8 +75,8 @@ std::string ArchInternetWindows::urlEncode(const std::string& url)
     // the win32 url encoding functions are pretty useless (to us) and only
     // escape "unsafe" chars, but not + or =, so we need to replace these
     // manually (and probably many other chars).
-    barrier::string::findReplaceAll(result, "+", "%2B");
-    barrier::string::findReplaceAll(result, "=", "%3D");
+    inputleap::string::findReplaceAll(result, "+", "%2B");
+    inputleap::string::findReplaceAll(result, "=", "%3D");
 
     return result;
 }

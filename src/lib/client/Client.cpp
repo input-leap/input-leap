@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -19,15 +19,15 @@
 #include "client/Client.h"
 
 #include "client/ServerProxy.h"
-#include "barrier/Screen.h"
-#include "barrier/FileChunk.h"
-#include "barrier/DropHelper.h"
-#include "barrier/PacketStreamFilter.h"
-#include "barrier/ProtocolUtil.h"
-#include "barrier/protocol_types.h"
-#include "barrier/XBarrier.h"
-#include "barrier/StreamChunker.h"
-#include "barrier/IPlatformScreen.h"
+#include "inputleap/Screen.h"
+#include "inputleap/FileChunk.h"
+#include "inputleap/DropHelper.h"
+#include "inputleap/PacketStreamFilter.h"
+#include "inputleap/ProtocolUtil.h"
+#include "inputleap/protocol_types.h"
+#include "inputleap/XBarrier.h"
+#include "inputleap/StreamChunker.h"
+#include "inputleap/IPlatformScreen.h"
 #include "mt/Thread.h"
 #include "net/TCPSocket.h"
 #include "net/IDataSocket.h"
@@ -50,7 +50,7 @@
 
 Client::Client(IEventQueue* events, const std::string& name, const NetworkAddress& address,
                ISocketFactory* socketFactory,
-               barrier::Screen* screen,
+               inputleap::Screen* screen,
                ClientArgs const& args) :
     m_mock(false),
     m_name(name),

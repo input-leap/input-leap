@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2012 Nick Bolton
  *
@@ -21,7 +21,7 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 
-namespace barrier { class IStream; }
+namespace inputleap { class IStream; }
 class IpcMessage;
 class IpcLogLineMessage;
 class IEventQueue;
@@ -30,7 +30,7 @@ class IpcServerProxy {
     friend class IpcClient;
 
 public:
-    IpcServerProxy(barrier::IStream& stream, IEventQueue* events);
+    IpcServerProxy(inputleap::IStream& stream, IEventQueue* events);
     virtual ~IpcServerProxy();
 
 private:
@@ -41,6 +41,6 @@ private:
     void                disconnect();
 
 private:
-    barrier::IStream&    m_stream;
+    inputleap::IStream& m_stream;
     IEventQueue*        m_events;
 };

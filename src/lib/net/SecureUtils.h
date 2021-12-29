@@ -1,6 +1,6 @@
 /*
-    barrier -- mouse and keyboard sharing utility
-    Copyright (C) Barrier contributors
+    InputLeap -- mouse and keyboard sharing utility
+    Copyright (C) InputLeap contributors
 
     This package is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -15,8 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BARRIER_LIB_NET_SECUREUTILS_H
-#define BARRIER_LIB_NET_SECUREUTILS_H
+#ifndef INPUTLEAP_LIB_NET_SECUREUTILS_H
+#define INPUTLEAP_LIB_NET_SECUREUTILS_H
 
 #include "FingerprintData.h"
 #include <openssl/ossl_typ.h>
@@ -24,7 +24,7 @@
 #include <string>
 #include <vector>
 
-namespace barrier {
+namespace inputleap {
 
 std::string format_ssl_fingerprint(const std::vector<std::uint8_t>& fingerprint,
                                    bool separator = true);
@@ -38,6 +38,6 @@ void generate_pem_self_signed_cert(const std::string& path);
 
 std::string create_fingerprint_randomart(const std::vector<std::uint8_t>& dgst_raw);
 
-} // namespace barrier
+} // namespace inputleap
 
-#endif // BARRIER_LIB_NET_SECUREUTILS_H
+#endif // INPUTLEAP_LIB_NET_SECUREUTILS_H

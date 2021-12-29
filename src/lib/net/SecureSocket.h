@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2015-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -58,7 +58,7 @@ public:
     EJobResult            doRead() override;
     EJobResult            doWrite() override;
     void                initSsl(bool server);
-    bool load_certificates(const barrier::fs::path& path);
+    bool load_certificates(const inputleap::fs::path& path);
 
 private:
     // SSL
@@ -74,7 +74,7 @@ private:
     void                disconnect();
 
     // may only be called with ssl_mutex_ acquired
-    bool verify_peer_certificate(const barrier::fs::path& fingerprint_db_path);
+    bool verify_peer_certificate(const inputleap::fs::path& fingerprint_db_path);
 
     MultiplexerJobStatus serviceConnect(ISocketMultiplexerJob*, bool, bool, bool);
     MultiplexerJobStatus serviceAccept(ISocketMultiplexerJob*, bool, bool, bool);

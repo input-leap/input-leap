@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -19,9 +19,9 @@
 #pragma once
 
 #include "server/BaseClientProxy.h"
-#include "barrier/protocol_types.h"
+#include "inputleap/protocol_types.h"
 
-namespace barrier { class Screen; }
+namespace inputleap { class Screen; }
 
 //! Primary screen as pseudo-client
 /*!
@@ -34,10 +34,10 @@ public:
     /*!
     \c name is the name of the server and \p screen is primary screen.
     */
-    PrimaryClient(const std::string& name, barrier::Screen* screen);
+    PrimaryClient(const std::string& name, inputleap::Screen* screen);
     ~PrimaryClient();
 
-#ifdef BARRIER_TEST_ENV
+#ifdef INPUTLEAP_TEST_ENV
     PrimaryClient() : BaseClientProxy("") { }
 #endif
 
@@ -146,11 +146,11 @@ public:
     virtual void        sendDragInfo(UInt32 fileCount, const char* info, size_t size);
     virtual void        fileChunkSending(UInt8 mark, char* data, size_t dataSize);
 
-    virtual barrier::IStream*
+    virtual inputleap::IStream*
                         getStream() const { return NULL; }
     bool                isPrimary() const { return true; }
 private:
-    barrier::Screen*    m_screen;
+    inputleap::Screen* m_screen;
     bool                m_clipboardDirty[kClipboardEnd];
     SInt32                m_fakeInputCount;
 };

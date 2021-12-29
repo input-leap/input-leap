@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -18,7 +18,7 @@
 
 #include "platform/XWindowsUtil.h"
 
-#include "barrier/key_types.h"
+#include "inputleap/key_types.h"
 #include "mt/Thread.h"
 #include "base/Log.h"
 #include "base/String.h"
@@ -1661,10 +1661,10 @@ std::string XWindowsUtil::atomToString(Display* display, Atom atom)
     XWindowsUtil::ErrorLock lock(display, &error);
     char* name = XGetAtomName(display, atom);
     if (error) {
-        return barrier::string::sprintf("<UNKNOWN> (%d)", (int)atom);
+        return inputleap::string::sprintf("<UNKNOWN> (%d)", (int)atom);
     }
     else {
-        std::string msg = barrier::string::sprintf("%s (%d)", name, (int)atom);
+        std::string msg = inputleap::string::sprintf("%s (%d)", name, (int)atom);
         XFree(name);
         return msg;
     }
@@ -1679,12 +1679,12 @@ std::string XWindowsUtil::atomsToString(Display* display, const Atom* atom, UInt
     std::string msg;
     if (error) {
         for (UInt32 i = 0; i < num; ++i) {
-            msg += barrier::string::sprintf("<UNKNOWN> (%d), ", (int)atom[i]);
+            msg += inputleap::string::sprintf("<UNKNOWN> (%d), ", (int)atom[i]);
         }
     }
     else {
         for (UInt32 i = 0; i < num; ++i) {
-            msg += barrier::string::sprintf("%s (%d), ", names[i], (int)atom[i]);
+            msg += inputleap::string::sprintf("%s (%d), ", names[i], (int)atom[i]);
             XFree(names[i]);
         }
     }

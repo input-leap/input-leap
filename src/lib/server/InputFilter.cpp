@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2005 Chris Schoeneman
  *
@@ -19,7 +19,7 @@
 #include "server/InputFilter.h"
 #include "server/Server.h"
 #include "server/PrimaryClient.h"
-#include "barrier/KeyMap.h"
+#include "inputleap/KeyMap.h"
 #include "base/EventQueue.h"
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
@@ -97,8 +97,8 @@ InputFilter::KeystrokeCondition::clone() const
 
 std::string InputFilter::KeystrokeCondition::format() const
 {
-    return barrier::string::sprintf("keystroke(%s)",
-                            barrier::KeyMap::formatKey(m_key, m_mask).c_str());
+    return inputleap::string::sprintf("keystroke(%s)",
+                            inputleap::KeyMap::formatKey(m_key, m_mask).c_str());
 }
 
 InputFilter::EFilterStatus
@@ -184,11 +184,11 @@ InputFilter::MouseButtonCondition::clone() const
 
 std::string InputFilter::MouseButtonCondition::format() const
 {
-    std::string key = barrier::KeyMap::formatKey(kKeyNone, m_mask);
+    std::string key = inputleap::KeyMap::formatKey(kKeyNone, m_mask);
     if (!key.empty()) {
         key += "+";
     }
-    return barrier::string::sprintf("mousebutton(%s%d)", key.c_str(), m_button);
+    return inputleap::string::sprintf("mousebutton(%s%d)", key.c_str(), m_button);
 }
 
 InputFilter::EFilterStatus
@@ -245,7 +245,7 @@ InputFilter::ScreenConnectedCondition::clone() const
 
 std::string InputFilter::ScreenConnectedCondition::format() const
 {
-    return barrier::string::sprintf("connect(%s)", m_screen.c_str());
+    return inputleap::string::sprintf("connect(%s)", m_screen.c_str());
 }
 
 InputFilter::EFilterStatus
@@ -299,7 +299,7 @@ std::string InputFilter::LockCursorToScreenAction::format() const
 {
     static const char* s_mode[] = { "off", "on", "toggle" };
 
-    return barrier::string::sprintf("lockCursorToScreen(%s)", s_mode[m_mode]);
+    return inputleap::string::sprintf("lockCursorToScreen(%s)", s_mode[m_mode]);
 }
 
 void
@@ -340,7 +340,7 @@ InputFilter::SwitchToScreenAction::clone() const
 
 std::string InputFilter::SwitchToScreenAction::format() const
 {
-    return barrier::string::sprintf("switchToScreen(%s)", m_screen.c_str());
+    return inputleap::string::sprintf("switchToScreen(%s)", m_screen.c_str());
 }
 
 void
@@ -378,7 +378,7 @@ InputFilter::ToggleScreenAction::clone() const
 String
 InputFilter::ToggleScreenAction::format() const
 {
-    return barrier::string::sprintf("toggleScreen");
+    return inputleap::string::sprintf("toggleScreen");
 }
 
 void
@@ -419,7 +419,7 @@ std::string InputFilter::SwitchInDirectionAction::format() const
         "down"
     };
 
-    return barrier::string::sprintf("switchInDirection(%s)", s_names[m_direction]);
+    return inputleap::string::sprintf("switchInDirection(%s)", s_names[m_direction]);
 }
 
 void
@@ -474,10 +474,10 @@ std::string InputFilter::KeyboardBroadcastAction::format() const
     static const char* s_name = "keyboardBroadcast";
 
     if (m_screens.empty() || m_screens[0] == '*') {
-        return barrier::string::sprintf("%s(%s)", s_name, s_mode[m_mode]);
+        return inputleap::string::sprintf("%s(%s)", s_name, s_mode[m_mode]);
     }
     else {
-        return barrier::string::sprintf("%s(%s,%.*s)", s_name, s_mode[m_mode],
+        return inputleap::string::sprintf("%s(%s,%.*s)", s_name, s_mode[m_mode],
                             m_screens.size() - 2,
                             m_screens.c_str() + 1);
     }
@@ -545,18 +545,18 @@ std::string InputFilter::KeystrokeAction::format() const
     const char* type = formatName();
 
     if (m_keyInfo->m_screens[0] == '\0') {
-        return barrier::string::sprintf("%s(%s)", type,
-                            barrier::KeyMap::formatKey(m_keyInfo->m_key,
+        return inputleap::string::sprintf("%s(%s)", type,
+                            inputleap::KeyMap::formatKey(m_keyInfo->m_key,
                                 m_keyInfo->m_mask).c_str());
     }
     else if (m_keyInfo->m_screens[0] == '*') {
-        return barrier::string::sprintf("%s(%s,*)", type,
-                            barrier::KeyMap::formatKey(m_keyInfo->m_key,
+        return inputleap::string::sprintf("%s(%s,*)", type,
+                            inputleap::KeyMap::formatKey(m_keyInfo->m_key,
                                 m_keyInfo->m_mask).c_str());
     }
     else {
-        return barrier::string::sprintf("%s(%s,%.*s)", type,
-                            barrier::KeyMap::formatKey(m_keyInfo->m_key,
+        return inputleap::string::sprintf("%s(%s,%.*s)", type,
+                            inputleap::KeyMap::formatKey(m_keyInfo->m_key,
                                 m_keyInfo->m_mask).c_str(),
                             strlen(m_keyInfo->m_screens + 1) - 1,
                             m_keyInfo->m_screens + 1);
@@ -625,8 +625,8 @@ std::string InputFilter::MouseButtonAction::format() const
 {
     const char* type = formatName();
 
-    std::string key = barrier::KeyMap::formatKey(kKeyNone, m_buttonInfo->m_mask);
-    return barrier::string::sprintf("%s(%s%s%d)", type,
+    std::string key = inputleap::KeyMap::formatKey(kKeyNone, m_buttonInfo->m_mask);
+    return inputleap::string::sprintf("%s(%s%s%d)", type,
                             key.c_str(), key.empty() ? "" : "+",
                             m_buttonInfo->m_button);
 }

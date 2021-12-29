@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2013-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -18,9 +18,9 @@
 #include "server/ClientProxy1_5.h"
 
 #include "server/Server.h"
-#include "barrier/FileChunk.h"
-#include "barrier/StreamChunker.h"
-#include "barrier/ProtocolUtil.h"
+#include "inputleap/FileChunk.h"
+#include "inputleap/StreamChunker.h"
+#include "inputleap/ProtocolUtil.h"
 #include "io/IStream.h"
 #include "base/TMethodEventJob.h"
 #include "base/Log.h"
@@ -31,7 +31,7 @@
 // ClientProxy1_5
 //
 
-ClientProxy1_5::ClientProxy1_5(const std::string& name, barrier::IStream* stream, Server* server,
+ClientProxy1_5::ClientProxy1_5(const std::string& name, inputleap::IStream* stream, Server* server,
                                IEventQueue* events) :
     ClientProxy1_4(name, stream, server, events),
     m_events(events)

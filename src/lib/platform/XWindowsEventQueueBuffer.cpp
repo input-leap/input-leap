@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  *
@@ -63,7 +63,7 @@ XWindowsEventQueueBuffer::XWindowsEventQueueBuffer(IXWindowsImpl* impl,
     assert(m_display != NULL);
     assert(m_window  != None);
 
-    m_userEvent = m_impl->XInternAtom(m_display, "BARRIER_USER_EVENT", False);
+    m_userEvent = m_impl->XInternAtom(m_display, "INPUTLEAP_USER_EVENT", False);
     // set up for pipe hack
     int result = pipe(m_pipefd);
     assert(result == 0);

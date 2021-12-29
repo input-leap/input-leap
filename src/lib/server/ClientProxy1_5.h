@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2013-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ class IEventQueue;
 //! Proxy for client implementing protocol version 1.5
 class ClientProxy1_5 : public ClientProxy1_4 {
 public:
-    ClientProxy1_5(const std::string& name, barrier::IStream* adoptedStream, Server* server,
+    ClientProxy1_5(const std::string& name, inputleap::IStream* adoptedStream, Server* server,
                    IEventQueue* events);
     ~ClientProxy1_5();
 

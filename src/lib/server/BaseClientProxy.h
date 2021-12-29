@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include "barrier/IClient.h"
+#include "inputleap/IClient.h"
 
-namespace barrier { class IStream; }
+namespace inputleap { class IStream; }
 
 //! Generic proxy for client or primary
 class BaseClientProxy : public IClient {
@@ -89,7 +89,7 @@ public:
                             size_t size) = 0;
     virtual void        fileChunkSending(UInt8 mark, char* data, size_t dataSize) = 0;
     virtual std::string getName() const;
-    virtual barrier::IStream*
+    virtual inputleap::IStream*
                         getStream() const = 0;
 
 private:

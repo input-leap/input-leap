@@ -16,12 +16,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 cmake_minimum_required (VERSION 3.4)
-project (barrier C CXX)
+project(InputLeap C CXX)
 
-option (BARRIER_BUILD_GUI "Build the GUI" ON)
-option (BARRIER_BUILD_INSTALLER "Build the installer" ON)
-option (BARRIER_BUILD_TESTS "Build the tests" ON)
-option (BARRIER_USE_EXTERNAL_GTEST "Use external installation of Google Test framework" OFF)
+option(INPUTLEAP_BUILD_GUI "Build the GUI" ON)
+option(INPUTLEAP_BUILD_INSTALLER "Build the installer" ON)
+option(INPUTLEAP_BUILD_TESTS "Build the tests" ON)
+option(INPUTLEAP_USE_EXTERNAL_GTEST "Use external installation of Google Test framework" OFF)
 
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set (CMAKE_CXX_STANDARD 14)
@@ -45,9 +45,9 @@ endif()
 
 # Add headers to source list
 if (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
-    set (BARRIER_ADD_HEADERS FALSE)
+    set(INPUTLEAP_ADD_HEADERS FALSE)
 else()
-    set (BARRIER_ADD_HEADERS TRUE)
+    set(INPUTLEAP_ADD_HEADERS TRUE)
 endif()
 
 set (libs)
@@ -173,7 +173,7 @@ if (UNIX)
             link_directories("/usr/X11R6/lib")
         endif()
 
-        if (BARRIER_BUILD_GUI AND ${PKG_CONFIG_FOUND})
+        if(INPUTLEAP_BUILD_GUI AND ${PKG_CONFIG_FOUND})
             pkg_check_modules (AVAHI_COMPAT REQUIRED avahi-compat-libdns_sd)
             include_directories (BEFORE SYSTEM ${AVAHI_COMPAT_INCLUDE_DIRS})
             set (CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${AVAHI_COMPAT_INCLUDE_DIRS}")
@@ -202,7 +202,7 @@ if (UNIX)
             message (FATAL_ERROR "Missing header: " ${XKBlib})
         endif()
 
-        if (BARRIER_BUILD_GUI AND NOT HAVE_DNSSD)
+        if(INPUTLEAP_BUILD_GUI AND NOT HAVE_DNSSD)
             message (FATAL_ERROR "Missing header: dns_sd.h")
         endif()
 
@@ -297,7 +297,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         /DWIN32
         /D_WINDOWS
         /D_CRT_SECURE_NO_WARNINGS
-        /DBARRIER_VERSION=\"${BARRIER_VERSION}\"
+        /DINPUTLEAP_VERSION=\"${INPUTLEAP_VERSION}\"
         /D_XKEYCHECK_H
     )
 endif()
@@ -409,30 +409,30 @@ macro (configure_files srcDir destDir)
     endforeach (templateFile)
 endmacro (configure_files)
 
-if (${BARRIER_BUILD_INSTALLER})
+if (${INPUTLEAP_BUILD_INSTALLER})
 #
 # macOS app Bundle
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set (CMAKE_INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks")
-    set (BARRIER_BUNDLE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dist/macos/bundle)
-    set (BARRIER_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
-    set (BARRIER_BUNDLE_APP_DIR ${BARRIER_BUNDLE_DIR}/Barrier.app)
-    set (BARRIER_BUNDLE_BINARY_DIR ${BARRIER_BUNDLE_APP_DIR}/Contents/MacOS)
+    set(INPUTLEAP_BUNDLE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dist/macos/bundle)
+    set(INPUTLEAP_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
+    set(INPUTLEAP_BUNDLE_APP_DIR ${INPUTLEAP_BUNDLE_DIR}/Barrier.app)
+    set(INPUTLEAP_BUNDLE_BINARY_DIR ${INPUTLEAP_BUNDLE_APP_DIR}/Contents/MacOS)
 
-    configure_files (${BARRIER_BUNDLE_SOURCE_DIR} ${BARRIER_BUNDLE_DIR})
+    configure_files(${INPUTLEAP_BUNDLE_SOURCE_DIR} ${INPUTLEAP_BUNDLE_DIR})
 
     add_custom_target(Barrier_MacOS ALL
                       bash build_dist.sh
                       DEPENDS barrier barriers barrierc
-                      WORKING_DIRECTORY ${BARRIER_BUNDLE_DIR})
+                      WORKING_DIRECTORY ${INPUTLEAP_BUNDLE_DIR})
 endif()
 
 #
 # Windows installer
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-        set (BARRIER_WIX_VERSION "${BARRIER_VERSION_MAJOR}.${BARRIER_VERSION_MINOR}.${BARRIER_VERSION_PATCH}")
+        set(INPUTLEAP_WIX_VERSION "${INPUTLEAP_VERSION_MAJOR}.${INPUTLEAP_VERSION_MINOR}.${INPUTLEAP_VERSION_PATCH}")
         message (STATUS "Configuring the wix installer")
         configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer-wix)
         message (STATUS "Configuring the inno installer")

@@ -1,6 +1,6 @@
 /*
-    barrier -- mouse and keyboard sharing utility
-    Copyright (C) Barrier contributors
+    InputLeap -- mouse and keyboard sharing utility
+    Copyright (C) InputLeap contributors
 
     This package is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -15,11 +15,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BARRIER_GUI_FINGERPRINT_ACCEPT_DIALOG_H
-#define BARRIER_GUI_FINGERPRINT_ACCEPT_DIALOG_H
+#ifndef INPUTLEAP_GUI_FINGERPRINT_ACCEPT_DIALOG_H
+#define INPUTLEAP_GUI_FINGERPRINT_ACCEPT_DIALOG_H
 
 #include "net/FingerprintData.h"
-#include "barrier/BarrierType.h"
+#include "inputleap/BarrierType.h"
 #include <QDialog>
 #include <memory>
 
@@ -34,12 +34,12 @@ class FingerprintAcceptDialog : public QDialog
 public:
     explicit FingerprintAcceptDialog(QWidget* parent,
                                      BarrierType type,
-                                     const barrier::FingerprintData& fingerprint_sha1,
-                                     const barrier::FingerprintData& fingerprint_sha256);
+                                     const inputleap::FingerprintData& fingerprint_sha1,
+                                     const inputleap::FingerprintData& fingerprint_sha256);
     ~FingerprintAcceptDialog() override;
 
 private:
     std::unique_ptr<Ui::FingerprintAcceptDialog> ui_;
 };
 
-#endif // BARRIER_GUI_FINGERPRINT_ACCEPT_DIALOG_H
+#endif // INPUTLEAP_GUI_FINGERPRINT_ACCEPT_DIALOG_H

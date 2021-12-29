@@ -1,6 +1,6 @@
 /*
-    barrier -- mouse and keyboard sharing utility
-    Copyright (C) Barrier contributors
+    InputLeap -- mouse and keyboard sharing utility
+    Copyright (C) InputLeap contributors
 
     This package is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -21,8 +21,8 @@
 
 FingerprintAcceptDialog::FingerprintAcceptDialog(QWidget *parent,
                                                  BarrierType type,
-                                                 const barrier::FingerprintData& fingerprint_sha1,
-                                                 const barrier::FingerprintData& fingerprint_sha256) :
+                                                 const inputleap::FingerprintData& fingerprint_sha1,
+                                                 const inputleap::FingerprintData& fingerprint_sha256) :
     QDialog(parent),
     ui_{std::make_unique<Ui::FingerprintAcceptDialog>()}
 {
@@ -33,13 +33,13 @@ FingerprintAcceptDialog::FingerprintAcceptDialog(QWidget *parent,
         ui_->label_sha1_fingerprint_full->hide();
     } else {
         ui_->label_sha1_fingerprint_full->setText(
-                QString::fromStdString(barrier::format_ssl_fingerprint(fingerprint_sha1.data)));
+                QString::fromStdString(inputleap::format_ssl_fingerprint(fingerprint_sha1.data)));
     }
 
     ui_->label_sha256_fingerprint_full->setText(
-            QString::fromStdString(barrier::format_ssl_fingerprint_columns(fingerprint_sha256.data)));
+            QString::fromStdString(inputleap::format_ssl_fingerprint_columns(fingerprint_sha256.data)));
     ui_->label_sha256_fingerprint_randomart->setText(
-            QString::fromStdString(barrier::create_fingerprint_randomart(fingerprint_sha256.data)));
+            QString::fromStdString(inputleap::create_fingerprint_randomart(fingerprint_sha256.data)));
 
     QString explanation;
     if (type == BarrierType::Server) {

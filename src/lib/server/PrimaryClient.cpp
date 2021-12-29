@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -18,15 +18,15 @@
 
 #include "server/PrimaryClient.h"
 
-#include "barrier/Screen.h"
-#include "barrier/Clipboard.h"
+#include "inputleap/Screen.h"
+#include "inputleap/Clipboard.h"
 #include "base/Log.h"
 
 //
 // PrimaryClient
 //
 
-PrimaryClient::PrimaryClient(const std::string& name, barrier::Screen* screen) :
+PrimaryClient::PrimaryClient(const std::string& name, inputleap::Screen* screen) :
     BaseClientProxy(name),
     m_screen(screen),
     m_fakeInputCount(0)

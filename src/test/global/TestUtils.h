@@ -1,6 +1,6 @@
 /*
-    barrier -- mouse and keyboard sharing utility
-    Copyright (C) Barrier contributors
+    InputLeap -- mouse and keyboard sharing utility
+    Copyright (C) InputLeap contributors
 
     This package is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -15,16 +15,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BARRIER_TEST_GLOBAL_TEST_UTILS_H
-#define BARRIER_TEST_GLOBAL_TEST_UTILS_H
+#ifndef INPUTLEAP_TEST_GLOBAL_TEST_UTILS_H
+#define INPUTLEAP_TEST_GLOBAL_TEST_UTILS_H
 
 #include <cstdint>
 #include <vector>
 
-namespace barrier {
+namespace inputleap {
 
 std::vector<std::uint8_t> generate_pseudo_random_bytes(std::size_t seed, std::size_t size);
 
-} // namespace barrier
+} // namespace inputleap
 
-#endif // BARRIER_TEST_GLOBAL_TEST_UTILS_H
+#endif // INPUTLEAP_TEST_GLOBAL_TEST_UTILS_H

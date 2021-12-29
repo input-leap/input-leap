@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 
 #include "test/global/gtest.h"
 
-using namespace barrier;
+using namespace inputleap;
 
 TEST(StringTests, format_formatWithArguments_formatedString)
 {

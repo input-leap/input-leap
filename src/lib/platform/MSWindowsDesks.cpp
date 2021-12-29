@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2018 Debauchee Open Source Group
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
@@ -20,8 +20,8 @@
 #include "platform/MSWindowsDesks.h"
 
 #include "platform/MSWindowsScreen.h"
-#include "barrier/IScreenSaver.h"
-#include "barrier/XScreen.h"
+#include "inputleap/IScreenSaver.h"
+#include "inputleap/XScreen.h"
 #include "mt/Lock.h"
 #include "mt/Thread.h"
 #include "arch/win32/ArchMiscWindows.h"
@@ -67,29 +67,29 @@
 #endif
 
 // <unused>; <unused>
-#define BARRIER_MSG_SWITCH            BARRIER_HOOK_LAST_MSG + 1
+#define INPUTLEAP_MSG_SWITCH INPUTLEAP_HOOK_LAST_MSG + 1
 // <unused>; <unused>
-#define BARRIER_MSG_ENTER            BARRIER_HOOK_LAST_MSG + 2
+#define INPUTLEAP_MSG_ENTER INPUTLEAP_HOOK_LAST_MSG + 2
 // <unused>; <unused>
-#define BARRIER_MSG_LEAVE            BARRIER_HOOK_LAST_MSG + 3
+#define INPUTLEAP_MSG_LEAVE INPUTLEAP_HOOK_LAST_MSG + 3
 // wParam = flags, HIBYTE(lParam) = virtual key, LOBYTE(lParam) = scan code
-#define BARRIER_MSG_FAKE_KEY        BARRIER_HOOK_LAST_MSG + 4
+#define INPUTLEAP_MSG_FAKE_KEY INPUTLEAP_HOOK_LAST_MSG + 4
  // flags, XBUTTON id
-#define BARRIER_MSG_FAKE_BUTTON        BARRIER_HOOK_LAST_MSG + 5
+#define INPUTLEAP_MSG_FAKE_BUTTON INPUTLEAP_HOOK_LAST_MSG + 5
 // x; y
-#define BARRIER_MSG_FAKE_MOVE        BARRIER_HOOK_LAST_MSG + 6
+#define INPUTLEAP_MSG_FAKE_MOVE INPUTLEAP_HOOK_LAST_MSG + 6
 // xDelta; yDelta
-#define BARRIER_MSG_FAKE_WHEEL        BARRIER_HOOK_LAST_MSG + 7
+#define INPUTLEAP_MSG_FAKE_WHEEL INPUTLEAP_HOOK_LAST_MSG + 7
 // POINT*; <unused>
-#define BARRIER_MSG_CURSOR_POS        BARRIER_HOOK_LAST_MSG + 8
+#define INPUTLEAP_MSG_CURSOR_POS INPUTLEAP_HOOK_LAST_MSG + 8
 // IKeyState*; <unused>
-#define BARRIER_MSG_SYNC_KEYS        BARRIER_HOOK_LAST_MSG + 9
+#define INPUTLEAP_MSG_SYNC_KEYS INPUTLEAP_HOOK_LAST_MSG + 9
 // install; <unused>
-#define BARRIER_MSG_SCREENSAVER        BARRIER_HOOK_LAST_MSG + 10
+#define INPUTLEAP_MSG_SCREENSAVER INPUTLEAP_HOOK_LAST_MSG + 10
 // dx; dy
-#define BARRIER_MSG_FAKE_REL_MOVE    BARRIER_HOOK_LAST_MSG + 11
+#define INPUTLEAP_MSG_FAKE_REL_MOVE INPUTLEAP_HOOK_LAST_MSG + 11
 // enable; <unused>
-#define BARRIER_MSG_FAKE_INPUT        BARRIER_HOOK_LAST_MSG + 12
+#define INPUTLEAP_MSG_FAKE_INPUT INPUTLEAP_HOOK_LAST_MSG + 12
 
 //
 // MSWindowsDesks
@@ -168,13 +168,13 @@ MSWindowsDesks::disable()
 void
 MSWindowsDesks::enter()
 {
-    sendMessage(BARRIER_MSG_ENTER, 0, 0);
+    sendMessage(INPUTLEAP_MSG_ENTER, 0, 0);
 }
 
 void
 MSWindowsDesks::leave(HKL keyLayout)
 {
-    sendMessage(BARRIER_MSG_LEAVE, (WPARAM)keyLayout, 0);
+    sendMessage(INPUTLEAP_MSG_LEAVE, (WPARAM)keyLayout, 0);
 }
 
 void
@@ -197,7 +197,7 @@ MSWindowsDesks::setOptions(const OptionsList& options)
 void
 MSWindowsDesks::updateKeys()
 {
-    sendMessage(BARRIER_MSG_SYNC_KEYS, 0, 0);
+    sendMessage(INPUTLEAP_MSG_SYNC_KEYS, 0, 0);
 }
 
 void
@@ -219,27 +219,27 @@ MSWindowsDesks::installScreensaverHooks(bool install)
 {
     if (m_isPrimary && m_screensaverNotify != install) {
         m_screensaverNotify = install;
-        sendMessage(BARRIER_MSG_SCREENSAVER, install, 0);
+        sendMessage(INPUTLEAP_MSG_SCREENSAVER, install, 0);
     }
 }
 
 void
 MSWindowsDesks::fakeInputBegin()
 {
-    sendMessage(BARRIER_MSG_FAKE_INPUT, 1, 0);
+    sendMessage(INPUTLEAP_MSG_FAKE_INPUT, 1, 0);
 }
 
 void
 MSWindowsDesks::fakeInputEnd()
 {
-    sendMessage(BARRIER_MSG_FAKE_INPUT, 0, 0);
+    sendMessage(INPUTLEAP_MSG_FAKE_INPUT, 0, 0);
 }
 
 void
 MSWindowsDesks::getCursorPos(SInt32& x, SInt32& y) const
 {
     POINT pos;
-    sendMessage(BARRIER_MSG_CURSOR_POS, reinterpret_cast<WPARAM>(&pos), 0);
+    sendMessage(INPUTLEAP_MSG_CURSOR_POS, reinterpret_cast<WPARAM>(&pos), 0);
     x = pos.x;
     y = pos.y;
 }
@@ -257,7 +257,7 @@ MSWindowsDesks::fakeKeyEvent(
     if (!press) {
         flags |= KEYEVENTF_KEYUP;
     }
-    sendMessage(BARRIER_MSG_FAKE_KEY, flags,
+    sendMessage(INPUTLEAP_MSG_FAKE_KEY, flags,
                             MAKEWORD(static_cast<BYTE>(button & 0xffu),
                                 static_cast<BYTE>(virtualKey & 0xffu)));
 }
@@ -312,13 +312,13 @@ MSWindowsDesks::fakeMouseButton(ButtonID button, bool press)
     }
 
     // do it
-    sendMessage(BARRIER_MSG_FAKE_BUTTON, flags, data);
+    sendMessage(INPUTLEAP_MSG_FAKE_BUTTON, flags, data);
 }
 
 void
 MSWindowsDesks::fakeMouseMove(SInt32 x, SInt32 y) const
 {
-    sendMessage(BARRIER_MSG_FAKE_MOVE,
+    sendMessage(INPUTLEAP_MSG_FAKE_MOVE,
                             static_cast<WPARAM>(x),
                             static_cast<LPARAM>(y));
 }
@@ -326,7 +326,7 @@ MSWindowsDesks::fakeMouseMove(SInt32 x, SInt32 y) const
 void
 MSWindowsDesks::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
 {
-    sendMessage(BARRIER_MSG_FAKE_REL_MOVE,
+    sendMessage(INPUTLEAP_MSG_FAKE_REL_MOVE,
                             static_cast<WPARAM>(dx),
                             static_cast<LPARAM>(dy));
 }
@@ -334,7 +334,7 @@ MSWindowsDesks::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
 void
 MSWindowsDesks::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 {
-    sendMessage(BARRIER_MSG_FAKE_WHEEL, xDelta, yDelta);
+    sendMessage(INPUTLEAP_MSG_FAKE_WHEEL, xDelta, yDelta);
 }
 
 void
@@ -635,7 +635,7 @@ void MSWindowsDesks::desk_thread(Desk* desk)
             DispatchMessage(&msg);
             continue;
 
-        case BARRIER_MSG_SWITCH:
+        case INPUTLEAP_MSG_SWITCH:
             if (m_isPrimary && !m_noHooks) {
                 MSWindowsHook::uninstall();
                 if (m_screensaverNotify) {
@@ -653,38 +653,38 @@ void MSWindowsDesks::desk_thread(Desk* desk)
             }
             break;
 
-        case BARRIER_MSG_ENTER:
+        case INPUTLEAP_MSG_ENTER:
             m_isOnScreen = true;
             deskEnter(desk);
             break;
 
-        case BARRIER_MSG_LEAVE:
+        case INPUTLEAP_MSG_LEAVE:
             m_isOnScreen = false;
             m_keyLayout  = (HKL)msg.wParam;
             deskLeave(desk, m_keyLayout);
             break;
 
-        case BARRIER_MSG_FAKE_KEY:
+        case INPUTLEAP_MSG_FAKE_KEY:
             keybd_event(HIBYTE(msg.lParam), LOBYTE(msg.lParam), (DWORD)msg.wParam, 0);
             break;
 
-        case BARRIER_MSG_FAKE_BUTTON:
+        case INPUTLEAP_MSG_FAKE_BUTTON:
             if (msg.wParam != 0) {
                 mouse_event((DWORD)msg.wParam, 0, 0, (DWORD)msg.lParam, 0);
             }
             break;
 
-        case BARRIER_MSG_FAKE_MOVE:
+        case INPUTLEAP_MSG_FAKE_MOVE:
             deskMouseMove(static_cast<SInt32>(msg.wParam),
                             static_cast<SInt32>(msg.lParam));
             break;
 
-        case BARRIER_MSG_FAKE_REL_MOVE:
+        case INPUTLEAP_MSG_FAKE_REL_MOVE:
             deskMouseRelativeMove(static_cast<SInt32>(msg.wParam),
                             static_cast<SInt32>(msg.lParam));
             break;
 
-        case BARRIER_MSG_FAKE_WHEEL:
+        case INPUTLEAP_MSG_FAKE_WHEEL:
             if (msg.lParam != 0) {
                 mouse_event(MOUSEEVENTF_WHEEL, 0, 0, (DWORD)msg.lParam, 0);
             }
@@ -693,7 +693,7 @@ void MSWindowsDesks::desk_thread(Desk* desk)
             }
             break;
 
-        case BARRIER_MSG_CURSOR_POS: {
+        case INPUTLEAP_MSG_CURSOR_POS: {
             POINT* pos = reinterpret_cast<POINT*>(msg.wParam);
             if (!GetCursorPos(pos)) {
                 pos->x = m_xCenter;
@@ -702,11 +702,11 @@ void MSWindowsDesks::desk_thread(Desk* desk)
             break;
         }
 
-        case BARRIER_MSG_SYNC_KEYS:
+        case INPUTLEAP_MSG_SYNC_KEYS:
             m_updateKeys();
             break;
 
-        case BARRIER_MSG_SCREENSAVER:
+        case INPUTLEAP_MSG_SCREENSAVER:
             if (!m_noHooks) {
                 if (msg.wParam != 0) {
                     MSWindowsHook::installScreenSaver();
@@ -717,10 +717,10 @@ void MSWindowsDesks::desk_thread(Desk* desk)
             }
             break;
 
-        case BARRIER_MSG_FAKE_INPUT:
-            keybd_event(BARRIER_HOOK_FAKE_INPUT_VIRTUAL_KEY,
-                                BARRIER_HOOK_FAKE_INPUT_SCANCODE,
-                                msg.wParam ? 0 : KEYEVENTF_KEYUP, 0);
+        case INPUTLEAP_MSG_FAKE_INPUT:
+            keybd_event(INPUTLEAP_HOOK_FAKE_INPUT_VIRTUAL_KEY,
+                        INPUTLEAP_HOOK_FAKE_INPUT_SCANCODE,
+                        msg.wParam ? 0 : KEYEVENTF_KEYUP, 0);
             break;
         }
 
@@ -803,7 +803,7 @@ MSWindowsDesks::checkDesk()
         // show cursor on previous desk
         bool wasOnScreen = m_isOnScreen;
         if (!wasOnScreen) {
-            sendMessage(BARRIER_MSG_ENTER, 0, 0);
+            sendMessage(INPUTLEAP_MSG_ENTER, 0, 0);
         }
 
         // check for desk accessibility change.  we don't get events
@@ -826,11 +826,11 @@ MSWindowsDesks::checkDesk()
         // switch desk
         m_activeDesk     = desk;
         m_activeDeskName = name;
-        sendMessage(BARRIER_MSG_SWITCH, 0, 0);
+        sendMessage(INPUTLEAP_MSG_SWITCH, 0, 0);
 
         // hide cursor on new desk
         if (!wasOnScreen) {
-            sendMessage(BARRIER_MSG_LEAVE, (WPARAM)m_keyLayout, 0);
+            sendMessage(INPUTLEAP_MSG_LEAVE, (WPARAM)m_keyLayout, 0);
         }
 
         // update keys if necessary
@@ -840,7 +840,7 @@ MSWindowsDesks::checkDesk()
     }
     else if (name != m_activeDeskName) {
         // screen saver might have started
-        PostThreadMessage(m_threadID, BARRIER_MSG_SCREEN_SAVER, TRUE, 0);
+        PostThreadMessage(m_threadID, INPUTLEAP_MSG_SCREEN_SAVER, TRUE, 0);
     }
 }
 
@@ -872,7 +872,7 @@ MSWindowsDesks::handleCheckDesk(const Event&, void*)
     if (m_isPrimary) {
         BOOL running;
         SystemParametersInfo(SPI_GETSCREENSAVERRUNNING, 0, &running, FALSE);
-        PostThreadMessage(m_threadID, BARRIER_MSG_SCREEN_SAVER, running, 0);
+        PostThreadMessage(m_threadID, INPUTLEAP_MSG_SCREEN_SAVER, running, 0);
     }
 }
 

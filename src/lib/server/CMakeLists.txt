@@ -1,4 +1,4 @@
-# barrier -- mouse and keyboard sharing utility
+# InputLeap -- mouse and keyboard sharing utility
 # Copyright (C) 2012-2016 Symless Ltd.
 # Copyright (C) 2009 Nick Bolton
 #
@@ -17,7 +17,7 @@
 file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
-if (BARRIER_ADD_HEADERS)
+if(INPUTLEAP_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 

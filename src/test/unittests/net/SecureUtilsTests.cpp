@@ -1,5 +1,5 @@
 /*
-    barrier -- mouse and keyboard sharing utility
+    InputLeap -- mouse and keyboard sharing utility
     Copyright (C) 2021 Barrier contributors
 
     This package is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include "test/global/gtest.h"
 #include "test/global/TestUtils.h"
 
-namespace barrier {
+namespace inputleap {
 
 TEST(SecureUtilsTest, FormatSslFingerprintHexWithSeparators)
 {
@@ -70,4 +70,4 @@ TEST(SecureUtilsTest, CreateFingerprintRandomArt)
               "+-----------------+");
 }
 
-} // namespace barrier
+} // namespace inputleap

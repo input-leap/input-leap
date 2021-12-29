@@ -1,5 +1,5 @@
 /*
-* barrier -- mouse and keyboard sharing utility
+* InputLeap -- mouse and keyboard sharing utility
 * Copyright (C) 2018 Debauchee Open Source Group
 *
 * This package is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 
 #include <Shlobj.h>
 
-namespace barrier {
+namespace inputleap {
 
 fs::path known_folder_path(const KNOWNFOLDERID& id)
 {
@@ -74,4 +74,4 @@ const fs::path& DataDirectories::systemconfig(const fs::path& path)
     return _systemconfig;
 }
 
-} // namespace barrier
+} // namespace inputleap

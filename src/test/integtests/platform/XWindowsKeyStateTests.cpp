@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2011 Nick Bolton
  *
@@ -16,10 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define BARRIER_TEST_ENV
+#define INPUTLEAP_TEST_ENV
 
-#include "test/mock/barrier/MockKeyMap.h"
-#include "test/mock/barrier/MockEventQueue.h"
+#include "test/mock/inputleap/MockKeyMap.h"
+#include "test/mock/inputleap/MockEventQueue.h"
 #include "platform/XWindowsKeyState.h"
 #include "base/Log.h"
 

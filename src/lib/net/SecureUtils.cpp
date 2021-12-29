@@ -1,6 +1,6 @@
 /*
-    barrier -- mouse and keyboard sharing utility
-    Copyright (C) Barrier contributors
+    InputLeap -- mouse and keyboard sharing utility
+    Copyright (C) InputLeap contributors
 
     This package is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -63,7 +63,7 @@
 #include <openssl/applink.c>
 #endif
 
-namespace barrier {
+namespace inputleap {
 
 namespace {
 
@@ -80,10 +80,10 @@ const EVP_MD* get_digest_for_type(FingerprintType type)
 
 std::string format_ssl_fingerprint(const std::vector<uint8_t>& fingerprint, bool separator)
 {
-    std::string result = barrier::string::to_hex(fingerprint, 2);
+    std::string result = inputleap::string::to_hex(fingerprint, 2);
 
     // all uppercase
-    barrier::string::uppercase(result);
+    inputleap::string::uppercase(result);
 
     if (separator) {
         // add colon to separate each 2 characters
@@ -99,8 +99,8 @@ std::string format_ssl_fingerprint_columns(const std::vector<uint8_t>& fingerpri
 {
     auto max_columns = 8;
 
-    std::string hex = barrier::string::to_hex(fingerprint, 2);
-    barrier::string::uppercase(hex);
+    std::string hex = inputleap::string::to_hex(fingerprint, 2);
+    inputleap::string::uppercase(hex);
     if (hex.empty() || hex.size() % 2 != 0) {
         return hex;
     }
@@ -310,4 +310,4 @@ std::string create_fingerprint_randomart(const std::vector<std::uint8_t>& dgst_r
     return std::string{retval.data(), retval.size()};
 }
 
-} // namespace barrier
+} // namespace inputleap

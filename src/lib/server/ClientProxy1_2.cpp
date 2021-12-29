@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -18,14 +18,14 @@
 
 #include "server/ClientProxy1_2.h"
 
-#include "barrier/ProtocolUtil.h"
+#include "inputleap/ProtocolUtil.h"
 #include "base/Log.h"
 
 //
 // ClientProxy1_1
 //
 
-ClientProxy1_2::ClientProxy1_2(const std::string& name, barrier::IStream* stream,
+ClientProxy1_2::ClientProxy1_2(const std::string& name, inputleap::IStream* stream,
                                IEventQueue* events) :
     ClientProxy1_1(name, stream, events)
 {

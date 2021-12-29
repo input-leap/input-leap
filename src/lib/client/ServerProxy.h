@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "barrier/clipboard_types.h"
-#include "barrier/key_types.h"
+#include "inputleap/clipboard_types.h"
+#include "inputleap/key_types.h"
 #include "base/Event.h"
 #include "base/Stopwatch.h"
 
@@ -27,7 +27,7 @@ class Client;
 class ClientInfo;
 class EventQueueTimer;
 class IClipboard;
-namespace barrier { class IStream; }
+namespace inputleap { class IStream; }
 class IEventQueue;
 
 //! Proxy for server
@@ -41,7 +41,7 @@ public:
     Process messages from the server on \p stream and forward to
     \p client.
     */
-    ServerProxy(Client* client, barrier::IStream* stream, IEventQueue* events);
+    ServerProxy(Client* client, inputleap::IStream* stream, IEventQueue* events);
     ~ServerProxy();
 
     //! @name manipulators
@@ -59,7 +59,7 @@ public:
     // sending dragging information to server
     void                sendDragInfo(UInt32 fileCount, const char* info, size_t size);
 
-#ifdef BARRIER_TEST_ENV
+#ifdef INPUTLEAP_TEST_ENV
     void                handleDataForTest() { handleData(Event(), NULL); }
 #endif
 
@@ -111,7 +111,7 @@ private:
     typedef EResult (ServerProxy::*MessageParser)(const UInt8*);
 
     Client*            m_client;
-    barrier::IStream*    m_stream;
+    inputleap::IStream* m_stream;
 
     UInt32                m_seqNum;
 

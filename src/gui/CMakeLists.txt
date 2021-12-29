@@ -133,8 +133,8 @@ add_executable (barrier WIN32
 include_directories (./src)
 
 target_link_libraries(barrier net base io Qt5::Core Qt5::Widgets Qt5::Network ${OPENSSL_LIBS})
-target_compile_definitions (barrier PRIVATE -DBARRIER_VERSION_STAGE="${BARRIER_VERSION_STAGE}")
-target_compile_definitions (barrier PRIVATE -DBARRIER_REVISION="${BARRIER_REVISION}")
+target_compile_definitions (barrier PRIVATE -DINPUTLEAP_VERSION_STAGE="${INPUTLEAP_VERSION_STAGE}")
+target_compile_definitions (barrier PRIVATE -DINPUTLEAP_REVISION="${INPUTLEAP_REVISION}")
 
 if (WIN32)
     include_directories ($ENV{BONJOUR_SDK_HOME}/Include)
@@ -157,12 +157,12 @@ endif()
 target_link_libraries (barrier common)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    install (TARGETS barrier DESTINATION ${BARRIER_BUNDLE_BINARY_DIR})
+    install(TARGETS barrier DESTINATION ${INPUTLEAP_BUNDLE_BINARY_DIR})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "BSD")
     install (TARGETS barrier DESTINATION bin)
 endif()
 
-if (BARRIER_BUILD_TESTS)
+if(INPUTLEAP_BUILD_TESTS)
     set(GUI_TEST_SOURCE_FILES
         test/KeySequenceTests.cpp
         test/HotkeyTests.cpp

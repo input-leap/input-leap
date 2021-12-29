@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2005 Chris Schoeneman
  *
@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include "barrier/key_types.h"
-#include "barrier/mouse_types.h"
-#include "barrier/protocol_types.h"
-#include "barrier/IPlatformScreen.h"
+#include "inputleap/key_types.h"
+#include "inputleap/mouse_types.h"
+#include "inputleap/protocol_types.h"
+#include "inputleap/IPlatformScreen.h"
 #include "common/stdmap.h"
 #include "common/stdset.h"
 
@@ -333,7 +333,7 @@ public:
     InputFilter(const InputFilter&);
     virtual ~InputFilter();
 
-#ifdef BARRIER_TEST_ENV
+#ifdef INPUTLEAP_TEST_ENV
     InputFilter() : m_primaryClient(NULL) { }
 #endif
 

@@ -1,5 +1,5 @@
 /*
-* barrier -- mouse and keyboard sharing utility
+* InputLeap -- mouse and keyboard sharing utility
 * Copyright (C) 2018 Debauchee Open Source Group
 *
 * This package is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
 
 #include "DataDirectories.h"
 
-namespace barrier {
+namespace inputleap {
 
 fs::path DataDirectories::_profile;
 fs::path DataDirectories::_global;
@@ -53,4 +53,4 @@ fs::path DataDirectories::ssl_certificate_path()
     return profile() / "SSL" / "Barrier.pem";
 }
 
-} // namespace barrier
+} // namespace inputleap

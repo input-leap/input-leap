@@ -1,5 +1,5 @@
 /*
- * barrier -- mouse and keyboard sharing utility
+ * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -22,17 +22,17 @@
 #include "server/ClientProxyUnknown.h"
 #include "server/PrimaryClient.h"
 #include "server/ClientListener.h"
-#include "barrier/FileChunk.h"
-#include "barrier/IPlatformScreen.h"
-#include "barrier/DropHelper.h"
-#include "barrier/option_types.h"
-#include "barrier/protocol_types.h"
-#include "barrier/XScreen.h"
-#include "barrier/XBarrier.h"
-#include "barrier/StreamChunker.h"
-#include "barrier/KeyState.h"
-#include "barrier/Screen.h"
-#include "barrier/PacketStreamFilter.h"
+#include "inputleap/FileChunk.h"
+#include "inputleap/IPlatformScreen.h"
+#include "inputleap/DropHelper.h"
+#include "inputleap/option_types.h"
+#include "inputleap/protocol_types.h"
+#include "inputleap/XScreen.h"
+#include "inputleap/XBarrier.h"
+#include "inputleap/StreamChunker.h"
+#include "inputleap/KeyState.h"
+#include "inputleap/Screen.h"
+#include "inputleap/PacketStreamFilter.h"
 #include "net/TCPSocket.h"
 #include "net/IDataSocket.h"
 #include "net/IListenSocket.h"
@@ -56,7 +56,7 @@
 Server::Server(
 		Config& config,
 		PrimaryClient* primaryClient,
-		barrier::Screen* screen,
+		inputleap::Screen* screen,
 		IEventQueue* events,
 		ServerArgs const& args) :
 	m_mock(false),

@@ -21,7 +21,6 @@
 #include "base/String.h"
 
 class IEventQueue;
-class Mutex;
 
 class StreamChunker {
 public:
@@ -38,5 +37,4 @@ public:
 private:
     static bool            s_isChunkingFile;
     static bool            s_interruptFile;
-    static Mutex*        s_interruptMutex;
 };

@@ -23,6 +23,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#include <mutex>
 
 #define ARCH_MULTITHREAD ArchMultithreadWindows
 
@@ -82,7 +83,7 @@ private:
 
     static ArchMultithreadWindows*    s_instance;
 
-    ArchMutex            m_threadMutex;
+    std::mutex thread_mutex_;
 
     ThreadList            m_threadList;
     ArchThread            m_mainThread;

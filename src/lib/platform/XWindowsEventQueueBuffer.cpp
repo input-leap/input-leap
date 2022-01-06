@@ -18,7 +18,6 @@
 
 #include "platform/XWindowsEventQueueBuffer.h"
 
-#include "mt/Lock.h"
 #include "mt/Thread.h"
 #include "base/Event.h"
 #include "base/IEventQueue.h"
@@ -84,7 +83,7 @@ XWindowsEventQueueBuffer::~XWindowsEventQueueBuffer()
 
 int XWindowsEventQueueBuffer::getPendingCountLocked()
 {
-    Lock lock(&m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     // work around a bug in old libx11 which causes the first XPending not to read events under
     // certain conditions. The issue happens when libx11 has not yet received replies for all
     // flushed events. In that case, internally XPending will not try to process received events
@@ -112,7 +111,7 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
     }
 
     {
-        Lock lock(&m_mutex);
+        std::lock_guard<std::mutex> lock(mutex_);
         // we're now waiting for events
         m_waiting = true;
 
@@ -204,7 +203,7 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 
     {
         // we're no longer waiting for events
-        Lock lock(&m_mutex);
+        std::lock_guard<std::mutex> lock(mutex_);
         m_waiting = false;
     }
 
@@ -214,7 +213,7 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 IEventQueueBuffer::Type
 XWindowsEventQueueBuffer::getEvent(Event& event, UInt32& dataID)
 {
-    Lock lock(&m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
 
     // push out pending events
     flush();
@@ -247,7 +246,7 @@ XWindowsEventQueueBuffer::addEvent(UInt32 dataID)
     xevent.xclient.data.l[0]    = static_cast<long>(dataID);
 
     // save the message
-    Lock lock(&m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     m_postedEvents.push_back(xevent);
 
     // if we're currently waiting for an event then send saved events to
@@ -275,7 +274,7 @@ XWindowsEventQueueBuffer::addEvent(UInt32 dataID)
 bool
 XWindowsEventQueueBuffer::isEmpty() const
 {
-    Lock lock(&m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     return (m_impl->XPending(m_display) == 0 );
 }
 
@@ -294,7 +293,7 @@ XWindowsEventQueueBuffer::deleteTimer(EventQueueTimer* timer) const
 void
 XWindowsEventQueueBuffer::flush()
 {
-    // note -- m_mutex must be locked on entry
+    // note -- mutex_ must be locked on entry
 
     // flush the posted event list to the X server
     for (size_t i = 0; i < m_postedEvents.size(); ++i) {

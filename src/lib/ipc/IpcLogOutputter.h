@@ -25,6 +25,7 @@
 #include "ipc/Ipc.h"
 
 #include <deque>
+#include <condition_variable>
 #include <mutex>
 
 class IpcServer;
@@ -106,8 +107,8 @@ private:
     bool                m_sending;
     Thread*                m_bufferThread;
     bool                m_running;
-    ArchCond            m_notifyCond;
-    ArchMutex            m_notifyMutex;
+    std::condition_variable notify_cv_;
+    std::mutex notify_mutex_;
     bool                m_bufferWaiting;
     IArchMultithread::ThreadID
                         m_bufferThreadId;

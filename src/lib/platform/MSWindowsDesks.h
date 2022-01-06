@@ -23,15 +23,14 @@
 #include "inputleap/key_types.h"
 #include "inputleap/mouse_types.h"
 #include "inputleap/option_types.h"
-#include "mt/CondVar.h"
-#include "mt/Mutex.h"
 #include "common/stdmap.h"
+#include <condition_variable>
 #include <functional>
+#include <mutex>
 #include <string>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-
 
 class Event;
 class EventQueueTimer;
@@ -280,8 +279,9 @@ private:
     std::string m_activeDeskName;
 
     // one desk per desktop and a cond var to communicate with it
-    Mutex                m_mutex;
-    CondVar<bool>        m_deskReady;
+    mutable std::mutex mutex_;
+    mutable std::condition_variable desks_ready_cv_;
+    bool is_desks_ready_ = false;
     Desks                m_desks;
 
     // keyboard stuff

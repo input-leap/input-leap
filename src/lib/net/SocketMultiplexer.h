@@ -21,11 +21,10 @@
 #include "arch/IArchNetwork.h"
 #include "common/stdlist.h"
 #include "common/stdmap.h"
+#include <condition_variable>
 #include <memory>
+#include <mutex>
 
-template <class T>
-class CondVar;
-class Mutex;
 class Thread;
 class ISocket;
 class ISocketMultiplexerJob;
@@ -96,12 +95,18 @@ private:
     void                unlockJobList();
 
 private:
-    Mutex*                m_mutex;
+    std::mutex mutex_;
     Thread*                m_thread;
     bool                m_update;
-    CondVar<bool>*        m_jobsReady;
-    CondVar<bool>*        m_jobListLock;
-    CondVar<bool>*        m_jobListLockLocked;
+    std::condition_variable cv_jobs_ready_;
+    bool are_jobs_ready_ = false;
+
+    std::condition_variable cv_jobs_list_lock_;
+    bool is_jobs_list_lock_locked_ = false;
+
+    std::condition_variable cv_job_list_lock_locked_;
+    bool is_job_list_lock_lock_locked_ = false;
+
     Thread*                m_jobListLocker;
     Thread*                m_jobListLockLocker;
 

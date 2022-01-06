@@ -20,8 +20,6 @@
 
 #include "net/ISocketMultiplexerJob.h"
 #include "mt/CondVar.h"
-#include "mt/Lock.h"
-#include "mt/Mutex.h"
 #include "mt/Thread.h"
 #include "arch/Arch.h"
 #include "arch/XArch.h"
@@ -47,12 +45,8 @@ public:
 
 
 SocketMultiplexer::SocketMultiplexer() :
-    m_mutex(new Mutex),
     m_thread(NULL),
     m_update(false),
-    m_jobsReady(new CondVar<bool>(m_mutex, false)),
-    m_jobListLock(new CondVar<bool>(m_mutex, false)),
-    m_jobListLockLocked(new CondVar<bool>(m_mutex, false)),
     m_jobListLocker(NULL),
     m_jobListLockLocker(NULL)
 {
@@ -66,12 +60,8 @@ SocketMultiplexer::~SocketMultiplexer()
     m_thread->unblockPollSocket();
     m_thread->wait();
     delete m_thread;
-    delete m_jobsReady;
-    delete m_jobListLock;
-    delete m_jobListLockLocked;
     delete m_jobListLocker;
     delete m_jobListLockLocker;
-    delete m_mutex;
 }
 
 void SocketMultiplexer::addSocket(ISocket* socket, std::unique_ptr<ISocketMultiplexerJob>&& job)
@@ -147,10 +137,8 @@ void SocketMultiplexer::service_thread()
 
         // wait until there are jobs to handle
         {
-            Lock lock(m_mutex);
-            while (!(bool)*m_jobsReady) {
-                m_jobsReady->wait();
-            }
+            std::unique_lock<std::mutex> lock(mutex_);
+            cv_jobs_ready_.wait(lock, [this](){ return are_jobs_ready_; });
         }
 
         // lock the job list
@@ -216,11 +204,11 @@ void SocketMultiplexer::service_thread()
                     MultiplexerJobStatus status = (*jobCursor)->run(read, write, error);
 
                     if (!status.continue_servicing) {
-                        Lock lock(m_mutex);
+                        std::lock_guard<std::mutex> lock(mutex_);
                         jobCursor->reset();
                         m_update = true;
                     } else if (status.new_job) {
-                        Lock lock(m_mutex);
+                        std::lock_guard<std::mutex> lock(mutex_);
                         *jobCursor = std::move(status.new_job);
                         m_update = true;
                     }
@@ -254,14 +242,14 @@ void SocketMultiplexer::service_thread()
 SocketMultiplexer::JobCursor
 SocketMultiplexer::newCursor()
 {
-    Lock lock(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     return m_socketJobs.insert(m_socketJobs.begin(), std::make_unique<CursorMultiplexerJob>());
 }
 
 SocketMultiplexer::JobCursor
 SocketMultiplexer::nextCursor(JobCursor cursor)
 {
-    Lock lock(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     JobCursor j = m_socketJobs.end();
     JobCursor i = cursor;
     while (++i != m_socketJobs.end()) {
@@ -280,52 +268,48 @@ SocketMultiplexer::nextCursor(JobCursor cursor)
 void
 SocketMultiplexer::deleteCursor(JobCursor cursor)
 {
-    Lock lock(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     m_socketJobs.erase(cursor);
 }
 
 void
 SocketMultiplexer::lockJobListLock()
 {
-    Lock lock(m_mutex);
+    std::unique_lock<std::mutex> lock(mutex_);
 
     // wait for the lock on the lock
-    while (*m_jobListLockLocked) {
-        m_jobListLockLocked->wait();
-    }
+    cv_job_list_lock_locked_.wait(lock, [this](){ return !is_job_list_lock_lock_locked_; });
 
     // take ownership of the lock on the lock
-    *m_jobListLockLocked = true;
+    is_job_list_lock_lock_locked_ = true;
     m_jobListLockLocker  = new Thread(Thread::getCurrentThread());
 }
 
 void
 SocketMultiplexer::lockJobList()
 {
-    Lock lock(m_mutex);
+    std::unique_lock<std::mutex> lock(mutex_);
 
     // make sure we're the one that called lockJobListLock()
     assert(*m_jobListLockLocker == Thread::getCurrentThread());
 
     // wait for the job list lock
-    while (*m_jobListLock) {
-        m_jobListLock->wait();
-    }
+    cv_jobs_list_lock_.wait(lock, [this]() { return !is_jobs_list_lock_locked_; });
 
     // take ownership of the lock
-    *m_jobListLock      = true;
+    is_jobs_list_lock_locked_ = true;
     m_jobListLocker     = m_jobListLockLocker;
     m_jobListLockLocker = NULL;
 
     // release the lock on the lock
-    *m_jobListLockLocked = false;
-    m_jobListLockLocked->broadcast();
+    is_job_list_lock_lock_locked_ = false;
+    cv_job_list_lock_locked_.notify_all();
 }
 
 void
 SocketMultiplexer::unlockJobList()
 {
-    Lock lock(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
 
     // make sure we're the one that called lockJobList()
     assert(*m_jobListLocker == Thread::getCurrentThread());
@@ -333,13 +317,13 @@ SocketMultiplexer::unlockJobList()
     // release the lock
     delete m_jobListLocker;
     m_jobListLocker = NULL;
-    *m_jobListLock  = false;
-    m_jobListLock->signal();
+    is_jobs_list_lock_locked_ = false;
+    cv_jobs_list_lock_.notify_one();
 
     // set new jobs ready state
     bool isReady = !m_socketJobMap.empty();
-    if (*m_jobsReady != isReady) {
-        *m_jobsReady = isReady;
-        m_jobsReady->signal();
+    if (are_jobs_ready_ != isReady) {
+        are_jobs_ready_ = isReady;
+        cv_jobs_ready_.notify_one();
     }
 }

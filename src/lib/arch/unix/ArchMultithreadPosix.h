@@ -26,16 +26,6 @@
 
 #define ARCH_MULTITHREAD ArchMultithreadPosix
 
-class ArchCondImpl {
-public:
-    pthread_cond_t        m_cond;
-};
-
-class ArchMutexImpl {
-public:
-    pthread_mutex_t        m_mutex;
-};
-
 //! Posix implementation of IArchMultithread
 class ArchMultithreadPosix : public IArchMultithread {
 public:
@@ -58,15 +48,6 @@ public:
     //@}
 
     // IArchMultithread overrides
-    virtual ArchCond    newCondVar();
-    virtual void        closeCondVar(ArchCond);
-    virtual void        signalCondVar(ArchCond);
-    virtual void        broadcastCondVar(ArchCond);
-    virtual bool        waitCondVar(ArchCond, ArchMutex, double timeout);
-    virtual ArchMutex    newMutex();
-    virtual void        closeMutex(ArchMutex);
-    virtual void        lockMutex(ArchMutex);
-    virtual void        unlockMutex(ArchMutex);
     virtual ArchThread newThread(const std::function<void()>& func);
     virtual ArchThread    newCurrentThread();
     virtual ArchThread    copyThread(ArchThread);

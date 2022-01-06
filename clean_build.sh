@@ -25,6 +25,12 @@ if [ "$(uname)" = "Darwin" ]; then
     . ./macos_environment.sh
     B_CMAKE_FLAGS="${B_CMAKE_FLAGS} -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9"
 fi
+
+# Prefer ninja if available
+if command -v ninja 2>/dev/null; then
+    B_CMAKE_FLAGS="-GNinja ${B_CMAKE_FLAGS}"
+fi
+
 # allow local customizations to build environment
 [ -r ./build_env.sh ] && . ./build_env.sh
 

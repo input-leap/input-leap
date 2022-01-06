@@ -19,8 +19,6 @@
 
 #include "test/global/gtest.h"
 
-using namespace inputleap;
-
 TEST(DeprecatedArgsParsingTests, parseDeprecatedArgs_cryptoPass_returnTrue)
 {
     int i = 1;

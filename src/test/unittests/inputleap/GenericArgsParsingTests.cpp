@@ -53,7 +53,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_logLevelCmd_setLogLevel)
 
     argParser.parseGenericArgs(argc, kLogLevelCmd, i);
 
-    String logFilter(argsBase.m_logFilter);
+    std::string logFilter = argsBase.m_logFilter;
 
     EXPECT_EQ("DEBUG", logFilter);
     EXPECT_EQ(2, i);
@@ -71,7 +71,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_logFileCmd_saveLogFilename)
 
     argParser.parseGenericArgs(argc, kLogFileCmd, i);
 
-    String logFile(argsBase.m_logFile);
+    std::string logFile = argsBase.m_logFile;
 
     EXPECT_EQ("mock_filename", logFile);
     EXPECT_EQ(2, i);
@@ -89,7 +89,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_logFileCmdWithSpace_saveLogFilena
 
     argParser.parseGenericArgs(argc, kLogFileCmdWithSpace, i);
 
-    String logFile(argsBase.m_logFile);
+    std::string logFile = argsBase.m_logFile;
 
     EXPECT_EQ("mo ck_filename", logFile);
     EXPECT_EQ(2, i);

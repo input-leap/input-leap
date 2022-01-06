@@ -31,8 +31,6 @@
 #include "inputleap/KeyMap.h"
 #include "inputleap/ClientApp.h"
 #include "mt/CondVar.h"
-#include "mt/Lock.h"
-#include "mt/Mutex.h"
 #include "mt/Thread.h"
 #include "arch/XArch.h"
 #include "base/Log.h"
@@ -87,9 +85,7 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 	m_hiddenWindow(NULL),
 	m_userInputWindow(NULL),
 	m_switchEventHandlerRef(0),
-	m_pmMutex(new Mutex),
 	m_pmWatchThread(NULL),
-	m_pmThreadReady(new CondVar<bool>(m_pmMutex, false)),
 	m_pmRootPort(0),
 	m_activeModifierHotKey(0),
 	m_activeModifierHotKeyMask(0),
@@ -150,11 +146,7 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 									&OSXScreen::handleConfirmSleep));
 
 		// create thread for monitoring system power state.
-		*m_pmThreadReady = false;
-#if defined(MAC_OS_X_VERSION_10_7)
-		m_carbonLoopMutex = new Mutex();
-		m_carbonLoopReady = new CondVar<bool>(m_carbonLoopMutex, false);
-#endif
+        is_pm_thread_ready_ = false;
 		LOG((CLOG_DEBUG "starting watchSystemPowerThread"));
         m_pmWatchThread = new Thread([this](){ watchSystemPowerThread(); });
 	}
@@ -190,10 +182,8 @@ OSXScreen::~OSXScreen()
 	if (m_pmWatchThread) {
 		// make sure the thread has setup the runloop.
 		{
-			Lock lock(m_pmMutex);
-			while (!(bool)*m_pmThreadReady) {
-				m_pmThreadReady->wait();
-			}
+            std::unique_lock<std::mutex> lock(pm_mutex_);
+            pm_thread_ready_cv_.wait(lock, [this](){ return is_pm_thread_ready_; });
 		}
 
 		// now exit the thread's runloop and wait for it to exit
@@ -203,8 +193,6 @@ OSXScreen::~OSXScreen()
 		delete m_pmWatchThread;
 		m_pmWatchThread = NULL;
 	}
-	delete m_pmThreadReady;
-	delete m_pmMutex;
 
 	m_events->removeHandler(m_events->forOSXScreen().confirmSleep(),
 								getEventTarget());
@@ -215,11 +203,6 @@ OSXScreen::~OSXScreen()
 
 	delete m_keyState;
 	delete m_screensaver;
-
-#if defined(MAC_OS_X_VERSION_10_7)
-	delete m_carbonLoopMutex;
-	delete m_carbonLoopReady;
-#endif
 }
 
 void*
@@ -1638,13 +1621,13 @@ void OSXScreen::watchSystemPowerThread()
 
 	// thread is ready
 	{
-		Lock lock(m_pmMutex);
-		*m_pmThreadReady = true;
-		m_pmThreadReady->signal();
+        std::lock_guard<std::mutex> lock(pm_mutex_);
+        is_pm_thread_ready_ = true;
+        pm_thread_ready_cv_.notify_one();
 	}
 
 	// if we were unable to initialize then exit.  we must do this after
-	// setting m_pmThreadReady to true otherwise the parent thread will
+    // setting is_pm_thread_ready_ to true otherwise the parent thread will
 	// block waiting for it.
 	if (m_pmRootPort == 0) {
 		LOG((CLOG_WARN "failed to init watchSystemPowerThread"));
@@ -1657,16 +1640,16 @@ void OSXScreen::watchSystemPowerThread()
 	m_events->waitForReady();
 
 #if defined(MAC_OS_X_VERSION_10_7)
-	{
-		Lock lockCarbon(m_carbonLoopMutex);
-		if (*m_carbonLoopReady == false) {
+    {
+        std::lock_guard<std::mutex> lock_carbon(carbon_loop_mutex_);
+        if (!is_carbon_loop_ready_) {
 
 			// we signalling carbon loop ready before starting
 			// unless we know how to do it within the loop
 			LOG((CLOG_DEBUG "signalling carbon loop ready"));
 
-			*m_carbonLoopReady = true;
-			m_carbonLoopReady->signal();
+            is_carbon_loop_ready_ = true;
+            cardon_loop_ready_cv_.notify_one();
 		}
 	}
 #endif
@@ -1684,7 +1667,7 @@ void OSXScreen::watchSystemPowerThread()
 		CFRelease(runloopSourceRef);
 	}
 
-	Lock lock(m_pmMutex);
+    std::lock_guard<std::mutex> lock(pm_mutex_);
 	IODeregisterForSystemPower(&notifier);
 	m_pmRootPort = 0;
 	LOG((CLOG_DEBUG "stopped watchSystemPowerThread"));
@@ -1721,7 +1704,7 @@ OSXScreen::handlePowerChangeRequest(natural_t messageType, void* messageArg)
 		break;
 	}
 
-	Lock lock(m_pmMutex);
+    std::lock_guard<std::mutex> lock(pm_mutex_);
 	if (m_pmRootPort != 0) {
 		IOAllowPowerChange(m_pmRootPort, (long)messageArg);
 	}
@@ -1732,7 +1715,7 @@ OSXScreen::handleConfirmSleep(const Event& event, void*)
 {
 	long messageArg = (long)event.getData();
 	if (messageArg != 0) {
-		Lock lock(m_pmMutex);
+        std::lock_guard<std::mutex> lock(pm_mutex_);
 		if (m_pmRootPort != 0) {
 			// deliver suspend event immediately.
 			m_events->addEvent(Event(m_events->forIScreen().suspend(),
@@ -2093,22 +2076,19 @@ void
 OSXScreen::waitForCarbonLoop() const
 {
 #if defined(MAC_OS_X_VERSION_10_7)
-	if (*m_carbonLoopReady) {
+    if (is_carbon_loop_ready_) {
 		LOG((CLOG_DEBUG "carbon loop already ready"));
 		return;
 	}
 
-	Lock lock(m_carbonLoopMutex);
+    std::unique_lock<std::mutex> lock(carbon_loop_mutex_);
 
 	LOG((CLOG_DEBUG "waiting for carbon loop"));
 
-	double timeout = ARCH->time() + kCarbonLoopWaitTimeout;
-	while (!m_carbonLoopReady->wait()) {
-		if (ARCH->time() > timeout) {
-			LOG((CLOG_DEBUG "carbon loop not ready, waiting again"));
-			timeout = ARCH->time() + kCarbonLoopWaitTimeout;
-		}
-	}
+    while (!cardon_loop_ready_cv_.wait_for(lock, std::chrono::seconds{kCarbonLoopWaitTimeout},
+                                           [this](){ return is_carbon_loop_ready_; })) {
+        LOG((CLOG_DEBUG "carbon loop not ready, waiting again"));
+    }
 
 	LOG((CLOG_DEBUG "carbon loop ready"));
 #endif

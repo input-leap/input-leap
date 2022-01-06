@@ -64,6 +64,8 @@
 #    include "arch/unix/ArchInternetUnix.h"
 #endif
 
+#include <mutex>
+
 /*!
 \def ARCH
 This macro evaluates to the singleton Arch object.
@@ -125,15 +127,19 @@ private:
 //! Convenience object to lock/unlock an arch mutex
 class ArchMutexLock {
 public:
-    ArchMutexLock(ArchMutex mutex) : m_mutex(mutex)
-    {
-        ARCH->lockMutex(m_mutex);
-    }
+    ArchMutexLock(ArchMutex mutex) : lock{*mutex} {}
+    ArchMutexLock(ArchMutex mutex, std::adopt_lock_t) :
+        lock{*mutex, std::adopt_lock}, adopted_{true}
+    {}
+
     ~ArchMutexLock()
     {
-        ARCH->unlockMutex(m_mutex);
+        if (adopted_) {
+            lock.release();
+        }
     }
 
+    std::unique_lock<std::mutex> lock;
 private:
-    ArchMutex            m_mutex;
+    bool adopted_ = false;
 };

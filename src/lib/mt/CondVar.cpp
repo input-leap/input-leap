@@ -81,7 +81,8 @@ CondVarBase::wait(Stopwatch& timer, double timeout) const
 bool
 CondVarBase::wait(double timeout) const
 {
-    return ARCH->waitCondVar(m_cond, m_mutex->m_mutex, timeout);
+    ArchMutexLock lock{m_mutex->m_mutex, std::adopt_lock};
+    return ARCH->waitCondVar(m_cond, lock, timeout);
 }
 
 Mutex*

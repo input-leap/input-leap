@@ -81,7 +81,7 @@ ArchTaskBarWindows::init()
     // we're going to want to get a result from the thread we're
     // about to create to know if it initialized successfully.
     // so we lock the condition variable.
-    ARCH->lockMutex(m_mutex);
+    ArchMutexLock lock(m_mutex);
 
     // open a window and run an event loop in a separate thread.
     // this has to happen in a separate thread because if we
@@ -92,11 +92,9 @@ ArchTaskBarWindows::init()
 
     // wait for child thread
     while (!m_ready) {
-        ARCH->waitCondVar(m_condVar, m_mutex, -1.0);
+        ARCH->waitCondVar(m_condVar, lock, -1.0);
     }
 
-    // ready
-    ARCH->unlockMutex(m_mutex);
 }
 
 void

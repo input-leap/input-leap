@@ -17,12 +17,11 @@
  */
 
 #include "IArchMultithread.h"
+#include "arch/Arch.h"
 
-bool IArchMultithread::waitCondVar(ArchCond cond, ArchMutex mutex,
+bool IArchMultithread::waitCondVar(ArchCond cond, ArchMutexLock& lock,
                                    double timeout)
 {
-    std::unique_lock<std::mutex> lock{*mutex, std::adopt_lock};
-
     // we can't wait on a condition variable and also wake it up for
     // cancellation since we don't use posix cancellation.  so we
     // must wake up periodically to check for cancellation.  we
@@ -39,8 +38,7 @@ bool IArchMultithread::waitCondVar(ArchCond cond, ArchMutex mutex,
     // see if we should cancel this thread
     testCancelThread();
 
-    auto ret = cond->wait_for(lock, seconds_to_chrono(timeout));
-    lock.release();
+    auto ret = cond->wait_for(lock.lock, seconds_to_chrono(timeout));
 
     // check for cancel again
     testCancelThread();

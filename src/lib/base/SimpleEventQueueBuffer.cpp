@@ -52,7 +52,7 @@ SimpleEventQueueBuffer::waitForEvent(double timeout)
                 return;
             }
         }
-        ARCH->waitCondVar(m_queueReadyCond, m_queueMutex, timeLeft);
+        ARCH->waitCondVar(m_queueReadyCond, lock, timeLeft);
     }
 }
 

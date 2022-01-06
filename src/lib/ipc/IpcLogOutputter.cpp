@@ -149,7 +149,7 @@ void IpcLogOutputter::buffer_thread()
         while (isRunning()) {
             if (m_buffer.empty() || !m_ipcServer.hasClients(m_clientType)) {
                 ArchMutexLock lock(m_notifyMutex);
-                ARCH->waitCondVar(m_notifyCond, m_notifyMutex, -1);
+                ARCH->waitCondVar(m_notifyCond, lock, -1);
             }
 
             sendBuffer();

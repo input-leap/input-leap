@@ -54,7 +54,8 @@ public:
     }
 
     void waitForSend() {
-        ARCH->waitCondVar(m_sendCond, m_sendMutex, 5);
+        ArchMutexLock lock{m_sendMutex, std::adopt_lock};
+        ARCH->waitCondVar(m_sendCond, lock, 5);
     }
 
 private:

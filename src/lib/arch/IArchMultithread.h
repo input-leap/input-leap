@@ -32,6 +32,7 @@ using ArchMutex = std::mutex*;
 An architecture dependent type holding the necessary data for a thread.
 */
 class ArchThreadImpl;
+class ArchMutexLock;
 
 /*!
 \var ArchThread
@@ -107,7 +108,7 @@ public:
 
     (Cancellation point)
     */
-    bool waitCondVar(ArchCond cv, ArchMutex mutex, double timeout);
+    bool waitCondVar(ArchCond cv, ArchMutexLock& lock, double timeout);
 
     //
     // mutex methods

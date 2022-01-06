@@ -334,7 +334,8 @@ ArchDaemonWindows::doRunDaemon(RunFunc run)
         // wait until we're told to start
         while (!isRunState(m_serviceState) &&
                 m_serviceState != SERVICE_STOP_PENDING) {
-            ARCH->waitCondVar(m_serviceCondVar, m_serviceMutex, -1.0);
+            ArchMutexLock lock{m_serviceMutex, std::adopt_lock};
+            ARCH->waitCondVar(m_serviceCondVar, lock, -1.0);
         }
 
         // run unless told to stop
@@ -581,7 +582,8 @@ ArchDaemonWindows::serviceHandler(DWORD ctrl)
         setStatus(m_serviceState, 0, 5000);
         PostThreadMessage(m_daemonThreadID, m_quitMessage, 0, 0);
         while (isRunState(m_serviceState)) {
-            ARCH->waitCondVar(m_serviceCondVar, m_serviceMutex, -1.0);
+            ArchMutexLock lock{m_serviceMutex, std::adopt_lock};
+            ARCH->waitCondVar(m_serviceCondVar, lock, -1.0);
         }
         break;
 
@@ -599,7 +601,8 @@ ArchDaemonWindows::serviceHandler(DWORD ctrl)
         PostThreadMessage(m_daemonThreadID, m_quitMessage, 0, 0);
         ARCH->broadcastCondVar(m_serviceCondVar);
         while (isRunState(m_serviceState)) {
-            ARCH->waitCondVar(m_serviceCondVar, m_serviceMutex, -1.0);
+            ArchMutexLock lock{m_serviceMutex, std::adopt_lock};
+            ARCH->waitCondVar(m_serviceCondVar, lock, -1.0);
         }
         break;
 

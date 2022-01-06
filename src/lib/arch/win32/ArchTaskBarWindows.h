@@ -26,6 +26,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+#include <condition_variable>
+
 #define ARCH_TASKBAR ArchTaskBarWindows
 
 //! Win32 implementation of IArchTaskBar
@@ -91,8 +93,8 @@ private:
     static ArchTaskBarWindows*    s_instance;
 
     // multithread data
-    ArchMutex            m_mutex;
-    ArchCond            m_condVar;
+    std::mutex mutex_;
+    std::condition_variable cond_var_;
     bool                m_ready;
     int                    m_result;
     ArchThread            m_thread;

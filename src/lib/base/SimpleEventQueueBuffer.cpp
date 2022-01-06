@@ -28,21 +28,17 @@ class EventQueueTimer { };
 
 SimpleEventQueueBuffer::SimpleEventQueueBuffer()
 {
-    m_queueMutex     = ARCH->newMutex();
-    m_queueReadyCond = ARCH->newCondVar();
     m_queueReady     = false;
 }
 
 SimpleEventQueueBuffer::~SimpleEventQueueBuffer()
 {
-    ARCH->closeCondVar(m_queueReadyCond);
-    ARCH->closeMutex(m_queueMutex);
 }
 
 void
 SimpleEventQueueBuffer::waitForEvent(double timeout)
 {
-    ArchMutexLock lock(m_queueMutex);
+    std::unique_lock<std::mutex> lock(queue_mutex_);
     Stopwatch timer(true);
     while (!m_queueReady) {
         double timeLeft = timeout;
@@ -52,14 +48,14 @@ SimpleEventQueueBuffer::waitForEvent(double timeout)
                 return;
             }
         }
-        ARCH->waitCondVar(m_queueReadyCond, lock, timeLeft);
+        ARCH->wait_cond_var(queue_ready_cv_, lock, timeLeft);
     }
 }
 
 IEventQueueBuffer::Type
 SimpleEventQueueBuffer::getEvent(Event&, UInt32& dataID)
 {
-    ArchMutexLock lock(m_queueMutex);
+    std::lock_guard<std::mutex> lock(queue_mutex_);
     if (!m_queueReady) {
         return kNone;
     }
@@ -72,11 +68,11 @@ SimpleEventQueueBuffer::getEvent(Event&, UInt32& dataID)
 bool
 SimpleEventQueueBuffer::addEvent(UInt32 dataID)
 {
-    ArchMutexLock lock(m_queueMutex);
+    std::lock_guard<std::mutex> lock(queue_mutex_);
     m_queue.push_front(dataID);
     if (!m_queueReady) {
         m_queueReady = true;
-        ARCH->broadcastCondVar(m_queueReadyCond);
+        queue_ready_cv_.notify_all();
     }
     return true;
 }
@@ -84,7 +80,7 @@ SimpleEventQueueBuffer::addEvent(UInt32 dataID)
 bool
 SimpleEventQueueBuffer::isEmpty() const
 {
-    ArchMutexLock lock(m_queueMutex);
+    std::lock_guard<std::mutex> lock(queue_mutex_);
     return !m_queueReady;
 }
 

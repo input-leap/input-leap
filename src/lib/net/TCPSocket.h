@@ -22,11 +22,11 @@
 #include "net/ISocketMultiplexerJob.h"
 #include "io/StreamBuffer.h"
 #include "mt/CondVar.h"
-#include "mt/Mutex.h"
 #include "arch/IArchNetwork.h"
+#include <condition_variable>
 #include <memory>
+#include <mutex>
 
-class Mutex;
 class Thread;
 class IEventQueue;
 class SocketMultiplexer;
@@ -81,8 +81,6 @@ protected:
     bool                isReadable() { return m_readable; }
     bool                isWritable() { return m_writable; }
 
-    Mutex&                getMutex() { return m_mutex; }
-
     void                sendEvent(Event::Type);
     void                discardWrittenData(int bytesWrote);
 
@@ -106,9 +104,10 @@ protected:
     StreamBuffer        m_inputBuffer;
     StreamBuffer        m_outputBuffer;
 
+    mutable std::mutex tcp_mutex_;
 private:
-    Mutex                m_mutex;
     ArchSocket            m_socket;
-    CondVar<bool>        m_flushed;
+    std::condition_variable flushed_cv_;
+    bool is_flushed_ = true;
     SocketMultiplexer*    m_socketMultiplexer;
 };

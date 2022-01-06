@@ -22,7 +22,8 @@
 #include "net/ISocketMultiplexerJob.h"
 #include "arch/IArchNetwork.h"
 
-class Mutex;
+#include <mutex>
+
 class IEventQueue;
 class SocketMultiplexer;
 
@@ -52,7 +53,7 @@ public:
 
 protected:
     ArchSocket            m_socket;
-    Mutex*                m_mutex;
+    std::mutex mutex_;
     IEventQueue*        m_events;
     SocketMultiplexer*    m_socketMultiplexer;
 };

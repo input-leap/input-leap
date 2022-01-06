@@ -30,7 +30,6 @@
 #include "inputleap/Clipboard.h"
 #include "inputleap/KeyMap.h"
 #include "inputleap/ClientApp.h"
-#include "mt/CondVar.h"
 #include "mt/Thread.h"
 #include "arch/XArch.h"
 #include "base/Log.h"

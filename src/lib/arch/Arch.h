@@ -123,23 +123,3 @@ private:
     static Arch*        s_instance;
     ARCH_INTERNET        m_internet;
 };
-
-//! Convenience object to lock/unlock an arch mutex
-class ArchMutexLock {
-public:
-    ArchMutexLock(ArchMutex mutex) : lock{*mutex} {}
-    ArchMutexLock(ArchMutex mutex, std::adopt_lock_t) :
-        lock{*mutex, std::adopt_lock}, adopted_{true}
-    {}
-
-    ~ArchMutexLock()
-    {
-        if (adopted_) {
-            lock.release();
-        }
-    }
-
-    std::unique_lock<std::mutex> lock;
-private:
-    bool adopted_ = false;
-};

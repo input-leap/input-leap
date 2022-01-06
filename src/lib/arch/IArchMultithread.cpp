@@ -17,13 +17,6 @@
  */
 
 #include "IArchMultithread.h"
-#include "arch/Arch.h"
-
-bool IArchMultithread::waitCondVar(ArchCond cond, ArchMutexLock& lock,
-                                   double timeout)
-{
-    return wait_cond_var(*cond, lock.lock, timeout);
-}
 
 bool IArchMultithread::wait_cond_var(std::condition_variable& cv,
                                      std::unique_lock<std::mutex>& lock, double timeout)

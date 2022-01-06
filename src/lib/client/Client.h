@@ -26,7 +26,6 @@
 #include "inputleap/ClientArgs.h"
 #include "net/NetworkAddress.h"
 #include "base/EventTypes.h"
-#include "mt/CondVar.h"
 
 class EventQueueTimer;
 namespace inputleap { class Screen; }

@@ -18,7 +18,6 @@
 
 #include "inputleap/ServerTaskBarReceiver.h"
 #include "server/Server.h"
-#include "mt/Lock.h"
 #include "base/String.h"
 #include "base/IEventQueue.h"
 #include "arch/Arch.h"

@@ -23,16 +23,12 @@
 #include <mutex>
 #include <condition_variable>
 
-using ArchCond = std::condition_variable*;
-using ArchMutex = std::mutex*;
-
 /*!
 \class ArchThreadImpl
 \brief Internal thread data.
 An architecture dependent type holding the necessary data for a thread.
 */
 class ArchThreadImpl;
-class ArchMutexLock;
 
 /*!
 \var ArchThread
@@ -79,24 +75,6 @@ public:
     // condition variable methods
     //
 
-    //! Create a condition variable
-    ArchCond newCondVar() { return new std::condition_variable; }
-
-    //! Destroy a condition variable
-    void closeCondVar(ArchCond cv) { delete cv; }
-
-    //! Signal a condition variable
-    /*!
-    Signalling a condition variable releases one waiting thread.
-    */
-    void signalCondVar(ArchCond cv) { cv->notify_one(); }
-
-    //! Broadcast a condition variable
-    /*!
-    Broadcasting a condition variable releases all waiting threads.
-    */
-    void broadcastCondVar(ArchCond cv) { cv->notify_all(); }
-
     //! Wait on a condition variable
     /*!
     Wait on a conditation variable for up to \c timeout seconds.
@@ -108,33 +86,8 @@ public:
 
     (Cancellation point)
     */
-    bool waitCondVar(ArchCond cv, ArchMutexLock& lock, double timeout);
-
     bool wait_cond_var(std::condition_variable& cv, std::unique_lock<std::mutex>& lock,
                        double timeout);
-
-    //
-    // mutex methods
-    //
-
-    //! Create a recursive mutex
-    /*!
-    Creates mutex.  A thread may lock a recursive mutex
-    when it already holds a lock on that mutex.  The mutex is an
-    opaque data type.
-
-    WARNING: this is recursive mutex on Windows and some code likely depends on it.
-    */
-    ArchMutex newMutex() { return new std::mutex; }
-
-    //! Destroy a mutex
-    void closeMutex(ArchMutex mutex) { delete mutex; }
-
-    //! Lock a mutex
-    void lockMutex(ArchMutex mutex) { mutex->lock(); }
-
-    //! Unlock a mutex
-    void unlockMutex(ArchMutex mutex) { mutex->unlock(); }
 
     //
     // thread methods

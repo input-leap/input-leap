@@ -19,7 +19,6 @@
 #include "net/SocketMultiplexer.h"
 
 #include "net/ISocketMultiplexerJob.h"
-#include "mt/CondVar.h"
 #include "mt/Thread.h"
 #include "arch/Arch.h"
 #include "arch/XArch.h"

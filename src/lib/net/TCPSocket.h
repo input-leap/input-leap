@@ -21,7 +21,6 @@
 #include "net/IDataSocket.h"
 #include "net/ISocketMultiplexerJob.h"
 #include "io/StreamBuffer.h"
-#include "mt/CondVar.h"
 #include "arch/IArchNetwork.h"
 #include <condition_variable>
 #include <memory>

@@ -180,8 +180,7 @@ ClientApp::updateStatus()
 }
 
 
-void
-ClientApp::updateStatus(const String& msg)
+void ClientApp::updateStatus(const std::string& msg)
 {
     if (m_taskBarReceiver)
     {
@@ -297,7 +296,7 @@ ClientApp::handleClientFailed(const Event& e, void*)
     Client::FailInfo* info =
         static_cast<Client::FailInfo*>(e.getData());
 
-    updateStatus(String("Failed to connect to server: ") + info->m_what);
+    updateStatus(std::string("Failed to connect to server: ") + info->m_what);
     if (!args().m_restartable || !info->m_retry) {
         LOG((CLOG_ERR "failed to connect to server: %s", info->m_what.c_str()));
         m_events->addEvent(Event(Event::kQuit));
@@ -325,9 +324,8 @@ ClientApp::handleClientDisconnected(const Event&, void*)
     updateStatus();
 }
 
-Client*
-ClientApp::openClient(const String& name, const NetworkAddress& address,
-                inputleap::Screen* screen)
+Client* ClientApp::openClient(const std::string& name, const NetworkAddress& address,
+                              inputleap::Screen* screen)
 {
     Client* client = new Client(
         m_events,
@@ -406,7 +404,7 @@ ClientApp::startClient()
     catch (XScreenUnavailable& e) {
         LOG((CLOG_WARN "secondary screen unavailable: %s", e.what()));
         closeClientScreen(clientScreen);
-        updateStatus(String("secondary screen unavailable: ") + e.what());
+        updateStatus(std::string("secondary screen unavailable: ") + e.what());
         retryTime = e.getRetryTime();
     }
     catch (XScreenOpenFailure& e) {

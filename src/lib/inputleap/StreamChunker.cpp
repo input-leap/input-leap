@@ -56,7 +56,7 @@ StreamChunker::sendFile(const char* filename,
     size_t size = (size_t)file.tellg();
 
     // send first message (file size)
-    String fileSize = inputleap::string::sizeTypeToString(size);
+    std::string fileSize = inputleap::string::sizeTypeToString(size);
     FileChunk* sizeMessage = FileChunk::start(fileSize);
 
     events->addEvent(Event(events->forFile().fileChunkSending(), eventTarget, sizeMessage));
@@ -108,7 +108,7 @@ StreamChunker::sendFile(const char* filename,
 
 void
 StreamChunker::sendClipboard(
-                String& data,
+                std::string& data,
                 size_t size,
                 ClipboardID id,
                 UInt32 sequence,
@@ -116,7 +116,7 @@ StreamChunker::sendClipboard(
                 void* eventTarget)
 {
     // send first message (data size)
-    String dataSize = inputleap::string::sizeTypeToString(size);
+    std::string dataSize = inputleap::string::sizeTypeToString(size);
     ClipboardChunk* sizeMessage = ClipboardChunk::start(id, sequence, dataSize);
 
     events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget, sizeMessage));
@@ -133,7 +133,7 @@ StreamChunker::sendClipboard(
             chunkSize = size - sentLength;
         }
 
-        String chunk(data.substr(sentLength, chunkSize).c_str(), chunkSize);
+        std::string chunk(data.substr(sentLength, chunkSize).c_str(), chunkSize);
         ClipboardChunk* dataChunk = ClipboardChunk::data(id, sequence, chunk);
 
         events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget, dataChunk));

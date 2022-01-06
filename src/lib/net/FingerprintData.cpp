@@ -15,7 +15,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "base/String.h"
 #include "FingerprintDatabase.h"
 #include "io/filesystem.h"
 #include <algorithm>

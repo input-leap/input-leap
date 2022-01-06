@@ -18,7 +18,6 @@
 
 #include "inputleap/ServerTaskBarReceiver.h"
 #include "server/Server.h"
-#include "base/String.h"
 #include "base/IEventQueue.h"
 #include "arch/Arch.h"
 #include "common/Version.h"
@@ -39,8 +38,7 @@ ServerTaskBarReceiver::~ServerTaskBarReceiver()
     // do nothing
 }
 
-void
-ServerTaskBarReceiver::updateStatus(Server* server, const String& errorMsg)
+void ServerTaskBarReceiver::updateStatus(Server* server, const std::string& errorMsg)
 {
     {
         // update our status
@@ -78,8 +76,7 @@ ServerTaskBarReceiver::getStatus() const
     return m_state;
 }
 
-const String&
-ServerTaskBarReceiver::getErrorMessage() const
+const std::string& ServerTaskBarReceiver::getErrorMessage() const
 {
     return m_errorMessage;
 }

@@ -16,7 +16,7 @@
  */
 
 #include "inputleap/Chunk.h"
-#include "base/String.h"
+#include <cstring>
 
 Chunk::Chunk(size_t size): m_dataSize(0)
 {

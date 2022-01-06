@@ -80,7 +80,7 @@ public:
     virtual void        setDraggingStarted(bool started) { m_draggingStarted = started; }
     virtual bool        isDraggingStarted();
     virtual bool        isFakeDraggingStarted() { return m_fakeDraggingStarted; }
-    virtual String&    getDraggingFilename() { return m_draggingFilename; }
+    virtual std::string& getDraggingFilename() { return m_draggingFilename; }
     virtual void        clearDraggingFilename() { }
 
     // IPlatformScreen overrides
@@ -99,9 +99,8 @@ public:
     virtual bool        isPrimary() const = 0;
     
     virtual void        fakeDraggingFiles(DragFileList fileList) { throw std::runtime_error("fakeDraggingFiles not implemented"); }
-    virtual const String&
-                        getDropTarget() const { throw std::runtime_error("getDropTarget not implemented"); }
-    virtual void        setDropTarget(const String&) { throw std::runtime_error("setDropTarget not implemented"); }
+    virtual const std::string& getDropTarget() const { throw std::runtime_error("getDropTarget not implemented"); }
+    virtual void setDropTarget(const std::string&) { throw std::runtime_error("setDropTarget not implemented"); }
 
 protected:
     //! Update mouse buttons
@@ -122,7 +121,7 @@ protected:
     virtual void        handleSystemEvent(const Event& event, void*) = 0;
 
 protected:
-    String                m_draggingFilename;
+    std::string                m_draggingFilename;
     bool                m_draggingStarted;
     bool                m_fakeDraggingStarted;
 };

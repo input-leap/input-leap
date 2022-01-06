@@ -308,14 +308,14 @@ public:
     Converts a key and modifier mask into a string representing the
     combination.
     */
-    static String        formatKey(KeyID key, KeyModifierMask);
+    static std::string formatKey(KeyID key, KeyModifierMask);
 
     //! Parse a string into a key
     /*!
     Converts a string into a key.  Returns \c true on success and \c false
     if the string cannot be parsed.
     */
-    static bool            parseKey(const String&, KeyID&);
+    static bool parseKey(const std::string&, KeyID&);
 
     //! Parse a string into a modifier mask
     /*!
@@ -324,7 +324,7 @@ public:
     remaining leading and trailing whitespace is stripped from the input
     string.
     */
-    static bool            parseModifiers(String&, KeyModifierMask&);
+    static bool parseModifiers(std::string&, KeyModifierMask&);
 
     //@}
 
@@ -484,12 +484,12 @@ private:
     typedef std::set<KeyButton> KeyButtonSet;
 
     // Key maps for parsing/formatting
-    typedef std::map<String, KeyID,
+    typedef std::map<std::string, KeyID,
                             inputleap::string::CaselessCmp> NameToKeyMap;
-    typedef std::map<String, KeyModifierMask,
+    typedef std::map<std::string, KeyModifierMask,
                             inputleap::string::CaselessCmp> NameToModifierMap;
-    typedef std::map<KeyID, String> KeyToNameMap;
-    typedef std::map<KeyModifierMask, String> ModifierToNameMap;
+    typedef std::map<KeyID, std::string> KeyToNameMap;
+    typedef std::map<KeyModifierMask, std::string> ModifierToNameMap;
 
     // KeyID info
     KeyIDMap            m_keyIDMap;

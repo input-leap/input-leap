@@ -23,6 +23,7 @@
 #include "inputleap/protocol_types.h"
 #include "inputleap/IPlatformScreen.h"
 #include "net/NetworkAddress.h"
+#include "base/String.h"
 #include "base/XBase.h"
 #include "common/stdmap.h"
 #include "common/stdset.h"

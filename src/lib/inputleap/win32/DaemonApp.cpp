@@ -144,8 +144,8 @@ DaemonApp::run(int argc, char** argv)
         return kExitSuccess;
     }
     catch (XArch& e) {
-        String message = e.what();
-        if (uninstall && (message.find("The service has not been started") != String::npos)) {
+        std::string message = e.what();
+        if (uninstall && (message.find("The service has not been started") != std::string::npos)) {
             // TODO: if we're keeping this use error code instead (what is it?!).
             // HACK: this message happens intermittently, not sure where from but
             // it's quite misleading for the user. they thing something has gone
@@ -202,7 +202,7 @@ DaemonApp::mainLoop(bool daemonized)
         // install the platform event queue to handle service stop events.
         m_events->adoptBuffer(new MSWindowsEventQueueBuffer(m_events));
 
-        String command = ARCH->setting("Command");
+        std::string command = ARCH->setting("Command");
         bool elevate = ARCH->setting("Elevate") == "1";
         if (command != "") {
             LOG((CLOG_INFO "using last known command: %s", command.c_str()));
@@ -256,7 +256,7 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
     switch (m->type()) {
         case kIpcCommand: {
             IpcCommandMessage* cm = static_cast<IpcCommandMessage*>(m);
-            String command = cm->command();
+            std::string command = cm->command();
 
             // if empty quotes, clear.
             if (command == "\"\"") {
@@ -266,14 +266,14 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
             if (!command.empty()) {
                 LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
 
-                std::vector<String> argsArray;
+                std::vector<std::string> argsArray;
                 ArgParser::splitCommandString(command, argsArray);
                 ArgParser argParser(NULL);
                 const char** argv = argParser.getArgv(argsArray);
                 ServerArgs serverArgs;
                 ClientArgs clientArgs;
                 int argc = static_cast<int>(argsArray.size());
-                bool server = argsArray[0].find("barriers") != String::npos ? true : false;
+                bool server = argsArray[0].find("barriers") != std::string::npos ? true : false;
                 ArgsBase* argBase = NULL;
 
                 if (server) {
@@ -287,7 +287,7 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
 
                 delete[] argv;
 
-                String logLevel(argBase->m_logFilter);
+                std::string logLevel(argBase->m_logFilter);
                 if (!logLevel.empty()) {
                     try {
                         // change log level based on that in the command string
@@ -302,9 +302,9 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
 
                 // eg. no log-to-file while running in foreground
                 if (m_fileLogOutputter != nullptr) {
-                    String logFilename;
+                    std::string logFilename;
                     if (argBase->m_logFile != NULL) {
-                        logFilename = String(argBase->m_logFile);
+                        logFilename = std::string(argBase->m_logFile);
                         ARCH->setting("LogFilename", logFilename);
                         m_watchdog->setFileLogOutputter(m_fileLogOutputter);
                         command = ArgParser::assembleCommand(argsArray, "--log", 1);
@@ -326,7 +326,7 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
                 ARCH->setting("Command", command);
 
                 // TODO: it would be nice to store bools/ints...
-                ARCH->setting("Elevate", String(cm->elevate() ? "1" : "0"));
+                ARCH->setting("Elevate", std::string(cm->elevate() ? "1" : "0"));
             }
             catch (XArch& e) {
                 LOG((CLOG_ERR "failed to save settings, %s", e.what()));
@@ -342,7 +342,7 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
 
         case kIpcHello:
             IpcHelloMessage* hm = static_cast<IpcHelloMessage*>(m);
-            String type;
+            std::string type;
             switch (hm->clientType()) {
                 case kIpcClientGui: type = "gui"; break;
                 case kIpcClientNode: type = "node"; break;

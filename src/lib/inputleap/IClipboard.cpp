@@ -23,8 +23,7 @@
 // IClipboard
 //
 
-void
-IClipboard::unmarshall(IClipboard* clipboard, const String& data, Time time)
+void IClipboard::unmarshall(IClipboard* clipboard, const std::string& data, Time time)
 {
     assert(clipboard != NULL);
 
@@ -53,7 +52,7 @@ IClipboard::unmarshall(IClipboard* clipboard, const String& data, Time time)
             // or server supports more clipboard formats than the other
             // then one of them will get a format >= kNumFormats here.
             if (format <IClipboard::kNumFormats) {
-                clipboard->add(format, String(index, size));
+                clipboard->add(format, std::string(index, size));
             }
             index += size;
         }
@@ -63,8 +62,7 @@ IClipboard::unmarshall(IClipboard* clipboard, const String& data, Time time)
     }
 }
 
-String
-IClipboard::marshall(const IClipboard* clipboard)
+std::string IClipboard::marshall(const IClipboard* clipboard)
 {
     // return data format:
     // 4 bytes => number of formats included
@@ -75,9 +73,9 @@ IClipboard::marshall(const IClipboard* clipboard)
 
     assert(clipboard != NULL);
 
-    String data;
+    std::string data;
 
-    std::vector<String> formatData;
+    std::vector<std::string> formatData;
     formatData.resize(IClipboard::kNumFormats);
     // FIXME -- use current time
     if (clipboard->open(0)) {
@@ -159,7 +157,7 @@ IClipboard::readUInt32(const char* buf)
 }
 
 void
-IClipboard::writeUInt32(String* buf, UInt32 v)
+IClipboard::writeUInt32(std::string* buf, UInt32 v)
 {
     *buf += static_cast<UInt8>((v >> 24) & 0xff);
     *buf += static_cast<UInt8>((v >> 16) & 0xff);

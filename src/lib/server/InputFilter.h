@@ -173,7 +173,7 @@ public:
 
         // Action overrides
         virtual Action* clone() const;
-        virtual String format() const;
+        virtual std::string format() const;
         virtual void perform(const Event&);
 
     private:

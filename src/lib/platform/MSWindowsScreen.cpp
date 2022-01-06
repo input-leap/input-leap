@@ -32,7 +32,6 @@
 #include "inputleap/App.h"
 #include "inputleap/ArgsBase.h"
 #include "inputleap/ClientApp.h"
-#include "mt/Lock.h"
 #include "mt/Thread.h"
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/Arch.h"

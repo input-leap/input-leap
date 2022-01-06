@@ -18,12 +18,12 @@
 
 #pragma once
 
-#include "mt/Mutex.h"
 #include "base/IEventQueueBuffer.h"
 #include "common/stdvector.h"
 #include "XWindowsImpl.h"
 
 #include <X11/Xlib.h>
+#include <mutex>
 
 class IEventQueue;
 
@@ -53,7 +53,7 @@ private:
     typedef std::vector<XEvent> EventList;
      IXWindowsImpl*       m_impl;
 
-    Mutex                m_mutex;
+    mutable std::mutex mutex_;
     Display*            m_display;
     Window                m_window;
     Atom                m_userEvent;

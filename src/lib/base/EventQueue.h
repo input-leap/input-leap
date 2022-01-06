@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "mt/CondVar.h"
 #include "arch/IArchMultithread.h"
 #include "base/IEventQueue.h"
 #include "base/Event.h"
@@ -28,6 +27,7 @@
 #include "common/stdset.h"
 #include "base/NonBlockingStream.h"
 
+#include <condition_variable>
 #include <mutex>
 #include <queue>
 
@@ -111,7 +111,7 @@ private:
     typedef std::map<void*, TypeHandlerTable> HandlerTable;
 
     int                    m_systemTarget;
-    mutable std::mutex m_mutex;
+    mutable std::mutex mutex_;
 
     // registered events
     Event::Type        m_nextType;
@@ -180,8 +180,9 @@ private:
     IScreenEvents*                m_typesForIScreen;
     ClipboardEvents*            m_typesForClipboard;
     FileEvents*                    m_typesForFile;
-    Mutex*                        m_readyMutex;
-    CondVar<bool>*                m_readyCondVar;
+    mutable std::mutex ready_mutex_;
+    mutable std::condition_variable ready_cv_;
+    bool is_ready_ = false;
     std::queue<Event>            m_pending;
     NonBlockingStream            m_parentStream;
 };

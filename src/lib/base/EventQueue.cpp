@@ -18,8 +18,6 @@
 
 #include "base/EventQueue.h"
 
-#include "mt/Mutex.h"
-#include "mt/Lock.h"
 #include "arch/Arch.h"
 #include "base/SimpleEventQueueBuffer.h"
 #include "base/Stopwatch.h"
@@ -86,9 +84,7 @@ EventQueue::EventQueue() :
     m_typesForIPrimaryScreen(NULL),
     m_typesForIScreen(NULL),
     m_typesForClipboard(NULL),
-    m_typesForFile(NULL),
-    m_readyMutex(new Mutex),
-    m_readyCondVar(new CondVar<bool>(m_readyMutex, false))
+    m_typesForFile(NULL)
 {
     ARCH->setSignalHandler(Arch::kINTERRUPT, &interrupt, this);
     ARCH->setSignalHandler(Arch::kTERMINATE, &interrupt, this);
@@ -98,9 +94,6 @@ EventQueue::EventQueue() :
 EventQueue::~EventQueue()
 {
     delete m_buffer;
-    delete m_readyCondVar;
-    delete m_readyMutex;
-
     ARCH->setSignalHandler(Arch::kINTERRUPT, NULL, NULL);
     ARCH->setSignalHandler(Arch::kTERMINATE, NULL, NULL);
 }
@@ -110,9 +103,9 @@ EventQueue::loop()
 {
     m_buffer->init();
     {
-        Lock lock(m_readyMutex);
-        *m_readyCondVar = true;
-        m_readyCondVar->signal();
+        std::unique_lock<std::mutex> lock(ready_mutex_);
+        is_ready_ = true;
+        ready_cv_.notify_one();
     }
     LOG((CLOG_DEBUG "event queue is ready"));
     while (!m_pending.empty()) {
@@ -134,7 +127,7 @@ EventQueue::loop()
 Event::Type
 EventQueue::registerTypeOnce(Event::Type& type, const char* name)
 {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     if (type == Event::kUnknown) {
         m_typeMap.insert(std::make_pair(m_nextType, name));
         m_nameMap.insert(std::make_pair(name, m_nextType));
@@ -174,7 +167,7 @@ EventQueue::getTypeName(Event::Type type)
 void
 EventQueue::adoptBuffer(IEventQueueBuffer* buffer)
 {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
 
     LOG((CLOG_DEBUG "adopting new buffer"));
 
@@ -259,7 +252,7 @@ retry:
 
     case IEventQueueBuffer::kUser:
         {
-            std::lock_guard<std::mutex> lock(m_mutex);
+            std::lock_guard<std::mutex> lock(mutex_);
             event = removeEvent(dataID);
             return true;
         }
@@ -303,7 +296,7 @@ EventQueue::addEvent(const Event& event)
         dispatchEvent(event);
         Event::deleteData(event);
     }
-    else if (!(*m_readyCondVar)) {
+    else if (!is_ready_) {
         m_pending.push(event);
     }
     else {
@@ -314,7 +307,7 @@ EventQueue::addEvent(const Event& event)
 void
 EventQueue::addEventToBuffer(const Event& event)
 {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
 
     // store the event's data locally
     UInt32 eventID = saveEvent(event);
@@ -336,7 +329,7 @@ EventQueue::newTimer(double duration, void* target)
     if (target == NULL) {
         target = timer;
     }
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     m_timers.insert(timer);
     // initial duration is requested duration plus whatever's on
     // the clock currently because the latter will be subtracted
@@ -355,7 +348,7 @@ EventQueue::newOneShotTimer(double duration, void* target)
     if (target == NULL) {
         target = timer;
     }
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     m_timers.insert(timer);
     // initial duration is requested duration plus whatever's on
     // the clock currently because the latter will be subtracted
@@ -368,7 +361,7 @@ EventQueue::newOneShotTimer(double duration, void* target)
 void
 EventQueue::deleteTimer(EventQueueTimer* timer)
 {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     for (TimerQueue::iterator index = m_timerQueue.begin();
                             index != m_timerQueue.end(); ++index) {
         if (index->getTimer() == timer) {
@@ -386,7 +379,7 @@ EventQueue::deleteTimer(EventQueueTimer* timer)
 void
 EventQueue::adoptHandler(Event::Type type, void* target, IEventJob* handler)
 {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     IEventJob*& job = m_handlers[target][type];
     delete job;
     job = handler;
@@ -397,7 +390,7 @@ EventQueue::removeHandler(Event::Type type, void* target)
 {
     IEventJob* handler = NULL;
     {
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::lock_guard<std::mutex> lock(mutex_);
         HandlerTable::iterator index = m_handlers.find(target);
         if (index != m_handlers.end()) {
             TypeHandlerTable& typeHandlers = index->second;
@@ -416,7 +409,7 @@ EventQueue::removeHandlers(void* target)
 {
     std::vector<IEventJob*> handlers;
     {
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::lock_guard<std::mutex> lock(mutex_);
         HandlerTable::iterator index = m_handlers.find(target);
         if (index != m_handlers.end()) {
             // copy to handlers array and clear table for target
@@ -439,7 +432,7 @@ EventQueue::removeHandlers(void* target)
 IEventJob*
 EventQueue::getHandler(Event::Type type, void* target) const
 {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     HandlerTable::const_iterator index = m_handlers.find(target);
     if (index != m_handlers.end()) {
         const TypeHandlerTable& typeHandlers = index->second;
@@ -566,13 +559,10 @@ EventQueue::getSystemTarget()
 void
 EventQueue::waitForReady() const
 {
-    double timeout = ARCH->time() + 10;
-    Lock lock(m_readyMutex);
+    std::unique_lock<std::mutex> lock(ready_mutex_);
 
-    while (!m_readyCondVar->wait()) {
-        if (ARCH->time() > timeout) {
-            throw std::runtime_error("event queue is not ready within 5 sec");
-        }
+    if (!ready_cv_.wait_for(lock, std::chrono::seconds{10}, [this](){ return is_ready_; })) {
+        throw std::runtime_error("event queue is not ready within 5 sec");
     }
 }
 

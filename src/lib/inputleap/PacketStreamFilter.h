@@ -20,7 +20,8 @@
 
 #include "io/StreamFilter.h"
 #include "io/StreamBuffer.h"
-#include "mt/Mutex.h"
+
+#include <mutex>
 
 class IEventQueue;
 
@@ -53,7 +54,7 @@ private:
     bool                readMore();
 
 private:
-    Mutex                m_mutex;
+    mutable std::mutex mutex_;
     UInt32                m_size;
     StreamBuffer        m_buffer;
     bool                m_inputShutdown;

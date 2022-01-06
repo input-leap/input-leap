@@ -23,6 +23,9 @@
 
 #include "test/global/gmock.h"
 
+#include <condition_variable>
+#include <mutex>
+
 using ::testing::_;
 using ::testing::Invoke;
 
@@ -31,19 +34,9 @@ class IEventQueue;
 class MockIpcServer : public IpcServer
 {
 public:
-    MockIpcServer() :
-        m_sendCond(ARCH->newCondVar()),
-        m_sendMutex(ARCH->newMutex()) { }
+    MockIpcServer() {}
 
-    ~MockIpcServer() {
-        if (m_sendCond != NULL) {
-            ARCH->closeCondVar(m_sendCond);
-        }
-
-        if (m_sendMutex != NULL) {
-            ARCH->closeMutex(m_sendMutex);
-        }
-    }
+    ~MockIpcServer() {}
 
     MOCK_METHOD0(listen, void());
     MOCK_METHOD2(send, void(const IpcMessage&, EIpcClientType));
@@ -54,15 +47,16 @@ public:
     }
 
     void waitForSend() {
-        ARCH->waitCondVar(m_sendCond, m_sendMutex, 5);
+        std::unique_lock<std::mutex> lock{send_mutex_};
+        ARCH->wait_cond_var(send_cv_, lock, 5);
     }
 
 private:
     void mockSend(const IpcMessage&, EIpcClientType) {
-        ArchMutexLock lock(m_sendMutex);
-        ARCH->broadcastCondVar(m_sendCond);
+        std::lock_guard<std::mutex> lock(send_mutex_);
+        send_cv_.notify_all();
     }
 
-    ArchCond            m_sendCond;
-    ArchMutex            m_sendMutex;
+    std::condition_variable send_cv_;
+    std::mutex send_mutex_;
 };

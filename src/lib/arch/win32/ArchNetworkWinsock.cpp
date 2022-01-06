@@ -97,10 +97,7 @@ ArchNetAddressImpl::alloc(size_t size)
 // ArchNetworkWinsock
 //
 
-ArchNetworkWinsock::ArchNetworkWinsock() :
-    m_mutex(NULL)
-{
-}
+ArchNetworkWinsock::ArchNetworkWinsock() = default;
 
 ArchNetworkWinsock::~ArchNetworkWinsock()
 {
@@ -110,9 +107,6 @@ ArchNetworkWinsock::~ArchNetworkWinsock()
 
         WSACleanup_winsock = NULL;
         s_networkModule    = NULL;
-    }
-    if (m_mutex != NULL) {
-        ARCH->closeMutex(m_mutex);
     }
 
     EventList::iterator it;
@@ -133,7 +127,6 @@ ArchNetworkWinsock::init()
     for (size_t i = 0; i < sizeof(s_library) / sizeof(s_library[0]); ++i) {
         try {
             initModule((HMODULE)::LoadLibrary(s_library[i]));
-            m_mutex = ARCH->newMutex();
             return;
         }
         catch (XArchNetwork&) {
@@ -239,9 +232,8 @@ ArchNetworkWinsock::copySocket(ArchSocket s)
     assert(s != NULL);
 
     // ref the socket and return it
-    ARCH->lockMutex(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     ++s->m_refCount;
-    ARCH->unlockMutex(m_mutex);
     return s;
 }
 
@@ -251,18 +243,20 @@ ArchNetworkWinsock::closeSocket(ArchSocket s)
     assert(s != NULL);
 
     // unref the socket and note if it should be released
-    ARCH->lockMutex(m_mutex);
-    const bool doClose = (--s->m_refCount == 0);
-    ARCH->unlockMutex(m_mutex);
+    bool doClose = false;
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        doClose = (--s->m_refCount == 0);
+    }
 
     // close the socket if necessary
     if (doClose) {
         if (close_winsock(s->m_socket) == SOCKET_ERROR) {
             // close failed.  restore the last ref and throw.
             int err = getsockerror_winsock();
-            ARCH->lockMutex(m_mutex);
+
+            std::lock_guard<std::mutex> lock(mutex_);
             ++s->m_refCount;
-            ARCH->unlockMutex(m_mutex);
             throwError(err);
         }
         WSACloseEvent_winsock(s->m_event);
@@ -729,9 +723,8 @@ ArchNetworkWinsock::nameToAddr(const std::string& name)
     hints.ai_family = AF_UNSPEC;
     int ret = -1;
 
-    ARCH->lockMutex(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     if ((ret = getaddrinfo(name.c_str(), NULL, &hints, &p)) != 0) {
-        ARCH->unlockMutex(m_mutex);
         delete addr;
         throwNameError(ret);
     }
@@ -744,7 +737,6 @@ ArchNetworkWinsock::nameToAddr(const std::string& name)
 
     memcpy(&addr->m_addr, p->ai_addr, addr->m_len);
     freeaddrinfo(p);
-    ARCH->unlockMutex(m_mutex);
     return addr;
 }
 

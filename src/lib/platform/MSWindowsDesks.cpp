@@ -22,7 +22,6 @@
 #include "platform/MSWindowsScreen.h"
 #include "inputleap/IScreenSaver.h"
 #include "inputleap/XScreen.h"
-#include "mt/Lock.h"
 #include "mt/Thread.h"
 #include "arch/win32/ArchMiscWindows.h"
 #include "base/Log.h"
@@ -110,8 +109,6 @@ MSWindowsDesks::MSWindowsDesks(bool isPrimary, bool noHooks,
     m_screensaverNotify(false),
     m_activeDesk(NULL),
     m_activeDeskName(),
-    m_mutex(),
-    m_deskReady(&m_mutex, false),
     m_updateKeys(updateKeys),
     m_events(events),
     m_stopOnDeskSwitch(stopOnDeskSwitch)
@@ -623,9 +620,9 @@ void MSWindowsDesks::desk_thread(Desk* desk)
 
     // tell main thread that we're ready
     {
-        Lock lock(&m_mutex);
-        m_deskReady = true;
-        m_deskReady.broadcast();
+        std::lock_guard<std::mutex> lock(mutex_);
+        is_desks_ready_ = true;
+        desks_ready_cv_.notify_all();
     }
 
     while (GetMessage(&msg, NULL, 0, 0)) {
@@ -725,9 +722,9 @@ void MSWindowsDesks::desk_thread(Desk* desk)
         }
 
         // notify that message was processed
-        Lock lock(&m_mutex);
-        m_deskReady = true;
-        m_deskReady.broadcast();
+        std::lock_guard<std::mutex> lock(mutex_);
+        is_desks_ready_ = true;
+        desks_ready_cv_.notify_all();
     }
 
     // clean up
@@ -855,11 +852,9 @@ MSWindowsDesks::waitForDesk() const
 {
     MSWindowsDesks* self = const_cast<MSWindowsDesks*>(this);
 
-    Lock lock(&m_mutex);
-    while (!(bool)m_deskReady) {
-        m_deskReady.wait();
-    }
-    self->m_deskReady = false;
+    std::unique_lock<std::mutex> lock(mutex_);
+    desks_ready_cv_.wait(lock, [this](){ return is_desks_ready_; });
+    self->is_desks_ready_ = false;
 }
 
 void

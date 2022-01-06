@@ -20,35 +20,8 @@
 
 #include "common/IInterface.h"
 #include <functional>
-
-/*!
-\class ArchCondImpl
-\brief Internal condition variable data.
-An architecture dependent type holding the necessary data for a
-condition variable.
-*/
-class ArchCondImpl;
-
-/*!
-\var ArchCond
-\brief Opaque condition variable type.
-An opaque type representing a condition variable.
-*/
-typedef ArchCondImpl* ArchCond;
-
-/*!
-\class ArchMutexImpl
-\brief Internal mutex data.
-An architecture dependent type holding the necessary data for a mutex.
-*/
-class ArchMutexImpl;
-
-/*!
-\var ArchMutex
-\brief Opaque mutex type.
-An opaque type representing a mutex.
-*/
-typedef ArchMutexImpl* ArchMutex;
+#include <mutex>
+#include <condition_variable>
 
 /*!
 \class ArchThreadImpl
@@ -63,6 +36,11 @@ class ArchThreadImpl;
 An opaque type representing a thread.
 */
 typedef ArchThreadImpl* ArchThread;
+
+inline std::chrono::nanoseconds seconds_to_chrono(double seconds)
+{
+    return std::chrono::nanoseconds(std::uint64_t(seconds * 1000000000.0));
+}
 
 //! Interface for architecture dependent multithreading
 /*!
@@ -97,27 +75,6 @@ public:
     // condition variable methods
     //
 
-    //! Create a condition variable
-    /*!
-    The condition variable is an opaque data type.
-    */
-    virtual ArchCond    newCondVar() = 0;
-
-    //! Destroy a condition variable
-    virtual void        closeCondVar(ArchCond) = 0;
-
-    //! Signal a condition variable
-    /*!
-    Signalling a condition variable releases one waiting thread.
-    */
-    virtual void        signalCondVar(ArchCond) = 0;
-
-    //! Broadcast a condition variable
-    /*!
-    Broadcasting a condition variable releases all waiting threads.
-    */
-    virtual void        broadcastCondVar(ArchCond) = 0;
-
     //! Wait on a condition variable
     /*!
     Wait on a conditation variable for up to \c timeout seconds.
@@ -129,28 +86,8 @@ public:
 
     (Cancellation point)
     */
-    virtual bool        waitCondVar(ArchCond, ArchMutex, double timeout) = 0;
-
-    //
-    // mutex methods
-    //
-
-    //! Create a recursive mutex
-    /*!
-    Creates a recursive mutex.  A thread may lock a recursive mutex
-    when it already holds a lock on that mutex.  The mutex is an
-    opaque data type.
-    */
-    virtual ArchMutex    newMutex() = 0;
-
-    //! Destroy a mutex
-    virtual void        closeMutex(ArchMutex) = 0;
-
-    //! Lock a mutex
-    virtual void        lockMutex(ArchMutex) = 0;
-
-    //! Unlock a mutex
-    virtual void        unlockMutex(ArchMutex) = 0;
+    bool wait_cond_var(std::condition_variable& cv, std::unique_lock<std::mutex>& lock,
+                       double timeout);
 
     //
     // thread methods

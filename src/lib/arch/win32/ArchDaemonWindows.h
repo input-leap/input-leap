@@ -26,6 +26,8 @@
 #include <Windows.h>
 #include <tchar.h>
 
+#include <condition_variable>
+
 #define ARCH_DAEMON ArchDaemonWindows
 
 //! Win32 implementation of IArchDaemon
@@ -122,8 +124,8 @@ private:
 private:
     static ArchDaemonWindows*    s_daemon;
 
-    ArchMutex            m_serviceMutex;
-    ArchCond            m_serviceCondVar;
+    std::mutex service_mutex_;
+    std::condition_variable service_cv_;
     DWORD                m_serviceState;
     bool                m_serviceHandlerWaiting;
     bool                m_serviceRunning;

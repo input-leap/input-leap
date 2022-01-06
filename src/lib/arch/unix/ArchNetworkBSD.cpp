@@ -93,14 +93,11 @@ ArchNetworkBSD::ArchNetworkBSD()
 
 ArchNetworkBSD::~ArchNetworkBSD()
 {
-    ARCH->closeMutex(m_mutex);
 }
 
 void
 ArchNetworkBSD::init()
 {
-    // create mutex to make some calls thread safe
-    m_mutex = ARCH->newMutex();
 }
 
 ArchSocket
@@ -137,9 +134,8 @@ ArchNetworkBSD::copySocket(ArchSocket s)
     assert(s != NULL);
 
     // ref the socket and return it
-    ARCH->lockMutex(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     ++s->m_refCount;
-    ARCH->unlockMutex(m_mutex);
     return s;
 }
 
@@ -149,18 +145,22 @@ ArchNetworkBSD::closeSocket(ArchSocket s)
     assert(s != NULL);
 
     // unref the socket and note if it should be released
-    ARCH->lockMutex(m_mutex);
-    const bool doClose = (--s->m_refCount == 0);
-    ARCH->unlockMutex(m_mutex);
+    bool doClose = false;
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        doClose = (--s->m_refCount == 0);
+    }
 
     // close the socket if necessary
     if (doClose) {
         if (close(s->m_fd) == -1) {
             // close failed.  restore the last ref and throw.
             int err = errno;
-            ARCH->lockMutex(m_mutex);
-            ++s->m_refCount;
-            ARCH->unlockMutex(m_mutex);
+
+            {
+                std::lock_guard<std::mutex> lock(mutex_);
+                ++s->m_refCount;
+            }
             throwError(err);
         }
         delete s;
@@ -697,9 +697,8 @@ ArchNetworkBSD::nameToAddr(const std::string& name)
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_UNSPEC;
 
-    ARCH->lockMutex(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     if ((ret = getaddrinfo(name.c_str(), NULL, &hints, &p)) != 0) {
-        ARCH->unlockMutex(m_mutex);
         delete addr;
         throwNameError(ret);
     }
@@ -712,7 +711,6 @@ ArchNetworkBSD::nameToAddr(const std::string& name)
 
     memcpy(&addr->m_addr, p->ai_addr, addr->m_len);
     freeaddrinfo(p);
-    ARCH->unlockMutex(m_mutex);
 
     return addr;
 }
@@ -731,23 +729,16 @@ ArchNetworkBSD::addrToName(ArchNetAddress addr)
     assert(addr != NULL);
 
     // mutexed name lookup (ugh)
-    ARCH->lockMutex(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     char host[1024];
     char service[20];
     int ret = getnameinfo(TYPED_ADDR(struct sockaddr, addr), addr->m_len, host,
             sizeof(host), service, sizeof(service), 0);
     if (ret != 0) {
-        ARCH->unlockMutex(m_mutex);
         throwNameError(ret);
     }
 
-    // save (primary) name
-    std::string name = host;
-
-    // done with static buffer
-    ARCH->unlockMutex(m_mutex);
-
-    return name;
+    return host;
 }
 
 std::string
@@ -758,18 +749,17 @@ ArchNetworkBSD::addrToString(ArchNetAddress addr)
     switch (getAddrFamily(addr)) {
     case kINET: {
         auto* ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
-        ARCH->lockMutex(m_mutex);
-        std::string s = inet_ntoa(ipAddr->sin_addr);
-        ARCH->unlockMutex(m_mutex);
-        return s;
+
+        std::lock_guard<std::mutex> lock(mutex_);
+        return inet_ntoa(ipAddr->sin_addr);
     }
 
     case kINET6: {
         char strAddr[INET6_ADDRSTRLEN];
         auto* ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
-        ARCH->lockMutex(m_mutex);
+
+        std::lock_guard<std::mutex> lock(mutex_);
         inet_ntop(AF_INET6, &ipAddr->sin6_addr, strAddr, INET6_ADDRSTRLEN);
-        ARCH->unlockMutex(m_mutex);
         return strAddr;
     }
 

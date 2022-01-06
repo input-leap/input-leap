@@ -20,6 +20,7 @@
 
 #include "arch/IArchNetwork.h"
 #include "arch/IArchMultithread.h"
+#include <mutex>
 
 #if HAVE_SYS_TYPES_H
 #    include <sys/types.h>
@@ -101,5 +102,5 @@ private:
     void                throwNameError(int);
 
 private:
-    ArchMutex            m_mutex;
+    std::mutex mutex_;
 };

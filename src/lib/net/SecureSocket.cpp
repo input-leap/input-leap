@@ -21,7 +21,6 @@
 #include "net/TSocketMultiplexerMethodJob.h"
 #include "base/TMethodEventJob.h"
 #include "net/TCPSocket.h"
-#include "mt/Lock.h"
 #include "arch/XArch.h"
 #include "base/Log.h"
 #include "base/String.h"
@@ -728,7 +727,7 @@ MultiplexerJobStatus SecureSocket::serviceConnect(ISocketMultiplexerJob* job,
 {
     (void) read;
 
-    Lock lock(&getMutex());
+    std::lock_guard<std::mutex> lock(tcp_mutex_);
 
     int status = 0;
 #ifdef SYSAPI_WIN32
@@ -761,7 +760,7 @@ MultiplexerJobStatus SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
                                                  bool read, bool write, bool error)
 {
     (void) read;
-    Lock lock(&getMutex());
+    std::lock_guard<std::mutex> lock(tcp_mutex_);
 
     int status = 0;
 #ifdef SYSAPI_WIN32

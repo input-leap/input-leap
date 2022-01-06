@@ -23,22 +23,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#include <mutex>
 
 #define ARCH_MULTITHREAD ArchMultithreadWindows
-
-class ArchCondImpl {
-public:
-    enum { kSignal = 0, kBroadcast };
-
-    HANDLE                m_events[2];
-    mutable int            m_waitCount;
-    ArchMutex            m_waitCountMutex;
-};
-
-class ArchMutexImpl {
-public:
-    CRITICAL_SECTION    m_mutex;
-};
 
 //! Win32 implementation of IArchMultithread
 class ArchMultithreadWindows : public IArchMultithread {
@@ -64,15 +51,6 @@ public:
     //@}
 
     // IArchMultithread overrides
-    virtual ArchCond    newCondVar();
-    virtual void        closeCondVar(ArchCond);
-    virtual void        signalCondVar(ArchCond);
-    virtual void        broadcastCondVar(ArchCond);
-    virtual bool        waitCondVar(ArchCond, ArchMutex, double timeout);
-    virtual ArchMutex    newMutex();
-    virtual void        closeMutex(ArchMutex);
-    virtual void        lockMutex(ArchMutex);
-    virtual void        unlockMutex(ArchMutex);
     virtual ArchThread newThread(const std::function<void()>& func);
     virtual ArchThread    newCurrentThread();
     virtual ArchThread    copyThread(ArchThread);
@@ -105,7 +83,7 @@ private:
 
     static ArchMultithreadWindows*    s_instance;
 
-    ArchMutex            m_threadMutex;
+    std::mutex thread_mutex_;
 
     ThreadList            m_threadList;
     ArchThread            m_mainThread;

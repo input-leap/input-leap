@@ -25,7 +25,6 @@
 #include "common/stdmap.h"
 #include "common/stdvector.h"
 
-#include <bitset>
 #include <Carbon/Carbon.h>
 #include <mach/mach_port.h>
 #include <mach/mach_interface.h>
@@ -33,22 +32,21 @@
 #include <IOKit/pwr_mgt/IOPMLib.h>
 #include <IOKit/IOMessage.h>
 
+#include <condition_variable>
+#include <bitset>
+#include <mutex>
+
 extern "C" {
     typedef int CGSConnectionID;
     CGError CGSSetConnectionProperty(CGSConnectionID cid, CGSConnectionID targetCID, CFStringRef key, CFTypeRef value);
     int _CGSDefaultConnection();
 }
 
-
-template <class T>
-class CondVar;
 class EventQueueTimer;
-class Mutex;
 class Thread;
 class OSXKeyState;
 class OSXScreenSaver;
 class IEventQueue;
-class Mutex;
 
 //! Implementation of IPlatformScreen for OS X
 class OSXScreen : public PlatformScreen {
@@ -304,9 +302,10 @@ private:
     EventHandlerRef            m_switchEventHandlerRef;
 
     // sleep / wakeup
-    Mutex*                    m_pmMutex;
+    std::mutex pm_mutex_;
     Thread*                m_pmWatchThread;
-    CondVar<bool>*            m_pmThreadReady;
+    std::condition_variable pm_thread_ready_cv_;
+    bool is_pm_thread_ready_ = false;
     CFRunLoopRef            m_pmRunloop;
     io_connect_t            m_pmRootPort;
 
@@ -341,8 +340,9 @@ private:
     std::string m_dropTarget;
 
 #if defined(MAC_OS_X_VERSION_10_7)
-    Mutex*                    m_carbonLoopMutex;
-    CondVar<bool>*            m_carbonLoopReady;
+    mutable std::mutex carbon_loop_mutex_;
+    mutable std::condition_variable cardon_loop_ready_cv_;
+    bool is_carbon_loop_ready_ = false;
 #endif
 
     class OSXScreenImpl*    m_impl;

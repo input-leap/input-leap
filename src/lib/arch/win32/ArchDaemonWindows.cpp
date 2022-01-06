@@ -320,7 +320,6 @@ int
 ArchDaemonWindows::doRunDaemon(RunFunc run)
 {
     // should only be called from DaemonFunc
-    assert(m_serviceMutex != NULL);
     assert(run            != NULL);
 
     // create message queue for this thread
@@ -328,31 +327,30 @@ ArchDaemonWindows::doRunDaemon(RunFunc run)
     PeekMessage(&dummy, NULL, 0, 0, PM_NOREMOVE);
 
     int result = 0;
-    ARCH->lockMutex(m_serviceMutex);
+    std::unique_lock<std::mutex> lock(service_mutex_);
     m_daemonThreadID = GetCurrentThreadId();
     while (m_serviceState != SERVICE_STOPPED) {
         // wait until we're told to start
         while (!isRunState(m_serviceState) &&
                 m_serviceState != SERVICE_STOP_PENDING) {
-            ARCH->waitCondVar(m_serviceCondVar, m_serviceMutex, -1.0);
+            ARCH->wait_cond_var(service_cv_, lock, -1.0);
         }
 
         // run unless told to stop
         if (m_serviceState != SERVICE_STOP_PENDING) {
-            ARCH->unlockMutex(m_serviceMutex);
+            lock.unlock();
             try {
                 result = run();
             }
             catch (...) {
-                ARCH->lockMutex(m_serviceMutex);
+                lock.lock();
                 setStatusError(0);
                 m_serviceState = SERVICE_STOPPED;
                 setStatus(m_serviceState);
-                ARCH->broadcastCondVar(m_serviceCondVar);
-                ARCH->unlockMutex(m_serviceMutex);
+                service_cv_.notify_all();
                 throw;
             }
-            ARCH->lockMutex(m_serviceMutex);
+            lock.lock();
         }
 
         // notify of new state
@@ -363,22 +361,20 @@ ArchDaemonWindows::doRunDaemon(RunFunc run)
             m_serviceState = SERVICE_STOPPED;
         }
         setStatus(m_serviceState);
-        ARCH->broadcastCondVar(m_serviceCondVar);
+        service_cv_.notify_all();
     }
-    ARCH->unlockMutex(m_serviceMutex);
     return result;
 }
 
 void
 ArchDaemonWindows::doDaemonRunning(bool running)
 {
-    ARCH->lockMutex(m_serviceMutex);
+    std::lock_guard<std::mutex> lock(service_mutex_);
     if (running) {
         m_serviceState = SERVICE_RUNNING;
         setStatus(m_serviceState);
-        ARCH->broadcastCondVar(m_serviceCondVar);
+        service_cv_.notify_all();
     }
-    ARCH->unlockMutex(m_serviceMutex);
 }
 
 UINT
@@ -438,18 +434,12 @@ ArchDaemonWindows::serviceMain(DWORD argc, LPTSTR* argvIn)
     typedef std::vector<std::string> Arguments;
     const char** argv = const_cast<const char**>(argvIn);
 
-    // create synchronization objects
-    m_serviceMutex        = ARCH->newMutex();
-    m_serviceCondVar      = ARCH->newCondVar();
-
     // register our service handler function
     m_statusHandle = RegisterServiceCtrlHandler(argv[0],
                                 &ArchDaemonWindows::serviceHandlerEntry);
     if (m_statusHandle == 0) {
         // cannot start as service
         m_daemonResult = -1;
-        ARCH->closeCondVar(m_serviceCondVar);
-        ARCH->closeMutex(m_serviceMutex);
         return;
     }
 
@@ -543,10 +533,6 @@ ArchDaemonWindows::serviceMain(DWORD argc, LPTSTR* argvIn)
         m_daemonResult = -1;
     }
 
-    // clean up
-    ARCH->closeCondVar(m_serviceCondVar);
-    ARCH->closeMutex(m_serviceMutex);
-
     // we're going to exit now, so set status to stopped
     m_serviceState = SERVICE_STOPPED;
     setStatus(m_serviceState, 0, 10000);
@@ -561,17 +547,13 @@ ArchDaemonWindows::serviceMainEntry(DWORD argc, LPTSTR* argv)
 void
 ArchDaemonWindows::serviceHandler(DWORD ctrl)
 {
-    assert(m_serviceMutex   != NULL);
-    assert(m_serviceCondVar != NULL);
-
-    ARCH->lockMutex(m_serviceMutex);
+    std::unique_lock<std::mutex> lock(service_mutex_);
 
     // ignore request if service is already stopped
     if (s_daemon == NULL || m_serviceState == SERVICE_STOPPED) {
         if (s_daemon != NULL) {
             setStatus(m_serviceState);
         }
-        ARCH->unlockMutex(m_serviceMutex);
         return;
     }
 
@@ -581,7 +563,7 @@ ArchDaemonWindows::serviceHandler(DWORD ctrl)
         setStatus(m_serviceState, 0, 5000);
         PostThreadMessage(m_daemonThreadID, m_quitMessage, 0, 0);
         while (isRunState(m_serviceState)) {
-            ARCH->waitCondVar(m_serviceCondVar, m_serviceMutex, -1.0);
+            ARCH->wait_cond_var(service_cv_, lock, -1.0);
         }
         break;
 
@@ -589,7 +571,7 @@ ArchDaemonWindows::serviceHandler(DWORD ctrl)
         // FIXME -- maybe should flush quit messages from queue
         m_serviceState = SERVICE_CONTINUE_PENDING;
         setStatus(m_serviceState, 0, 5000);
-        ARCH->broadcastCondVar(m_serviceCondVar);
+        service_cv_.notify_all();
         break;
 
     case SERVICE_CONTROL_STOP:
@@ -597,9 +579,9 @@ ArchDaemonWindows::serviceHandler(DWORD ctrl)
         m_serviceState = SERVICE_STOP_PENDING;
         setStatus(m_serviceState, 0, 5000);
         PostThreadMessage(m_daemonThreadID, m_quitMessage, 0, 0);
-        ARCH->broadcastCondVar(m_serviceCondVar);
+        service_cv_.notify_all();
         while (isRunState(m_serviceState)) {
-            ARCH->waitCondVar(m_serviceCondVar, m_serviceMutex, -1.0);
+            ARCH->wait_cond_var(service_cv_, lock, -1.0);
         }
         break;
 
@@ -611,8 +593,6 @@ ArchDaemonWindows::serviceHandler(DWORD ctrl)
         setStatus(m_serviceState);
         break;
     }
-
-    ARCH->unlockMutex(m_serviceMutex);
 }
 
 void WINAPI

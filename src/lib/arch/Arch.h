@@ -64,6 +64,8 @@
 #    include "arch/unix/ArchInternetUnix.h"
 #endif
 
+#include <mutex>
+
 /*!
 \def ARCH
 This macro evaluates to the singleton Arch object.
@@ -120,20 +122,4 @@ public:
 private:
     static Arch*        s_instance;
     ARCH_INTERNET        m_internet;
-};
-
-//! Convenience object to lock/unlock an arch mutex
-class ArchMutexLock {
-public:
-    ArchMutexLock(ArchMutex mutex) : m_mutex(mutex)
-    {
-        ARCH->lockMutex(m_mutex);
-    }
-    ~ArchMutexLock()
-    {
-        ARCH->unlockMutex(m_mutex);
-    }
-
-private:
-    ArchMutex            m_mutex;
 };

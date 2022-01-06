@@ -91,9 +91,6 @@ ArchMultithreadWindows::ArchMultithreadWindows()
         m_signalUserData[i] = NULL;
     }
 
-    // create mutex for thread list
-    m_threadMutex = newMutex();
-
     // create thread for calling (main) thread and add it to our
     // list.  no need to lock the mutex since we're the only thread.
     m_mainThread           = new ArchThreadImpl;
@@ -111,35 +108,28 @@ ArchMultithreadWindows::~ArchMultithreadWindows()
                                index != m_threadList.end(); ++index) {
         delete *index;
     }
-
-    // done with mutex
-    delete m_threadMutex;
 }
 
 void
 ArchMultithreadWindows::setNetworkDataForCurrentThread(void* data)
 {
-    lockMutex(m_threadMutex);
+    std::lock_guard<std::mutex> lock(thread_mutex_);
     ArchThreadImpl* thread = findNoRef(GetCurrentThreadId());
     thread->m_networkData = data;
-    unlockMutex(m_threadMutex);
 }
 
 void*
 ArchMultithreadWindows::getNetworkDataForThread(ArchThread thread)
 {
-    lockMutex(m_threadMutex);
-    void* data = thread->m_networkData;
-    unlockMutex(m_threadMutex);
-    return data;
+    std::lock_guard<std::mutex> lock(thread_mutex_);
+    return thread->m_networkData;
 }
 
 HANDLE
 ArchMultithreadWindows::getCancelEventForCurrentThread()
 {
-    lockMutex(m_threadMutex);
+    std::lock_guard<std::mutex> lock(thread_mutex_);
     ArchThreadImpl* thread = findNoRef(GetCurrentThreadId());
-    unlockMutex(m_threadMutex);
     return thread->m_cancel;
 }
 
@@ -149,147 +139,10 @@ ArchMultithreadWindows::getInstance()
     return s_instance;
 }
 
-ArchCond
-ArchMultithreadWindows::newCondVar()
-{
-    ArchCondImpl* cond                       = new ArchCondImpl;
-    cond->m_events[ArchCondImpl::kSignal]    = CreateEvent(NULL,
-                                                    FALSE, FALSE, NULL);
-    cond->m_events[ArchCondImpl::kBroadcast] = CreateEvent(NULL,
-                                                    TRUE,  FALSE, NULL);
-    cond->m_waitCountMutex                    = newMutex();
-    cond->m_waitCount                         = 0;
-    return cond;
-}
-
-void
-ArchMultithreadWindows::closeCondVar(ArchCond cond)
-{
-    CloseHandle(cond->m_events[ArchCondImpl::kSignal]);
-    CloseHandle(cond->m_events[ArchCondImpl::kBroadcast]);
-    closeMutex(cond->m_waitCountMutex);
-    delete cond;
-}
-
-void
-ArchMultithreadWindows::signalCondVar(ArchCond cond)
-{
-    // is anybody waiting?
-    lockMutex(cond->m_waitCountMutex);
-    const bool hasWaiter = (cond->m_waitCount > 0);
-    unlockMutex(cond->m_waitCountMutex);
-
-    // wake one thread if anybody is waiting
-    if (hasWaiter) {
-        SetEvent(cond->m_events[ArchCondImpl::kSignal]);
-    }
-}
-
-void
-ArchMultithreadWindows::broadcastCondVar(ArchCond cond)
-{
-    // is anybody waiting?
-    lockMutex(cond->m_waitCountMutex);
-    const bool hasWaiter = (cond->m_waitCount > 0);
-    unlockMutex(cond->m_waitCountMutex);
-
-    // wake all threads if anybody is waiting
-    if (hasWaiter) {
-        SetEvent(cond->m_events[ArchCondImpl::kBroadcast]);
-    }
-}
-
-bool
-ArchMultithreadWindows::waitCondVar(ArchCond cond,
-                            ArchMutex mutex, double timeout)
-{
-    // prepare to wait
-    const DWORD winTimeout = (timeout < 0.0) ? INFINITE :
-                                static_cast<DWORD>(1000.0 * timeout);
-
-    // make a list of the condition variable events and the cancel event
-    // for the current thread.
-    HANDLE handles[4];
-    handles[0] = cond->m_events[ArchCondImpl::kSignal];
-    handles[1] = cond->m_events[ArchCondImpl::kBroadcast];
-    handles[2] = getCancelEventForCurrentThread();
-
-    // update waiter count
-    lockMutex(cond->m_waitCountMutex);
-    ++cond->m_waitCount;
-    unlockMutex(cond->m_waitCountMutex);
-
-    // release mutex.  this should be atomic with the wait so that it's
-    // impossible for another thread to signal us between the unlock and
-    // the wait, which would lead to a lost signal on broadcasts.
-    // however, we're using a manual reset event for broadcasts which
-    // stays set until we reset it, so we don't lose the broadcast.
-    unlockMutex(mutex);
-
-    // wait for a signal or broadcast
-    // TODO: this doesn't always signal when kill signals are sent
-    DWORD result = WaitForMultipleObjects(3, handles, FALSE, winTimeout);
-
-    // cancel takes priority
-    if (result != WAIT_OBJECT_0 + 2 &&
-        WaitForSingleObject(handles[2], 0) == WAIT_OBJECT_0) {
-        result = WAIT_OBJECT_0 + 2;
-    }
-
-    // update the waiter count and check if we're the last waiter
-    lockMutex(cond->m_waitCountMutex);
-    --cond->m_waitCount;
-    const bool last = (result == WAIT_OBJECT_0 + 1 && cond->m_waitCount == 0);
-    unlockMutex(cond->m_waitCountMutex);
-
-    // reset the broadcast event if we're the last waiter
-    if (last) {
-        ResetEvent(cond->m_events[ArchCondImpl::kBroadcast]);
-    }
-
-    // reacquire the mutex
-    lockMutex(mutex);
-
-    // cancel thread if necessary
-    if (result == WAIT_OBJECT_0 + 2) {
-        ARCH->testCancelThread();
-    }
-
-    // return success or failure
-    return (result == WAIT_OBJECT_0 + 0 ||
-            result == WAIT_OBJECT_0 + 1);
-}
-
-ArchMutex
-ArchMultithreadWindows::newMutex()
-{
-    ArchMutexImpl* mutex = new ArchMutexImpl;
-    InitializeCriticalSection(&mutex->m_mutex);
-    return mutex;
-}
-
-void
-ArchMultithreadWindows::closeMutex(ArchMutex mutex)
-{
-    DeleteCriticalSection(&mutex->m_mutex);
-    delete mutex;
-}
-
-void
-ArchMultithreadWindows::lockMutex(ArchMutex mutex)
-{
-    EnterCriticalSection(&mutex->m_mutex);
-}
-
-void
-ArchMultithreadWindows::unlockMutex(ArchMutex mutex)
-{
-    LeaveCriticalSection(&mutex->m_mutex);
-}
-
 ArchThread ArchMultithreadWindows::newThread(const std::function<void()>& func)
 {
-    lockMutex(m_threadMutex);
+    // note that the child thread will wait until we release this mutex
+    std::lock_guard<std::mutex> lock(thread_mutex_);
 
     // create thread impl for new thread
     ArchThreadImpl* thread = new ArchThreadImpl;
@@ -315,18 +168,15 @@ ArchThread ArchMultithreadWindows::newThread(const std::function<void()>& func)
         refThread(thread);
     }
 
-    // note that the child thread will wait until we release this mutex
-    unlockMutex(m_threadMutex);
-
     return thread;
 }
 
 ArchThread
 ArchMultithreadWindows::newCurrentThread()
 {
-    lockMutex(m_threadMutex);
+    std::lock_guard<std::mutex> lock(thread_mutex_);
+
     ArchThreadImpl* thread = find(GetCurrentThreadId());
-    unlockMutex(m_threadMutex);
     assert(thread != NULL);
     return thread;
 }
@@ -344,12 +194,9 @@ ArchMultithreadWindows::closeThread(ArchThread thread)
         }
 
         // remove thread from list
-        lockMutex(m_threadMutex);
+        std::lock_guard<std::mutex> lock(thread_mutex_);
         assert(findNoRefOrCreate(thread->m_id) == thread);
         erase(thread);
-        unlockMutex(m_threadMutex);
-
-        // done with thread
         delete thread;
     }
 }
@@ -432,10 +279,11 @@ ArchMultithreadWindows::setPriorityOfThread(ArchThread thread, int n)
 void
 ArchMultithreadWindows::testCancelThread()
 {
-    // find current thread
-    lockMutex(m_threadMutex);
-    ArchThreadImpl* thread = findNoRef(GetCurrentThreadId());
-    unlockMutex(m_threadMutex);
+    ArchThreadImpl* thread = nullptr;
+    {
+        std::lock_guard<std::mutex> lock(thread_mutex_);
+        thread = findNoRef(GetCurrentThreadId());
+    }
 
     // test cancel on thread
     testCancelThreadImpl(thread);
@@ -446,21 +294,21 @@ ArchMultithreadWindows::wait(ArchThread target, double timeout)
 {
     assert(target != NULL);
 
-    lockMutex(m_threadMutex);
+    ArchThreadImpl* self = nullptr;
+    {
+        std::lock_guard<std::mutex> lock(thread_mutex_);
 
-    // find current thread
-    ArchThreadImpl* self = findNoRef(GetCurrentThreadId());
+        // find current thread
+        self = findNoRef(GetCurrentThreadId());
 
-    // ignore wait if trying to wait on ourself
-    if (target == self) {
-        unlockMutex(m_threadMutex);
-        return false;
+        // ignore wait if trying to wait on ourself
+        if (target == self) {
+            return false;
+        }
+
+        // ref the target so it can't go away while we're watching it
+        refThread(target);
     }
-
-    // ref the target so it can't go away while we're watching it
-    refThread(target);
-
-    unlockMutex(m_threadMutex);
 
     // convert timeout
     DWORD t;
@@ -526,16 +374,15 @@ void
 ArchMultithreadWindows::setSignalHandler(
                 ESignal signal, SignalFunc func, void* userData)
 {
-    lockMutex(m_threadMutex);
+    std::lock_guard<std::mutex> lock(thread_mutex_);
     m_signalFunc[signal]     = func;
     m_signalUserData[signal] = userData;
-    unlockMutex(m_threadMutex);
 }
 
 void
 ArchMultithreadWindows::raiseSignal(ESignal signal)
 {
-    lockMutex(m_threadMutex);
+    std::lock_guard<std::mutex> lock(thread_mutex_);
     if (m_signalFunc[signal] != NULL) {
         m_signalFunc[signal](signal, m_signalUserData[signal]);
         ARCH->unblockPollSocket(m_mainThread);
@@ -543,7 +390,6 @@ ArchMultithreadWindows::raiseSignal(ESignal signal)
     else if (signal == kINTERRUPT || signal == kTERMINATE) {
         ARCH->cancelThread(m_mainThread);
     }
-    unlockMutex(m_threadMutex);
 }
 
 ArchThreadImpl*
@@ -630,11 +476,11 @@ ArchMultithreadWindows::testCancelThreadImpl(ArchThreadImpl* thread)
     }
 
     // update cancel state
-    lockMutex(m_threadMutex);
+    std::lock_guard<std::mutex> lock(thread_mutex_);
+
     bool cancel          = !thread->m_cancelling;
     thread->m_cancelling = true;
     ResetEvent(thread->m_cancel);
-    unlockMutex(m_threadMutex);
 
     // unwind thread's stack if cancelling
     if (cancel) {
@@ -659,8 +505,9 @@ void
 ArchMultithreadWindows::doThreadFunc(ArchThread thread)
 {
     // wait for parent to initialize this object
-    lockMutex(m_threadMutex);
-    unlockMutex(m_threadMutex);
+    {
+        std::lock_guard<std::mutex> lock(thread_mutex_);
+    }
 
     try {
         thread->func_();

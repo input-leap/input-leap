@@ -41,8 +41,6 @@ IpcLogOutputter::IpcLogOutputter(IpcServer& ipcServer, EIpcClientType clientType
     m_sending(false),
     m_bufferThread(nullptr),
     m_running(false),
-    m_notifyCond(ARCH->newCondVar()),
-    m_notifyMutex(ARCH->newMutex()),
     m_bufferWaiting(false),
     m_bufferThreadId(0),
     m_bufferMaxSize(kBufferMaxSize),
@@ -66,9 +64,6 @@ IpcLogOutputter::~IpcLogOutputter()
         m_bufferThread->wait();
         delete m_bufferThread;
     }
-
-    ARCH->closeCondVar(m_notifyCond);
-    ARCH->closeMutex(m_notifyMutex);
 }
 
 void
@@ -148,8 +143,8 @@ void IpcLogOutputter::buffer_thread()
     try {
         while (isRunning()) {
             if (m_buffer.empty() || !m_ipcServer.hasClients(m_clientType)) {
-                ArchMutexLock lock(m_notifyMutex);
-                ARCH->waitCondVar(m_notifyCond, m_notifyMutex, -1);
+                std::unique_lock<std::mutex> lock(notify_mutex_);
+                ARCH->wait_cond_var(notify_cv_, lock, -1);
             }
 
             sendBuffer();
@@ -165,8 +160,8 @@ void IpcLogOutputter::buffer_thread()
 void
 IpcLogOutputter::notifyBuffer()
 {
-    ArchMutexLock lock(m_notifyMutex);
-    ARCH->broadcastCondVar(m_notifyCond);
+    std::lock_guard<std::mutex> lock(notify_mutex_);
+    notify_cv_.notify_all();
 }
 
 std::string IpcLogOutputter::getChunk(size_t count)

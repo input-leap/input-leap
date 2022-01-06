@@ -39,8 +39,6 @@ static const UINT        kFirstReceiverID = WM_USER + 14;
 ArchTaskBarWindows*    ArchTaskBarWindows::s_instance    = NULL;
 
 ArchTaskBarWindows::ArchTaskBarWindows() :
-    m_mutex(NULL),
-    m_condVar(NULL),
     m_ready(false),
     m_result(0),
     m_thread(NULL),
@@ -59,29 +57,19 @@ ArchTaskBarWindows::~ArchTaskBarWindows()
         ARCH->wait(m_thread, -1.0);
         ARCH->closeThread(m_thread);
     }
-    if (m_condVar != NULL) {
-        ARCH->closeCondVar(m_condVar);
-    }
-    if (m_mutex != NULL) {
-        ARCH->closeMutex(m_mutex);
-    }
     s_instance = NULL;
 }
 
 void
 ArchTaskBarWindows::init()
 {
-    // we need a mutex
-    m_mutex       = ARCH->newMutex();
-
     // and a condition variable which uses the above mutex
     m_ready       = false;
-    m_condVar     = ARCH->newCondVar();
 
     // we're going to want to get a result from the thread we're
     // about to create to know if it initialized successfully.
     // so we lock the condition variable.
-    ARCH->lockMutex(m_mutex);
+    std::unique_lock<std::mutex> lock(mutex_);
 
     // open a window and run an event loop in a separate thread.
     // this has to happen in a separate thread because if we
@@ -92,11 +80,9 @@ ArchTaskBarWindows::init()
 
     // wait for child thread
     while (!m_ready) {
-        ARCH->waitCondVar(m_condVar, m_mutex, -1.0);
+        ARCH->wait_cond_var(cond_var_, lock, -1.0);
     }
 
-    // ready
-    ARCH->unlockMutex(m_mutex);
 }
 
 void
@@ -188,53 +174,48 @@ ArchTaskBarWindows::recycleID(UINT id)
 void
 ArchTaskBarWindows::addIcon(UINT id)
 {
-    ARCH->lockMutex(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     CIDToReceiverMap::const_iterator index = m_idTable.find(id);
     if (index != m_idTable.end()) {
         modifyIconNoLock(index->second, NIM_ADD);
     }
-    ARCH->unlockMutex(m_mutex);
 }
 
 void
 ArchTaskBarWindows::removeIcon(UINT id)
 {
-    ARCH->lockMutex(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     removeIconNoLock(id);
-    ARCH->unlockMutex(m_mutex);
 }
 
 void
 ArchTaskBarWindows::updateIcon(UINT id)
 {
-    ARCH->lockMutex(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     CIDToReceiverMap::const_iterator index = m_idTable.find(id);
     if (index != m_idTable.end()) {
         modifyIconNoLock(index->second, NIM_MODIFY);
     }
-    ARCH->unlockMutex(m_mutex);
 }
 
 void
 ArchTaskBarWindows::addAllIcons()
 {
-    ARCH->lockMutex(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     for (ReceiverToInfoMap::const_iterator index = m_receivers.begin();
                                     index != m_receivers.end(); ++index) {
         modifyIconNoLock(index, NIM_ADD);
     }
-    ARCH->unlockMutex(m_mutex);
 }
 
 void
 ArchTaskBarWindows::removeAllIcons()
 {
-    ARCH->lockMutex(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     for (ReceiverToInfoMap::const_iterator index = m_receivers.begin();
                                     index != m_receivers.end(); ++index) {
         removeIconNoLock(index->second.m_id);
     }
-    ARCH->unlockMutex(m_mutex);
 }
 
 void
@@ -334,7 +315,7 @@ ArchTaskBarWindows::processDialogs(MSG* msg)
     // at any given time.  that's not a problem since only our event
     // loop calls this method and there's just one of those.
 
-    ARCH->lockMutex(m_mutex);
+    std::unique_lock<std::mutex> lock(mutex_);
 
     // remove removed dialogs
     m_dialogs.erase(false);
@@ -346,7 +327,6 @@ ArchTaskBarWindows::processDialogs(MSG* msg)
     }
     m_addedDialogs.clear();
 
-    ARCH->unlockMutex(m_mutex);
 
     // check message against all dialogs until one handles it.
     // note that we don't hold a lock while checking because
@@ -354,18 +334,16 @@ ArchTaskBarWindows::processDialogs(MSG* msg)
     // object.  that's okay because addDialog() and
     // removeDialog() don't change the map itself (just the
     // values of some elements).
-    ARCH->lockMutex(m_mutex);
     for (Dialogs::const_iterator index = m_dialogs.begin();
                             index != m_dialogs.end(); ++index) {
         if (index->second) {
-            ARCH->unlockMutex(m_mutex);
+            lock.unlock();
             if (IsDialogMessage(index->first, msg)) {
                 return true;
             }
-            ARCH->lockMutex(m_mutex);
+            lock.lock();
         }
     }
-    ARCH->unlockMutex(m_mutex);
 
     return false;
 }
@@ -475,10 +453,11 @@ ArchTaskBarWindows::threadMainLoop()
                             static_cast<void*>(this));
 
     // signal ready
-    ARCH->lockMutex(m_mutex);
-    m_ready = true;
-    ARCH->broadcastCondVar(m_condVar);
-    ARCH->unlockMutex(m_mutex);
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        m_ready = true;
+        cond_var_.notify_all();
+    }
 
     // handle failure
     if (m_hwnd == NULL) {

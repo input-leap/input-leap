@@ -30,7 +30,7 @@ public:
 
     MOCK_METHOD0(help, void());
     MOCK_METHOD0(loadConfig, void());
-    MOCK_METHOD1(loadConfig, bool(const String&));
+    MOCK_METHOD1(loadConfig, bool(const std::string&));
     MOCK_CONST_METHOD0(daemonInfo, const char*());
     MOCK_CONST_METHOD0(daemonName, const char*());
     MOCK_METHOD2(parseArgs, void(int, const char* const*));

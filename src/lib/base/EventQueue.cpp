@@ -134,7 +134,7 @@ EventQueue::loop()
 Event::Type
 EventQueue::registerTypeOnce(Event::Type& type, const char* name)
 {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     if (type == Event::kUnknown) {
         m_typeMap.insert(std::make_pair(m_nextType, name));
         m_nameMap.insert(std::make_pair(name, m_nextType));
@@ -174,7 +174,7 @@ EventQueue::getTypeName(Event::Type type)
 void
 EventQueue::adoptBuffer(IEventQueueBuffer* buffer)
 {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
 
     LOG((CLOG_DEBUG "adopting new buffer"));
 
@@ -259,7 +259,7 @@ retry:
 
     case IEventQueueBuffer::kUser:
         {
-            std::lock_guard<std::mutex> lock(m_mutex);
+            std::lock_guard<std::mutex> lock(mutex_);
             event = removeEvent(dataID);
             return true;
         }
@@ -314,7 +314,7 @@ EventQueue::addEvent(const Event& event)
 void
 EventQueue::addEventToBuffer(const Event& event)
 {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
 
     // store the event's data locally
     UInt32 eventID = saveEvent(event);
@@ -336,7 +336,7 @@ EventQueue::newTimer(double duration, void* target)
     if (target == NULL) {
         target = timer;
     }
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     m_timers.insert(timer);
     // initial duration is requested duration plus whatever's on
     // the clock currently because the latter will be subtracted
@@ -355,7 +355,7 @@ EventQueue::newOneShotTimer(double duration, void* target)
     if (target == NULL) {
         target = timer;
     }
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     m_timers.insert(timer);
     // initial duration is requested duration plus whatever's on
     // the clock currently because the latter will be subtracted
@@ -368,7 +368,7 @@ EventQueue::newOneShotTimer(double duration, void* target)
 void
 EventQueue::deleteTimer(EventQueueTimer* timer)
 {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     for (TimerQueue::iterator index = m_timerQueue.begin();
                             index != m_timerQueue.end(); ++index) {
         if (index->getTimer() == timer) {
@@ -386,7 +386,7 @@ EventQueue::deleteTimer(EventQueueTimer* timer)
 void
 EventQueue::adoptHandler(Event::Type type, void* target, IEventJob* handler)
 {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     IEventJob*& job = m_handlers[target][type];
     delete job;
     job = handler;
@@ -397,7 +397,7 @@ EventQueue::removeHandler(Event::Type type, void* target)
 {
     IEventJob* handler = NULL;
     {
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::lock_guard<std::mutex> lock(mutex_);
         HandlerTable::iterator index = m_handlers.find(target);
         if (index != m_handlers.end()) {
             TypeHandlerTable& typeHandlers = index->second;
@@ -416,7 +416,7 @@ EventQueue::removeHandlers(void* target)
 {
     std::vector<IEventJob*> handlers;
     {
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::lock_guard<std::mutex> lock(mutex_);
         HandlerTable::iterator index = m_handlers.find(target);
         if (index != m_handlers.end()) {
             // copy to handlers array and clear table for target
@@ -439,7 +439,7 @@ EventQueue::removeHandlers(void* target)
 IEventJob*
 EventQueue::getHandler(Event::Type type, void* target) const
 {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     HandlerTable::const_iterator index = m_handlers.find(target);
     if (index != m_handlers.end()) {
         const TypeHandlerTable& typeHandlers = index->second;

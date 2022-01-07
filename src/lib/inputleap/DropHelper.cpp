@@ -23,13 +23,13 @@
 #include <fstream>
 
 void
-DropHelper::writeToDir(const String& destination, DragFileList& fileList, String& data)
+DropHelper::writeToDir(const std::string& destination, DragFileList& fileList, std::string& data)
 {
     LOG((CLOG_DEBUG "dropping file, files=%i target=%s", fileList.size(), destination.c_str()));
 
     if (!destination.empty() && fileList.size() > 0) {
         std::fstream file;
-        String dropTarget = destination;
+        std::string dropTarget = destination;
 #ifdef SYSAPI_WIN32
         dropTarget.append("\\");
 #else

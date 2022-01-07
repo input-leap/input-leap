@@ -1151,13 +1151,12 @@ KeyMap::getDeadKey(KeyID key)
     }
 }
 
-String
-KeyMap::formatKey(KeyID key, KeyModifierMask mask)
+std::string KeyMap::formatKey(KeyID key, KeyModifierMask mask)
 {
     // initialize tables
     initKeyNameMaps();
 
-    String x;
+    std::string x;
     for (SInt32 i = 0; i < kKeyModifierNumBits; ++i) {
         KeyModifierMask mod = (1u << i);
         if ((mask & mod) != 0 && s_modifierToNameMap->count(mod) > 0) {
@@ -1184,8 +1183,7 @@ KeyMap::formatKey(KeyID key, KeyModifierMask mask)
     return x;
 }
 
-bool
-KeyMap::parseKey(const String& x, KeyID& key)
+bool KeyMap::parseKey(const std::string& x, KeyID& key)
 {
     // initialize tables
     initKeyNameMaps();
@@ -1219,21 +1217,20 @@ KeyMap::parseKey(const String& x, KeyID& key)
     return true;
 }
 
-bool
-KeyMap::parseModifiers(String& x, KeyModifierMask& mask)
+bool KeyMap::parseModifiers(std::string& x, KeyModifierMask& mask)
 {
     // initialize tables
     initKeyNameMaps();
 
     mask = 0;
-    String::size_type tb = x.find_first_not_of(" \t", 0);
-    while (tb != String::npos) {
+    std::string::size_type tb = x.find_first_not_of(" \t", 0);
+    while (tb != std::string::npos) {
         // get next component
-        String::size_type te = x.find_first_of(" \t+)", tb);
-        if (te == String::npos) {
+        std::string::size_type te = x.find_first_of(" \t+)", tb);
+        if (te == std::string::npos) {
             te = x.size();
         }
-        String c = x.substr(tb, te - tb);
+        std::string c = x.substr(tb, te - tb);
         if (c.empty()) {
             // missing component
             return false;
@@ -1250,9 +1247,9 @@ KeyMap::parseModifiers(String& x, KeyModifierMask& mask)
         else {
             // unknown string
             x.erase(0, tb);
-            String::size_type tb = x.find_first_not_of(" \t");
-            String::size_type te = x.find_last_not_of(" \t");
-            if (tb == String::npos) {
+            std::string::size_type tb = x.find_first_not_of(" \t");
+            std::string::size_type te = x.find_last_not_of(" \t");
+            if (tb == std::string::npos) {
                 x = "";
             }
             else {
@@ -1263,7 +1260,7 @@ KeyMap::parseModifiers(String& x, KeyModifierMask& mask)
 
         // check for '+' or end of string
         tb = x.find_first_not_of(" \t", te);
-        if (tb != String::npos) {
+        if (tb != std::string::npos) {
             if (x[tb] != '+') {
                 // expected '+'
                 return false;

@@ -294,8 +294,7 @@ MinimalApp::loadConfig()
 {
 }
 
-bool
-MinimalApp::loadConfig(const String& pathname)
+bool MinimalApp::loadConfig(const std::string& pathname)
 {
     return false;
 }

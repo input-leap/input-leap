@@ -18,8 +18,8 @@
 #pragma once
 
 #include "inputleap/Chunk.h"
-#include "base/String.h"
 #include "common/basic_types.h"
+#include <string>
 
 #define FILE_CHUNK_META_SIZE 2
 
@@ -31,13 +31,10 @@ class FileChunk : public Chunk {
 public:
     FileChunk(size_t size);
 
-    static FileChunk*    start(const String& size);
+    static FileChunk* start(const std::string& size);
     static FileChunk*    data(UInt8* data, size_t dataSize);
     static FileChunk*    end();
-    static int            assemble(
-                            inputleap::IStream* stream,
-                            String& dataCached,
-                            size_t& expectedSize);
+    static int assemble(inputleap::IStream* stream, std::string& dataCached, size_t& expectedSize);
     static void            send(
                             inputleap::IStream* stream,
                             UInt8 mark,

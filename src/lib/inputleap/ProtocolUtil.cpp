@@ -22,7 +22,6 @@
 #include "inputleap/protocol_types.h"
 #include "inputleap/XBarrier.h"
 #include "common/stdvector.h"
-#include "base/String.h"
 
 #include <cctype>
 #include <cstring>
@@ -244,7 +243,7 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                 LOG((CLOG_DEBUG2 "readf: read %d byte string", len));
 
                 // save the data
-                String* dst = va_arg(args, String*);
+                std::string* dst = va_arg(args, std::string*);
                 dst->assign((const char*)sBuffer, len);
 
                 // release the buffer
@@ -316,7 +315,7 @@ ProtocolUtil::getLength(const char* fmt, va_list args)
 
             case 's':
                 assert(len == 0);
-                len = (UInt32)(va_arg(args, String*))->size() + 4;
+                len = (UInt32)(va_arg(args, std::string*))->size() + 4;
                 (void)va_arg(args, UInt8*);
                 break;
 
@@ -450,7 +449,7 @@ ProtocolUtil::writef_void(void* buffer, const char* fmt, va_list args)
 
             case 's': {
                 assert(len == 0);
-                const String* src = va_arg(args, String*);
+                const std::string* src = va_arg(args, std::string*);
                 const UInt32 len = (src != NULL) ? (UInt32)src->size() : 0;
                 *dst++ = static_cast<UInt8>((len >> 24) & 0xff);
                 *dst++ = static_cast<UInt8>((len >> 16) & 0xff);
@@ -548,8 +547,7 @@ ProtocolUtil::read(inputleap::IStream* stream, void* vbuffer, UInt32 count)
 // XIOReadMismatch
 //
 
-String
-XIOReadMismatch::getWhat() const noexcept
+std::string XIOReadMismatch::getWhat() const noexcept
 {
     return format("XIOReadMismatch", "ProtocolUtil::readf() mismatch");
 }

@@ -41,9 +41,9 @@ public:
     /*!
     Determine the status and query required information from the server.
     */
-    void                updateStatus(Server*, const String& errorMsg);
+    void updateStatus(Server*, const std::string& errorMsg);
 
-    void updateStatus(INode* n, const String& errorMsg) { updateStatus((Server*)n, errorMsg); }
+    void updateStatus(INode* n, const std::string& errorMsg) { updateStatus((Server*)n, errorMsg); }
 
     //@}
 
@@ -57,7 +57,7 @@ public:
     virtual std::string    getToolTip() const;
 
 protected:
-    typedef std::vector<String> Clients;
+    typedef std::vector<std::string> Clients;
     enum EState {
         kNotRunning,
         kNotWorking,
@@ -70,7 +70,7 @@ protected:
     EState                getStatus() const;
 
     //! Get error message
-    const String&        getErrorMessage() const;
+    const std::string& getErrorMessage() const;
 
     //! Get connected clients
     const Clients&        getClients() const;
@@ -90,7 +90,7 @@ protected:
 
 private:
     EState                m_state;
-    String                m_errorMessage;
+    std::string m_errorMessage;
     Clients            m_clients;
     IEventQueue*        m_events;
 };

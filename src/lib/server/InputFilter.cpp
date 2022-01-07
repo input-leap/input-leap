@@ -375,8 +375,7 @@ InputFilter::ToggleScreenAction::clone() const
     return new ToggleScreenAction(*this);
 }
 
-String
-InputFilter::ToggleScreenAction::format() const
+std::string InputFilter::ToggleScreenAction::format() const
 {
     return inputleap::string::sprintf("toggleScreen");
 }

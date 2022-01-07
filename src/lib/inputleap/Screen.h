@@ -24,7 +24,6 @@
 #include "inputleap/key_types.h"
 #include "inputleap/mouse_types.h"
 #include "inputleap/option_types.h"
-#include "base/String.h"
 
 class IClipboard;
 class IPlatformScreen;
@@ -283,15 +282,15 @@ public:
     bool                isFakeDraggingStarted() const;
 
     //! Get the filename of the file being dragged
-    String&            getDraggingFilename() const;
+    std::string& getDraggingFilename() const;
 
     //! Clear the filename of the file that was dragged
     void                clearDraggingFilename();
 
     //! Get the drop target directory
-    const String&        getDropTarget() const;
+    const std::string& getDropTarget() const;
     //! Set the drop target directory
-    void                 setDropTarget(const String&);
+    void setDropTarget(const std::string&);
 
     //@}
 

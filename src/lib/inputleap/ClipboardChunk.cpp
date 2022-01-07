@@ -21,6 +21,7 @@
 #include "inputleap/protocol_types.h"
 #include "io/IStream.h"
 #include "base/Log.h"
+#include "base/String.h"
 #include <cstring>
 
 size_t ClipboardChunk::s_expectedSize = 0;
@@ -31,11 +32,7 @@ ClipboardChunk::ClipboardChunk(size_t size) :
         m_dataSize = size - CLIPBOARD_CHUNK_META_SIZE;
 }
 
-ClipboardChunk*
-ClipboardChunk::start(
-                    ClipboardID id,
-                    UInt32 sequence,
-                    const String& size)
+ClipboardChunk* ClipboardChunk::start(ClipboardID id, UInt32 sequence, const std::string& size)
 {
     size_t sizeLength = size.size();
     ClipboardChunk* start = new ClipboardChunk(sizeLength + CLIPBOARD_CHUNK_META_SIZE);
@@ -50,11 +47,7 @@ ClipboardChunk::start(
     return start;
 }
 
-ClipboardChunk*
-ClipboardChunk::data(
-                    ClipboardID id,
-                    UInt32 sequence,
-                    const String& data)
+ClipboardChunk* ClipboardChunk::data(ClipboardID id, UInt32 sequence, const std::string& data)
 {
     size_t dataSize = data.size();
     ClipboardChunk* chunk = new ClipboardChunk(dataSize + CLIPBOARD_CHUNK_META_SIZE);
@@ -83,14 +76,11 @@ ClipboardChunk::end(ClipboardID id, UInt32 sequence)
     return end;
 }
 
-int
-ClipboardChunk::assemble(inputleap::IStream* stream,
-                    String& dataCached,
-                    ClipboardID& id,
-                    UInt32& sequence)
+int ClipboardChunk::assemble(inputleap::IStream* stream, std::string& dataCached,
+                             ClipboardID& id, UInt32& sequence)
 {
     UInt8 mark;
-    String data;
+    std::string data;
 
     if (!ProtocolUtil::readf(stream, kMsgDClipboard + 4, &id, &sequence, &mark, &data)) {
         return kError;
@@ -134,7 +124,7 @@ ClipboardChunk::send(inputleap::IStream* stream, void* data)
     UInt32 sequence;
     std::memcpy (&sequence, &chunk[1], 4);
     UInt8 mark = chunk[5];
-    String dataChunk(&chunk[6], clipboardData->m_dataSize);
+    std::string dataChunk(&chunk[6], clipboardData->m_dataSize);
 
     switch (mark) {
     case kDataStart:

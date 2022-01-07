@@ -260,7 +260,7 @@ MSWindowsServerTaskBarReceiver::copyLog() const
 {
     if (m_logBuffer != NULL) {
         // collect log buffer
-        String data;
+        std::string data;
         for (BufferedLogOutputter::const_iterator index = m_logBuffer->begin();
                                 index != m_logBuffer->end(); ++index) {
             data += *index;

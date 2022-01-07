@@ -57,7 +57,7 @@ Clipboard::empty()
 }
 
 void
-Clipboard::add(EFormat format, const String& data)
+Clipboard::add(EFormat format, const std::string& data)
 {
     assert(m_open);
     assert(m_owner);
@@ -98,21 +98,19 @@ Clipboard::has(EFormat format) const
     return m_added[format];
 }
 
-String
-Clipboard::get(EFormat format) const
+std::string Clipboard::get(EFormat format) const
 {
     assert(m_open);
     return m_data[format];
 }
 
 void
-Clipboard::unmarshall(const String& data, Time time)
+Clipboard::unmarshall(const std::string& data, Time time)
 {
     IClipboard::unmarshall(this, data, time);
 }
 
-String
-Clipboard::marshall() const
+std::string Clipboard::marshall() const
 {
     return IClipboard::marshall(this);
 }

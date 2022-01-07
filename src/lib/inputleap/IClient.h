@@ -23,7 +23,7 @@
 #include "inputleap/key_types.h"
 #include "inputleap/mouse_types.h"
 #include "inputleap/option_types.h"
-#include "base/String.h"
+#include <string>
 
 //! Client interface
 /*!
@@ -163,7 +163,7 @@ public:
     /*!
     Return the client's name.
     */
-    virtual String        getName() const = 0;
+    virtual std::string getName() const = 0;
 
     //@}
 

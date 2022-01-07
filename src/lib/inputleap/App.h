@@ -20,7 +20,6 @@
 
 #include "ipc/IpcClient.h"
 #include "inputleap/IApp.h"
-#include "base/String.h"
 #include "base/Log.h"
 #include "base/EventQueue.h"
 #include "net/SocketMultiplexer.h"
@@ -65,7 +64,7 @@ public:
     int daemonMainLoop(int, const char**);
 
     virtual void loadConfig() = 0;
-    virtual bool loadConfig(const String& pathname) = 0;
+    virtual bool loadConfig(const std::string& pathname) = 0;
 
     // A description of the daemon (used only on Windows).
     virtual const char* daemonInfo() const = 0;
@@ -138,7 +137,7 @@ public:
     virtual inputleap::Screen*
                         createScreen();
     virtual void        loadConfig();
-    virtual bool        loadConfig(const String& pathname);
+    virtual bool loadConfig(const std::string& pathname);
     virtual const char*    daemonInfo() const;
     virtual const char* daemonName() const;
     virtual void        parseArgs(int argc, const char* const* argv);

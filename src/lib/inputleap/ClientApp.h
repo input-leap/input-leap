@@ -45,14 +45,14 @@ public:
 
     // TODO: move to server only (not supported on client)
     void loadConfig() { }
-    bool loadConfig(const String& pathname) { return false; }
+    bool loadConfig(const std::string& pathname) { return false; }
 
     int foregroundStartup(int argc, char** argv);
     int standardStartup(int argc, char** argv);
     int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup);
     inputleap::Screen* createScreen();
     void updateStatus();
-    void updateStatus(const String& msg);
+    void updateStatus(const std::string& msg);
     void resetRestartTimeout();
     double nextRestartTimeout();
     void handleScreenError(const Event&, void*);
@@ -63,7 +63,7 @@ public:
     void handleClientConnected(const Event&, void*);
     void handleClientFailed(const Event& e, void*);
     void handleClientDisconnected(const Event&, void*);
-    Client* openClient(const String& name, const NetworkAddress& address,
+    Client* openClient(const std::string& name, const NetworkAddress& address,
                 inputleap::Screen* screen);
     void closeClient(Client* client);
     bool startClient();

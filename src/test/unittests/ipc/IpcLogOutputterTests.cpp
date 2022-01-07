@@ -21,7 +21,6 @@
 
 #include "mt/Thread.h"
 #include "ipc/IpcLogOutputter.h"
-#include "base/String.h"
 #include "common/common.h"
 
 #include "test/global/gmock.h"
@@ -38,9 +37,7 @@ using ::testing::Property;
 using ::testing::StrEq;
 using ::testing::AtLeast;
 
-using namespace inputleap;
-
-inline const Matcher<const IpcMessage&> IpcLogLineMessageEq(const String& s) {
+inline const Matcher<const IpcMessage&> IpcLogLineMessageEq(const std::string& s) {
     const Matcher<const IpcLogLineMessage&> m(
         Property(&IpcLogLineMessage::logLine, StrEq(s)));
     return MatcherCast<const IpcMessage&>(m);

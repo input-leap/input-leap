@@ -19,7 +19,6 @@
 #pragma once
 
 #include "inputleap/AppUtil.h"
-#include "base/String.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include "Windows.h"

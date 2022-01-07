@@ -21,6 +21,7 @@
 #include "inputleap/protocol_types.h"
 #include "io/IStream.h"
 #include "base/Stopwatch.h"
+#include "base/String.h"
 #include "base/Log.h"
 
 static const UInt16 kIntervalThreshold = 1;
@@ -31,8 +32,7 @@ FileChunk::FileChunk(size_t size) :
         m_dataSize = size - FILE_CHUNK_META_SIZE;
 }
 
-FileChunk*
-FileChunk::start(const String& size)
+FileChunk* FileChunk::start(const std::string& size)
 {
     size_t sizeLength = size.size();
     FileChunk* start = new FileChunk(sizeLength + FILE_CHUNK_META_SIZE);
@@ -67,12 +67,11 @@ FileChunk::end()
     return end;
 }
 
-int
-FileChunk::assemble(inputleap::IStream* stream, String& dataReceived, size_t& expectedSize)
+int FileChunk::assemble(inputleap::IStream* stream, std::string& dataReceived, size_t& expectedSize)
 {
     // parse
     UInt8 mark = 0;
-    String content;
+    std::string content;
     static size_t receivedDataSize;
     static double elapsedTime;
     static Stopwatch stopwatch;
@@ -136,7 +135,7 @@ FileChunk::assemble(inputleap::IStream* stream, String& dataReceived, size_t& ex
 void
 FileChunk::send(inputleap::IStream* stream, UInt8 mark, char* data, size_t dataSize)
 {
-    String chunk(data, dataSize);
+    std::string chunk(data, dataSize);
 
     switch (mark) {
     case kDataStart:

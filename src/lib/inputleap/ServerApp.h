@@ -20,7 +20,6 @@
 
 #include "inputleap/ArgsBase.h"
 #include "inputleap/App.h"
-#include "base/String.h"
 #include "server/Config.h"
 #include "net/NetworkAddress.h"
 #include "arch/Arch.h"
@@ -69,7 +68,7 @@ public:
 
     void reloadConfig(const Event&, void*);
     void loadConfig();
-    bool loadConfig(const String& pathname);
+    bool loadConfig(const std::string& pathname);
     void forceReconnect(const Event&, void*);
     void resetServer(const Event&, void*);
     void handleClientConnected(const Event&, void* vlistener);
@@ -77,7 +76,7 @@ public:
     void closeServer(Server* server);
     void stopRetryTimer();
     void updateStatus();
-    void updateStatus(const String& msg);
+    void updateStatus(const std::string& msg);
     void closeClientListener(ClientListener* listen);
     void stopServer();
     void closePrimaryClient(PrimaryClient* primaryClient);
@@ -87,7 +86,7 @@ public:
     void retryHandler(const Event&, void*);
     inputleap::Screen* openServerScreen();
     inputleap::Screen* createScreen();
-    PrimaryClient* openPrimaryClient(const String& name, inputleap::Screen* screen);
+    PrimaryClient* openPrimaryClient(const std::string& name, inputleap::Screen* screen);
     void handleScreenError(const Event&, void*);
     void handleSuspend(const Event&, void*);
     void handleResume(const Event&, void*);

@@ -18,8 +18,8 @@
 #pragma once
 
 #include "common/stdvector.h"
-#include "base/String.h"
 #include "base/EventTypes.h"
+#include <string>
 
 class DragInformation;
 typedef std::vector<DragInformation> DragFileList;
@@ -29,25 +29,25 @@ public:
     DragInformation();
     ~DragInformation() { }
 
-    String&            getFilename() { return m_filename; }
-    void                setFilename(String& name) { m_filename = name; }
+    std::string& getFilename() { return m_filename; }
+    void setFilename(std::string& name) { m_filename = name; }
     size_t                getFilesize() { return m_filesize; }
     void                setFilesize(size_t size) { m_filesize = size; }
 
-    static void            parseDragInfo(DragFileList& dragFileList, UInt32 fileNum, String data);
-    static String        getDragFileExtension(String filename);
+    static void parseDragInfo(DragFileList& dragFileList, UInt32 fileNum, std::string data);
+    static std::string getDragFileExtension(std::string filename);
     // helper function to setup drag info
     // example: filename1,filesize1,filename2,filesize2,
     // return file count
-    static int            setupDragInfo(DragFileList& fileList, String& output);
+    static int setupDragInfo(DragFileList& fileList, std::string& output);
 
-    static bool            isFileValid(String filename);
-
-private:
-    static size_t        stringToNum(String& str);
-    static String        getFileSize(String& filename);
+    static bool isFileValid(std::string filename);
 
 private:
-    String                m_filename;
+    static size_t stringToNum(std::string& str);
+    static std::string getFileSize(std::string& filename);
+
+private:
+    std::string m_filename;
     size_t                m_filesize;
 };

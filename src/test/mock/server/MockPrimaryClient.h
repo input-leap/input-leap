@@ -20,7 +20,6 @@
 #define INPUTLEAP_TEST_ENV
 
 #include "server/PrimaryClient.h"
-#include "base/String.h"
 
 #include "test/global/gmock.h"
 

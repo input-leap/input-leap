@@ -17,8 +17,8 @@
  */
 
 #include "inputleap/PortableTaskBarReceiver.h"
-#include "base/String.h"
 #include "base/IEventQueue.h"
+#include "base/String.h"
 #include "arch/Arch.h"
 #include "common/Version.h"
 
@@ -38,8 +38,7 @@ PortableTaskBarReceiver::~PortableTaskBarReceiver()
     // do nothing
 }
 
-void
-PortableTaskBarReceiver::updateStatus(INode* node, const String& errorMsg)
+void PortableTaskBarReceiver::updateStatus(INode* node, const std::string& errorMsg)
 {
     {
         // update our status
@@ -70,8 +69,7 @@ PortableTaskBarReceiver::getStatus() const
     return m_state;
 }
 
-const String&
-PortableTaskBarReceiver::getErrorMessage() const
+const std::string& PortableTaskBarReceiver::getErrorMessage() const
 {
     return m_errorMessage;
 }

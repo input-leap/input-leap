@@ -448,8 +448,7 @@ Screen::setEnableDragDrop(bool enabled)
     m_enableDragDrop = enabled;
 }
 
-String&
-Screen::getDraggingFilename() const
+std::string& Screen::getDraggingFilename() const
 {
     return m_screen->getDraggingFilename();
 }
@@ -460,14 +459,12 @@ Screen::clearDraggingFilename()
     m_screen->clearDraggingFilename();
 }
 
-const String&
-Screen::getDropTarget() const
+const std::string& Screen::getDropTarget() const
 {
     return m_screen->getDropTarget();
 }
 
-void
-Screen::setDropTarget(const String& target)
+void Screen::setDropTarget(const std::string& target)
 {
     return m_screen->setDropTarget(target);
 }

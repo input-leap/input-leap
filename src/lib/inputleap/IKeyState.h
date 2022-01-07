@@ -20,7 +20,6 @@
 
 #include "inputleap/key_types.h"
 #include "base/Event.h"
-#include "base/String.h"
 #include "base/IEventQueue.h"
 #include "base/EventTypes.h"
 #include "common/stdset.h"
@@ -44,14 +43,14 @@ public:
     public:
         static KeyInfo* alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count);
         static KeyInfo* alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count,
-                            const std::set<String>& destinations);
+                              const std::set<std::string>& destinations);
         static KeyInfo* alloc(const KeyInfo&);
 
         static bool isDefault(const char* screens);
-        static bool contains(const char* screens, const String& name);
+        static bool contains(const char* screens, const std::string& name);
         static bool equal(const KeyInfo*, const KeyInfo*);
-        static String join(const std::set<String>& destinations);
-        static void split(const char* screens, std::set<String>&);
+        static std::string join(const std::set<std::string>& destinations);
+        static void split(const char* screens, std::set<std::string>&);
 
     public:
         KeyID            m_key;

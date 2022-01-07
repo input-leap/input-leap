@@ -23,7 +23,6 @@
 #include "base/log_outputters.h"
 #include "base/EventTypes.h"
 #include "base/Event.h"
-#include "base/String.h"
 #include "common/stdvector.h"
 
 class IEventQueue;
@@ -41,7 +40,7 @@ public:
     /*!
     Determine the status and query required information from the server.
     */
-    void                updateStatus(INode*, const String& errorMsg);
+    void updateStatus(INode*, const std::string& errorMsg);
 
     //@}
 
@@ -55,7 +54,7 @@ public:
     virtual std::string    getToolTip() const;
 
 protected:
-    typedef std::vector<String> Clients;
+    typedef std::vector<std::string> Clients;
     enum EState {
         kNotRunning,
         kNotWorking,
@@ -68,7 +67,7 @@ protected:
     EState                getStatus() const;
 
     //! Get error message
-    const String&        getErrorMessage() const;
+    const std::string& getErrorMessage() const;
 
     //! Quit app
     /*!
@@ -85,9 +84,9 @@ protected:
 
 private:
     EState                m_state;
-    String                m_errorMessage;
+    std::string m_errorMessage;
 
-    String                m_server;
+    std::string m_server;
     Clients            m_clients;
 
     IEventQueue*        m_events;

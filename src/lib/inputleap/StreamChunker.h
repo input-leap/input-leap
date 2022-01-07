@@ -18,20 +18,16 @@
 #pragma once
 
 #include "inputleap/clipboard_types.h"
-#include "base/String.h"
+
+#include <string>
 
 class IEventQueue;
 
 class StreamChunker {
 public:
     static void sendFile(const char* filename, IEventQueue* events, void* eventTarget);
-    static void            sendClipboard(
-                            String& data,
-                            size_t size,
-                            ClipboardID id,
-                            UInt32 sequence,
-                            IEventQueue* events,
-                            void* eventTarget);
+    static void sendClipboard(std::string& data, std::size_t size, ClipboardID id,
+                              UInt32 sequence, IEventQueue* events, void* eventTarget);
     static void            interruptFile();
 
 private:

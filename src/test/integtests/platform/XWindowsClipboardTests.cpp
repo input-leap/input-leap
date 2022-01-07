@@ -91,7 +91,7 @@ TEST_F(CXWindowsClipboardTests, add_newValue_valueWasStored)
 
     clipboard.add(IClipboard::kText, "barrier rocks!");
 
-    String actual = clipboard.get(IClipboard::kText);
+    std::string actual = clipboard.get(IClipboard::kText);
     EXPECT_EQ("barrier rocks!", actual);
 }
 
@@ -102,7 +102,7 @@ TEST_F(CXWindowsClipboardTests, add_replaceValue_valueWasReplaced)
     clipboard.add(IClipboard::kText, "barrier rocks!");
     clipboard.add(IClipboard::kText, "maxivista sucks"); // haha, just kidding.
 
-    String actual = clipboard.get(IClipboard::kText);
+    std::string actual = clipboard.get(IClipboard::kText);
     EXPECT_EQ("maxivista sucks", actual);
 }
 
@@ -139,7 +139,7 @@ TEST_F(CXWindowsClipboardTests, get_withNoFormats_returnsEmpty)
 {
     CXWindowsClipboard clipboard = createClipboard();
 
-    String actual = clipboard.get(IClipboard::kText);
+    std::string actual = clipboard.get(IClipboard::kText);
 
     EXPECT_EQ("", actual);
 }
@@ -149,7 +149,7 @@ TEST_F(CXWindowsClipboardTests, get_withFormatAdded_returnsExpected)
     CXWindowsClipboard clipboard = createClipboard();
     clipboard.add(IClipboard::kText, "barrier rocks!");
 
-    String actual = clipboard.get(IClipboard::kText);
+    std::string actual = clipboard.get(IClipboard::kText);
 
     EXPECT_EQ("barrier rocks!", actual);
 }

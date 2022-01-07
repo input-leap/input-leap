@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "base/String.h"
 #include "io/filesystem.h"
 
 class ArgsBase {
@@ -35,11 +34,11 @@ public:
     const char*            m_logFilter;
     const char*            m_logFile;
     const char*            m_display;
-    String                m_name;
+    std::string m_name;
     bool                m_disableTray;
     bool                m_enableIpc;
     bool                m_enableDragDrop;
-    String              m_dropTarget;
+    std::string m_dropTarget;
 #if SYSAPI_WIN32
     bool                m_debugServiceWait;
     bool                m_pauseOnExit;
@@ -49,7 +48,7 @@ public:
     bool                m_disableXInitThreads;
 #endif
     bool                m_shouldExit;
-    String                m_barrierAddress;
+    std::string m_barrierAddress;
     bool                m_enableCrypto;
     inputleap::fs::path m_profileDirectory;
     inputleap::fs::path m_pluginDirectory;

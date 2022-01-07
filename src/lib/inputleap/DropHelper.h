@@ -18,10 +18,10 @@
 #pragma once
 
 #include "inputleap/DragInformation.h"
-#include "base/String.h"
+#include <string>
 
 class DropHelper {
 public:
-    static void            writeToDir(const String& destination,
-                            DragFileList& fileList, String& data);
+    static void writeToDir(const std::string& destination,
+                           DragFileList& fileList, std::string& data);
 };

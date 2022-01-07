@@ -23,10 +23,7 @@
 #include <climits>
 #include <cstring>
 #include <cstdlib>
-
-#include <mutex>
-
-std::mutex s_mutex;
+#include <cwchar>
 
 //
 // use C library non-reentrant multibyte conversion with mutex
@@ -40,9 +37,8 @@ int
 IArchString::convStringWCToMB(char* dst,
                 const wchar_t* src, UInt32 n, bool* errors)
 {
-    std::lock_guard<std::mutex> lock(s_mutex);
-
     ptrdiff_t len = 0;
+    std::mbstate_t state = { };
 
     bool dummyErrors;
     if (errors == NULL) {
@@ -52,14 +48,14 @@ IArchString::convStringWCToMB(char* dst,
     if (dst == NULL) {
         char dummy[MB_LEN_MAX];
         for (const wchar_t* scan = src; n > 0; ++scan, --n) {
-            ptrdiff_t mblen = wctomb(dummy, *scan);
+            std::size_t mblen = std::wcrtomb(dummy, *scan, &state);
             if (mblen == -1) {
                 *errors = true;
                 mblen   = 1;
             }
             len += mblen;
         }
-        ptrdiff_t mblen = wctomb(dummy, L'\0');
+        std::size_t mblen = std::wcrtomb(dummy, L'\0', &state);
         if (mblen != -1) {
             len += mblen - 1;
         }
@@ -67,7 +63,7 @@ IArchString::convStringWCToMB(char* dst,
     else {
         char* dst0 = dst;
         for (const wchar_t* scan = src; n > 0; ++scan, --n) {
-            ptrdiff_t mblen = wctomb(dst, *scan);
+            std::size_t mblen = std::wcrtomb(dst, *scan, &state);
             if (mblen == -1) {
                 *errors = true;
                 *dst++  = '?';
@@ -76,7 +72,7 @@ IArchString::convStringWCToMB(char* dst,
                 dst    += mblen;
             }
         }
-        ptrdiff_t mblen = wctomb(dst, L'\0');
+        std::size_t mblen = std::wcrtomb(dst, L'\0', &state);
         if (mblen != -1) {
             // don't include nul terminator
             dst += mblen - 1;
@@ -91,7 +87,7 @@ int
 IArchString::convStringMBToWC(wchar_t* dst,
                 const char* src, UInt32 n_param, bool* errors)
 {
-    std::lock_guard<std::mutex> lock(s_mutex);
+    std::mbstate_t state = { };
 
     ptrdiff_t n = (ptrdiff_t)n_param; // fix compiler warning
     ptrdiff_t len = 0;
@@ -104,16 +100,16 @@ IArchString::convStringMBToWC(wchar_t* dst,
 
     if (dst == NULL) {
         for (const char* scan = src; n > 0; ) {
-            ptrdiff_t mblen = mbtowc(&dummy, scan, n);
+            std::size_t mblen = std::mbrtowc(&dummy, scan, n, &state);
             switch (mblen) {
-            case -2:
+            case static_cast<std::size_t>(-2):
                 // incomplete last character.  convert to unknown character.
                 *errors = true;
                 len    += 1;
                 n       = 0;
                 break;
 
-            case -1:
+            case static_cast<std::size_t>(-1):
                 // invalid character.  count one unknown character and
                 // start at the next byte.
                 *errors = true;
@@ -140,16 +136,16 @@ IArchString::convStringMBToWC(wchar_t* dst,
     else {
         wchar_t* dst0 = dst;
         for (const char* scan = src; n > 0; ++dst) {
-            ptrdiff_t mblen = mbtowc(dst, scan, n);
+            std::size_t mblen = std::mbrtowc(dst, scan, n, &state);
             switch (mblen) {
-            case -2:
+            case static_cast<std::size_t>(-2):
                 // incomplete character.  convert to unknown character.
                 *errors = true;
                 *dst    = (wchar_t)0xfffd;
                 n       = 0;
                 break;
 
-            case -1:
+            case static_cast<std::size_t>(-1):
                 // invalid character.  count one unknown character and
                 // start at the next byte.
                 *errors = true;

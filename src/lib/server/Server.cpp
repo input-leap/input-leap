@@ -1229,6 +1229,10 @@ Server::handleClipboardGrabbed(const Event& event, void* vclient)
 	if (m_clientSet.count(grabber) == 0) {
 		return;
 	}
+  // ignore grab event from non-active client, which happens if their clipboard is updated in background
+	if (grabber != m_active) {
+		return;
+	}
 	const IScreen::ClipboardInfo* info =
 		static_cast<const IScreen::ClipboardInfo*>(event.getData());
 

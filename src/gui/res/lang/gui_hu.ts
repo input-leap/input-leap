@@ -12,7 +12,7 @@
         <location filename="res/AboutDialogBase.ui" line="53"/>
         <source>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
-Copyright © 2018 Debauchee Open Source Group&lt;br /&gt;
+Copyright © 2018 The InputLeap Developers&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Barrier is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
@@ -21,7 +21,7 @@ The Barrier GUI is based on QSynergy by Volker Lanz.
 &lt;/p&gt;</source>
         <oldsource>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
-Copyright © 2018 Debauchee Open Source Group&lt;br /&gt;
+Copyright © 2018 The InputLeap Developers&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Barrier is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
@@ -30,7 +30,7 @@ The Barrier GUI is based on QSynergy by Volker Lanz.
 &lt;/p&gt;</oldsource>
         <translation>&lt;p&gt;
 Alkalmazás egér és billentyűzet megosztásához. Rendszerfüggetlen és nyílt forráskódú.&lt;br /&gt;&lt;br /&gt;
-Szerzői jog © 2018 Debauchee Open Source Group&lt;br /&gt;
+Szerzői jog © 2018 The InputLeap Developers&lt;br /&gt;
 Szerzői jog © 2012-2016 Symless Ltd.&lt;br /&gt;
 Szerzői jog © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 A Barrier a GNU Általános Nyilvános Licenc (GPLv2) oltalma alatt áll.&lt;br /&gt;&lt;br /&gt;

@@ -67,10 +67,10 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "Debauchee Open Source Group"
-            VALUE "CompanyWeb", "https://github.com/debauchee/barrier/"
+            VALUE "CompanyName", "The InputLeap Developers"
+            VALUE "CompanyWeb", "https://github.com/input-leap/input-leap"
             VALUE "FileVersion", INPUTLEAP_VERSION
-            VALUE "LegalCopyright", "Copyright (C) 2018 Debauchee Open Source Group\nCopyright (C) 2012-2016 Symless Ltd.\nCopyright (C) 2008-2014 Nick Bolton\nCopyright (C) 2002-2014 Chris Schoeneman"
+            VALUE "LegalCopyright", "Copyright (C) 2018 The InputLeap Developers\nCopyright (C) 2012-2016 Symless Ltd.\nCopyright (C) 2008-2014 Nick Bolton\nCopyright (C) 2002-2014 Chris Schoeneman"
             VALUE "ProductName", "Barrier"
             VALUE "ProductVersion", INPUTLEAP_VERSION
             VALUE "OriginalFilename", "barrierc.exe"

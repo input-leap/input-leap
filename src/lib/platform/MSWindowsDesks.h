@@ -1,6 +1,6 @@
 /*
  * InputLeap -- mouse and keyboard sharing utility
- * Copyright (C) 2018 Debauchee Open Source Group
+ * Copyright (C) 2018 The InputLeap Developers
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  *

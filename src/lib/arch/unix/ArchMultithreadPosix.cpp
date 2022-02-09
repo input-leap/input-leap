@@ -59,7 +59,7 @@ public:
     int                    m_refCount;
     IArchMultithread::ThreadID        m_id;
     pthread_t            m_thread;
-    std::function<void()> func_;;
+    std::function<void()> func_;
     bool                m_cancel;
     bool                m_cancelling;
     bool                m_exited;

@@ -25,7 +25,7 @@
 
 namespace inputleap {
 class IStream;
-};
+}
 
 class FileChunk : public Chunk {
 public:

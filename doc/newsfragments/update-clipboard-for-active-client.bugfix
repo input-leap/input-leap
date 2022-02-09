@@ -1,0 +1,1 @@
+Non-active client can no longer grabs the current clipboard content when their background process updates clipboard. (https://github.com/debauchee/barrier/issues/1433).

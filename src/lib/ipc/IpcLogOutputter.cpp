@@ -69,6 +69,7 @@ IpcLogOutputter::~IpcLogOutputter()
 void
 IpcLogOutputter::open(const char* title)
 {
+    (void) title;
 }
 
 void
@@ -85,6 +86,7 @@ IpcLogOutputter::close()
 void
 IpcLogOutputter::show(bool showIfEmpty)
 {
+    (void) showIfEmpty;
 }
 
 bool

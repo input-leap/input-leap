@@ -256,6 +256,8 @@ FileLogOutputter::setLogFilename(const char* logFile)
 bool
 FileLogOutputter::write(ELevel level, const char *message)
 {
+    (void) level;
+
     bool moveFile = false;
 
     std::ofstream m_handle;
@@ -280,14 +282,12 @@ FileLogOutputter::write(ELevel level, const char *message)
     return true;
 }
 
-void
-FileLogOutputter::open(const char *title) {}
+void FileLogOutputter::open(const char *title) { (void) title; }
 
 void
 FileLogOutputter::close() {}
 
-void
-FileLogOutputter::show(bool showIfEmpty) {}
+void FileLogOutputter::show(bool showIfEmpty) { (void) showIfEmpty; }
 
 //
 // MesssageBoxLogOutputter
@@ -306,6 +306,7 @@ MesssageBoxLogOutputter::~MesssageBoxLogOutputter()
 void
 MesssageBoxLogOutputter::open(const char* title)
 {
+    (void) title;
     // do nothing
 }
 
@@ -318,12 +319,14 @@ MesssageBoxLogOutputter::close()
 void
 MesssageBoxLogOutputter::show(bool showIfEmpty)
 {
+    (void) showIfEmpty;
     // do nothing
 }
 
 bool
 MesssageBoxLogOutputter::write(ELevel level, const char* msg)
 {
+    (void) msg;
     // don't spam user with messages.
     if (level > kERROR) {
         return true;

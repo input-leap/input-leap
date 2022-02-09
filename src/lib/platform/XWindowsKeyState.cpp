@@ -70,6 +70,9 @@ XWindowsKeyState::~XWindowsKeyState()
 void
 XWindowsKeyState::init(Display* display, bool useXKB)
 {
+    (void) display;
+    (void) useXKB;
+
     XGetKeyboardControl(m_display, &m_keyboardState);
 #if HAVE_XKB_EXTENSION
     if (useXKB) {
@@ -791,6 +794,8 @@ void
 XWindowsKeyState::remapKeyModifiers(KeyID id, SInt32 group,
                             inputleap::KeyMap::KeyItem& item, void* vself)
 {
+    (void) id;
+
     XWindowsKeyState* self = static_cast<XWindowsKeyState*>(vself);
     item.m_required  =
         self->mapModifiersFromX(XkbBuildCoreState(item.m_required, group));

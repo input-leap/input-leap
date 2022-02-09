@@ -144,6 +144,8 @@ TCPListenSocket::setListeningJob()
 MultiplexerJobStatus TCPListenSocket::serviceListening(ISocketMultiplexerJob* job,
                                                        bool read, bool, bool error)
 {
+    (void) job;
+
     if (error) {
         close();
         return {false, {}};

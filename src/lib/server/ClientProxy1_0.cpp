@@ -293,6 +293,9 @@ ClientProxy1_0::leave()
 void
 ClientProxy1_0::setClipboard(ClipboardID id, const IClipboard* clipboard)
 {
+    (void) id;
+    (void) clipboard;
+
     // ignore -- deprecated in protocol 1.0
 }
 
@@ -372,6 +375,10 @@ ClientProxy1_0::mouseWheel(SInt32, SInt32 yDelta)
 void
 ClientProxy1_0::sendDragInfo(UInt32 fileCount, const char* info, size_t size)
 {
+    (void) fileCount;
+    (void) info;
+    (void) size;
+
     // ignore -- not supported in protocol 1.0
     LOG((CLOG_DEBUG "draggingInfoSending not supported"));
 }
@@ -379,6 +386,10 @@ ClientProxy1_0::sendDragInfo(UInt32 fileCount, const char* info, size_t size)
 void
 ClientProxy1_0::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 {
+    (void) mark;
+    (void) data;
+    (void) dataSize;
+
     // ignore -- not supported in protocol 1.0
     LOG((CLOG_DEBUG "fileChunkSending not supported"));
 }

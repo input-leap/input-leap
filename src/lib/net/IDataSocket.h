@@ -36,7 +36,7 @@ public:
         std::string m_what;
     };
 
-    IDataSocket(IEventQueue* events) { }
+    IDataSocket(IEventQueue* events) { (void) events; }
 
     //! @name manipulators
     //@{

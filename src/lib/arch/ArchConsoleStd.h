@@ -27,7 +27,7 @@ public:
     virtual ~ArchConsoleStd() { }
 
     // IArchConsole overrides
-    virtual void        openConsole(const char* title) { }
+    virtual void openConsole(const char* title) { (void) title; }
     virtual void        closeConsole() { }
     virtual void        showConsole(bool) { }
     virtual void        writeConsole(ELevel level, const char*);

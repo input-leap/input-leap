@@ -472,6 +472,8 @@ stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys)
 void
 assertMaskIsOne(ForeachKeyCallback cb, void* userData)
 {
+    (void) cb;
+
     ASSERT_EQ(1, ((KeyState::AddActiveModifierContext*)userData)->m_mask);
 }
 
@@ -483,6 +485,13 @@ stubMapKey(
     KeyModifierMask desiredMask,
     bool isAutoRepeat)
 {
+    (void) id;
+    (void) group;
+    (void) activeModifiers;
+    (void) currentState;
+    (void) desiredMask;
+    (void) isAutoRepeat;
+
     keys.push_back(s_stubKeystroke);
     return &s_stubKeyItem;
 }

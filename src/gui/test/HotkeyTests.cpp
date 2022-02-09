@@ -34,6 +34,8 @@ struct TestAction
     static TestAction createKeyAction(Action::ActionType type, const std::vector<TestKey>& keys,
                                       const std::vector<std::string>& type_screen_names = {})
     {
+        (void) type;
+
         TestAction action;
         action.type = Action::keyDown;
         action.keys = keys;

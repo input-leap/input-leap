@@ -257,12 +257,20 @@ MinimalApp::~MinimalApp()
 int
 MinimalApp::standardStartup(int argc, char** argv)
 {
+    (void) argc;
+    (void) argv;
+
     return 0;
 }
 
 int
 MinimalApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 {
+    (void) argc;
+    (void) argv;
+    (void) outputter;
+    (void) startup;
+
     return 0;
 }
 
@@ -280,6 +288,9 @@ MinimalApp::mainLoop()
 int
 MinimalApp::foregroundStartup(int argc, char** argv)
 {
+    (void) argc;
+    (void) argv;
+
     return 0;
 }
 
@@ -296,6 +307,8 @@ MinimalApp::loadConfig()
 
 bool MinimalApp::loadConfig(const std::string& pathname)
 {
+    (void) pathname;
+
     return false;
 }
 
@@ -314,4 +327,6 @@ MinimalApp::daemonName() const
 void
 MinimalApp::parseArgs(int argc, const char* const* argv)
 {
+    (void) argc;
+    (void) argv;
 }

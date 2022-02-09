@@ -498,6 +498,8 @@ TCPSocket::onDisconnected()
 
 MultiplexerJobStatus TCPSocket::serviceConnecting(ISocketMultiplexerJob* job, bool, bool write, bool error)
 {
+    (void) job;
+
     std::lock_guard<std::mutex> lock(tcp_mutex_);
 
     // should only check for errors if error is true but checking a new
@@ -541,6 +543,8 @@ MultiplexerJobStatus TCPSocket::serviceConnecting(ISocketMultiplexerJob* job, bo
 MultiplexerJobStatus TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
                                                  bool read, bool write, bool error)
 {
+    (void) job;
+
     std::lock_guard<std::mutex> lock(tcp_mutex_);
 
     if (error) {

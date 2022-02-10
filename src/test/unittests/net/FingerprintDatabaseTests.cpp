@@ -80,7 +80,7 @@ TEST(FingerprintDatabase, add_trusted_no_duplicates)
     db.add_trusted({ "algo1", { 1, 2, 3, 4, 0xab } });
     db.add_trusted({ "algo2", { 3, 4, 5, 6, 0xab } });
     db.add_trusted({ "algo1", { 1, 2, 3, 4, 0xab } });
-    ASSERT_EQ(db.fingerprints().size(), 2);
+    ASSERT_EQ(db.fingerprints().size(), 2u);
 }
 
 TEST(FingerprintDatabase, is_trusted)

@@ -58,7 +58,7 @@ void Hotkey::saveSettings(QSettings& settings) const
     m_KeySequence.saveSettings(settings);
 
     settings.beginWriteArray("actions");
-    for (int i = 0; i < m_Actions.size(); i++)
+    for (std::size_t i = 0; i < m_Actions.size(); i++)
     {
         settings.setArrayIndex(i);
         m_Actions[i].saveSettings(settings);
@@ -74,7 +74,7 @@ QTextStream& operator<<(QTextStream& outStream, const Hotkey& hotkey)
     }
 
     outStream << "\t" << hotkey.text() << " = ";
-    for (int i = 0; i < hotkey.actions().size(); i++) {
+    for (std::size_t i = 0; i < hotkey.actions().size(); i++) {
         outStream << hotkey.actions()[i];
         if (i != hotkey.actions().size() - 1) {
             outStream << ", ";

@@ -213,7 +213,7 @@ TEST(KeyStateTests, updateKeyState_activeModifiers_maskNotSet)
     keyState.updateKeyState();
 
     KeyModifierMask actual = keyState.getActiveModifiers();
-    ASSERT_EQ(0, actual);
+    ASSERT_EQ(0u, actual);
 }
 
 TEST(KeyStateTests, updateKeyState_activeModifiers_keyMapGotModifers)
@@ -474,7 +474,7 @@ assertMaskIsOne(ForeachKeyCallback cb, void* userData)
 {
     (void) cb;
 
-    ASSERT_EQ(1, ((KeyState::AddActiveModifierContext*)userData)->m_mask);
+    ASSERT_EQ(1u, ((KeyState::AddActiveModifierContext*)userData)->m_mask);
 }
 
 const inputleap::KeyMap::KeyItem*

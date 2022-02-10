@@ -30,7 +30,7 @@ ScreenSetupModel::ScreenSetupModel(std::vector<Screen>& screens, int numColumns,
     m_NumColumns(numColumns),
     m_NumRows(numRows)
 {
-    if (m_NumColumns * m_NumRows > screens.size())
+    if (static_cast<std::size_t>(m_NumColumns * m_NumRows) > screens.size())
         qFatal("Not enough elements (%u) in screens QList for %d columns and %d rows", screens.size(), m_NumColumns, m_NumRows);
 }
 

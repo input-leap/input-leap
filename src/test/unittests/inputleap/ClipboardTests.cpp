@@ -100,7 +100,7 @@ TEST(ClipboardTests, getTime_openWithNoEmpty_returnsZero)
 
     Clipboard::Time actual = clipboard.getTime();
 
-    EXPECT_EQ(0, actual);
+    EXPECT_EQ(0u, actual);
 }
 
 TEST(ClipboardTests, getTime_openAndEmpty_returnsOne)
@@ -111,7 +111,7 @@ TEST(ClipboardTests, getTime_openAndEmpty_returnsOne)
 
     Clipboard::Time actual = clipboard.getTime();
 
-    EXPECT_EQ(1, actual);
+    EXPECT_EQ(1u, actual);
 }
 
 TEST(ClipboardTests, has_withFormatAdded_returnsTrue)

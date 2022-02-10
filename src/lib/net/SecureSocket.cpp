@@ -216,7 +216,7 @@ TCPSocket::EJobResult
 SecureSocket::doWrite()
 {
     // write data
-    int bufferSize = 0;
+    std::uint32_t bufferSize = 0;
     int bytesWrote = 0;
     int status = 0;
 

@@ -123,7 +123,7 @@ void ServerConfig::saveSettings()
     writeSettings<bool>(settings(), switchCorners(), "switchCorner");
 
     settings().beginWriteArray("screens");
-    for (int i = 0; i < screens().size(); i++)
+    for (std::size_t i = 0; i < screens().size(); i++)
     {
         settings().setArrayIndex(i);
         screens()[i].saveSettings(settings());
@@ -131,7 +131,7 @@ void ServerConfig::saveSettings()
     settings().endArray();
 
     settings().beginWriteArray("hotkeys");
-    for (int i = 0; i < hotkeys().size(); i++)
+    for (std::size_t i = 0; i < hotkeys().size(); i++)
     {
         settings().setArrayIndex(i);
         hotkeys()[i].saveSettings(settings());
@@ -168,9 +168,9 @@ void ServerConfig::loadSettings()
     readSettings<bool>(settings(), switchCorners(), "switchCorner", false,
                        static_cast<int>(SwitchCorner::Count));
 
-    int numScreens = settings().beginReadArray("screens");
+    std::size_t numScreens = settings().beginReadArray("screens");
     Q_ASSERT(numScreens <= screens().size());
-    for (int i = 0; i < numScreens; i++)
+    for (std::size_t i = 0; i < numScreens; i++)
     {
         settings().setArrayIndex(i);
         screens()[i].loadSettings(settings());
@@ -202,7 +202,7 @@ int ServerConfig::adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) co
 
     int arrayPos = idx + deltaColumn + deltaRow * numColumns();
 
-    if (arrayPos >= screens().size() || arrayPos < 0)
+    if (arrayPos >= static_cast<int>(screens().size()) || arrayPos < 0)
         return -1;
 
     return arrayPos;
@@ -230,7 +230,7 @@ QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config)
 
     outStream << "section: links" << endl;
 
-    for (int i = 0; i < config.screens().size(); i++)
+    for (std::size_t i = 0; i < config.screens().size(); i++)
         if (!config.screens()[i].isNull())
         {
             outStream << "\t" << config.screens()[i].name() << ":" << endl;
@@ -363,7 +363,7 @@ int ServerConfig::autoAddScreen(const QString name)
 bool ServerConfig::findScreenName(const QString& name, int& index)
 {
     bool found = false;
-    for (int i = 0; i < screens().size(); i++) {
+    for (std::size_t i = 0; i < screens().size(); i++) {
         if (!screens()[i].isNull() &&
             screens()[i].name().compare(name) == 0) {
             index = i;
@@ -405,7 +405,7 @@ int ServerConfig::showAddClientDialog(const QString& clientName)
 
 void::ServerConfig::addToFirstEmptyGrid(const QString &clientName)
 {
-    for (int i = 0; i < screens().size(); i++) {
+    for (std::size_t i = 0; i < screens().size(); i++) {
         if (screens()[i].isNull()) {
             m_Screens[i].setName(clientName);
             break;

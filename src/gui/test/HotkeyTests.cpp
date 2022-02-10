@@ -187,7 +187,7 @@ void doHotkeyLoadSaveTest(const TestHotKey& test_hotkey)
         const auto& actions_after = hotkey_after.actions();
 
         ASSERT_EQ(actions_before.size(), actions_after.size());
-        for (int i = 0; i < actions_before.size(); ++i) {
+        for (std::size_t i = 0; i < actions_before.size(); ++i) {
             const auto& action_before = actions_before[i];
             const auto& action_after = actions_after[i];
 

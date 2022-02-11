@@ -48,19 +48,19 @@ public:
     //@}
 
     // IArchMultithread overrides
-    virtual ArchThread newThread(const std::function<void()>& func);
-    virtual ArchThread    newCurrentThread();
-    virtual ArchThread    copyThread(ArchThread);
-    virtual void        closeThread(ArchThread);
-    virtual void        cancelThread(ArchThread);
-    virtual void        setPriorityOfThread(ArchThread, int n);
-    virtual void        testCancelThread();
-    virtual bool        wait(ArchThread, double timeout);
-    virtual bool        isSameThread(ArchThread, ArchThread);
-    virtual bool        isExitedThread(ArchThread);
-    virtual ThreadID    getIDOfThread(ArchThread);
-    virtual void        setSignalHandler(ESignal, SignalFunc, void*);
-    virtual void        raiseSignal(ESignal);
+    ArchThread newThread(const std::function<void()>& func) override;
+    ArchThread newCurrentThread() override;
+    ArchThread copyThread(ArchThread) override;
+    void closeThread(ArchThread) override;
+    void cancelThread(ArchThread) override;
+    void setPriorityOfThread(ArchThread, int n) override;
+    void testCancelThread() override;
+    bool wait(ArchThread, double timeout) override;
+    bool isSameThread(ArchThread, ArchThread) override;
+    bool isExitedThread(ArchThread) override;
+    ThreadID getIDOfThread(ArchThread) override;
+    void setSignalHandler(ESignal, SignalFunc, void*) override;
+    void raiseSignal(ESignal) override;
 
 private:
     void                startSignalHandler();

@@ -166,11 +166,4 @@ public:
     virtual std::string getName() const = 0;
 
     //@}
-
-    // IScreen overrides
-    virtual void*        getEventTarget() const = 0;
-    virtual bool        getClipboard(ClipboardID id, IClipboard*) const = 0;
-    virtual void        getShape(SInt32& x, SInt32& y,
-                            SInt32& width, SInt32& height) const = 0;
-    virtual void        getCursorPos(SInt32& x, SInt32& y) const = 0;
 };

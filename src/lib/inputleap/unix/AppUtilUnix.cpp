@@ -21,6 +21,7 @@
 
 AppUtilUnix::AppUtilUnix(IEventQueue* events)
 {
+    (void) events;
 }
 
 AppUtilUnix::~AppUtilUnix()

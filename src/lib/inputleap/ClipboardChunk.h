@@ -26,7 +26,7 @@
 
 namespace inputleap {
 class IStream;
-};
+}
 
 class ClipboardChunk : public Chunk {
 public:

@@ -57,7 +57,7 @@ public:
 
 protected:
     // XBase overrides
-    virtual std::string getWhat() const noexcept;
+    std::string getWhat() const noexcept override;
 
 private:
     EError                m_error;

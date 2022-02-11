@@ -1415,6 +1415,8 @@ Server::handleSwitchToScreenEvent(const Event& event, void*)
 void
 Server::handleToggleScreenEvent(const Event& event, void*)
 {
+    (void) event;
+
   std::string current = getName(m_active);
   ClientList::const_iterator index = m_clients.find(current);
   if (index == m_clients.end()) {
@@ -1534,6 +1536,8 @@ Server::handleFileChunkSendingEvent(const Event& event, void*)
 void
 Server::handleFileRecieveCompletedEvent(const Event& event, void*)
 {
+    (void) event;
+
 	onFileRecieveCompleted();
 }
 

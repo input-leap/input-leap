@@ -36,7 +36,7 @@ public:
         std::string m_what;
     };
 
-    IDataSocket(IEventQueue* events) { }
+    IDataSocket(IEventQueue* events) { (void) events; }
 
     //! @name manipulators
     //@{
@@ -57,17 +57,9 @@ public:
     // in VC++6.  it claims the methods are unused locals and warns
     // that it's removing them.  it's presumably tickled by inheriting
     // methods with identical signatures from both superclasses.
-    virtual void        bind(const NetworkAddress&) = 0;
-    virtual void        close();
-    virtual void*        getEventTarget() const;
+    void close() override;
+    void* getEventTarget() const override;
 
     // IStream overrides
-    virtual UInt32        read(void* buffer, UInt32 n) = 0;
-    virtual void        write(const void* buffer, UInt32 n) = 0;
-    virtual void        flush() = 0;
-    virtual void        shutdownInput() = 0;
-    virtual void        shutdownOutput() = 0;
-    virtual bool        isReady() const = 0;
     virtual bool        isFatal() const = 0;
-    virtual UInt32        getSize() const = 0;
 };

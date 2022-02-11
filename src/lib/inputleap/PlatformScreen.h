@@ -98,7 +98,7 @@ public:
     virtual void        setSequenceNumber(UInt32) = 0;
     virtual bool        isPrimary() const = 0;
     
-    virtual void        fakeDraggingFiles(DragFileList fileList) { throw std::runtime_error("fakeDraggingFiles not implemented"); }
+    virtual void fakeDraggingFiles(DragFileList fileList) { (void) fileList; throw std::runtime_error("fakeDraggingFiles not implemented"); }
     virtual const std::string& getDropTarget() const { throw std::runtime_error("getDropTarget not implemented"); }
     virtual void setDropTarget(const std::string&) { throw std::runtime_error("setDropTarget not implemented"); }
 

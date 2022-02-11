@@ -34,6 +34,8 @@ struct TestAction
     static TestAction createKeyAction(Action::ActionType type, const std::vector<TestKey>& keys,
                                       const std::vector<std::string>& type_screen_names = {})
     {
+        (void) type;
+
         TestAction action;
         action.type = Action::keyDown;
         action.keys = keys;
@@ -185,7 +187,7 @@ void doHotkeyLoadSaveTest(const TestHotKey& test_hotkey)
         const auto& actions_after = hotkey_after.actions();
 
         ASSERT_EQ(actions_before.size(), actions_after.size());
-        for (int i = 0; i < actions_before.size(); ++i) {
+        for (std::size_t i = 0; i < actions_before.size(); ++i) {
             const auto& action_before = actions_before[i];
             const auto& action_after = actions_after[i];
 

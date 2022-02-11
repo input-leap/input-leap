@@ -106,7 +106,7 @@ private:
     // The following are used only from doWrite()
     // FIXME: using std::vector would simplify logic significantly.
     bool do_write_retry_ = false;
-    int do_write_retry_size_ = 0;
+    std::uint32_t do_write_retry_size_ = 0;
     std::unique_ptr<char[]> do_write_retry_buffer_;
     std::size_t do_write_retry_buffer_size_ = 0;
 };

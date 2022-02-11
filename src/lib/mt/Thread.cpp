@@ -67,6 +67,7 @@ Thread::operator=(const Thread& thread)
 void
 Thread::exit(void* result)
 {
+    (void) result;
     throw XThreadExit();
 }
 

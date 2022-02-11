@@ -252,12 +252,20 @@ PrimaryClient::screensaver(bool)
 void
 PrimaryClient::sendDragInfo(UInt32 fileCount, const char* info, size_t size)
 {
+    (void) fileCount;
+    (void) info;
+    (void) size;
+
     // ignore
 }
 
 void
 PrimaryClient::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 {
+    (void) mark;
+    (void) data;
+    (void) dataSize;
+
     // ignore
 }
 

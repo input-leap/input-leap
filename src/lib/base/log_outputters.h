@@ -36,13 +36,13 @@ this to prevent already inserted outputters from writing.
 class StopLogOutputter : public ILogOutputter {
 public:
     StopLogOutputter();
-    virtual ~StopLogOutputter();
+    ~StopLogOutputter() override;
 
     // ILogOutputter overrides
-    virtual void        open(const char* title);
-    virtual void        close();
-    virtual void        show(bool showIfEmpty);
-    virtual bool        write(ELevel level, const char* message);
+    void open(const char* title) override;
+    void close() override;
+    void show(bool showIfEmpty) override;
+    bool write(ELevel level, const char* message) override;
 };
 
 //! Write log to console
@@ -56,10 +56,10 @@ public:
     virtual ~ConsoleLogOutputter();
 
     // ILogOutputter overrides
-    virtual void        open(const char* title);
-    virtual void        close();
-    virtual void        show(bool showIfEmpty);
-    virtual bool        write(ELevel level, const char* message);
+    void open(const char* title) override;
+    void close() override;
+    void show(bool showIfEmpty) override;
+    bool write(ELevel level, const char* message) override;
     virtual void        flush();
 };
 
@@ -72,13 +72,13 @@ message is ignored.
 class FileLogOutputter : public ILogOutputter {
 public:
     FileLogOutputter(const char* logFile);
-    virtual ~FileLogOutputter();
+    ~FileLogOutputter() override;
 
     // ILogOutputter overrides
-    virtual void        open(const char* title);
-    virtual void        close();
-    virtual void        show(bool showIfEmpty);
-    virtual bool        write(ELevel level, const char* message);
+    void open(const char* title) override;
+    void close() override;
+    void show(bool showIfEmpty) override;
+    bool write(ELevel level, const char* message) override;
 
     void                setLogFilename(const char* title);
 
@@ -93,13 +93,13 @@ This outputter writes output to the system log.
 class SystemLogOutputter : public ILogOutputter {
 public:
     SystemLogOutputter();
-    virtual ~SystemLogOutputter();
+    ~SystemLogOutputter() override;
 
     // ILogOutputter overrides
-    virtual void        open(const char* title);
-    virtual void        close();
-    virtual void        show(bool showIfEmpty);
-    virtual bool        write(ELevel level, const char* message);
+    void open(const char* title) override;
+    void close() override;
+    void show(bool showIfEmpty) override;
+    bool write(ELevel level, const char* message) override;
 };
 
 //! Write log to system log only
@@ -146,10 +146,10 @@ public:
     //@}
 
     // ILogOutputter overrides
-    virtual void        open(const char* title);
-    virtual void        close();
-    virtual void        show(bool showIfEmpty);
-    virtual bool        write(ELevel level, const char* message);
+    void open(const char* title) override;
+    void close() override;
+    void show(bool showIfEmpty) override;
+    bool write(ELevel level, const char* message) override;
 private:
     UInt32                m_maxBufferSize;
     Buffer                m_buffer;
@@ -162,11 +162,11 @@ The level for each message is ignored.
 class MesssageBoxLogOutputter : public ILogOutputter {
 public:
     MesssageBoxLogOutputter();
-    virtual ~MesssageBoxLogOutputter();
+    ~MesssageBoxLogOutputter() override;
 
     // ILogOutputter overrides
-    virtual void        open(const char* title);
-    virtual void        close();
-    virtual void        show(bool showIfEmpty);
-    virtual bool        write(ELevel level, const char* message);
+    void open(const char* title) override;
+    void close() override;
+    void show(bool showIfEmpty) override;
+    bool write(ELevel level, const char* message) override;
 };

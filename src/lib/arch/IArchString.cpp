@@ -49,14 +49,14 @@ IArchString::convStringWCToMB(char* dst,
         char dummy[MB_LEN_MAX];
         for (const wchar_t* scan = src; n > 0; ++scan, --n) {
             std::size_t mblen = std::wcrtomb(dummy, *scan, &state);
-            if (mblen == -1) {
+            if (mblen == static_cast<std::size_t>(-1)) {
                 *errors = true;
                 mblen   = 1;
             }
             len += mblen;
         }
         std::size_t mblen = std::wcrtomb(dummy, L'\0', &state);
-        if (mblen != -1) {
+        if (mblen != static_cast<std::size_t>(-1)) {
             len += mblen - 1;
         }
     }
@@ -64,7 +64,7 @@ IArchString::convStringWCToMB(char* dst,
         char* dst0 = dst;
         for (const wchar_t* scan = src; n > 0; ++scan, --n) {
             std::size_t mblen = std::wcrtomb(dst, *scan, &state);
-            if (mblen == -1) {
+            if (mblen == static_cast<std::size_t>(-1)) {
                 *errors = true;
                 *dst++  = '?';
             }
@@ -73,7 +73,7 @@ IArchString::convStringWCToMB(char* dst,
             }
         }
         std::size_t mblen = std::wcrtomb(dst, L'\0', &state);
-        if (mblen != -1) {
+        if (mblen != static_cast<std::size_t>(-1)) {
             // don't include nul terminator
             dst += mblen - 1;
         }

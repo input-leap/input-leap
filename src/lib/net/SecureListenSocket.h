@@ -32,8 +32,7 @@ public:
                        ConnectionSecurityLevel security_level);
 
     // IListenSocket overrides
-    virtual IDataSocket*
-                        accept();
+    IDataSocket* accept() override;
 private:
     ConnectionSecurityLevel security_level_;
 };

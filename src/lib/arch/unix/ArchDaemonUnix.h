@@ -27,10 +27,10 @@
 class ArchDaemonUnix : public ArchDaemonNone {
 public:
     ArchDaemonUnix();
-    virtual ~ArchDaemonUnix();
+    ~ArchDaemonUnix() override;
 
     // IArchDaemon overrides
-    virtual int            daemonize(const char* name, DaemonFunc func);
+    int daemonize(const char* name, DaemonFunc func) override;
 };
 
 #define CONFIG_FILE "/etc/barrier/barrierd.conf"

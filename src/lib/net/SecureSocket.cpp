@@ -216,7 +216,7 @@ TCPSocket::EJobResult
 SecureSocket::doWrite()
 {
     // write data
-    int bufferSize = 0;
+    std::uint32_t bufferSize = 0;
     int bytesWrote = 0;
     int status = 0;
 
@@ -725,7 +725,10 @@ bool SecureSocket::verify_peer_certificate(const inputleap::fs::path& fingerprin
 MultiplexerJobStatus SecureSocket::serviceConnect(ISocketMultiplexerJob* job,
                                                   bool read, bool write, bool error)
 {
+    (void) job;
     (void) read;
+    (void) write;
+    (void) error;
 
     std::lock_guard<std::mutex> lock(tcp_mutex_);
 
@@ -759,7 +762,11 @@ MultiplexerJobStatus SecureSocket::serviceConnect(ISocketMultiplexerJob* job,
 MultiplexerJobStatus SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
                                                  bool read, bool write, bool error)
 {
+    (void) job;
     (void) read;
+    (void) write;
+    (void) error;
+
     std::lock_guard<std::mutex> lock(tcp_mutex_);
 
     int status = 0;
@@ -869,6 +876,8 @@ SecureSocket::showSecureConnectInfo()
 void
 SecureSocket::handleTCPConnected(const Event& event, void*)
 {
+    (void) event;
+
     if (getSocket() == nullptr) {
         LOG((CLOG_DEBUG "disregarding stale connect event"));
         return;

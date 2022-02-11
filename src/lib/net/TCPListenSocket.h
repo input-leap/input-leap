@@ -37,13 +37,12 @@ public:
     virtual ~TCPListenSocket();
 
     // ISocket overrides
-    virtual void        bind(const NetworkAddress&);
-    virtual void        close();
-    virtual void*        getEventTarget() const;
+    void bind(const NetworkAddress&) override;
+    void close() override;
+    void* getEventTarget() const override;
 
     // IListenSocket overrides
-    virtual IDataSocket*
-                        accept();
+    IDataSocket* accept() override;
 
 protected:
     void                setListeningJob();

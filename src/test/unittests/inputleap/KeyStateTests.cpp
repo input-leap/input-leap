@@ -213,7 +213,7 @@ TEST(KeyStateTests, updateKeyState_activeModifiers_maskNotSet)
     keyState.updateKeyState();
 
     KeyModifierMask actual = keyState.getActiveModifiers();
-    ASSERT_EQ(0, actual);
+    ASSERT_EQ(0u, actual);
 }
 
 TEST(KeyStateTests, updateKeyState_activeModifiers_keyMapGotModifers)
@@ -472,7 +472,9 @@ stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys)
 void
 assertMaskIsOne(ForeachKeyCallback cb, void* userData)
 {
-    ASSERT_EQ(1, ((KeyState::AddActiveModifierContext*)userData)->m_mask);
+    (void) cb;
+
+    ASSERT_EQ(1u, ((KeyState::AddActiveModifierContext*)userData)->m_mask);
 }
 
 const inputleap::KeyMap::KeyItem*
@@ -483,6 +485,13 @@ stubMapKey(
     KeyModifierMask desiredMask,
     bool isAutoRepeat)
 {
+    (void) id;
+    (void) group;
+    (void) activeModifiers;
+    (void) currentState;
+    (void) desiredMask;
+    (void) isAutoRepeat;
+
     keys.push_back(s_stubKeystroke);
     return &s_stubKeyItem;
 }

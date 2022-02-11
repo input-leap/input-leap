@@ -72,6 +72,8 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, co
 
 void ServerConfigDialog::showEvent(QShowEvent* event)
 {
+    (void) event;
+
     QDialog::show();
 
     if (!m_Message.isEmpty())
@@ -130,7 +132,7 @@ void ServerConfigDialog::on_m_pButtonNewHotkey_clicked()
 void ServerConfigDialog::on_m_pButtonEditHotkey_clicked()
 {
     int idx = m_pListHotkeys->currentRow();
-    Q_ASSERT(idx >= 0 && idx < serverConfig().hotkeys().size());
+    Q_ASSERT(idx >= 0 && idx < static_cast<int>(serverConfig().hotkeys().size()));
     Hotkey& hotkey = serverConfig().hotkeys()[idx];
     HotkeyDialog dlg(this, hotkey);
     if (dlg.exec() == QDialog::Accepted)
@@ -140,7 +142,7 @@ void ServerConfigDialog::on_m_pButtonEditHotkey_clicked()
 void ServerConfigDialog::on_m_pButtonRemoveHotkey_clicked()
 {
     int idx = m_pListHotkeys->currentRow();
-    Q_ASSERT(idx >= 0 && idx < serverConfig().hotkeys().size());
+    Q_ASSERT(idx >= 0 && idx < static_cast<int>(serverConfig().hotkeys().size()));
     serverConfig().hotkeys().erase(serverConfig().hotkeys().begin() + idx);
     m_pListActions->clear();
     delete m_pListHotkeys->item(idx);
@@ -163,10 +165,10 @@ void ServerConfigDialog::on_m_pListHotkeys_itemSelectionChanged()
         // only possibly be 0. GDB shows we got called indirectly from the delete line in
         // on_m_pButtonRemoveHotkey_clicked() above, but the delete is of course necessary and seems correct.
         // The while() is a generalized workaround for all that and shouldn't be required.
-        while (idx >= 0 && idx >= serverConfig().hotkeys().size())
+        while (idx >= 0 && idx >= static_cast<int>(serverConfig().hotkeys().size()))
             idx--;
 
-        Q_ASSERT(idx >= 0 && idx < serverConfig().hotkeys().size());
+        Q_ASSERT(idx >= 0 && idx < static_cast<int>(serverConfig().hotkeys().size()));
 
         const Hotkey& hotkey = serverConfig().hotkeys()[idx];
         for (const Action& action : hotkey.actions()) {
@@ -178,7 +180,7 @@ void ServerConfigDialog::on_m_pListHotkeys_itemSelectionChanged()
 void ServerConfigDialog::on_m_pButtonNewAction_clicked()
 {
     int idx = m_pListHotkeys->currentRow();
-    Q_ASSERT(idx >= 0 && idx < serverConfig().hotkeys().size());
+    Q_ASSERT(idx >= 0 && idx < static_cast<int>(serverConfig().hotkeys().size()));
     Hotkey& hotkey = serverConfig().hotkeys()[idx];
 
     Action action;
@@ -193,11 +195,11 @@ void ServerConfigDialog::on_m_pButtonNewAction_clicked()
 void ServerConfigDialog::on_m_pButtonEditAction_clicked()
 {
     int idxHotkey = m_pListHotkeys->currentRow();
-    Q_ASSERT(idxHotkey >= 0 && idxHotkey < serverConfig().hotkeys().size());
+    Q_ASSERT(idxHotkey >= 0 && idxHotkey < static_cast<int>(serverConfig().hotkeys().size()));
     Hotkey& hotkey = serverConfig().hotkeys()[idxHotkey];
 
     int idxAction = m_pListActions->currentRow();
-    Q_ASSERT(idxAction >= 0 && idxAction < hotkey.actions().size());
+    Q_ASSERT(idxAction >= 0 && idxAction < static_cast<int>(hotkey.actions().size()));
     Action action = hotkey.actions()[idxAction];
 
     ActionDialog dlg(this, serverConfig(), hotkey, action);
@@ -210,11 +212,11 @@ void ServerConfigDialog::on_m_pButtonEditAction_clicked()
 void ServerConfigDialog::on_m_pButtonRemoveAction_clicked()
 {
     int idxHotkey = m_pListHotkeys->currentRow();
-    Q_ASSERT(idxHotkey >= 0 && idxHotkey < serverConfig().hotkeys().size());
+    Q_ASSERT(idxHotkey >= 0 && idxHotkey < static_cast<int>(serverConfig().hotkeys().size()));
     Hotkey& hotkey = serverConfig().hotkeys()[idxHotkey];
 
     int idxAction = m_pListActions->currentRow();
-    Q_ASSERT(idxAction >= 0 && idxAction < hotkey.actions().size());
+    Q_ASSERT(idxAction >= 0 && idxAction < static_cast<int>(hotkey.actions().size()));
 
     hotkey.removeAction(idxAction);
     delete m_pListActions->currentItem();

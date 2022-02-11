@@ -33,6 +33,10 @@ class CursorMultiplexerJob : public ISocketMultiplexerJob {
 public:
     MultiplexerJobStatus run(bool readable, bool writable, bool error) override
     {
+        (void) readable;
+        (void) writable;
+        (void) error;
+
         return {false, {}};
     }
 

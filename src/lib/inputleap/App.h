@@ -45,10 +45,10 @@ typedef IArchTaskBarReceiver* (*CreateTaskBarReceiverFunc)(const BufferedLogOutp
 class App : public IApp {
 public:
     App(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver, ArgsBase* args);
-    virtual ~App();
+    ~App() override;
 
     // Returns args that are common between server and client.
-    ArgsBase& argsBase() const { return *m_args; }
+    ArgsBase& argsBase() const override { return *m_args; }
 
     // Prints the current compiled version.
     virtual void version();
@@ -82,19 +82,19 @@ public:
     void loggingFilterWarning();
 
     // Parses args, sets up file logging, and loads the config.
-    void initApp(int argc, const char** argv);
+    void initApp(int argc, const char** argv) override;
 
     // HACK: accept non-const, but make it const anyway
     void initApp(int argc, char** argv) { initApp(argc, (const char**)argv); }
 
     ARCH_APP_UTIL& appUtil() { return m_appUtil; }
 
-    virtual IArchTaskBarReceiver* taskBarReceiver() const { return m_taskBarReceiver; }
+    IArchTaskBarReceiver* taskBarReceiver() const override { return m_taskBarReceiver; }
 
-    virtual void setByeFunc(void(*bye)(int)) { m_bye = bye; }
-    virtual void bye(int error) { m_bye(error); }
+    void setByeFunc(void(*bye)(int)) override { m_bye = bye; }
+    void bye(int error) override { m_bye(error); }
 
-    virtual IEventQueue* getEvents() const { return m_events; }
+    IEventQueue* getEvents() const override { return m_events; }
 
     void setSocketMultiplexer(std::unique_ptr<SocketMultiplexer>&& sm) { m_socketMultiplexer = std::move(sm); }
     SocketMultiplexer*    getSocketMultiplexer() const { return m_socketMultiplexer.get(); }
@@ -126,21 +126,20 @@ private:
 class MinimalApp : public App {
 public:
     MinimalApp();
-    virtual ~MinimalApp();
+    ~MinimalApp() override;
 
     // IApp overrides
-    virtual int            standardStartup(int argc, char** argv);
-    virtual int            runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup);
-    virtual void        startNode();
-    virtual int            mainLoop();
-    virtual int            foregroundStartup(int argc, char** argv);
-    virtual inputleap::Screen*
-                        createScreen();
-    virtual void        loadConfig();
-    virtual bool loadConfig(const std::string& pathname);
-    virtual const char*    daemonInfo() const;
-    virtual const char* daemonName() const;
-    virtual void        parseArgs(int argc, const char* const* argv);
+    int standardStartup(int argc, char** argv) override;
+    int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup) override;
+    void startNode() override;
+    int mainLoop() override;
+    int foregroundStartup(int argc, char** argv) override;
+    inputleap::Screen* createScreen() override;
+    void loadConfig() override;
+    bool loadConfig(const std::string& pathname) override;
+    const char* daemonInfo() const override;
+    const char* daemonName() const override;
+    void parseArgs(int argc, const char* const* argv) override;
 
 private:
     Arch                m_arch;

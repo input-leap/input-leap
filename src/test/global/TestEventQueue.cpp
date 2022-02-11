@@ -49,5 +49,7 @@ TestEventQueue::cleanupQuitTimeout()
 void
 TestEventQueue::handleQuitTimeout(const Event&, void* vclient)
 {
+    (void) vclient;
+
     throw std::runtime_error("test event queue timeout");
 }

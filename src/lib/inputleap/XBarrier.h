@@ -54,7 +54,7 @@ public:
     //@}
 
 protected:
-    virtual std::string getWhat() const noexcept;
+    std::string getWhat() const noexcept override;
 
 private:
     int                    m_major;
@@ -80,7 +80,7 @@ public:
     //@}
 
 protected:
-    virtual std::string getWhat() const noexcept;
+    std::string getWhat() const noexcept override;
 
 private:
     std::string m_name;
@@ -105,7 +105,7 @@ public:
     //@}
 
 protected:
-    virtual std::string getWhat() const noexcept;
+    std::string getWhat() const noexcept override;
 
 private:
     std::string                m_name;
@@ -126,7 +126,7 @@ public:
     int getCode() const noexcept;
 
 protected:
-    virtual std::string getWhat() const noexcept;
+    std::string getWhat() const noexcept override;
 
 private:
     int    m_code;

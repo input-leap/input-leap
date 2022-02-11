@@ -64,8 +64,8 @@ TEST(ArgParserTests, searchDoubleQuotes_doubleQuotedArg_returnTrue)
     bool result = ArgParser::searchDoubleQuotes(command, left, right);
 
     EXPECT_EQ(true, result);
-    EXPECT_EQ(0, left);
-    EXPECT_EQ(5, right);
+    EXPECT_EQ(0u, left);
+    EXPECT_EQ(5u, right);
 }
 
 TEST(ArgParserTests, searchDoubleQuotes_noDoubleQuotedArg_returnfalse)
@@ -77,8 +77,8 @@ TEST(ArgParserTests, searchDoubleQuotes_noDoubleQuotedArg_returnfalse)
     bool result = ArgParser::searchDoubleQuotes(command, left, right);
 
     EXPECT_FALSE(result);
-    EXPECT_EQ(0, left);
-    EXPECT_EQ(0, right);
+    EXPECT_EQ(0u, left);
+    EXPECT_EQ(0u, right);
 }
 
 TEST(ArgParserTests, searchDoubleQuotes_oneDoubleQuoteArg_returnfalse)
@@ -90,8 +90,8 @@ TEST(ArgParserTests, searchDoubleQuotes_oneDoubleQuoteArg_returnfalse)
     bool result = ArgParser::searchDoubleQuotes(command, left, right);
 
     EXPECT_FALSE(result);
-    EXPECT_EQ(0, left);
-    EXPECT_EQ(0, right);
+    EXPECT_EQ(0u, left);
+    EXPECT_EQ(0u, right);
 }
 
 TEST(ArgParserTests, splitCommandString_oneArg_returnArgv)
@@ -101,7 +101,7 @@ TEST(ArgParserTests, splitCommandString_oneArg_returnArgv)
 
     ArgParser::splitCommandString(command, argv);
 
-    EXPECT_EQ(1, argv.size());
+    EXPECT_EQ(1u, argv.size());
     EXPECT_EQ("stub", argv.at(0));
 }
 
@@ -112,7 +112,7 @@ TEST(ArgParserTests, splitCommandString_twoArgs_returnArgv)
 
     ArgParser::splitCommandString(command, argv);
 
-    EXPECT_EQ(2, argv.size());
+    EXPECT_EQ(2u, argv.size());
     EXPECT_EQ("stub1", argv.at(0));
     EXPECT_EQ("stub2", argv.at(1));
 }
@@ -124,7 +124,7 @@ TEST(ArgParserTests, splitCommandString_doubleQuotedArgs_returnArgv)
 
     ArgParser::splitCommandString(command, argv);
 
-    EXPECT_EQ(3, argv.size());
+    EXPECT_EQ(3u, argv.size());
     EXPECT_EQ("stub1", argv.at(0));
     EXPECT_EQ("stub2", argv.at(1));
     EXPECT_EQ("stub3", argv.at(2));
@@ -137,7 +137,7 @@ TEST(ArgParserTests, splitCommandString_spaceDoubleQuotedArgs_returnArgv)
 
     ArgParser::splitCommandString(command, argv);
 
-    EXPECT_EQ(3, argv.size());
+    EXPECT_EQ(3u, argv.size());
     EXPECT_EQ("stub1", argv.at(0));
     EXPECT_EQ("stub2", argv.at(1));
     EXPECT_EQ("stub3 space", argv.at(2));

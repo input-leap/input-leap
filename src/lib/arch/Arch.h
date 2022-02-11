@@ -102,7 +102,7 @@ public:
     Some arch classes depend on others to exist first. When init is called
     these clases will have ARCH available for use.
     */
-    virtual void init();
+    void init() override;
 
     //
     // accessors

@@ -238,6 +238,10 @@ Bool XWindowsImpl::XkbSelectEventDetails(Display* display,
 Bool XWindowsImpl::XRRQueryExtension(Display* display, int* event_base_return,
                                      int* error_base_return)
 {
+    (void) display;
+    (void) event_base_return;
+    (void) error_base_return;
+
 #if HAVE_X11_EXTENSIONS_XRANDR_H
     return ::XRRQueryExtension(display, event_base_return, error_base_return);
 #else
@@ -260,6 +264,10 @@ Bool XWindowsImpl::XineramaQueryExtension(Display* display, int* event_base,
 #if HAVE_X11_EXTENSIONS_XINERAMA_H
     return ::XineramaQueryExtension(display, event_base, error_base);
 #else
+    (void) display;
+    (void) event_base;
+    (void) error_base;
+
     return false;
 #endif
 }
@@ -269,6 +277,8 @@ Bool XWindowsImpl::XineramaIsActive(Display* display)
 #if HAVE_X11_EXTENSIONS_XINERAMA_H
     return ::XineramaIsActive(display);
 #else
+    (void) display;
+
     return false;
 #endif
 }
@@ -278,6 +288,9 @@ void* XWindowsImpl::XineramaQueryScreens(Display* display, int* number)
 #if HAVE_X11_EXTENSIONS_XINERAMA_H
     return ::XineramaQueryScreens(display, number);
 #else
+    (void) display;
+    (void) number;
+
     return nullptr;
 #endif
 }

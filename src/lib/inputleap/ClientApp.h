@@ -45,7 +45,7 @@ public:
 
     // TODO: move to server only (not supported on client)
     void loadConfig() { }
-    bool loadConfig(const std::string& pathname) { return false; }
+    bool loadConfig(const std::string& pathname) { (void) pathname; return false; }
 
     int foregroundStartup(int argc, char** argv);
     int standardStartup(int argc, char** argv);

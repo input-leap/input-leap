@@ -752,6 +752,8 @@ Client::handleFileChunkSending(const Event& event, void*)
 void
 Client::handleFileRecieveCompleted(const Event& event, void*)
 {
+    (void) event;
+
     onFileRecieveCompleted();
 }
 

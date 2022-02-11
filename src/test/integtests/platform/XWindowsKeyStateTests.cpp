@@ -147,7 +147,7 @@ TEST_F(XWindowsKeyStateTests, pollActiveModifiers_defaultState_returnsZero)
 
     KeyModifierMask actual = keyState.pollActiveModifiers();
 
-    ASSERT_EQ(0, actual);
+    ASSERT_EQ(0u, actual);
 }
 
 TEST_F(XWindowsKeyStateTests, pollActiveModifiers_shiftKeyDownThenUp_masksAreCorrect)

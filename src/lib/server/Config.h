@@ -43,7 +43,7 @@ struct iterator_traits<Config> {
     typedef std::string* pointer;
     typedef std::string& reference;
 };
-};
+}
 
 //! Server configuration
 /*!

@@ -726,6 +726,8 @@ KeyState::fakeAllKeysUp()
 bool
 KeyState::fakeMediaKey(KeyID id)
 {
+    (void) id;
+
     return false;
 }
 

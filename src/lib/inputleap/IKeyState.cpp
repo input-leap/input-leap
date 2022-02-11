@@ -28,6 +28,7 @@
 
 IKeyState::IKeyState(IEventQueue* events)
 {
+    (void) events;
 }
 
 //

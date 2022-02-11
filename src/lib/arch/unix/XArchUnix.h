@@ -24,9 +24,9 @@
 class XArchEvalUnix : public XArchEval {
 public:
     XArchEvalUnix(int error) : m_error(error) { }
-    virtual ~XArchEvalUnix() noexcept { }
+    ~XArchEvalUnix() noexcept override { }
 
-    virtual std::string    eval() const;
+    std::string eval() const override;
 
 private:
     int                    m_error;

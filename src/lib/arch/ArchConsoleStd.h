@@ -24,11 +24,11 @@
 class ArchConsoleStd : public IArchConsole {
 public:
     ArchConsoleStd() { }
-    virtual ~ArchConsoleStd() { }
+    ~ArchConsoleStd() override { }
 
     // IArchConsole overrides
-    virtual void openConsole(const char* title) { (void) title; }
-    virtual void        closeConsole() { }
-    virtual void        showConsole(bool) { }
-    virtual void        writeConsole(ELevel level, const char*);
+    void openConsole(const char* title) override { (void) title; }
+    void closeConsole() override { }
+    void showConsole(bool) override { }
+    void writeConsole(ELevel level, const char*) override;
 };

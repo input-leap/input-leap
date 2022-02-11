@@ -27,8 +27,8 @@ class IEventQueue;
 class AppUtilUnix : public AppUtil {
 public:
     AppUtilUnix(IEventQueue* events);
-    virtual ~AppUtilUnix();
+    ~AppUtilUnix() override;
 
-    int run(int argc, char** argv);
-    void startNode();
+    int run(int argc, char** argv) override;
+    void startNode() override;
 };

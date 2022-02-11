@@ -31,11 +31,11 @@ public:
     virtual ~TCPSocketFactory();
 
     // ISocketFactory overrides
-    virtual IDataSocket* create(IArchNetwork::EAddressFamily family,
-                                ConnectionSecurityLevel security_level) const;
+    IDataSocket* create(IArchNetwork::EAddressFamily family,
+                                ConnectionSecurityLevel security_level) const override;
 
-    virtual IListenSocket* createListen(IArchNetwork::EAddressFamily family,
-                                        ConnectionSecurityLevel security_level) const;
+    IListenSocket* createListen(IArchNetwork::EAddressFamily family,
+                                        ConnectionSecurityLevel security_level) const override;
 
 private:
     IEventQueue*        m_events;

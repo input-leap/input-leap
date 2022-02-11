@@ -26,10 +26,10 @@
 class ArchTaskBarXWindows : public IArchTaskBar {
 public:
     ArchTaskBarXWindows();
-    virtual ~ArchTaskBarXWindows();
+    ~ArchTaskBarXWindows() override;
 
     // IArchTaskBar overrides
-    virtual void        addReceiver(IArchTaskBarReceiver*);
-    virtual void        removeReceiver(IArchTaskBarReceiver*);
-    virtual void        updateReceiver(IArchTaskBarReceiver*);
+    void addReceiver(IArchTaskBarReceiver*) override;
+    void removeReceiver(IArchTaskBarReceiver*) override;
+    void updateReceiver(IArchTaskBarReceiver*) override;
 };

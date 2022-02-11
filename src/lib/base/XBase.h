@@ -34,7 +34,7 @@ public:
     virtual ~XBase() noexcept;
 
     //! Reason for exception
-    virtual const char* what() const noexcept;
+    const char* what() const noexcept override;
 
 protected:
     //! Get a human readable string describing the exception
@@ -79,7 +79,7 @@ public:                                                                    \
     virtual ~name_() noexcept { }                                        \
                                                                         \
 protected:                                                                \
-    virtual std::string getWhat() const noexcept;                        \
+    std::string getWhat() const noexcept override;                        \
 }
 
 /*!

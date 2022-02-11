@@ -43,9 +43,4 @@ public:
                         accept() = 0;
 
     //@}
-
-    // ISocket overrides
-    virtual void        bind(const NetworkAddress&) = 0;
-    virtual void        close() = 0;
-    virtual void*        getEventTarget() const = 0;
 };

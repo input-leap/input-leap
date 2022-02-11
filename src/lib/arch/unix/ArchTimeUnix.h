@@ -26,8 +26,8 @@
 class ArchTimeUnix : public IArchTime {
 public:
     ArchTimeUnix();
-    virtual ~ArchTimeUnix();
+    ~ArchTimeUnix() override;
 
     // IArchTime overrides
-    virtual double        time();
+    double time() override;
 };

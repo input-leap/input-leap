@@ -1,0 +1,15 @@
+[package]
+name = "input_leap_rs"
+version = "3.0.0"
+edition = "2018"
+
+[lib]
+name = "input_leap_rs"
+crate-type = ["staticlib"]
+
+[dependencies]
+const_format = "0.2.31"
+cxx = "1.0"
+
+[build-dependencies]
+cxx-build = "1.0"

@@ -1,0 +1,2 @@
+https://github.com/actions/labeler
+https://github.com/lannonbr/issue-label-manager-action

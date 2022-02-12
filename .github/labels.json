@@ -1,0 +1,13 @@
+[
+    {
+        "name": "awaiting-approval",
+        "color": "null",
+        "description": "The pull request is awaiting approval from a reviewer."
+    },
+    {
+        "name": "barrier-import",
+        "color": "null",
+        "description": "This issue is imported from the Barrier repository."
+    },
+
+]

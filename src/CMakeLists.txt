@@ -14,6 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Link Rust library with all targets.
+add_subdirectory (rust)
+link_libraries(rustlib)
+
 include_directories (./lib)
 include_directories (${CMAKE_CURRENT_BINARY_DIR}/lib)
 

@@ -1,0 +1,11 @@
+find_program(CXXBRIDGE cxxbridge PATHS "$ENV{CARGO_HOME}")
+if (CXXBRIDGE STREQUAL "CXXBRIDGE-NOTFOUND")
+    find_program(CARGO cargo PATHS "$ENV{CARGO_HOME}")
+    if (CARGO STREQUAL "CARGO-NOTFOUND")
+        message(FATAL_ERROR "Requires cargo available in path, install via rustup https://rustup.rs/")
+    endif()
+    message(FATAL_ERROR "Could not find cxxbridge, please install `cxxbridge-cmd`")
+endif()
+
+corrosion_import_crate(MANIFEST_PATH Cargo.toml)
+corrosion_add_cxxbridge(rustlib CRATE input_leap_rs FILES lib.rs)

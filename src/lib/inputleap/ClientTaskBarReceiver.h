@@ -41,7 +41,7 @@ public:
     void updateStatus(Client*, const std::string& errorMsg);
 
     void updateStatus(INode* n, const std::string& errorMsg)  override
-        { updateStatus((Client*)n, errorMsg); }
+        { updateStatus(static_cast<Client*>(n), errorMsg); }
 
     //@}
 

@@ -1119,7 +1119,7 @@ XWindowsClipboard::sendReply(Reply* reply)
                             std::string tmp;
                             tmp.reserve(data.size() * 3);
                             for (j = 0; j < data.size(); ++j) {
-                                unsigned char v = (unsigned char)data[j];
+                                unsigned char v = static_cast<unsigned char>(data[j]);
                                 tmp += hex[v >> 16];
                                 tmp += hex[v & 15];
                                 tmp += ' ';

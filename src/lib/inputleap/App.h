@@ -85,7 +85,7 @@ public:
     void initApp(int argc, const char** argv) override;
 
     // HACK: accept non-const, but make it const anyway
-    void initApp(int argc, char** argv) { initApp(argc, (const char**)argv); }
+    void initApp(int argc, char** argv) { initApp(argc, const_cast<const char**>(argv)); }
 
     ARCH_APP_UTIL& appUtil() { return m_appUtil; }
 

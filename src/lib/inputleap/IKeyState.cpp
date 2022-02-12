@@ -39,7 +39,7 @@ IKeyState::KeyInfo*
 IKeyState::KeyInfo::alloc(KeyID id,
                 KeyModifierMask mask, KeyButton button, SInt32 count)
 {
-    KeyInfo* info           = (KeyInfo*)malloc(sizeof(KeyInfo));
+    KeyInfo* info = static_cast<KeyInfo*>(malloc(sizeof(KeyInfo)));
     info->m_key              = id;
     info->m_mask             = mask;
     info->m_button           = button;
@@ -56,7 +56,7 @@ IKeyState::KeyInfo* IKeyState::KeyInfo::alloc(KeyID id, KeyModifierMask mask, Ke
     std::string screens = join(destinations);
 
     // build structure
-    KeyInfo* info  = (KeyInfo*)malloc(sizeof(KeyInfo) + screens.size());
+    KeyInfo* info = static_cast<KeyInfo*>(malloc(sizeof(KeyInfo) + screens.size()));
     info->m_key     = id;
     info->m_mask    = mask;
     info->m_button  = button;
@@ -69,8 +69,7 @@ IKeyState::KeyInfo* IKeyState::KeyInfo::alloc(KeyID id, KeyModifierMask mask, Ke
 IKeyState::KeyInfo*
 IKeyState::KeyInfo::alloc(const KeyInfo& x)
 {
-    KeyInfo* info  = (KeyInfo*)malloc(sizeof(KeyInfo) +
-                                        strlen(x.m_screensBuffer));
+    KeyInfo* info = static_cast<KeyInfo*>(malloc(sizeof(KeyInfo) + strlen(x.m_screensBuffer)));
     info->m_key     = x.m_key;
     info->m_mask    = x.m_mask;
     info->m_button  = x.m_button;

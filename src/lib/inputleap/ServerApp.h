@@ -24,8 +24,8 @@
 #include "net/NetworkAddress.h"
 #include "arch/Arch.h"
 #include "arch/IArchMultithread.h"
-#include "inputleap/ArgsBase.h"
 #include "base/EventTypes.h"
+#include "ServerArgs.h"
 
 #include <map>
 
@@ -58,7 +58,7 @@ public:
     void help() override;
 
     // Returns arguments that are common and for server.
-    ServerArgs& args() const { return (ServerArgs&)argsBase(); }
+    ServerArgs& args() const { return static_cast<ServerArgs&>(argsBase()); }
 
     const char* daemonName() const override;
     const char* daemonInfo() const override;
@@ -100,7 +100,7 @@ public:
     int foregroundStartup(int argc, char** argv) override;
     void startNode() override;
 
-    static ServerApp& instance() { return (ServerApp&)App::instance(); }
+    static ServerApp& instance() { return static_cast<ServerApp&>(App::instance()); }
 
     Server* getServerPtr() { return m_server; }
 

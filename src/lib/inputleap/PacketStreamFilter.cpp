@@ -94,10 +94,10 @@ PacketStreamFilter::write(const void* buffer, UInt32 count)
 {
     // write the length of the payload
     UInt8 length[4];
-    length[0] = (UInt8)((count >> 24) & 0xff);
-    length[1] = (UInt8)((count >> 16) & 0xff);
-    length[2] = (UInt8)((count >>  8) & 0xff);
-    length[3] = (UInt8)( count        & 0xff);
+    length[0] = static_cast<UInt8>((count >> 24) & 0xff);
+    length[1] = static_cast<UInt8>((count >> 16) & 0xff);
+    length[2] = static_cast<UInt8>((count >>  8) & 0xff);
+    length[3] = static_cast<UInt8>(count& 0xff);
     getStream()->write(length, sizeof(length));
 
     // write the payload
@@ -141,10 +141,10 @@ bool PacketStreamFilter::readPacketSize()
         UInt8 buffer[4];
         memcpy(buffer, m_buffer.peek(sizeof(buffer)), sizeof(buffer));
         m_buffer.pop(sizeof(buffer));
-        m_size = ((UInt32)buffer[0] << 24) |
-                 ((UInt32)buffer[1] << 16) |
-                 ((UInt32)buffer[2] <<  8) |
-                  (UInt32)buffer[3];
+        m_size = (static_cast<UInt32>(buffer[0]) << 24) |
+                 (static_cast<UInt32>(buffer[1]) << 16) |
+                 (static_cast<UInt32>(buffer[2]) <<  8) |
+                  static_cast<UInt32>(buffer[3]);
 
         if (m_size > PROTOCOL_MAX_MESSAGE_LENGTH) {
             m_events->addEvent(Event(m_events->forIStream().inputFormatError(), getEventTarget()));

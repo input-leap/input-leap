@@ -53,7 +53,7 @@ StreamChunker::sendFile(const char* filename,
 
     // check file size
     file.seekg (0, std::ios::end);
-    size_t size = (size_t)file.tellg();
+    size_t size = static_cast<size_t>(file.tellg());
 
     // send first message (file size)
     std::string fileSize = inputleap::string::sizeTypeToString(size);

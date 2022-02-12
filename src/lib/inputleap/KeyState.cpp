@@ -24,7 +24,7 @@
 #include <iterator>
 #include <list>
 
-static const KeyButton kButtonMask = (KeyButton)(IKeyState::kNumButtons - 1);
+static const KeyButton kButtonMask = static_cast<KeyButton>(IKeyState::kNumButtons - 1);
 
 static const KeyID s_decomposeTable[] = {
     // spacing version of dead keys
@@ -585,7 +585,7 @@ KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
         return;
     }
 
-    KeyButton localID = (KeyButton)(keyItem->m_button & kButtonMask);
+    KeyButton localID = static_cast<KeyButton>(keyItem->m_button & kButtonMask);
     updateModifierKeyState(localID, oldActiveModifiers, m_activeModifiers);
     if (localID != 0) {
         // note keys down
@@ -621,7 +621,7 @@ KeyState::fakeKeyRepeat(
     if (keyItem == NULL) {
         return false;
     }
-    KeyButton localID = (KeyButton)(keyItem->m_button & kButtonMask);
+    KeyButton localID = static_cast<KeyButton>(keyItem->m_button & kButtonMask);
     if (localID == 0) {
         return false;
     }

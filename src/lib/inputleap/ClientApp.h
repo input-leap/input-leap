@@ -19,6 +19,7 @@
 #pragma once
 
 #include "inputleap/App.h"
+#include "ClientArgs.h"
 
 namespace inputleap { class Screen; }
 class Event;
@@ -38,7 +39,7 @@ public:
     void help() override;
 
     // Returns arguments that are common and for client.
-    ClientArgs& args() const { return (ClientArgs&)argsBase(); }
+    ClientArgs& args() const { return static_cast<ClientArgs&>(argsBase()); }
 
     const char* daemonName() const override;
     const char* daemonInfo() const override;
@@ -71,7 +72,7 @@ public:
     int mainLoop() override;
     void startNode() override;
 
-    static ClientApp& instance() { return (ClientApp&)App::instance(); }
+    static ClientApp& instance() { return static_cast<ClientApp&>(App::instance()); }
 
     Client* getClientPtr() { return m_client; }
 

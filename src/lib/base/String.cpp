@@ -165,7 +165,7 @@ sprintf(const char* fmt, ...)
 {
     char tmp[1024];
     char* buffer = tmp;
-    int len      = (int)(sizeof(tmp) / sizeof(tmp[0]));
+    int len = static_cast<int>(sizeof(tmp) / sizeof(tmp[0]));
     std::string result;
     while (buffer != NULL) {
         // try printing into the buffer

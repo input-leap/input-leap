@@ -120,19 +120,19 @@ bool IpcReader::readStream(char* buffer, int length)
 int IpcReader::bytesToInt(const char *buffer, int size)
 {
     if (size == 1) {
-        return (unsigned char)buffer[0];
+        return static_cast<unsigned char>(buffer[0]);
     }
     else if (size == 2) {
         return
-            (((unsigned char)buffer[0]) << 8) +
-              (unsigned char)buffer[1];
+            ((static_cast<unsigned char>(buffer[0])) << 8) +
+              static_cast<unsigned char>(buffer[1]);
     }
     else if (size == 4) {
         return
-            (((unsigned char)buffer[0]) << 24) +
-            (((unsigned char)buffer[1]) << 16) +
-            (((unsigned char)buffer[2]) << 8) +
-              (unsigned char)buffer[3];
+            ((static_cast<unsigned char>(buffer[0])) << 24) +
+            ((static_cast<unsigned char>(buffer[1])) << 16) +
+            ((static_cast<unsigned char>(buffer[2])) << 8) +
+              static_cast<unsigned char>(buffer[3]);
     }
     else {
         return 0;

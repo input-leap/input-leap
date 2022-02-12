@@ -117,7 +117,7 @@ public:
 
     static void            setInstance(Arch* s) { s_instance = s; }
 
-    ARCH_INTERNET&        internet() const { return (ARCH_INTERNET&)m_internet; }
+    ARCH_INTERNET& internet() const { return const_cast<ARCH_INTERNET&>(m_internet); }
 
 private:
     static Arch*        s_instance;

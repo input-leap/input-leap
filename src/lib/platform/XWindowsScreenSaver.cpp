@@ -410,7 +410,7 @@ XWindowsScreenSaver::sendXScreenSaverCommand(Atom cmd, long arg1, long arg2)
     event.xclient.data.l[3]    = 0;
     event.xclient.data.l[4]    = 0;
 
-    LOG((CLOG_DEBUG "send xscreensaver command: %d %d %d", (long)cmd, arg1, arg2));
+    LOG((CLOG_DEBUG "send xscreensaver command: %d %d %d", static_cast<long>(cmd), arg1, arg2));
     bool error = false;
     {
         XWindowsUtil::ErrorLock lock(m_display, &error);

@@ -709,7 +709,7 @@ void
 ServerApp::handleScreenSwitched(const Event& e, void*)
 {
     #ifdef WINAPI_XWINDOWS
-        Server::SwitchToScreenInfo* info = (Server::SwitchToScreenInfo*)(e.getData());
+        Server::SwitchToScreenInfo* info = static_cast<Server::SwitchToScreenInfo*>(e.getData());
 
         if (!args().m_screenChangeScript.empty()) {
             LOG((CLOG_INFO "Running shell script for screen \"%s\"", info->m_screen));

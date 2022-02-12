@@ -1385,7 +1385,7 @@ XWindowsUtil::getWindowProperty(Display* display, Window window,
 
         // append data
         if (data != NULL) {
-            data->append((char*)rawData, numBytes);
+            data->append(reinterpret_cast<char*>(rawData), numBytes);
         }
         else {
             // data is not required so don't try to get any more
@@ -1492,7 +1492,7 @@ XWindowsUtil::getCurrentTime(Display* display, Window window)
     // wait for reply
     XEvent xevent;
     XIfEvent(display, &xevent, &XWindowsUtil::propertyNotifyPredicate,
-                                (XPointer)&filter);
+                                reinterpret_cast<XPointer>(&filter));
     assert(xevent.type             == PropertyNotify);
     assert(xevent.xproperty.window == window);
     assert(xevent.xproperty.atom   == atom);
@@ -1661,10 +1661,10 @@ std::string XWindowsUtil::atomToString(Display* display, Atom atom)
     XWindowsUtil::ErrorLock lock(display, &error);
     char* name = XGetAtomName(display, atom);
     if (error) {
-        return inputleap::string::sprintf("<UNKNOWN> (%d)", (int)atom);
+        return inputleap::string::sprintf("<UNKNOWN> (%d)", static_cast<int>(atom));
     }
     else {
-        std::string msg = inputleap::string::sprintf("%s (%d)", name, (int)atom);
+        std::string msg = inputleap::string::sprintf("%s (%d)", name, static_cast<int>(atom));
         XFree(name);
         return msg;
     }
@@ -1675,16 +1675,16 @@ std::string XWindowsUtil::atomsToString(Display* display, const Atom* atom, UInt
     char** names = new char*[num];
     bool error = false;
     XWindowsUtil::ErrorLock lock(display, &error);
-    XGetAtomNames(display, const_cast<Atom*>(atom), (int)num, names);
+    XGetAtomNames(display, const_cast<Atom*>(atom), static_cast<int>(num), names);
     std::string msg;
     if (error) {
         for (UInt32 i = 0; i < num; ++i) {
-            msg += inputleap::string::sprintf("<UNKNOWN> (%d), ", (int)atom[i]);
+            msg += inputleap::string::sprintf("<UNKNOWN> (%d), ", static_cast<int>(atom[i]));
         }
     }
     else {
         for (UInt32 i = 0; i < num; ++i) {
-            msg += inputleap::string::sprintf("%s (%d), ", names[i], (int)atom[i]);
+            msg += inputleap::string::sprintf("%s (%d), ", names[i], static_cast<int>(atom[i]));
             XFree(names[i]);
         }
     }

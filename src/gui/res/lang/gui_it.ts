@@ -3,8 +3,8 @@
     <name>AboutDialogBase</name>
     <message>
         <location filename="res/AboutDialogBase.ui" line="38"/>
-        <source>About Barrier</source>
-        <translation type="finished">Riguardo a Barrier</translation>
+        <source>About Input Leap</source>
+        <translation type="finished">Riguardo a Input Leap</translation>
     </message>
     <message utf8="true">
         <location filename="res/AboutDialogBase.ui" line="53"/>
@@ -12,18 +12,18 @@
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Barrier is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
-Barrier is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Barrier GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Input Leap is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
+Input Leap is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
+The Input Leap GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (symless.com).
 &lt;/p&gt;</source>
         <oldsource>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Barrier is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
-Barrier is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Barrier GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Input Leap is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
+Input Leap is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
+The Input Leap GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (symless.com).
 &lt;/p&gt;</oldsource>
         <translation type="unfinished"></translation>
@@ -202,7 +202,7 @@ Visit our website for help and info (symless.com).
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="364"/>
-        <source>&lt;p&gt;Your version of Barrier is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Your version of Input Leap is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</source>
         <oldsource>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</oldsource>
         <translation type="unfinished"></translation>
     </message>
@@ -218,13 +218,13 @@ Visit our website for help and info (symless.com).
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="596"/>
-        <source>Barrier client not found</source>
-        <translation type="finished">La componente client di Barrier non è stata individuata</translation>
+        <source>Input Leap client not found</source>
+        <translation type="finished">La componente client di Input Leap non è stata individuata</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="597"/>
-        <source>The executable for the barrier client does not exist.</source>
-        <translation type="finished">L'eseguibile per il client di Barrier non esiste.</translation>
+        <source>The executable for the Input Leap client does not exist.</source>
+        <translation type="finished">L'eseguibile per il client di Input Leap non esiste.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="625"/>
@@ -233,8 +233,8 @@ Visit our website for help and info (symless.com).
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="626"/>
-        <source>Please fill in a hostname for the barrier client to connect to.</source>
-        <translation type="finished">Si prega di completare il nome macchina per permettere al client Barrier di connettercisi.</translation>
+        <source>Please fill in a hostname for the Input Leap client to connect to.</source>
+        <translation type="finished">Si prega di completare il nome macchina per permettere al client Input Leap di connettercisi.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="646"/>
@@ -243,8 +243,8 @@ Visit our website for help and info (symless.com).
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="646"/>
-        <source>The temporary configuration file required to start barrier can not be written.</source>
-        <translation type="finished">Il file temporaneo di configurazione necessario ad avviare Barrier non puo' essere scritto.</translation>
+        <source>The temporary configuration file required to start Input Leap can not be written.</source>
+        <translation type="finished">Il file temporaneo di configurazione necessario ad avviare Input Leap non puo' essere scritto.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="659"/>
@@ -253,28 +253,28 @@ Visit our website for help and info (symless.com).
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="660"/>
-        <source>You have not filled in a valid configuration file for the barrier server. Do you want to browse for the configuration file now?</source>
-        <translation type="finished">Non hai specificato un nome di file di configurazione valido per la componente server di Barrier. Vuoi sfogliare il contenuto del tuo computer per il trovare il file di configurazione ora?</translation>
+        <source>You have not filled in a valid configuration file for the Input Leap server. Do you want to browse for the configuration file now?</source>
+        <translation type="finished">Non hai specificato un nome di file di configurazione valido per la componente server di Input Leap. Vuoi sfogliare il contenuto del tuo computer per il trovare il file di configurazione ora?</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="688"/>
-        <source>Barrier server not found</source>
-        <translation type="finished">La componente server di Barrier non è stata trovata</translation>
+        <source>Input Leap server not found</source>
+        <translation type="finished">La componente server di Input Leap non è stata trovata</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="689"/>
-        <source>The executable for the barrier server does not exist.</source>
-        <translation type="finished">L'eseguibile per il server Barrier non esiste.</translation>
+        <source>The executable for the Input Leap server does not exist.</source>
+        <translation type="finished">L'eseguibile per il server Input Leap non esiste.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="764"/>
-        <source>Barrier terminated with an error</source>
-        <translation type="finished">Barrier si è chiuso con un errore</translation>
+        <source>Input Leap terminated with an error</source>
+        <translation type="finished">Input Leap si è chiuso con un errore</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="764"/>
-        <source>Barrier terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
-        <translation type="finished">Barrier si è chiuso inaspettatamente con un codice di uscita di %1.&lt;br&gt;&lt;br&gt; Sei pregato di visualizzare il log per maggiori dettagli.</translation>
+        <source>Input Leap terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
+        <translation type="finished">Input Leap si è chiuso inaspettatamente con un codice di uscita di %1.&lt;br&gt;&lt;br&gt; Sei pregato di visualizzare il log per maggiori dettagli.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="783"/>
@@ -322,18 +322,18 @@ Do you want to install Bonjour?</source>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="815"/>
-        <source>Barrier is starting.</source>
-        <translation type="finished">Barrier si sta avviando.</translation>
+        <source>Input Leap is starting.</source>
+        <translation type="finished">Input Leap si sta avviando.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="809"/>
-        <source>Barrier is running.</source>
-        <translation type="finished">Barrier è in funzione.</translation>
+        <source>Input Leap is running.</source>
+        <translation type="finished">Input Leap è in funzione.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="819"/>
-        <source>Barrier is not running.</source>
-        <translation type="finished">Barrier non è in funzione.</translation>
+        <source>Input Leap is not running.</source>
+        <translation type="finished">Input Leap non è in funzione.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="870"/>
@@ -344,17 +344,17 @@ Do you want to install Bonjour?</source>
         <location filename="src/MainWindow.cpp" line="1146"/>
         <location filename="src/MainWindow.cpp" line="1225"/>
         <location filename="src/MainWindow.cpp" line="1269"/>
-        <source>Barrier</source>
-        <translation type="finished">Barrier</translation>
+        <source>Input Leap</source>
+        <translation type="finished">Input Leap</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="987"/>
         <source>Browse for a barriers config file</source>
-        <translation type="finished">Sfoglia il contenuto del tuo computer per un file di configurazione di Barrier</translation>
+        <translation type="finished">Sfoglia il contenuto del tuo computer per un file di configurazione di Input Leap</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="408"/>
-        <source>Barrier is now connected, You can close the config window. Barrier will remain connected in the background.</source>
+        <source>Input Leap is now connected, You can close the config window. Input Leap will remain connected in the background.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -393,8 +393,8 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <name>MainWindowBase</name>
     <message>
         <location filename="res/MainWindowBase.ui" line="26"/>
-        <source>Barrier</source>
-        <translation type="finished">Barrier</translation>
+        <source>Input Leap</source>
+        <translation type="finished">Input Leap</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="90"/>
@@ -479,8 +479,8 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="390"/>
-        <source>&amp;About Barrier...</source>
-        <translation type="finished">Riguardo a Barrier...</translation>
+        <source>&amp;About Input Leap...</source>
+        <translation type="finished">Riguardo a Input Leap...</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="398"/>
@@ -599,8 +599,8 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <name>PluginWizardPage</name>
     <message>
         <location filename="res/PluginWizardPageBase.ui" line="14"/>
-        <source>Setup Barrier</source>
-        <translation type="finished">Configura Barrier</translation>
+        <source>Setup Input Leap</source>
+        <translation type="finished">Configura Input Leap</translation>
     </message>
     <message>
         <location filename="res/PluginWizardPageBase.ui" line="101"/>
@@ -653,13 +653,13 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="60"/>
-        <source>Barrier Configurations (*.sgc)</source>
-        <translation type="finished">Configurazioni di Barrier (*.sgc)</translation>
+        <source>Input Leap Configurations (*.sgc)</source>
+        <translation type="finished">Configurazioni di Input Leap (*.sgc)</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="67"/>
-        <source>Barrier Configurations (*.conf)</source>
-        <translation type="finished">Configurazioni di Barrier (*.conf)</translation>
+        <source>Input Leap Configurations (*.conf)</source>
+        <translation type="finished">Configurazioni di Input Leap (*.conf)</translation>
     </message>
     <message>
         <location filename="src/main.cpp" line="119"/>
@@ -892,8 +892,8 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="60"/>
-        <source>Configure the layout of your barrier server configuration.</source>
-        <translation type="finished">Configura il layout del server Barrier</translation>
+        <source>Configure the layout of your Input Leap server configuration.</source>
+        <translation type="finished">Configura il layout del server Input Leap</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="73"/>
@@ -1051,16 +1051,16 @@ Doppio click su uno schermo per modificarne le impostazioni.</translation>
     </message>
     <message>
         <location filename="src/SettingsDialog.cpp" line="151"/>
-        <source>Elevate Barrier</source>
-        <translation type="finished">Eleva Barrier</translation>
+        <source>Elevate Input Leap</source>
+        <translation type="finished">Eleva Input Leap</translation>
     </message>
     <message>
         <location filename="src/SettingsDialog.cpp" line="152"/>
-        <source>Are you sure you want to elevate Barrier?
+        <source>Are you sure you want to elevate Input Leap?
 
-This allows Barrier to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate Barrier only if you really need to.</source>
-        <translation type="finished">Sei sicuro di voler elevare Barrier?
-Ciò consentirà a Barrier di interagire con molti processi e con il dialogo UAC,ma potrebbe casusare problemi con i processi non elevati.Eleva Barrier solo se ti serve davvero.</translation>
+This allows Input Leap to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate Input Leap only if you really need to.</source>
+        <translation type="finished">Sei sicuro di voler elevare Input Leap?
+Ciò consentirà a Input Leap di interagire con molti processi e con il dialogo UAC,ma potrebbe casusare problemi con i processi non elevati.Eleva Input Leap solo se ti serve davvero.</translation>
     </message>
 </context>
 <context>
@@ -1175,8 +1175,8 @@ Ciò consentirà a Barrier di interagire con molti processi e con il dialogo UAC
     <name>SetupWizard</name>
     <message>
         <location filename="src/SetupWizard.cpp" line="72"/>
-        <source>Setup Barrier</source>
-        <translation type="finished">Configura Barrier</translation>
+        <source>Setup Input Leap</source>
+        <translation type="finished">Configura Input Leap</translation>
     </message>
     <message>
         <location filename="src/SetupWizard.cpp" line="113"/>
@@ -1193,8 +1193,8 @@ Ciò consentirà a Barrier di interagire con molti processi e con il dialogo UAC
     <name>SetupWizardBase</name>
     <message>
         <location filename="res/SetupWizardBase.ui" line="26"/>
-        <source>Setup Barrier</source>
-        <translation type="finished">Configura Barrier</translation>
+        <source>Setup Input Leap</source>
+        <translation type="finished">Configura Input Leap</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="30"/>
@@ -1203,13 +1203,13 @@ Ciò consentirà a Barrier di interagire con molti processi e con il dialogo UAC
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="39"/>
-        <source>Thanks for installing Barrier!</source>
-        <translation type="finished">Grazie per aver installato Barrier!</translation>
+        <source>Thanks for installing Input Leap!</source>
+        <translation type="finished">Grazie per aver installato Input Leap!</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="114"/>
-        <source>Barrier lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Barrier is cross-platform (works on Windows, Mac OS X and Linux).</source>
-        <translation type="finished">Barrier ti permette facilmente di condividere il mouse e la tastiera tra piu' computers sulla tua scrivania, è un software Libero e Gratuito. Ti basta muovere il mouse oltre i bordi dello schermo per passare da un computer ad un altro. Puoi anche condividere la bacheca degli appunti (Copia e Incolla). Tutto cio' che serve è una connessione di rete (WiFi o LAN). Barrier è multi-piattaforma (Funziona correttamente su Windows, Mac OS X e Linux)</translation>
+        <source>Input Leap lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Input Leap is cross-platform (works on Windows, Mac OS X and Linux).</source>
+        <translation type="finished">Input Leap ti permette facilmente di condividere il mouse e la tastiera tra piu' computers sulla tua scrivania, è un software Libero e Gratuito. Ti basta muovere il mouse oltre i bordi dello schermo per passare da un computer ad un altro. Puoi anche condividere la bacheca degli appunti (Copia e Incolla). Tutto cio' che serve è una connessione di rete (WiFi o LAN). Input Leap è multi-piattaforma (Funziona correttamente su Windows, Mac OS X e Linux)</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="125"/>
@@ -1395,8 +1395,8 @@ Server response:
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="140"/>
-        <source>Barrier</source>
-        <translation type="finished">Barrier</translation>
+        <source>Input Leap</source>
+        <translation type="finished">Input Leap</translation>
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="141"/>

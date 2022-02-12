@@ -35,13 +35,13 @@ public:
 
 public:
     SetupWizard(MainWindow& mainWindow, bool startMain);
-    virtual ~SetupWizard();
-    bool validateCurrentPage();
+    virtual ~SetupWizard() override;
+    bool validateCurrentPage() override;
 
 protected:
-    void changeEvent(QEvent* event);
-    void accept();
-    void reject();
+    void changeEvent(QEvent* event) override;
+    void accept() override;
+    void reject() override;
 
 private:
     MainWindow& m_MainWindow;

@@ -63,25 +63,17 @@ public:
     //@}
 
     // IKeyState overrides
-    virtual void        updateKeyMap();
-    virtual void        updateKeyState();
-    virtual void        setHalfDuplexMask(KeyModifierMask);
-    virtual void        fakeKeyDown(KeyID id, KeyModifierMask mask,
-                            KeyButton button);
-    virtual bool        fakeKeyRepeat(KeyID id, KeyModifierMask mask,
-                            SInt32 count, KeyButton button);
-    virtual bool        fakeKeyUp(KeyButton button);
-    virtual void        fakeAllKeysUp();
-    virtual bool        fakeCtrlAltDel() = 0;
-    virtual bool        fakeMediaKey(KeyID id);
+    void updateKeyMap() override;
+    void updateKeyState() override;
+    void setHalfDuplexMask(KeyModifierMask) override;
+    void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button) override;
+    bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button) override;
+    bool fakeKeyUp(KeyButton button) override;
+    void fakeAllKeysUp() override;
+    bool fakeMediaKey(KeyID id) override;
 
-    virtual bool        isKeyDown(KeyButton) const;
-    virtual KeyModifierMask
-                        getActiveModifiers() const;
-    virtual KeyModifierMask
-                        pollActiveModifiers() const = 0;
-    virtual SInt32        pollActiveGroup() const = 0;
-    virtual void        pollPressedKeys(KeyButtonSet& pressedKeys) const = 0;
+    bool isKeyDown(KeyButton) const override;
+    KeyModifierMask getActiveModifiers() const override;
 
     SInt32 getKeyState(KeyButton keyButton) { return m_keys[keyButton]; }
 

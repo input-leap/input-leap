@@ -522,11 +522,11 @@ class XConfigRead : public XBase {
 public:
     XConfigRead(const ConfigReadContext& context, const std::string&);
     XConfigRead(const ConfigReadContext& contex, const char* errorFmt, const std::string& arg);
-    virtual ~XConfigRead() noexcept;
+    ~XConfigRead() noexcept override;
 
 protected:
     // XBase overrides
-    virtual std::string getWhat() const noexcept;
+    std::string getWhat() const noexcept override;
 
 private:
     std::string                m_error;

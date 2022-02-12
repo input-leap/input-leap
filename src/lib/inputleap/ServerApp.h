@@ -49,26 +49,26 @@ class ServerArgs;
 class ServerApp : public App {
 public:
     ServerApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver);
-    virtual ~ServerApp();
+    ~ServerApp() override;
 
     // Parse server specific command line arguments.
-    void parseArgs(int argc, const char* const* argv);
+    void parseArgs(int argc, const char* const* argv) override;
 
     // Prints help specific to server.
-    void help();
+    void help() override;
 
     // Returns arguments that are common and for server.
     ServerArgs& args() const { return (ServerArgs&)argsBase(); }
 
-    const char* daemonName() const;
-    const char* daemonInfo() const;
+    const char* daemonName() const override;
+    const char* daemonInfo() const override;
 
     // TODO: Document these functions.
     static void reloadSignalHandler(Arch::ESignal, void*);
 
     void reloadConfig(const Event&, void*);
-    void loadConfig();
-    bool loadConfig(const std::string& pathname);
+    void loadConfig() override;
+    bool loadConfig(const std::string& pathname) override;
     void forceReconnect(const Event&, void*);
     void resetServer(const Event&, void*);
     void handleClientConnected(const Event&, void* vlistener);
@@ -85,7 +85,7 @@ public:
     bool initServer();
     void retryHandler(const Event&, void*);
     inputleap::Screen* openServerScreen();
-    inputleap::Screen* createScreen();
+    inputleap::Screen* createScreen() override;
     PrimaryClient* openPrimaryClient(const std::string& name, inputleap::Screen* screen);
     void handleScreenError(const Event&, void*);
     void handleSuspend(const Event&, void*);
@@ -94,11 +94,11 @@ public:
     Server* openServer(Config& config, PrimaryClient* primaryClient);
     void handleNoClients(const Event&, void*);
     bool startServer();
-    int mainLoop();
-    int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup);
-    int standardStartup(int argc, char** argv);
-    int foregroundStartup(int argc, char** argv);
-    void startNode();
+    int mainLoop() override;
+    int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup) override;
+    int standardStartup(int argc, char** argv) override;
+    int foregroundStartup(int argc, char** argv) override;
+    void startNode() override;
 
     static ServerApp& instance() { return (ServerApp&)App::instance(); }
 

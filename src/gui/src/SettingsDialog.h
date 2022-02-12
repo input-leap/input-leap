@@ -34,9 +34,9 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
         SettingsDialog(QWidget* parent, AppConfig& config);
 
     protected:
-        void accept();
-        void reject();
-        void changeEvent(QEvent* event);
+        void accept() override;
+        void reject() override;
+        void changeEvent(QEvent* event) override;
         AppConfig& appConfig() { return m_appConfig; }
 
     private:

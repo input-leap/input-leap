@@ -42,18 +42,18 @@ class ScreenSetupModel : public QAbstractTableModel
 
     public:
         static const QString& mimeType() { return m_MimeType; }
-        QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+        QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
         int rowCount() const { return m_NumRows; }
         int columnCount() const { return m_NumColumns; }
-        int rowCount(const QModelIndex&) const { return rowCount(); }
-        int columnCount(const QModelIndex&) const { return columnCount(); }
-        Qt::DropActions supportedDropActions() const;
-        Qt::ItemFlags flags(const QModelIndex& index) const;
-        QStringList mimeTypes() const;
-        QMimeData* mimeData(const QModelIndexList& indexes) const;
+        int rowCount(const QModelIndex&) const override { return rowCount(); }
+        int columnCount(const QModelIndex&) const override { return columnCount(); }
+        Qt::DropActions supportedDropActions() const override;
+        Qt::ItemFlags flags(const QModelIndex& index) const override;
+        QStringList mimeTypes() const override;
+        QMimeData* mimeData(const QModelIndexList& indexes) const override;
 
     protected:
-        bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
+        bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent) override;
         const Screen& screen(const QModelIndex& index) const { return screen(index.column(), index.row()); }
         Screen& screen(const QModelIndex& index) { return screen(index.column(), index.row()); }
         const Screen& screen(int column, int row) const { return m_Screens[row * m_NumColumns + column]; }

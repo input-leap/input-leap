@@ -27,7 +27,7 @@ class ZeroconfThread : public QThread
 public:
     ZeroconfThread(int socketDescriptor, QObject* parent);
 
-    void run();
+    void run() override;
 
 signals:
     void error(QTcpSocket::SocketError socketError);

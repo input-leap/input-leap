@@ -43,7 +43,7 @@ protected:
     {
     }
 
-    ~XWindowsKeyStateTests()
+    ~XWindowsKeyStateTests() override
     {
         if (m_display != NULL) {
             LOG((CLOG_DEBUG "closing display"));
@@ -51,8 +51,8 @@ protected:
         }
     }
 
-    virtual void
-    SetUp()
+    void
+    SetUp() override
     {
         // open the display only once for the entire test suite
         if (this->m_display == NULL) {
@@ -64,8 +64,8 @@ protected:
         }
     }
 
-    virtual void
-    TearDown()
+    void
+    TearDown() override
     {
     }
 

@@ -26,8 +26,8 @@ class IEventQueue;
 class ClientProxy1_2 : public ClientProxy1_1 {
 public:
     ClientProxy1_2(const std::string& name, inputleap::IStream* adoptedStream, IEventQueue* events);
-    ~ClientProxy1_2();
+    ~ClientProxy1_2() override;
 
     // IClient overrides
-    virtual void        mouseRelativeMove(SInt32 xRel, SInt32 yRel);
+    void mouseRelativeMove(SInt32 xRel, SInt32 yRel) override;
 };

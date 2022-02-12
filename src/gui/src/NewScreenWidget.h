@@ -33,7 +33,7 @@ class NewScreenWidget : public QLabel
         NewScreenWidget(QWidget* parent);
 
     protected:
-        void mousePressEvent(QMouseEvent* event);
+        void mousePressEvent(QMouseEvent* event) override;
 };
 
 #endif

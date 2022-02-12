@@ -29,7 +29,7 @@ class IEventQueue;
 class ClientTaskBarReceiver : public IArchTaskBarReceiver {
 public:
     ClientTaskBarReceiver(IEventQueue* events);
-    virtual ~ClientTaskBarReceiver();
+    ~ClientTaskBarReceiver() override;
 
     //! @name manipulators
     //@{
@@ -40,19 +40,16 @@ public:
     */
     void updateStatus(Client*, const std::string& errorMsg);
 
-    void updateStatus(INode* n, const std::string& errorMsg) { updateStatus((Client*)n, errorMsg); }
+    void updateStatus(INode* n, const std::string& errorMsg)  override
+        { updateStatus((Client*)n, errorMsg); }
 
     //@}
 
     // IArchTaskBarReceiver overrides
-    virtual void        showStatus() = 0;
-    virtual void        runMenu(int x, int y) = 0;
-    virtual void        primaryAction() = 0;
-    virtual void        lock() const;
-    virtual void        unlock() const;
-    virtual const Icon    getIcon() const = 0;
-    virtual std::string    getToolTip() const;
-    virtual void cleanup() {}
+    void lock() const override;
+    void unlock() const override;
+    std::string getToolTip() const override;
+    void cleanup() override {}
 
 protected:
     enum EState {

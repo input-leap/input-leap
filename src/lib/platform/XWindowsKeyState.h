@@ -98,16 +98,15 @@ public:
     //@}
 
     // IKeyState overrides
-    virtual bool        fakeCtrlAltDel();
-    virtual KeyModifierMask
-                        pollActiveModifiers() const;
-    virtual SInt32        pollActiveGroup() const;
-    virtual void        pollPressedKeys(KeyButtonSet& pressedKeys) const;
+    bool fakeCtrlAltDel() override;
+    KeyModifierMask pollActiveModifiers() const override;
+    SInt32 pollActiveGroup() const override;
+    void pollPressedKeys(KeyButtonSet& pressedKeys) const override;
 
 protected:
     // KeyState overrides
-    virtual void        getKeyMap(inputleap::KeyMap& keyMap);
-    virtual void        fakeKey(const Keystroke& keystroke);
+    void getKeyMap(inputleap::KeyMap& keyMap) override;
+    void fakeKey(const Keystroke& keystroke) override;
 
 private:
     void                init(Display* display, bool useXKB);

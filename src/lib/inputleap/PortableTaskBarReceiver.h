@@ -31,7 +31,7 @@ class IEventQueue;
 class PortableTaskBarReceiver : public IArchTaskBarReceiver {
 public:
     PortableTaskBarReceiver(IEventQueue* events);
-    virtual ~PortableTaskBarReceiver();
+    ~PortableTaskBarReceiver() override;
 
     //! @name manipulators
     //@{
@@ -40,18 +40,14 @@ public:
     /*!
     Determine the status and query required information from the server.
     */
-    void updateStatus(INode*, const std::string& errorMsg);
+    void updateStatus(INode*, const std::string& errorMsg) override;
 
     //@}
 
     // IArchTaskBarReceiver overrides
-    virtual void        showStatus() = 0;
-    virtual void        runMenu(int x, int y) = 0;
-    virtual void        primaryAction() = 0;
-    virtual void        lock() const;
-    virtual void        unlock() const;
-    virtual const Icon    getIcon() const = 0;
-    virtual std::string    getToolTip() const;
+    void lock() const override;
+    void unlock() const override;
+    std::string getToolTip() const override;
 
 protected:
     typedef std::vector<std::string> Clients;

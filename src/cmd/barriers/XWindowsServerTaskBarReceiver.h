@@ -28,11 +28,11 @@ class CXWindowsServerTaskBarReceiver : public ServerTaskBarReceiver {
 public:
     CXWindowsServerTaskBarReceiver(
         const BufferedLogOutputter*, IEventQueue* events);
-    virtual ~CXWindowsServerTaskBarReceiver();
+    ~CXWindowsServerTaskBarReceiver() override;
 
     // IArchTaskBarReceiver overrides
-    virtual void        showStatus();
-    virtual void        runMenu(int x, int y);
-    virtual void        primaryAction();
-    virtual const Icon    getIcon() const;
+    void showStatus() override;
+    void runMenu(int x, int y) override;
+    void primaryAction() override;
+    const Icon    getIcon() const override;
 };

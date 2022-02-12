@@ -29,11 +29,11 @@ class ClientProxy1_5 : public ClientProxy1_4 {
 public:
     ClientProxy1_5(const std::string& name, inputleap::IStream* adoptedStream, Server* server,
                    IEventQueue* events);
-    ~ClientProxy1_5();
+    ~ClientProxy1_5() override;
 
-    virtual void        sendDragInfo(UInt32 fileCount, const char* info, size_t size);
-    virtual void        fileChunkSending(UInt8 mark, char* data, size_t dataSize);
-    virtual bool        parseMessage(const UInt8* code);
+    void sendDragInfo(UInt32 fileCount, const char* info, size_t size) override;
+    void fileChunkSending(UInt8 mark, char* data, size_t dataSize) override;
+    bool parseMessage(const UInt8* code) override;
     void                fileChunkReceived();
     void                dragInfoReceived();
 

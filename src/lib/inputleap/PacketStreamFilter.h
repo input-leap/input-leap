@@ -32,19 +32,19 @@ Filters a stream to read and write packets.
 class PacketStreamFilter : public StreamFilter {
 public:
     PacketStreamFilter(IEventQueue* events, inputleap::IStream* stream, bool adoptStream = true);
-    ~PacketStreamFilter();
+    ~PacketStreamFilter() override;
 
     // IStream overrides
-    virtual void        close();
-    virtual UInt32        read(void* buffer, UInt32 n);
-    virtual void        write(const void* buffer, UInt32 n);
-    virtual void        shutdownInput();
-    virtual bool        isReady() const;
-    virtual UInt32        getSize() const;
+    virtual void close() override;
+    virtual UInt32 read(void* buffer, UInt32 n) override;
+    virtual void write(const void* buffer, UInt32 n) override;
+    virtual void shutdownInput() override;
+    virtual bool isReady() const override;
+    virtual UInt32 getSize() const override;
 
 protected:
     // StreamFilter overrides
-    virtual void        filterEvent(const Event&);
+    void filterEvent(const Event&) override;
 
 private:
     bool                isReadyNoLock() const;

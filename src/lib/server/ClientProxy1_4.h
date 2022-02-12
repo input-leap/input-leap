@@ -27,7 +27,7 @@ class ClientProxy1_4 : public ClientProxy1_3 {
 public:
     ClientProxy1_4(const std::string& name, inputleap::IStream* adoptedStream, Server* server,
                    IEventQueue* events);
-    ~ClientProxy1_4();
+    ~ClientProxy1_4() override;
 
     //! @name accessors
     //@{
@@ -38,10 +38,10 @@ public:
     //@}
 
     // IClient overrides
-    virtual void        keyDown(KeyID key, KeyModifierMask mask, KeyButton button);
-    virtual void        keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button);
-    virtual void        keyUp(KeyID key, KeyModifierMask mask, KeyButton button);
-    virtual void        keepAlive();
+    void keyDown(KeyID key, KeyModifierMask mask, KeyButton button) override;
+    void keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button) override;
+    void keyUp(KeyID key, KeyModifierMask mask, KeyButton button) override;
+    void keepAlive() override;
 
     Server*            m_server;
 };

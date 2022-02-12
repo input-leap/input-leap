@@ -90,10 +90,10 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 
     public:
         MainWindow(QSettings& settings, AppConfig& appConfig);
-        ~MainWindow();
+        ~MainWindow() override;
 
     public:
-        void setVisible(bool visible);
+        void setVisible(bool visible) override;
         BarrierType barrier_type() const;
         int barrierState() const { return m_BarrierState; }
         QString hostname() const { return m_pLineEditHostname->text(); }
@@ -152,8 +152,8 @@ public slots:
         QString getIPAddresses();
         void stopService();
         void stopDesktop();
-        void changeEvent(QEvent* event);
-        bool event(QEvent* event);
+        void changeEvent(QEvent* event) override;
+        bool event(QEvent* event) override;
         void retranslateMenuBar();
 #if defined(Q_OS_WIN)
         bool isServiceRunning(QString name);

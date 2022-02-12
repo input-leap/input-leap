@@ -24,11 +24,10 @@
 class ClientProxy1_1 : public ClientProxy1_0 {
 public:
     ClientProxy1_1(const std::string& name, inputleap::IStream* adoptedStream, IEventQueue* events);
-    ~ClientProxy1_1();
+    ~ClientProxy1_1() override;
 
     // IClient overrides
-    virtual void        keyDown(KeyID, KeyModifierMask, KeyButton);
-    virtual void        keyRepeat(KeyID, KeyModifierMask,
-                            SInt32 count, KeyButton);
-    virtual void        keyUp(KeyID, KeyModifierMask, KeyButton);
+    void keyDown(KeyID, KeyModifierMask, KeyButton) override;
+    void keyRepeat(KeyID, KeyModifierMask, SInt32 count, KeyButton) override;
+    void keyUp(KeyID, KeyModifierMask, KeyButton) override;
 };

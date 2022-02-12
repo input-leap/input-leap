@@ -36,7 +36,7 @@ class MockIpcServer : public IpcServer
 public:
     MockIpcServer() {}
 
-    ~MockIpcServer() {}
+    ~MockIpcServer() override {}
 
     MOCK_METHOD0(listen, void());
     MOCK_METHOD2(send, void(const IpcMessage&, EIpcClientType));

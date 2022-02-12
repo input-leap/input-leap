@@ -52,9 +52,9 @@ class KeySequenceWidget : public QPushButton
         bool valid() const { return keySequence().valid(); }
 
     protected:
-        void mousePressEvent(QMouseEvent*);
-        void keyPressEvent(QKeyEvent*);
-        bool event(QEvent* event);
+        void mousePressEvent(QMouseEvent*) override;
+        void keyPressEvent(QKeyEvent*) override;
+        bool event(QEvent* event) override;
         void appendToSequence(int key);
         void updateOutput();
         void startRecording();

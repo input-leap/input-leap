@@ -35,8 +35,8 @@ class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase
         ServerConfigDialog(QWidget* parent, ServerConfig& config, const QString& defaultScreenName);
 
     public slots:
-        void accept();
-        void showEvent(QShowEvent* event);
+        void accept() override;
+        void showEvent(QShowEvent* event) override;
         void message(const QString& message) { m_Message = message; }
 
     protected slots:

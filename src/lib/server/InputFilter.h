@@ -59,17 +59,17 @@ public:
     public:
         KeystrokeCondition(IEventQueue* events, IPlatformScreen::KeyInfo*);
         KeystrokeCondition(IEventQueue* events, KeyID key, KeyModifierMask mask);
-        virtual ~KeystrokeCondition();
+        ~KeystrokeCondition() override;
 
         KeyID                    getKey() const;
         KeyModifierMask            getMask() const;
 
         // Condition overrides
-        virtual Condition*        clone() const;
-        virtual std::string format() const;
-        virtual EFilterStatus    match(const Event&);
-        virtual void            enablePrimary(PrimaryClient*);
-        virtual void            disablePrimary(PrimaryClient*);
+        Condition* clone() const override;
+        std::string format() const override;
+        EFilterStatus match(const Event&) override;
+        void enablePrimary(PrimaryClient*) override;
+        void disablePrimary(PrimaryClient*) override;
 
     private:
         UInt32                    m_id;
@@ -83,15 +83,15 @@ public:
     public:
         MouseButtonCondition(IEventQueue* events, IPlatformScreen::ButtonInfo*);
         MouseButtonCondition(IEventQueue* events, ButtonID, KeyModifierMask mask);
-        virtual ~MouseButtonCondition();
+        ~MouseButtonCondition() override;
 
         ButtonID                getButton() const;
         KeyModifierMask            getMask() const;
 
         // Condition overrides
-        virtual Condition*        clone() const;
-        virtual std::string format() const;
-        virtual EFilterStatus    match(const Event&);
+        Condition* clone() const override;
+        std::string format() const override;
+        EFilterStatus match(const Event&) override;
 
     private:
         ButtonID                m_button;
@@ -103,12 +103,12 @@ public:
     class ScreenConnectedCondition : public Condition {
     public:
         ScreenConnectedCondition(IEventQueue* events, const std::string& screen);
-        virtual ~ScreenConnectedCondition();
+        ~ScreenConnectedCondition() override;
 
         // Condition overrides
-        virtual Condition*        clone() const;
-        virtual std::string format() const;
-        virtual EFilterStatus    match(const Event&);
+        Condition* clone() const override;
+        std::string format() const override;
+        EFilterStatus match(const Event&) override;
 
     private:
         std::string m_screen;
@@ -140,9 +140,9 @@ public:
         Mode                    getMode() const;
 
         // Action overrides
-        virtual Action*        clone() const;
-        virtual std::string format() const;
-        virtual void            perform(const Event&);
+        Action* clone() const override;
+        std::string format() const override;
+        void perform(const Event&) override;
 
     private:
         Mode                    m_mode;
@@ -157,9 +157,9 @@ public:
         std::string getScreen() const;
 
         // Action overrides
-        virtual Action*        clone() const;
-        virtual std::string format() const;
-        virtual void            perform(const Event&);
+        Action* clone() const override;
+        std::string format() const override;
+        void perform(const Event&) override;
 
     private:
         std::string                    m_screen;
@@ -172,9 +172,9 @@ public:
         ToggleScreenAction(IEventQueue* events);
 
         // Action overrides
-        virtual Action* clone() const;
-        virtual std::string format() const;
-        virtual void perform(const Event&);
+        Action* clone() const override;
+        std::string format() const override;
+        void perform(const Event&) override;
 
     private:
         IEventQueue* m_events;
@@ -188,9 +188,9 @@ public:
         EDirection                getDirection() const;
 
         // Action overrides
-        virtual Action*        clone() const;
-        virtual std::string format() const;
-        virtual void            perform(const Event&);
+        Action* clone() const override;
+        std::string format() const override;
+        void perform(const Event&) override;
 
     private:
         EDirection                m_direction;
@@ -209,9 +209,9 @@ public:
         std::set<std::string> getScreens() const;
 
         // Action overrides
-        virtual Action*        clone() const;
-        virtual std::string format() const;
-        virtual void            perform(const Event&);
+        Action* clone() const override;
+        std::string format() const override;
+        void perform(const Event&) override;
 
     private:
         Mode                    m_mode;
@@ -231,9 +231,9 @@ public:
         bool                    isOnPress() const;
 
         // Action overrides
-        virtual Action*        clone() const;
-        virtual std::string format() const;
-        virtual void            perform(const Event&);
+        Action* clone() const override;
+        std::string format() const override;
+        void perform(const Event&) override;
 
     protected:
         virtual const char*        formatName() const;
@@ -257,9 +257,9 @@ public:
         bool                    isOnPress() const;
 
         // Action overrides
-        virtual Action*        clone() const;
-        virtual std::string format() const;
-        virtual void            perform(const Event&);
+        Action* clone() const override;
+        std::string format() const override;
+        void perform(const Event&) override;
 
     protected:
         virtual const char*        formatName() const;

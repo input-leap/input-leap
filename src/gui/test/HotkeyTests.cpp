@@ -131,6 +131,8 @@ namespace {
             case Action::lockCursorToScreen:
                 action.setLockCursorMode(test_action.lock_cursor_mode);
                 break;
+            default:
+                break;
         }
         return action;
     }

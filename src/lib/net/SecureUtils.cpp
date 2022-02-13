@@ -72,6 +72,8 @@ const EVP_MD* get_digest_for_type(FingerprintType type)
     switch (type) {
         case FingerprintType::SHA1: return EVP_sha1();
         case FingerprintType::SHA256: return EVP_sha256();
+        default:
+            break;
     }
     throw std::runtime_error("Unknown fingerprint type " + std::to_string(static_cast<int>(type)));
 }

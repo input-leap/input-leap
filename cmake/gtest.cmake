@@ -18,12 +18,12 @@ if(INPUTLEAP_USE_EXTERNAL_GTEST)
     include (FindPkgConfig)
     find_package(GTest REQUIRED)
     pkg_check_modules(GMOCK REQUIRED gmock)
-    include_directories(
+    include_directories(SYSTEM
         ${GTEST_INCLUDE_DIRS}
         ${GMOCK_INCLUDE_DIRS}
     )
 else()
-    include_directories(
+    include_directories(SYSTEM
         ../ext/gtest
         ../ext/gtest/include
         ../ext/gmock

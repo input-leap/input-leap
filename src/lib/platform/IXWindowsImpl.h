@@ -33,6 +33,8 @@
 class IXWindowsImpl {
 public:
 
+    virtual ~IXWindowsImpl() {}
+
     virtual Status XInitThreads() = 0;
     virtual XIOErrorHandler XSetIOErrorHandler(XIOErrorHandler handler) = 0;
     virtual Window do_DefaultRootWindow(Display* display) = 0;

@@ -18,6 +18,8 @@
 
 #define INPUTLEAP_TEST_ENV
 
+#include "config.h"
+
 #include "test/mock/inputleap/MockKeyMap.h"
 #include "test/mock/inputleap/MockEventQueue.h"
 #include "platform/XWindowsKeyState.h"

@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "config.h"
+
 #include "arch/IArchSystem.h"
 
 #define ARCH_SYSTEM ArchSystemUnix

@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "config.h"
+
 #include "base/IEventQueueBuffer.h"
 #include "common/stdvector.h"
 #include "XWindowsImpl.h"

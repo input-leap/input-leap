@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "config.h"
+
 #include "inputleap/KeyState.h"
 #include "common/stdmap.h"
 #include "common/stdvector.h"

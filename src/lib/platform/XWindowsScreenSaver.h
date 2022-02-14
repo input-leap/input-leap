@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "config.h"
+
 #include "inputleap/IScreenSaver.h"
 #include "base/IEventQueue.h"
 #include "common/stdmap.h"

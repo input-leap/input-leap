@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "config.h"
+
 #include "inputleap/PlatformScreen.h"
 #include "inputleap/KeyMap.h"
 #include "common/stdset.h"

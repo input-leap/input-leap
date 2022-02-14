@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "config.h"
+
 #include "arch/IArchSleep.h"
 
 #define ARCH_SLEEP ArchSleepUnix

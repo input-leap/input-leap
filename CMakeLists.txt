@@ -273,9 +273,6 @@ if (UNIX)
     set (TIME_WITH_SYS_TIME 1)
     set (HAVE_SOCKLEN_T 1)
 
-    # For config.h, save the results based on a template (config.h.in).
-    configure_file (res/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/src/lib/config.h)
-
     add_definitions (-DSYSAPI_UNIX=1 -DHAVE_CONFIG_H)
 
     if (APPLE)
@@ -301,6 +298,9 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         /D_XKEYCHECK_H
     )
 endif()
+
+# For config.h, save the results based on a template (config.h.in).
+configure_file(res/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/src/lib/config.h)
 
 include_directories(SYSTEM "${CMAKE_SOURCE_DIR}/ext/gulrak-filesystem/include")
 

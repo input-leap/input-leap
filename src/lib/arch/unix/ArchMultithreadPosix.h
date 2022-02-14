@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "config.h"
+
 #include "arch/IArchMultithread.h"
 #include "common/stdlist.h"
 

@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "config.h"
+
 #include "IXWindowsImpl.h"
 
 class XWindowsImpl : public IXWindowsImpl {

@@ -557,6 +557,8 @@ Server::mapToFraction(BaseClientProxy* client,
 	case kNoDirection:
 		assert(0 && "bad direction");
 		break;
+    default:
+        break;
 	}
 	return 0.0f;
 }
@@ -581,6 +583,8 @@ Server::mapToPixel(BaseClientProxy* client,
 	case kNoDirection:
 		assert(0 && "bad direction");
 		break;
+    default:
+        break;
 	}
 }
 
@@ -732,6 +736,8 @@ Server::mapToNeighbor(BaseClientProxy* src,
 	case kNoDirection:
 		assert(0 && "bad direction");
 		return NULL;
+    default:
+        break;
 	}
 
 	// save destination screen
@@ -792,6 +798,8 @@ Server::avoidJumpZone(BaseClientProxy* dst,
 
 	case kNoDirection:
 		assert(0 && "bad direction");
+    default:
+        break;
 	}
 }
 

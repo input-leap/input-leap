@@ -144,6 +144,8 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                          static_cast<UInt32>(buffer[3]);
                     LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *static_cast<UInt32*>(v), *static_cast<UInt32*>(v)));
                     break;
+                default:
+                    break;
                 }
                 break;
             }
@@ -200,6 +202,8 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                              static_cast<UInt32>(buffer[3]));
                         LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)", len, i, static_cast<std::vector<UInt32>*>(v)->back(), static_cast<std::vector<UInt32>*>(v)->back()));
                     }
+                    break;
+                default:
                     break;
                 }
                 break;
@@ -309,6 +313,8 @@ ProtocolUtil::getLength(const char* fmt, va_list args)
 
                 case 4:
                     len = 4 * static_cast<UInt32>((va_arg(args, std::vector<UInt32>*))->size()) + 4;
+                    break;
+                default:
                     break;
                 }
                 break;

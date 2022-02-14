@@ -1071,6 +1071,8 @@ KeyMap::addKeystrokes(EKeystroke type, const KeyItem& keyItem,
             currentState &= ~keyItem.m_generates;
         }
         break;
+    default:
+        break;
     }
 }
 

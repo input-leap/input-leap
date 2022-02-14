@@ -1372,6 +1372,8 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 				LOG((CLOG_INFO "group change: %d", xkbEvent->state.group));
                 m_keyState->setActiveGroup(static_cast<SInt32>(xkbEvent->state.group));
 				return;
+            default:
+                break;
 			}
 		}
 #endif

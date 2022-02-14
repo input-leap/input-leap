@@ -192,6 +192,8 @@ XWindowsScreenSaver::handleXEvent(const XEvent* xevent)
             return true;
         }
         break;
+    default:
+        break;
     }
 
     return false;

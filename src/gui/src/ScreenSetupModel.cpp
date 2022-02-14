@@ -57,6 +57,8 @@ QVariant ScreenSetupModel::data(const QModelIndex& index, int role) const
                 if (screen(index).isNull())
                     break;
                 return screen(index).name();
+        default:
+            break;
         }
     }
 

@@ -867,6 +867,8 @@ void MainWindow::setBarrierState(qBarrierState state)
         break;
     case barrierTransfering:
         break;
+    default:
+        break;
     }
 
     setIcon(state);
@@ -1129,6 +1131,8 @@ void MainWindow::autoAddScreen(const QString name)
                     tr("Please drag the new client screen (%1) "
                         "to the desired position on the grid.")
                         .arg(name));
+                break;
+            default:
                 break;
             }
         }

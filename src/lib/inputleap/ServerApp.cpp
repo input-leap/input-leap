@@ -445,6 +445,8 @@ ServerApp::retryHandler(const Event&, void*)
             m_events->addEvent(Event(Event::kQuit));
         }
         break;
+    default:
+        break;
     }
 }
 

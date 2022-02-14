@@ -298,6 +298,8 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
             }
         }
         break;
+        default:
+            break;
     }
     XFlush(m_display);
 }

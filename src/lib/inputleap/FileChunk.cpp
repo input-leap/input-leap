@@ -127,6 +127,8 @@ int FileChunk::assemble(inputleap::IStream* stream, std::string& dataReceived, s
             LOG((CLOG_DEBUG2 "file transfer finished: total average speed=%f kb/s", averageSpeed));
         }
         return kFinish;
+        default:
+            break;
     }
 
     return kError;
@@ -148,6 +150,8 @@ FileChunk::send(inputleap::IStream* stream, UInt8 mark, char* data, size_t dataS
 
     case kDataEnd:
         LOG((CLOG_DEBUG2 "sending file finished"));
+        break;
+    default:
         break;
     }
 

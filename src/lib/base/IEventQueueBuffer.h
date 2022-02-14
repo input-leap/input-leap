@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "common/IInterface.h"
 #include "common/basic_types.h"
 
 class Event;
@@ -28,8 +27,10 @@ class EventQueueTimer;
 /*!
 An event queue buffer provides a queue of events for an IEventQueue.
 */
-class IEventQueueBuffer : public IInterface {
+class IEventQueueBuffer {
 public:
+    virtual ~IEventQueueBuffer() { }
+
     enum Type {
         kNone,        //!< No event is available
         kSystem,    //!< Event is a system event

@@ -18,8 +18,6 @@
 
 #pragma once
 
-#include "common/IInterface.h"
-
 typedef int (*StartupFunc)(int, char**);
 
 class ILogOutputter;
@@ -28,9 +26,10 @@ class IArchTaskBarReceiver;
 namespace inputleap { class Screen; }
 class IEventQueue;
 
-class IApp : public IInterface
-{
+class IApp {
 public:
+    virtual ~IApp() {}
+
     virtual void setByeFunc(void(*bye)(int)) = 0;
     virtual ArgsBase& argsBase() const = 0;
     virtual int standardStartup(int argc, char** argv) = 0;

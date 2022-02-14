@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "common/IInterface.h"
 #include "base/Event.h"
 #include <string>
 
@@ -58,8 +57,9 @@ on any event becoming available at the head of the queue and can place
 new events at the end of the queue.  Clients can also add and remove
 timers which generate events periodically.
 */
-class IEventQueue : public IInterface {
+class IEventQueue {
 public:
+    virtual ~IEventQueue() { }
     class TimerEvent {
     public:
         EventQueueTimer*    m_timer;    //!< The timer

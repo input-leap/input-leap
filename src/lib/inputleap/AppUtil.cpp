@@ -17,6 +17,7 @@
  */
 
 #include "inputleap/AppUtil.h"
+#include <cassert>
 
 AppUtil* AppUtil::s_instance = nullptr;
 

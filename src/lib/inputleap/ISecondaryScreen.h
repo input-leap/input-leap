@@ -21,15 +21,16 @@
 #include "inputleap/mouse_types.h"
 #include "base/Event.h"
 #include "base/EventTypes.h"
-#include "common/IInterface.h"
 
 //! Secondary screen interface
 /*!
 This interface defines the methods common to all platform dependent
 secondary screen implementations.
 */
-class ISecondaryScreen : public IInterface {
+class ISecondaryScreen {
 public:
+    virtual ~ISecondaryScreen() { }
+
     //! @name accessors
     //@{
 

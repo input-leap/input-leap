@@ -18,11 +18,12 @@
 
 #pragma once
 
-#include "common/IInterface.h"
 #include "inputleap/IApp.h"
 
-class IAppUtil : public IInterface {
+class IAppUtil {
 public:
+    virtual ~IAppUtil() { }
+
     virtual void adoptApp(IApp* app) = 0;
     virtual IApp& app() const = 0;
     virtual int run(int argc, char** argv) = 0;

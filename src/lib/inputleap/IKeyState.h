@@ -23,15 +23,16 @@
 #include "base/IEventQueue.h"
 #include "base/EventTypes.h"
 #include "common/stdset.h"
-#include "common/IInterface.h"
 
 //! Key state interface
 /*!
 This interface provides access to set and query the keyboard state and
 to synthesize key events.
 */
-class IKeyState : public IInterface {
+class IKeyState {
 public:
+    virtual ~IKeyState() { }
+
     IKeyState(IEventQueue* events);
 
     enum {

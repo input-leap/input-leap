@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "common/IInterface.h"
 #include "base/ELevel.h"
 
 //! Interface for architecture dependent logging
@@ -26,8 +25,10 @@
 This interface defines the logging operations required by
 barrier.  Each architecture must implement this interface.
 */
-class IArchLog : public IInterface {
+class IArchLog {
 public:
+    virtual ~IArchLog() { }
+
     //! @name manipulators
     //@{
 

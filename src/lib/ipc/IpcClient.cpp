@@ -21,6 +21,7 @@
 #include "ipc/IpcServerProxy.h"
 #include "ipc/IpcMessage.h"
 #include "base/TMethodEventJob.h"
+#include <cassert>
 
 //
 // IpcClient

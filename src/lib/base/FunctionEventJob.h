@@ -19,6 +19,7 @@
 #pragma once
 
 #include "base/IEventJob.h"
+#include <cstddef>
 
 //! Use a function as an event job
 /*!

@@ -19,14 +19,15 @@
 #pragma once
 
 #include "base/Event.h"
-#include "common/IInterface.h"
 
 //! Screen saver interface
 /*!
 This interface defines the methods common to all screen savers.
 */
-class IScreenSaver : public IInterface {
+class IScreenSaver {
 public:
+    virtual ~IScreenSaver() { }
+
     // note -- the c'tor/d'tor must *not* enable/disable the screen saver
 
     //! @name manipulators

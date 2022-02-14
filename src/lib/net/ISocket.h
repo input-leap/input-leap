@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "common/IInterface.h"
 #include "base/Event.h"
 #include "base/EventTypes.h"
 
@@ -29,8 +28,10 @@ class NetworkAddress;
 This interface defines the methods common to all network sockets.
 Generated events use \c this as the target.
 */
-class ISocket : public IInterface {
+class ISocket {
 public:
+    virtual ~ISocket() { }
+
     //! @name manipulators
     //@{
 

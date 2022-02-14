@@ -18,15 +18,16 @@
 
 #pragma once
 
-#include "common/IInterface.h"
 #include "common/stdstring.h"
 
 //! Interface for architecture dependent system queries
 /*!
 This interface defines operations for querying system info.
 */
-class IArchSystem : public IInterface {
+class IArchSystem {
 public:
+    virtual ~IArchSystem() { }
+
     //! @name accessors
     //@{
 

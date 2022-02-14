@@ -18,8 +18,6 @@
 
 #pragma once
 
-#include "common/IInterface.h"
-
 class IArchTaskBarReceiver;
 
 //! Interface for architecture dependent task bar control
@@ -28,8 +26,10 @@ This interface defines the task bar icon operations required
 by barrier.  Each architecture must implement this interface
 though each operation can be a no-op.
 */
-class IArchTaskBar : public IInterface {
+class IArchTaskBar {
 public:
+    virtual ~IArchTaskBar() { }
+
     //! @name manipulators
     //@{
 

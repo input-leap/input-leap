@@ -20,7 +20,6 @@
 
 #include "base/Log.h"
 #include "base/ELevel.h"
-#include "common/IInterface.h"
 
 //! Outputter interface
 /*!
@@ -28,8 +27,10 @@ Type of outputter interface.  The logger performs all output through
 outputters.  ILogOutputter overrides must not call any log functions
 directly or indirectly.
 */
-class ILogOutputter : public IInterface {
+class ILogOutputter {
 public:
+    virtual ~ILogOutputter() { }
+
     //! @name manipulators
     //@{
 

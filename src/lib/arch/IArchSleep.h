@@ -18,15 +18,15 @@
 
 #pragma once
 
-#include "common/IInterface.h"
-
 //! Interface for architecture dependent sleeping
 /*!
 This interface defines the sleep operations required by
 barrier.  Each architecture must implement this interface.
 */
-class IArchSleep : public IInterface {
+class IArchSleep {
 public:
+    virtual ~IArchSleep() { }
+
     //! @name manipulators
     //@{
 

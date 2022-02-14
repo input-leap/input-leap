@@ -18,6 +18,7 @@
 
 #include "inputleap/IClipboard.h"
 #include "common/stdvector.h"
+#include <cassert>
 
 //
 // IClipboard

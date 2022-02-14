@@ -329,8 +329,10 @@ private:
 This interface defines the methods common to all X11 clipboard format
 converters.
 */
-class IXWindowsClipboardConverter : public IInterface {
+class IXWindowsClipboardConverter {
 public:
+    virtual ~IXWindowsClipboardConverter() { }
+
     //! @name accessors
     //@{
 

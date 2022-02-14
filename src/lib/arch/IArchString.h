@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "common/IInterface.h"
 #include "common/basic_types.h"
 
 #include <stdarg.h>
@@ -28,7 +27,7 @@
 This interface defines the string operations required by
 barrier.  Each architecture must implement this interface.
 */
-class IArchString : public IInterface {
+class IArchString {
 public:
     virtual ~IArchString();
 

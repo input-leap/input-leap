@@ -21,7 +21,6 @@
 #include "inputleap/clipboard_types.h"
 #include "base/Event.h"
 #include "base/EventTypes.h"
-#include "common/IInterface.h"
 
 class IClipboard;
 
@@ -29,8 +28,10 @@ class IClipboard;
 /*!
 This interface defines the methods common to all screens.
 */
-class IScreen : public IInterface {
+class IScreen {
 public:
+    virtual ~IScreen() { }
+
     struct ClipboardInfo {
     public:
         ClipboardID        m_id;

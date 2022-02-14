@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "common/IInterface.h"
 
 class Event;
 
@@ -26,8 +25,10 @@ class Event;
 /*!
 An event job is an interface for executing a event handler.
 */
-class IEventJob : public IInterface {
+class IEventJob {
 public:
+    virtual ~IEventJob() { }
+
     //! Run the job
     virtual void        run(const Event&) = 0;
 };

@@ -19,15 +19,16 @@
 #pragma once
 
 #include "base/EventTypes.h"
-#include "common/IInterface.h"
 #include <string>
 
 //! Clipboard interface
 /*!
 This interface defines the methods common to all clipboards.
 */
-class IClipboard : public IInterface {
+class IClipboard {
 public:
+    virtual ~IClipboard() { }
+
     //! Timestamp type
     /*!
     Timestamp type.  Timestamps are in milliseconds from some

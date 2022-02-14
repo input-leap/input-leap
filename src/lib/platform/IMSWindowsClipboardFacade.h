@@ -19,15 +19,12 @@
 #ifndef IMWINDOWSCLIPBOARDFACADE
 #define IMWINDOWSCLIPBOARDFACADE
 
-#include "common/IInterface.h"
-
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
 class IMSWindowsClipboardConverter;
 
-class IMSWindowsClipboardFacade : public IInterface
-{
+class IMSWindowsClipboardFacade {
 public:
     virtual void write(HANDLE win32Data, UINT win32Format) = 0;
     virtual ~IMSWindowsClipboardFacade() { }

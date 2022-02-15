@@ -37,7 +37,7 @@ NonBlockingStream::NonBlockingStream(int fd) :
     tcsetattr(fd, TCSANOW, &ta);
 
     // prevent IO from blocking so we can poll (read())
-    int _cntl_previous = fcntl(fd, F_GETFL);
+    _cntl_previous = fcntl(fd, F_GETFL);
     fcntl(fd, F_SETFL, _cntl_previous | O_NONBLOCK);
 }
 

@@ -179,7 +179,7 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 #if HAVE_POLL
     retval = poll(pfds, 2, TIMEOUT_DELAY); //16ms = 60hz, but we make it > to play nicely with the cpu
      if (pfds[1].revents & POLLIN) {
-         ssize_t read_response = read(m_pipefd[0], buf, 15);
+        read_response = read(m_pipefd[0], buf, 15);
 
         // with linux automake, warnings are treated as errors by default
         if (read_response < 0)

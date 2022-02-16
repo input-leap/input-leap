@@ -25,7 +25,7 @@ struct TestKey
     int key = 0;
     int modifier = Qt::NoModifier;
 
-    TestKey(int key, int modifier) : key{key}, modifier{modifier} {}
+    TestKey(int a_key, int a_modifier) : key{a_key}, modifier{a_modifier} {}
 };
 
 inline QString getTemporaryFilename()

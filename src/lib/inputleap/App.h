@@ -91,7 +91,7 @@ public:
 
     IArchTaskBarReceiver* taskBarReceiver() const override { return m_taskBarReceiver; }
 
-    void setByeFunc(void(*bye)(int)) override { m_bye = bye; }
+    void setByeFunc(void(*func)(int)) override { m_bye = func; }
     void bye(int error) override { m_bye(error); }
 
     IEventQueue* getEvents() const override { return m_events; }

@@ -173,22 +173,22 @@ void SocketMultiplexer::service_thread()
             deleteCursor(cursor);
         }
 
-        int status;
+        int poll_status;
         try {
             // check for status
             if (!pfds.empty()) {
-                status = ARCH->pollSocket(&pfds[0], static_cast<int>(pfds.size()), -1);
+                poll_status = ARCH->pollSocket(&pfds[0], static_cast<int>(pfds.size()), -1);
             }
             else {
-                status = 0;
+                poll_status = 0;
             }
         }
         catch (XArchNetwork& e) {
             LOG((CLOG_WARN "error in socket multiplexer: %s", e.what()));
-            status = 0;
+            poll_status = 0;
         }
 
-        if (status != 0) {
+        if (poll_status != 0) {
             // iterate over socket jobs, invoking each and saving the
             // new job.
             UInt32 i             = 0;

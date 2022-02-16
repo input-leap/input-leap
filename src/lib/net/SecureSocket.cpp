@@ -678,7 +678,7 @@ bool SecureSocket::verify_peer_certificate(const inputleap::fs::path& fingerprin
         return false;
     }
     auto cert_free = inputleap::finally([cert]() { X509_free(cert); });
-    char* line = X509_NAME_oneline(X509_get_subject_name(cert), 0, 0);
+    char* line = X509_NAME_oneline(X509_get_subject_name(cert), nullptr, 0);
     LOG((CLOG_INFO "peer ssl certificate info: %s", line));
     OPENSSL_free(line);
 

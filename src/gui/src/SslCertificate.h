@@ -26,7 +26,7 @@ class SslCertificate : public QObject
     Q_OBJECT
 
 public:
-    explicit SslCertificate(QObject *parent = 0);
+    explicit SslCertificate(QObject *parent = nullptr);
 
 public slots:
     void generateCertificate();

@@ -942,7 +942,7 @@ QString MainWindow::getScreenName()
 
 void MainWindow::changeEvent(QEvent* event)
 {
-    if (event != 0)
+    if (event != nullptr)
     {
         switch (event->type())
         {

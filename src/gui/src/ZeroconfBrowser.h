@@ -31,7 +31,7 @@ class ZeroconfBrowser : public QObject
     Q_OBJECT
 
 public:
-    ZeroconfBrowser(QObject* parent = 0);
+    ZeroconfBrowser(QObject* parent = nullptr);
     ~ZeroconfBrowser();
     void browseForType(const QString& type);
     inline QList<ZeroconfRecord> currentRecords() const { return m_Records; }

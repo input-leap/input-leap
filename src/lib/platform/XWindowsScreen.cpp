@@ -1026,7 +1026,7 @@ XWindowsScreen::openWindow() const
 
 	// create and return the window
     Window window = m_impl->XCreateWindow(m_display, m_root, x, y, w, h, 0, 0,
-							InputOnly, CopyFromParent,
+                            InputOnly, reinterpret_cast<Visual*>(CopyFromParent),
 							CWDontPropagate | CWEventMask |
 							CWOverrideRedirect | CWCursor,
 							&attr);

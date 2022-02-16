@@ -21,8 +21,8 @@
 
 ZeroconfRegister::ZeroconfRegister(QObject* parent) :
     QObject(parent),
-    m_DnsServiceRef(0),
-    m_pSocket(0)
+    m_DnsServiceRef(nullptr),
+    m_pSocket(nullptr)
 {
 }
 
@@ -34,7 +34,7 @@ ZeroconfRegister::~ZeroconfRegister()
 
     if (m_DnsServiceRef) {
         DNSServiceRefDeallocate(m_DnsServiceRef);
-        m_DnsServiceRef = 0;
+        m_DnsServiceRef = nullptr;
     }
 }
 
@@ -57,8 +57,8 @@ void ZeroconfRegister::registerService(const ZeroconfRecord& record,
         kDNSServiceFlagsNoAutoRename, 0,
         record.serviceName.toUtf8().constData(),
         record.registeredType.toUtf8().constData(),
-        record.replyDomain.isEmpty() ? 0 : record.replyDomain.toUtf8().constData(),
-        0, bigEndianPort, 0, 0, registerService, this);
+        record.replyDomain.isEmpty() ? nullptr : record.replyDomain.toUtf8().constData(),
+        nullptr, bigEndianPort, 0, nullptr, registerService, this);
 
     if (err != kDNSServiceErr_NoError) {
         emit error(err);

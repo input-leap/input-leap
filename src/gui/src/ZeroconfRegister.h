@@ -36,7 +36,7 @@ class ZeroconfRegister : public QObject
     Q_OBJECT
 
 public:
-    ZeroconfRegister(QObject* parent = 0);
+    ZeroconfRegister(QObject* parent = nullptr);
     ~ZeroconfRegister();
 
     void registerService(const ZeroconfRecord& record, quint16 servicePort);

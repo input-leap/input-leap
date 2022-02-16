@@ -79,7 +79,7 @@ static const struct
     { Qt::Key_Launch1,      "AppUser2" },
     { Qt::Key_Select,       "Select" },
 
-    { 0, 0 }
+    { 0, nullptr }
 };
 
 KeySequence::KeySequence() :

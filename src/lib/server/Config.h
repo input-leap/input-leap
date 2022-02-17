@@ -501,7 +501,7 @@ public:
     IPlatformScreen::ButtonInfo* parseMouse(const std::string& mouse) const;
     KeyModifierMask parseModifier(const std::string& modifiers) const;
 
-    std::istream&        getStream() const { return m_stream; };
+    std::istream&        getStream() const { return m_stream; }
 
 private:
     // not implemented

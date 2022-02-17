@@ -53,10 +53,10 @@ class EventQueueTimer { };
 
 XWindowsEventQueueBuffer::XWindowsEventQueueBuffer(IXWindowsImpl* impl,
         Display* display, Window window, IEventQueue* events) :
-    m_events(events),
     m_display(display),
     m_window(window),
-    m_waiting(false)
+    m_waiting(false),
+    m_events(events)
 {
     m_impl = impl;
     assert(m_display != NULL);

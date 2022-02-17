@@ -27,9 +27,6 @@ m_stopOnDeskSwitch(false),
 #else
 m_daemon(true), // backward compatibility for unix (daemon by default)
 #endif
-#if WINAPI_XWINDOWS
-m_disableXInitThreads(false),
-#endif
 m_backend(false),
 m_restartable(true),
 m_noHooks(false),
@@ -40,6 +37,9 @@ m_disableTray(false),
 m_enableIpc(false),
 m_enableDragDrop(false),
 m_dropTarget(""),
+#if WINAPI_XWINDOWS
+m_disableXInitThreads(false),
+#endif
 m_shouldExit(false),
 m_barrierAddress(),
     m_enableCrypto(true),

@@ -145,8 +145,8 @@ IpcTests::IpcTests() :
 m_connectToServer_helloMessageReceived(false),
 m_connectToServer_hasClientNode(false),
 m_connectToServer_server(nullptr),
-m_sendMessageToClient_server(nullptr),
-m_sendMessageToServer_client(nullptr)
+m_sendMessageToServer_client(nullptr),
+m_sendMessageToClient_server(nullptr)
 {
 }
 

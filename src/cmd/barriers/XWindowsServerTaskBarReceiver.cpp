@@ -54,8 +54,7 @@ CXWindowsServerTaskBarReceiver::primaryAction()
     // do nothing
 }
 
-const IArchTaskBarReceiver::Icon
-CXWindowsServerTaskBarReceiver::getIcon() const
+IArchTaskBarReceiver::Icon CXWindowsServerTaskBarReceiver::getIcon() const
 {
     return NULL;
 }

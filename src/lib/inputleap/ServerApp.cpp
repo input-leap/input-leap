@@ -529,7 +529,7 @@ ServerApp::openServerScreen()
     return screen;
 }
 
-static const char* const family_string(IArchNetwork::EAddressFamily family)
+static const char* family_string(IArchNetwork::EAddressFamily family)
 {
     if (family == IArchNetwork::kINET)
         return "IPv4";

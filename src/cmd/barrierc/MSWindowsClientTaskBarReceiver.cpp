@@ -218,8 +218,7 @@ MSWindowsClientTaskBarReceiver::primaryAction()
     showStatus();
 }
 
-const IArchTaskBarReceiver::Icon
-MSWindowsClientTaskBarReceiver::getIcon() const
+IArchTaskBarReceiver::Icon MSWindowsClientTaskBarReceiver::getIcon() const
 {
     return static_cast<Icon>(m_icon[getStatus()]);
 }

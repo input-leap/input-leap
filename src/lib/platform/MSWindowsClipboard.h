@@ -89,8 +89,9 @@ private:
 This interface defines the methods common to all win32 clipboard format
 converters.
 */
-class IMSWindowsClipboardConverter : public IInterface {
+class IMSWindowsClipboardConverter {
 public:
+    virtual ~IMSWindowsClipboardConverter() { }
     // accessors
 
     // return the clipboard format this object converts from/to

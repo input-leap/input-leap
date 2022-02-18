@@ -164,7 +164,7 @@ TEST(ClipboardTests, marshall_addNotCalled_firstCharIsZero)
 
     // seems to return "\0\0\0\0" but EXPECT_EQ can't assert this,
     // so instead, just assert that first char is '\0'.
-    EXPECT_EQ(0, (int)actual[0]);
+    EXPECT_EQ(0, static_cast<int>(actual[0]));
 }
 
 TEST(ClipboardTests, marshall_withTextAdded_typeCharIsText)
@@ -177,7 +177,7 @@ TEST(ClipboardTests, marshall_withTextAdded_typeCharIsText)
     std::string actual = clipboard.marshall();
 
     // string contains other data, but 8th char should be kText.
-    EXPECT_EQ(IClipboard::kText, (int)actual[7]);
+    EXPECT_EQ(IClipboard::kText, static_cast<int>(actual[7]));
 }
 
 TEST(ClipboardTests, marshall_withTextAdded_lastSizeCharIs14)
@@ -189,7 +189,7 @@ TEST(ClipboardTests, marshall_withTextAdded_lastSizeCharIs14)
 
     std::string actual = clipboard.marshall();
 
-    EXPECT_EQ(14, (int)actual[11]);
+    EXPECT_EQ(14, static_cast<int>(actual[11]));
 }
 
 // TODO: there's some integer -> char encoding going on here. i find it
@@ -235,7 +235,7 @@ TEST(ClipboardTests, marshall_withHtmlAdded_typeCharIsHtml)
     std::string actual = clipboard.marshall();
 
     // string contains other data, but 8th char should be kHTML.
-    EXPECT_EQ(IClipboard::kHTML, (int)actual[7]);
+    EXPECT_EQ(IClipboard::kHTML, static_cast<int>(actual[7]));
 }
 
 TEST(ClipboardTests, marshall_withHtmlAndText_has2Formats)
@@ -253,7 +253,7 @@ TEST(ClipboardTests, marshall_withHtmlAndText_has2Formats)
     // so if you right align 2, it will be "\0\0\0\2" in a string.
     // we assert that the char at the 4th index is 2 (the number of
     // formats that we've added).
-    EXPECT_EQ(2, (int)actual[3]);
+    EXPECT_EQ(2, static_cast<int>(actual[3]));
 }
 
 TEST(ClipboardTests, marshall_withTextAdded_endsWithAdded)
@@ -274,10 +274,10 @@ TEST(ClipboardTests, unmarshall_emptyData_hasTextIsFalse)
     Clipboard clipboard;
 
     std::string data;
-    data += (char)0;
-    data += (char)0;
-    data += (char)0;
-    data += (char)0; // 0 formats added
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(0); // 0 formats added
 
     clipboard.unmarshall(data, 0);
 
@@ -299,18 +299,18 @@ TEST(ClipboardTests, unmarshall_withTextSize285_getTextIsValid)
     text.append("network. Barrier is supported on Windows, Mac OS X and Linux.");
 
     std::string data;
-    data += (char)0;
-    data += (char)0;
-    data += (char)0;
-    data += (char)1; // 1 format added
-    data += (char)0;
-    data += (char)0;
-    data += (char)0;
-    data += (char)IClipboard::kText;
-    data += (char)0; // 285 >> 24 = 285 / (256^3) = 0
-    data += (char)0; // 285 >> 16 = 285 / (256^2) = 0
-    data += (char)1; // 285 >> 8 = 285 / (256^1) = 1(.11328125)
-    data += (char)29; // 285 - 256 = 29
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(1); // 1 format added
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(IClipboard::kText);
+    data += static_cast<char>(0); // 285 >> 24 = 285 / (256^3) = 0
+    data += static_cast<char>(0); // 285 >> 16 = 285 / (256^2) = 0
+    data += static_cast<char>(1); // 285 >> 8 = 285 / (256^1) = 1(.11328125)
+    data += static_cast<char>(29); // 285 - 256 = 29
     data += text;
 
     clipboard.unmarshall(data, 0);
@@ -324,27 +324,27 @@ TEST(ClipboardTests, unmarshall_withTextAndHtml_getTextIsValid)
 {
     Clipboard clipboard;
     std::string data;
-    data += (char)0;
-    data += (char)0;
-    data += (char)0;
-    data += (char)2; // 2 formats added
-    data += (char)0;
-    data += (char)0;
-    data += (char)0;
-    data += (char)IClipboard::kText;
-    data += (char)0;
-    data += (char)0;
-    data += (char)0;
-    data += (char)14;
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(2); // 2 formats added
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(IClipboard::kText);
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(14);
     data += "barrier rocks!";
-    data += (char)0;
-    data += (char)0;
-    data += (char)0;
-    data += (char)IClipboard::kHTML;
-    data += (char)0;
-    data += (char)0;
-    data += (char)0;
-    data += (char)10;
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(IClipboard::kHTML);
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(10);
     data += "html sucks";
 
     clipboard.unmarshall(data, 0);
@@ -358,27 +358,27 @@ TEST(ClipboardTests, unmarshall_withTextAndHtml_getHtmlIsValid)
 {
     Clipboard clipboard;
     std::string data;
-    data += (char)0;
-    data += (char)0;
-    data += (char)0;
-    data += (char)2; // 2 formats added
-    data += (char)0;
-    data += (char)0;
-    data += (char)0;
-    data += (char)IClipboard::kText;
-    data += (char)0;
-    data += (char)0;
-    data += (char)0;
-    data += (char)14;
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(2); // 2 formats added
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(IClipboard::kText);
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(14);
     data += "barrier rocks!";
-    data += (char)0;
-    data += (char)0;
-    data += (char)0;
-    data += (char)IClipboard::kHTML;
-    data += (char)0;
-    data += (char)0;
-    data += (char)0;
-    data += (char)10;
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(IClipboard::kHTML);
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(0);
+    data += static_cast<char>(10);
     data += "html sucks";
 
     clipboard.unmarshall(data, 0);

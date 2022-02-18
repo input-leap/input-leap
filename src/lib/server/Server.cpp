@@ -368,7 +368,7 @@ Server::disconnect()
 UInt32
 Server::getNumClients() const
 {
-	return (SInt32)m_clients.size();
+    return static_cast<SInt32>(m_clients.size());
 }
 
 void
@@ -1453,7 +1453,7 @@ Server::handleSwitchInDirectionEvent(const Event& event, void*)
 void
 Server::handleKeyboardBroadcastEvent(const Event& event, void*)
 {
-	KeyboardBroadcastInfo* info = (KeyboardBroadcastInfo*)event.getData();
+    KeyboardBroadcastInfo* info = static_cast<KeyboardBroadcastInfo*>(event.getData());
 
 	// choose new state
 	bool newState;
@@ -1484,7 +1484,7 @@ Server::handleKeyboardBroadcastEvent(const Event& event, void*)
 void
 Server::handleLockCursorToScreenEvent(const Event& event, void*)
 {
-	LockCursorToScreenInfo* info = (LockCursorToScreenInfo*)event.getData();
+    LockCursorToScreenInfo* info = static_cast<LockCursorToScreenInfo*>(event.getData());
 
 	// choose new state
 	bool newState;
@@ -2184,7 +2184,7 @@ Server::closeClient(BaseClientProxy* client, const char* msg)
 
 	// send message
 	// FIXME -- avoid type cast (kinda hard, though)
-	((ClientProxy*)client)->close(msg);
+    (static_cast<ClientProxy*>(client))->close(msg);
 
 	// install timer.  wait timeout seconds for client to close.
 	double timeout = 5.0;
@@ -2321,7 +2321,7 @@ Server::LockCursorToScreenInfo*
 Server::LockCursorToScreenInfo::alloc(State state)
 {
 	LockCursorToScreenInfo* info =
-		(LockCursorToScreenInfo*)malloc(sizeof(LockCursorToScreenInfo));
+        static_cast<LockCursorToScreenInfo*>(malloc(sizeof(LockCursorToScreenInfo)));
 	info->m_state = state;
 	return info;
 }
@@ -2335,8 +2335,8 @@ Server::SwitchToScreenInfo*
 Server::SwitchToScreenInfo::alloc(const std::string& screen)
 {
 	SwitchToScreenInfo* info =
-		(SwitchToScreenInfo*)malloc(sizeof(SwitchToScreenInfo) +
-								screen.size());
+        static_cast<SwitchToScreenInfo*>(malloc(sizeof(SwitchToScreenInfo) +
+                                screen.size()));
 	strcpy(info->m_screen, screen.c_str());
 	return info;
 }
@@ -2350,7 +2350,7 @@ Server::SwitchInDirectionInfo*
 Server::SwitchInDirectionInfo::alloc(EDirection direction)
 {
 	SwitchInDirectionInfo* info =
-		(SwitchInDirectionInfo*)malloc(sizeof(SwitchInDirectionInfo));
+        static_cast<SwitchInDirectionInfo*>(malloc(sizeof(SwitchInDirectionInfo)));
 	info->m_direction = direction;
 	return info;
 }
@@ -2363,7 +2363,7 @@ Server::KeyboardBroadcastInfo*
 Server::KeyboardBroadcastInfo::alloc(State state)
 {
 	KeyboardBroadcastInfo* info =
-		(KeyboardBroadcastInfo*)malloc(sizeof(KeyboardBroadcastInfo));
+        static_cast<KeyboardBroadcastInfo*>(malloc(sizeof(KeyboardBroadcastInfo)));
 	info->m_state      = state;
 	info->m_screens[0] = '\0';
 	return info;
@@ -2373,8 +2373,8 @@ Server::KeyboardBroadcastInfo*
 Server::KeyboardBroadcastInfo::alloc(State state, const std::string& screens)
 {
 	KeyboardBroadcastInfo* info =
-		(KeyboardBroadcastInfo*)malloc(sizeof(KeyboardBroadcastInfo) +
-								screens.size());
+        static_cast<KeyboardBroadcastInfo*>(malloc(sizeof(KeyboardBroadcastInfo) +
+                                screens.size()));
 	info->m_state = state;
 	strcpy(info->m_screens, screens.c_str());
 	return info;

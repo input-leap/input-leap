@@ -100,7 +100,7 @@ public:                                                                    \
     name_(const std::string& msg) : super_(msg), m_state(kFirst) { }        \
     virtual ~name_() noexcept { }                                        \
                                                                         \
-    virtual const char* what() const noexcept                            \
+    const char* what() const noexcept override                          \
     {                                                                    \
         if (m_state == kFirst) {                                        \
             m_state = kFormat;                                            \
@@ -116,7 +116,7 @@ public:                                                                    \
     }                                                                    \
                                                                         \
 protected:                                                                \
-    virtual std::string getWhat() const noexcept;                        \
+    std::string getWhat() const noexcept override;                        \
                                                                         \
 private:                                                                \
     mutable EState                m_state;                                \

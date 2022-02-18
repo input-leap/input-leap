@@ -1108,7 +1108,7 @@ XWindowsScreen::sendEvent(Event::Type type, void* data)
 void
 XWindowsScreen::sendClipboardEvent(Event::Type type, ClipboardID id)
 {
-	ClipboardInfo* info   = (ClipboardInfo*)malloc(sizeof(ClipboardInfo));
+    ClipboardInfo* info = static_cast<ClipboardInfo*>(malloc(sizeof(ClipboardInfo)));
 	info->m_id             = id;
 	info->m_sequenceNumber = m_sequenceNumber;
 	sendEvent(type, info);
@@ -1152,7 +1152,7 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 			XEvent xevent2;
             isRepeat = (m_impl->XCheckIfEvent(m_display, &xevent2,
 							&XWindowsScreen::findKeyEvent,
-							(XPointer)&filter) == True);
+                            reinterpret_cast<XPointer>(&filter)) == True);
 		}
 
 		if (xevent->type == KeyPress || xevent->type == KeyRelease) {
@@ -1221,7 +1221,7 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 #ifdef HAVE_XI2
 	if (m_xi2detected) {
 		// Process RawMotion
-		XGenericEventCookie *cookie = (XGenericEventCookie*)&xevent->xcookie;
+        XGenericEventCookie *cookie = static_cast<XGenericEventCookie*>(&xevent->xcookie);
             if (m_impl->XGetEventData(m_display, cookie) &&
 				cookie->type == GenericEvent &&
 				cookie->extension == xi_opcode) {
@@ -1370,7 +1370,7 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 
 			case XkbStateNotify:
 				LOG((CLOG_INFO "group change: %d", xkbEvent->state.group));
-				m_keyState->setActiveGroup((SInt32)xkbEvent->state.group);
+                m_keyState->setActiveGroup(static_cast<SInt32>(xkbEvent->state.group));
 				return;
 			}
 		}
@@ -2023,7 +2023,7 @@ XWindowsScreen::refreshKeyboard(XEvent* event)
 	// keyboard mapping changed
 #if HAVE_XKB_EXTENSION
 	if (m_xkb && event->type == m_xkbEventBase) {
-        m_impl->XkbRefreshKeyboardMapping((XkbMapNotifyEvent*)event);
+        m_impl->XkbRefreshKeyboardMapping(reinterpret_cast<XkbMapNotifyEvent*>(event));
 	}
 	else
 #else
@@ -2070,7 +2070,7 @@ XWindowsScreen::selectXIRawMotion()
 
 	mask.deviceid = XIAllDevices;
 	mask.mask_len = XIMaskLen(XI_RawMotion);
-	mask.mask = (unsigned char*)calloc(mask.mask_len, sizeof(char));
+    mask.mask = static_cast<unsigned char*>(calloc(mask.mask_len, sizeof(char)));
 	mask.deviceid = XIAllMasterDevices;
 	memset(mask.mask, 0, 2);
     XISetMask(mask.mask, XI_RawKeyRelease);

@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "common/IInterface.h"
 #include "common/stdstring.h"
 
 class ArchThreadImpl;
@@ -58,8 +57,10 @@ typedef ArchNetAddressImpl* ArchNetAddress;
 This interface defines the networking operations required by
 barrier.  Each architecture must implement this interface.
 */
-class IArchNetwork : public IInterface {
+class IArchNetwork {
 public:
+    virtual ~IArchNetwork() {}
+
     //! Supported address families
     enum EAddressFamily {
         kUNKNOWN,

@@ -39,13 +39,13 @@ class AddClientDialog : public QDialog, public Ui::AddClientDialog
     Q_OBJECT
 public:
     AddClientDialog(const QString& clientName, QWidget* parent = 0);
-    ~AddClientDialog();
+    ~AddClientDialog() override;
 
     int addResult() { return m_AddResult; }
     bool ignoreAutoConfigClient() { return m_IgnoreAutoConfigClient; }
 
 protected:
-    void changeEvent(QEvent *e);
+    void changeEvent(QEvent *e) override;
 
 private slots:
     void on_m_pCheckBoxIgnoreClient_toggled(bool checked);

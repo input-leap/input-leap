@@ -18,15 +18,15 @@
 
 #pragma once
 
-#include "common/IInterface.h"
-
 //! Interface for architecture dependent time operations
 /*!
 This interface defines the time operations required by
 barrier.  Each architecture must implement this interface.
 */
-class IArchTime : public IInterface {
+class IArchTime {
 public:
+    virtual ~IArchTime() { }
+
     //! @name manipulators
     //@{
 

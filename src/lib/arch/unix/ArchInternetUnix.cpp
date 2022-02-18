@@ -58,7 +58,7 @@ std::string ArchInternetUnix::urlEncode(const std::string& url)
 static size_t
 curlWriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
-    ((std::string*)userp)->append((char*)contents, size * nmemb);
+    (static_cast<std::string*>(userp))->append(static_cast<char*>(contents), size * nmemb);
     return size * nmemb;
 }
 

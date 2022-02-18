@@ -17,6 +17,7 @@
  */
 
 #include "inputleap/Clipboard.h"
+#include <cassert>
 
 //
 // Clipboard

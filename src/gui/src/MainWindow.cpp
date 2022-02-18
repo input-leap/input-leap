@@ -497,7 +497,7 @@ void MainWindow::proofreadInfo()
 {
     int oldState = m_BarrierState;
     m_BarrierState = barrierDisconnected;
-    setBarrierState((qBarrierState)oldState);
+    setBarrierState(static_cast<qBarrierState>(oldState));
 }
 
 void MainWindow::startBarrier()

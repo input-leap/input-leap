@@ -624,8 +624,8 @@ std::string Config::formatInterval(const Interval& x)
 	if (x.first == 0.0f && x.second == 1.0f) {
 		return "";
 	}
-	return inputleap::string::sprintf("(%d,%d)", (int)(x.first * 100.0f + 0.5f),
-										(int)(x.second * 100.0f + 0.5f));
+    return inputleap::string::sprintf("(%d,%d)", static_cast<int>(x.first * 100.0f + 0.5f),
+                                        static_cast<int>(x.second * 100.0f + 0.5f));
 }
 
 void
@@ -2215,7 +2215,7 @@ ConfigReadContext::parseMouse(const std::string& mouse) const
 	}
 
 	char* end;
-	ButtonID button = (ButtonID)strtol(s.c_str(), &end, 10);
+    ButtonID button = static_cast<ButtonID>(strtol(s.c_str(), &end, 10));
 	if (*end != '\0') {
 		throw XConfigRead(*this, "unable to parse button");
 	}

@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "config.h"
+
 #include "arch/IArchNetwork.h"
 #include "arch/IArchMultithread.h"
 #include <mutex>

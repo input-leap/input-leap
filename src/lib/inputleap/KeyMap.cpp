@@ -173,7 +173,7 @@ KeyMap::addKeyCombinationEntry(KeyID id, SInt32 group,
         // groups for keys, otherwise search just the given group.
         SInt32 n = 1;
         if (m_composeAcrossGroups) {
-            n = (SInt32)groupTable.size();
+            n = static_cast<SInt32>(groupTable.size());
         }
 
         bool found = false;
@@ -496,7 +496,7 @@ KeyMap::setModifierKeys()
                 for (SInt32 b = 0; b < kKeyModifierNumBits; ++b) {
                     // skip if item doesn't generate bit b
                     if (((1u << b) & item.m_generates) != 0) {
-                        SInt32 mIndex = (SInt32)g * kKeyModifierNumBits + b;
+                        SInt32 mIndex = static_cast<SInt32>(g) * kKeyModifierNumBits + b;
                         m_modifierKeys[mIndex].push_back(&item);
                     }
                 }
@@ -695,7 +695,7 @@ KeyMap::findBestKey(const KeyEntryList& entryList,
                 KeyModifierMask desiredState) const
 {
     // check for an item that can accommodate the desiredState exactly
-    for (SInt32 i = 0; i < (SInt32)entryList.size(); ++i) {
+    for (SInt32 i = 0; i < static_cast<SInt32>(entryList.size()); ++i) {
         const KeyItem& item = entryList[i].back();
         if ((item.m_required & desiredState) == item.m_required &&
             (item.m_required & desiredState) == (item.m_sensitive & desiredState)) {
@@ -707,7 +707,7 @@ KeyMap::findBestKey(const KeyEntryList& entryList,
     // choose the item that requires the fewest modifier changes
     SInt32 bestCount = 32;
     SInt32 bestIndex = -1;
-    for (SInt32 i = 0; i < (SInt32)entryList.size(); ++i) {
+    for (SInt32 i = 0; i < static_cast<SInt32>(entryList.size()); ++i) {
         const KeyItem& item = entryList[i].back();
         KeyModifierMask change =
             ((item.m_required ^ desiredState) & item.m_sensitive);
@@ -1170,7 +1170,7 @@ std::string KeyMap::formatKey(KeyID key, KeyModifierMask mask)
         }
         // XXX -- we're assuming ASCII here
         else if (key >= 33 && key < 127) {
-            x += (char)key;
+            x += static_cast<char>(key);
         }
         else {
             x += inputleap::string::sprintf("\\u%04x", key);
@@ -1199,12 +1199,12 @@ bool KeyMap::parseKey(const std::string& x, KeyID& key)
             // unknown key
             return false;
         }
-        key = (KeyID)x[0];
+        key = static_cast<KeyID>(x[0]);
     }
     else if (x.size() == 6 && x[0] == '\\' && x[1] == 'u') {
         // escaped unicode (\uXXXX where XXXX is a hex number)
         char* end;
-        key = (KeyID)strtol(x.c_str() + 2, &end, 16);
+        key = static_cast<KeyID>(strtol(x.c_str() + 2, &end, 16));
         if (*end != '\0') {
             return false;
         }

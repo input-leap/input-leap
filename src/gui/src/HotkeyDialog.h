@@ -36,7 +36,7 @@ class HotkeyDialog : public QDialog, public Ui::HotkeyDialogBase
         const Hotkey& hotkey() const { return m_Hotkey; }
 
     protected slots:
-        void accept();
+        void accept() override;
 
     protected:
         const KeySequenceWidget* sequenceWidget() const { return m_pKeySequenceWidgetHotkey; }

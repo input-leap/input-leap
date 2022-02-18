@@ -60,8 +60,9 @@ private:
 /*!
 This interface defines the methods common to all Scrap book format
 */
-class IOSXClipboardConverter : public IInterface {
+class IOSXClipboardConverter {
 public:
+    virtual ~IOSXClipboardConverter() { }
     //! @name accessors
     //@{
 

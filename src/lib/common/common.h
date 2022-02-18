@@ -18,9 +18,7 @@
 
 #pragma once
 
-#if HAVE_CONFIG_H
-#	include "config.h"
-#endif
+#include "config.h"
 
 // define NULL
 #include <stddef.h>

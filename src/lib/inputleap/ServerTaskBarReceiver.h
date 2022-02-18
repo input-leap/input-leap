@@ -32,7 +32,7 @@ class IEventQueue;
 class ServerTaskBarReceiver : public IArchTaskBarReceiver {
 public:
     ServerTaskBarReceiver(IEventQueue* events);
-    virtual ~ServerTaskBarReceiver();
+    ~ServerTaskBarReceiver() override;
 
     //! @name manipulators
     //@{
@@ -43,18 +43,15 @@ public:
     */
     void updateStatus(Server*, const std::string& errorMsg);
 
-    void updateStatus(INode* n, const std::string& errorMsg) { updateStatus((Server*)n, errorMsg); }
+    void updateStatus(INode* n, const std::string& errorMsg) override
+        { updateStatus(static_cast<Server*>(n), errorMsg); }
 
     //@}
 
     // IArchTaskBarReceiver overrides
-    virtual void        showStatus() = 0;
-    virtual void        runMenu(int x, int y) = 0;
-    virtual void        primaryAction() = 0;
-    virtual void        lock() const;
-    virtual void        unlock() const;
-    virtual const Icon    getIcon() const = 0;
-    virtual std::string    getToolTip() const;
+    void lock() const override;
+    void unlock() const override;
+    std::string getToolTip() const override;
 
 protected:
     typedef std::vector<std::string> Clients;

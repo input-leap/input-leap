@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "config.h"
+
 #include "base/IEventQueueBuffer.h"
 #include "common/stdvector.h"
 #include "XWindowsImpl.h"
@@ -32,17 +34,16 @@ class XWindowsEventQueueBuffer : public IEventQueueBuffer {
 public:
     XWindowsEventQueueBuffer(IXWindowsImpl* impl, Display*, Window,
                              IEventQueue* events);
-    virtual ~XWindowsEventQueueBuffer();
+    ~XWindowsEventQueueBuffer() override;
 
     // IEventQueueBuffer overrides
-    virtual    void        init() { }
-    virtual void        waitForEvent(double timeout);
-    virtual Type        getEvent(Event& event, UInt32& dataID);
-    virtual bool        addEvent(UInt32 dataID);
-    virtual bool        isEmpty() const;
-    virtual EventQueueTimer*
-                        newTimer(double duration, bool oneShot) const;
-    virtual void        deleteTimer(EventQueueTimer*) const;
+    void init()  override { }
+    void waitForEvent(double timeout) override;
+    Type getEvent(Event& event, UInt32& dataID) override;
+    bool addEvent(UInt32 dataID) override;
+    bool isEmpty() const override;
+    EventQueueTimer* newTimer(double duration, bool oneShot) const override;
+    void deleteTimer(EventQueueTimer*) const override;
 
 private:
     void                flush();

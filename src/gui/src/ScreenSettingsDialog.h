@@ -37,7 +37,7 @@ class ScreenSettingsDialog : public QDialog, public Ui::ScreenSettingsDialogBase
         ScreenSettingsDialog(QWidget* parent, Screen* pScreen = NULL);
 
     public slots:
-        void accept();
+        void accept() override;
 
     private slots:
         void on_m_pButtonAddAlias_clicked();

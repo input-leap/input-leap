@@ -474,7 +474,7 @@ assertMaskIsOne(ForeachKeyCallback cb, void* userData)
 {
     (void) cb;
 
-    ASSERT_EQ(1u, ((KeyState::AddActiveModifierContext*)userData)->m_mask);
+    ASSERT_EQ(1u, (static_cast<KeyState::AddActiveModifierContext*>(userData))->m_mask);
 }
 
 const inputleap::KeyMap::KeyItem*

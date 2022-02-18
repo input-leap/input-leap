@@ -67,8 +67,8 @@ ArchSleepUnix::sleep(double timeout)
 #if HAVE_NANOSLEEP
     // prep timeout
     struct timespec t;
-    t.tv_sec  = (long)timeout;
-    t.tv_nsec = (long)(1.0e+9 * (timeout - (double)t.tv_sec));
+    t.tv_sec  = static_cast<long>(timeout);
+    t.tv_nsec = static_cast<long>(1.0e+9 * (timeout - static_cast<double>(t.tv_sec)));
 
     // wait
     while (nanosleep(&t, &t) < 0)

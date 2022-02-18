@@ -34,7 +34,7 @@ public:
     virtual ~TMethodEventJob();
 
     // IJob overrides
-    virtual void        run(const Event&);
+    void run(const Event&)  override;
 
 private:
     T*                    m_object;

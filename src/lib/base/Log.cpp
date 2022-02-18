@@ -43,7 +43,7 @@ static const char*        g_priority[] = {
 };
 
 // number of priorities
-static const int g_numPriority = (int)(sizeof(g_priority) / sizeof(g_priority[0]));
+static const int g_numPriority = static_cast<int>(sizeof(g_priority) / sizeof(g_priority[0]));
 
 // the default priority
 #ifndef NDEBUG
@@ -120,7 +120,7 @@ Log::print(const char* file, int line, const char* fmt, ...)
         // 060 in octal is 0 (48 in decimal), so subtracting this converts ascii
         // number it a true number. we could use atoi instead, but this is how
         // it was done originally.
-        priority = (ELevel)(fmt[2] - '\060');
+        priority = static_cast<ELevel>(fmt[2] - '\060');
 
         // move the pointer on past the debug priority char
         fmt += 3;
@@ -140,7 +140,7 @@ Log::print(const char* file, int line, const char* fmt, ...)
     // print to buffer, leaving space for a newline at the end and prefix
     // at the beginning.
     char* buffer = stack;
-    int len            = (int)(sizeof(stack) / sizeof(stack[0]));
+    int len = static_cast<int>(sizeof(stack) / sizeof(stack[0]));
     while (true) {
         // try printing into the buffer
         va_list args;
@@ -149,7 +149,7 @@ Log::print(const char* file, int line, const char* fmt, ...)
         va_end(args);
 
         // if the buffer wasn't big enough then make it bigger and try again
-        if (n < 0 || n > (int)len) {
+        if (n < 0 || n > static_cast<int>(len)) {
             if (buffer != stack) {
                 delete[] buffer;
             }

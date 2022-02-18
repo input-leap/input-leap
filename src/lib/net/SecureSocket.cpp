@@ -805,7 +805,7 @@ showCipherStackDesc(STACK_OF(SSL_CIPHER) * stack) {
         SSL_CIPHER_description(cipher, msg, kMsgSize);
 
         // Why does SSL put a newline in the description?
-        int pos = (int)strlen(msg) - 1;
+        int pos = static_cast<int>(strlen(msg)) - 1;
         if (msg[pos] == '\n') {
             msg[pos] = '\0';
         }

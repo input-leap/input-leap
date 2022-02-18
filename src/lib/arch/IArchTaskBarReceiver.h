@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "common/IInterface.h"
 #include <string>
 
 class IScreen;
@@ -30,8 +29,10 @@ This interface defines the task bar icon event handlers required
 by barrier.  Each architecture must implement this interface
 though each operation can be a no-op.
 */
-class IArchTaskBarReceiver : public IInterface {
+class IArchTaskBarReceiver {
 public:
+    virtual ~IArchTaskBarReceiver() { }
+
     // Icon data is architecture dependent
     typedef void* Icon;
 

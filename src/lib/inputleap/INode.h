@@ -18,8 +18,7 @@
 
 #pragma once
 
-#include "common/IInterface.h"
-
-class INode : IInterface {
-
+class INode {
+public:
+    virtual ~INode() { }
 };

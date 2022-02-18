@@ -22,15 +22,16 @@
 #include "inputleap/mouse_types.h"
 #include "base/Event.h"
 #include "base/EventTypes.h"
-#include "common/IInterface.h"
 
 //! Primary screen interface
 /*!
 This interface defines the methods common to all platform dependent
 primary screen implementations.
 */
-class IPrimaryScreen : public IInterface {
+class IPrimaryScreen {
 public:
+    virtual ~IPrimaryScreen() { }
+
     //! Button event data
     class ButtonInfo {
     public:

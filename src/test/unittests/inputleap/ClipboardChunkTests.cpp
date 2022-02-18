@@ -28,7 +28,7 @@ TEST(ClipboardChunkTests, start_formatStartChunk)
     ClipboardChunk* chunk = ClipboardChunk::start(id, sequence, mockDataSize);
 
     EXPECT_EQ(id, chunk->m_chunk[0]);
-    EXPECT_EQ(sequence, (UInt32)chunk->m_chunk[1]);
+    EXPECT_EQ(sequence, static_cast<UInt32>(chunk->m_chunk[1]));
     EXPECT_EQ(kDataStart, chunk->m_chunk[5]);
     EXPECT_EQ('1', chunk->m_chunk[6]);
     EXPECT_EQ('0', chunk->m_chunk[7]);
@@ -45,7 +45,7 @@ TEST(ClipboardChunkTests, data_formatDataChunk)
     ClipboardChunk* chunk = ClipboardChunk::data(id, sequence, mockData);
 
     EXPECT_EQ(id, chunk->m_chunk[0]);
-    EXPECT_EQ(sequence, (UInt32)chunk->m_chunk[1]);
+    EXPECT_EQ(sequence, static_cast<UInt32>(chunk->m_chunk[1]));
     EXPECT_EQ(kDataChunk, chunk->m_chunk[5]);
     EXPECT_EQ('m', chunk->m_chunk[6]);
     EXPECT_EQ('o', chunk->m_chunk[7]);
@@ -68,7 +68,7 @@ TEST(ClipboardChunkTests, end_formatDataChunk)
     ClipboardChunk* chunk = ClipboardChunk::end(id, sequence);
 
     EXPECT_EQ(id, chunk->m_chunk[0]);
-    EXPECT_EQ(sequence, (UInt32)chunk->m_chunk[1]);
+    EXPECT_EQ(sequence, static_cast<UInt32>(chunk->m_chunk[1]));
     EXPECT_EQ(kDataEnd, chunk->m_chunk[5]);
     EXPECT_EQ('\0', chunk->m_chunk[6]);
 

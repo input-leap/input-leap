@@ -22,8 +22,8 @@
 
 #include "test/global/gmock.h"
 
-class MockKeyMap;
-class MockEventQueue;
+#include "MockEventQueue.h"
+#include "MockKeyMap.h"
 
 // NOTE: do not mock methods that are not pure virtual. this mock exists only
 // to provide an implementation of the KeyState abstract class.
@@ -31,12 +31,12 @@ class MockKeyState : public KeyState
 {
 public:
     MockKeyState(const MockEventQueue& eventQueue) :
-        KeyState((IEventQueue*)&eventQueue)
+        KeyState(const_cast<MockEventQueue*>(&eventQueue))
     {
     }
 
     MockKeyState(const MockEventQueue& eventQueue, const MockKeyMap& keyMap) :
-        KeyState((IEventQueue*)&eventQueue, (inputleap::KeyMap&)keyMap)
+        KeyState(const_cast<MockEventQueue*>(&eventQueue), const_cast<MockKeyMap&>(keyMap))
     {
     }
 

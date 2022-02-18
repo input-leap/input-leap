@@ -18,6 +18,7 @@
 
 #include "inputleap/IClipboard.h"
 #include "common/stdvector.h"
+#include <cassert>
 
 //
 // IClipboard
@@ -88,7 +89,7 @@ std::string IClipboard::marshall(const IClipboard* clipboard)
                 ++numFormats;
                 formatData[format] =
                     clipboard->get(static_cast<IClipboard::EFormat>(format));
-                size += 4 + 4 + (UInt32)formatData[format].size();
+                size += 4 + 4 + static_cast<UInt32>(formatData[format].size());
             }
         }
 
@@ -100,7 +101,7 @@ std::string IClipboard::marshall(const IClipboard* clipboard)
         for (UInt32 format = 0; format != IClipboard::kNumFormats; ++format) {
             if (clipboard->has(static_cast<IClipboard::EFormat>(format))) {
                 writeUInt32(&data, format);
-                writeUInt32(&data, (UInt32)formatData[format].size());
+                writeUInt32(&data, static_cast<UInt32>(formatData[format].size()));
                 data += formatData[format];
             }
         }
@@ -131,7 +132,7 @@ IClipboard::copy(IClipboard* dst, const IClipboard* src, Time time)
             if (dst->empty()) {
                 for (SInt32 format = 0;
                                 format != IClipboard::kNumFormats; ++format) {
-                    IClipboard::EFormat eFormat = (IClipboard::EFormat)format;
+                    IClipboard::EFormat eFormat = static_cast<IClipboard::EFormat>(format);
                     if (src->has(eFormat)) {
                         dst->add(eFormat, src->get(eFormat));
                     }

@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "common/IInterface.h"
 #include <functional>
 #include <mutex>
 #include <condition_variable>
@@ -47,8 +46,10 @@ inline std::chrono::nanoseconds seconds_to_chrono(double seconds)
 This interface defines the multithreading operations required by
 barrier.  Each architecture must implement this interface.
 */
-class IArchMultithread : public IInterface {
+class IArchMultithread {
 public:
+    virtual ~IArchMultithread() { }
+
     //! Type of thread entry point
     typedef void (*ThreadFunc)(void*);
     //! Type of thread identifier

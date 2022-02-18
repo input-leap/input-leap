@@ -19,7 +19,6 @@
 #pragma once
 
 #include "arch/IArchNetwork.h"
-#include "common/IInterface.h"
 #include <memory>
 
 class ISocketMultiplexerJob;
@@ -38,8 +37,10 @@ struct MultiplexerJobStatus
 /*!
 A socket multiplexer job handles events on a socket.
 */
-class ISocketMultiplexerJob : public IInterface {
+class ISocketMultiplexerJob {
 public:
+    virtual ~ISocketMultiplexerJob() { }
+
     //! @name manipulators
     //@{
 

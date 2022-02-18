@@ -821,7 +821,7 @@ ServerProxy::setOptions()
     m_client->setOptions(options);
 
     // update modifier table
-    for (UInt32 i = 0, n = (UInt32)options.size(); i < n; i += 2) {
+    for (UInt32 i = 0, n = static_cast<UInt32>(options.size()); i < n; i += 2) {
         KeyModifierID id = kKeyModifierIDNull;
         if (options[i] == kOptionModifierMapForShift) {
             id = kKeyModifierIDShift;

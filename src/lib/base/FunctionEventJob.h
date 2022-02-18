@@ -19,6 +19,7 @@
 #pragma once
 
 #include "base/IEventJob.h"
+#include <cstddef>
 
 //! Use a function as an event job
 /*!
@@ -28,10 +29,10 @@ class FunctionEventJob : public IEventJob {
 public:
     //! run() invokes \c func(arg)
     FunctionEventJob(void (*func)(const Event&, void*), void* arg = NULL);
-    virtual ~FunctionEventJob();
+    ~FunctionEventJob() override;
 
     // IEventJob overrides
-    virtual void        run(const Event&);
+    void run(const Event&) override;
 
 private:
     void                (*m_func)(const Event&, void*);

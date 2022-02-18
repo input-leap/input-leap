@@ -82,7 +82,7 @@ StreamBuffer::pop(UInt32 n)
     ChunkList::iterator scan = m_chunks.begin();
     assert(scan != m_chunks.end());
     while (scan->size() - m_headUsed <= n) {
-        n         -= (UInt32)scan->size() - m_headUsed;
+        n -= static_cast<UInt32>(scan->size()) - m_headUsed;
         m_headUsed = 0;
         scan       = m_chunks.erase(scan);
         assert(scan != m_chunks.end());
@@ -124,7 +124,7 @@ StreamBuffer::write(const void* vdata, UInt32 n)
     while (n > 0) {
         // choose number of bytes for next chunk
         assert(scan->size() <= kChunkSize);
-        UInt32 count = kChunkSize - (UInt32)scan->size();
+        UInt32 count = kChunkSize - static_cast<UInt32>(scan->size());
         if (count > n)
             count = n;
 

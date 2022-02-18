@@ -34,20 +34,20 @@ public:
     d'tor.
     */
     StreamFilter(IEventQueue* events, inputleap::IStream* stream, bool adoptStream = true);
-    virtual ~StreamFilter();
+    ~StreamFilter() override;
 
     // IStream overrides
     // These all just forward to the underlying stream except getEventTarget.
     // Override as necessary.  getEventTarget returns a pointer to this.
-    virtual void        close();
-    virtual UInt32        read(void* buffer, UInt32 n);
-    virtual void        write(const void* buffer, UInt32 n);
-    virtual void        flush();
-    virtual void        shutdownInput();
-    virtual void        shutdownOutput();
-    virtual void*        getEventTarget() const;
-    virtual bool        isReady() const;
-    virtual UInt32        getSize() const;
+    void close() override;
+    UInt32 read(void* buffer, UInt32 n) override;
+    void write(const void* buffer, UInt32 n) override;
+    void flush() override;
+    void shutdownInput() override;
+    void shutdownOutput() override;
+    void* getEventTarget() const override;
+    bool isReady() const override;
+    UInt32 getSize() const override;
 
     //! Get the stream
     /*!

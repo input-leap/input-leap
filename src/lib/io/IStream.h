@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "common/IInterface.h"
 #include "base/Event.h"
 #include "base/IEventQueue.h"
 #include "base/EventTypes.h"
@@ -31,9 +30,10 @@ namespace inputleap {
 /*!
 Defines the interface for all streams.
 */
-class IStream : public IInterface {
+class IStream {
 public:
     IStream() { }
+    virtual ~IStream() { }
 
     //! @name manipulators
     //@{

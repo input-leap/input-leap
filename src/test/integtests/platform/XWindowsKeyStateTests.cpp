@@ -18,6 +18,8 @@
 
 #define INPUTLEAP_TEST_ENV
 
+#include "config.h"
+
 #include "test/mock/inputleap/MockKeyMap.h"
 #include "test/mock/inputleap/MockEventQueue.h"
 #include "platform/XWindowsKeyState.h"
@@ -43,7 +45,7 @@ protected:
     {
     }
 
-    ~XWindowsKeyStateTests()
+    ~XWindowsKeyStateTests() override
     {
         if (m_display != NULL) {
             LOG((CLOG_DEBUG "closing display"));
@@ -51,8 +53,8 @@ protected:
         }
     }
 
-    virtual void
-    SetUp()
+    void
+    SetUp() override
     {
         // open the display only once for the entire test suite
         if (this->m_display == NULL) {
@@ -64,8 +66,8 @@ protected:
         }
     }
 
-    virtual void
-    TearDown()
+    void
+    TearDown() override
     {
     }
 

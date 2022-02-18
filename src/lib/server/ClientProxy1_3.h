@@ -24,21 +24,21 @@
 class ClientProxy1_3 : public ClientProxy1_2 {
 public:
     ClientProxy1_3(const std::string& name, inputleap::IStream* adoptedStream, IEventQueue* events);
-    ~ClientProxy1_3();
+    ~ClientProxy1_3() override;
 
     // IClient overrides
-    virtual void        mouseWheel(SInt32 xDelta, SInt32 yDelta);
+    void mouseWheel(SInt32 xDelta, SInt32 yDelta) override;
 
     void                handleKeepAlive(const Event&, void*);
 
 protected:
     // ClientProxy overrides
-    virtual bool        parseMessage(const UInt8* code);
-    virtual void        resetHeartbeatRate();
-    virtual void        setHeartbeatRate(double rate, double alarm);
-    virtual void        resetHeartbeatTimer();
-    virtual void        addHeartbeatTimer();
-    virtual void        removeHeartbeatTimer();
+    bool parseMessage(const UInt8* code) override;
+    void resetHeartbeatRate() override;
+    void setHeartbeatRate(double rate, double alarm) override;
+    void resetHeartbeatTimer() override;
+    void addHeartbeatTimer() override;
+    void removeHeartbeatTimer() override;
     virtual void        keepAlive();
 
 private:

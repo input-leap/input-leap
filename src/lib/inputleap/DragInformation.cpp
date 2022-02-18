@@ -140,7 +140,7 @@ std::string DragInformation::getFileSize(std::string& filename)
 
     // check file size
     file.seekg (0, std::ios::end);
-    size_t size = (size_t)file.tellg();
+    size_t size = static_cast<size_t>(file.tellg());
 
     stringstream ss;
     ss << size;

@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "config.h"
+
 #include "common/common.h"
 #include "arch/Arch.h"
 

@@ -80,7 +80,7 @@ IArchString::convStringWCToMB(char* dst,
         len = dst - dst0;
     }
 
-    return (int)len;
+    return static_cast<int>(len);
 }
 
 int
@@ -89,7 +89,7 @@ IArchString::convStringMBToWC(wchar_t* dst,
 {
     std::mbstate_t state = { };
 
-    ptrdiff_t n = (ptrdiff_t)n_param; // fix compiler warning
+    ptrdiff_t n = static_cast<ptrdiff_t>(n_param); // fix compiler warning
     ptrdiff_t len = 0;
     wchar_t dummy;
 
@@ -141,7 +141,7 @@ IArchString::convStringMBToWC(wchar_t* dst,
             case static_cast<std::size_t>(-2):
                 // incomplete character.  convert to unknown character.
                 *errors = true;
-                *dst    = (wchar_t)0xfffd;
+                *dst    = static_cast<wchar_t>(0xfffd);
                 n       = 0;
                 break;
 
@@ -149,13 +149,13 @@ IArchString::convStringMBToWC(wchar_t* dst,
                 // invalid character.  count one unknown character and
                 // start at the next byte.
                 *errors = true;
-                *dst    = (wchar_t)0xfffd;
+                *dst    = static_cast<wchar_t>(0xfffd);
                 scan   += 1;
                 n      -= 1;
                 break;
 
             case 0:
-                *dst    = (wchar_t)0x0000;
+                *dst    = static_cast<wchar_t>(0x0000);
                 scan   += 1;
                 n      -= 1;
                 break;
@@ -170,5 +170,5 @@ IArchString::convStringMBToWC(wchar_t* dst,
         len = dst - dst0;
     }
 
-    return (int)len;
+    return static_cast<wchar_t>(len);
 }

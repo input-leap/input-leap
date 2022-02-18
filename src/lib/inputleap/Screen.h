@@ -295,11 +295,10 @@ public:
     //@}
 
     // IScreen overrides
-    virtual void*        getEventTarget() const;
-    virtual bool        getClipboard(ClipboardID id, IClipboard*) const;
-    virtual void        getShape(SInt32& x, SInt32& y,
-                            SInt32& width, SInt32& height) const;
-    virtual void        getCursorPos(SInt32& x, SInt32& y) const;
+    void* getEventTarget() const override;
+    bool getClipboard(ClipboardID id, IClipboard*) const override;
+    void getShape(SInt32& x, SInt32& y, SInt32& width, SInt32& height) const override;
+    void getCursorPos(SInt32& x, SInt32& y) const override;
 
     IPlatformScreen*    getPlatformScreen() { return m_screen; }
 

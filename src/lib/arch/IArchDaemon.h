@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "common/IInterface.h"
 #include <string>
 
 //! Interface for architecture dependent daemonizing
@@ -27,8 +26,10 @@ This interface defines the operations required by barrier for installing
 uninstalling daeamons and daemonizing a process.  Each architecture must
 implement this interface.
 */
-class IArchDaemon : public IInterface {
+class IArchDaemon {
 public:
+    virtual ~IArchDaemon() { }
+
     typedef int            (*DaemonFunc)(int argc, const char** argv);
 
     //! @name manipulators

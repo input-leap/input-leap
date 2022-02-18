@@ -334,7 +334,7 @@ TCPSocket::doRead()
 
         // slurp up as much as possible
         do {
-            m_inputBuffer.write(buffer, (UInt32)bytesRead);
+            m_inputBuffer.write(buffer, static_cast<UInt32>(bytesRead));
 
             if (m_inputBuffer.getSize() > MAX_INPUT_BUFFER_SIZE) {
                 break;
@@ -373,7 +373,7 @@ TCPSocket::doWrite()
 
     bufferSize = m_outputBuffer.getSize();
     const void* buffer = m_outputBuffer.peek(bufferSize);
-    bytesWrote = (UInt32)ARCH->writeSocket(m_socket, buffer, bufferSize);
+    bytesWrote = static_cast<UInt32>(ARCH->writeSocket(m_socket, buffer, bufferSize));
 
     if (bytesWrote > 0) {
         discardWrittenData(bytesWrote);

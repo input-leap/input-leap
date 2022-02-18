@@ -18,14 +18,13 @@
 
 #pragma once
 
-#include "common/IInterface.h"
-
 //! Job interface
 /*!
 A job is an interface for executing some function.
 */
-class IJob : public IInterface {
+class IJob {
 public:
     //! Run the job
     virtual void        run() = 0;
+    virtual ~IJob() { }
 };

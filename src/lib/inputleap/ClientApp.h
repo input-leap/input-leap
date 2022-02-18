@@ -19,6 +19,7 @@
 #pragma once
 
 #include "inputleap/App.h"
+#include "ClientArgs.h"
 
 namespace inputleap { class Screen; }
 class Event;
@@ -29,28 +30,28 @@ class ClientArgs;
 class ClientApp : public App {
 public:
     ClientApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver);
-    virtual ~ClientApp();
+    ~ClientApp() override;
 
     // Parse client specific command line arguments.
-    void parseArgs(int argc, const char* const* argv);
+    void parseArgs(int argc, const char* const* argv) override;
 
     // Prints help specific to client.
-    void help();
+    void help() override;
 
     // Returns arguments that are common and for client.
-    ClientArgs& args() const { return (ClientArgs&)argsBase(); }
+    ClientArgs& args() const { return static_cast<ClientArgs&>(argsBase()); }
 
-    const char* daemonName() const;
-    const char* daemonInfo() const;
+    const char* daemonName() const override;
+    const char* daemonInfo() const override;
 
     // TODO: move to server only (not supported on client)
-    void loadConfig() { }
-    bool loadConfig(const std::string& pathname) { (void) pathname; return false; }
+    void loadConfig() override { }
+    bool loadConfig(const std::string& pathname) override { (void) pathname; return false; }
 
-    int foregroundStartup(int argc, char** argv);
-    int standardStartup(int argc, char** argv);
-    int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup);
-    inputleap::Screen* createScreen();
+    int foregroundStartup(int argc, char** argv) override;
+    int standardStartup(int argc, char** argv) override;
+    int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup) override;
+    inputleap::Screen* createScreen() override;
     void updateStatus();
     void updateStatus(const std::string& msg);
     void resetRestartTimeout();
@@ -68,10 +69,10 @@ public:
     void closeClient(Client* client);
     bool startClient();
     void stopClient();
-    int mainLoop();
-    void startNode();
+    int mainLoop() override;
+    void startNode() override;
 
-    static ClientApp& instance() { return (ClientApp&)App::instance(); }
+    static ClientApp& instance() { return static_cast<ClientApp&>(App::instance()); }
 
     Client* getClientPtr() { return m_client; }
 

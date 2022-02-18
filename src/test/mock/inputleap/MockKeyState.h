@@ -51,7 +51,7 @@ public:
 
 typedef ::testing::NiceMock<MockKeyState> KeyStateImpl;
 
-typedef UInt32 KeyID;
+typedef std::uint32_t KeyID;
 
 typedef void (*ForeachKeyCallback)(
         KeyID, SInt32 group, inputleap::KeyMap::KeyItem&, void* userData);

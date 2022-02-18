@@ -22,21 +22,19 @@
 struct CBMPHeader {
 public:
     UInt16                type;
-    UInt32                size;
+    std::uint32_t size;
     UInt16                reserved1;
     UInt16                reserved2;
-    UInt32                offset;
+    std::uint32_t offset;
 };
 
 // BMP is little-endian
-static inline
-UInt32
-fromLEU32(const UInt8* data)
+static inline std::uint32_t fromLEU32(const UInt8* data)
 {
-    return static_cast<UInt32>(data[0]) |
-            (static_cast<UInt32>(data[1]) <<  8) |
-            (static_cast<UInt32>(data[2]) << 16) |
-            (static_cast<UInt32>(data[3]) << 24);
+    return static_cast<std::uint32_t>(data[0]) |
+            (static_cast<std::uint32_t>(data[1]) <<  8) |
+            (static_cast<std::uint32_t>(data[2]) << 16) |
+            (static_cast<std::uint32_t>(data[3]) << 24);
 }
 
 static
@@ -56,9 +54,7 @@ toLE(UInt8*& dst, UInt16 src)
     dst += 2;
 }
 
-static
-void
-toLE(UInt8*& dst, UInt32 src)
+static void toLE(UInt8*& dst, std::uint32_t src)
 {
     dst[0] = static_cast<UInt8>(src & 0xffu);
     dst[1] = static_cast<UInt8>((src >>  8) & 0xffu);
@@ -108,10 +104,10 @@ std::string XWindowsClipboardBMPConverter::fromIClipboard(const std::string& bmp
     UInt8* dst = header;
     toLE(dst, 'B');
     toLE(dst, 'M');
-    toLE(dst, static_cast<UInt32>(14 + bmp.size()));
+    toLE(dst, static_cast<std::uint32_t>(14 + bmp.size()));
     toLE(dst, static_cast<UInt16>(0));
     toLE(dst, static_cast<UInt16>(0));
-    toLE(dst, static_cast<UInt32>(14 + 40));
+    toLE(dst, static_cast<std::uint32_t>(14 + 40));
     return std::string(reinterpret_cast<const char*>(header), 14) + bmp;
 }
 
@@ -129,7 +125,7 @@ std::string XWindowsClipboardBMPConverter::toIClipboard(const std::string& bmp) 
     }
 
     // get offset to image data
-    UInt32 offset = fromLEU32(rawBMPHeader + 10);
+    std::uint32_t offset = fromLEU32(rawBMPHeader + 10);
 
     // construct BMP
     if (offset == 14 + 40) {

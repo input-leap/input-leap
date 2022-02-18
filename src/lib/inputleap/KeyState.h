@@ -178,7 +178,7 @@ private:
     void                addCombinationEntries();
 
     // synthesize key events.  synthesize auto-repeat events count times.
-    void                fakeKeys(const Keystrokes&, UInt32 count);
+    void fakeKeys(const Keystrokes&, std::uint32_t count);
 
     // update key state to match changes to modifiers
     void                updateModifierKeyState(KeyButton button,
@@ -214,7 +214,7 @@ private:
     SInt32                m_syntheticKeys[kNumButtons];
 
     // client data for each pressed key
-    UInt32                m_keyClientData[kNumButtons];
+    std::uint32_t m_keyClientData[kNumButtons];
 
     // server keyboard state.  an entry is 0 if not the key isn't pressed
     // otherwise it's the local KeyButton synthesized for the server key.

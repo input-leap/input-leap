@@ -85,13 +85,13 @@ public:
     virtual void        handshakeComplete();
 
     //! Received drag information
-    void dragInfoReceived(UInt32 fileNum, std::string data);
+    void dragInfoReceived(std::uint32_t fileNum, std::string data);
 
     //! Create a new thread and use it to send file to Server
     void                sendFileToServer(const char* filename);
 
     //! Send dragging file information back to server
-    void sendDragInfo(UInt32 fileCount, std::string& info, size_t size);
+    void sendDragInfo(std::uint32_t fileCount, std::string& info, size_t size);
 
 
     //@}
@@ -139,7 +139,7 @@ public:
     void getCursorPos(SInt32& x, SInt32& y) const override;
 
     // IClient overrides
-    void enter(SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask,
+    void enter(SInt32 xAbs, SInt32 yAbs, std::uint32_t seqNum, KeyModifierMask mask,
                bool forScreensaver) override;
     bool leave() override;
     void setClipboard(ClipboardID, const IClipboard*) override;

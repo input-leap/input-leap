@@ -40,14 +40,14 @@ public:
     // These all just forward to the underlying stream except getEventTarget.
     // Override as necessary.  getEventTarget returns a pointer to this.
     void close() override;
-    UInt32 read(void* buffer, UInt32 n) override;
-    void write(const void* buffer, UInt32 n) override;
+    std::uint32_t read(void* buffer, std::uint32_t n) override;
+    void write(const void* buffer, std::uint32_t n) override;
     void flush() override;
     void shutdownInput() override;
     void shutdownOutput() override;
     void* getEventTarget() const override;
     bool isReady() const override;
-    UInt32 getSize() const override;
+    std::uint32_t getSize() const override;
 
     //! Get the stream
     /*!

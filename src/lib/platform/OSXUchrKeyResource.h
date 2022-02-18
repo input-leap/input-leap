@@ -26,15 +26,15 @@ typedef TISInputSourceRef KeyLayout;
 
 class OSXUchrKeyResource : public IOSXKeyResource {
 public:
-    OSXUchrKeyResource(const void*, UInt32 keyboardType);
+    OSXUchrKeyResource(const void*, std::uint32_t keyboardType);
 
     // KeyResource overrides
     virtual bool    isValid() const;
-    virtual UInt32    getNumModifierCombinations() const;
-    virtual UInt32    getNumTables() const;
-    virtual UInt32    getNumButtons() const;
-    virtual UInt32    getTableForModifier(UInt32 mask) const;
-    virtual KeyID    getKey(UInt32 table, UInt32 button) const;
+    virtual std::uint32_t getNumModifierCombinations() const;
+    virtual std::uint32_t getNumTables() const;
+    virtual std::uint32_t getNumButtons() const;
+    virtual std::uint32_t getTableForModifier(std::uint32_t mask) const;
+    virtual KeyID getKey(std::uint32_t table, std::uint32_t button) const;
 
 private:
     typedef std::vector<KeyID> KeySequence;

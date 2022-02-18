@@ -750,8 +750,7 @@ InputFilter::Rule::adoptAction(Action* action, bool onActivation)
     }
 }
 
-void
-InputFilter::Rule::removeAction(bool onActivation, UInt32 index)
+void InputFilter::Rule::removeAction(bool onActivation, std::uint32_t index)
 {
     if (onActivation) {
         delete m_activateActions[index];
@@ -763,9 +762,7 @@ InputFilter::Rule::removeAction(bool onActivation, UInt32 index)
     }
 }
 
-void
-InputFilter::Rule::replaceAction(Action* adopted,
-                bool onActivation, UInt32 index)
+void InputFilter::Rule::replaceAction(Action* adopted, bool onActivation, std::uint32_t index)
 {
     if (adopted == NULL) {
         removeAction(onActivation, index);
@@ -872,19 +869,18 @@ InputFilter::Rule::getCondition() const
     return m_condition;
 }
 
-UInt32
-InputFilter::Rule::getNumActions(bool onActivation) const
+std::uint32_t InputFilter::Rule::getNumActions(bool onActivation) const
 {
     if (onActivation) {
-        return static_cast<UInt32>(m_activateActions.size());
+        return static_cast<std::uint32_t>(m_activateActions.size());
     }
     else {
-        return static_cast<UInt32>(m_deactivateActions.size());
+        return static_cast<std::uint32_t>(m_deactivateActions.size());
     }
 }
 
-const InputFilter::Action&
-InputFilter::Rule::getAction(bool onActivation, UInt32 index) const
+const InputFilter::Action& InputFilter::Rule::getAction(bool onActivation,
+                                                        std::uint32_t index) const
 {
     if (onActivation) {
         return *m_activateActions[index];
@@ -941,8 +937,7 @@ InputFilter::addFilterRule(const Rule& rule)
     }
 }
 
-void
-InputFilter::removeFilterRule(UInt32 index)
+void InputFilter::removeFilterRule(std::uint32_t index)
 {
     if (m_primaryClient != NULL) {
         m_ruleList[index].disable(m_primaryClient);
@@ -950,8 +945,7 @@ InputFilter::removeFilterRule(UInt32 index)
     m_ruleList.erase(m_ruleList.begin() + index);
 }
 
-InputFilter::Rule&
-InputFilter::getRule(UInt32 index)
+InputFilter::Rule& InputFilter::getRule(std::uint32_t index)
 {
     return m_ruleList[index];
 }
@@ -1042,10 +1036,9 @@ std::string InputFilter::format(const std::string& linePrefix) const
     return s;
 }
 
-UInt32
-InputFilter::getNumRules() const
+std::uint32_t InputFilter::getNumRules() const
 {
-    return static_cast<UInt32>(m_ruleList.size());
+    return static_cast<std::uint32_t>(m_ruleList.size());
 }
 
 bool

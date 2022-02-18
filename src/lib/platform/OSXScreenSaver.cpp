@@ -152,7 +152,7 @@ OSXScreenSaver::launchTerminationCallback(
         (actualSize > 0) &&
         (actualType == typeProcessSerialNumber)) {
         OSXScreenSaver* screenSaver = (OSXScreenSaver*)userData;
-        UInt32 eventKind = GetEventKind(theEvent);
+        std::uint32_t eventKind = GetEventKind(theEvent);
         if (eventKind == kEventAppLaunched) {
             screenSaver->processLaunched(psn);
         }

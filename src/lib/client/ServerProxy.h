@@ -57,7 +57,7 @@ public:
     void                fileChunkSending(UInt8 mark, char* data, size_t dataSize);
 
     // sending dragging information to server
-    void                sendDragInfo(UInt32 fileCount, const char* info, size_t size);
+    void sendDragInfo(std::uint32_t fileCount, const char* info, size_t size);
 
 #ifdef INPUTLEAP_TEST_ENV
     void                handleDataForTest() { handleData(Event(), NULL); }
@@ -113,7 +113,7 @@ private:
     Client*            m_client;
     inputleap::IStream* m_stream;
 
-    UInt32                m_seqNum;
+    std::uint32_t m_seqNum;
 
     bool                m_compressMouse;
     bool                m_compressMouseRelative;

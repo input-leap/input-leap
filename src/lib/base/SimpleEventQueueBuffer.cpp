@@ -52,8 +52,7 @@ SimpleEventQueueBuffer::waitForEvent(double timeout)
     }
 }
 
-IEventQueueBuffer::Type
-SimpleEventQueueBuffer::getEvent(Event&, UInt32& dataID)
+IEventQueueBuffer::Type SimpleEventQueueBuffer::getEvent(Event&, std::uint32_t& dataID)
 {
     std::lock_guard<std::mutex> lock(queue_mutex_);
     if (!m_queueReady) {
@@ -65,8 +64,7 @@ SimpleEventQueueBuffer::getEvent(Event&, UInt32& dataID)
     return kUser;
 }
 
-bool
-SimpleEventQueueBuffer::addEvent(UInt32 dataID)
+bool SimpleEventQueueBuffer::addEvent(std::uint32_t dataID)
 {
     std::lock_guard<std::mutex> lock(queue_mutex_);
     m_queue.push_front(dataID);

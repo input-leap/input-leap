@@ -111,7 +111,7 @@ StreamChunker::sendClipboard(
                 std::string& data,
                 size_t size,
                 ClipboardID id,
-                UInt32 sequence,
+                std::uint32_t sequence,
                 IEventQueue* events,
                 void* eventTarget)
 {

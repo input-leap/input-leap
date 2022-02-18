@@ -35,7 +35,7 @@ public:
     struct ClipboardInfo {
     public:
         ClipboardID        m_id;
-        UInt32            m_sequenceNumber;
+        std::uint32_t m_sequenceNumber;
     };
 
     //! @name accessors

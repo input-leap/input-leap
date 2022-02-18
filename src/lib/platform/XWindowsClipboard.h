@@ -242,7 +242,7 @@ private:
         int                m_format;
 
         // index of next byte in m_data to send
-        UInt32            m_ptr;
+        std::uint32_t m_ptr;
     };
     typedef std::list<Reply*> ReplyList;
     typedef std::map<Window, ReplyList> ReplyMap;

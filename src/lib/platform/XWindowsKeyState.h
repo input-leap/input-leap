@@ -116,7 +116,7 @@ private:
     void                updateKeysymMapXKB(inputleap::KeyMap&);
     bool                hasModifiersXKB() const;
     int                    getEffectiveGroup(KeyCode, int group) const;
-    UInt32                getGroupFromState(unsigned int state) const;
+    std::uint32_t getGroupFromState(unsigned int state) const;
 
     static void            remapKeyModifiers(KeyID, SInt32,
                             inputleap::KeyMap::KeyItem&, void*);
@@ -125,7 +125,7 @@ private:
     struct XKBModifierInfo {
     public:
         unsigned char    m_level;
-        UInt32            m_mask;
+        std::uint32_t m_mask;
         bool            m_lock;
     };
 
@@ -138,7 +138,7 @@ private:
     typedef std::map<KeyModifierMask, unsigned int> KeyModifierToXMask;
     typedef std::multimap<KeyID, KeyCode> KeyToKeyCodeMap;
     typedef std::map<KeyCode, unsigned int> NonXKBModifierMap;
-    typedef std::map<UInt32, XKBModifierInfo> XKBModifierMap;
+    typedef std::map<std::uint32_t, XKBModifierInfo> XKBModifierMap;
 
     IXWindowsImpl* m_impl;
 

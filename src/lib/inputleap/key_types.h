@@ -26,7 +26,7 @@ Type to hold a key symbol identifier.  The encoding is UTF-32, using
 U+E000 through U+EFFF for the various control keys (e.g. arrow
 keys, function keys, modifier keys, etc).
 */
-typedef UInt32			KeyID;
+typedef std::uint32_t KeyID;
 
 //! Key Code
 /*!
@@ -41,13 +41,13 @@ typedef UInt16			KeyButton;
 /*!
 Type to hold a bitmask of key modifiers (e.g. shift keys).
 */
-typedef UInt32			KeyModifierMask;
+typedef std::uint32_t KeyModifierMask;
 
 //! Modifier key ID
 /*!
 Type to hold the id of a key modifier (e.g. a shift key).
 */
-typedef UInt32			KeyModifierID;
+typedef std::uint32_t KeyModifierID;
 
 //! @name Modifier key masks
 //@{
@@ -65,17 +65,17 @@ static const KeyModifierMask	KeyModifierScrollLock = 0x4000;
 
 //! @name Modifier key bits
 //@{
-static const UInt32				kKeyModifierBitNone       = 16;
-static const UInt32				kKeyModifierBitShift      = 0;
-static const UInt32				kKeyModifierBitControl    = 1;
-static const UInt32				kKeyModifierBitAlt        = 2;
-static const UInt32				kKeyModifierBitMeta       = 3;
-static const UInt32				kKeyModifierBitSuper      = 4;
-static const UInt32				kKeyModifierBitAltGr      = 5;
-static const UInt32				kKeyModifierBitLevel5Lock = 6;
-static const UInt32				kKeyModifierBitCapsLock   = 12;
-static const UInt32				kKeyModifierBitNumLock    = 13;
-static const UInt32				kKeyModifierBitScrollLock = 14;
+static const std::uint32_t kKeyModifierBitNone       = 16;
+static const std::uint32_t kKeyModifierBitShift      = 0;
+static const std::uint32_t kKeyModifierBitControl    = 1;
+static const std::uint32_t kKeyModifierBitAlt        = 2;
+static const std::uint32_t kKeyModifierBitMeta       = 3;
+static const std::uint32_t kKeyModifierBitSuper      = 4;
+static const std::uint32_t kKeyModifierBitAltGr      = 5;
+static const std::uint32_t kKeyModifierBitLevel5Lock = 6;
+static const std::uint32_t kKeyModifierBitCapsLock   = 12;
+static const std::uint32_t kKeyModifierBitNumLock    = 13;
+static const std::uint32_t kKeyModifierBitScrollLock = 14;
 static const SInt32				kKeyModifierNumBits       = 16;
 //@}
 

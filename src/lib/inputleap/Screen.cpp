@@ -149,8 +149,7 @@ Screen::leave()
     return true;
 }
 
-void
-Screen::reconfigure(UInt32 activeSides)
+void Screen::reconfigure(std::uint32_t activeSides)
 {
     assert(m_isPrimary);
     m_screen->reconfigure(activeSides);
@@ -272,7 +271,7 @@ Screen::setOptions(const OptionsList& options)
 {
     // update options
     bool oldScreenSaverSync = m_screenSaverSync;
-    for (UInt32 i = 0, n = static_cast<UInt32>(options.size()); i < n; i += 2) {
+    for (std::uint32_t i = 0, n = static_cast<std::uint32_t>(options.size()); i < n; i += 2) {
         if (options[i] == kOptionScreenSaverSync) {
             m_screenSaverSync = (options[i + 1] != 0);
             LOG((CLOG_DEBUG1 "screen saver synchronization %s", m_screenSaverSync ? "on" : "off"));
@@ -323,20 +322,17 @@ Screen::setOptions(const OptionsList& options)
     m_screen->setOptions(options);
 }
 
-void
-Screen::setSequenceNumber(UInt32 seqNum)
+void Screen::setSequenceNumber(std::uint32_t seqNum)
 {
     m_screen->setSequenceNumber(seqNum);
 }
 
-UInt32
-Screen::registerHotKey(KeyID key, KeyModifierMask mask)
+std::uint32_t Screen::registerHotKey(KeyID key, KeyModifierMask mask)
 {
     return m_screen->registerHotKey(key, mask);
 }
 
-void
-Screen::unregisterHotKey(UInt32 id)
+void Screen::unregisterHotKey(std::uint32_t id)
 {
     m_screen->unregisterHotKey(id);
 }
@@ -370,7 +366,7 @@ Screen::isLockedToScreen() const
 {
     // check for pressed mouse buttons
     // HACK: commented out as it breaks new drag drop feature
-    UInt32 buttonID = 0;
+    std::uint32_t buttonID = 0;
 
     if (m_screen->isAnyMouseButtonDown(buttonID)) {
         if (buttonID != kButtonLeft) {

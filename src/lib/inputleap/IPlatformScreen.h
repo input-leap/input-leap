@@ -128,7 +128,7 @@ public:
     /*!
     Sets the sequence number to use in subsequent clipboard events.
     */
-    virtual void        setSequenceNumber(UInt32) = 0;
+    virtual void setSequenceNumber(std::uint32_t) = 0;
 
     //! Change dragging status
     virtual void        setDraggingStarted(bool started) = 0;

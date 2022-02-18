@@ -35,7 +35,7 @@ A \c Event holds an event type and a pointer to event data.
 */
 class Event {
 public:
-    typedef UInt32 Type;
+    typedef std::uint32_t Type;
     enum {
         kUnknown,    //!< The event type is unknown
         kQuit,        //!< The quit event
@@ -44,7 +44,7 @@ public:
         kLast        //!< Must be last
     };
 
-    typedef UInt32 Flags;
+    typedef std::uint32_t Flags;
     enum {
         kNone                = 0x00,    //!< No flags
         kDeliverImmediately    = 0x01,    //!< Dispatch and free event immediately

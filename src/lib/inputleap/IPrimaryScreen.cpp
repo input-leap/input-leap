@@ -82,8 +82,7 @@ IPrimaryScreen::WheelInfo::alloc(SInt32 xDelta, SInt32 yDelta)
 // IPrimaryScreen::HotKeyInfo
 //
 
-IPrimaryScreen::HotKeyInfo*
-IPrimaryScreen::HotKeyInfo::alloc(UInt32 id)
+IPrimaryScreen::HotKeyInfo* IPrimaryScreen::HotKeyInfo::alloc(std::uint32_t id)
 {
     HotKeyInfo* info = static_cast<HotKeyInfo*>(malloc(sizeof(HotKeyInfo)));
     info->m_id = id;

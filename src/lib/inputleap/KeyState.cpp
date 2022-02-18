@@ -827,7 +827,7 @@ KeyState::addCombinationEntries()
         // add dead and compose key composition sequences
         for (const KeyID* i = s_decomposeTable; *i != 0; ++i) {
             // count the decomposed keys for this key
-            UInt32 numKeys = 0;
+            std::uint32_t numKeys = 0;
             for (const KeyID* j = i; *++j != 0; ) {
                 ++numKeys;
             }
@@ -841,8 +841,7 @@ KeyState::addCombinationEntries()
     }
 }
 
-void
-KeyState::fakeKeys(const Keystrokes& keys, UInt32 count)
+void KeyState::fakeKeys(const Keystrokes& keys, std::uint32_t count)
 {
     // do nothing if no keys or no repeats
     if (count == 0 || keys.empty()) {

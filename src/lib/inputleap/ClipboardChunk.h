@@ -32,13 +32,12 @@ class ClipboardChunk : public Chunk {
 public:
     ClipboardChunk(size_t size);
 
-    static ClipboardChunk* start(ClipboardID id, UInt32 sequence, const std::string& size);
-    static ClipboardChunk* data(ClipboardID id, UInt32 sequence, const std::string& data);
-    static ClipboardChunk*
-                        end(ClipboardID id, UInt32 sequence);
+    static ClipboardChunk* start(ClipboardID id, std::uint32_t sequence, const std::string& size);
+    static ClipboardChunk* data(ClipboardID id, std::uint32_t sequence, const std::string& data);
+    static ClipboardChunk* end(ClipboardID id, std::uint32_t sequence);
 
     static int assemble(inputleap::IStream* stream, std::string& dataCached, ClipboardID& id,
-                        UInt32& sequence);
+                        std::uint32_t& sequence);
 
     static void            send(inputleap::IStream* stream, void* data);
 

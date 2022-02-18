@@ -183,7 +183,7 @@ MSWindowsDesks::resetOptions()
 void
 MSWindowsDesks::setOptions(const OptionsList& options)
 {
-    for (UInt32 i = 0, n = (UInt32)options.size(); i < n; i += 2) {
+    for (std::uint32_t i = 0, n = (std::uint32_t)options.size(); i < n; i += 2) {
         if (options[i] == kOptionWin32KeepForeground) {
             m_leaveForegroundOption = (options[i + 1] != 0);
             LOG((CLOG_DEBUG1 "%s the foreground window", m_leaveForegroundOption ? "don\'t grab" : "grab"));

@@ -39,7 +39,7 @@ static const SInt16        kProtocolMinorVersion = 6;
 static const UInt16        kDefaultPort = 24800;
 
 // maximum total length for greeting returned by client
-static const UInt32        kMaxHelloLength = 1024;
+static const std::uint32_t kMaxHelloLength = 1024;
 
 // time between kMsgCKeepAlive (in seconds).  a non-positive value disables
 // keep alives.  this is the default rate that can be overridden using an

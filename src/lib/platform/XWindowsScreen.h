@@ -52,14 +52,14 @@ public:
     void getCursorPos(SInt32& x, SInt32& y) const override;
 
     // IPrimaryScreen overrides
-    void reconfigure(UInt32 activeSides) override;
+    void reconfigure(std::uint32_t activeSides) override;
     void warpCursor(SInt32 x, SInt32 y) override;
-    UInt32 registerHotKey(KeyID key, KeyModifierMask mask) override;
-    void unregisterHotKey(UInt32 id) override;
+    std::uint32_t registerHotKey(KeyID key, KeyModifierMask mask) override;
+    void unregisterHotKey(std::uint32_t id) override;
     void fakeInputBegin() override;
     void fakeInputEnd() override;
     SInt32 getJumpZoneSize() const override;
-    bool isAnyMouseButtonDown(UInt32& buttonID) const override;
+    bool isAnyMouseButtonDown(std::uint32_t& buttonID) const override;
     void getCursorCenter(SInt32& x, SInt32& y) const override;
 
     // ISecondaryScreen overrides
@@ -80,7 +80,7 @@ public:
     void screensaver(bool activate) override;
     void resetOptions() override;
     void setOptions(const OptionsList& options) override;
-    void setSequenceNumber(UInt32) override;
+    void setSequenceNumber(std::uint32_t) override;
     bool isPrimary() const override;
 
 protected:
@@ -169,9 +169,9 @@ private:
     };
     typedef std::set<bool> FilteredKeycodes;
     typedef std::vector<std::pair<int, unsigned int> > HotKeyList;
-    typedef std::map<UInt32, HotKeyList> HotKeyMap;
-    typedef std::vector<UInt32> HotKeyIDList;
-    typedef std::map<HotKeyItem, UInt32> HotKeyToIDMap;
+    typedef std::map<std::uint32_t, HotKeyList> HotKeyMap;
+    typedef std::vector<std::uint32_t> HotKeyIDList;
+    typedef std::map<HotKeyItem, std::uint32_t> HotKeyToIDMap;
 
     IXWindowsImpl*       m_impl;
 
@@ -222,7 +222,7 @@ private:
 
     // clipboards
     XWindowsClipboard*    m_clipboard[kClipboardEnd];
-    UInt32                m_sequenceNumber;
+    std::uint32_t m_sequenceNumber;
 
     // screen saver stuff
     XWindowsScreenSaver*    m_screensaver;

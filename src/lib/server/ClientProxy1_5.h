@@ -31,7 +31,7 @@ public:
                    IEventQueue* events);
     ~ClientProxy1_5() override;
 
-    void sendDragInfo(UInt32 fileCount, const char* info, size_t size) override;
+    void sendDragInfo(std::uint32_t fileCount, const char* info, size_t size) override;
     void fileChunkSending(UInt8 mark, char* data, size_t dataSize) override;
     bool parseMessage(const UInt8* code) override;
     void                fileChunkReceived();

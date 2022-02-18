@@ -479,7 +479,7 @@ public:
     ~ConfigReadContext();
 
     bool                readLine(std::string&);
-    UInt32                getLineNumber() const;
+    std::uint32_t getLineNumber() const;
 
     bool                operator!() const;
 

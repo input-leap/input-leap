@@ -43,7 +43,7 @@ static WindowsHookResource  g_hkMessage;
 static WindowsHookResource  g_hkKeyboard;
 static WindowsHookResource  g_hkMouse;
 static EHookMode        g_mode = kHOOK_DISABLE;
-static UInt32            g_zoneSides = 0;
+static std::uint32_t g_zoneSides = 0;
 static SInt32            g_zoneSize = 0;
 static SInt32            g_xScreen = 0;
 static SInt32            g_yScreen = 0;
@@ -77,8 +77,7 @@ bool is_immune_key(DWORD target)
     return false;
 }
 
-void
-MSWindowsHook::setSides(UInt32 sides)
+void MSWindowsHook::setSides(std::uint32_t sides)
 {
     g_zoneSides = sides;
 }

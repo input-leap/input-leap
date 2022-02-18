@@ -58,7 +58,7 @@ public:
         KeyModifierMask    m_generates;    //!< Modifiers key is mapped to
         bool            m_dead;            //!< \c true if this is a dead KeyID
         bool            m_lock;            //!< \c true if this locks a modifier
-        UInt32            m_client;        //!< Client data
+        std::uint32_t m_client;        //!< Client data
 
     public:
         bool            operator==(const KeyItem&) const;
@@ -84,7 +84,7 @@ public:
             kGroup                        //!< Set new group
         };
 
-        Keystroke(KeyButton, bool press, bool repeat, UInt32 clientData);
+        Keystroke(KeyButton, bool press, bool repeat, std::uint32_t clientData);
         Keystroke(SInt32 group, bool absolute, bool restore);
 
     public:
@@ -93,7 +93,7 @@ public:
             KeyButton    m_button;        //!< Button to synthesize
             bool        m_press;        //!< \c true iff press
             bool        m_repeat;        //!< \c true iff for an autorepeat
-            UInt32        m_client;        //!< Client data
+            std::uint32_t m_client;        //!< Client data
         };
         struct Group {
         public:
@@ -164,8 +164,7 @@ public:
     least one key in \p keys is not in the map then nothing is added
     and this returns \c false, otherwise it returns \c true.
     */
-    bool                addKeyCombinationEntry(KeyID id, SInt32 group,
-                            const KeyID* keys, UInt32 numKeys);
+    bool addKeyCombinationEntry(KeyID id, SInt32 group, const KeyID* keys, std::uint32_t numKeys);
 
     //! Enable composition across groups
     /*!

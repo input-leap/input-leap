@@ -35,14 +35,14 @@ public:
     // IEventQueueBuffer overrides
     void init() override { }
     void waitForEvent(double timeout) override;
-    Type getEvent(Event& event, UInt32& dataID) override;
-    bool addEvent(UInt32 dataID) override;
+    Type getEvent(Event& event, std::uint32_t& dataID) override;
+    bool addEvent(std::uint32_t dataID) override;
     bool isEmpty() const override;
     EventQueueTimer* newTimer(double duration, bool oneShot) const override;
     void deleteTimer(EventQueueTimer*) const override;
 
 private:
-    typedef std::deque<UInt32> EventDeque;
+    typedef std::deque<std::uint32_t> EventDeque;
 
     mutable std::mutex queue_mutex_;
     std::condition_variable queue_ready_cv_;

@@ -50,14 +50,12 @@ StreamFilter::close()
     getStream()->close();
 }
 
-UInt32
-StreamFilter::read(void* buffer, UInt32 n)
+std::uint32_t StreamFilter::read(void* buffer, std::uint32_t n)
 {
     return getStream()->read(buffer, n);
 }
 
-void
-StreamFilter::write(const void* buffer, UInt32 n)
+void StreamFilter::write(const void* buffer, std::uint32_t n)
 {
     getStream()->write(buffer, n);
 }
@@ -92,8 +90,7 @@ StreamFilter::isReady() const
     return getStream()->isReady();
 }
 
-UInt32
-StreamFilter::getSize() const
+std::uint32_t StreamFilter::getSize() const
 {
     return getStream()->getSize();
 }

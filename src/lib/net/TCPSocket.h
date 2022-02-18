@@ -46,14 +46,14 @@ public:
     void* getEventTarget() const override;
 
     // IStream overrides
-    UInt32 read(void* buffer, UInt32 n) override;
-    void write(const void* buffer, UInt32 n) override;
+    std::uint32_t read(void* buffer, std::uint32_t n) override;
+    void write(const void* buffer, std::uint32_t n) override;
     void flush() override;
     void shutdownInput() override;
     void shutdownOutput() override;
     bool isReady() const override;
     bool isFatal() const override;
-    UInt32 getSize() const override;
+    std::uint32_t getSize() const override;
 
     // IDataSocket overrides
     void connect(const NetworkAddress&) override;

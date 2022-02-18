@@ -525,7 +525,7 @@ XWindowsClipboard::icccmFillCache()
 
     XWindowsUtil::convertAtomProperty(data);
     const Atom* targets = reinterpret_cast<const Atom*>(data.data()); // TODO: Safe?
-    const UInt32 numTargets = data.size() / sizeof(Atom);
+    const std::uint32_t numTargets = data.size() / sizeof(Atom);
     LOG((CLOG_DEBUG "  available targets: %s", XWindowsUtil::atomsToString(m_display, targets, numTargets).c_str()));
 
     // try each converter in order (because they're in order of
@@ -545,7 +545,7 @@ XWindowsClipboard::icccmFillCache()
         // owners that don't report all the targets they support.
         target = converter->getAtom();
         /*
-        for (UInt32 i = 0; i < numTargets; ++i) {
+        for (std::uint32_t i = 0; i < numTargets; ++i) {
             if (converter->getAtom() == targets[i]) {
                 target = targets[i];
                 break;
@@ -771,7 +771,7 @@ XWindowsClipboard::motifFillCache()
         // save it
         motifFormats.insert(std::make_pair(motifFormat.m_type, data));
     }
-    //const UInt32 numMotifFormats = motifFormats.size();
+    //const std::uint32_t numMotifFormats = motifFormats.size();
 
     // try each converter in order (because they're in order of
     // preference).
@@ -866,11 +866,11 @@ XWindowsClipboard::insertMultipleReply(Window requestor,
     // data is a list of atom pairs:  target, property
     XWindowsUtil::convertAtomProperty(data);
     const Atom* targets = reinterpret_cast<const Atom*>(data.data());
-    const UInt32 numTargets = data.size() / sizeof(Atom);
+    const std::uint32_t numTargets = data.size() / sizeof(Atom);
 
     // add replies for each target
     bool changed = false;
-    for (UInt32 i = 0; i < numTargets; i += 2) {
+    for (std::uint32_t i = 0; i < numTargets; i += 2) {
         const Atom request_target   = targets[i + 0];
         const Atom request_property = targets[i + 1];
         if (!addSimpleRequest(requestor, request_target, time, request_property)) {
@@ -1013,12 +1013,12 @@ XWindowsClipboard::sendReply(Reply* reply)
 
         // send using INCR if already sending incrementally or if reply
         // is too large, otherwise just send it.
-        const UInt32 maxRequestSize = 3 * XMaxRequestSize(m_display);
+        const std::uint32_t maxRequestSize = 3 * XMaxRequestSize(m_display);
         const bool useINCR = (reply->m_data.size() > maxRequestSize);
 
         // send INCR reply if incremental and we haven't replied yet
         if (useINCR && !reply->m_replied) {
-            UInt32 size = reply->m_data.size();
+            std::uint32_t size = reply->m_data.size();
             if (!XWindowsUtil::setWindowProperty(m_display,
                                 reply->m_requestor, reply->m_property,
                                 &size, 4, m_atomINCR, 32)) {
@@ -1029,7 +1029,7 @@ XWindowsClipboard::sendReply(Reply* reply)
         // send more INCR reply or entire non-incremental reply
         else {
             // how much more data should we send?
-            UInt32 size = reply->m_data.size() - reply->m_ptr;
+            std::uint32_t size = reply->m_data.size() - reply->m_ptr;
             if (size > maxRequestSize)
                 size = maxRequestSize;
 
@@ -1362,7 +1362,7 @@ XWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
     }
 
     // put unprocessed events back
-    for (UInt32 i = events.size(); i > 0; --i) {
+    for (std::uint32_t i = events.size(); i > 0; --i) {
         XPutBackEvent(display, &events[i - 1]);
     }
 

@@ -23,8 +23,7 @@
 // OSXUchrKeyResource
 //
 
-OSXUchrKeyResource::OSXUchrKeyResource(const void* resource,
-                UInt32 keyboardType) :
+OSXUchrKeyResource::OSXUchrKeyResource(const void* resource, std::uint32_t keyboardType) :
     m_m(NULL),
     m_cti(NULL),
     m_sdi(NULL),
@@ -76,8 +75,8 @@ OSXUchrKeyResource::OSXUchrKeyResource(const void* resource,
     // a dead key followed by a space yields the non-dead version of
     // the dead key.
     m_spaceOutput = 0xffffu;
-    UInt32 table  = getTableForModifier(0);
-    for (UInt32 button = 0, n = getNumButtons(); button < n; ++button) {
+    std::uint32_t table  = getTableForModifier(0);
+    for (std::uint32_t button = 0, n = getNumButtons(); button < n; ++button) {
         KeyID id = getKey(table, button);
         if (id == 0x20) {
             UCKeyOutput c =
@@ -98,27 +97,23 @@ OSXUchrKeyResource::isValid() const
     return (m_m != NULL);
 }
 
-UInt32
-OSXUchrKeyResource::getNumModifierCombinations() const
+std::uint32_t OSXUchrKeyResource::getNumModifierCombinations() const
 {
     // only 32 (not 256) because the righthanded modifier bits are ignored
     return 32;
 }
 
-UInt32
-OSXUchrKeyResource::getNumTables() const
+std::uint32_t OSXUchrKeyResource::getNumTables() const
 {
     return m_cti->keyToCharTableCount;
 }
 
-UInt32
-OSXUchrKeyResource::getNumButtons() const
+std::uint32_t OSXUchrKeyResource::getNumButtons() const
 {
     return m_cti->keyToCharTableSize;
 }
 
-UInt32
-OSXUchrKeyResource::getTableForModifier(UInt32 mask) const
+std::uint32_t OSXUchrKeyResource::getTableForModifier(std::uint32_t mask) const
 {
     if (mask >= m_m->modifiersCount) {
         return m_m->defaultTableNum;
@@ -128,8 +123,7 @@ OSXUchrKeyResource::getTableForModifier(UInt32 mask) const
     }
 }
 
-KeyID
-OSXUchrKeyResource::getKey(UInt32 table, UInt32 button) const
+KeyID OSXUchrKeyResource::getKey(std::uint32_t table, std::uint32_t button) const
 {
     assert(table < getNumTables());
     assert(button < getNumButtons());

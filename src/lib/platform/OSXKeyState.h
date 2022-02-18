@@ -60,13 +60,13 @@ public:
     Returns the barrier modifier mask corresponding to the OS X modifier
     mask in \p mask.
     */
-    KeyModifierMask        mapModifiersFromOSX(UInt32 mask) const;
+    KeyModifierMask mapModifiersFromOSX(std::uint32_t mask) const;
 
     //! Convert CG flags-style modifier mask to old-style Carbon
     /*!
     Still required in a few places for translation calls.
     */
-    KeyModifierMask        mapModifiersToCarbon(UInt32 mask) const;
+    KeyModifierMask mapModifiersToCarbon(std::uint32_t mask) const;
 
     //! Map key event to keys
     /*!
@@ -84,9 +84,8 @@ public:
     Calculates mac virtual key and mask for a key \p key and modifiers
     \p mask.  Returns \c true if the key can be mapped, \c false otherwise.
     */
-    bool                mapBarrierHotKeyToMac(KeyID key, KeyModifierMask mask,
-                            UInt32& macVirtualKey,
-                            UInt32& macModifierMask) const;
+    bool mapBarrierHotKeyToMac(KeyID key, KeyModifierMask mask, std::uint32_t& macVirtualKey,
+                               std::uint32_t& macModifierMask) const;
 
     //@}
 
@@ -127,9 +126,8 @@ private:
     void                checkKeyboardLayout();
 
     // Send an event for the given modifier key
-    void                handleModifierKey(void* target,
-                            UInt32 virtualKey, KeyID id,
-                            bool down, KeyModifierMask newMask);
+    void handleModifierKey(void* target, std::uint32_t virtualKey, KeyID id, bool down,
+                           KeyModifierMask newMask);
 
     // Checks if any in \p ids is a glyph key and if \p isCommand is false.
     // If so it adds the AltGr modifier to \p mask.  This allows OS X
@@ -142,11 +140,11 @@ private:
 
     // Maps an OS X virtual key id to a KeyButton.  This simply remaps
     // the ids so we don't use KeyButton 0.
-    static KeyButton    mapVirtualKeyToKeyButton(UInt32 keyCode);
+    static KeyButton mapVirtualKeyToKeyButton(std::uint32_t keyCode);
 
     // Maps a KeyButton to an OS X key code.  This is the inverse of
     // mapVirtualKeyToKeyButton.
-    static UInt32        mapKeyButtonToVirtualKey(KeyButton keyButton);
+    static std::uint32_t mapKeyButtonToVirtualKey(KeyButton keyButton);
 
     void                init();
 
@@ -166,10 +164,10 @@ private:
     };
 
     typedef std::map<CFDataRef, SInt32> GroupMap;
-    typedef std::map<UInt32, KeyID> VirtualKeyMap;
+    typedef std::map<std::uint32_t, KeyID> VirtualKeyMap;
 
     VirtualKeyMap        m_virtualKeyMap;
-    mutable UInt32        m_deadKeyState;
+    mutable std::uint32_t m_deadKeyState;
     GroupList            m_groups;
     GroupMap            m_groupMap;
     bool                m_shiftPressed;

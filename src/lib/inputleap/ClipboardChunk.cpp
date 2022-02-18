@@ -32,7 +32,8 @@ ClipboardChunk::ClipboardChunk(size_t size) :
         m_dataSize = size - CLIPBOARD_CHUNK_META_SIZE;
 }
 
-ClipboardChunk* ClipboardChunk::start(ClipboardID id, UInt32 sequence, const std::string& size)
+ClipboardChunk* ClipboardChunk::start(ClipboardID id, std::uint32_t sequence,
+                                      const std::string& size)
 {
     size_t sizeLength = size.size();
     ClipboardChunk* start = new ClipboardChunk(sizeLength + CLIPBOARD_CHUNK_META_SIZE);
@@ -47,7 +48,8 @@ ClipboardChunk* ClipboardChunk::start(ClipboardID id, UInt32 sequence, const std
     return start;
 }
 
-ClipboardChunk* ClipboardChunk::data(ClipboardID id, UInt32 sequence, const std::string& data)
+ClipboardChunk* ClipboardChunk::data(ClipboardID id, std::uint32_t sequence,
+                                     const std::string& data)
 {
     size_t dataSize = data.size();
     ClipboardChunk* chunk = new ClipboardChunk(dataSize + CLIPBOARD_CHUNK_META_SIZE);
@@ -62,8 +64,7 @@ ClipboardChunk* ClipboardChunk::data(ClipboardID id, UInt32 sequence, const std:
     return chunk;
 }
 
-ClipboardChunk*
-ClipboardChunk::end(ClipboardID id, UInt32 sequence)
+ClipboardChunk* ClipboardChunk::end(ClipboardID id, std::uint32_t sequence)
 {
     ClipboardChunk* end = new ClipboardChunk(CLIPBOARD_CHUNK_META_SIZE);
     char* chunk = end->m_chunk;
@@ -77,7 +78,7 @@ ClipboardChunk::end(ClipboardID id, UInt32 sequence)
 }
 
 int ClipboardChunk::assemble(inputleap::IStream* stream, std::string& dataCached,
-                             ClipboardID& id, UInt32& sequence)
+                             ClipboardID& id, std::uint32_t& sequence)
 {
     UInt8 mark;
     std::string data;
@@ -121,7 +122,7 @@ ClipboardChunk::send(inputleap::IStream* stream, void* data)
 
     char* chunk = clipboardData->m_chunk;
     ClipboardID id = chunk[0];
-    UInt32 sequence;
+    std::uint32_t sequence;
     std::memcpy (&sequence, &chunk[1], 4);
     UInt8 mark = chunk[5];
     std::string dataChunk(&chunk[6], clipboardData->m_dataSize);

@@ -64,14 +64,14 @@ public:
     virtual void        getCursorPos(SInt32& x, SInt32& y) const;
 
     // IPrimaryScreen overrides
-    virtual void        reconfigure(UInt32 activeSides);
+    virtual void reconfigure(std::uint32_t activeSides);
     virtual void        warpCursor(SInt32 x, SInt32 y);
-    virtual UInt32        registerHotKey(KeyID key, KeyModifierMask mask);
-    virtual void        unregisterHotKey(UInt32 id);
+    virtual std::uint32_t registerHotKey(KeyID key, KeyModifierMask mask);
+    virtual void unregisterHotKey(std::uint32_t id);
     virtual void        fakeInputBegin();
     virtual void        fakeInputEnd();
     virtual SInt32        getJumpZoneSize() const;
-    virtual bool        isAnyMouseButtonDown(UInt32& buttonID) const;
+    virtual bool isAnyMouseButtonDown(std::uint32_t& buttonID) const;
     virtual void        getCursorCenter(SInt32& x, SInt32& y) const;
 
     // ISecondaryScreen overrides
@@ -92,7 +92,7 @@ public:
     virtual void        screensaver(bool activate);
     virtual void        resetOptions();
     virtual void        setOptions(const OptionsList& options);
-    virtual void        setSequenceNumber(UInt32);
+    virtual void        setSequenceNumber(std::uint32_t);
     virtual bool        isPrimary() const;
     virtual void        fakeDraggingFiles(DragFileList fileList);
     virtual std::string& getDraggingFilename();
@@ -204,8 +204,8 @@ private:
 private:
     struct HotKeyItem {
     public:
-        HotKeyItem(UInt32, UInt32);
-        HotKeyItem(EventHotKeyRef, UInt32, UInt32);
+        HotKeyItem(std::uint32_t, std::uint32_t);
+        HotKeyItem(EventHotKeyRef, std::uint32_t, std::uint32_t);
 
         EventHotKeyRef    getRef() const;
 
@@ -213,8 +213,8 @@ private:
 
     private:
         EventHotKeyRef    m_ref;
-        UInt32            m_keycode;
-        UInt32            m_mask;
+        std::uint32_t m_keycode;
+        std::uint32_t m_mask;
     };
 
     enum EMouseButtonState {
@@ -227,21 +227,21 @@ private:
 
     class MouseButtonState {
     public:
-        void set(UInt32 button, EMouseButtonState state);
+        void set(std::uint32_t button, EMouseButtonState state);
         bool any();
         void reset();
-        void overwrite(UInt32 buttons);
+        void overwrite(std::uint32_t buttons);
 
-        bool test(UInt32 button) const;
+        bool test(std::uint32_t button) const;
         SInt8 getFirstButtonDown() const;
     private:
         std::bitset<NumButtonIDs>      m_buttons;
     };
 
-    typedef std::map<UInt32, HotKeyItem> HotKeyMap;
-    typedef std::vector<UInt32> HotKeyIDList;
-    typedef std::map<KeyModifierMask, UInt32> ModifierHotKeyMap;
-    typedef std::map<HotKeyItem, UInt32> HotKeyToIDMap;
+    typedef std::map<std::uint32_t, HotKeyItem> HotKeyMap;
+    typedef std::vector<std::uint32_t> HotKeyIDList;
+    typedef std::map<KeyModifierMask, std::uint32_t> ModifierHotKeyMap;
+    typedef std::map<HotKeyItem, std::uint32_t> HotKeyToIDMap;
 
     // true if screen is being used as a primary screen, false otherwise
     bool                m_isPrimary;
@@ -281,7 +281,7 @@ private:
 
     // clipboards
     OSXClipboard       m_pasteboard;
-    UInt32                m_sequenceNumber;
+    std::uint32_t m_sequenceNumber;
 
     // screen saver stuff
     OSXScreenSaver*    m_screensaver;
@@ -313,7 +313,7 @@ private:
     HotKeyMap                m_hotKeys;
     HotKeyIDList            m_oldHotKeyIDs;
     ModifierHotKeyMap        m_modifierHotKeys;
-    UInt32                    m_activeModifierHotKey;
+    std::uint32_t m_activeModifierHotKey;
     KeyModifierMask            m_activeModifierHotKeyMask;
     HotKeyToIDMap            m_hotKeyToIDMap;
 

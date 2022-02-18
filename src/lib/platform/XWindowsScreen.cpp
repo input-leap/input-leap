@@ -1227,7 +1227,6 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 				cookie->extension == xi_opcode) {
 			if (cookie->evtype == XI_RawMotion) {
 				// Get current pointer's position
-				Window root, child;
 				XMotionEvent xmotion;
 				xmotion.type = MotionNotify;
 				xmotion.send_event = False; // Raw motion

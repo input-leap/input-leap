@@ -158,8 +158,8 @@ std::uint32_t IClipboard::readUInt32(const char* buf)
 
 void IClipboard::writeUInt32(std::string* buf, std::uint32_t v)
 {
-    *buf += static_cast<UInt8>((v >> 24) & 0xff);
-    *buf += static_cast<UInt8>((v >> 16) & 0xff);
-    *buf += static_cast<UInt8>((v >>  8) & 0xff);
-    *buf += static_cast<UInt8>( v        & 0xff);
+    *buf += static_cast<std::uint8_t>((v >> 24) & 0xff);
+    *buf += static_cast<std::uint8_t>((v >> 16) & 0xff);
+    *buf += static_cast<std::uint8_t>((v >>  8) & 0xff);
+    *buf += static_cast<std::uint8_t>( v & 0xff);
 }

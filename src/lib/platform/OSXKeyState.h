@@ -149,8 +149,7 @@ private:
     // Post a key event to HID manager. It posts an event to HID client, a
     // much lower level than window manager which's the target from carbon
     // CGEventPost
-    void                postHIDVirtualKey(const UInt8 virtualKeyCode,
-                            const bool postDown);
+    void postHIDVirtualKey(const std::uint8_t virtualKeyCode, const bool postDown);
 
 private:
     // OS X uses a physical key if 0 for the 'A' key.  barrier reserves

@@ -28,13 +28,13 @@ public:
     virtual ~IpcMessage();
 
     //! Gets the message type ID.
-    UInt8                type() const { return m_type; }
+    std::uint8_t type() const { return m_type; }
 
 protected:
-    IpcMessage(UInt8 type);
+    IpcMessage(std::uint8_t type);
 
 private:
-    UInt8                m_type;
+    std::uint8_t m_type;
 };
 
 class IpcHelloMessage : public IpcMessage {

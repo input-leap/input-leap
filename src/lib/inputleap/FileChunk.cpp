@@ -44,8 +44,7 @@ FileChunk* FileChunk::start(const std::string& size)
     return start;
 }
 
-FileChunk*
-FileChunk::data(UInt8* data, size_t dataSize)
+FileChunk* FileChunk::data(std::uint8_t* data, size_t dataSize)
 {
     FileChunk* chunk = new FileChunk(dataSize + FILE_CHUNK_META_SIZE);
     char* chunkData = chunk->m_chunk;
@@ -70,7 +69,7 @@ FileChunk::end()
 int FileChunk::assemble(inputleap::IStream* stream, std::string& dataReceived, size_t& expectedSize)
 {
     // parse
-    UInt8 mark = 0;
+    std::uint8_t mark = 0;
     std::string content;
     static size_t receivedDataSize;
     static double elapsedTime;
@@ -134,8 +133,7 @@ int FileChunk::assemble(inputleap::IStream* stream, std::string& dataReceived, s
     return kError;
 }
 
-void
-FileChunk::send(inputleap::IStream* stream, UInt8 mark, char* data, size_t dataSize)
+void FileChunk::send(inputleap::IStream* stream, std::uint8_t mark, char* data, size_t dataSize)
 {
     std::string chunk(data, dataSize);
 

@@ -36,38 +36,38 @@ public:
 
 // BMP is little-endian
 
-static void toLE(UInt8*& dst, std::uint16_t src)
+static void toLE(std::uint8_t*& dst, std::uint16_t src)
 {
-    dst[0] = static_cast<UInt8>(src & 0xffu);
-    dst[1] = static_cast<UInt8>((src >> 8) & 0xffu);
+    dst[0] = static_cast<std::uint8_t>(src & 0xffu);
+    dst[1] = static_cast<std::uint8_t>((src >> 8) & 0xffu);
     dst += 2;
 }
 
-static void toLE(UInt8*& dst, std::int32_t src)
+static void toLE(std::uint8_t*& dst, std::int32_t src)
 {
-    dst[0] = static_cast<UInt8>(src & 0xffu);
-    dst[1] = static_cast<UInt8>((src >>  8) & 0xffu);
-    dst[2] = static_cast<UInt8>((src >> 16) & 0xffu);
-    dst[3] = static_cast<UInt8>((src >> 24) & 0xffu);
+    dst[0] = static_cast<std::uint8_t>(src & 0xffu);
+    dst[1] = static_cast<std::uint8_t>((src >>  8) & 0xffu);
+    dst[2] = static_cast<std::uint8_t>((src >> 16) & 0xffu);
+    dst[3] = static_cast<std::uint8_t>((src >> 24) & 0xffu);
     dst += 4;
 }
 
-static void toLE(UInt8*& dst, std::uint32_t src)
+static void toLE(std::uint8_t*& dst, std::uint32_t src)
 {
-    dst[0] = static_cast<UInt8>(src & 0xffu);
-    dst[1] = static_cast<UInt8>((src >>  8) & 0xffu);
-    dst[2] = static_cast<UInt8>((src >> 16) & 0xffu);
-    dst[3] = static_cast<UInt8>((src >> 24) & 0xffu);
+    dst[0] = static_cast<std::uint8_t>(src & 0xffu);
+    dst[1] = static_cast<std::uint8_t>((src >>  8) & 0xffu);
+    dst[2] = static_cast<std::uint8_t>((src >> 16) & 0xffu);
+    dst[3] = static_cast<std::uint8_t>((src >> 24) & 0xffu);
     dst += 4;
 }
 
-static inline std::uint16_t fromLEU16(const UInt8* data)
+static inline std::uint16_t fromLEU16(const std::uint8_t* data)
 {
     return static_cast<std::uint16_t>(data[0]) |
             (static_cast<std::uint16_t>(data[1]) << 8);
 }
 
-static inline std::int32_t fromLES32(const UInt8* data)
+static inline std::int32_t fromLES32(const std::uint8_t* data)
 {
     return static_cast<std::int32_t>(static_cast<std::uint32_t>(data[0]) |
             (static_cast<std::uint32_t>(data[1]) <<  8) |
@@ -75,7 +75,7 @@ static inline std::int32_t fromLES32(const UInt8* data)
             (static_cast<std::uint32_t>(data[3]) << 24));
 }
 
-static inline std::uint32_t fromLEU32(const UInt8* data)
+static inline std::uint32_t fromLEU32(const std::uint8_t* data)
 {
     return static_cast<std::uint32_t>(data[0]) |
             (static_cast<std::uint32_t>(data[1]) <<  8) |
@@ -114,7 +114,7 @@ std::string XWindowsClipboardAnyBitmapConverter::fromIClipboard(const std::strin
 {
     // fill BMP info header with native-endian data
     CBMPInfoHeader infoHeader;
-    const UInt8* rawBMPInfoHeader = reinterpret_cast<const UInt8*>(bmp.data());
+    const std::uint8_t* rawBMPInfoHeader = reinterpret_cast<const std::uint8_t*>(bmp.data());
     infoHeader.biSize             = fromLEU32(rawBMPInfoHeader +  0);
     infoHeader.biWidth            = fromLES32(rawBMPInfoHeader +  4);
     infoHeader.biHeight           = fromLES32(rawBMPInfoHeader +  8);
@@ -136,7 +136,7 @@ std::string XWindowsClipboardAnyBitmapConverter::fromIClipboard(const std::strin
     }
 
     // convert to image format
-    const UInt8* rawBMPPixels = rawBMPInfoHeader + 40;
+    const std::uint8_t* rawBMPPixels = rawBMPInfoHeader + 40;
     if (infoHeader.biBitCount == 24) {
         return doBGRFromIClipboard(rawBMPPixels,
                             infoHeader.biWidth, infoHeader.biHeight);
@@ -157,8 +157,8 @@ std::string XWindowsClipboardAnyBitmapConverter::toIClipboard(const std::string&
     }
 
     // fill BMP info header with little-endian data
-    UInt8 infoHeader[40];
-    UInt8* dst = infoHeader;
+    std::uint8_t infoHeader[40];
+    std::uint8_t* dst = infoHeader;
     toLE(dst, static_cast<std::uint32_t>(40));
     toLE(dst, static_cast<std::int32_t>(w));
     toLE(dst, static_cast<std::int32_t>(h));

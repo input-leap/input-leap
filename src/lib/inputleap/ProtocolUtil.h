@@ -44,11 +44,11 @@ public:
     - \%1i  -- converts integer argument to 1 byte integer
     - \%2i  -- converts integer argument to 2 byte integer in NBO
     - \%4i  -- converts integer argument to 4 byte integer in NBO
-    - \%1I  -- converts std::vector<UInt8>* to 1 byte integers
+    - \%1I  -- converts std::vector<std::uint8_t>* to 1 byte integers
     - \%2I  -- converts std::vector<std::uint16_t>* to 2 byte integers in NBO
     - \%4I  -- converts std::vector<std::uint32_t>* to 4 byte integers in NBO
     - \%s   -- converts std::string* to stream of bytes
-    - \%S   -- converts integer N and const UInt8* to stream of N bytes
+    - \%S   -- converts integer N and const std::uint8_t* to stream of N bytes
     */
     static void writef(inputleap::IStream*, const char* fmt, ...);
 
@@ -63,7 +63,7 @@ public:
     - \%1i  -- reads a 1 byte integer; argument is a std::int32_t* or std::uint32_t*
     - \%2i  -- reads an NBO 2 byte integer;  arg is std::int32_t* or std::uint32_t*
     - \%4i  -- reads an NBO 4 byte integer;  arg is std::int32_t* or std::uint32_t*
-    - \%1I  -- reads 1 byte integers;  arg is std::vector<UInt8>*
+    - \%1I  -- reads 1 byte integers;  arg is std::vector<std::uint8_t>*
     - \%2I  -- reads NBO 2 byte integers;  arg is std::vector<std::uint16_t>*
     - \%4I  -- reads NBO 4 byte integers;  arg is std::vector<std::uint32_t>*
     - \%s   -- reads bytes;  argument must be a std::string*, \b not a char*

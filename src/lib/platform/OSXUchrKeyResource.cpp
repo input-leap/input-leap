@@ -55,7 +55,7 @@ OSXUchrKeyResource::OSXUchrKeyResource(const void* resource, std::uint32_t keybo
     }
 
     // get tables for keyboard type
-    const UInt8* const base = reinterpret_cast<const UInt8*>(m_resource);
+    const std::uint8_t* const base = reinterpret_cast<const std::uint8_t*>(m_resource);
     m_m   = reinterpret_cast<const UCKeyModifiersToTableNum*>(base +
                                 th->keyModifiersToTableNumOffset);
     m_cti = reinterpret_cast<const UCKeyToCharTableIndex*>(base +
@@ -128,7 +128,7 @@ KeyID OSXUchrKeyResource::getKey(std::uint32_t table, std::uint32_t button) cons
     assert(table < getNumTables());
     assert(button < getNumButtons());
 
-    const UInt8* const base   = reinterpret_cast<const UInt8*>(m_resource);
+    const std::uint8_t* const base = reinterpret_cast<const std::uint8_t*>(m_resource);
     const UCKeyOutput* cPtr = reinterpret_cast<const UCKeyOutput*>(base +
                                 m_cti->keyToCharTableOffsets[table]);
 
@@ -202,7 +202,7 @@ bool OSXUchrKeyResource::getDeadKey(KeySequence& keys, std::uint16_t index) cons
 bool OSXUchrKeyResource::getKeyRecord(KeySequence& keys, std::uint16_t index,
                                       std::uint16_t& state) const
 {
-    const UInt8* const base = reinterpret_cast<const UInt8*>(m_resource);
+    const std::uint8_t* const base = reinterpret_cast<const std::uint8_t*>(m_resource);
     const UCKeyStateRecord* sr =
         reinterpret_cast<const UCKeyStateRecord*>(base +
                                 m_sri->keyStateRecordOffsets[index]);

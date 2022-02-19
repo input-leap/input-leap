@@ -423,7 +423,7 @@ OSXKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
 {
     ::KeyMap km;
     GetKeys(km);
-    const UInt8* m = reinterpret_cast<const UInt8*>(km);
+    const std::uint8_t* m = reinterpret_cast<const std::uint8_t*>(km);
     for (std::uint32_t i = 0; i < 16; ++i) {
         for (std::uint32_t j = 0; j < 8; ++j) {
             if ((m[i] & (1u << j)) != 0) {
@@ -506,9 +506,7 @@ static io_connect_t getEventDriver(void)
     return sEventDrvrRef;
 }
 
-void
-OSXKeyState::postHIDVirtualKey(const UInt8 virtualKeyCode,
-                const bool postDown)
+void OSXKeyState::postHIDVirtualKey(const std::uint8_t virtualKeyCode, const bool postDown)
 {
     static std::uint32_t modifiers = 0;
 
@@ -696,11 +694,11 @@ bool OSXKeyState::getKeyMap(inputleap::KeyMap& keyMap, std::int32_t group,
 
             // collect the tables that map to the same KeyID.  we know it
             // can't be any earlier tables because of the check above.
-            std::set<UInt8> tables;
-            tables.insert(static_cast<UInt8>(j));
+            std::set<std::uint8_t> tables;
+            tables.insert(static_cast<std::uint8_t>(j));
             for (std::uint32_t k = j + 1; k < r.getNumTables(); ++k) {
                 if (buttonKeys[k].first == id) {
-                    tables.insert(static_cast<UInt8>(k));
+                    tables.insert(static_cast<std::uint8_t>(k));
                 }
             }
 

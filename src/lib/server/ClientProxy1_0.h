@@ -57,11 +57,11 @@ public:
     void resetOptions() override;
     void setOptions(const OptionsList& options) override;
     void sendDragInfo(std::uint32_t fileCount, const char* info, size_t size) override;
-    void fileChunkSending(UInt8 mark, char* data, size_t dataSize) override;
+    void fileChunkSending(std::uint8_t mark, char* data, size_t dataSize) override;
 
 protected:
-    virtual bool        parseHandshakeMessage(const UInt8* code);
-    virtual bool        parseMessage(const UInt8* code);
+    virtual bool parseHandshakeMessage(const std::uint8_t* code);
+    virtual bool parseMessage(const std::uint8_t* code);
 
     virtual void        resetHeartbeatRate();
     virtual void        setHeartbeatRate(double rate, double alarm);
@@ -95,7 +95,7 @@ protected:
     ClientClipboard    m_clipboard[kClipboardEnd];
 
 private:
-    typedef bool (ClientProxy1_0::*MessageParser)(const UInt8*);
+    typedef bool (ClientProxy1_0::*MessageParser)(const std::uint8_t*);
 
     ClientInfo            m_info;
     double                m_heartbeatAlarm;

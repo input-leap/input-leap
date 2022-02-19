@@ -33,7 +33,7 @@ public:
 
 protected:
     // ClientProxy overrides
-    bool parseMessage(const UInt8* code) override;
+    bool parseMessage(const std::uint8_t* code) override;
     void resetHeartbeatRate() override;
     void setHeartbeatRate(double rate, double alarm) override;
     void resetHeartbeatTimer() override;

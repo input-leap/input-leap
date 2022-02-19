@@ -70,7 +70,7 @@ public:
 private:
     static const std::uint32_t kChunkSize;
 
-    typedef std::vector<UInt8> Chunk;
+    typedef std::vector<std::uint8_t> Chunk;
     typedef std::list<Chunk> ChunkList;
 
     ChunkList            m_chunks;

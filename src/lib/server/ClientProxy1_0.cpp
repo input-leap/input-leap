@@ -143,7 +143,7 @@ void
 ClientProxy1_0::handleData(const Event&, void*)
 {
     // handle messages until there are no more.  first read message code.
-    UInt8 code[4];
+    std::uint8_t code[4];
     std::uint32_t n = getStream()->read(code, 4);
     while (n != 0) {
         // verify we got an entire code
@@ -178,8 +178,7 @@ ClientProxy1_0::handleData(const Event&, void*)
     resetHeartbeatTimer();
 }
 
-bool
-ClientProxy1_0::parseHandshakeMessage(const UInt8* code)
+bool ClientProxy1_0::parseHandshakeMessage(const std::uint8_t* code)
 {
     if (memcmp(code, kMsgCNoop, 4) == 0) {
         // discard no-ops
@@ -200,8 +199,7 @@ ClientProxy1_0::parseHandshakeMessage(const UInt8* code)
     return false;
 }
 
-bool
-ClientProxy1_0::parseMessage(const UInt8* code)
+bool ClientProxy1_0::parseMessage(const std::uint8_t* code)
 {
     if (memcmp(code, kMsgDInfo, 4) == 0) {
         if (recvInfo()) {
@@ -375,8 +373,7 @@ void ClientProxy1_0::sendDragInfo(std::uint32_t fileCount, const char* info, siz
     LOG((CLOG_DEBUG "draggingInfoSending not supported"));
 }
 
-void
-ClientProxy1_0::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
+void ClientProxy1_0::fileChunkSending(std::uint8_t mark, char* data, size_t dataSize)
 {
     (void) mark;
     (void) data;

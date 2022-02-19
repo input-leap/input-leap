@@ -50,7 +50,7 @@ IpcServerProxy::handleData(const Event&, void*)
 {
     LOG((CLOG_DEBUG "start ipc handle data"));
 
-    UInt8 code[4];
+    std::uint8_t code[4];
     std::uint32_t n = m_stream.read(code, 4);
     while (n != 0) {
 

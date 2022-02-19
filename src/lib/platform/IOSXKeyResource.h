@@ -30,7 +30,7 @@ public:
     virtual KeyID getKey(std::uint32_t table, std::uint32_t button) const = 0;
 
     // Convert a character in the current script to the equivalent KeyID
-    static KeyID    getKeyID(UInt8);
+    static KeyID getKeyID(std::uint8_t);
 
     // Convert a unicode character to the equivalent KeyID.
     static KeyID    unicharToKeyID(UniChar);

@@ -30,7 +30,7 @@ public:
 };
 
 // BMP is little-endian
-static inline std::uint32_t fromLEU32(const UInt8* data)
+static inline std::uint32_t fromLEU32(const std::uint8_t* data)
 {
     return static_cast<std::uint32_t>(data[0]) |
             (static_cast<std::uint32_t>(data[1]) << 8) |
@@ -38,27 +38,25 @@ static inline std::uint32_t fromLEU32(const UInt8* data)
             (static_cast<std::uint32_t>(data[3]) << 24);
 }
 
-static
-void
-toLE(UInt8*& dst, char src)
+static void toLE(std::uint8_t*& dst, char src)
 {
-    dst[0] = static_cast<UInt8>(src);
+    dst[0] = static_cast<std::uint8_t>(src);
     dst += 1;
 }
 
-static void toLE(UInt8*& dst, std::uint16_t src)
+static void toLE(std::uint8_t*& dst, std::uint16_t src)
 {
-    dst[0] = static_cast<UInt8>(src & 0xffu);
-    dst[1] = static_cast<UInt8>((src >> 8) & 0xffu);
+    dst[0] = static_cast<std::uint8_t>(src & 0xffu);
+    dst[1] = static_cast<std::uint8_t>((src >> 8) & 0xffu);
     dst += 2;
 }
 
-static void toLE(UInt8*& dst, std::uint32_t src)
+static void toLE(std::uint8_t*& dst, std::uint32_t src)
 {
-    dst[0] = static_cast<UInt8>(src & 0xffu);
-    dst[1] = static_cast<UInt8>((src >> 8) & 0xffu);
-    dst[2] = static_cast<UInt8>((src >> 16) & 0xffu);
-    dst[3] = static_cast<UInt8>((src >> 24) & 0xffu);
+    dst[0] = static_cast<std::uint8_t>(src & 0xffu);
+    dst[1] = static_cast<std::uint8_t>((src >> 8) & 0xffu);
+    dst[2] = static_cast<std::uint8_t>((src >> 16) & 0xffu);
+    dst[3] = static_cast<std::uint8_t>((src >> 24) & 0xffu);
     dst += 4;
 }
 
@@ -89,8 +87,8 @@ std::string OSXClipboardBMPConverter::fromIClipboard(const std::string& bmp) con
 {
     LOG((CLOG_DEBUG1 "ENTER OSXClipboardBMPConverter::doFromIClipboard()"));
     // create BMP image
-    UInt8 header[14];
-    UInt8* dst = header;
+    std::uint8_t header[14];
+    std::uint8_t* dst = header;
     toLE(dst, 'B');
     toLE(dst, 'M');
     toLE(dst, static_cast<std::uint32_t>(14 + bmp.size()));
@@ -108,7 +106,7 @@ std::string OSXClipboardBMPConverter::toIClipboard(const std::string& bmp) const
     }
 
     // check BMP file header
-    const UInt8* rawBMPHeader = reinterpret_cast<const UInt8*>(bmp.data());
+    const std::uint8_t* rawBMPHeader = reinterpret_cast<const std::uint8_t*>(bmp.data());
     if (rawBMPHeader[0] != 'B' || rawBMPHeader[1] != 'M') {
         return {};
     }

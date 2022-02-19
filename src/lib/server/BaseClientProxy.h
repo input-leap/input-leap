@@ -60,7 +60,7 @@ public:
 
     // IClient overrides
     virtual void sendDragInfo(std::uint32_t fileCount, const char* info, size_t size) = 0;
-    virtual void        fileChunkSending(UInt8 mark, char* data, size_t dataSize) = 0;
+    virtual void fileChunkSending(std::uint8_t mark, char* data, size_t dataSize) = 0;
     std::string getName() const override;
     virtual inputleap::IStream*
                         getStream() const = 0;

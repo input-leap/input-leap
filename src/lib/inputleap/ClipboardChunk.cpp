@@ -80,7 +80,7 @@ ClipboardChunk* ClipboardChunk::end(ClipboardID id, std::uint32_t sequence)
 int ClipboardChunk::assemble(inputleap::IStream* stream, std::string& dataCached,
                              ClipboardID& id, std::uint32_t& sequence)
 {
-    UInt8 mark;
+    std::uint8_t mark;
     std::string data;
 
     if (!ProtocolUtil::readf(stream, kMsgDClipboard + 4, &id, &sequence, &mark, &data)) {
@@ -124,7 +124,7 @@ ClipboardChunk::send(inputleap::IStream* stream, void* data)
     ClipboardID id = chunk[0];
     std::uint32_t sequence;
     std::memcpy (&sequence, &chunk[1], 4);
-    UInt8 mark = chunk[5];
+    std::uint8_t mark = chunk[5];
     std::string dataChunk(&chunk[6], clipboardData->m_dataSize);
 
     switch (mark) {

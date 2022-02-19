@@ -442,7 +442,7 @@ OSXScreen::postMouseEvent(CGPoint& pos) const
 
 	CGEventType type = kCGEventMouseMoved;
 
-	SInt8 button = m_buttonState.getFirstButtonDown();
+	std::int8_t button = m_buttonState.getFirstButtonDown();
 	if (button != -1) {
 		MouseButtonEventMapType thisButtonType = MouseButtonEventMap[button];
 		type = thisButtonType[kMouseButtonDragged];
@@ -1974,8 +1974,7 @@ bool OSXScreen::MouseButtonState::test(std::uint32_t button) const
 	return m_buttons.test(button);
 }
 
-SInt8
-OSXScreen::MouseButtonState::getFirstButtonDown() const
+std::int8_t OSXScreen::MouseButtonState::getFirstButtonDown() const
 {
 	if (m_buttons.any()) {
 		for (unsigned short button = 0; button < m_buttons.size(); button++) {

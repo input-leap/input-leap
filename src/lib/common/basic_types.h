@@ -33,6 +33,5 @@
 #if defined(__APPLE__)
 #include <CoreServices/CoreServices.h>
 #else
-using SInt8 = std::int8_t;
 #endif
 #endif

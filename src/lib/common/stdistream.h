@@ -29,7 +29,7 @@
 #if defined(_MSC_VER) && _MSC_VER <= 1200
 // VC++6 istream has no overloads for __int* types, .NET does
 inline
-std::istream& operator>>(std::istream& s, SInt8& i)
+std::istream& operator>>(std::istream& s, std::int8_t& i)
 { return s >> (signed char&)i; }
 inline
 std::istream& operator>>(std::istream& s, std::int16_t& i)

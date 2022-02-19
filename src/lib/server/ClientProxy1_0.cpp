@@ -254,8 +254,8 @@ ClientProxy1_0::getClipboard(ClipboardID id, IClipboard* clipboard) const
     return true;
 }
 
-void
-ClientProxy1_0::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
+void ClientProxy1_0::getShape(std::int32_t& x, std::int32_t& y, std::int32_t& w,
+                              std::int32_t& h) const
 {
     x = m_info.m_x;
     y = m_info.m_y;
@@ -263,16 +263,15 @@ ClientProxy1_0::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
     h = m_info.m_h;
 }
 
-void
-ClientProxy1_0::getCursorPos(SInt32& x, SInt32& y) const
+void ClientProxy1_0::getCursorPos(std::int32_t& x, std::int32_t& y) const
 {
     // note -- this returns the cursor pos from when we last got client info
     x = m_info.m_mx;
     y = m_info.m_my;
 }
 
-void ClientProxy1_0::enter(SInt32 xAbs, SInt32 yAbs, std::uint32_t seqNum, KeyModifierMask mask,
-                           bool)
+void ClientProxy1_0::enter(std::int32_t xAbs, std::int32_t yAbs, std::uint32_t seqNum,
+                           KeyModifierMask mask, bool)
 {
     LOG((CLOG_DEBUG1 "send enter to \"%s\", %d,%d %d %04x", getName().c_str(), xAbs, yAbs, seqNum, mask));
     ProtocolUtil::writef(getStream(), kMsgCEnter,
@@ -321,9 +320,7 @@ ClientProxy1_0::keyDown(KeyID key, KeyModifierMask mask, KeyButton)
     ProtocolUtil::writef(getStream(), kMsgDKeyDown1_0, key, mask);
 }
 
-void
-ClientProxy1_0::keyRepeat(KeyID key, KeyModifierMask mask,
-                SInt32 count, KeyButton)
+void ClientProxy1_0::keyRepeat(KeyID key, KeyModifierMask mask, std::int32_t count, KeyButton)
 {
     LOG((CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d", getName().c_str(), key, mask, count));
     ProtocolUtil::writef(getStream(), kMsgDKeyRepeat1_0, key, mask, count);
@@ -350,21 +347,18 @@ ClientProxy1_0::mouseUp(ButtonID button)
     ProtocolUtil::writef(getStream(), kMsgDMouseUp, button);
 }
 
-void
-ClientProxy1_0::mouseMove(SInt32 xAbs, SInt32 yAbs)
+void ClientProxy1_0::mouseMove(std::int32_t xAbs, std::int32_t yAbs)
 {
     LOG((CLOG_DEBUG2 "send mouse move to \"%s\" %d,%d", getName().c_str(), xAbs, yAbs));
     ProtocolUtil::writef(getStream(), kMsgDMouseMove, xAbs, yAbs);
 }
 
-void
-ClientProxy1_0::mouseRelativeMove(SInt32, SInt32)
+void ClientProxy1_0::mouseRelativeMove(std::int32_t, std::int32_t)
 {
     // ignore -- not supported in protocol 1.0
 }
 
-void
-ClientProxy1_0::mouseWheel(SInt32, SInt32 yDelta)
+void ClientProxy1_0::mouseWheel(std::int32_t, std::int32_t yDelta)
 {
     // clients prior to 1.3 only support the y axis
     LOG((CLOG_DEBUG2 "send mouse wheel to \"%s\" %+d", getName().c_str(), yDelta));

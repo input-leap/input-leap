@@ -35,9 +35,8 @@ IKeyState::IKeyState(IEventQueue* events)
 // IKeyState::KeyInfo
 //
 
-IKeyState::KeyInfo*
-IKeyState::KeyInfo::alloc(KeyID id,
-                KeyModifierMask mask, KeyButton button, SInt32 count)
+IKeyState::KeyInfo* IKeyState::KeyInfo::alloc(KeyID id, KeyModifierMask mask, KeyButton button,
+                                              std::int32_t count)
 {
     KeyInfo* info = static_cast<KeyInfo*>(malloc(sizeof(KeyInfo)));
     info->m_key              = id;
@@ -50,7 +49,7 @@ IKeyState::KeyInfo::alloc(KeyID id,
 }
 
 IKeyState::KeyInfo* IKeyState::KeyInfo::alloc(KeyID id, KeyModifierMask mask, KeyButton button,
-                                              SInt32 count,
+                                              std::int32_t count,
                                               const std::set<std::string>& destinations)
 {
     std::string screens = join(destinations);

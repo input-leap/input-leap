@@ -475,7 +475,7 @@ class ConfigReadContext {
 public:
     typedef std::vector<std::string> ArgList;
 
-    ConfigReadContext(std::istream&, SInt32 firstLine = 1);
+    ConfigReadContext(std::istream&, std::int32_t firstLine = 1);
     ~ConfigReadContext();
 
     bool                readLine(std::string&);
@@ -511,7 +511,7 @@ private:
 
 private:
     std::istream&        m_stream;
-    SInt32                m_line;
+    std::int32_t m_line;
 };
 
 //! Configuration stream read exception

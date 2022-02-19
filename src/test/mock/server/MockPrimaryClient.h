@@ -27,8 +27,8 @@ class MockPrimaryClient : public PrimaryClient
 {
 public:
     MOCK_CONST_METHOD0(getEventTarget, void*());
-    MOCK_CONST_METHOD2(getCursorPos, void(SInt32&, SInt32&));
-    MOCK_CONST_METHOD2(setJumpCursorPos, void(SInt32, SInt32));
+    MOCK_CONST_METHOD2(getCursorPos, void(std::int32_t&, std::int32_t&));
+    MOCK_CONST_METHOD2(setJumpCursorPos, void(std::int32_t, std::int32_t));
     MOCK_METHOD1(reconfigure, void(std::uint32_t));
     MOCK_METHOD0(resetOptions, void());
     MOCK_METHOD1(setOptions, void(const OptionsList&));

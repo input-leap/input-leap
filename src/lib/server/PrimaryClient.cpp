@@ -73,14 +73,12 @@ PrimaryClient::fakeInputEnd()
     }
 }
 
-SInt32
-PrimaryClient::getJumpZoneSize() const
+std::int32_t PrimaryClient::getJumpZoneSize() const
 {
     return m_screen->getJumpZoneSize();
 }
 
-void
-PrimaryClient::getCursorCenter(SInt32& x, SInt32& y) const
+void PrimaryClient::getCursorCenter(std::int32_t& x, std::int32_t& y) const
 {
     m_screen->getCursorCenter(x, y);
 }
@@ -109,15 +107,13 @@ PrimaryClient::getClipboard(ClipboardID id, IClipboard* clipboard) const
     return m_screen->getClipboard(id, clipboard);
 }
 
-void
-PrimaryClient::getShape(SInt32& x, SInt32& y,
-                SInt32& width, SInt32& height) const
+void PrimaryClient::getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width,
+                             std::int32_t& height) const
 {
     m_screen->getShape(x, y, width, height);
 }
 
-void
-PrimaryClient::getCursorPos(SInt32& x, SInt32& y) const
+void PrimaryClient::getCursorPos(std::int32_t& x, std::int32_t& y) const
 {
     m_screen->getCursorPos(x, y);
 }
@@ -134,8 +130,8 @@ PrimaryClient::disable()
     m_screen->disable();
 }
 
-void PrimaryClient::enter(SInt32 xAbs, SInt32 yAbs, std::uint32_t seqNum, KeyModifierMask mask,
-                          bool screensaver)
+void PrimaryClient::enter(std::int32_t xAbs, std::int32_t yAbs, std::uint32_t seqNum,
+                          KeyModifierMask mask, bool screensaver)
 {
     m_screen->setSequenceNumber(seqNum);
     if (!screensaver) {
@@ -191,8 +187,7 @@ PrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
     }
 }
 
-void
-PrimaryClient::keyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton)
+void PrimaryClient::keyRepeat(KeyID, KeyModifierMask, std::int32_t, KeyButton)
 {
     // ignore
 }
@@ -221,20 +216,17 @@ PrimaryClient::mouseUp(ButtonID)
     // ignore
 }
 
-void
-PrimaryClient::mouseMove(SInt32 x, SInt32 y)
+void PrimaryClient::mouseMove(std::int32_t x, std::int32_t y)
 {
     m_screen->warpCursor(x, y);
 }
 
-void
-PrimaryClient::mouseRelativeMove(SInt32, SInt32)
+void PrimaryClient::mouseRelativeMove(std::int32_t, std::int32_t)
 {
     // ignore
 }
 
-void
-PrimaryClient::mouseWheel(SInt32, SInt32)
+void PrimaryClient::mouseWheel(std::int32_t, std::int32_t)
 {
     // ignore
 }

@@ -402,8 +402,7 @@ OSXKeyState::pollActiveModifiers() const
     return outMask;
 }
 
-SInt32
-OSXKeyState::pollActiveGroup() const
+std::int32_t OSXKeyState::pollActiveGroup() const
 {
     TISInputSourceRef keyboardLayout = TISCopyCurrentKeyboardLayoutInputSource();
     CFDataRef id = (CFDataRef)TISGetInputSourceProperty(
@@ -440,8 +439,8 @@ OSXKeyState::getKeyMap(inputleap::KeyMap& keyMap)
     // update keyboard groups
     if (getGroups(m_groups)) {
         m_groupMap.clear();
-        SInt32 numGroups = (SInt32)m_groups.size();
-        for (SInt32 g = 0; g < numGroups; ++g) {
+        std::int32_t numGroups = (std::int32_t)m_groups.size();
+        for (std::int32_t g = 0; g < numGroups; ++g) {
             CFDataRef id = (CFDataRef)TISGetInputSourceProperty(
                                 m_groups[g], kTISPropertyInputSourceID);
             m_groupMap[id] = g;
@@ -449,7 +448,7 @@ OSXKeyState::getKeyMap(inputleap::KeyMap& keyMap)
     }
 
     std::uint32_t keyboardType = LMGetKbdType();
-    for (SInt32 g = 0, n = (SInt32)m_groups.size(); g < n; ++g) {
+    for (std::int32_t g = 0, n = (std::int32_t)m_groups.size(); g < n; ++g) {
         // add special keys
         getKeyMapForSpecialKeys(keyMap, g);
 
@@ -598,7 +597,7 @@ OSXKeyState::fakeKey(const Keystroke& keystroke)
     }
 
     case Keystroke::kGroup: {
-        SInt32 group = keystroke.m_data.m_group.m_group;
+        std::int32_t group = keystroke.m_data.m_group.m_group;
         if (keystroke.m_data.m_group.m_absolute) {
             LOG((CLOG_DEBUG1 "  group %d", group));
             setGroup(group);
@@ -612,8 +611,7 @@ OSXKeyState::fakeKey(const Keystroke& keystroke)
     }
 }
 
-void
-OSXKeyState::getKeyMapForSpecialKeys(inputleap::KeyMap& keyMap, SInt32 group) const
+void OSXKeyState::getKeyMapForSpecialKeys(inputleap::KeyMap& keyMap, std::int32_t group) const
 {
     // special keys are insensitive to modifers and none are dead keys
     inputleap::KeyMap::KeyItem item;
@@ -643,9 +641,8 @@ OSXKeyState::getKeyMapForSpecialKeys(inputleap::KeyMap& keyMap, SInt32 group) co
     // anyway.
 }
 
-bool
-OSXKeyState::getKeyMap(inputleap::KeyMap& keyMap,
-                SInt32 group, const IOSXKeyResource& r) const
+bool OSXKeyState::getKeyMap(inputleap::KeyMap& keyMap, std::int32_t group,
+                            const IOSXKeyResource& r) const
 {
     if (!r.isValid()) {
         return false;
@@ -870,8 +867,7 @@ OSXKeyState::getGroups(GroupList& groups) const
     return true;
 }
 
-void
-OSXKeyState::setGroup(SInt32 group)
+void OSXKeyState::setGroup(std::int32_t group)
 {
     TISSetInputMethodKeyboardLayoutOverride(m_groups[group]);
 }

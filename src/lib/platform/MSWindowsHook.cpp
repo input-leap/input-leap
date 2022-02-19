@@ -44,11 +44,11 @@ static WindowsHookResource  g_hkKeyboard;
 static WindowsHookResource  g_hkMouse;
 static EHookMode        g_mode = kHOOK_DISABLE;
 static std::uint32_t g_zoneSides = 0;
-static SInt32            g_zoneSize = 0;
-static SInt32            g_xScreen = 0;
-static SInt32            g_yScreen = 0;
-static SInt32            g_wScreen = 0;
-static SInt32            g_hScreen = 0;
+static std::int32_t g_zoneSize = 0;
+static std::int32_t g_xScreen = 0;
+static std::int32_t g_yScreen = 0;
+static std::int32_t g_wScreen = 0;
+static std::int32_t g_hScreen = 0;
 static WPARAM            g_deadVirtKey = 0;
 static WPARAM            g_deadRelease = 0;
 static LPARAM            g_deadLParam = 0;
@@ -82,8 +82,8 @@ void MSWindowsHook::setSides(std::uint32_t sides)
     g_zoneSides = sides;
 }
 
-void
-MSWindowsHook::setZone(SInt32 x, SInt32 y, SInt32 w, SInt32 h, SInt32 jumpZoneSize)
+void MSWindowsHook::setZone(std::int32_t x, std::int32_t y, std::int32_t w, std::int32_t h,
+                            std::int32_t jumpZoneSize)
 {
     g_zoneSize = jumpZoneSize;
     g_xScreen = x;
@@ -435,9 +435,7 @@ keyboardLLHook(int code, WPARAM wParam, LPARAM lParam)
 }
 #endif // !NO_GRAB_KEYBOARD
 
-static
-bool
-mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
+static bool mouseHookHandler(WPARAM wParam, std::int32_t x, std::int32_t y, std::int32_t data)
 {
     switch (wParam) {
     case WM_LBUTTONDOWN:
@@ -549,9 +547,9 @@ mouseLLHook(int code, WPARAM wParam, LPARAM lParam)
     if (code == HC_ACTION) {
         // decode the message
         MSLLHOOKSTRUCT* info = reinterpret_cast<MSLLHOOKSTRUCT*>(lParam);
-        SInt32 x = static_cast<SInt32>(info->pt.x);
-        SInt32 y = static_cast<SInt32>(info->pt.y);
-        SInt32 w = static_cast<SInt16>(HIWORD(info->mouseData));
+        std::int32_t x = static_cast<std::int32_t>(info->pt.x);
+        std::int32_t y = static_cast<std::int32_t>(info->pt.y);
+        std::int32_t w = static_cast<SInt16>(HIWORD(info->mouseData));
 
         // handle the message
         if (mouseHookHandler(wParam, x, y, w)) {

@@ -29,7 +29,8 @@ class MSWindowsHook
 {
 public:
     void setSides(std::uint32_t sides);
-    void                setZone(SInt32 x, SInt32 y, SInt32 w, SInt32 h, SInt32 jumpZoneSize);
+    void setZone(std::int32_t x, std::int32_t y, std::int32_t w, std::int32_t h,
+                 std::int32_t jumpZoneSize);
     void                setMode(EHookMode mode);
 
     static bool install();

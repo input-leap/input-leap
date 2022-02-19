@@ -44,19 +44,19 @@ public:
     /*!
     Synthesize a mouse move to the absolute coordinates \c x,y.
     */
-    virtual void        fakeMouseMove(SInt32 x, SInt32 y) = 0;
+    virtual void fakeMouseMove(std::int32_t x, std::int32_t y) = 0;
 
     //! Fake mouse move
     /*!
     Synthesize a mouse move to the relative coordinates \c dx,dy.
     */
-    virtual void        fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const = 0;
+    virtual void fakeMouseRelativeMove(std::int32_t dx, std::int32_t dy) const = 0;
 
     //! Fake mouse wheel
     /*!
     Synthesize a mouse wheel event of amount \c xDelta and \c yDelta.
     */
-    virtual void        fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const = 0;
+    virtual void fakeMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const = 0;
 
     //@}
 };

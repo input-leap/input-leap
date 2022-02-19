@@ -1331,10 +1331,9 @@ static const KeySym s_map1009FF[] =
 
 XWindowsUtil::KeySymMap    XWindowsUtil::s_keySymToUCS4;
 
-bool
-XWindowsUtil::getWindowProperty(Display* display, Window window,
-                Atom property, std::string* data, Atom* type,
-                SInt32* format, bool deleteProperty)
+bool XWindowsUtil::getWindowProperty(Display* display, Window window, Atom property,
+                                     std::string* data, Atom* type, std::int32_t* format,
+                                     bool deleteProperty)
 {
     assert(display != NULL);
 
@@ -1406,7 +1405,7 @@ XWindowsUtil::getWindowProperty(Display* display, Window window,
         *type = actualType;
     }
     if (format != NULL) {
-        *format = static_cast<SInt32>(actualDatumSize);
+        *format = static_cast<std::int32_t>(actualDatumSize);
     }
 
     if (okay) {
@@ -1421,7 +1420,7 @@ XWindowsUtil::getWindowProperty(Display* display, Window window,
 
 bool XWindowsUtil::setWindowProperty(Display* display, Window window, Atom property,
                                      const void* vdata, std::uint32_t size, Atom type,
-                                     SInt32 format)
+                                     std::int32_t format)
 {
     const std::uint32_t length = 4 * XMaxRequestSize(display);
     const unsigned char* data = static_cast<const unsigned char*>(vdata);

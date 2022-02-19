@@ -1843,7 +1843,7 @@ operator<<(std::ostream& s, const Config& config)
 // ConfigReadContext
 //
 
-ConfigReadContext::ConfigReadContext(std::istream& s, SInt32 firstLine) :
+ConfigReadContext::ConfigReadContext(std::istream& s, std::int32_t firstLine) :
 	m_stream(s),
 	m_line(firstLine - 1)
 {

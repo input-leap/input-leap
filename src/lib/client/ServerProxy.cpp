@@ -198,7 +198,7 @@ ServerProxy::parseHandshakeMessage(const UInt8* code)
     }
 
     else if (memcmp(code, kMsgEIncompatible, 4) == 0) {
-        SInt32 major, minor;
+        std::int32_t major, minor;
         ProtocolUtil::readf(m_stream,
                         kMsgEIncompatible + 4, &major, &minor);
         LOG((CLOG_ERR "server has incompatible version %d.%d", major, minor));

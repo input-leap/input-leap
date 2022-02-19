@@ -39,7 +39,7 @@ TEST(CXWindowsScreenTests, fakeMouseMove_nonPrimary_getCursorPosValuesCorrect)
 
     screen.fakeMouseMove(10, 20);
 
-    SInt32 x, y;
+    std::int32_t x, y;
     screen.getCursorPos(x, y);
     ASSERT_EQ(10, x);
     ASSERT_EQ(20, y);

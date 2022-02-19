@@ -469,8 +469,7 @@ XWindowsScreen::getClipboard(ClipboardID id, IClipboard* clipboard) const
 	return Clipboard::copy(clipboard, m_clipboard[id], timestamp);
 }
 
-void
-XWindowsScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
+void XWindowsScreen::getShape(std::int32_t& x, std::int32_t& y, std::int32_t& w, std::int32_t& h) const
 {
 	x = m_x;
 	y = m_y;
@@ -478,8 +477,7 @@ XWindowsScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 	h = m_h;
 }
 
-void
-XWindowsScreen::getCursorPos(SInt32& x, SInt32& y) const
+void XWindowsScreen::getCursorPos(std::int32_t& x, std::int32_t& y) const
 {
 	Window root, window;
 	int mx, my, xWindow, yWindow;
@@ -500,8 +498,7 @@ void XWindowsScreen::reconfigure(std::uint32_t)
 	// do nothing
 }
 
-void
-XWindowsScreen::warpCursor(SInt32 x, SInt32 y)
+void XWindowsScreen::warpCursor(std::int32_t x, std::int32_t y)
 {
 	// warp mouse
 	warpCursorNoFlush(x, y);
@@ -758,8 +755,7 @@ XWindowsScreen::fakeInputEnd()
 	// FIXME -- not implemented
 }
 
-SInt32
-XWindowsScreen::getJumpZoneSize() const
+std::int32_t XWindowsScreen::getJumpZoneSize() const
 {
 	return 1;
 }
@@ -781,8 +777,7 @@ bool XWindowsScreen::isAnyMouseButtonDown(std::uint32_t& buttonID) const
 	return false;
 }
 
-void
-XWindowsScreen::getCursorCenter(SInt32& x, SInt32& y) const
+void XWindowsScreen::getCursorCenter(std::int32_t& x, std::int32_t& y) const
 {
 	x = m_xCenter;
 	y = m_yCenter;
@@ -799,8 +794,7 @@ XWindowsScreen::fakeMouseButton(ButtonID button, bool press)
 	}
 }
 
-void
-XWindowsScreen::fakeMouseMove(SInt32 x, SInt32 y)
+void XWindowsScreen::fakeMouseMove(std::int32_t x, std::int32_t y)
 {
 	if (m_xinerama && m_xtestIsXineramaUnaware) {
         m_impl->XWarpPointer(m_display, None, m_root, 0, 0, 0, 0, x, y);
@@ -812,8 +806,7 @@ XWindowsScreen::fakeMouseMove(SInt32 x, SInt32 y)
     m_impl->XFlush(m_display);
 }
 
-void
-XWindowsScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
+void XWindowsScreen::fakeMouseRelativeMove(std::int32_t dx, std::int32_t dy) const
 {
 	// FIXME -- ignore xinerama for now
 	if (false && m_xinerama && m_xtestIsXineramaUnaware) {
@@ -825,8 +818,7 @@ XWindowsScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
     m_impl->XFlush(m_display);
 }
 
-void
-XWindowsScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
+void XWindowsScreen::fakeMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const
 {
     int numEvents;
 
@@ -991,7 +983,7 @@ XWindowsScreen::openWindow() const
 	attr.cursor                = createBlankCursor();
 
 	// adjust attributes and get size and shape
-	SInt32 x, y, w, h;
+	std::int32_t x, y, w, h;
 	if (m_isPrimary) {
 		// grab window attributes.  this window is used to capture user
 		// input when the user is focused on another client.  it covers
@@ -1364,7 +1356,7 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 
 			case XkbStateNotify:
 				LOG((CLOG_INFO "group change: %d", xkbEvent->state.group));
-                m_keyState->setActiveGroup(static_cast<SInt32>(xkbEvent->state.group));
+                m_keyState->setActiveGroup(static_cast<std::int32_t>(xkbEvent->state.group));
 				return;
             default:
                 break;
@@ -1557,8 +1549,8 @@ XWindowsScreen::onMouseMove(const XMotionEvent& xmotion)
 
 	// compute motion delta (relative to the last known
 	// mouse position)
-	SInt32 x = xmotion.x_root - m_xCursor;
-	SInt32 y = xmotion.y_root - m_yCursor;
+	std::int32_t x = xmotion.x_root - m_xCursor;
+	std::int32_t y = xmotion.y_root - m_yCursor;
 
 	// save position to compute delta of next motion
 	m_xCursor = xmotion.x_root;
@@ -1599,7 +1591,7 @@ XWindowsScreen::onMouseMove(const XMotionEvent& xmotion)
 		// pixel) but the latter is a PITA.  to work around
 		// it we only warp when the mouse has moved more
 		// than s_size pixels from the center.
-		static const SInt32 s_size = 32;
+		static const std::int32_t s_size = 32;
 		if (xmotion.x_root - m_xCenter < -s_size ||
 			xmotion.x_root - m_xCenter >  s_size ||
 			xmotion.y_root - m_yCenter < -s_size ||
@@ -1619,8 +1611,7 @@ XWindowsScreen::onMouseMove(const XMotionEvent& xmotion)
 	}
 }
 
-int
-XWindowsScreen::x_accumulateMouseScroll(SInt32 xDelta) const
+int XWindowsScreen::x_accumulateMouseScroll(std::int32_t xDelta) const
 {
     m_x_accumulatedScroll += xDelta;
     int numEvents = m_x_accumulatedScroll / m_mouseScrollDelta;
@@ -1628,8 +1619,7 @@ XWindowsScreen::x_accumulateMouseScroll(SInt32 xDelta) const
     return numEvents;
 }
 
-int
-XWindowsScreen::y_accumulateMouseScroll(SInt32 yDelta) const
+int XWindowsScreen::y_accumulateMouseScroll(std::int32_t yDelta) const
 {
     m_y_accumulatedScroll += yDelta;
     int numEvents = m_y_accumulatedScroll / m_mouseScrollDelta;
@@ -1889,8 +1879,7 @@ XWindowsScreen::mapButtonToX(ButtonID id) const
 	}
 }
 
-void
-XWindowsScreen::warpCursorNoFlush(SInt32 x, SInt32 y)
+void XWindowsScreen::warpCursorNoFlush(std::int32_t x, std::int32_t y)
 {
 	assert(m_window != None);
 

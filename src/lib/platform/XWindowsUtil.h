@@ -41,7 +41,7 @@ public:
     */
     static bool getWindowProperty(Display*, Window window, Atom property,
                                   std::string* data, Atom* type,
-                                  SInt32* format, bool deleteProperty);
+                                  std::int32_t* format, bool deleteProperty);
 
     //! Set property
     /*!
@@ -49,7 +49,7 @@ public:
     \c data.
     */
     static bool setWindowProperty(Display*, Window window, Atom property, const void* data,
-                                  std::uint32_t size, Atom type, SInt32 format);
+                                  std::uint32_t size, Atom type, std::int32_t format);
 
     //! Get X server time
     /*!

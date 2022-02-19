@@ -747,11 +747,8 @@ MSWindowsKeyState::onKey(KeyButton button, bool down, KeyModifierMask newState)
 	KeyState::onKey(button, down, newState);
 }
 
-void
-MSWindowsKeyState::sendKeyEvent(void* target,
-							bool press, bool isAutoRepeat,
-							KeyID key, KeyModifierMask mask,
-							SInt32 count, KeyButton button)
+void MSWindowsKeyState::sendKeyEvent(void* target, bool press, bool isAutoRepeat, KeyID key,
+                                     KeyModifierMask mask, std::int32_t count, KeyButton button)
 {
 	if (press || isAutoRepeat) {
 		// send key
@@ -780,9 +777,8 @@ MSWindowsKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask,
 	KeyState::fakeKeyDown(id, mask, button);
 }
 
-bool
-MSWindowsKeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
-				SInt32 count, KeyButton button)
+bool MSWindowsKeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask, std::int32_t count,
+                                      KeyButton button)
 {
 	return KeyState::fakeKeyRepeat(id, mask, count, button);
 }
@@ -855,8 +851,7 @@ MSWindowsKeyState::pollActiveModifiers() const
 	return state;
 }
 
-SInt32
-MSWindowsKeyState::pollActiveGroup() const
+std::int32_t MSWindowsKeyState::pollActiveGroup() const
 {
 	// determine the thread that'll receive this event
 	HWND  targetWindow = GetForegroundWindow();
@@ -907,8 +902,8 @@ MSWindowsKeyState::getKeyMap(inputleap::KeyMap& keyMap)
 	// update keyboard groups
 	if (getGroups(m_groups)) {
 		m_groupMap.clear();
-		SInt32 numGroups = (SInt32)m_groups.size();
-		for (SInt32 g = 0; g < numGroups; ++g) {
+		std::int32_t numGroups = (std::int32_t)m_groups.size();
+		for (std::int32_t g = 0; g < numGroups; ++g) {
 			m_groupMap[m_groups[g]] = g;
 		}
 	}
@@ -919,8 +914,8 @@ MSWindowsKeyState::getKeyMap(inputleap::KeyMap& keyMap)
 	m_keyToVKMap.clear();
 
 	inputleap::KeyMap::KeyItem item;
-	SInt32 numGroups = (SInt32)m_groups.size();
-	for (SInt32 g = 0; g < numGroups; ++g) {
+	std::int32_t numGroups = (std::int32_t)m_groups.size();
+	for (std::int32_t g = 0; g < numGroups; ++g) {
 		item.m_group = g;
 		ActivateKeyboardLayout(m_groups[g], 0);
 
@@ -1298,8 +1293,7 @@ MSWindowsKeyState::getGroups(GroupList& groups) const
 	return true;
 }
 
-void
-MSWindowsKeyState::setWindowGroup(SInt32 group)
+void MSWindowsKeyState::setWindowGroup(std::int32_t group)
 {
 	HWND targetWindow = GetForegroundWindow();
 

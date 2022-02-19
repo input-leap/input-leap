@@ -136,21 +136,19 @@ public:
 	// IKeyState overrides
 	virtual void		fakeKeyDown(KeyID id, KeyModifierMask mask,
 							KeyButton button);
-	virtual bool		fakeKeyRepeat(KeyID id, KeyModifierMask mask,
-							SInt32 count, KeyButton button);
+    virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, std::int32_t count,
+                               KeyButton button);
 	virtual bool		fakeCtrlAltDel();
 	virtual KeyModifierMask
 						pollActiveModifiers() const;
-	virtual SInt32		pollActiveGroup() const;
+    virtual std::int32_t pollActiveGroup() const;
 	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const;
 
 	// KeyState overrides
 	virtual void		onKey(KeyButton button, bool down,
 							KeyModifierMask newState);
-	virtual void		sendKeyEvent(void* target,
-							bool press, bool isAutoRepeat,
-							KeyID key, KeyModifierMask mask,
-							SInt32 count, KeyButton button);
+    virtual void sendKeyEvent(void* target, bool press, bool isAutoRepeat, KeyID key,
+                              KeyModifierMask mask, std::int32_t count, KeyButton button);
 
 	// Unit test accessors
 	KeyButton			getLastDown() const { return m_lastDown; }
@@ -172,7 +170,7 @@ private:
     static void ctrl_alt_del_thread();
 
 	bool				getGroups(GroupList&) const;
-	void				setWindowGroup(SInt32 group);
+    void setWindowGroup(std::int32_t group);
 
 	KeyID				getIDForKey(inputleap::KeyMap::KeyItem& item,
 							KeyButton button, UINT virtualKey,
@@ -188,7 +186,7 @@ private:
 	MSWindowsKeyState& operator=(const MSWindowsKeyState&);
 
 private:
-	typedef std::map<HKL, SInt32> GroupMap;
+	typedef std::map<HKL, std::int32_t> GroupMap;
 	typedef std::map<KeyID, UINT> KeyToVKMap;
 
 	void*				m_eventTarget;

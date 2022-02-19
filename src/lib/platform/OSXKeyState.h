@@ -94,7 +94,7 @@ public:
     virtual bool        fakeMediaKey(KeyID id);
     virtual KeyModifierMask
                         pollActiveModifiers() const;
-    virtual SInt32        pollActiveGroup() const;
+    virtual std::int32_t pollActiveGroup() const;
     virtual void        pollPressedKeys(KeyButtonSet& pressedKeys) const;
 
     CGEventFlags getModifierStateAsOSXFlags();
@@ -108,18 +108,16 @@ private:
     typedef std::vector<KeyLayout> GroupList;
 
     // Add hard coded special keys to a inputleap::KeyMap.
-    void                getKeyMapForSpecialKeys(
-                            inputleap::KeyMap& keyMap, SInt32 group) const;
+    void getKeyMapForSpecialKeys(inputleap::KeyMap& keyMap, std::int32_t group) const;
 
     // Convert keyboard resource to a key map
-    bool                getKeyMap(inputleap::KeyMap& keyMap,
-                            SInt32 group, const IOSXKeyResource& r) const;
+    bool getKeyMap(inputleap::KeyMap& keyMap, std::int32_t group, const IOSXKeyResource& r) const;
 
     // Get the available keyboard groups
     bool                getGroups(GroupList&) const;
 
     // Change active keyboard group to group
-    void                setGroup(SInt32 group);
+    void setGroup(std::int32_t group);
 
     // Check if the keyboard layout has changed and update keyboard state
     // if so.
@@ -163,7 +161,7 @@ private:
         KeyButtonOffset = 1
     };
 
-    typedef std::map<CFDataRef, SInt32> GroupMap;
+    typedef std::map<CFDataRef, std::int32_t> GroupMap;
     typedef std::map<std::uint32_t, KeyID> VirtualKeyMap;
 
     VirtualKeyMap        m_virtualKeyMap;

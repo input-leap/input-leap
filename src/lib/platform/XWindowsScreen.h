@@ -48,25 +48,25 @@ public:
     // IScreen overrides
     void* getEventTarget() const override;
     bool getClipboard(ClipboardID id, IClipboard*) const override;
-    void getShape(SInt32& x, SInt32& y, SInt32& width, SInt32& height) const override;
-    void getCursorPos(SInt32& x, SInt32& y) const override;
+    void getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width, std::int32_t& height) const override;
+    void getCursorPos(std::int32_t& x, std::int32_t& y) const override;
 
     // IPrimaryScreen overrides
     void reconfigure(std::uint32_t activeSides) override;
-    void warpCursor(SInt32 x, SInt32 y) override;
+    void warpCursor(std::int32_t x, std::int32_t y) override;
     std::uint32_t registerHotKey(KeyID key, KeyModifierMask mask) override;
     void unregisterHotKey(std::uint32_t id) override;
     void fakeInputBegin() override;
     void fakeInputEnd() override;
-    SInt32 getJumpZoneSize() const override;
+    std::int32_t getJumpZoneSize() const override;
     bool isAnyMouseButtonDown(std::uint32_t& buttonID) const override;
-    void getCursorCenter(SInt32& x, SInt32& y) const override;
+    void getCursorCenter(std::int32_t& x, std::int32_t& y) const override;
 
     // ISecondaryScreen overrides
     void fakeMouseButton(ButtonID id, bool press) override;
-    void fakeMouseMove(SInt32 x, SInt32 y) override;
-    void fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const override;
-    void fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const override;
+    void fakeMouseMove(std::int32_t x, std::int32_t y) override;
+    void fakeMouseRelativeMove(std::int32_t dx, std::int32_t dy) const override;
+    void fakeMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const override;
 
     // IPlatformScreen overrides
     void enable() override;
@@ -136,8 +136,8 @@ private:
 
     // Returns the number of scroll events needed after the current delta has
     // been taken into account
-    int                 x_accumulateMouseScroll(SInt32 xDelta) const;
-    int                 y_accumulateMouseScroll(SInt32 yDelta) const;
+    int x_accumulateMouseScroll(std::int32_t xDelta) const;
+    int y_accumulateMouseScroll(std::int32_t yDelta) const;
 
     bool                detectXI2();
 #ifdef HAVE_XI2
@@ -150,7 +150,7 @@ private:
     ButtonID            mapButtonFromX(const XButtonEvent*) const;
     unsigned int        mapButtonToX(ButtonID id) const;
 
-    void                warpCursorNoFlush(SInt32 x, SInt32 y);
+    void warpCursorNoFlush(std::int32_t x, std::int32_t y);
 
     void                refreshKeyboard(XEvent*);
 
@@ -195,12 +195,12 @@ private:
     bool                m_isOnScreen;
 
     // screen shape stuff
-    SInt32                m_x, m_y;
-    SInt32                m_w, m_h;
-    SInt32                m_xCenter, m_yCenter;
+    std::int32_t m_x, m_y;
+    std::int32_t m_w, m_h;
+    std::int32_t m_xCenter, m_yCenter;
 
     // last mouse position
-    SInt32                m_xCursor, m_yCursor;
+    std::int32_t m_xCursor, m_yCursor;
 
     // keyboard stuff
     XWindowsKeyState*    m_keyState;

@@ -37,8 +37,7 @@ ClientProxy1_2::~ClientProxy1_2()
     // do nothing
 }
 
-void
-ClientProxy1_2::mouseRelativeMove(SInt32 xRel, SInt32 yRel)
+void ClientProxy1_2::mouseRelativeMove(std::int32_t xRel, std::int32_t yRel)
 {
     LOG((CLOG_DEBUG2 "send mouse relative move to \"%s\" %d,%d", getName().c_str(), xRel, yRel));
     ProtocolUtil::writef(getStream(), kMsgDMouseRelMove, xRel, yRel);

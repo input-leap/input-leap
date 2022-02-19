@@ -35,7 +35,7 @@ inline
 std::istream& operator>>(std::istream& s, SInt16& i)
 { return s >> (short&)i; }
 inline
-std::istream& operator>>(std::istream& s, SInt32& i)
+std::istream& operator>>(std::istream& s, std::int32_t& i)
 { return s >> (int&)i; }
 inline
 std::istream& operator>>(std::istream& s, UInt8& i)

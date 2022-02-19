@@ -76,7 +76,7 @@ static const std::uint32_t kKeyModifierBitLevel5Lock = 6;
 static const std::uint32_t kKeyModifierBitCapsLock   = 12;
 static const std::uint32_t kKeyModifierBitNumLock    = 13;
 static const std::uint32_t kKeyModifierBitScrollLock = 14;
-static const SInt32				kKeyModifierNumBits       = 16;
+static const std::int32_t kKeyModifierNumBits       = 16;
 //@}
 
 //! @name Modifier key identifiers

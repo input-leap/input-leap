@@ -28,6 +28,6 @@ public:
 
     // IClient overrides
     void keyDown(KeyID, KeyModifierMask, KeyButton) override;
-    void keyRepeat(KeyID, KeyModifierMask, SInt32 count, KeyButton) override;
+    void keyRepeat(KeyID, KeyModifierMask, std::int32_t count, KeyButton) override;
     void keyUp(KeyID, KeyModifierMask, KeyButton) override;
 };

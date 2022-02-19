@@ -59,14 +59,14 @@ public:
     Return the position of the upper-left corner of the screen in \c x and
     \c y and the size of the screen in \c width and \c height.
     */
-    virtual void        getShape(SInt32& x, SInt32& y,
-                            SInt32& width, SInt32& height) const = 0;
+    virtual void getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width,
+                          std::int32_t& height) const = 0;
 
     //! Get cursor position
     /*!
     Return the current position of the cursor in \c x and \c y.
     */
-    virtual void        getCursorPos(SInt32& x, SInt32& y) const = 0;
+    virtual void getCursorPos(std::int32_t& x, std::int32_t& y) const = 0;
 
     //@}
 };

@@ -22,14 +22,14 @@
 struct CBMPInfoHeader {
 public:
     std::uint32_t biSize;
-    SInt32                biWidth;
-    SInt32                biHeight;
+    std::int32_t biWidth;
+    std::int32_t biHeight;
     UInt16                biPlanes;
     UInt16                biBitCount;
     std::uint32_t biCompression;
     std::uint32_t biSizeImage;
-    SInt32                biXPelsPerMeter;
-    SInt32                biYPelsPerMeter;
+    std::int32_t biXPelsPerMeter;
+    std::int32_t biYPelsPerMeter;
     std::uint32_t biClrUsed;
     std::uint32_t biClrImportant;
 };
@@ -45,9 +45,7 @@ toLE(UInt8*& dst, UInt16 src)
     dst += 2;
 }
 
-static
-void
-toLE(UInt8*& dst, SInt32 src)
+static void toLE(UInt8*& dst, std::int32_t src)
 {
     dst[0] = static_cast<UInt8>(src & 0xffu);
     dst[1] = static_cast<UInt8>((src >>  8) & 0xffu);
@@ -73,11 +71,9 @@ fromLEU16(const UInt8* data)
             (static_cast<UInt16>(data[1]) << 8);
 }
 
-static inline
-SInt32
-fromLES32(const UInt8* data)
+static inline std::int32_t fromLES32(const UInt8* data)
 {
-    return static_cast<SInt32>(static_cast<std::uint32_t>(data[0]) |
+    return static_cast<std::int32_t>(static_cast<std::uint32_t>(data[0]) |
             (static_cast<std::uint32_t>(data[1]) <<  8) |
             (static_cast<std::uint32_t>(data[2]) << 16) |
             (static_cast<std::uint32_t>(data[3]) << 24));
@@ -168,14 +164,14 @@ std::string XWindowsClipboardAnyBitmapConverter::toIClipboard(const std::string&
     UInt8 infoHeader[40];
     UInt8* dst = infoHeader;
     toLE(dst, static_cast<std::uint32_t>(40));
-    toLE(dst, static_cast<SInt32>(w));
-    toLE(dst, static_cast<SInt32>(h));
+    toLE(dst, static_cast<std::int32_t>(w));
+    toLE(dst, static_cast<std::int32_t>(h));
     toLE(dst, static_cast<UInt16>(1));
     toLE(dst, static_cast<UInt16>(depth));
     toLE(dst, static_cast<std::uint32_t>(0));        // BI_RGB
     toLE(dst, static_cast<std::uint32_t>(image.size()));
-    toLE(dst, static_cast<SInt32>(2834));    // 72 dpi
-    toLE(dst, static_cast<SInt32>(2834));    // 72 dpi
+    toLE(dst, static_cast<std::int32_t>(2834));    // 72 dpi
+    toLE(dst, static_cast<std::int32_t>(2834));    // 72 dpi
     toLE(dst, static_cast<std::uint32_t>(0));
     toLE(dst, static_cast<std::uint32_t>(0));
 

@@ -125,9 +125,8 @@ public:
     /*!
     This tells the desks that the display size has changed.
     */
-    void                setShape(SInt32 x, SInt32 y,
-                            SInt32 width, SInt32 height,
-                            SInt32 xCenter, SInt32 yCenter, bool isMultimon);
+    void setShape(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height,
+                  std::int32_t xCenter, std::int32_t yCenter, bool isMultimon);
 
     //! Install/uninstall screensaver hooks
     /*!
@@ -157,7 +156,7 @@ public:
     /*!
     Return the current position of the cursor in \c x and \c y.
     */
-    void                getCursorPos(SInt32& x, SInt32& y) const;
+    void getCursorPos(std::int32_t& x, std::int32_t& y) const;
 
     //! Fake key press/release
     /*!
@@ -176,19 +175,19 @@ public:
     /*!
     Synthesize a mouse move to the absolute coordinates \c x,y.
     */
-    void                fakeMouseMove(SInt32 x, SInt32 y) const;
+    void fakeMouseMove(std::int32_t x, std::int32_t y) const;
 
     //! Fake mouse move
     /*!
     Synthesize a mouse move to the relative coordinates \c dx,dy.
     */
-    void                fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const;
+    void fakeMouseRelativeMove(std::int32_t dx, std::int32_t dy) const;
 
     //! Fake mouse wheel
     /*!
     Synthesize a mouse wheel event of amount \c delta in direction \c axis.
     */
-    void                fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
+    void fakeMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const;
 
     //@}
 
@@ -215,8 +214,8 @@ private:
     void                destroyWindow(HWND) const;
 
     // message handlers
-    void                deskMouseMove(SInt32 x, SInt32 y) const;
-    void                deskMouseRelativeMove(SInt32 dx, SInt32 dy) const;
+    void deskMouseMove(std::int32_t x, std::int32_t y) const;
+    void deskMouseRelativeMove(std::int32_t dx, std::int32_t dy) const;
     void                deskEnter(Desk* desk);
     void                deskLeave(Desk* desk, HKL keyLayout);
     void desk_thread(Desk* desk);
@@ -259,9 +258,9 @@ private:
     HCURSOR                m_cursor;
 
     // screen shape stuff
-    SInt32                m_x, m_y;
-    SInt32                m_w, m_h;
-    SInt32                m_xCenter, m_yCenter;
+    std::int32_t m_x, m_y;
+    std::int32_t m_w, m_h;
+    std::int32_t m_xCenter, m_yCenter;
 
     // true if system appears to have multiple monitors
     bool                m_multimon;

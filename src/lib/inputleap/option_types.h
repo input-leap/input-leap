@@ -31,7 +31,7 @@ typedef std::uint32_t OptionID;
 /*!
 Type to hold an option value.
 */
-typedef SInt32            OptionValue;
+typedef std::int32_t OptionValue;
 
 // for now, options are just pairs of integers
 typedef std::vector<std::uint32_t> OptionsList;

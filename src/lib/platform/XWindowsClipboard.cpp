@@ -474,7 +474,7 @@ XWindowsClipboard::doClearCache()
 {
     m_checkCache = false;
     m_cached     = false;
-    for (SInt32 index = 0; index < kNumFormats; ++index) {
+    for (std::int32_t index = 0; index < kNumFormats; ++index) {
         m_data[index]  = "";
         m_added[index] = false;
     }
@@ -668,7 +668,7 @@ XWindowsClipboard::motifOwnsClipboard() const
 
     // get the Motif clipboard header property from the root window
     Atom target;
-    SInt32 format;
+    std::int32_t format;
     std::string data;
     Window root = RootWindow(m_display, DefaultScreen(m_display));
     if (!XWindowsUtil::getWindowProperty(m_display, root,
@@ -697,7 +697,7 @@ XWindowsClipboard::motifFillCache()
 
     // get the Motif clipboard header property from the root window
     Atom target;
-    SInt32 format;
+    std::int32_t format;
     std::string data;
     Window root = RootWindow(m_display, DefaultScreen(m_display));
     if (!XWindowsUtil::getWindowProperty(m_display, root,
@@ -737,14 +737,14 @@ XWindowsClipboard::motifFillCache()
     }
 
     // format list is after static item structure elements
-    const SInt32 numFormats = item.m_numFormats - item.m_numDeletedFormats;
-    const SInt32* formats   = reinterpret_cast<const SInt32*>(item.m_size +
-                                static_cast<const char*>(data.data()));
+    const std::int32_t numFormats = item.m_numFormats - item.m_numDeletedFormats;
+    const std::int32_t* formats = reinterpret_cast<const std::int32_t*>(item.m_size +
+                                                            static_cast<const char*>(data.data()));
 
     // get the available formats
     typedef std::map<Atom, std::string> MotifFormatMap;
     MotifFormatMap motifFormats;
-    for (SInt32 i = 0; i < numFormats; ++i) {
+    for (std::int32_t i = 0; i < numFormats; ++i) {
         // get Motif format property from the root window
         sprintf(name, "_MOTIF_CLIP_ITEM_%d", formats[i]);
         Atom atomFormat = m_impl->XInternAtom(m_display, name, False);
@@ -850,7 +850,7 @@ XWindowsClipboard::insertMultipleReply(Window requestor,
 {
     // get the requested targets
     Atom target;
-    SInt32 format;
+    std::int32_t format;
     std::string data;
     if (!XWindowsUtil::getWindowProperty(m_display, requestor,
                                 property, &data, &target, &format, False)) {

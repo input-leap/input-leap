@@ -217,8 +217,7 @@ OSXScreen::getClipboard(ClipboardID, IClipboard* dst) const
 	return true;
 }
 
-void
-OSXScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
+void OSXScreen::getShape(std::int32_t& x, std::int32_t& y, std::int32_t& w, std::int32_t& h) const
 {
 	x = m_x;
 	y = m_y;
@@ -226,8 +225,7 @@ OSXScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 	h = m_h;
 }
 
-void
-OSXScreen::getCursorPos(SInt32& x, SInt32& y) const
+void OSXScreen::getCursorPos(std::int32_t& x, std::int32_t& y) const
 {
 	CGEventRef event = CGEventCreate(NULL);
 	CGPoint mouse = CGEventGetLocation(event);
@@ -244,8 +242,7 @@ void OSXScreen::reconfigure(std::uint32_t)
 	// do nothing
 }
 
-void
-OSXScreen::warpCursor(SInt32 x, SInt32 y)
+void OSXScreen::warpCursor(std::int32_t x, std::int32_t y)
 {
 	// move cursor without generating events
 	CGPoint pos;
@@ -271,8 +268,7 @@ OSXScreen::fakeInputEnd()
 	// FIXME -- not implemented
 }
 
-SInt32
-OSXScreen::getJumpZoneSize() const
+std::int32_t OSXScreen::getJumpZoneSize() const
 {
 	return 1;
 }
@@ -287,8 +283,7 @@ bool OSXScreen::isAnyMouseButtonDown(std::uint32_t& buttonID) const
 	return (GetCurrentButtonState() != 0);
 }
 
-void
-OSXScreen::getCursorCenter(SInt32& x, SInt32& y) const
+void OSXScreen::getCursorCenter(std::int32_t& x, std::int32_t& y) const
 {
 	x = m_xCenter;
 	y = m_yCenter;
@@ -494,7 +489,7 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
 
 	CGPoint pos;
 	if (!m_cursorPosValid) {
-		SInt32 x, y;
+        std::int32_t x, y;
 		getCursorPos(x, y);
 	}
 	pos.x = m_xCursor;
@@ -502,8 +497,8 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
 
 	// variable used to detect mouse coordinate differences between
 	// old & new mouse clicks. Used in double click detection.
-	SInt32 xDiff = m_xCursor - m_lastSingleClickXCursor;
-	SInt32 yDiff = m_yCursor - m_lastSingleClickYCursor;
+    std::int32_t xDiff = m_xCursor - m_lastSingleClickXCursor;
+    std::int32_t yDiff = m_yCursor - m_lastSingleClickYCursor;
 	double diff = sqrt(xDiff * xDiff + yDiff * yDiff);
 	// max sqrt(x^2 + y^2) difference allowed to double click
 	// since we don't have double click distance in NX APIs
@@ -594,8 +589,7 @@ void OSXScreen::get_drop_target_thread()
 	m_fakeDraggingStarted = false;
 }
 
-void
-OSXScreen::fakeMouseMove(SInt32 x, SInt32 y)
+void OSXScreen::fakeMouseMove(std::int32_t x, std::int32_t y)
 {
 	if (m_fakeDraggingStarted) {
 		m_buttonState.set(0, kMouseButtonDown);
@@ -613,13 +607,12 @@ OSXScreen::fakeMouseMove(SInt32 x, SInt32 y)
 	postMouseEvent(pos);
 
 	// save new cursor position
-	m_xCursor        = static_cast<SInt32>(pos.x);
-	m_yCursor        = static_cast<SInt32>(pos.y);
+    m_xCursor = static_cast<std::int32_t>(pos.x);
+    m_yCursor = static_cast<std::int32_t>(pos.y);
 	m_cursorPosValid = true;
 }
 
-void
-OSXScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
+void OSXScreen::fakeMouseRelativeMove(std::int32_t dx, std::int32_t dy) const
 {
 	// OS X does not appear to have a fake relative mouse move function.
 	// simulate it by getting the current mouse position and adding to
@@ -633,8 +626,8 @@ OSXScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
 
 	// synthesize event
 	CGPoint pos;
-	m_xCursor = static_cast<SInt32>(oldPos.x);
-	m_yCursor = static_cast<SInt32>(oldPos.y);
+    m_xCursor = static_cast<std::int32_t>(oldPos.x);
+    m_yCursor = static_cast<std::int32_t>(oldPos.y);
 	pos.x     = oldPos.x + dx;
 	pos.y     = oldPos.y + dy;
 	postMouseEvent(pos);
@@ -643,8 +636,7 @@ OSXScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
 	m_cursorPosValid = false;
 }
 
-void
-OSXScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
+void OSXScreen::fakeMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const
 {
 	if (xDelta != 0 || yDelta != 0) {
 		// create a scroll event, post it and release it.  not sure if kCGScrollEventUnitLine
@@ -1061,8 +1053,8 @@ OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 	}
 
 	// save position to compute delta of next motion
-	m_xCursor = (SInt32)mx;
-	m_yCursor = (SInt32)my;
+    m_xCursor = (std::int32_t)mx;
+    m_yCursor = (std::int32_t)my;
 
 	if (m_isOnScreen) {
 		// motion on primary screen
@@ -1082,7 +1074,7 @@ OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 		// it's probably a bogus motion that we want to
 		// ignore (see warpCursorNoFlush() for a further
 		// description).
-		static SInt32 bogusZoneSize = 10;
+        static std::int32_t bogusZoneSize = 10;
 		if (-x + bogusZoneSize > m_xCenter - m_x ||
 			 x + bogusZoneSize > m_x + m_w - m_xCenter ||
 			-y + bogusZoneSize > m_yCenter - m_y ||
@@ -1099,8 +1091,8 @@ OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 			m_yFractionalMove += y;
 
 			// Return the integer part
-			SInt32 intX = (SInt32)m_xFractionalMove;
-			SInt32 intY = (SInt32)m_yFractionalMove;
+            std::int32_t intX = (std::int32_t)m_xFractionalMove;
+            std::int32_t intY = (std::int32_t)m_yFractionalMove;
 
 			// And keep only the fractional part
 			m_xFractionalMove -= intX;
@@ -1168,8 +1160,7 @@ OSXScreen::onMouseButton(bool pressed, UInt16 macButton)
 	return true;
 }
 
-bool
-OSXScreen::onMouseWheel(SInt32 xDelta, SInt32 yDelta) const
+bool OSXScreen::onMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const
 {
 	LOG((CLOG_DEBUG1 "event: button wheel delta=%+d,%+d", xDelta, yDelta));
 	sendEvent(m_events->forIPrimaryScreen().wheel(), WheelInfo::alloc(xDelta, yDelta));
@@ -1393,21 +1384,19 @@ OSXScreen::mapMacButtonToBarrier(UInt16 macButton) const
 	return static_cast<ButtonID>(macButton);
 }
 
-SInt32
-OSXScreen::mapScrollWheelToBarrier(float x) const
+std::int32_t OSXScreen::mapScrollWheelToBarrier(float x) const
 {
 	// return accelerated scrolling but not exponentially scaled as it is
 	// on the mac.
 	double d = (1.0 + getScrollSpeed()) * x / getScrollSpeedFactor();
-	return static_cast<SInt32>(120.0 * d);
+    return static_cast<std::int32_t>(120.0 * d);
 }
 
-SInt32
-OSXScreen::mapScrollWheelFromBarrier(float x) const
+std::int32_t OSXScreen::mapScrollWheelFromBarrier(float x) const
 {
 	// use server's acceleration with a little boost since other platforms
 	// take one wheel step as a larger step than the mac does.
-	return static_cast<SInt32>(3.0 * x / 120.0);
+    return static_cast<std::int32_t>(3.0 * x / 120.0);
 }
 
 double
@@ -1473,7 +1462,7 @@ OSXScreen::handleDrag(const Event&, void*)
 	if ((short)p.x != m_dragLastPoint.h || (short)p.y != m_dragLastPoint.v) {
 		m_dragLastPoint.h = (short)p.x;
 		m_dragLastPoint.v = (short)p.y;
-		onMouseMove((SInt32)p.x, (SInt32)p.y);
+        onMouseMove((std::int32_t)p.x, (std::int32_t)p.y);
 	}
 }
 
@@ -1530,10 +1519,10 @@ OSXScreen::updateScreenShape()
 	}
 
 	// get shape of default screen
-	m_x = (SInt32)totalBounds.origin.x;
-	m_y = (SInt32)totalBounds.origin.y;
-	m_w = (SInt32)totalBounds.size.width;
-	m_h = (SInt32)totalBounds.size.height;
+    m_x = (std::int32_t)totalBounds.origin.x;
+    m_y = (std::int32_t)totalBounds.origin.y;
+    m_w = (std::int32_t)totalBounds.size.width;
+    m_h = (std::int32_t)totalBounds.size.height;
 
 	// get center of default screen
   CGDirectDisplayID main = CGMainDisplayID();

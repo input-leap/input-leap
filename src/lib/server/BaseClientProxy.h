@@ -38,7 +38,7 @@ public:
     /*!
     Save the position of the cursor when jumping from client.
     */
-    void                setJumpCursorPos(SInt32 x, SInt32 y);
+    void setJumpCursorPos(std::int32_t x, std::int32_t y);
 
     //@}
     //! @name accessors
@@ -48,7 +48,7 @@ public:
     /*!
     Get the position of the cursor when last jumping from client.
     */
-    void                getJumpCursorPos(SInt32& x, SInt32& y) const;
+    void getJumpCursorPos(std::int32_t& x, std::int32_t& y) const;
 
     //! Get cursor position
     /*!
@@ -67,5 +67,5 @@ public:
 
 private:
     std::string m_name;
-    SInt32                m_x, m_y;
+    std::int32_t m_x, m_y;
 };

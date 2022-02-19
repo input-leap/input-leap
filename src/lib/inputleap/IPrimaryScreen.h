@@ -47,20 +47,20 @@ public:
     //! Motion event data
     class MotionInfo {
     public:
-        static MotionInfo* alloc(SInt32 x, SInt32 y);
+        static MotionInfo* alloc(std::int32_t x, std::int32_t y);
 
     public:
-        SInt32            m_x;
-        SInt32            m_y;
+        std::int32_t m_x;
+        std::int32_t m_y;
     };
     //! Wheel motion event data
     class WheelInfo {
     public:
-        static WheelInfo* alloc(SInt32 xDelta, SInt32 yDelta);
+        static WheelInfo* alloc(std::int32_t xDelta, std::int32_t yDelta);
 
     public:
-        SInt32            m_xDelta;
-        SInt32            m_yDelta;
+        std::int32_t m_xDelta;
+        std::int32_t m_yDelta;
     };
     //! Hot key event data
     class HotKeyInfo {
@@ -89,7 +89,7 @@ public:
     discard input events up to and including the warp before
     returning.
     */
-    virtual void        warpCursor(SInt32 x, SInt32 y) = 0;
+    virtual void warpCursor(std::int32_t x, std::int32_t y) = 0;
 
     //! Register a system hotkey
     /*!
@@ -144,7 +144,7 @@ public:
     Return the jump zone size, the size of the regions on the edges of
     the screen that cause the cursor to jump to another screen.
     */
-    virtual SInt32        getJumpZoneSize() const = 0;
+    virtual std::int32_t getJumpZoneSize() const = 0;
 
     //! Test if mouse is pressed
     /*!
@@ -160,7 +160,7 @@ public:
     cursor to compute cursor motion deltas and should be far from
     the edges of the screen, typically the center.
     */
-    virtual void        getCursorCenter(SInt32& x, SInt32& y) const = 0;
+    virtual void getCursorCenter(std::int32_t& x, std::int32_t& y) const = 0;
 
     //@}
 };

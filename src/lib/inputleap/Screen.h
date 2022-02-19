@@ -90,7 +90,7 @@ public:
     discards input events up to and including the warp before
     returning.
     */
-    void                warpCursor(SInt32 x, SInt32 y);
+    void warpCursor(std::int32_t x, std::int32_t y);
 
     //! Set clipboard
     /*!
@@ -128,8 +128,7 @@ public:
     Synthesize key events to generate a press and release of key \c id
     \c count times.  If possible match the given modifier mask.
     */
-    void                keyRepeat(KeyID id, KeyModifierMask,
-                            SInt32 count, KeyButton);
+    void keyRepeat(KeyID id, KeyModifierMask, std::int32_t count, KeyButton);
 
     //! Notify of key release
     /*!
@@ -155,14 +154,14 @@ public:
     Synthesize mouse events to generate mouse motion to the absolute
     screen position \c xAbs,yAbs.
     */
-    void                mouseMove(SInt32 xAbs, SInt32 yAbs);
+    void mouseMove(std::int32_t xAbs, std::int32_t yAbs);
 
     //! Notify of mouse motion
     /*!
     Synthesize mouse events to generate mouse motion by the relative
     amount \c xRel,yRel.
     */
-    void                mouseRelativeMove(SInt32 xRel, SInt32 yRel);
+    void mouseRelativeMove(std::int32_t xRel, std::int32_t yRel);
 
     //! Notify of mouse wheel motion
     /*!
@@ -171,7 +170,7 @@ public:
     to the right and negative for motion towards the user or to the left.
     Each wheel click should generate a delta of +/-120.
     */
-    void                mouseWheel(SInt32 xDelta, SInt32 yDelta);
+    void mouseWheel(std::int32_t xDelta, std::int32_t yDelta);
 
     //! Notify of options changes
     /*!
@@ -251,7 +250,7 @@ public:
     Return the jump zone size, the size of the regions on the edges of
     the screen that cause the cursor to jump to another screen.
     */
-    SInt32                getJumpZoneSize() const;
+    std::int32_t getJumpZoneSize() const;
 
     //! Get cursor center position
     /*!
@@ -259,7 +258,7 @@ public:
     cursor to compute cursor motion deltas and should be far from
     the edges of the screen, typically the center.
     */
-    void                getCursorCenter(SInt32& x, SInt32& y) const;
+    void getCursorCenter(std::int32_t& x, std::int32_t& y) const;
 
     //! Get the active modifiers
     /*!
@@ -297,8 +296,9 @@ public:
     // IScreen overrides
     void* getEventTarget() const override;
     bool getClipboard(ClipboardID id, IClipboard*) const override;
-    void getShape(SInt32& x, SInt32& y, SInt32& width, SInt32& height) const override;
-    void getCursorPos(SInt32& x, SInt32& y) const override;
+    void getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width,
+                  std::int32_t& height) const override;
+    void getCursorPos(std::int32_t& x, std::int32_t& y) const override;
 
     IPlatformScreen*    getPlatformScreen() { return m_screen; }
 

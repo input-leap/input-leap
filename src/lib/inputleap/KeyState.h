@@ -51,10 +51,8 @@ public:
     events in some circumstances.  If this is overridden it must forward
     to the superclass.
     */
-    virtual void        sendKeyEvent(void* target,
-                            bool press, bool isAutoRepeat,
-                            KeyID key, KeyModifierMask mask,
-                            SInt32 count, KeyButton button);
+    virtual void sendKeyEvent(void* target, bool press, bool isAutoRepeat, KeyID key,
+                              KeyModifierMask mask, std::int32_t count, KeyButton button);
 
     //@}
     //! @name accessors
@@ -67,7 +65,8 @@ public:
     void updateKeyState() override;
     void setHalfDuplexMask(KeyModifierMask) override;
     void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button) override;
-    bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button) override;
+    bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, std::int32_t count,
+                       KeyButton button) override;
     bool fakeKeyUp(KeyButton button) override;
     void fakeAllKeysUp() override;
     bool fakeMediaKey(KeyID id) override;
@@ -75,7 +74,7 @@ public:
     bool isKeyDown(KeyButton) const override;
     KeyModifierMask getActiveModifiers() const override;
 
-    SInt32 getKeyState(KeyButton keyButton) { return m_keys[keyButton]; }
+    std::int32_t getKeyState(KeyButton keyButton) { return m_keys[keyButton]; }
 
 protected:
     typedef inputleap::KeyMap::Keystroke Keystroke;
@@ -111,7 +110,7 @@ protected:
     /*!
     Returns the number of the group \p offset groups after group \p group.
     */
-    SInt32                getEffectiveGroup(SInt32 group, SInt32 offset) const;
+    std::int32_t getEffectiveGroup(std::int32_t group, std::int32_t offset) const;
 
     //! Check if key is ignored
     /*!
@@ -125,7 +124,7 @@ protected:
     Return the button mapped to key \p id in group \p group if any,
     otherwise returns 0.
     */
-    KeyButton            getButton(KeyID id, SInt32 group) const;
+    KeyButton getButton(KeyID id, std::int32_t group) const;
 
     //@}
 
@@ -135,11 +134,11 @@ private:
 public:
     struct AddActiveModifierContext {
     public:
-        AddActiveModifierContext(SInt32 group, KeyModifierMask mask,
-                            ModifierToKeys&    activeModifiers);
+        AddActiveModifierContext(std::int32_t group, KeyModifierMask mask,
+                                 ModifierToKeys& activeModifiers);
 
     public:
-        SInt32            m_activeGroup;
+        std::int32_t m_activeGroup;
         KeyModifierMask    m_mask;
         ModifierToKeys&    m_activeModifiers;
 
@@ -186,8 +185,8 @@ private:
                             const ModifierToKeys& newModifiers);
 
     // active modifiers collection callback
-    static void            addActiveModifierCB(KeyID id, SInt32 group,
-                            inputleap::KeyMap::KeyItem& keyItem, void* vcontext);
+    static void addActiveModifierCB(KeyID id, std::int32_t group,
+                                    inputleap::KeyMap::KeyItem& keyItem, void* vcontext);
 
 private:
     // must be declared before m_keyMap. used when this class owns the key map.
@@ -205,13 +204,13 @@ private:
     // current keyboard state (> 0 if pressed, 0 otherwise).  this is
     // initialized to the keyboard state according to the system then
     // it tracks synthesized events.
-    SInt32                m_keys[kNumButtons];
+    std::int32_t m_keys[kNumButtons];
 
     // synthetic keyboard state (> 0 if pressed, 0 otherwise).  this
     // tracks the synthesized keyboard state.  if m_keys[n] > 0 but
     // m_syntheticKeys[n] == 0 then the key was pressed locally and
     // not synthesized yet.
-    SInt32                m_syntheticKeys[kNumButtons];
+    std::int32_t m_syntheticKeys[kNumButtons];
 
     // client data for each pressed key
     std::uint32_t m_keyClientData[kNumButtons];

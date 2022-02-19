@@ -155,8 +155,7 @@ void Screen::reconfigure(std::uint32_t activeSides)
     m_screen->reconfigure(activeSides);
 }
 
-void
-Screen::warpCursor(SInt32 x, SInt32 y)
+void Screen::warpCursor(std::int32_t x, std::int32_t y)
 {
     assert(m_isPrimary);
     m_screen->warpCursor(x, y);
@@ -200,9 +199,7 @@ Screen::keyDown(KeyID id, KeyModifierMask mask, KeyButton button)
     m_screen->fakeKeyDown(id, mask, button);
 }
 
-void
-Screen::keyRepeat(KeyID id,
-                KeyModifierMask mask, SInt32 count, KeyButton button)
+void Screen::keyRepeat(KeyID id, KeyModifierMask mask, std::int32_t count, KeyButton button)
 {
     assert(!m_isPrimary);
     m_screen->fakeKeyRepeat(id, mask, count, button);
@@ -226,22 +223,19 @@ Screen::mouseUp(ButtonID button)
     m_screen->fakeMouseButton(button, false);
 }
 
-void
-Screen::mouseMove(SInt32 x, SInt32 y)
+void Screen::mouseMove(std::int32_t x, std::int32_t y)
 {
     assert(!m_isPrimary);
     m_screen->fakeMouseMove(x, y);
 }
 
-void
-Screen::mouseRelativeMove(SInt32 dx, SInt32 dy)
+void Screen::mouseRelativeMove(std::int32_t dx, std::int32_t dy)
 {
     assert(!m_isPrimary);
     m_screen->fakeMouseRelativeMove(dx, dy);
 }
 
-void
-Screen::mouseWheel(SInt32 xDelta, SInt32 yDelta)
+void Screen::mouseWheel(std::int32_t xDelta, std::int32_t yDelta)
 {
     assert(!m_isPrimary);
     m_screen->fakeMouseWheel(xDelta, yDelta);
@@ -385,8 +379,7 @@ Screen::isLockedToScreen() const
     return false;
 }
 
-SInt32
-Screen::getJumpZoneSize() const
+std::int32_t Screen::getJumpZoneSize() const
 {
     if (!m_isPrimary) {
         return 0;
@@ -396,8 +389,7 @@ Screen::getJumpZoneSize() const
     }
 }
 
-void
-Screen::getCursorCenter(SInt32& x, SInt32& y) const
+void Screen::getCursorCenter(std::int32_t& x, std::int32_t& y) const
 {
     m_screen->getCursorCenter(x, y);
 }
@@ -477,14 +469,12 @@ Screen::getClipboard(ClipboardID id, IClipboard* clipboard) const
     return m_screen->getClipboard(id, clipboard);
 }
 
-void
-Screen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
+void Screen::getShape(std::int32_t& x, std::int32_t& y, std::int32_t& w, std::int32_t& h) const
 {
     m_screen->getShape(x, y, w, h);
 }
 
-void
-Screen::getCursorPos(SInt32& x, SInt32& y) const
+void Screen::getCursorPos(std::int32_t& x, std::int32_t& y) const
 {
     m_screen->getCursorPos(x, y);
 }

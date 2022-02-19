@@ -87,8 +87,7 @@ XWindowsKeyState::init(Display* display, bool useXKB)
     setActiveGroup(kGroupPollAndSet);
 }
 
-void
-XWindowsKeyState::setActiveGroup(SInt32 group)
+void XWindowsKeyState::setActiveGroup(std::int32_t group)
 {
     if (group == kGroupPollAndSet) {
         // we need to set the group to -1 in order for pollActiveGroup() to
@@ -137,7 +136,7 @@ XWindowsKeyState::mapModifiersToX(KeyModifierMask mask,
 {
     modifiers = 0;
 
-    for (SInt32 i = 0; i < kKeyModifierNumBits; ++i) {
+    for (std::int32_t i = 0; i < kKeyModifierNumBits; ++i) {
         KeyModifierMask bit = (1u << i);
         if ((mask & bit) != 0) {
             KeyModifierToXMask::const_iterator j = m_modifierToX.find(bit);
@@ -187,8 +186,7 @@ XWindowsKeyState::pollActiveModifiers() const
     return mapModifiersFromX(state);
 }
 
-SInt32
-XWindowsKeyState::pollActiveGroup() const
+std::int32_t XWindowsKeyState::pollActiveGroup() const
 {
     // fixed condition where any group < -1 would have undetermined behaviour
     if (m_group >= 0) {
@@ -711,7 +709,7 @@ XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
                     XWindowsUtil::getModifierBitForKeySym(keysym);
                 if (isModifier && modifierBit != kKeyModifierBitNone) {
                     item.m_generates = (1u << modifierBit);
-                    for (SInt32 k = 0; k < 8; ++k) {
+                    for (std::int32_t k = 0; k < 8; ++k) {
                         // skip modifiers this key doesn't generate
                         if ((modifierMask & (1u << k)) == 0) {
                             continue;
@@ -792,9 +790,8 @@ XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
 }
 #endif
 
-void
-XWindowsKeyState::remapKeyModifiers(KeyID id, SInt32 group,
-                            inputleap::KeyMap::KeyItem& item, void* vself)
+void XWindowsKeyState::remapKeyModifiers(KeyID id, std::int32_t group,
+                                         inputleap::KeyMap::KeyItem& item, void* vself)
 {
     (void) id;
 

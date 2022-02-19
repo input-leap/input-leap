@@ -59,26 +59,26 @@ public:
     // IScreen overrides
     virtual void*        getEventTarget() const;
     virtual bool        getClipboard(ClipboardID id, IClipboard*) const;
-    virtual void        getShape(SInt32& x, SInt32& y,
-                            SInt32& width, SInt32& height) const;
-    virtual void        getCursorPos(SInt32& x, SInt32& y) const;
+    virtual void getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width,
+                          std::int32_t& height) const;
+    virtual void getCursorPos(std::int32_t& x, std::int32_t& y) const;
 
     // IPrimaryScreen overrides
     virtual void reconfigure(std::uint32_t activeSides);
-    virtual void        warpCursor(SInt32 x, SInt32 y);
+    virtual void warpCursor(std::int32_t x, std::int32_t y);
     virtual std::uint32_t registerHotKey(KeyID key, KeyModifierMask mask);
     virtual void unregisterHotKey(std::uint32_t id);
     virtual void        fakeInputBegin();
     virtual void        fakeInputEnd();
-    virtual SInt32        getJumpZoneSize() const;
+    virtual std::int32_t getJumpZoneSize() const;
     virtual bool isAnyMouseButtonDown(std::uint32_t& buttonID) const;
-    virtual void        getCursorCenter(SInt32& x, SInt32& y) const;
+    virtual void getCursorCenter(std::int32_t& x, std::int32_t& y) const;
 
     // ISecondaryScreen overrides
     virtual void        fakeMouseButton(ButtonID id, bool press);
-    virtual void        fakeMouseMove(SInt32 x, SInt32 y);
-    virtual void        fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const;
-    virtual void        fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
+    virtual void fakeMouseMove(std::int32_t x, std::int32_t y);
+    virtual void fakeMouseRelativeMove(std::int32_t dx, std::int32_t dy) const;
+    virtual void fakeMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const;
 
     // IPlatformScreen overrides
     virtual void        enable();
@@ -121,7 +121,7 @@ private:
     // event, false if it is a mouseup event.  macButton is the index
     // of the button pressed using the mac button mapping.
     bool                onMouseButton(bool pressed, UInt16 macButton);
-    bool                onMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
+    bool onMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const;
 
     void                constructMouseButtonEventMap();
 
@@ -142,10 +142,10 @@ private:
     ButtonID            mapMacButtonToBarrier(UInt16) const;
 
     // map mac scroll wheel value to a barrier scroll wheel value
-    SInt32                mapScrollWheelToBarrier(float) const;
+    std::int32_t mapScrollWheelToBarrier(float) const;
 
     // map barrier scroll wheel value to a mac scroll wheel value
-    SInt32                mapScrollWheelFromBarrier(float) const;
+    std::int32_t mapScrollWheelFromBarrier(float) const;
 
     // get the current scroll wheel speed
     double                getScrollSpeed() const;
@@ -253,12 +253,12 @@ private:
     CGDirectDisplayID    m_displayID;
 
     // screen shape stuff
-    SInt32                m_x, m_y;
-    SInt32                m_w, m_h;
-    SInt32                m_xCenter, m_yCenter;
+    std::int32_t m_x, m_y;
+    std::int32_t m_w, m_h;
+    std::int32_t m_xCenter, m_yCenter;
 
     // mouse state
-    mutable SInt32        m_xCursor, m_yCursor;
+    mutable std::int32_t m_xCursor, m_yCursor;
     mutable bool        m_cursorPosValid;
 
     /* FIXME: this data structure is explicitly marked mutable due
@@ -272,7 +272,7 @@ private:
     std::vector<MouseButtonEventMapType> MouseButtonEventMap;
 
     bool                m_cursorHidden;
-    SInt32                m_dragNumButtonsDown;
+    std::int32_t m_dragNumButtonsDown;
     Point                m_dragLastPoint;
     EventQueueTimer*    m_dragTimer;
 
@@ -328,8 +328,8 @@ private:
     // for double click coalescing.
     double                    m_lastClickTime;
     int                     m_clickState;
-    SInt32                    m_lastSingleClickXCursor;
-    SInt32                    m_lastSingleClickYCursor;
+    std::int32_t m_lastSingleClickXCursor;
+    std::int32_t m_lastSingleClickYCursor;
 
     // cursor will hide and show on enable and disable if true.
     bool                    m_autoShowHideCursor;

@@ -58,9 +58,8 @@ PlatformScreen::fakeKeyDown(KeyID id, KeyModifierMask mask,
     getKeyState()->fakeKeyDown(id, mask, button);
 }
 
-bool
-PlatformScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
-                SInt32 count, KeyButton button)
+bool PlatformScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask, std::int32_t count,
+                                   KeyButton button)
 {
     return getKeyState()->fakeKeyRepeat(id, mask, count, button);
 }
@@ -101,8 +100,7 @@ PlatformScreen::pollActiveModifiers() const
     return getKeyState()->pollActiveModifiers();
 }
 
-SInt32
-PlatformScreen::pollActiveGroup() const
+std::int32_t PlatformScreen::pollActiveGroup() const
 {
     return getKeyState()->pollActiveGroup();
 }

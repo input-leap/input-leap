@@ -40,7 +40,7 @@ public:
     {
     }
 
-    MOCK_CONST_METHOD0(pollActiveGroup, SInt32());
+    MOCK_CONST_METHOD0(pollActiveGroup, std::int32_t());
     MOCK_CONST_METHOD0(pollActiveModifiers, KeyModifierMask());
     MOCK_METHOD0(fakeCtrlAltDel, bool());
     MOCK_METHOD1(getKeyMap, void(inputleap::KeyMap&));
@@ -53,5 +53,5 @@ typedef ::testing::NiceMock<MockKeyState> KeyStateImpl;
 
 typedef std::uint32_t KeyID;
 
-typedef void (*ForeachKeyCallback)(
-        KeyID, SInt32 group, inputleap::KeyMap::KeyItem&, void* userData);
+typedef void (*ForeachKeyCallback)(KeyID, std::int32_t group, inputleap::KeyMap::KeyItem&,
+                                   void* userData);

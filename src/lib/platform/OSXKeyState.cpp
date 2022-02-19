@@ -23,6 +23,7 @@
 #include "base/Log.h"
 
 #include <Carbon/Carbon.h>
+#include <CoreServices/CoreServices.h>
 #include <IOKit/hidsystem/IOHIDLib.h>
 
 // Note that some virtual keys codes appear more than once.  The

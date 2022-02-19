@@ -19,7 +19,8 @@
 
 #include "inputleap/Chunk.h"
 #include "inputleap/clipboard_types.h"
-#include "common/basic_types.h"
+
+#include <cstdint>
 #include <string>
 
 #define CLIPBOARD_CHUNK_META_SIZE 7

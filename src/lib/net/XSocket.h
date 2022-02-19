@@ -20,7 +20,8 @@
 
 #include "io/XIO.h"
 #include "base/XBase.h"
-#include "common/basic_types.h"
+
+#include <cstdint>
 
 //! Generic socket exception
 XBASE_SUBCLASS(XSocket, XBase);

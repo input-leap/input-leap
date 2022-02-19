@@ -18,8 +18,7 @@
 
 #pragma once
 
-#include "common/basic_types.h"
-
+#include <cstdint>
 #include <stdarg.h>
 
 //! Interface for architecture dependent string operations

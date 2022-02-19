@@ -18,6 +18,7 @@
 #pragma once
 
 #include "inputleap/KeyState.h"
+#include <CoreServices/CoreServices.h>
 
 class IOSXKeyResource {
 public:

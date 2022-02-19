@@ -18,7 +18,8 @@
 #pragma once
 
 #include "inputleap/Chunk.h"
-#include "common/basic_types.h"
+
+#include <cstdint>
 #include <string>
 
 #define FILE_CHUNK_META_SIZE 2

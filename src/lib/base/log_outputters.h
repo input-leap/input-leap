@@ -20,9 +20,9 @@
 
 #include "mt/Thread.h"
 #include "base/ILogOutputter.h"
-#include "common/basic_types.h"
 #include "common/stddeque.h"
 
+#include <cstdint>
 #include <list>
 #include <fstream>
 #include <string>

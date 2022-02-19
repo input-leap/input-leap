@@ -531,7 +531,7 @@ void
 ServerProxy::enter()
 {
     // parse
-    SInt16 x, y;
+    std::int16_t x, y;
     std::uint16_t mask;
     std::uint32_t seqNum;
     ProtocolUtil::readf(m_stream, kMsgCEnter + 4, &x, &y, &seqNum, &mask);
@@ -710,7 +710,7 @@ ServerProxy::mouseMove()
 {
     // parse
     bool ignore;
-    SInt16 x, y;
+    std::int16_t x, y;
     ProtocolUtil::readf(m_stream, kMsgDMouseMove + 4, &x, &y);
 
     // note if we should ignore the move
@@ -743,7 +743,7 @@ ServerProxy::mouseRelativeMove()
 {
     // parse
     bool ignore;
-    SInt16 dx, dy;
+    std::int16_t dx, dy;
     ProtocolUtil::readf(m_stream, kMsgDMouseRelMove + 4, &dx, &dy);
 
     // note if we should ignore the move
@@ -775,7 +775,7 @@ ServerProxy::mouseWheel()
     flushCompressedMouse();
 
     // parse
-    SInt16 xDelta, yDelta;
+    std::int16_t xDelta, yDelta;
     ProtocolUtil::readf(m_stream, kMsgDMouseWheel + 4, &xDelta, &yDelta);
     LOG((CLOG_DEBUG2 "recv mouse wheel %+d,%+d", xDelta, yDelta));
 

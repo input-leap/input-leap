@@ -549,7 +549,7 @@ mouseLLHook(int code, WPARAM wParam, LPARAM lParam)
         MSLLHOOKSTRUCT* info = reinterpret_cast<MSLLHOOKSTRUCT*>(lParam);
         std::int32_t x = static_cast<std::int32_t>(info->pt.x);
         std::int32_t y = static_cast<std::int32_t>(info->pt.y);
-        std::int32_t w = static_cast<SInt16>(HIWORD(info->mouseData));
+        std::int32_t w = static_cast<std::int16_t>(HIWORD(info->mouseData));
 
         // handle the message
         if (mouseHookHandler(wParam, x, y, w)) {

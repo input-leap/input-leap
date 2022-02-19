@@ -32,8 +32,8 @@
 // 1.5:  adds file transfer and removes home brew crypto
 // 1.6:  adds clipboard streaming
 // NOTE: with new version, barrier minor version should increment
-static const SInt16        kProtocolMajorVersion = 1;
-static const SInt16        kProtocolMinorVersion = 6;
+static const std::int16_t kProtocolMajorVersion = 1;
+static const std::int16_t kProtocolMinorVersion = 6;
 
 // default contact port number
 static const std::uint16_t kDefaultPort = 24800;

@@ -34,7 +34,6 @@
 #include <CoreServices/CoreServices.h>
 #else
 using SInt8 = std::int8_t;
-using SInt16 = std::int16_t;
 using UInt8 = std::uint8_t;
 #endif
 #endif

@@ -32,7 +32,7 @@ inline
 std::istream& operator>>(std::istream& s, SInt8& i)
 { return s >> (signed char&)i; }
 inline
-std::istream& operator>>(std::istream& s, SInt16& i)
+std::istream& operator>>(std::istream& s, std::int16_t& i)
 { return s >> (short&)i; }
 inline
 std::istream& operator>>(std::istream& s, std::int32_t& i)

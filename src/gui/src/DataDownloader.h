@@ -29,7 +29,7 @@ class DataDownloader : public QObject
     Q_OBJECT
 
 public:
-    explicit DataDownloader(QObject* parent = 0);
+    explicit DataDownloader(QObject* parent = nullptr);
     virtual ~DataDownloader();
 
     QByteArray data() const;

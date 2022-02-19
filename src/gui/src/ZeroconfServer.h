@@ -27,7 +27,7 @@ class ZeroconfServer : public QTcpServer
     Q_OBJECT
 
 public:
-    ZeroconfServer(QObject* parent = 0);
+    ZeroconfServer(QObject* parent = nullptr);
 
 protected:
     void incomingConnection(qintptr socketDescriptor) override;

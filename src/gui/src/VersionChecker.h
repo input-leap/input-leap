@@ -28,7 +28,7 @@ class VersionChecker : public QObject
 {
     Q_OBJECT
 public:
-    explicit VersionChecker(QObject* parent = 0);
+    explicit VersionChecker(QObject* parent = nullptr);
     void checkLatest();
     QString getVersion();
     void setApp(const QString& app) { m_app = app; }

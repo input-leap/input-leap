@@ -298,6 +298,8 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
             }
         }
         break;
+        default:
+            break;
     }
     XFlush(m_display);
 }
@@ -709,9 +711,9 @@ XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
                     XWindowsUtil::getModifierBitForKeySym(keysym);
                 if (isModifier && modifierBit != kKeyModifierBitNone) {
                     item.m_generates = (1u << modifierBit);
-                    for (SInt32 j = 0; j < 8; ++j) {
+                    for (SInt32 k = 0; k < 8; ++k) {
                         // skip modifiers this key doesn't generate
-                        if ((modifierMask & (1u << j)) == 0) {
+                        if ((modifierMask & (1u << k)) == 0) {
                             continue;
                         }
 
@@ -721,15 +723,15 @@ XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
                         // and we know of a key that combines with fewer
                         // modifiers (or no modifiers) then prefer the
                         // other key.
-                        if (level >= modifierLevel[8 * group + j]) {
+                        if (level >= modifierLevel[8 * group + k]) {
                             continue;
                         }
-                        modifierLevel[8 * group + j] = level;
+                        modifierLevel[8 * group + k] = level;
 
                         // save modifier
-                        m_modifierFromX[8 * group + j] |= (1u << modifierBit);
+                        m_modifierFromX[8 * group + k] |= (1u << modifierBit);
                         m_modifierToX.insert(std::make_pair(
-                                1u << modifierBit, 1u << j));
+                                1u << modifierBit, 1u << k));
                     }
                 }
 

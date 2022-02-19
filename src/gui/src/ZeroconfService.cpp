@@ -61,8 +61,8 @@ static void silence_avahi_warning()
 
 ZeroconfService::ZeroconfService(MainWindow* mainWindow) :
     m_pMainWindow(mainWindow),
-    m_pZeroconfBrowser(0),
-    m_pZeroconfRegister(0),
+    m_pZeroconfBrowser(nullptr),
+    m_pZeroconfRegister(nullptr),
     m_ServiceRegistered(false)
 {
     silence_avahi_warning();
@@ -120,7 +120,7 @@ void ZeroconfService::clientDetected(const QList<ZeroconfRecord>& list)
 
 void ZeroconfService::errorHandle(DNSServiceErrorType errorCode)
 {
-    QMessageBox::critical(0, tr("Zero configuration service"),
+    QMessageBox::critical(nullptr, tr("Zero configuration service"),
         tr("Error code: %1.").arg(errorCode));
 }
 
@@ -151,7 +151,7 @@ bool ZeroconfService::registerService(bool server)
 
     if (!m_ServiceRegistered) {
         if (!m_zeroconfServer.listen()) {
-            QMessageBox::critical(0, tr("Zero configuration service"),
+            QMessageBox::critical(nullptr, tr("Zero configuration service"),
                 tr("Unable to start the zeroconf: %1.")
                 .arg(m_zeroconfServer.errorString()));
             result = false;

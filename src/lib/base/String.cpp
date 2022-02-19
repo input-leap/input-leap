@@ -65,6 +65,8 @@ int hex_to_number(char ch)
         case 'D': return 13;
         case 'E': return 14;
         case 'F': return 15;
+        default:
+            break;
     }
     return -1;
 }

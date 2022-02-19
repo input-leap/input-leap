@@ -79,7 +79,7 @@ static const struct
     { Qt::Key_Launch1,      "AppUser2" },
     { Qt::Key_Select,       "Select" },
 
-    { 0, 0 }
+    { 0, nullptr }
 };
 
 KeySequence::KeySequence() :
@@ -192,6 +192,8 @@ QString KeySequence::keyToString(int key)
             case Qt::LeftButton: return "1";
             case Qt::RightButton: return "2";
             case Qt::MidButton: return "3";
+        default:
+            break;
         }
 
         return "4"; // qt only knows three mouse buttons, so assume it's an unknown fourth one

@@ -138,6 +138,8 @@ ClipboardChunk::send(inputleap::IStream* stream, void* data)
     case kDataEnd:
         LOG((CLOG_DEBUG2 "sending clipboard finished"));
         break;
+    default:
+        break;
     }
 
     ProtocolUtil::writef(stream, kMsgDClipboard, id, sequence, mark, &dataChunk);

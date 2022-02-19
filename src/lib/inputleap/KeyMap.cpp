@@ -167,19 +167,19 @@ KeyMap::addKeyCombinationEntry(KeyID id, SInt32 group,
         if (gtIndex == m_keyIDMap.end()) {
             return false;
         }
-        const KeyGroupTable& groupTable = gtIndex->second;
+        const KeyGroupTable& key_group_table = gtIndex->second;
 
         // if we allow group switching during composition then search all
         // groups for keys, otherwise search just the given group.
         SInt32 n = 1;
         if (m_composeAcrossGroups) {
-            n = static_cast<SInt32>(groupTable.size());
+            n = static_cast<SInt32>(key_group_table.size());
         }
 
         bool found = false;
         for (SInt32 gd = 0; gd < n && !found; ++gd) {
             SInt32 eg = (group + gd) % getNumGroups();
-            const KeyEntryList& entries = groupTable[eg];
+            const KeyEntryList& entries = key_group_table[eg];
             for (size_t j = 0; j < entries.size(); ++j) {
                 if (entries[j].size() == 1) {
                     found = true;
@@ -515,13 +515,13 @@ KeyMap::mapCommandKey(Keystrokes& keys, KeyID id, SInt32 group,
     static const KeyModifierMask s_overrideModifiers = 0xffffu;
 
     // find KeySym in table
-    KeyIDMap::const_iterator i = m_keyIDMap.find(id);
-    if (i == m_keyIDMap.end()) {
+    KeyIDMap::const_iterator it = m_keyIDMap.find(id);
+    if (it == m_keyIDMap.end()) {
         // unknown key
         LOG((CLOG_DEBUG1 "key %04x is not on keyboard", id));
         return NULL;
     }
-    const KeyGroupTable& keyGroupTable = i->second;
+    const KeyGroupTable& keyGroupTable = it->second;
 
     // find the first key that generates this KeyID
     const KeyItem* keyItem = NULL;
@@ -1071,6 +1071,8 @@ KeyMap::addKeystrokes(EKeystroke type, const KeyItem& keyItem,
             currentState &= ~keyItem.m_generates;
         }
         break;
+    default:
+        break;
     }
 }
 
@@ -1247,8 +1249,8 @@ bool KeyMap::parseModifiers(std::string& x, KeyModifierMask& mask)
         else {
             // unknown string
             x.erase(0, tb);
-            std::string::size_type tb = x.find_first_not_of(" \t");
-            std::string::size_type te = x.find_last_not_of(" \t");
+            tb = x.find_first_not_of(" \t");
+            te = x.find_last_not_of(" \t");
             if (tb == std::string::npos) {
                 x = "";
             }

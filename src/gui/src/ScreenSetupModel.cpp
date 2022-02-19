@@ -57,6 +57,8 @@ QVariant ScreenSetupModel::data(const QModelIndex& index, int role) const
                 if (screen(index).isNull())
                     break;
                 return screen(index).name();
+        default:
+            break;
         }
     }
 
@@ -66,7 +68,7 @@ QVariant ScreenSetupModel::data(const QModelIndex& index, int role) const
 Qt::ItemFlags ScreenSetupModel::flags(const QModelIndex& index) const
 {
     if (!index.isValid() || index.row() >= m_NumRows || index.column() >= m_NumColumns)
-        return 0;
+        return nullptr;
 
     if (!screen(index).isNull())
         return Qt::ItemIsEnabled | Qt::ItemIsDragEnabled | Qt::ItemIsSelectable | Qt::ItemIsDropEnabled;

@@ -144,6 +144,8 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                          static_cast<UInt32>(buffer[3]);
                     LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *static_cast<UInt32*>(v), *static_cast<UInt32*>(v)));
                     break;
+                default:
+                    break;
                 }
                 break;
             }
@@ -201,6 +203,8 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                         LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)", len, i, static_cast<std::vector<UInt32>*>(v)->back(), static_cast<std::vector<UInt32>*>(v)->back()));
                     }
                     break;
+                default:
+                    break;
                 }
                 break;
             }
@@ -211,27 +215,27 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                 // read the string length
                 UInt8 buffer[128];
                 read(stream, buffer, 4);
-                UInt32 len = (static_cast<UInt32>(buffer[0]) << 24) |
-                             (static_cast<UInt32>(buffer[1]) << 16) |
-                             (static_cast<UInt32>(buffer[2]) <<  8) |
-                              static_cast<UInt32>(buffer[3]);
+                UInt32 str_len = (static_cast<UInt32>(buffer[0]) << 24) |
+                                 (static_cast<UInt32>(buffer[1]) << 16) |
+                                 (static_cast<UInt32>(buffer[2]) <<  8) |
+                                  static_cast<UInt32>(buffer[3]);
 
-                if (len > PROTOCOL_MAX_STRING_LENGTH) {
+                if (str_len > PROTOCOL_MAX_STRING_LENGTH) {
                     throw XBadClient("Too long message received");
                 }
 
                 // use a fixed size buffer if its big enough
-                const bool useFixed = (len <= sizeof(buffer));
+                const bool useFixed = (str_len <= sizeof(buffer));
 
                 // allocate a buffer to read the data
                 UInt8* sBuffer = buffer;
                 if (!useFixed) {
-                    sBuffer = new UInt8[len];
+                    sBuffer = new UInt8[str_len];
                 }
 
                 // read the data
                 try {
-                    read(stream, sBuffer, len);
+                    read(stream, sBuffer, str_len);
                 }
                 catch (...) {
                     if (!useFixed) {
@@ -240,11 +244,11 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                     throw;
                 }
 
-                LOG((CLOG_DEBUG2 "readf: read %d byte string", len));
+                LOG((CLOG_DEBUG2 "readf: read %d byte string", str_len));
 
                 // save the data
                 std::string* dst = va_arg(args, std::string*);
-                dst->assign(reinterpret_cast<const char*>(sBuffer), len);
+                dst->assign(reinterpret_cast<const char*>(sBuffer), str_len);
 
                 // release the buffer
                 if (!useFixed) {
@@ -309,6 +313,8 @@ ProtocolUtil::getLength(const char* fmt, va_list args)
 
                 case 4:
                     len = 4 * static_cast<UInt32>((va_arg(args, std::vector<UInt32>*))->size()) + 4;
+                    break;
+                default:
                     break;
                 }
                 break;
@@ -450,28 +456,28 @@ ProtocolUtil::writef_void(void* buffer, const char* fmt, va_list args)
             case 's': {
                 assert(len == 0);
                 const std::string* src = va_arg(args, std::string*);
-                const UInt32 len = (src != NULL) ? static_cast<UInt32>(src->size()) : 0;
-                *dst++ = static_cast<UInt8>((len >> 24) & 0xff);
-                *dst++ = static_cast<UInt8>((len >> 16) & 0xff);
-                *dst++ = static_cast<UInt8>((len >>  8) & 0xff);
-                *dst++ = static_cast<UInt8>( len        & 0xff);
-                if (len != 0) {
-                    memcpy(dst, src->data(), len);
-                    dst += len;
+                const UInt32 str_len = (src != NULL) ? static_cast<UInt32>(src->size()) : 0;
+                *dst++ = static_cast<UInt8>((str_len >> 24) & 0xff);
+                *dst++ = static_cast<UInt8>((str_len >> 16) & 0xff);
+                *dst++ = static_cast<UInt8>((str_len >>  8) & 0xff);
+                *dst++ = static_cast<UInt8>(str_len & 0xff);
+                if (str_len != 0) {
+                    memcpy(dst, src->data(), str_len);
+                    dst += str_len;
                 }
                 break;
             }
 
             case 'S': {
                 assert(len == 0);
-                const UInt32 len = va_arg(args, UInt32);
+                const UInt32 str_len = va_arg(args, UInt32);
                 const UInt8* src = va_arg(args, UInt8*);
-                *dst++ = static_cast<UInt8>((len >> 24) & 0xff);
-                *dst++ = static_cast<UInt8>((len >> 16) & 0xff);
-                *dst++ = static_cast<UInt8>((len >>  8) & 0xff);
-                *dst++ = static_cast<UInt8>( len        & 0xff);
-                memcpy(dst, src, len);
-                dst += len;
+                *dst++ = static_cast<UInt8>((str_len >> 24) & 0xff);
+                *dst++ = static_cast<UInt8>((str_len >> 16) & 0xff);
+                *dst++ = static_cast<UInt8>((str_len >>  8) & 0xff);
+                *dst++ = static_cast<UInt8>(str_len & 0xff);
+                memcpy(dst, src, str_len);
+                dst += str_len;
                 break;
             }
 

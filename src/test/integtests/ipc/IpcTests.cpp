@@ -145,8 +145,8 @@ IpcTests::IpcTests() :
 m_connectToServer_helloMessageReceived(false),
 m_connectToServer_hasClientNode(false),
 m_connectToServer_server(nullptr),
-m_sendMessageToClient_server(nullptr),
-m_sendMessageToServer_client(nullptr)
+m_sendMessageToServer_client(nullptr),
+m_sendMessageToClient_server(nullptr)
 {
 }
 
@@ -172,8 +172,8 @@ IpcTests::sendMessageToServer_serverHandleMessageReceived(const Event& e, void*)
     IpcMessage* m = static_cast<IpcMessage*>(e.getDataObject());
     if (m->type() == kIpcHello) {
         LOG((CLOG_DEBUG "client said hello, sending test to server"));
-        IpcCommandMessage m("test", true);
-        m_sendMessageToServer_client->send(m);
+        IpcCommandMessage cm("test", true);
+        m_sendMessageToServer_client->send(cm);
     }
     else if (m->type() == kIpcCommand) {
         IpcCommandMessage* cm = static_cast<IpcCommandMessage*>(m);
@@ -189,8 +189,8 @@ IpcTests::sendMessageToClient_serverHandleClientConnected(const Event& e, void*)
     IpcMessage* m = static_cast<IpcMessage*>(e.getDataObject());
     if (m->type() == kIpcHello) {
         LOG((CLOG_DEBUG "client said hello, sending test to client"));
-        IpcLogLineMessage m("test");
-        m_sendMessageToClient_server->send(m, kIpcClientNode);
+        IpcLogLineMessage msg("test");
+        m_sendMessageToClient_server->send(msg, kIpcClientNode);
     }
 }
 

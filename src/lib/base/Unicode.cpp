@@ -690,6 +690,8 @@ Unicode::fromUTF8(const UInt8*& data, UInt32& n)
             truncated = true;
             size = 1;
         }
+    default:
+        break;
     }
 
     // update parameters

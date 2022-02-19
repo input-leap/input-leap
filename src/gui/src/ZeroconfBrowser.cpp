@@ -21,8 +21,8 @@
 
 ZeroconfBrowser::ZeroconfBrowser(QObject* parent) :
     QObject(parent),
-    m_DnsServiceRef(0),
-    m_pSocket(0)
+    m_DnsServiceRef(nullptr),
+    m_pSocket(nullptr)
 {
 }
 
@@ -34,14 +34,14 @@ ZeroconfBrowser::~ZeroconfBrowser()
 
     if (m_DnsServiceRef) {
         DNSServiceRefDeallocate(m_DnsServiceRef);
-        m_DnsServiceRef = 0;
+        m_DnsServiceRef = nullptr;
     }
 }
 
 void ZeroconfBrowser::browseForType(const QString& type)
 {
     DNSServiceErrorType err = DNSServiceBrowse(&m_DnsServiceRef, 0, 0,
-        type.toUtf8().constData(), 0, browseReply, this);
+        type.toUtf8().constData(), nullptr, browseReply, this);
 
     if (err != kDNSServiceErr_NoError) {
         emit error(err);

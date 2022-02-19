@@ -137,6 +137,8 @@ ServerProxy::handleData(const Event&, void*)
 
             case kDisconnect:
                 return;
+            default:
+                break;
             }
         } catch (const XBadClient& e) {
             // TODO: disconnect handling is currently dispersed across both parseMessage() and
@@ -472,6 +474,8 @@ ServerProxy::translateKey(KeyID id) const
     case kKeySuper_R:
         id2  = kKeyModifierIDSuper;
         side = 1;
+        break;
+    default:
         break;
     }
 

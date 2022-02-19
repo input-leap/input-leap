@@ -34,5 +34,5 @@ public:
     void showStatus() override;
     void runMenu(int x, int y) override;
     void primaryAction() override;
-    const Icon    getIcon() const override;
+    Icon getIcon() const override;
 };

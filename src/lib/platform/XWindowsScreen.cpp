@@ -63,34 +63,34 @@ XWindowsScreen::XWindowsScreen(
 		bool disableXInitThreads,
 		int mouseScrollDelta,
 		IEventQueue* events) :
-	m_isPrimary(isPrimary),
-	m_mouseScrollDelta(mouseScrollDelta),
+    PlatformScreen(events),
+    m_isPrimary(isPrimary),
+    m_mouseScrollDelta(mouseScrollDelta),
     m_x_accumulatedScroll(0),
     m_y_accumulatedScroll(0),
-	m_display(NULL),
-	m_root(None),
-	m_window(None),
-	m_isOnScreen(m_isPrimary),
-	m_x(0), m_y(0),
-	m_w(0), m_h(0),
-	m_xCenter(0), m_yCenter(0),
-	m_xCursor(0), m_yCursor(0),
-	m_keyState(NULL),
-	m_lastFocus(None),
-	m_lastFocusRevert(RevertToNone),
-	m_im(NULL),
-	m_ic(NULL),
-	m_lastKeycode(0),
-	m_sequenceNumber(0),
-	m_screensaver(NULL),
-	m_screensaverNotify(false),
-	m_xtestIsXineramaUnaware(true),
-	m_preserveFocus(false),
-	m_xkb(false),
-	m_xi2detected(false),
-	m_xrandr(false),
-	m_events(events),
-	PlatformScreen(events)
+    m_display(NULL),
+    m_root(None),
+    m_window(None),
+    m_isOnScreen(m_isPrimary),
+    m_x(0), m_y(0),
+    m_w(0), m_h(0),
+    m_xCenter(0), m_yCenter(0),
+    m_xCursor(0), m_yCursor(0),
+    m_keyState(NULL),
+    m_lastFocus(None),
+    m_lastFocusRevert(RevertToNone),
+    m_im(NULL),
+    m_ic(NULL),
+    m_lastKeycode(0),
+    m_sequenceNumber(0),
+    m_screensaver(NULL),
+    m_screensaverNotify(false),
+    m_xtestIsXineramaUnaware(true),
+    m_preserveFocus(false),
+    m_xkb(false),
+    m_xi2detected(false),
+    m_xrandr(false),
+    m_events(events)
 {
     m_impl = impl;
 	assert(s_screen == NULL);
@@ -1026,7 +1026,7 @@ XWindowsScreen::openWindow() const
 
 	// create and return the window
     Window window = m_impl->XCreateWindow(m_display, m_root, x, y, w, h, 0, 0,
-							InputOnly, CopyFromParent,
+                            InputOnly, reinterpret_cast<Visual*>(CopyFromParent),
 							CWDontPropagate | CWEventMask |
 							CWOverrideRedirect | CWCursor,
 							&attr);
@@ -1227,7 +1227,6 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 				cookie->extension == xi_opcode) {
 			if (cookie->evtype == XI_RawMotion) {
 				// Get current pointer's position
-				Window root, child;
 				XMotionEvent xmotion;
 				xmotion.type = MotionNotify;
 				xmotion.send_event = False; // Raw motion
@@ -1372,6 +1371,8 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 				LOG((CLOG_INFO "group change: %d", xkbEvent->state.group));
                 m_keyState->setActiveGroup(static_cast<SInt32>(xkbEvent->state.group));
 				return;
+            default:
+                break;
 			}
 		}
 #endif

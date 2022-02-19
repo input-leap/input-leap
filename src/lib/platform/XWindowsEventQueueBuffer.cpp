@@ -53,10 +53,10 @@ class EventQueueTimer { };
 
 XWindowsEventQueueBuffer::XWindowsEventQueueBuffer(IXWindowsImpl* impl,
         Display* display, Window window, IEventQueue* events) :
-    m_events(events),
     m_display(display),
     m_window(window),
-    m_waiting(false)
+    m_waiting(false),
+    m_events(events)
 {
     m_impl = impl;
     assert(m_display != NULL);
@@ -179,7 +179,7 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 #if HAVE_POLL
     retval = poll(pfds, 2, TIMEOUT_DELAY); //16ms = 60hz, but we make it > to play nicely with the cpu
      if (pfds[1].revents & POLLIN) {
-         ssize_t read_response = read(m_pipefd[0], buf, 15);
+        read_response = read(m_pipefd[0], buf, 15);
 
         // with linux automake, warnings are treated as errors by default
         if (read_response < 0)

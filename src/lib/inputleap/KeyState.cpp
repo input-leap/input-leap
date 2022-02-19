@@ -395,7 +395,7 @@ KeyState::KeyState(IEventQueue* events) :
 
 KeyState::KeyState(IEventQueue* events, inputleap::KeyMap& keyMap) :
     IKeyState(events),
-    m_keyMapPtr(0),
+    m_keyMapPtr(nullptr),
     m_keyMap(keyMap),
     m_mask(0),
     m_events(events)

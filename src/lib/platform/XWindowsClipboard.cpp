@@ -540,7 +540,6 @@ XWindowsClipboard::icccmFillCache()
         }
 
         // see if atom is in target list
-        Atom target = None;
         // XXX -- just ask for the converter's target to see if it's
         // available rather than checking TARGETS.  i've seen clipboard
         // owners that don't report all the targets they support.
@@ -749,7 +748,7 @@ XWindowsClipboard::motifFillCache()
         // get Motif format property from the root window
         sprintf(name, "_MOTIF_CLIP_ITEM_%d", formats[i]);
         Atom atomFormat = m_impl->XInternAtom(m_display, name, False);
-        std::string data;
+        data.clear();
         if (!XWindowsUtil::getWindowProperty(m_display, root,
                                     atomFormat, &data,
                                     &target, &format, False)) {
@@ -795,7 +794,7 @@ XWindowsClipboard::motifFillCache()
         // get format
         MotifClipFormat motifFormat;
         std::memcpy (&motifFormat, index2->second.data(), sizeof(motifFormat));
-        const Atom target = motifFormat.m_type;
+        target = motifFormat.m_type;
 
         // get the data (finally)
         Atom actualTarget;
@@ -806,10 +805,11 @@ XWindowsClipboard::motifFillCache()
         }
 
         // add to clipboard and note we've done it
-        IClipboard::EFormat format = converter->getFormat();
-        m_data[format]  = converter->toIClipboard(targetData);
-        m_added[format] = true;
-        LOG((CLOG_DEBUG "added format %d for target %s", format, XWindowsUtil::atomToString(m_display, target).c_str()));
+        IClipboard::EFormat clipboard_format = converter->getFormat();
+        m_data[clipboard_format]  = converter->toIClipboard(targetData);
+        m_added[clipboard_format] = true;
+        LOG((CLOG_DEBUG "added format %d for target %s", clipboard_format,
+             XWindowsUtil::atomToString(m_display, target).c_str()));
     }
 }
 
@@ -871,9 +871,9 @@ XWindowsClipboard::insertMultipleReply(Window requestor,
     // add replies for each target
     bool changed = false;
     for (UInt32 i = 0; i < numTargets; i += 2) {
-        const Atom target   = targets[i + 0];
-        const Atom property = targets[i + 1];
-        if (!addSimpleRequest(requestor, target, time, property)) {
+        const Atom request_target   = targets[i + 0];
+        const Atom request_property = targets[i + 1];
+        if (!addSimpleRequest(requestor, request_target, time, request_property)) {
             // note that we can't perform the requested conversion
             XWindowsUtil::replaceAtomData(data, i, None);
             changed = true;

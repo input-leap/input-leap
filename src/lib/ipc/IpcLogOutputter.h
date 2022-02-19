@@ -62,13 +62,13 @@ public:
     Set the maximum size of the buffer to protect memory
     from runaway logging.
     */
-    void                bufferMaxSize(UInt16 bufferMaxSize);
+    void bufferMaxSize(std::uint16_t bufferMaxSize);
 
     //! Set the rate limit
     /*!
     Set the maximum number of \p writeRate for every \p timeRate in seconds.
     */
-    void                bufferRateLimit(UInt16 writeLimit, double timeLimit);
+    void bufferRateLimit(std::uint16_t writeLimit, double timeLimit);
 
     //! Send the buffer
     /*!
@@ -86,7 +86,7 @@ public:
     /*!
     Returns the maximum size of the buffer.
     */
-    UInt16                bufferMaxSize() const;
+    std::uint16_t bufferMaxSize() const;
 
     //@}
 
@@ -111,10 +111,10 @@ private:
     bool                m_bufferWaiting;
     IArchMultithread::ThreadID
                         m_bufferThreadId;
-    UInt16                m_bufferMaxSize;
-    UInt16                m_bufferRateWriteLimit;
+    std::uint16_t m_bufferMaxSize;
+    std::uint16_t m_bufferRateWriteLimit;
     double                m_bufferRateTimeLimit;
-    UInt16                m_bufferWriteCount;
+    std::uint16_t m_bufferWriteCount;
     double                m_bufferRateStart;
     EIpcClientType        m_clientType;
     std::mutex m_runningMutex;

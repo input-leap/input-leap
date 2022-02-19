@@ -41,7 +41,7 @@ inline
 std::istream& operator>>(std::istream& s, UInt8& i)
 { return s >> (unsigned char&)i; }
 inline
-std::istream& operator>>(std::istream& s, UInt16& i)
+std::istream& operator>>(std::istream& s, std::uint16_t& i)
 { return s >> (unsigned short&)i; }
 inline
 std::istream& operator>>(std::istream& s, std::uint32_t& i)

@@ -158,16 +158,14 @@ KeyID OSXUchrKeyResource::getKey(std::uint32_t table, std::uint32_t button) cons
     return keys.front();
 }
 
-bool
-OSXUchrKeyResource::getDeadKey(
-    KeySequence& keys, UInt16 index) const
+bool OSXUchrKeyResource::getDeadKey(KeySequence& keys, std::uint16_t index) const
 {
     if (m_sri == NULL || index >= m_sri->keyStateRecordCount) {
         // XXX -- should we be using some other fallback?
         return false;
     }
 
-    UInt16 state = 0;
+    std::uint16_t state = 0;
     if (!getKeyRecord(keys, index, state)) {
         return false;
     }
@@ -201,9 +199,8 @@ OSXUchrKeyResource::getDeadKey(
     return true;
 }
 
-bool
-OSXUchrKeyResource::getKeyRecord(
-    KeySequence& keys, UInt16 index, UInt16& state) const
+bool OSXUchrKeyResource::getKeyRecord(KeySequence& keys, std::uint16_t index,
+                                      std::uint16_t& state) const
 {
     const UInt8* const base = reinterpret_cast<const UInt8*>(m_resource);
     const UCKeyStateRecord* sr =
@@ -212,7 +209,7 @@ OSXUchrKeyResource::getKeyRecord(
     const UCKeyStateEntryTerminal* kset =
         reinterpret_cast<const UCKeyStateEntryTerminal*>(sr->stateEntryData);
 
-    UInt16 nextState = 0;
+    std::uint16_t nextState = 0;
     bool found       = false;
     if (state == 0) {
         found     = true;
@@ -225,7 +222,7 @@ OSXUchrKeyResource::getKeyRecord(
         // we have a next entry
         switch (sr->stateEntryFormat) {
         case kUCKeyStateEntryTerminalFormat:
-            for (UInt16 j = 0; j < sr->stateEntryCount; ++j) {
+            for (std::uint16_t j = 0; j < sr->stateEntryCount; ++j) {
                 if (kset[j].curState == state) {
                     if (!addSequence(keys, kset[j].charData)) {
                         return false;
@@ -270,7 +267,7 @@ OSXUchrKeyResource::addSequence(
     KeySequence& keys, UCKeyCharSeq c) const
 {
     if ((c & kUCKeyOutputTestForIndexMask) == kUCKeyOutputSequenceIndexMask) {
-        UInt16 index = (c & kUCKeyOutputGetIndexMask);
+        std::uint16_t index = (c & kUCKeyOutputGetIndexMask);
         if (index < m_sdi->charSequenceCount &&
             m_sdi->charSequenceOffsets[index] !=
                 m_sdi->charSequenceOffsets[index + 1]) {

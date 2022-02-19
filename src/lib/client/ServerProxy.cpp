@@ -532,7 +532,7 @@ ServerProxy::enter()
 {
     // parse
     SInt16 x, y;
-    UInt16 mask;
+    std::uint16_t mask;
     std::uint32_t seqNum;
     ProtocolUtil::readf(m_stream, kMsgCEnter + 4, &x, &y, &seqNum, &mask);
     LOG((CLOG_DEBUG1 "recv enter, %d,%d %d %04x", x, y, seqNum, mask));
@@ -612,7 +612,7 @@ ServerProxy::keyDown()
     flushCompressedMouse();
 
     // parse
-    UInt16 id, mask, button;
+    std::uint16_t id, mask, button;
     ProtocolUtil::readf(m_stream, kMsgDKeyDown + 4, &id, &mask, &button);
     LOG((CLOG_DEBUG1 "recv key down id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button));
 
@@ -635,7 +635,7 @@ ServerProxy::keyRepeat()
     flushCompressedMouse();
 
     // parse
-    UInt16 id, mask, count, button;
+    std::uint16_t id, mask, count, button;
     ProtocolUtil::readf(m_stream, kMsgDKeyRepeat + 4,
                                 &id, &mask, &count, &button);
     LOG((CLOG_DEBUG1 "recv key repeat id=0x%08x, mask=0x%04x, count=%d, button=0x%04x", id, mask, count, button));
@@ -659,7 +659,7 @@ ServerProxy::keyUp()
     flushCompressedMouse();
 
     // parse
-    UInt16 id, mask, button;
+    std::uint16_t id, mask, button;
     ProtocolUtil::readf(m_stream, kMsgDKeyUp + 4, &id, &mask, &button);
     LOG((CLOG_DEBUG1 "recv key up id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button));
 

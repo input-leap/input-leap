@@ -397,9 +397,9 @@ OSXScreen::constructMouseButtonEventMap()
 		{kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown}
 	};
 
-	for (UInt16 button = 0; button < NumButtonIDs; button++) {
+	for (std::uint16_t button = 0; button < NumButtonIDs; button++) {
 		MouseButtonEventMapType new_map;
-		for (UInt16 state = (std::uint32_t) kMouseButtonUp; state < kMouseButtonStateMax; state++) {
+		for (std::uint16_t state = (std::uint32_t) kMouseButtonUp; state < kMouseButtonStateMax; state++) {
 			CGEventType curEvent = source[button][state];
 			new_map[state] = curEvent;
 		}
@@ -1104,8 +1104,7 @@ OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 	return true;
 }
 
-bool
-OSXScreen::onMouseButton(bool pressed, UInt16 macButton)
+bool OSXScreen::onMouseButton(bool pressed, std::uint16_t macButton)
 {
 	// Buttons 2 and 3 are inverted on the mac
 	ButtonID button = mapMacButtonToBarrier(macButton);
@@ -1352,8 +1351,7 @@ OSXScreen::onHotKey(EventRef event) const
 	return true;
 }
 
-ButtonID
-OSXScreen::mapBarrierButtonToMac(UInt16 button) const
+ButtonID OSXScreen::mapBarrierButtonToMac(std::uint16_t button) const
 {
     switch (button) {
     case 1:
@@ -1367,8 +1365,7 @@ OSXScreen::mapBarrierButtonToMac(UInt16 button) const
     return static_cast<ButtonID>(button);
 }
 
-ButtonID
-OSXScreen::mapMacButtonToBarrier(UInt16 macButton) const
+ButtonID OSXScreen::mapMacButtonToBarrier(std::uint16_t macButton) const
 {
 	switch (macButton) {
 	case 1:

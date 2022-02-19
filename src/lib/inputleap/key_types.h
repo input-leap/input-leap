@@ -35,7 +35,7 @@ physical key on the keyboard.  KeyButton 0 is reserved to be an
 invalid key;  platforms that use 0 as a physical key identifier
 will have to remap that value to some arbitrary unused id.
 */
-typedef UInt16			KeyButton;
+typedef std::uint16_t KeyButton;
 
 //! Modifier key mask
 /*!

@@ -284,7 +284,7 @@ OSXKeyState::mapKeyFromEvent(KeyIDs& ids,
     //}
 
     // choose action
-    UInt16 action;
+    std::uint16_t action;
     if (eventKind==kCGEventKeyDown) {
         action = kUCKeyActionDown;
     }

@@ -21,10 +21,10 @@
 // BMP file header structure
 struct CBMPHeader {
 public:
-    UInt16                type;
+    std::uint16_t type;
     std::uint32_t size;
-    UInt16                reserved1;
-    UInt16                reserved2;
+    std::uint16_t reserved1;
+    std::uint16_t reserved2;
     std::uint32_t offset;
 };
 
@@ -45,9 +45,7 @@ toLE(UInt8*& dst, char src)
     dst += 1;
 }
 
-static
-void
-toLE(UInt8*& dst, UInt16 src)
+static void toLE(UInt8*& dst, std::uint16_t src)
 {
     dst[0] = static_cast<UInt8>(src & 0xffu);
     dst[1] = static_cast<UInt8>((src >> 8) & 0xffu);
@@ -105,8 +103,8 @@ std::string XWindowsClipboardBMPConverter::fromIClipboard(const std::string& bmp
     toLE(dst, 'B');
     toLE(dst, 'M');
     toLE(dst, static_cast<std::uint32_t>(14 + bmp.size()));
-    toLE(dst, static_cast<UInt16>(0));
-    toLE(dst, static_cast<UInt16>(0));
+    toLE(dst, static_cast<std::uint16_t>(0));
+    toLE(dst, static_cast<std::uint16_t>(0));
     toLE(dst, static_cast<std::uint32_t>(14 + 40));
     return std::string(reinterpret_cast<const char*>(header), 14) + bmp;
 }

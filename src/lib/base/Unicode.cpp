@@ -25,14 +25,11 @@
 // local utility functions
 //
 
-inline
-static
-UInt16
-decode16(const UInt8* n, bool byteSwapped)
+inline static std::uint16_t decode16(const UInt8* n, bool byteSwapped)
 {
     union x16 {
         UInt8    n8[2];
-        UInt16    n16;
+        std::uint16_t n16;
     } c;
     if (byteSwapped) {
         c.n8[0] = n[1];
@@ -127,7 +124,7 @@ std::string Unicode::UTF8ToUCS2(const std::string& src, bool* errors)
             setError(errors);
             c = s_replacement;
         }
-        UInt16 ucs2 = static_cast<UInt16>(c);
+        std::uint16_t ucs2 = static_cast<std::uint16_t>(c);
         dst.append(reinterpret_cast<const char*>(&ucs2), 2);
     }
 
@@ -181,13 +178,13 @@ Unicode::UTF8ToUTF16(const std::string& src, bool* errors)
             c = s_replacement;
         }
         if (c < 0x00010000) {
-            UInt16 ucs2 = static_cast<UInt16>(c);
+            std::uint16_t ucs2 = static_cast<std::uint16_t>(c);
             dst.append(reinterpret_cast<const char*>(&ucs2), 2);
         }
         else {
             c -= 0x00010000;
-            UInt16 utf16h = static_cast<UInt16>((c >> 10) + 0xd800);
-            UInt16 utf16l = static_cast<UInt16>((c & 0x03ff) + 0xdc00);
+            std::uint16_t utf16h = static_cast<std::uint16_t>((c >> 10) + 0xd800);
+            std::uint16_t utf16l = static_cast<std::uint16_t>((c & 0x03ff) + 0xdc00);
             dst.append(reinterpret_cast<const char*>(&utf16h), 2);
             dst.append(reinterpret_cast<const char*>(&utf16l), 2);
         }

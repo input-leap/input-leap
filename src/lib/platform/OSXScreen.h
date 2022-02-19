@@ -120,7 +120,7 @@ private:
     // mouse button handler.  pressed is true if this is a mousedown
     // event, false if it is a mouseup event.  macButton is the index
     // of the button pressed using the mac button mapping.
-    bool                onMouseButton(bool pressed, UInt16 macButton);
+    bool onMouseButton(bool pressed, std::uint16_t macButton);
     bool onMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const;
 
     void                constructMouseButtonEventMap();
@@ -136,10 +136,10 @@ private:
     void                hideCursor();
 
     // map barrier mouse button to mac buttons
-    ButtonID            mapBarrierButtonToMac(UInt16) const;
+    ButtonID mapBarrierButtonToMac(std::uint16_t) const;
 
     // map mac mouse button to barrier buttons
-    ButtonID            mapMacButtonToBarrier(UInt16) const;
+    ButtonID mapMacButtonToBarrier(std::uint16_t) const;
 
     // map mac scroll wheel value to a barrier scroll wheel value
     std::int32_t mapScrollWheelToBarrier(float) const;
@@ -268,7 +268,7 @@ private:
        Evil, and this should be moved to a place where it need not
        be mutable as soon as possible. */
     mutable MouseButtonState m_buttonState;
-    typedef std::map<UInt16, CGEventType> MouseButtonEventMapType;
+    typedef std::map<std::uint16_t, CGEventType> MouseButtonEventMapType;
     std::vector<MouseButtonEventMapType> MouseButtonEventMap;
 
     bool                m_cursorHidden;

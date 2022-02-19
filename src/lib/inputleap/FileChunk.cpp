@@ -24,7 +24,7 @@
 #include "base/String.h"
 #include "base/Log.h"
 
-static const UInt16 kIntervalThreshold = 1;
+static const std::uint16_t kIntervalThreshold = 1;
 
 FileChunk::FileChunk(size_t size) :
     Chunk(size)

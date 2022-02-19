@@ -127,11 +127,12 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
 
                 case 2:
                     // 2 byte integer
-                    *static_cast<UInt16*>(v) =
-                        static_cast<UInt16>(
-                        (static_cast<UInt16>(buffer[0]) << 8) |
-                         static_cast<UInt16>(buffer[1]));
-                    LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *static_cast<UInt16*>(v), *static_cast<UInt16*>(v)));
+                    *static_cast<std::uint16_t*>(v) =
+                        static_cast<std::uint16_t>(
+                        (static_cast<std::uint16_t>(buffer[0]) << 8) |
+                         static_cast<std::uint16_t>(buffer[1]));
+                    LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len,
+                         *static_cast<std::uint16_t*>(v), *static_cast<std::uint16_t*>(v)));
                     break;
 
                 case 4:
@@ -183,11 +184,13 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                     // 2 byte integer
                     for (std::uint32_t i = 0; i < n; ++i) {
                         read(stream, buffer, 2);
-                        static_cast<std::vector<UInt16>*>(v)->push_back(
-                            static_cast<UInt16>(
-                            (static_cast<UInt16>(buffer[0]) << 8) |
-                             static_cast<UInt16>(buffer[1])));
-                        LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)", len, i, static_cast<std::vector<UInt16>*>(v)->back(), static_cast<std::vector<UInt16>*>(v)->back()));
+                        static_cast<std::vector<std::uint16_t>*>(v)->push_back(
+                            static_cast<std::uint16_t>(
+                            (static_cast<std::uint16_t>(buffer[0]) << 8) |
+                             static_cast<std::uint16_t>(buffer[1])));
+                        LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)", len, i,
+                             static_cast<std::vector<std::uint16_t>*>(v)->back(),
+                             static_cast<std::vector<std::uint16_t>*>(v)->back()));
                     }
                     break;
 
@@ -311,7 +314,7 @@ std::uint32_t ProtocolUtil::getLength(const char* fmt, va_list args)
 
                 case 2:
                     len = 4 + 2 * static_cast<std::uint32_t>(
-                                (va_arg(args, std::vector<UInt16>*))->size());
+                                (va_arg(args, std::vector<std::uint16_t>*))->size());
                     break;
 
                 case 4:
@@ -416,15 +419,15 @@ ProtocolUtil::writef_void(void* buffer, const char* fmt, va_list args)
 
                 case 2: {
                     // 2 byte integers
-                    const std::vector<UInt16>* list =
-                        va_arg(args, const std::vector<UInt16>*);
+                    const std::vector<std::uint16_t>* list =
+                        va_arg(args, const std::vector<std::uint16_t>*);
                     const std::uint32_t n = static_cast<std::uint32_t>(list->size());
                     *dst++ = static_cast<UInt8>((n >> 24) & 0xff);
                     *dst++ = static_cast<UInt8>((n >> 16) & 0xff);
                     *dst++ = static_cast<UInt8>((n >>  8) & 0xff);
                     *dst++ = static_cast<UInt8>( n        & 0xff);
                     for (std::uint32_t i = 0; i < n; ++i) {
-                        const UInt16 v = (*list)[i];
+                        const std::uint16_t v = (*list)[i];
                         *dst++ = static_cast<UInt8>((v >> 8) & 0xff);
                         *dst++ = static_cast<UInt8>( v       & 0xff);
                     }

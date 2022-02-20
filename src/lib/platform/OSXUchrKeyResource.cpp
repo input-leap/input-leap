@@ -23,8 +23,7 @@
 // OSXUchrKeyResource
 //
 
-OSXUchrKeyResource::OSXUchrKeyResource(const void* resource,
-                UInt32 keyboardType) :
+OSXUchrKeyResource::OSXUchrKeyResource(const void* resource, std::uint32_t keyboardType) :
     m_m(NULL),
     m_cti(NULL),
     m_sdi(NULL),
@@ -56,7 +55,7 @@ OSXUchrKeyResource::OSXUchrKeyResource(const void* resource,
     }
 
     // get tables for keyboard type
-    const UInt8* const base = reinterpret_cast<const UInt8*>(m_resource);
+    const std::uint8_t* const base = reinterpret_cast<const std::uint8_t*>(m_resource);
     m_m   = reinterpret_cast<const UCKeyModifiersToTableNum*>(base +
                                 th->keyModifiersToTableNumOffset);
     m_cti = reinterpret_cast<const UCKeyToCharTableIndex*>(base +
@@ -76,8 +75,8 @@ OSXUchrKeyResource::OSXUchrKeyResource(const void* resource,
     // a dead key followed by a space yields the non-dead version of
     // the dead key.
     m_spaceOutput = 0xffffu;
-    UInt32 table  = getTableForModifier(0);
-    for (UInt32 button = 0, n = getNumButtons(); button < n; ++button) {
+    std::uint32_t table  = getTableForModifier(0);
+    for (std::uint32_t button = 0, n = getNumButtons(); button < n; ++button) {
         KeyID id = getKey(table, button);
         if (id == 0x20) {
             UCKeyOutput c =
@@ -98,27 +97,23 @@ OSXUchrKeyResource::isValid() const
     return (m_m != NULL);
 }
 
-UInt32
-OSXUchrKeyResource::getNumModifierCombinations() const
+std::uint32_t OSXUchrKeyResource::getNumModifierCombinations() const
 {
     // only 32 (not 256) because the righthanded modifier bits are ignored
     return 32;
 }
 
-UInt32
-OSXUchrKeyResource::getNumTables() const
+std::uint32_t OSXUchrKeyResource::getNumTables() const
 {
     return m_cti->keyToCharTableCount;
 }
 
-UInt32
-OSXUchrKeyResource::getNumButtons() const
+std::uint32_t OSXUchrKeyResource::getNumButtons() const
 {
     return m_cti->keyToCharTableSize;
 }
 
-UInt32
-OSXUchrKeyResource::getTableForModifier(UInt32 mask) const
+std::uint32_t OSXUchrKeyResource::getTableForModifier(std::uint32_t mask) const
 {
     if (mask >= m_m->modifiersCount) {
         return m_m->defaultTableNum;
@@ -128,13 +123,12 @@ OSXUchrKeyResource::getTableForModifier(UInt32 mask) const
     }
 }
 
-KeyID
-OSXUchrKeyResource::getKey(UInt32 table, UInt32 button) const
+KeyID OSXUchrKeyResource::getKey(std::uint32_t table, std::uint32_t button) const
 {
     assert(table < getNumTables());
     assert(button < getNumButtons());
 
-    const UInt8* const base   = reinterpret_cast<const UInt8*>(m_resource);
+    const std::uint8_t* const base = reinterpret_cast<const std::uint8_t*>(m_resource);
     const UCKeyOutput* cPtr = reinterpret_cast<const UCKeyOutput*>(base +
                                 m_cti->keyToCharTableOffsets[table]);
 
@@ -164,16 +158,14 @@ OSXUchrKeyResource::getKey(UInt32 table, UInt32 button) const
     return keys.front();
 }
 
-bool
-OSXUchrKeyResource::getDeadKey(
-    KeySequence& keys, UInt16 index) const
+bool OSXUchrKeyResource::getDeadKey(KeySequence& keys, std::uint16_t index) const
 {
     if (m_sri == NULL || index >= m_sri->keyStateRecordCount) {
         // XXX -- should we be using some other fallback?
         return false;
     }
 
-    UInt16 state = 0;
+    std::uint16_t state = 0;
     if (!getKeyRecord(keys, index, state)) {
         return false;
     }
@@ -207,18 +199,17 @@ OSXUchrKeyResource::getDeadKey(
     return true;
 }
 
-bool
-OSXUchrKeyResource::getKeyRecord(
-    KeySequence& keys, UInt16 index, UInt16& state) const
+bool OSXUchrKeyResource::getKeyRecord(KeySequence& keys, std::uint16_t index,
+                                      std::uint16_t& state) const
 {
-    const UInt8* const base = reinterpret_cast<const UInt8*>(m_resource);
+    const std::uint8_t* const base = reinterpret_cast<const std::uint8_t*>(m_resource);
     const UCKeyStateRecord* sr =
         reinterpret_cast<const UCKeyStateRecord*>(base +
                                 m_sri->keyStateRecordOffsets[index]);
     const UCKeyStateEntryTerminal* kset =
         reinterpret_cast<const UCKeyStateEntryTerminal*>(sr->stateEntryData);
 
-    UInt16 nextState = 0;
+    std::uint16_t nextState = 0;
     bool found       = false;
     if (state == 0) {
         found     = true;
@@ -231,7 +222,7 @@ OSXUchrKeyResource::getKeyRecord(
         // we have a next entry
         switch (sr->stateEntryFormat) {
         case kUCKeyStateEntryTerminalFormat:
-            for (UInt16 j = 0; j < sr->stateEntryCount; ++j) {
+            for (std::uint16_t j = 0; j < sr->stateEntryCount; ++j) {
                 if (kset[j].curState == state) {
                     if (!addSequence(keys, kset[j].charData)) {
                         return false;
@@ -276,7 +267,7 @@ OSXUchrKeyResource::addSequence(
     KeySequence& keys, UCKeyCharSeq c) const
 {
     if ((c & kUCKeyOutputTestForIndexMask) == kUCKeyOutputSequenceIndexMask) {
-        UInt16 index = (c & kUCKeyOutputGetIndexMask);
+        std::uint16_t index = (c & kUCKeyOutputGetIndexMask);
         if (index < m_sdi->charSequenceCount &&
             m_sdi->charSequenceOffsets[index] !=
                 m_sdi->charSequenceOffsets[index + 1]) {

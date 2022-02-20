@@ -59,26 +59,26 @@ public:
     // IScreen overrides
     virtual void*        getEventTarget() const;
     virtual bool        getClipboard(ClipboardID id, IClipboard*) const;
-    virtual void        getShape(SInt32& x, SInt32& y,
-                            SInt32& width, SInt32& height) const;
-    virtual void        getCursorPos(SInt32& x, SInt32& y) const;
+    virtual void getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width,
+                          std::int32_t& height) const;
+    virtual void getCursorPos(std::int32_t& x, std::int32_t& y) const;
 
     // IPrimaryScreen overrides
-    virtual void        reconfigure(UInt32 activeSides);
-    virtual void        warpCursor(SInt32 x, SInt32 y);
-    virtual UInt32        registerHotKey(KeyID key, KeyModifierMask mask);
-    virtual void        unregisterHotKey(UInt32 id);
+    virtual void reconfigure(std::uint32_t activeSides);
+    virtual void warpCursor(std::int32_t x, std::int32_t y);
+    virtual std::uint32_t registerHotKey(KeyID key, KeyModifierMask mask);
+    virtual void unregisterHotKey(std::uint32_t id);
     virtual void        fakeInputBegin();
     virtual void        fakeInputEnd();
-    virtual SInt32        getJumpZoneSize() const;
-    virtual bool        isAnyMouseButtonDown(UInt32& buttonID) const;
-    virtual void        getCursorCenter(SInt32& x, SInt32& y) const;
+    virtual std::int32_t getJumpZoneSize() const;
+    virtual bool isAnyMouseButtonDown(std::uint32_t& buttonID) const;
+    virtual void getCursorCenter(std::int32_t& x, std::int32_t& y) const;
 
     // ISecondaryScreen overrides
     virtual void        fakeMouseButton(ButtonID id, bool press);
-    virtual void        fakeMouseMove(SInt32 x, SInt32 y);
-    virtual void        fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const;
-    virtual void        fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
+    virtual void fakeMouseMove(std::int32_t x, std::int32_t y);
+    virtual void fakeMouseRelativeMove(std::int32_t dx, std::int32_t dy) const;
+    virtual void fakeMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const;
 
     // IPlatformScreen overrides
     virtual void        enable();
@@ -92,7 +92,7 @@ public:
     virtual void        screensaver(bool activate);
     virtual void        resetOptions();
     virtual void        setOptions(const OptionsList& options);
-    virtual void        setSequenceNumber(UInt32);
+    virtual void        setSequenceNumber(std::uint32_t);
     virtual bool        isPrimary() const;
     virtual void        fakeDraggingFiles(DragFileList fileList);
     virtual std::string& getDraggingFilename();
@@ -120,8 +120,8 @@ private:
     // mouse button handler.  pressed is true if this is a mousedown
     // event, false if it is a mouseup event.  macButton is the index
     // of the button pressed using the mac button mapping.
-    bool                onMouseButton(bool pressed, UInt16 macButton);
-    bool                onMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
+    bool onMouseButton(bool pressed, std::uint16_t macButton);
+    bool onMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const;
 
     void                constructMouseButtonEventMap();
 
@@ -136,16 +136,16 @@ private:
     void                hideCursor();
 
     // map barrier mouse button to mac buttons
-    ButtonID            mapBarrierButtonToMac(UInt16) const;
+    ButtonID mapBarrierButtonToMac(std::uint16_t) const;
 
     // map mac mouse button to barrier buttons
-    ButtonID            mapMacButtonToBarrier(UInt16) const;
+    ButtonID mapMacButtonToBarrier(std::uint16_t) const;
 
     // map mac scroll wheel value to a barrier scroll wheel value
-    SInt32                mapScrollWheelToBarrier(float) const;
+    std::int32_t mapScrollWheelToBarrier(float) const;
 
     // map barrier scroll wheel value to a mac scroll wheel value
-    SInt32                mapScrollWheelFromBarrier(float) const;
+    std::int32_t mapScrollWheelFromBarrier(float) const;
 
     // get the current scroll wheel speed
     double                getScrollSpeed() const;
@@ -204,8 +204,8 @@ private:
 private:
     struct HotKeyItem {
     public:
-        HotKeyItem(UInt32, UInt32);
-        HotKeyItem(EventHotKeyRef, UInt32, UInt32);
+        HotKeyItem(std::uint32_t, std::uint32_t);
+        HotKeyItem(EventHotKeyRef, std::uint32_t, std::uint32_t);
 
         EventHotKeyRef    getRef() const;
 
@@ -213,8 +213,8 @@ private:
 
     private:
         EventHotKeyRef    m_ref;
-        UInt32            m_keycode;
-        UInt32            m_mask;
+        std::uint32_t m_keycode;
+        std::uint32_t m_mask;
     };
 
     enum EMouseButtonState {
@@ -227,21 +227,21 @@ private:
 
     class MouseButtonState {
     public:
-        void set(UInt32 button, EMouseButtonState state);
+        void set(std::uint32_t button, EMouseButtonState state);
         bool any();
         void reset();
-        void overwrite(UInt32 buttons);
+        void overwrite(std::uint32_t buttons);
 
-        bool test(UInt32 button) const;
-        SInt8 getFirstButtonDown() const;
+        bool test(std::uint32_t button) const;
+        std::int8_t getFirstButtonDown() const;
     private:
         std::bitset<NumButtonIDs>      m_buttons;
     };
 
-    typedef std::map<UInt32, HotKeyItem> HotKeyMap;
-    typedef std::vector<UInt32> HotKeyIDList;
-    typedef std::map<KeyModifierMask, UInt32> ModifierHotKeyMap;
-    typedef std::map<HotKeyItem, UInt32> HotKeyToIDMap;
+    typedef std::map<std::uint32_t, HotKeyItem> HotKeyMap;
+    typedef std::vector<std::uint32_t> HotKeyIDList;
+    typedef std::map<KeyModifierMask, std::uint32_t> ModifierHotKeyMap;
+    typedef std::map<HotKeyItem, std::uint32_t> HotKeyToIDMap;
 
     // true if screen is being used as a primary screen, false otherwise
     bool                m_isPrimary;
@@ -253,12 +253,12 @@ private:
     CGDirectDisplayID    m_displayID;
 
     // screen shape stuff
-    SInt32                m_x, m_y;
-    SInt32                m_w, m_h;
-    SInt32                m_xCenter, m_yCenter;
+    std::int32_t m_x, m_y;
+    std::int32_t m_w, m_h;
+    std::int32_t m_xCenter, m_yCenter;
 
     // mouse state
-    mutable SInt32        m_xCursor, m_yCursor;
+    mutable std::int32_t m_xCursor, m_yCursor;
     mutable bool        m_cursorPosValid;
 
     /* FIXME: this data structure is explicitly marked mutable due
@@ -268,11 +268,11 @@ private:
        Evil, and this should be moved to a place where it need not
        be mutable as soon as possible. */
     mutable MouseButtonState m_buttonState;
-    typedef std::map<UInt16, CGEventType> MouseButtonEventMapType;
+    typedef std::map<std::uint16_t, CGEventType> MouseButtonEventMapType;
     std::vector<MouseButtonEventMapType> MouseButtonEventMap;
 
     bool                m_cursorHidden;
-    SInt32                m_dragNumButtonsDown;
+    std::int32_t m_dragNumButtonsDown;
     Point                m_dragLastPoint;
     EventQueueTimer*    m_dragTimer;
 
@@ -281,7 +281,7 @@ private:
 
     // clipboards
     OSXClipboard       m_pasteboard;
-    UInt32                m_sequenceNumber;
+    std::uint32_t m_sequenceNumber;
 
     // screen saver stuff
     OSXScreenSaver*    m_screensaver;
@@ -313,7 +313,7 @@ private:
     HotKeyMap                m_hotKeys;
     HotKeyIDList            m_oldHotKeyIDs;
     ModifierHotKeyMap        m_modifierHotKeys;
-    UInt32                    m_activeModifierHotKey;
+    std::uint32_t m_activeModifierHotKey;
     KeyModifierMask            m_activeModifierHotKeyMask;
     HotKeyToIDMap            m_hotKeyToIDMap;
 
@@ -328,8 +328,8 @@ private:
     // for double click coalescing.
     double                    m_lastClickTime;
     int                     m_clickState;
-    SInt32                    m_lastSingleClickXCursor;
-    SInt32                    m_lastSingleClickYCursor;
+    std::int32_t m_lastSingleClickXCursor;
+    std::int32_t m_lastSingleClickYCursor;
 
     // cursor will hide and show on enable and disable if true.
     bool                    m_autoShowHideCursor;

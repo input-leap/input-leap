@@ -19,7 +19,7 @@
 #include "ipc/IpcMessage.h"
 #include "ipc/Ipc.h"
 
-IpcMessage::IpcMessage(UInt8 type) :
+IpcMessage::IpcMessage(std::uint8_t type) :
     m_type(type)
 {
 }

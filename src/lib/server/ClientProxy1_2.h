@@ -29,5 +29,5 @@ public:
     ~ClientProxy1_2() override;
 
     // IClient overrides
-    void mouseRelativeMove(SInt32 xRel, SInt32 yRel) override;
+    void mouseRelativeMove(std::int32_t xRel, std::int32_t yRel) override;
 };

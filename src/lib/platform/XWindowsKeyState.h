@@ -62,7 +62,7 @@ public:
     on X11.  If \p group is \c kGroupPollAndSet then this will poll the
     active group now and use it for future calls to \c pollActiveGroup().
     */
-    void                setActiveGroup(SInt32 group);
+    void setActiveGroup(std::int32_t group);
 
     //! Set the auto-repeat state
     /*!
@@ -102,7 +102,7 @@ public:
     // IKeyState overrides
     bool fakeCtrlAltDel() override;
     KeyModifierMask pollActiveModifiers() const override;
-    SInt32 pollActiveGroup() const override;
+    std::int32_t pollActiveGroup() const override;
     void pollPressedKeys(KeyButtonSet& pressedKeys) const override;
 
 protected:
@@ -116,16 +116,15 @@ private:
     void                updateKeysymMapXKB(inputleap::KeyMap&);
     bool                hasModifiersXKB() const;
     int                    getEffectiveGroup(KeyCode, int group) const;
-    UInt32                getGroupFromState(unsigned int state) const;
+    std::uint32_t getGroupFromState(unsigned int state) const;
 
-    static void            remapKeyModifiers(KeyID, SInt32,
-                            inputleap::KeyMap::KeyItem&, void*);
+    static void remapKeyModifiers(KeyID, std::int32_t, inputleap::KeyMap::KeyItem&, void*);
 
 private:
     struct XKBModifierInfo {
     public:
         unsigned char    m_level;
-        UInt32            m_mask;
+        std::uint32_t m_mask;
         bool            m_lock;
     };
 
@@ -138,7 +137,7 @@ private:
     typedef std::map<KeyModifierMask, unsigned int> KeyModifierToXMask;
     typedef std::multimap<KeyID, KeyCode> KeyToKeyCodeMap;
     typedef std::map<KeyCode, unsigned int> NonXKBModifierMap;
-    typedef std::map<UInt32, XKBModifierInfo> XKBModifierMap;
+    typedef std::map<std::uint32_t, XKBModifierInfo> XKBModifierMap;
 
     IXWindowsImpl* m_impl;
 
@@ -146,7 +145,7 @@ private:
 #if HAVE_XKB_EXTENSION
     XkbDescPtr            m_xkb;
 #endif
-    SInt32                m_group;
+    std::int32_t m_group;
     XKBModifierMap        m_lastGoodXKBModifiers;
     NonXKBModifierMap    m_lastGoodNonXKBModifiers;
 
@@ -164,8 +163,8 @@ private:
 
 #ifdef INPUTLEAP_TEST_ENV
 public:
-    SInt32                  group() const { return m_group; }
-    void                    group(const SInt32& group) { m_group = group; }
+    std::int32_t group() const { return m_group; }
+    void group(const std::int32_t& group) { m_group = group; }
     KeyModifierMaskList& modifierFromX() { return m_modifierFromX; }
 #endif
 };

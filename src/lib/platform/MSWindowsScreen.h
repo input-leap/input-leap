@@ -70,34 +70,34 @@ public:
     // IScreen overrides
     virtual void*        getEventTarget() const;
     virtual bool        getClipboard(ClipboardID id, IClipboard*) const;
-    virtual void        getShape(SInt32& x, SInt32& y,
-                            SInt32& width, SInt32& height) const;
-    virtual void        getCursorPos(SInt32& x, SInt32& y) const;
+    virtual void getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width,
+                          std::int32_t& height) const;
+    virtual void getCursorPos(std::int32_t& x, std::int32_t& y) const;
 
     // IPrimaryScreen overrides
-    virtual void        reconfigure(UInt32 activeSides);
-    virtual void        warpCursor(SInt32 x, SInt32 y);
-    virtual UInt32        registerHotKey(KeyID key,
+    virtual void reconfigure(std::uint32_t activeSides);
+    virtual void warpCursor(std::int32_t x, std::int32_t y);
+    virtual std::uint32_t registerHotKey(KeyID key,
                             KeyModifierMask mask);
-    virtual void        unregisterHotKey(UInt32 id);
+    virtual void unregisterHotKey(std::uint32_t id);
     virtual void        fakeInputBegin();
     virtual void        fakeInputEnd();
-    virtual SInt32        getJumpZoneSize() const;
-    virtual bool        isAnyMouseButtonDown(UInt32& buttonID) const;
-    virtual void        getCursorCenter(SInt32& x, SInt32& y) const;
+    virtual std::int32_t getJumpZoneSize() const;
+    virtual bool isAnyMouseButtonDown(std::uint32_t& buttonID) const;
+    virtual void getCursorCenter(std::int32_t& x, std::int32_t& y) const;
 
     // ISecondaryScreen overrides
     virtual void        fakeMouseButton(ButtonID id, bool press);
-    virtual void        fakeMouseMove(SInt32 x, SInt32 y);
-    virtual void        fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const;
-    virtual void        fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
+    virtual void fakeMouseMove(std::int32_t x, std::int32_t y);
+    virtual void fakeMouseRelativeMove(std::int32_t dx, std::int32_t dy) const;
+    virtual void fakeMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const;
 
     // IKeyState overrides
     virtual void        updateKeys();
     virtual void        fakeKeyDown(KeyID id, KeyModifierMask mask,
                             KeyButton button);
-    virtual bool        fakeKeyRepeat(KeyID id, KeyModifierMask mask,
-                            SInt32 count, KeyButton button);
+    virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, std::int32_t count,
+                               KeyButton button);
     virtual bool        fakeKeyUp(KeyButton button);
     virtual void        fakeAllKeysUp();
 
@@ -113,7 +113,7 @@ public:
     virtual void        screensaver(bool activate);
     virtual void        resetOptions();
     virtual void        setOptions(const OptionsList& options);
-    virtual void        setSequenceNumber(UInt32);
+    virtual void setSequenceNumber(std::uint32_t);
     virtual bool        isPrimary() const;
     virtual void        fakeDraggingFiles(DragFileList fileList);
     virtual std::string& getDraggingFilename();
@@ -159,18 +159,18 @@ private: // HACK
     bool                onEvent(HWND, UINT, WPARAM, LPARAM, LRESULT* result);
 
     // message handlers
-    bool                onMark(UInt32 mark);
+    bool onMark(std::uint32_t mark);
     bool                onKey(WPARAM, LPARAM);
     bool                onHotKey(WPARAM, LPARAM);
     bool                onMouseButton(WPARAM, LPARAM);
-    bool                onMouseMove(SInt32 x, SInt32 y);
-    bool                onMouseWheel(SInt32 xDelta, SInt32 yDelta);
+    bool onMouseMove(std::int32_t x, std::int32_t y);
+    bool onMouseWheel(std::int32_t xDelta, std::int32_t yDelta);
     bool                onScreensaver(bool activated);
     bool                onDisplayChange();
     bool                onClipboardChange();
 
     // warp cursor without discarding queued events
-    void                warpCursorNoFlush(SInt32 x, SInt32 y);
+    void warpCursorNoFlush(std::int32_t x, std::int32_t y);
 
     // discard posted messages
     void                nextMark();
@@ -213,7 +213,7 @@ private: // HACK
     static LRESULT CALLBACK wndProc(HWND, UINT, WPARAM, LPARAM);
 
     // save last position of mouse to compute next delta movement
-    void saveMousePosition(SInt32 x, SInt32 y);
+    void saveMousePosition(std::int32_t x, std::int32_t y);
 
     // check if it is a modifier key repeating message
     bool                isModifierRepeat(KeyModifierMask oldState,
@@ -235,9 +235,9 @@ private:
         UINT            m_keycode;
         UINT            m_mask;
     };
-    typedef std::map<UInt32, HotKeyItem> HotKeyMap;
-    typedef std::vector<UInt32> HotKeyIDList;
-    typedef std::map<HotKeyItem, UInt32> HotKeyToIDMap;
+    typedef std::map<std::uint32_t, HotKeyItem> HotKeyMap;
+    typedef std::vector<std::uint32_t> HotKeyIDList;
+    typedef std::map<HotKeyItem, std::uint32_t> HotKeyToIDMap;
     typedef std::vector<KeyButton> PrimaryKeyDownList;
 
     static HINSTANCE    s_windowInstance;
@@ -255,22 +255,22 @@ private:
     ATOM                m_class;
 
     // screen shape stuff
-    SInt32                m_x, m_y;
-    SInt32                m_w, m_h;
-    SInt32                m_xCenter, m_yCenter;
+    std::int32_t m_x, m_y;
+    std::int32_t m_w, m_h;
+    std::int32_t m_xCenter, m_yCenter;
 
     // true if system appears to have multiple monitors
     bool                m_multimon;
 
     // last mouse position
-    SInt32                m_xCursor, m_yCursor;
+    std::int32_t m_xCursor, m_yCursor;
 
     // last clipboard
-    UInt32                m_sequenceNumber;
+    std::uint32_t m_sequenceNumber;
 
     // used to discard queued messages that are no longer needed
-    UInt32                m_mark;
-    UInt32                m_markReceived;
+    std::uint32_t m_mark;
+    std::uint32_t m_markReceived;
 
     // the main loop's thread id
     DWORD                m_threadID;

@@ -92,8 +92,7 @@ MSWindowsEventQueueBuffer::waitForEvent(double timeout)
     MsgWaitForMultipleObjects(0, dummy, FALSE, t, m_os_supported_message_types);
 }
 
-IEventQueueBuffer::Type
-MSWindowsEventQueueBuffer::getEvent(Event& event, UInt32& dataID)
+IEventQueueBuffer::Type MSWindowsEventQueueBuffer::getEvent(Event& event, std::uint32_t& dataID)
 {
     // peek at messages first.  waiting for QS_ALLINPUT will return
     // if a message has been sent to our window but GetMessage will
@@ -118,7 +117,7 @@ MSWindowsEventQueueBuffer::getEvent(Event& event, UInt32& dataID)
         return kSystem;
     }
     else if (m_event.message == m_userEvent) {
-        dataID = static_cast<UInt32>(m_event.wParam);
+        dataID = static_cast<std::uint32_t>(m_event.wParam);
         return kUser;
     }
     else {
@@ -128,8 +127,7 @@ MSWindowsEventQueueBuffer::getEvent(Event& event, UInt32& dataID)
     }
 }
 
-bool
-MSWindowsEventQueueBuffer::addEvent(UInt32 dataID)
+bool MSWindowsEventQueueBuffer::addEvent(std::uint32_t dataID)
 {
     return (PostThreadMessage(m_thread, m_userEvent,
                             static_cast<WPARAM>(dataID), 0) != 0);

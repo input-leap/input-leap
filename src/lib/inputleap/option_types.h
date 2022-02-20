@@ -25,23 +25,23 @@
 /*!
 Type to hold an option identifier.
 */
-typedef UInt32            OptionID;
+typedef std::uint32_t OptionID;
 
 //! Option Value
 /*!
 Type to hold an option value.
 */
-typedef SInt32            OptionValue;
+typedef std::int32_t OptionValue;
 
 // for now, options are just pairs of integers
-typedef std::vector<UInt32> OptionsList;
+typedef std::vector<std::uint32_t> OptionsList;
 
 // macro for packing 4 character strings into 4 byte integers
 #define OPTION_CODE(_s)                                             \
-    (static_cast<UInt32>(static_cast<unsigned char>(_s[0]) << 24) |    \
-     static_cast<UInt32>(static_cast<unsigned char>(_s[1]) << 16) |    \
-     static_cast<UInt32>(static_cast<unsigned char>(_s[2]) <<  8) |    \
-     static_cast<UInt32>(static_cast<unsigned char>(_s[3])      ))
+    (static_cast<std::uint32_t>(static_cast<unsigned char>(_s[0]) << 24) |    \
+     static_cast<std::uint32_t>(static_cast<unsigned char>(_s[1]) << 16) |    \
+     static_cast<std::uint32_t>(static_cast<unsigned char>(_s[2]) <<  8) |    \
+     static_cast<std::uint32_t>(static_cast<unsigned char>(_s[3])      ))
 
 //! @name Option identifiers
 //@{

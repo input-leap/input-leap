@@ -228,20 +228,17 @@ Client::getClipboard(ClipboardID id, IClipboard* clipboard) const
     return m_screen->getClipboard(id, clipboard);
 }
 
-void
-Client::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
+void Client::getShape(std::int32_t& x, std::int32_t& y, std::int32_t& w, std::int32_t& h) const
 {
     m_screen->getShape(x, y, w, h);
 }
 
-void
-Client::getCursorPos(SInt32& x, SInt32& y) const
+void Client::getCursorPos(std::int32_t& x, std::int32_t& y) const
 {
     m_screen->getCursorPos(x, y);
 }
 
-void
-Client::enter(SInt32 xAbs, SInt32 yAbs, UInt32, KeyModifierMask mask, bool)
+void Client::enter(std::int32_t xAbs, std::int32_t yAbs, std::uint32_t, KeyModifierMask mask, bool)
 {
     m_active = true;
     m_screen->mouseMove(xAbs, yAbs);
@@ -300,9 +297,7 @@ Client::keyDown(KeyID id, KeyModifierMask mask, KeyButton button)
      m_screen->keyDown(id, mask, button);
 }
 
-void
-Client::keyRepeat(KeyID id, KeyModifierMask mask,
-                SInt32 count, KeyButton button)
+void Client::keyRepeat(KeyID id, KeyModifierMask mask, std::int32_t count, KeyButton button)
 {
      m_screen->keyRepeat(id, mask, count, button);
 }
@@ -325,20 +320,17 @@ Client::mouseUp(ButtonID id)
      m_screen->mouseUp(id);
 }
 
-void
-Client::mouseMove(SInt32 x, SInt32 y)
+void Client::mouseMove(std::int32_t x, std::int32_t y)
 {
     m_screen->mouseMove(x, y);
 }
 
-void
-Client::mouseRelativeMove(SInt32 dx, SInt32 dy)
+void Client::mouseRelativeMove(std::int32_t dx, std::int32_t dy)
 {
     m_screen->mouseRelativeMove(dx, dy);
 }
 
-void
-Client::mouseWheel(SInt32 xDelta, SInt32 yDelta)
+void Client::mouseWheel(std::int32_t xDelta, std::int32_t yDelta)
 {
     m_screen->mouseWheel(xDelta, yDelta);
 }
@@ -685,7 +677,7 @@ Client::handleClipboardGrabbed(const Event& event, void*)
 void
 Client::handleHello(const Event&, void*)
 {
-    SInt16 major, minor;
+    std::int16_t major, minor;
     if (!ProtocolUtil::readf(m_stream, kMsgHello, &major, &minor)) {
         sendConnectionFailedEvent("Protocol error from server, check encryption settings");
         cleanupTimer();
@@ -783,8 +775,7 @@ void Client::write_to_drop_dir_thread()
                     m_receivedFileData);
 }
 
-void
-Client::dragInfoReceived(UInt32 fileNum, std::string data)
+void Client::dragInfoReceived(std::uint32_t fileNum, std::string data)
 {
     // TODO: fix duplicate function from CServer
     if (!m_args.m_enableDragDrop) {
@@ -825,8 +816,7 @@ void Client::send_file_thread(const char* filename)
     m_sendFileThread = NULL;
 }
 
-void
-Client::sendDragInfo(UInt32 fileCount, std::string& info, size_t size)
+void Client::sendDragInfo(std::uint32_t fileCount, std::string& info, size_t size)
 {
     m_server->sendDragInfo(fileCount, info.c_str(), size);
 }

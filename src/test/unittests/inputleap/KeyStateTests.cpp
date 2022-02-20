@@ -36,13 +36,11 @@ stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys);
 void
 assertMaskIsOne(ForeachKeyCallback cb, void* userData);
 
-const inputleap::KeyMap::KeyItem*
-stubMapKey(
-           inputleap::KeyMap::Keystrokes& keys, KeyID id, SInt32 group,
-           inputleap::KeyMap::ModifierToKeys& activeModifiers,
-           KeyModifierMask& currentState,
-           KeyModifierMask desiredMask,
-           bool isAutoRepeat);
+const inputleap::KeyMap::KeyItem* stubMapKey(inputleap::KeyMap::Keystrokes& keys, KeyID id,
+                                             std::int32_t group,
+                                             inputleap::KeyMap::ModifierToKeys& activeModifiers,
+                                             KeyModifierMask& currentState,
+                                             KeyModifierMask desiredMask, bool isAutoRepeat);
 
 inputleap::KeyMap::Keystroke s_stubKeystroke(1, false, false);
 inputleap::KeyMap::KeyItem s_stubKeyItem;
@@ -477,13 +475,11 @@ assertMaskIsOne(ForeachKeyCallback cb, void* userData)
     ASSERT_EQ(1u, (static_cast<KeyState::AddActiveModifierContext*>(userData))->m_mask);
 }
 
-const inputleap::KeyMap::KeyItem*
-stubMapKey(
-    inputleap::KeyMap::Keystrokes& keys, KeyID id, SInt32 group,
-    inputleap::KeyMap::ModifierToKeys& activeModifiers,
-    KeyModifierMask& currentState,
-    KeyModifierMask desiredMask,
-    bool isAutoRepeat)
+const inputleap::KeyMap::KeyItem* stubMapKey(inputleap::KeyMap::Keystrokes& keys, KeyID id,
+                                             std::int32_t group,
+                                             inputleap::KeyMap::ModifierToKeys& activeModifiers,
+                                             KeyModifierMask& currentState,
+                                             KeyModifierMask desiredMask, bool isAutoRepeat)
 {
     (void) id;
     (void) group;

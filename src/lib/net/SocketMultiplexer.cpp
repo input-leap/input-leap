@@ -191,7 +191,7 @@ void SocketMultiplexer::service_thread()
         if (poll_status != 0) {
             // iterate over socket jobs, invoking each and saving the
             // new job.
-            UInt32 i             = 0;
+            std::uint32_t i = 0;
             JobCursor cursor    = newCursor();
             JobCursor jobCursor = nextCursor(cursor);
             while (i < pfds.size() && jobCursor != m_socketJobs.end()) {

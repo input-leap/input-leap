@@ -366,7 +366,7 @@ void MSWindowsScreen::send_drag_thread()
     if (draggingFilename.empty() == false) {
         ClientApp& app = ClientApp::instance();
         Client* client = app.getClientPtr();
-        UInt32 fileCount = 1;
+        std::uint32_t fileCount = 1;
         LOG((CLOG_DEBUG "send dragging info to server: %s", draggingFilename.c_str()));
         client->sendDragInfo(fileCount, draggingFilename, size);
         LOG((CLOG_DEBUG "send dragging file to server"));
@@ -471,8 +471,7 @@ MSWindowsScreen::setOptions(const OptionsList& options)
     m_desks->setOptions(options);
 }
 
-void
-MSWindowsScreen::setSequenceNumber(UInt32 seqNum)
+void MSWindowsScreen::setSequenceNumber(std::uint32_t seqNum)
 {
     m_sequenceNumber = seqNum;
 }
@@ -497,8 +496,8 @@ MSWindowsScreen::getClipboard(ClipboardID, IClipboard* dst) const
     return true;
 }
 
-void
-MSWindowsScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
+void MSWindowsScreen::getShape(std::int32_t& x, std::int32_t& y, std::int32_t& w,
+                               std::int32_t& h) const
 {
     assert(m_class != 0);
 
@@ -508,14 +507,12 @@ MSWindowsScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
     h = m_h;
 }
 
-void
-MSWindowsScreen::getCursorPos(SInt32& x, SInt32& y) const
+void MSWindowsScreen::getCursorPos(std::int32_t& x, std::int32_t& y) const
 {
     m_desks->getCursorPos(x, y);
 }
 
-void
-MSWindowsScreen::reconfigure(UInt32 activeSides)
+void MSWindowsScreen::reconfigure(std::uint32_t activeSides)
 {
     assert(m_isPrimary);
 
@@ -523,8 +520,7 @@ MSWindowsScreen::reconfigure(UInt32 activeSides)
     m_hook.setSides(activeSides);
 }
 
-void
-MSWindowsScreen::warpCursor(SInt32 x, SInt32 y)
+void MSWindowsScreen::warpCursor(std::int32_t x, std::int32_t y)
 {
     // warp mouse
     warpCursorNoFlush(x, y);
@@ -540,15 +536,14 @@ MSWindowsScreen::warpCursor(SInt32 x, SInt32 y)
     saveMousePosition(x, y);
 }
 
-void MSWindowsScreen::saveMousePosition(SInt32 x, SInt32 y) {
+void MSWindowsScreen::saveMousePosition(std::int32_t x, std::int32_t y) {
     m_xCursor = x;
     m_yCursor = y;
 
     LOG((CLOG_DEBUG5 "saved mouse position for next delta: %+d,%+d", x,y));
 }
 
-UInt32
-MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
+std::uint32_t MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 {
     // only allow certain modifiers
     if ((mask & ~(KeyModifierShift | KeyModifierControl |
@@ -588,14 +583,14 @@ MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
     }
 
     // choose hotkey id
-    UInt32 id;
+    std::uint32_t id;
     if (!m_oldHotKeyIDs.empty()) {
         id = m_oldHotKeyIDs.back();
         m_oldHotKeyIDs.pop_back();
     }
     else {
         //id = m_hotKeys.size() + 1;
-        id = (UInt32)m_hotKeys.size() + 1;
+        id = (std::uint32_t)m_hotKeys.size() + 1;
     }
 
     // if this hot key has modifiers only then we'll handle it specially
@@ -624,8 +619,7 @@ MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
     return id;
 }
 
-void
-MSWindowsScreen::unregisterHotKey(UInt32 id)
+void MSWindowsScreen::unregisterHotKey(std::uint32_t id)
 {
     // look up hotkey
     HotKeyMap::iterator i = m_hotKeys.find(id);
@@ -676,14 +670,12 @@ MSWindowsScreen::fakeInputEnd()
     }
 }
 
-SInt32
-MSWindowsScreen::getJumpZoneSize() const
+std::int32_t MSWindowsScreen::getJumpZoneSize() const
 {
     return 1;
 }
 
-bool
-MSWindowsScreen::isAnyMouseButtonDown(UInt32& buttonID) const
+bool MSWindowsScreen::isAnyMouseButtonDown(std::uint32_t& buttonID) const
 {
     static const char* buttonToName[] = {
         "<invalid>",
@@ -694,7 +686,7 @@ MSWindowsScreen::isAnyMouseButtonDown(UInt32& buttonID) const
         "X Button 2"
     };
 
-    for (UInt32 i = 1; i < sizeof(m_buttons) / sizeof(m_buttons[0]); ++i) {
+    for (std::uint32_t i = 1; i < sizeof(m_buttons) / sizeof(m_buttons[0]); ++i) {
         if (m_buttons[i]) {
             buttonID = i;
             LOG((CLOG_DEBUG "locked by \"%s\"", buttonToName[i]));
@@ -705,8 +697,7 @@ MSWindowsScreen::isAnyMouseButtonDown(UInt32& buttonID) const
     return false;
 }
 
-void
-MSWindowsScreen::getCursorCenter(SInt32& x, SInt32& y) const
+void MSWindowsScreen::getCursorCenter(std::int32_t& x, std::int32_t& y) const
 {
     x = m_xCenter;
     y = m_yCenter;
@@ -729,8 +720,7 @@ MSWindowsScreen::fakeMouseButton(ButtonID id, bool press)
     }
 }
 
-void
-MSWindowsScreen::fakeMouseMove(SInt32 x, SInt32 y)
+void MSWindowsScreen::fakeMouseMove(std::int32_t x, std::int32_t y)
 {
     m_desks->fakeMouseMove(x, y);
     if (m_buttons[kButtonLeft]) {
@@ -738,14 +728,12 @@ MSWindowsScreen::fakeMouseMove(SInt32 x, SInt32 y)
     }
 }
 
-void
-MSWindowsScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
+void MSWindowsScreen::fakeMouseRelativeMove(std::int32_t dx, std::int32_t dy) const
 {
     m_desks->fakeMouseRelativeMove(dx, dy);
 }
 
-void
-MSWindowsScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
+void MSWindowsScreen::fakeMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const
 {
     m_desks->fakeMouseWheel(xDelta, yDelta);
 }
@@ -764,9 +752,8 @@ MSWindowsScreen::fakeKeyDown(KeyID id, KeyModifierMask mask,
     updateForceShowCursor();
 }
 
-bool
-MSWindowsScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
-                SInt32 count, KeyButton button)
+bool MSWindowsScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask, std::int32_t count,
+                                    KeyButton button)
 {
     bool result = PlatformScreen::fakeKeyRepeat(id, mask, count, button);
     updateForceShowCursor();
@@ -795,8 +782,8 @@ MSWindowsScreen::createBlankCursor() const
     int cw = GetSystemMetrics(SM_CXCURSOR);
     int ch = GetSystemMetrics(SM_CYCURSOR);
 
-    UInt8* cursorAND = new UInt8[ch * ((cw + 31) >> 2)];
-    UInt8* cursorXOR = new UInt8[ch * ((cw + 31) >> 2)];
+    std::uint8_t* cursorAND = new std::uint8_t[ch * ((cw + 31) >> 2)];
+    std::uint8_t* cursorXOR = new std::uint8_t[ch * ((cw + 31) >> 2)];
     memset(cursorAND, 0xff, ch * ((cw + 31) >> 2));
     memset(cursorXOR, 0x00, ch * ((cw + 31) >> 2));
     HCURSOR c = CreateCursor(s_windowInstance, 0, 0, cw, ch, cursorAND, cursorXOR);
@@ -976,7 +963,7 @@ MSWindowsScreen::onPreDispatchPrimary(HWND,
     // handle event
     switch (message) {
     case INPUTLEAP_MSG_MARK:
-        return onMark(static_cast<UInt32>(wParam));
+        return onMark(static_cast<std::uint32_t>(wParam));
 
     case INPUTLEAP_MSG_KEY:
         return onKey(wParam, lParam);
@@ -985,16 +972,15 @@ MSWindowsScreen::onPreDispatchPrimary(HWND,
         return onMouseButton(wParam, lParam);
 
     case INPUTLEAP_MSG_MOUSE_MOVE:
-        return onMouseMove(static_cast<SInt32>(wParam),
-                            static_cast<SInt32>(lParam));
+        return onMouseMove(static_cast<std::int32_t>(wParam), static_cast<std::int32_t>(lParam));
 
     case INPUTLEAP_MSG_MOUSE_WHEEL:
-        return onMouseWheel(static_cast<SInt32>(lParam), static_cast<SInt32>(wParam));
+        return onMouseWheel(static_cast<std::int32_t>(lParam), static_cast<std::int32_t>(wParam));
 
     case INPUTLEAP_MSG_PRE_WARP:
         {
             // save position to compute delta of next motion
-            saveMousePosition(static_cast<SInt32>(wParam), static_cast<SInt32>(lParam));
+            saveMousePosition(static_cast<std::int32_t>(wParam), static_cast<std::int32_t>(lParam));
 
             // we warped the mouse.  discard events until we find the
             // matching post warp event.  see warpCursorNoFlush() for
@@ -1084,8 +1070,7 @@ MSWindowsScreen::onEvent(HWND, UINT msg,
     return false;
 }
 
-bool
-MSWindowsScreen::onMark(UInt32 mark)
+bool MSWindowsScreen::onMark(std::uint32_t mark)
 {
     m_markReceived = mark;
     return true;
@@ -1210,7 +1195,7 @@ MSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
             m_keyState->sendKeyEvent(getEventTarget(),
                             ((lParam & 0x80000000u) == 0),
                             ((lParam & 0x40000000u) != 0),
-                            key, mask, (SInt32)(lParam & 0xffff), button);
+                            key, mask, (std::int32_t)(lParam & 0xffff), button);
         }
         else {
             LOG((CLOG_DEBUG1 "cannot map key"));
@@ -1321,13 +1306,12 @@ MSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
 //      - remember the cursor is hidden on the server at this point
 //      - this actually records the current x,y as "last" a second time (it seems)
 //   5. sends the delta movement to the client (could be +1,+1 or -1,+4 for example)
-bool
-MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
+bool MSWindowsScreen::onMouseMove(std::int32_t mx, std::int32_t my)
 {
     // compute motion delta (relative to the last known
     // mouse position)
-    SInt32 x = mx - m_xCursor;
-    SInt32 y = my - m_yCursor;
+    std::int32_t x = mx - m_xCursor;
+    std::int32_t y = my - m_yCursor;
 
     LOG((CLOG_DEBUG3
         "mouse move - motion delta: %+d=(%+d - %+d),%+d=(%+d - %+d)",
@@ -1367,7 +1351,7 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
         // it's probably a bogus motion that we want to
         // ignore (see warpCursorNoFlush() for a further
         // description).
-        static SInt32 bogusZoneSize = 10;
+        static std::int32_t bogusZoneSize = 10;
         if (-x + bogusZoneSize > m_xCenter - m_x ||
              x + bogusZoneSize > m_x + m_w - m_xCenter ||
             -y + bogusZoneSize > m_yCenter - m_y ||
@@ -1384,8 +1368,7 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
     return true;
 }
 
-bool
-MSWindowsScreen::onMouseWheel(SInt32 xDelta, SInt32 yDelta)
+bool MSWindowsScreen::onMouseWheel(std::int32_t xDelta, std::int32_t yDelta)
 {
     // ignore message if posted prior to last mark change
     if (!ignore()) {
@@ -1439,7 +1422,7 @@ bool
 MSWindowsScreen::onDisplayChange()
 {
     // screen resolution may have changed.  save old shape.
-    SInt32 xOld = m_x, yOld = m_y, wOld = m_w, hOld = m_h;
+    std::int32_t xOld = m_x, yOld = m_y, wOld = m_w, hOld = m_h;
 
     // update shape
     updateScreenShape();
@@ -1490,8 +1473,7 @@ MSWindowsScreen::onClipboardChange()
     return true;
 }
 
-void
-MSWindowsScreen::warpCursorNoFlush(SInt32 x, SInt32 y)
+void MSWindowsScreen::warpCursorNoFlush(std::int32_t x, std::int32_t y)
 {
     // send an event that we can recognize before the mouse warp
     PostThreadMessage(GetCurrentThreadId(), INPUTLEAP_MSG_PRE_WARP, x, y);
@@ -1857,8 +1839,8 @@ std::string& MSWindowsScreen::getDraggingFilename()
 
         int halfSize = m_dropWindowSize / 2;
 
-        SInt32 xPos = m_isPrimary ? m_xCursor : m_xCenter;
-        SInt32 yPos = m_isPrimary ? m_yCursor : m_yCenter;
+        std::int32_t xPos = m_isPrimary ? m_xCursor : m_xCenter;
+        std::int32_t yPos = m_isPrimary ? m_yCursor : m_yCenter;
         xPos = (xPos - halfSize) < 0 ? 0 : xPos - halfSize;
         yPos = (yPos - halfSize) < 0 ? 0 : yPos - halfSize;
         SetWindowPos(

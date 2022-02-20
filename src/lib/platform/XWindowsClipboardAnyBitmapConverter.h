@@ -38,19 +38,21 @@ protected:
     /*!
     Convert raw BGR pixel data to another image format.
     */
-    virtual std::string doBGRFromIClipboard(const UInt8* bgrData, UInt32 w, UInt32 h) const = 0;
+    virtual std::string doBGRFromIClipboard(const std::uint8_t* bgrData, std::uint32_t w,
+                                            std::uint32_t h) const = 0;
 
     //! Convert from IClipboard format
     /*!
     Convert raw BGRA pixel data to another image format.
     */
-    virtual std::string doBGRAFromIClipboard(const UInt8* bgrData, UInt32 w, UInt32 h) const = 0;
+    virtual std::string doBGRAFromIClipboard(const std::uint8_t* bgrData, std::uint32_t w,
+                                             std::uint32_t h) const = 0;
 
     //! Convert to IClipboard format
     /*!
     Convert an image into raw BGR or BGRA image data and store the
     width, height, and image depth (24 or 32).
     */
-    virtual std::string doToIClipboard(const std::string&, UInt32& w, UInt32& h,
-                                       UInt32& depth) const = 0;
+    virtual std::string doToIClipboard(const std::string&, std::uint32_t& w, std::uint32_t& h,
+                                       std::uint32_t& depth) const = 0;
 };

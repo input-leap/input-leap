@@ -29,8 +29,8 @@ class MockStream : public inputleap::IStream
 public:
     MockStream() { }
     MOCK_METHOD0(close, void());
-    MOCK_METHOD2(read, UInt32(void*, UInt32));
-    MOCK_METHOD2(write, void(const void*, UInt32));
+    MOCK_METHOD2(read, std::uint32_t(void*, std::uint32_t));
+    MOCK_METHOD2(write, void(const void*, std::uint32_t));
     MOCK_METHOD0(flush, void());
     MOCK_METHOD0(shutdownInput, void());
     MOCK_METHOD0(shutdownOutput, void());
@@ -40,5 +40,5 @@ public:
     MOCK_METHOD0(getOutputShutdownEvent, Event::Type());
     MOCK_CONST_METHOD0(getEventTarget, void*());
     MOCK_CONST_METHOD0(isReady, bool());
-    MOCK_CONST_METHOD0(getSize, UInt32());
+    MOCK_CONST_METHOD0(getSize, std::uint32_t());
 };

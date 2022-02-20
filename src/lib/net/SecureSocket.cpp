@@ -156,7 +156,7 @@ SecureSocket::secureAccept()
 TCPSocket::EJobResult
 SecureSocket::doRead()
 {
-    UInt8 buffer[4096];
+    std::uint8_t buffer[4096];
     memset(buffer, 0, sizeof(buffer));
     int bytesRead = 0;
     int status = 0;

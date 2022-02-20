@@ -54,10 +54,10 @@ public:
     //@}
 
     // sending file chunk to server
-    void                fileChunkSending(UInt8 mark, char* data, size_t dataSize);
+    void fileChunkSending(std::uint8_t mark, char* data, size_t dataSize);
 
     // sending dragging information to server
-    void                sendDragInfo(UInt32 fileCount, const char* info, size_t size);
+    void sendDragInfo(std::uint32_t fileCount, const char* info, size_t size);
 
 #ifdef INPUTLEAP_TEST_ENV
     void                handleDataForTest() { handleData(Event(), NULL); }
@@ -65,8 +65,8 @@ public:
 
 protected:
     enum EResult { kOkay, kUnknown, kDisconnect };
-    EResult                parseHandshakeMessage(const UInt8* code);
-    EResult                parseMessage(const UInt8* code);
+    EResult parseHandshakeMessage(const std::uint8_t* code);
+    EResult parseMessage(const std::uint8_t* code);
 
 private:
     // if compressing mouse motion then send the last motion now
@@ -108,17 +108,17 @@ private:
     void                handleClipboardSendingEvent(const Event&, void*);
 
 private:
-    typedef EResult (ServerProxy::*MessageParser)(const UInt8*);
+    typedef EResult (ServerProxy::*MessageParser)(const std::uint8_t*);
 
     Client*            m_client;
     inputleap::IStream* m_stream;
 
-    UInt32                m_seqNum;
+    std::uint32_t m_seqNum;
 
     bool                m_compressMouse;
     bool                m_compressMouseRelative;
-    SInt32                m_xMouse, m_yMouse;
-    SInt32                m_dxMouse, m_dyMouse;
+    std::int32_t m_xMouse, m_yMouse;
+    std::int32_t m_dxMouse, m_dyMouse;
 
     bool                m_ignoreMouse;
 

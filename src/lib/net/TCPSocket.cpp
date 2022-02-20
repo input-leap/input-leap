@@ -127,12 +127,11 @@ TCPSocket::getEventTarget() const
     return const_cast<void*>(static_cast<const void*>(this));
 }
 
-UInt32
-TCPSocket::read(void* buffer, UInt32 n)
+std::uint32_t TCPSocket::read(void* buffer, std::uint32_t n)
 {
     // copy data directly from our input buffer
     std::lock_guard<std::mutex> lock(tcp_mutex_);
-    UInt32 size = m_inputBuffer.getSize();
+    std::uint32_t size = m_inputBuffer.getSize();
     if (n > size) {
         n = size;
     }
@@ -150,8 +149,7 @@ TCPSocket::read(void* buffer, UInt32 n)
     return n;
 }
 
-void
-TCPSocket::write(const void* buffer, UInt32 n)
+void TCPSocket::write(const void* buffer, std::uint32_t n)
 {
     bool wasEmpty;
     {
@@ -258,8 +256,7 @@ TCPSocket::isFatal() const
     return false;
 }
 
-UInt32
-TCPSocket::getSize() const
+std::uint32_t TCPSocket::getSize() const
 {
     std::lock_guard<std::mutex> lock(tcp_mutex_);
     return m_inputBuffer.getSize();
@@ -323,7 +320,7 @@ TCPSocket::init()
 TCPSocket::EJobResult
 TCPSocket::doRead()
 {
-    UInt8 buffer[4096];
+    std::uint8_t buffer[4096];
     memset(buffer, 0, sizeof(buffer));
     size_t bytesRead = 0;
 
@@ -334,7 +331,7 @@ TCPSocket::doRead()
 
         // slurp up as much as possible
         do {
-            m_inputBuffer.write(buffer, static_cast<UInt32>(bytesRead));
+            m_inputBuffer.write(buffer, static_cast<std::uint32_t>(bytesRead));
 
             if (m_inputBuffer.getSize() > MAX_INPUT_BUFFER_SIZE) {
                 break;
@@ -368,12 +365,12 @@ TCPSocket::EJobResult
 TCPSocket::doWrite()
 {
     // write data
-    UInt32 bufferSize = 0;
+    std::uint32_t bufferSize = 0;
     int bytesWrote = 0;
 
     bufferSize = m_outputBuffer.getSize();
     const void* buffer = m_outputBuffer.peek(bufferSize);
-    bytesWrote = static_cast<UInt32>(ARCH->writeSocket(m_socket, buffer, bufferSize));
+    bytesWrote = static_cast<std::uint32_t>(ARCH->writeSocket(m_socket, buffer, bufferSize));
 
     if (bytesWrote > 0) {
         discardWrittenData(bytesWrote);

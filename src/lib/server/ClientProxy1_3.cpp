@@ -46,15 +46,13 @@ ClientProxy1_3::~ClientProxy1_3()
     removeHeartbeatTimer();
 }
 
-void
-ClientProxy1_3::mouseWheel(SInt32 xDelta, SInt32 yDelta)
+void ClientProxy1_3::mouseWheel(std::int32_t xDelta, std::int32_t yDelta)
 {
     LOG((CLOG_DEBUG2 "send mouse wheel to \"%s\" %+d,%+d", getName().c_str(), xDelta, yDelta));
     ProtocolUtil::writef(getStream(), kMsgDMouseWheel, xDelta, yDelta);
 }
 
-bool
-ClientProxy1_3::parseMessage(const UInt8* code)
+bool ClientProxy1_3::parseMessage(const std::uint8_t* code)
 {
     // process message
     if (memcmp(code, kMsgCKeepAlive, 4) == 0) {

@@ -217,8 +217,7 @@ OSXScreen::getClipboard(ClipboardID, IClipboard* dst) const
 	return true;
 }
 
-void
-OSXScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
+void OSXScreen::getShape(std::int32_t& x, std::int32_t& y, std::int32_t& w, std::int32_t& h) const
 {
 	x = m_x;
 	y = m_y;
@@ -226,8 +225,7 @@ OSXScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 	h = m_h;
 }
 
-void
-OSXScreen::getCursorPos(SInt32& x, SInt32& y) const
+void OSXScreen::getCursorPos(std::int32_t& x, std::int32_t& y) const
 {
 	CGEventRef event = CGEventCreate(NULL);
 	CGPoint mouse = CGEventGetLocation(event);
@@ -239,14 +237,12 @@ OSXScreen::getCursorPos(SInt32& x, SInt32& y) const
 	CFRelease(event);
 }
 
-void
-OSXScreen::reconfigure(UInt32)
+void OSXScreen::reconfigure(std::uint32_t)
 {
 	// do nothing
 }
 
-void
-OSXScreen::warpCursor(SInt32 x, SInt32 y)
+void OSXScreen::warpCursor(std::int32_t x, std::int32_t y)
 {
 	// move cursor without generating events
 	CGPoint pos;
@@ -272,14 +268,12 @@ OSXScreen::fakeInputEnd()
 	// FIXME -- not implemented
 }
 
-SInt32
-OSXScreen::getJumpZoneSize() const
+std::int32_t OSXScreen::getJumpZoneSize() const
 {
 	return 1;
 }
 
-bool
-OSXScreen::isAnyMouseButtonDown(UInt32& buttonID) const
+bool OSXScreen::isAnyMouseButtonDown(std::uint32_t& buttonID) const
 {
 	if (m_buttonState.test(0)) {
 		buttonID = kButtonLeft;
@@ -289,25 +283,23 @@ OSXScreen::isAnyMouseButtonDown(UInt32& buttonID) const
 	return (GetCurrentButtonState() != 0);
 }
 
-void
-OSXScreen::getCursorCenter(SInt32& x, SInt32& y) const
+void OSXScreen::getCursorCenter(std::int32_t& x, std::int32_t& y) const
 {
 	x = m_xCenter;
 	y = m_yCenter;
 }
 
-UInt32
-OSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
+std::uint32_t OSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 {
 	// get mac virtual key and modifier mask matching barrier key and mask
-	UInt32 macKey, macMask;
+	std::uint32_t macKey, macMask;
 	if (!m_keyState->mapBarrierHotKeyToMac(key, mask, macKey, macMask)) {
 		LOG((CLOG_DEBUG "could not map hotkey id=%04x mask=%04x", key, mask));
 		return 0;
 	}
 
 	// choose hotkey id
-	UInt32 id;
+	std::uint32_t id;
 	if (!m_oldHotKeyIDs.empty()) {
 		id = m_oldHotKeyIDs.back();
 		m_oldHotKeyIDs.pop_back();
@@ -330,7 +322,7 @@ OSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 		}
 	}
 	else {
-		EventHotKeyID hkid = { 'SNRG', (UInt32)id };
+		EventHotKeyID hkid = { 'SNRG', (std::uint32_t)id };
 		OSStatus status = RegisterEventHotKey(macKey, macMask, hkid,
 								GetApplicationEventTarget(), 0,
 								&ref);
@@ -351,8 +343,7 @@ OSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 	return id;
 }
 
-void
-OSXScreen::unregisterHotKey(UInt32 id)
+void OSXScreen::unregisterHotKey(std::uint32_t id)
 {
 	// look up hotkey
 	HotKeyMap::iterator i = m_hotKeys.find(id);
@@ -406,9 +397,9 @@ OSXScreen::constructMouseButtonEventMap()
 		{kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown}
 	};
 
-	for (UInt16 button = 0; button < NumButtonIDs; button++) {
+	for (std::uint16_t button = 0; button < NumButtonIDs; button++) {
 		MouseButtonEventMapType new_map;
-		for (UInt16 state = (UInt32) kMouseButtonUp; state < kMouseButtonStateMax; state++) {
+		for (std::uint16_t state = (std::uint32_t) kMouseButtonUp; state < kMouseButtonStateMax; state++) {
 			CGEventType curEvent = source[button][state];
 			new_map[state] = curEvent;
 		}
@@ -451,7 +442,7 @@ OSXScreen::postMouseEvent(CGPoint& pos) const
 
 	CGEventType type = kCGEventMouseMoved;
 
-	SInt8 button = m_buttonState.getFirstButtonDown();
+	std::int8_t button = m_buttonState.getFirstButtonDown();
 	if (button != -1) {
 		MouseButtonEventMapType thisButtonType = MouseButtonEventMap[button];
 		type = thisButtonType[kMouseButtonDragged];
@@ -491,14 +482,14 @@ void
 OSXScreen::fakeMouseButton(ButtonID id, bool press)
 {
 	// Buttons are indexed from one, but the button down array is indexed from zero
-	UInt32 index = mapBarrierButtonToMac(id) - kButtonLeft;
+	std::uint32_t index = mapBarrierButtonToMac(id) - kButtonLeft;
 	if (index >= NumButtonIDs) {
 		return;
 	}
 
 	CGPoint pos;
 	if (!m_cursorPosValid) {
-		SInt32 x, y;
+        std::int32_t x, y;
 		getCursorPos(x, y);
 	}
 	pos.x = m_xCursor;
@@ -506,8 +497,8 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
 
 	// variable used to detect mouse coordinate differences between
 	// old & new mouse clicks. Used in double click detection.
-	SInt32 xDiff = m_xCursor - m_lastSingleClickXCursor;
-	SInt32 yDiff = m_yCursor - m_lastSingleClickYCursor;
+    std::int32_t xDiff = m_xCursor - m_lastSingleClickXCursor;
+    std::int32_t yDiff = m_yCursor - m_lastSingleClickYCursor;
 	double diff = sqrt(xDiff * xDiff + yDiff * yDiff);
 	// max sqrt(x^2 + y^2) difference allowed to double click
 	// since we don't have double click distance in NX APIs
@@ -571,7 +562,7 @@ void OSXScreen::get_drop_target_thread()
 	char* cstr = NULL;
 
 	// wait for 5 secs for the drop destinaiton string to be filled.
-	UInt32 timeout = ARCH->time() + 5;
+	std::uint32_t timeout = ARCH->time() + 5;
 
 	while (ARCH->time() < timeout) {
 		CFStringRef cfstr = getCocoaDropTarget();
@@ -598,8 +589,7 @@ void OSXScreen::get_drop_target_thread()
 	m_fakeDraggingStarted = false;
 }
 
-void
-OSXScreen::fakeMouseMove(SInt32 x, SInt32 y)
+void OSXScreen::fakeMouseMove(std::int32_t x, std::int32_t y)
 {
 	if (m_fakeDraggingStarted) {
 		m_buttonState.set(0, kMouseButtonDown);
@@ -617,13 +607,12 @@ OSXScreen::fakeMouseMove(SInt32 x, SInt32 y)
 	postMouseEvent(pos);
 
 	// save new cursor position
-	m_xCursor        = static_cast<SInt32>(pos.x);
-	m_yCursor        = static_cast<SInt32>(pos.y);
+    m_xCursor = static_cast<std::int32_t>(pos.x);
+    m_yCursor = static_cast<std::int32_t>(pos.y);
 	m_cursorPosValid = true;
 }
 
-void
-OSXScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
+void OSXScreen::fakeMouseRelativeMove(std::int32_t dx, std::int32_t dy) const
 {
 	// OS X does not appear to have a fake relative mouse move function.
 	// simulate it by getting the current mouse position and adding to
@@ -637,8 +626,8 @@ OSXScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
 
 	// synthesize event
 	CGPoint pos;
-	m_xCursor = static_cast<SInt32>(oldPos.x);
-	m_yCursor = static_cast<SInt32>(oldPos.y);
+    m_xCursor = static_cast<std::int32_t>(oldPos.x);
+    m_yCursor = static_cast<std::int32_t>(oldPos.y);
 	pos.x     = oldPos.x + dx;
 	pos.y     = oldPos.y + dy;
 	postMouseEvent(pos);
@@ -647,8 +636,7 @@ OSXScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
 	m_cursorPosValid = false;
 }
 
-void
-OSXScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
+void OSXScreen::fakeMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const
 {
 	if (xDelta != 0 || yDelta != 0) {
 		// create a scroll event, post it and release it.  not sure if kCGScrollEventUnitLine
@@ -855,8 +843,7 @@ OSXScreen::leave()
 				DragFileList dragFileList;
 				dragFileList.push_back(di);
                 std::string info;
-				UInt32 fileCount = DragInformation::setupDragInfo(
-					dragFileList, info);
+				std::uint32_t fileCount = DragInformation::setupDragInfo(dragFileList, info);
 				client->sendDragInfo(fileCount, info, info.size());
 				LOG((CLOG_DEBUG "send dragging file to server"));
 
@@ -940,8 +927,7 @@ OSXScreen::setOptions(const OptionsList&)
 	// no options
 }
 
-void
-OSXScreen::setSequenceNumber(UInt32 seqNum)
+void OSXScreen::setSequenceNumber(std::uint32_t seqNum)
 {
 	m_sequenceNumber = seqNum;
 }
@@ -973,7 +959,7 @@ OSXScreen::handleSystemEvent(const Event& event, void*)
 	EventRef* carbonEvent = static_cast<EventRef*>(event.getData());
 	assert(carbonEvent != NULL);
 
-	UInt32 eventClass = GetEventClass(*carbonEvent);
+	std::uint32_t eventClass = GetEventClass(*carbonEvent);
 
 	switch (eventClass) {
 	case kEventClassMouse:
@@ -1067,8 +1053,8 @@ OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 	}
 
 	// save position to compute delta of next motion
-	m_xCursor = (SInt32)mx;
-	m_yCursor = (SInt32)my;
+    m_xCursor = (std::int32_t)mx;
+    m_yCursor = (std::int32_t)my;
 
 	if (m_isOnScreen) {
 		// motion on primary screen
@@ -1088,7 +1074,7 @@ OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 		// it's probably a bogus motion that we want to
 		// ignore (see warpCursorNoFlush() for a further
 		// description).
-		static SInt32 bogusZoneSize = 10;
+        static std::int32_t bogusZoneSize = 10;
 		if (-x + bogusZoneSize > m_xCenter - m_x ||
 			 x + bogusZoneSize > m_x + m_w - m_xCenter ||
 			-y + bogusZoneSize > m_yCenter - m_y ||
@@ -1105,8 +1091,8 @@ OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 			m_yFractionalMove += y;
 
 			// Return the integer part
-			SInt32 intX = (SInt32)m_xFractionalMove;
-			SInt32 intY = (SInt32)m_yFractionalMove;
+            std::int32_t intX = (std::int32_t)m_xFractionalMove;
+            std::int32_t intY = (std::int32_t)m_yFractionalMove;
 
 			// And keep only the fractional part
 			m_xFractionalMove -= intX;
@@ -1118,8 +1104,7 @@ OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 	return true;
 }
 
-bool
-OSXScreen::onMouseButton(bool pressed, UInt16 macButton)
+bool OSXScreen::onMouseButton(bool pressed, std::uint16_t macButton)
 {
 	// Buttons 2 and 3 are inverted on the mac
 	ButtonID button = mapMacButtonToBarrier(macButton);
@@ -1174,8 +1159,7 @@ OSXScreen::onMouseButton(bool pressed, UInt16 macButton)
 	return true;
 }
 
-bool
-OSXScreen::onMouseWheel(SInt32 xDelta, SInt32 yDelta) const
+bool OSXScreen::onMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const
 {
 	LOG((CLOG_DEBUG1 "event: button wheel delta=%+d,%+d", xDelta, yDelta));
 	sendEvent(m_events->forIPrimaryScreen().wheel(), WheelInfo::alloc(xDelta, yDelta));
@@ -1216,7 +1200,7 @@ OSXScreen::onKey(CGEventRef event)
 	CGEventType eventKind = CGEventGetType(event);
 
 	// get the key and active modifiers
-	UInt32 virtualKey = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
+	std::uint32_t virtualKey = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
 	CGEventFlags macMask = CGEventGetFlags(event);
 	LOG((CLOG_DEBUG1 "event: Key event kind: %d, keycode=%d", eventKind, virtualKey));
 
@@ -1257,10 +1241,10 @@ OSXScreen::onKey(CGEventRef event)
 
 	HotKeyToIDMap::const_iterator i = m_hotKeyToIDMap.find(HotKeyItem(virtualKey, m_keyState->mapModifiersToCarbon(macMask) & 0xff00u));
 	if (i != m_hotKeyToIDMap.end()) {
-		UInt32 id = i->second;
+		std::uint32_t id = i->second;
 		// determine event type
 		Event::Type type;
-		//UInt32 eventKind = GetEventKind(event);
+		//std::uint32_t eventKind = GetEventKind(event);
 		if (eventKind == kCGEventKeyDown) {
 			type = m_events->forIPrimaryScreen().hotKeyDown();
 		}
@@ -1346,11 +1330,11 @@ OSXScreen::onHotKey(EventRef event) const
 	EventHotKeyID hkid;
 	GetEventParameter(event, kEventParamDirectObject, typeEventHotKeyID,
 							NULL, sizeof(EventHotKeyID), NULL, &hkid);
-	UInt32 id = hkid.id;
+	std::uint32_t id = hkid.id;
 
 	// determine event type
 	Event::Type type;
-	UInt32 eventKind = GetEventKind(event);
+	std::uint32_t eventKind = GetEventKind(event);
 	if (eventKind == kEventHotKeyPressed) {
 		type = m_events->forIPrimaryScreen().hotKeyDown();
 	}
@@ -1367,8 +1351,7 @@ OSXScreen::onHotKey(EventRef event) const
 	return true;
 }
 
-ButtonID
-OSXScreen::mapBarrierButtonToMac(UInt16 button) const
+ButtonID OSXScreen::mapBarrierButtonToMac(std::uint16_t button) const
 {
     switch (button) {
     case 1:
@@ -1382,8 +1365,7 @@ OSXScreen::mapBarrierButtonToMac(UInt16 button) const
     return static_cast<ButtonID>(button);
 }
 
-ButtonID
-OSXScreen::mapMacButtonToBarrier(UInt16 macButton) const
+ButtonID OSXScreen::mapMacButtonToBarrier(std::uint16_t macButton) const
 {
 	switch (macButton) {
 	case 1:
@@ -1399,21 +1381,19 @@ OSXScreen::mapMacButtonToBarrier(UInt16 macButton) const
 	return static_cast<ButtonID>(macButton);
 }
 
-SInt32
-OSXScreen::mapScrollWheelToBarrier(float x) const
+std::int32_t OSXScreen::mapScrollWheelToBarrier(float x) const
 {
 	// return accelerated scrolling but not exponentially scaled as it is
 	// on the mac.
 	double d = (1.0 + getScrollSpeed()) * x / getScrollSpeedFactor();
-	return static_cast<SInt32>(120.0 * d);
+    return static_cast<std::int32_t>(120.0 * d);
 }
 
-SInt32
-OSXScreen::mapScrollWheelFromBarrier(float x) const
+std::int32_t OSXScreen::mapScrollWheelFromBarrier(float x) const
 {
 	// use server's acceleration with a little boost since other platforms
 	// take one wheel step as a larger step than the mac does.
-	return static_cast<SInt32>(3.0 * x / 120.0);
+    return static_cast<std::int32_t>(3.0 * x / 120.0);
 }
 
 double
@@ -1479,14 +1459,14 @@ OSXScreen::handleDrag(const Event&, void*)
 	if ((short)p.x != m_dragLastPoint.h || (short)p.y != m_dragLastPoint.v) {
 		m_dragLastPoint.h = (short)p.x;
 		m_dragLastPoint.v = (short)p.y;
-		onMouseMove((SInt32)p.x, (SInt32)p.y);
+        onMouseMove((std::int32_t)p.x, (std::int32_t)p.y);
 	}
 }
 
 void
 OSXScreen::updateButtons()
 {
-	UInt32 buttons = GetCurrentButtonState();
+	std::uint32_t buttons = GetCurrentButtonState();
 
 	m_buttonState.overwrite(buttons);
 }
@@ -1536,10 +1516,10 @@ OSXScreen::updateScreenShape()
 	}
 
 	// get shape of default screen
-	m_x = (SInt32)totalBounds.origin.x;
-	m_y = (SInt32)totalBounds.origin.y;
-	m_w = (SInt32)totalBounds.size.width;
-	m_h = (SInt32)totalBounds.size.height;
+    m_x = (std::int32_t)totalBounds.origin.x;
+    m_y = (std::int32_t)totalBounds.origin.y;
+    m_w = (std::int32_t)totalBounds.size.width;
+    m_h = (std::int32_t)totalBounds.size.height;
 
 	// get center of default screen
   CGDirectDisplayID main = CGMainDisplayID();
@@ -1572,7 +1552,7 @@ OSXScreen::userSwitchCallback(EventHandlerCallRef nextHandler,
 								void* inUserData)
 {
 	OSXScreen* screen = (OSXScreen*)inUserData;
-	UInt32 kind        = GetEventKind(theEvent);
+    std::uint32_t kind = GetEventKind(theEvent);
 	IEventQueue* events = screen->getEvents();
 
 	if (kind == kEventSystemUserSessionDeactivated) {
@@ -1832,7 +1812,7 @@ OSXScreen::getGlobalHotKeysEnabled()
 // OSXScreen::HotKeyItem
 //
 
-OSXScreen::HotKeyItem::HotKeyItem(UInt32 keycode, UInt32 mask) :
+OSXScreen::HotKeyItem::HotKeyItem(std::uint32_t keycode, std::uint32_t mask) :
 	m_ref(NULL),
 	m_keycode(keycode),
 	m_mask(mask)
@@ -1840,8 +1820,7 @@ OSXScreen::HotKeyItem::HotKeyItem(UInt32 keycode, UInt32 mask) :
 	// do nothing
 }
 
-OSXScreen::HotKeyItem::HotKeyItem(EventHotKeyRef ref,
-				UInt32 keycode, UInt32 mask) :
+OSXScreen::HotKeyItem::HotKeyItem(EventHotKeyRef ref, std::uint32_t keycode, std::uint32_t mask) :
 	m_ref(ref),
 	m_keycode(keycode),
 	m_mask(mask)
@@ -1967,8 +1946,7 @@ OSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 	}
 }
 
-void
-OSXScreen::MouseButtonState::set(UInt32 button, EMouseButtonState state)
+void OSXScreen::MouseButtonState::set(std::uint32_t button, EMouseButtonState state)
 {
 	bool newState = (state == kMouseButtonDown);
 	m_buttons.set(button, newState);
@@ -1986,20 +1964,17 @@ OSXScreen::MouseButtonState::reset()
 	m_buttons.reset();
 }
 
-void
-OSXScreen::MouseButtonState::overwrite(UInt32 buttons)
+void OSXScreen::MouseButtonState::overwrite(std::uint32_t buttons)
 {
 	m_buttons = std::bitset<NumButtonIDs>(buttons);
 }
 
-bool
-OSXScreen::MouseButtonState::test(UInt32 button) const
+bool OSXScreen::MouseButtonState::test(std::uint32_t button) const
 {
 	return m_buttons.test(button);
 }
 
-SInt8
-OSXScreen::MouseButtonState::getFirstButtonDown() const
+std::int8_t OSXScreen::MouseButtonState::getFirstButtonDown() const
 {
 	if (m_buttons.any()) {
 		for (unsigned short button = 0; button < m_buttons.size(); button++) {

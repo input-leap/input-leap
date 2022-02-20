@@ -55,13 +55,13 @@ using ::testing::Invoke;
 #define TEST_HOST "localhost"
 
 const size_t kMockDataSize = 1024 * 1024 * 10; // 10MB
-const UInt16 kMockDataChunkIncrement = 1024; // 1KB
+const std::uint16_t kMockDataChunkIncrement = 1024; // 1KB
 const char* kMockFilename = "NetworkTests.mock";
 const size_t kMockFileSize = 1024 * 1024 * 10; // 10MB
 
-void getScreenShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h);
-void getCursorPos(SInt32& x, SInt32& y);
-UInt8* newMockData(size_t size);
+void getScreenShape(std::int32_t& x, std::int32_t& y, std::int32_t& w, std::int32_t& h);
+void getCursorPos(std::int32_t& x, std::int32_t& y);
+std::uint8_t* newMockData(size_t size);
 void createFile(fstream& file, const char* filename, size_t size);
 
 class NetworkTests : public ::testing::Test
@@ -98,7 +98,7 @@ public:
 
 public:
     TestEventQueue        m_events;
-    UInt8*                m_mockData;
+    std::uint8_t* m_mockData;
     size_t                m_mockDataSize;
     fstream                m_mockFile;
     size_t                m_mockFileSize;
@@ -461,17 +461,16 @@ NetworkTests::sendMockData(void* eventTarget)
     m_events.addEvent(Event(m_events.forFile().fileChunkSending(), eventTarget, transferFinished));
 }
 
-UInt8*
-newMockData(size_t size)
+std::uint8_t* newMockData(size_t size)
 {
-    UInt8* buffer = new UInt8[size];
+    std::uint8_t* buffer = new std::uint8_t[size];
 
-    UInt8* data = buffer;
-    const UInt8 head[] = "mock head... ";
+    std::uint8_t* data = buffer;
+    const std::uint8_t head[] = "mock head... ";
     size_t headSize = sizeof(head) - 1;
-    const UInt8 tail[] = "... mock tail";
+    const std::uint8_t tail[] = "... mock tail";
     size_t tailSize = sizeof(tail) - 1;
-    const UInt8 barrierRocks[] = "barrier\0 rocks! ";
+    const std::uint8_t barrierRocks[] = "barrier\0 rocks! ";
     size_t barrierRocksSize = sizeof(barrierRocks) - 1;
 
     memcpy(data, head, headSize);
@@ -496,7 +495,7 @@ newMockData(size_t size)
 void
 createFile(fstream& file, const char* filename, size_t size)
 {
-    UInt8* buffer = newMockData(size);
+    std::uint8_t* buffer = newMockData(size);
 
     file.open(filename, ios::out | ios::binary);
     if (!file.is_open()) {
@@ -509,8 +508,7 @@ createFile(fstream& file, const char* filename, size_t size)
     delete[] buffer;
 }
 
-void
-getScreenShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h)
+void getScreenShape(std::int32_t& x, std::int32_t& y, std::int32_t& w, std::int32_t& h)
 {
     x = 0;
     y = 0;
@@ -518,8 +516,7 @@ getScreenShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h)
     h = 1;
 }
 
-void
-getCursorPos(SInt32& x, SInt32& y)
+void getCursorPos(std::int32_t& x, std::int32_t& y)
 {
     x = 0;
     y = 0;

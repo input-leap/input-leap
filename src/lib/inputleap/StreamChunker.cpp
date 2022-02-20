@@ -82,7 +82,7 @@ StreamChunker::sendFile(const char* filename,
 
         char* chunkData = new char[chunkSize];
         file.read(chunkData, chunkSize);
-        UInt8* data = reinterpret_cast<UInt8*>(chunkData);
+        std::uint8_t* data = reinterpret_cast<std::uint8_t*>(chunkData);
         FileChunk* fileChunk = FileChunk::data(data, chunkSize);
         delete[] chunkData;
 
@@ -111,7 +111,7 @@ StreamChunker::sendClipboard(
                 std::string& data,
                 size_t size,
                 ClipboardID id,
-                UInt32 sequence,
+                std::uint32_t sequence,
                 IEventQueue* events,
                 void* eventTarget)
 {

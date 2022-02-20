@@ -18,19 +18,20 @@
 #pragma once
 
 #include "inputleap/KeyState.h"
+#include <CoreServices/CoreServices.h>
 
 class IOSXKeyResource {
 public:
     virtual ~IOSXKeyResource() { }
     virtual bool    isValid() const = 0;
-    virtual UInt32    getNumModifierCombinations() const = 0;
-    virtual UInt32    getNumTables() const = 0;
-    virtual UInt32    getNumButtons() const = 0;
-    virtual UInt32    getTableForModifier(UInt32 mask) const = 0;
-    virtual KeyID    getKey(UInt32 table, UInt32 button) const = 0;
+    virtual std::uint32_t getNumModifierCombinations() const = 0;
+    virtual std::uint32_t getNumTables() const = 0;
+    virtual std::uint32_t getNumButtons() const = 0;
+    virtual std::uint32_t getTableForModifier(std::uint32_t mask) const = 0;
+    virtual KeyID getKey(std::uint32_t table, std::uint32_t button) const = 0;
 
     // Convert a character in the current script to the equivalent KeyID
-    static KeyID    getKeyID(UInt8);
+    static KeyID getKeyID(std::uint8_t);
 
     // Convert a unicode character to the equivalent KeyID.
     static KeyID    unicharToKeyID(UniChar);

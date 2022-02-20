@@ -54,8 +54,7 @@ IPrimaryScreen::ButtonInfo::equal(const ButtonInfo* a, const ButtonInfo* b)
 // IPrimaryScreen::MotionInfo
 //
 
-IPrimaryScreen::MotionInfo*
-IPrimaryScreen::MotionInfo::alloc(SInt32 x, SInt32 y)
+IPrimaryScreen::MotionInfo* IPrimaryScreen::MotionInfo::alloc(std::int32_t x, std::int32_t y)
 {
     MotionInfo* info = static_cast<MotionInfo*>(malloc(sizeof(MotionInfo)));
     info->m_x = x;
@@ -68,8 +67,8 @@ IPrimaryScreen::MotionInfo::alloc(SInt32 x, SInt32 y)
 // IPrimaryScreen::WheelInfo
 //
 
-IPrimaryScreen::WheelInfo*
-IPrimaryScreen::WheelInfo::alloc(SInt32 xDelta, SInt32 yDelta)
+IPrimaryScreen::WheelInfo* IPrimaryScreen::WheelInfo::alloc(std::int32_t xDelta,
+                                                            std::int32_t yDelta)
 {
     WheelInfo* info = static_cast<WheelInfo*>(malloc(sizeof(WheelInfo)));
     info->m_xDelta = xDelta;
@@ -82,8 +81,7 @@ IPrimaryScreen::WheelInfo::alloc(SInt32 xDelta, SInt32 yDelta)
 // IPrimaryScreen::HotKeyInfo
 //
 
-IPrimaryScreen::HotKeyInfo*
-IPrimaryScreen::HotKeyInfo::alloc(UInt32 id)
+IPrimaryScreen::HotKeyInfo* IPrimaryScreen::HotKeyInfo::alloc(std::uint32_t id)
 {
     HotKeyInfo* info = static_cast<HotKeyInfo*>(malloc(sizeof(HotKeyInfo)));
     info->m_id = id;

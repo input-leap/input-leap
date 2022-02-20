@@ -27,13 +27,13 @@ public:
     ~ClientProxy1_3() override;
 
     // IClient overrides
-    void mouseWheel(SInt32 xDelta, SInt32 yDelta) override;
+    void mouseWheel(std::int32_t xDelta, std::int32_t yDelta) override;
 
     void                handleKeepAlive(const Event&, void*);
 
 protected:
     // ClientProxy overrides
-    bool parseMessage(const UInt8* code) override;
+    bool parseMessage(const std::uint8_t* code) override;
     void resetHeartbeatRate() override;
     void setHeartbeatRate(double rate, double alarm) override;
     void resetHeartbeatTimer() override;

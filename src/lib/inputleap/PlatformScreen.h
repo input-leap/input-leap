@@ -38,14 +38,15 @@ public:
     void updateKeyState() override;
     void setHalfDuplexMask(KeyModifierMask) override;
     void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button) override;
-    bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button) override;
+    bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, std::int32_t count,
+                       KeyButton button) override;
     bool fakeKeyUp(KeyButton button) override;
     void fakeAllKeysUp() override;
     bool fakeCtrlAltDel() override;
     bool isKeyDown(KeyButton) const override;
     KeyModifierMask getActiveModifiers() const override;
     KeyModifierMask pollActiveModifiers() const override;
-    SInt32 pollActiveGroup() const override;
+    std::int32_t pollActiveGroup() const override;
     void pollPressedKeys(KeyButtonSet& pressedKeys) const override;
 
     void setDraggingStarted(bool started) override { m_draggingStarted = started; }

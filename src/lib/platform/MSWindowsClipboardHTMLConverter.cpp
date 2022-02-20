@@ -56,10 +56,10 @@ std::string MSWindowsClipboardHTMLConverter::doFromIClipboard(const std::string&
     std::string suffix("<!--EndFragment--></BODY></HTML>\r\n");
 
     // Get byte offsets for header
-    UInt32 StartFragment = (UInt32)prefix.size();
-    UInt32 EndFragment   = StartFragment + (UInt32)data.size();
+    std::uint32_t StartFragment = (std::uint32_t)prefix.size();
+    std::uint32_t EndFragment = StartFragment + (std::uint32_t)data.size();
     // StartHTML is constant by the design of the prefix
-    UInt32 EndHTML = EndFragment + (UInt32)suffix.size();
+    std::uint32_t EndHTML = EndFragment + (std::uint32_t)suffix.size();
 
     prefix.replace(prefix.find("XXXXXXXXXX"), 10,
                             inputleap::string::sprintf("%010u", StartFragment));
@@ -84,8 +84,8 @@ std::string MSWindowsClipboardHTMLConverter::doToIClipboard(const std::string& d
     }
 
     // convert args to integers
-    SInt32 start = (SInt32)atoi(startArg.c_str());
-    SInt32 end   = (SInt32)atoi(endArg.c_str());
+    std::int32_t start = (std::int32_t)atoi(startArg.c_str());
+    std::int32_t end   = (std::int32_t)atoi(endArg.c_str());
     if (start <= 0 || end <= 0 || start >= end) {
         return std::string();
     }

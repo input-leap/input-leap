@@ -63,7 +63,7 @@ public:
     class TimerEvent {
     public:
         EventQueueTimer*    m_timer;    //!< The timer
-        UInt32                m_count;    //!< Number of repeats
+        std::uint32_t m_count;    //!< Number of repeats
     };
 
     //! @name manipulators

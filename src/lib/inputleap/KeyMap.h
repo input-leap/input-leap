@@ -51,14 +51,14 @@ public:
     struct KeyItem {
     public:
         KeyID            m_id;            //!< KeyID
-        SInt32            m_group;        //!< Group for key
+        std::int32_t m_group;        //!< Group for key
         KeyButton        m_button;        //!< Button to generate KeyID
         KeyModifierMask    m_required;        //!< Modifiers required for KeyID
         KeyModifierMask    m_sensitive;    //!< Modifiers key is sensitive to
         KeyModifierMask    m_generates;    //!< Modifiers key is mapped to
         bool            m_dead;            //!< \c true if this is a dead KeyID
         bool            m_lock;            //!< \c true if this locks a modifier
-        UInt32            m_client;        //!< Client data
+        std::uint32_t m_client;        //!< Client data
 
     public:
         bool            operator==(const KeyItem&) const;
@@ -84,8 +84,8 @@ public:
             kGroup                        //!< Set new group
         };
 
-        Keystroke(KeyButton, bool press, bool repeat, UInt32 clientData);
-        Keystroke(SInt32 group, bool absolute, bool restore);
+        Keystroke(KeyButton, bool press, bool repeat, std::uint32_t clientData);
+        Keystroke(std::int32_t group, bool absolute, bool restore);
 
     public:
         struct Button {
@@ -93,11 +93,11 @@ public:
             KeyButton    m_button;        //!< Button to synthesize
             bool        m_press;        //!< \c true iff press
             bool        m_repeat;        //!< \c true iff for an autorepeat
-            UInt32        m_client;        //!< Client data
+            std::uint32_t m_client;        //!< Client data
         };
         struct Group {
         public:
-            SInt32        m_group;        //!< Group/offset to change to/by
+            std::int32_t m_group;        //!< Group/offset to change to/by
             bool        m_absolute;        //!< \c true iff change to, else by
             bool        m_restore;        //!< \c true iff for restoring state
         };
@@ -121,8 +121,7 @@ public:
     typedef std::map<KeyButton, const KeyItem*> ButtonToKeyMap;
 
     //! Callback type for \c foreachKey
-    typedef void (*ForeachKeyCallback)(KeyID, SInt32 group,
-                            KeyItem&, void* userData);
+    typedef void (*ForeachKeyCallback)(KeyID, std::int32_t group, KeyItem&, void* userData);
 
     //! @name manipulators
     //@{
@@ -147,12 +146,9 @@ public:
     effectively makes the \p sourceID an alias for \p targetID (i.e. we
     can generate \p targetID using \p sourceID).
     */
-    void                addKeyAliasEntry(KeyID targetID, SInt32 group,
-                            KeyModifierMask targetRequired,
-                            KeyModifierMask targetSensitive,
-                            KeyID sourceID,
-                            KeyModifierMask sourceRequired,
-                            KeyModifierMask sourceSensitive);
+    void addKeyAliasEntry(KeyID targetID, std::int32_t group, KeyModifierMask targetRequired,
+                          KeyModifierMask targetSensitive, KeyID sourceID,
+                          KeyModifierMask sourceRequired, KeyModifierMask sourceSensitive);
 
     //! Add a key sequence entry
     /*!
@@ -164,8 +160,8 @@ public:
     least one key in \p keys is not in the map then nothing is added
     and this returns \c false, otherwise it returns \c true.
     */
-    bool                addKeyCombinationEntry(KeyID id, SInt32 group,
-                            const KeyID* keys, UInt32 numKeys);
+    bool addKeyCombinationEntry(KeyID id, std::int32_t group, const KeyID* keys,
+                                std::uint32_t numKeys);
 
     //! Enable composition across groups
     /*!
@@ -220,23 +216,21 @@ public:
     event in \p keys.  It returns the \c KeyItem of the key being
     pressed/repeated, or NULL if the key cannot be mapped.
     */
-    virtual const KeyItem*    mapKey(Keystrokes& keys, KeyID id, SInt32 group,
-                            ModifierToKeys& activeModifiers,
-                            KeyModifierMask& currentState,
-                            KeyModifierMask desiredMask,
-                            bool isAutoRepeat) const;
+    virtual const KeyItem* mapKey(Keystrokes& keys, KeyID id, std::int32_t group,
+                                  ModifierToKeys& activeModifiers, KeyModifierMask& currentState,
+                                  KeyModifierMask desiredMask, bool isAutoRepeat) const;
 
     //! Get number of groups
     /*!
     Returns the number of keyboard groups (independent layouts) in the map.
     */
-    SInt32                getNumGroups() const;
+    std::int32_t getNumGroups() const;
 
     //! Compute a group number
     /*!
     Returns the number of the group \p offset groups after group \p group.
     */
-    SInt32                getEffectiveGroup(SInt32 group, SInt32 offset) const;
+    std::int32_t getEffectiveGroup(std::int32_t group, std::int32_t offset) const;
 
     //! Find key entry compatible with modifiers
     /*!
@@ -247,9 +241,8 @@ public:
     it requires the modifiers to be in the state indicated by \p required
     for every modifier indicated by \p sensitive.
     */
-    const KeyItemList*    findCompatibleKey(KeyID id, SInt32 group,
-                            KeyModifierMask required,
-                            KeyModifierMask sensitive) const;
+    const KeyItemList* findCompatibleKey(KeyID id, std::int32_t group, KeyModifierMask required,
+                                         KeyModifierMask sensitive) const;
 
     //! Test if modifier is half-duplex
     /*!
@@ -360,7 +353,7 @@ private:
     typedef std::vector<KeyItemList> KeyEntryList;
 
     // computes the number of groups
-    SInt32                findNumGroups() const;
+    std::int32_t findNumGroups() const;
 
     // computes the map of modifiers to the keys that generate the modifiers
     void                setModifierKeys();
@@ -371,74 +364,59 @@ private:
     // right button and synthesize the requested modifiers without regard
     // to what character they would synthesize.  we disallow multikey
     // entries since they don't make sense as hotkeys.
-    const KeyItem*        mapCommandKey(Keystrokes& keys,
-                            KeyID id, SInt32 group,
-                            ModifierToKeys& activeModifiers,
-                            KeyModifierMask& currentState,
-                            KeyModifierMask desiredMask,
-                            bool isAutoRepeat) const;
+    const KeyItem* mapCommandKey(Keystrokes& keys, KeyID id, std::int32_t group,
+                                 ModifierToKeys& activeModifiers, KeyModifierMask& currentState,
+                                 KeyModifierMask desiredMask, bool isAutoRepeat) const;
 
     // maps a character key.  a character key is trying to synthesize a
     // particular KeyID and isn't entirely concerned with the modifiers
     // used to do it.
-    const KeyItem*        mapCharacterKey(Keystrokes& keys,
-                            KeyID id, SInt32 group,
-                            ModifierToKeys& activeModifiers,
-                            KeyModifierMask& currentState,
-                            KeyModifierMask desiredMask,
-                            bool isAutoRepeat) const;
+    const KeyItem* mapCharacterKey(Keystrokes& keys, KeyID id, std::int32_t group,
+                                   ModifierToKeys& activeModifiers,
+                                   KeyModifierMask& currentState, KeyModifierMask desiredMask,
+                                   bool isAutoRepeat) const;
 
     // maps a modifier key
-    const KeyItem*        mapModifierKey(Keystrokes& keys,
-                            KeyID id, SInt32 group,
-                            ModifierToKeys& activeModifiers,
-                            KeyModifierMask& currentState,
-                            KeyModifierMask desiredMask,
-                            bool isAutoRepeat) const;
+    const KeyItem* mapModifierKey(Keystrokes& keys, KeyID id, std::int32_t group,
+                                  ModifierToKeys& activeModifiers, KeyModifierMask& currentState,
+                                  KeyModifierMask desiredMask, bool isAutoRepeat) const;
 
     // returns the index into \p entryList of the KeyItemList requiring
     // the fewest modifier changes between \p currentState and
     // \p desiredState.
-    SInt32                findBestKey(const KeyEntryList& entryList,
-                            KeyModifierMask currentState,
-                            KeyModifierMask desiredState) const;
+    std::int32_t findBestKey(const KeyEntryList& entryList, KeyModifierMask currentState,
+                             KeyModifierMask desiredState) const;
 
     // gets the \c KeyItem used to synthesize the modifier who's bit is
     // given by \p modifierBit in group \p group and does not synthesize
     // the key \p button.
-    const KeyItem*        keyForModifier(KeyButton button, SInt32 group,
-                            SInt32 modifierBit) const;
+    const KeyItem* keyForModifier(KeyButton button, std::int32_t group,
+                                  std::int32_t modifierBit) const;
 
     // fills \p keystrokes with the keys to synthesize the key in
     // \p keyItem taking the modifiers into account.  returns \c true
     // iff successful and sets \p currentState to the
     // resulting modifier state.
-    bool                keysForKeyItem(const KeyItem& keyItem,
-                            SInt32& group,
-                            ModifierToKeys& activeModifiers,
-                            KeyModifierMask& currentState,
-                            KeyModifierMask desiredState,
-                            KeyModifierMask overrideModifiers,
-                            bool isAutoRepeat,
-                            Keystrokes& keystrokes) const;
+    bool keysForKeyItem(const KeyItem& keyItem, std::int32_t& group,
+                        ModifierToKeys& activeModifiers, KeyModifierMask& currentState,
+                        KeyModifierMask desiredState, KeyModifierMask overrideModifiers,
+                        bool isAutoRepeat, Keystrokes& keystrokes) const;
 
     // fills \p keystrokes with the keys to synthesize the modifiers
     // in \p desiredModifiers from the active modifiers listed in
     // \p activeModifiers not including the key in \p keyItem.
     // returns \c true iff successful.
-    bool                keysToRestoreModifiers(const KeyItem& keyItem,
-                            SInt32 group,
-                            ModifierToKeys& activeModifiers,
-                            KeyModifierMask& currentState,
-                            const ModifierToKeys& desiredModifiers,
-                            Keystrokes& keystrokes) const;
+    bool keysToRestoreModifiers(const KeyItem& keyItem, std::int32_t group,
+                                ModifierToKeys& activeModifiers, KeyModifierMask& currentState,
+                                const ModifierToKeys& desiredModifiers,
+                                Keystrokes& keystrokes) const;
 
     // fills \p keystrokes and \p undo with the keys to change the
     // current modifier state in \p currentState to match the state in
     // \p requiredState for each modifier indicated in \p sensitiveMask.
     // returns \c true iff successful and sets \p currentState to the
     // resulting modifier state.
-    bool                keysForModifierState(KeyButton button, SInt32 group,
+    bool                keysForModifierState(KeyButton button, std::int32_t group,
                             ModifierToKeys& activeModifiers,
                             KeyModifierMask& currentState,
                             KeyModifierMask requiredState,
@@ -455,7 +433,7 @@ private:
                             Keystrokes& keystrokes) const;
 
     // Returns the number of modifiers indicated in \p state.
-    static SInt32        getNumModifiers(KeyModifierMask state);
+    static std::int32_t getNumModifiers(KeyModifierMask state);
 
     // Initialize key name/id maps
     static void            initKeyNameMaps();
@@ -493,7 +471,7 @@ private:
 
     // KeyID info
     KeyIDMap            m_keyIDMap;
-    SInt32                m_numGroups;
+    std::int32_t m_numGroups;
     ModifierToKeyTable    m_modifierKeys;
 
     // composition info

@@ -35,15 +35,13 @@ BaseClientProxy::~BaseClientProxy()
     // do nothing
 }
 
-void
-BaseClientProxy::setJumpCursorPos(SInt32 x, SInt32 y)
+void BaseClientProxy::setJumpCursorPos(std::int32_t x, std::int32_t y)
 {
     m_x = x;
     m_y = y;
 }
 
-void
-BaseClientProxy::getJumpCursorPos(SInt32& x, SInt32& y) const
+void BaseClientProxy::getJumpCursorPos(std::int32_t& x, std::int32_t& y) const
 {
     x = m_x;
     y = m_y;

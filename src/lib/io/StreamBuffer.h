@@ -40,20 +40,20 @@ public:
     (which must be <= getSize()).  The caller must not modify the returned
     memory nor delete it.
     */
-    const void*            peek(UInt32 n);
+    const void* peek(std::uint32_t n);
 
     //! Discard data
     /*!
     Discards the next \c n bytes.  If \c n >= getSize() then the buffer
     is cleared.
     */
-    void                pop(UInt32 n);
+    void pop(std::uint32_t n);
 
     //! Write data to buffer
     /*!
     Appends \c n bytes from \c data to the buffer.
     */
-    void                write(const void* data, UInt32 n);
+    void write(const void* data, std::uint32_t n);
 
     //@}
     //! @name accessors
@@ -63,17 +63,17 @@ public:
     /*!
     Returns the number of bytes in the buffer.
     */
-    UInt32                getSize() const;
+    std::uint32_t getSize() const;
 
     //@}
 
 private:
-    static const UInt32    kChunkSize;
+    static const std::uint32_t kChunkSize;
 
-    typedef std::vector<UInt8> Chunk;
+    typedef std::vector<std::uint8_t> Chunk;
     typedef std::list<Chunk> ChunkList;
 
     ChunkList            m_chunks;
-    UInt32                m_size;
-    UInt32                m_headUsed;
+    std::uint32_t m_size;
+    std::uint32_t m_headUsed;
 };

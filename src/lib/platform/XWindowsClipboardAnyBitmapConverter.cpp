@@ -21,78 +21,66 @@
 // BMP info header structure
 struct CBMPInfoHeader {
 public:
-    UInt32                biSize;
-    SInt32                biWidth;
-    SInt32                biHeight;
-    UInt16                biPlanes;
-    UInt16                biBitCount;
-    UInt32                biCompression;
-    UInt32                biSizeImage;
-    SInt32                biXPelsPerMeter;
-    SInt32                biYPelsPerMeter;
-    UInt32                biClrUsed;
-    UInt32                biClrImportant;
+    std::uint32_t biSize;
+    std::int32_t biWidth;
+    std::int32_t biHeight;
+    std::uint16_t biPlanes;
+    std::uint16_t biBitCount;
+    std::uint32_t biCompression;
+    std::uint32_t biSizeImage;
+    std::int32_t biXPelsPerMeter;
+    std::int32_t biYPelsPerMeter;
+    std::uint32_t biClrUsed;
+    std::uint32_t biClrImportant;
 };
 
 // BMP is little-endian
 
-static
-void
-toLE(UInt8*& dst, UInt16 src)
+static void toLE(std::uint8_t*& dst, std::uint16_t src)
 {
-    dst[0] = static_cast<UInt8>(src & 0xffu);
-    dst[1] = static_cast<UInt8>((src >> 8) & 0xffu);
+    dst[0] = static_cast<std::uint8_t>(src & 0xffu);
+    dst[1] = static_cast<std::uint8_t>((src >> 8) & 0xffu);
     dst += 2;
 }
 
-static
-void
-toLE(UInt8*& dst, SInt32 src)
+static void toLE(std::uint8_t*& dst, std::int32_t src)
 {
-    dst[0] = static_cast<UInt8>(src & 0xffu);
-    dst[1] = static_cast<UInt8>((src >>  8) & 0xffu);
-    dst[2] = static_cast<UInt8>((src >> 16) & 0xffu);
-    dst[3] = static_cast<UInt8>((src >> 24) & 0xffu);
+    dst[0] = static_cast<std::uint8_t>(src & 0xffu);
+    dst[1] = static_cast<std::uint8_t>((src >>  8) & 0xffu);
+    dst[2] = static_cast<std::uint8_t>((src >> 16) & 0xffu);
+    dst[3] = static_cast<std::uint8_t>((src >> 24) & 0xffu);
     dst += 4;
 }
 
-static
-void
-toLE(UInt8*& dst, UInt32 src)
+static void toLE(std::uint8_t*& dst, std::uint32_t src)
 {
-    dst[0] = static_cast<UInt8>(src & 0xffu);
-    dst[1] = static_cast<UInt8>((src >>  8) & 0xffu);
-    dst[2] = static_cast<UInt8>((src >> 16) & 0xffu);
-    dst[3] = static_cast<UInt8>((src >> 24) & 0xffu);
+    dst[0] = static_cast<std::uint8_t>(src & 0xffu);
+    dst[1] = static_cast<std::uint8_t>((src >>  8) & 0xffu);
+    dst[2] = static_cast<std::uint8_t>((src >> 16) & 0xffu);
+    dst[3] = static_cast<std::uint8_t>((src >> 24) & 0xffu);
     dst += 4;
 }
 
-static inline
-UInt16
-fromLEU16(const UInt8* data)
+static inline std::uint16_t fromLEU16(const std::uint8_t* data)
 {
-    return static_cast<UInt16>(data[0]) |
-            (static_cast<UInt16>(data[1]) << 8);
+    return static_cast<std::uint16_t>(data[0]) |
+            (static_cast<std::uint16_t>(data[1]) << 8);
 }
 
-static inline
-SInt32
-fromLES32(const UInt8* data)
+static inline std::int32_t fromLES32(const std::uint8_t* data)
 {
-    return static_cast<SInt32>(static_cast<UInt32>(data[0]) |
-            (static_cast<UInt32>(data[1]) <<  8) |
-            (static_cast<UInt32>(data[2]) << 16) |
-            (static_cast<UInt32>(data[3]) << 24));
+    return static_cast<std::int32_t>(static_cast<std::uint32_t>(data[0]) |
+            (static_cast<std::uint32_t>(data[1]) <<  8) |
+            (static_cast<std::uint32_t>(data[2]) << 16) |
+            (static_cast<std::uint32_t>(data[3]) << 24));
 }
 
-static inline
-UInt32
-fromLEU32(const UInt8* data)
+static inline std::uint32_t fromLEU32(const std::uint8_t* data)
 {
-    return static_cast<UInt32>(data[0]) |
-            (static_cast<UInt32>(data[1]) <<  8) |
-            (static_cast<UInt32>(data[2]) << 16) |
-            (static_cast<UInt32>(data[3]) << 24);
+    return static_cast<std::uint32_t>(data[0]) |
+            (static_cast<std::uint32_t>(data[1]) <<  8) |
+            (static_cast<std::uint32_t>(data[2]) << 16) |
+            (static_cast<std::uint32_t>(data[3]) << 24);
 }
 
 
@@ -126,7 +114,7 @@ std::string XWindowsClipboardAnyBitmapConverter::fromIClipboard(const std::strin
 {
     // fill BMP info header with native-endian data
     CBMPInfoHeader infoHeader;
-    const UInt8* rawBMPInfoHeader = reinterpret_cast<const UInt8*>(bmp.data());
+    const std::uint8_t* rawBMPInfoHeader = reinterpret_cast<const std::uint8_t*>(bmp.data());
     infoHeader.biSize             = fromLEU32(rawBMPInfoHeader +  0);
     infoHeader.biWidth            = fromLES32(rawBMPInfoHeader +  4);
     infoHeader.biHeight           = fromLES32(rawBMPInfoHeader +  8);
@@ -148,7 +136,7 @@ std::string XWindowsClipboardAnyBitmapConverter::fromIClipboard(const std::strin
     }
 
     // convert to image format
-    const UInt8* rawBMPPixels = rawBMPInfoHeader + 40;
+    const std::uint8_t* rawBMPPixels = rawBMPInfoHeader + 40;
     if (infoHeader.biBitCount == 24) {
         return doBGRFromIClipboard(rawBMPPixels,
                             infoHeader.biWidth, infoHeader.biHeight);
@@ -162,26 +150,26 @@ std::string XWindowsClipboardAnyBitmapConverter::fromIClipboard(const std::strin
 std::string XWindowsClipboardAnyBitmapConverter::toIClipboard(const std::string& image) const
 {
     // convert to raw BMP data
-    UInt32 w, h, depth;
+    std::uint32_t w, h, depth;
     std::string rawBMP = doToIClipboard(image, w, h, depth);
     if (rawBMP.empty() || w == 0 || h == 0 || (depth != 24 && depth != 32)) {
         return {};
     }
 
     // fill BMP info header with little-endian data
-    UInt8 infoHeader[40];
-    UInt8* dst = infoHeader;
-    toLE(dst, static_cast<UInt32>(40));
-    toLE(dst, static_cast<SInt32>(w));
-    toLE(dst, static_cast<SInt32>(h));
-    toLE(dst, static_cast<UInt16>(1));
-    toLE(dst, static_cast<UInt16>(depth));
-    toLE(dst, static_cast<UInt32>(0));        // BI_RGB
-    toLE(dst, static_cast<UInt32>(image.size()));
-    toLE(dst, static_cast<SInt32>(2834));    // 72 dpi
-    toLE(dst, static_cast<SInt32>(2834));    // 72 dpi
-    toLE(dst, static_cast<UInt32>(0));
-    toLE(dst, static_cast<UInt32>(0));
+    std::uint8_t infoHeader[40];
+    std::uint8_t* dst = infoHeader;
+    toLE(dst, static_cast<std::uint32_t>(40));
+    toLE(dst, static_cast<std::int32_t>(w));
+    toLE(dst, static_cast<std::int32_t>(h));
+    toLE(dst, static_cast<std::uint16_t>(1));
+    toLE(dst, static_cast<std::uint16_t>(depth));
+    toLE(dst, static_cast<std::uint32_t>(0));        // BI_RGB
+    toLE(dst, static_cast<std::uint32_t>(image.size()));
+    toLE(dst, static_cast<std::int32_t>(2834));    // 72 dpi
+    toLE(dst, static_cast<std::int32_t>(2834));    // 72 dpi
+    toLE(dst, static_cast<std::uint32_t>(0));
+    toLE(dst, static_cast<std::uint32_t>(0));
 
     // construct image
     return std::string(reinterpret_cast<const char*>(infoHeader),

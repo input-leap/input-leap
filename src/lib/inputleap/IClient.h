@@ -43,9 +43,8 @@ public:
     screen is being entered because the screen saver is starting.
     Subsequent clipboard events should report \p seqNum.
     */
-    virtual void        enter(SInt32 xAbs, SInt32 yAbs,
-                            UInt32 seqNum, KeyModifierMask mask,
-                            bool forScreensaver) = 0;
+    virtual void enter(std::int32_t xAbs, std::int32_t yAbs, std::uint32_t seqNum,
+                       KeyModifierMask mask, bool forScreensaver) = 0;
 
     //! Leave screen
     /*!
@@ -94,8 +93,7 @@ public:
     Synthesize key events to generate a press and release of key \c id
     \c count times.  If possible match the given modifier mask.
     */
-    virtual void        keyRepeat(KeyID id, KeyModifierMask,
-                            SInt32 count, KeyButton) = 0;
+    virtual void keyRepeat(KeyID id, KeyModifierMask, std::int32_t count, KeyButton) = 0;
 
     //! Notify of key release
     /*!
@@ -121,14 +119,14 @@ public:
     Synthesize mouse events to generate mouse motion to the absolute
     screen position \c xAbs,yAbs.
     */
-    virtual void        mouseMove(SInt32 xAbs, SInt32 yAbs) = 0;
+    virtual void mouseMove(std::int32_t xAbs, std::int32_t yAbs) = 0;
 
     //! Notify of mouse motion
     /*!
     Synthesize mouse events to generate mouse motion by the relative
     amount \c xRel,yRel.
     */
-    virtual void        mouseRelativeMove(SInt32 xRel, SInt32 yRel) = 0;
+    virtual void mouseRelativeMove(std::int32_t xRel, std::int32_t yRel) = 0;
 
     //! Notify of mouse wheel motion
     /*!
@@ -137,7 +135,7 @@ public:
     to the right and negative for motion towards the user or to the left.
     Each wheel click should generate a delta of +/-120.
     */
-    virtual void        mouseWheel(SInt32 xDelta, SInt32 yDelta) = 0;
+    virtual void mouseWheel(std::int32_t xDelta, std::int32_t yDelta) = 0;
 
     //! Notify of screen saver change
     virtual void        screensaver(bool activate) = 0;

@@ -20,9 +20,9 @@
 
 #include "mt/Thread.h"
 #include "base/ILogOutputter.h"
-#include "common/basic_types.h"
 #include "common/stddeque.h"
 
+#include <cstdint>
 #include <list>
 #include <fstream>
 #include <string>
@@ -131,7 +131,7 @@ private:
 public:
     typedef Buffer::const_iterator const_iterator;
 
-    BufferedLogOutputter(UInt32 maxBufferSize);
+    BufferedLogOutputter(std::uint32_t maxBufferSize);
     virtual ~BufferedLogOutputter();
 
     //! @name accessors
@@ -151,7 +151,7 @@ public:
     void show(bool showIfEmpty) override;
     bool write(ELevel level, const char* message) override;
 private:
-    UInt32                m_maxBufferSize;
+    std::uint32_t m_maxBufferSize;
     Buffer                m_buffer;
 };
 

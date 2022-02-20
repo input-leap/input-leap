@@ -34,7 +34,7 @@ public:
     size_t                getFilesize() { return m_filesize; }
     void                setFilesize(size_t size) { m_filesize = size; }
 
-    static void parseDragInfo(DragFileList& dragFileList, UInt32 fileNum, std::string data);
+    static void parseDragInfo(DragFileList& dragFileList, std::uint32_t fileNum, std::string data);
     static std::string getDragFileExtension(std::string filename);
     // helper function to setup drag info
     // example: filename1,filesize1,filename2,filesize2,

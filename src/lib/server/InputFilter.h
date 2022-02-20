@@ -72,7 +72,7 @@ public:
         void disablePrimary(PrimaryClient*) override;
 
     private:
-        UInt32                    m_id;
+        std::uint32_t m_id;
         KeyID                    m_key;
         KeyModifierMask            m_mask;
         IEventQueue*            m_events;
@@ -286,11 +286,10 @@ public:
         void            adoptAction(Action*, bool onActivation);
 
         // remove an action from the rule
-        void            removeAction(bool onActivation, UInt32 index);
+        void removeAction(bool onActivation, std::uint32_t index);
 
         // replace an action in the rule
-        void            replaceAction(Action* adopted,
-                            bool onActivation, UInt32 index);
+        void replaceAction(Action* adopted, bool onActivation, std::uint32_t index);
 
         // enable/disable
         void            enable(PrimaryClient*);
@@ -307,10 +306,10 @@ public:
                         getCondition() const;
 
         // get number of actions
-        UInt32            getNumActions(bool onActivation) const;
+        std::uint32_t getNumActions(bool onActivation) const;
 
         // get action by index
-        const Action&    getAction(bool onActivation, UInt32 index) const;
+        const Action& getAction(bool onActivation, std::uint32_t index) const;
 
     private:
         void            clear();
@@ -343,10 +342,10 @@ public:
     void                addFilterRule(const Rule& rule);
 
     // remove a rule
-    void                removeFilterRule(UInt32 index);
+    void removeFilterRule(std::uint32_t index);
 
     // get rule by index
-    Rule&                getRule(UInt32 index);
+    Rule& getRule(std::uint32_t index);
 
     // enable event filtering using the given primary client.  disable
     // if client is NULL.
@@ -356,7 +355,7 @@ public:
     std::string format(const std::string& linePrefix) const;
 
     // get number of rules
-    UInt32                getNumRules() const;
+    std::uint32_t getNumRules() const;
 
     //! Compare filters
     bool                operator==(const InputFilter&) const;

@@ -24,7 +24,7 @@
 /*!
 Type to hold a mouse button identifier.
 */
-typedef UInt8            ButtonID;
+typedef std::uint8_t ButtonID;
 
 //! @name Mouse button identifiers
 //@{
@@ -41,4 +41,4 @@ static const ButtonID   kMacButtonRight = 2;
 static const ButtonID   kMacButtonMiddle = 3;
 //@}
 
-static const UInt8      NumButtonIDs  = 6;
+static const std::uint8_t NumButtonIDs  = 6;

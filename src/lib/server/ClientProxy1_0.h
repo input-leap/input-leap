@@ -34,33 +34,34 @@ public:
 
     // IScreen
     bool getClipboard(ClipboardID id, IClipboard*) const override;
-    void getShape(SInt32& x, SInt32& y, SInt32& width, SInt32& height) const override;
-    void getCursorPos(SInt32& x, SInt32& y) const override;
+    void getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width,
+                  std::int32_t& height) const override;
+    void getCursorPos(std::int32_t& x, std::int32_t& y) const override;
 
     // IClient overrides
-    void enter(SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask,
+    void enter(std::int32_t xAbs, std::int32_t yAbs, std::uint32_t seqNum, KeyModifierMask mask,
                bool forScreensaver) override;
     bool leave() override;
     void setClipboard(ClipboardID, const IClipboard*) override;
     void grabClipboard(ClipboardID) override;
     void setClipboardDirty(ClipboardID, bool) override;
     void keyDown(KeyID, KeyModifierMask, KeyButton) override;
-    void keyRepeat(KeyID, KeyModifierMask, SInt32 count, KeyButton) override;
+    void keyRepeat(KeyID, KeyModifierMask, std::int32_t count, KeyButton) override;
     void keyUp(KeyID, KeyModifierMask, KeyButton) override;
     void mouseDown(ButtonID) override;
     void mouseUp(ButtonID) override;
-    void mouseMove(SInt32 xAbs, SInt32 yAbs) override;
-    void mouseRelativeMove(SInt32 xRel, SInt32 yRel) override;
-    void mouseWheel(SInt32 xDelta, SInt32 yDelta) override;
+    void mouseMove(std::int32_t xAbs, std::int32_t yAbs) override;
+    void mouseRelativeMove(std::int32_t xRel, std::int32_t yRel) override;
+    void mouseWheel(std::int32_t xDelta, std::int32_t yDelta) override;
     void screensaver(bool activate) override;
     void resetOptions() override;
     void setOptions(const OptionsList& options) override;
-    void sendDragInfo(UInt32 fileCount, const char* info, size_t size) override;
-    void fileChunkSending(UInt8 mark, char* data, size_t dataSize) override;
+    void sendDragInfo(std::uint32_t fileCount, const char* info, size_t size) override;
+    void fileChunkSending(std::uint8_t mark, char* data, size_t dataSize) override;
 
 protected:
-    virtual bool        parseHandshakeMessage(const UInt8* code);
-    virtual bool        parseMessage(const UInt8* code);
+    virtual bool parseHandshakeMessage(const std::uint8_t* code);
+    virtual bool parseMessage(const std::uint8_t* code);
 
     virtual void        resetHeartbeatRate();
     virtual void        setHeartbeatRate(double rate, double alarm);
@@ -87,14 +88,14 @@ protected:
 
     public:
         Clipboard        m_clipboard;
-        UInt32            m_sequenceNumber;
+        std::uint32_t m_sequenceNumber;
         bool            m_dirty;
     };
 
     ClientClipboard    m_clipboard[kClipboardEnd];
 
 private:
-    typedef bool (ClientProxy1_0::*MessageParser)(const UInt8*);
+    typedef bool (ClientProxy1_0::*MessageParser)(const std::uint8_t*);
 
     ClientInfo            m_info;
     double                m_heartbeatAlarm;

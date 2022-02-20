@@ -18,13 +18,13 @@
 
 #pragma once
 
-#include "common/basic_types.h"
+#include <cstdint>
 
 //! Clipboard ID
 /*!
 Type to hold a clipboard identifier.
 */
-typedef UInt8            ClipboardID;
+typedef std::uint8_t ClipboardID;
 
 //! @name Clipboard identifiers
 //@{

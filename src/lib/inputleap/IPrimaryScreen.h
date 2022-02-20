@@ -47,28 +47,28 @@ public:
     //! Motion event data
     class MotionInfo {
     public:
-        static MotionInfo* alloc(SInt32 x, SInt32 y);
+        static MotionInfo* alloc(std::int32_t x, std::int32_t y);
 
     public:
-        SInt32            m_x;
-        SInt32            m_y;
+        std::int32_t m_x;
+        std::int32_t m_y;
     };
     //! Wheel motion event data
     class WheelInfo {
     public:
-        static WheelInfo* alloc(SInt32 xDelta, SInt32 yDelta);
+        static WheelInfo* alloc(std::int32_t xDelta, std::int32_t yDelta);
 
     public:
-        SInt32            m_xDelta;
-        SInt32            m_yDelta;
+        std::int32_t m_xDelta;
+        std::int32_t m_yDelta;
     };
     //! Hot key event data
     class HotKeyInfo {
     public:
-        static HotKeyInfo* alloc(UInt32 id);
+        static HotKeyInfo* alloc(std::uint32_t id);
 
     public:
-        UInt32            m_id;
+        std::uint32_t m_id;
     };
 
     //! @name manipulators
@@ -81,7 +81,7 @@ public:
     primary screen are linked to clients.  Override to handle the
     possible change in jump zones.
     */
-    virtual void        reconfigure(UInt32 activeSides) = 0;
+    virtual void reconfigure(std::uint32_t activeSides) = 0;
 
     //! Warp cursor
     /*!
@@ -89,7 +89,7 @@ public:
     discard input events up to and including the warp before
     returning.
     */
-    virtual void        warpCursor(SInt32 x, SInt32 y) = 0;
+    virtual void warpCursor(std::int32_t x, std::int32_t y) = 0;
 
     //! Register a system hotkey
     /*!
@@ -112,13 +112,13 @@ public:
     the modifiers in any order or to require the user to press the given key
     last.
     */
-    virtual UInt32        registerHotKey(KeyID key, KeyModifierMask mask) = 0;
+    virtual std::uint32_t registerHotKey(KeyID key, KeyModifierMask mask) = 0;
 
     //! Unregister a system hotkey
     /*!
     Unregisters a previously registered hot key.
     */
-    virtual void        unregisterHotKey(UInt32 id) = 0;
+    virtual void unregisterHotKey(std::uint32_t id) = 0;
 
     //! Prepare to synthesize input on primary screen
     /*!
@@ -144,7 +144,7 @@ public:
     Return the jump zone size, the size of the regions on the edges of
     the screen that cause the cursor to jump to another screen.
     */
-    virtual SInt32        getJumpZoneSize() const = 0;
+    virtual std::int32_t getJumpZoneSize() const = 0;
 
     //! Test if mouse is pressed
     /*!
@@ -152,7 +152,7 @@ public:
     "current" means up to the last processed event but it can mean
     the current physical mouse button state.
     */
-    virtual bool        isAnyMouseButtonDown(UInt32& buttonID) const = 0;
+    virtual bool isAnyMouseButtonDown(std::uint32_t& buttonID) const = 0;
 
     //! Get cursor center position
     /*!
@@ -160,7 +160,7 @@ public:
     cursor to compute cursor motion deltas and should be far from
     the edges of the screen, typically the center.
     */
-    virtual void        getCursorCenter(SInt32& x, SInt32& y) const = 0;
+    virtual void getCursorCenter(std::int32_t& x, std::int32_t& y) const = 0;
 
     //@}
 };

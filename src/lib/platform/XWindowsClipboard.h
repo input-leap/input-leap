@@ -182,38 +182,38 @@ private:
     // _MOTIF_CLIP_HEADER structure
     class MotifClipHeader {
     public:
-        SInt32            m_id;            // kMotifClipHeader
-        SInt32            m_pad1[3];
-        SInt32            m_item;
-        SInt32            m_pad2[4];
-        SInt32            m_numItems;
-        SInt32            m_pad3[3];
-        SInt32            m_selectionOwner;    // a Window
-        SInt32            m_pad4[2];
+        std::int32_t m_id;            // kMotifClipHeader
+        std::int32_t m_pad1[3];
+        std::int32_t m_item;
+        std::int32_t m_pad2[4];
+        std::int32_t m_numItems;
+        std::int32_t m_pad3[3];
+        std::int32_t m_selectionOwner;    // a Window
+        std::int32_t m_pad4[2];
     };
 
     // Motif clip item structure
     class MotifClipItem {
     public:
-        SInt32            m_id;            // kMotifClipItem
-        SInt32            m_pad1[5];
-        SInt32            m_size;
-        SInt32            m_numFormats;
-        SInt32            m_numDeletedFormats;
-        SInt32            m_pad2[6];
+        std::int32_t m_id;            // kMotifClipItem
+        std::int32_t m_pad1[5];
+        std::int32_t m_size;
+        std::int32_t m_numFormats;
+        std::int32_t m_numDeletedFormats;
+        std::int32_t m_pad2[6];
     };
 
     // Motif clip format structure
     class MotifClipFormat {
     public:
-        SInt32            m_id;            // kMotifClipFormat
-        SInt32            m_pad1[6];
-        SInt32            m_length;
-        SInt32            m_data;
-        SInt32            m_type;            // an Atom
-        SInt32            m_pad2[1];
-        SInt32            m_deleted;
-        SInt32            m_pad3[4];
+        std::int32_t m_id;            // kMotifClipFormat
+        std::int32_t m_pad1[6];
+        std::int32_t m_length;
+        std::int32_t m_data;
+        std::int32_t m_type;            // an Atom
+        std::int32_t m_pad2[1];
+        std::int32_t m_deleted;
+        std::int32_t m_pad3[4];
     };
 
     // stores data needed to respond to a selection request
@@ -242,7 +242,7 @@ private:
         int                m_format;
 
         // index of next byte in m_data to send
-        UInt32            m_ptr;
+        std::uint32_t m_ptr;
     };
     typedef std::list<Reply*> ReplyList;
     typedef std::map<Window, ReplyList> ReplyMap;

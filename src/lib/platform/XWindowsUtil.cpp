@@ -78,7 +78,7 @@
 
 struct codepair {
     KeySym                keysym;
-    UInt32                ucs4;
+    std::uint32_t ucs4;
 } s_keymap[] = {
 { XK_Aogonek,                     0x0104 }, /* LATIN CAPITAL LETTER A WITH OGONEK */
 { XK_breve,                       0x02d8 }, /* BREVE */
@@ -1331,10 +1331,9 @@ static const KeySym s_map1009FF[] =
 
 XWindowsUtil::KeySymMap    XWindowsUtil::s_keySymToUCS4;
 
-bool
-XWindowsUtil::getWindowProperty(Display* display, Window window,
-                Atom property, std::string* data, Atom* type,
-                SInt32* format, bool deleteProperty)
+bool XWindowsUtil::getWindowProperty(Display* display, Window window, Atom property,
+                                     std::string* data, Atom* type, std::int32_t* format,
+                                     bool deleteProperty)
 {
     assert(display != NULL);
 
@@ -1406,7 +1405,7 @@ XWindowsUtil::getWindowProperty(Display* display, Window window,
         *type = actualType;
     }
     if (format != NULL) {
-        *format = static_cast<SInt32>(actualDatumSize);
+        *format = static_cast<std::int32_t>(actualDatumSize);
     }
 
     if (okay) {
@@ -1419,14 +1418,13 @@ XWindowsUtil::getWindowProperty(Display* display, Window window,
     }
 }
 
-bool
-XWindowsUtil::setWindowProperty(Display* display, Window window,
-                Atom property, const void* vdata, UInt32 size,
-                Atom type, SInt32 format)
+bool XWindowsUtil::setWindowProperty(Display* display, Window window, Atom property,
+                                     const void* vdata, std::uint32_t size, Atom type,
+                                     std::int32_t format)
 {
-    const UInt32 length       = 4 * XMaxRequestSize(display);
+    const std::uint32_t length = 4 * XMaxRequestSize(display);
     const unsigned char* data = static_cast<const unsigned char*>(vdata);
-    UInt32 datumSize    = static_cast<UInt32>(format / 8);
+    std::uint32_t datumSize = static_cast<std::uint32_t>(format / 8);
     // format 32 on 64bit systems is 8 bytes not 4.
     if (format == 32) {
         datumSize = sizeof(Atom);
@@ -1437,7 +1435,7 @@ XWindowsUtil::setWindowProperty(Display* display, Window window,
     XWindowsUtil::ErrorLock lock(display, &error);
 
     // how much data to send in first chunk?
-    UInt32 chunkSize = size;
+    std::uint32_t chunkSize = size;
     if (chunkSize > length) {
         chunkSize = length;
     }
@@ -1602,8 +1600,7 @@ XWindowsUtil::mapKeySymToKeyID(KeySym k)
     }
 }
 
-UInt32
-XWindowsUtil::getModifierBitForKeySym(KeySym keysym)
+std::uint32_t XWindowsUtil::getModifierBitForKeySym(KeySym keysym)
 {
     switch (keysym) {
     case XK_Shift_L:
@@ -1670,7 +1667,7 @@ std::string XWindowsUtil::atomToString(Display* display, Atom atom)
     }
 }
 
-std::string XWindowsUtil::atomsToString(Display* display, const Atom* atom, UInt32 num)
+std::string XWindowsUtil::atomsToString(Display* display, const Atom* atom, std::uint32_t num)
 {
     char** names = new char*[num];
     bool error = false;
@@ -1678,12 +1675,12 @@ std::string XWindowsUtil::atomsToString(Display* display, const Atom* atom, UInt
     XGetAtomNames(display, const_cast<Atom*>(atom), static_cast<int>(num), names);
     std::string msg;
     if (error) {
-        for (UInt32 i = 0; i < num; ++i) {
+        for (std::uint32_t i = 0; i < num; ++i) {
             msg += inputleap::string::sprintf("<UNKNOWN> (%d), ", static_cast<int>(atom[i]));
         }
     }
     else {
-        for (UInt32 i = 0; i < num; ++i) {
+        for (std::uint32_t i = 0; i < num; ++i) {
             msg += inputleap::string::sprintf("%s (%d), ", names[i], static_cast<int>(atom[i]));
             XFree(names[i]);
         }
@@ -1704,7 +1701,7 @@ void XWindowsUtil::convertAtomProperty(std::string& data)
     // should all be 0.  since we're going to reference the Atoms as
     // 64-bit numbers we have to ensure the last number is a full 64 bits.
     if (sizeof(Atom) != 4 && ((data.size() / 4) & 1) != 0) {
-        UInt32 zero = 0;
+        std::uint32_t zero = 0;
         data.append(reinterpret_cast<char*>(&zero), sizeof(zero));
     }
 }
@@ -1714,7 +1711,7 @@ void XWindowsUtil::appendAtomData(std::string& data, Atom atom)
     data.append(reinterpret_cast<char*>(&atom), sizeof(Atom));
 }
 
-void XWindowsUtil::replaceAtomData(std::string& data, UInt32 index, Atom atom)
+void XWindowsUtil::replaceAtomData(std::string& data, std::uint32_t index, Atom atom)
 {
     data.replace(index * sizeof(Atom), sizeof(Atom),
                                 reinterpret_cast<const char*>(&atom),

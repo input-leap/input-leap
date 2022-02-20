@@ -58,7 +58,7 @@ KeyMap::swap(KeyMap& x)
     m_modifierKeys.swap(x.m_modifierKeys);
     m_halfDuplex.swap(x.m_halfDuplex);
     m_halfDuplexMods.swap(x.m_halfDuplexMods);
-    SInt32 tmp1   = m_numGroups;
+    std::int32_t tmp1 = m_numGroups;
     m_numGroups   = x.m_numGroups;
     x.m_numGroups = tmp1;
     bool tmp2               = m_composeAcrossGroups;
@@ -75,7 +75,7 @@ KeyMap::addKeyEntry(const KeyItem& item)
     }
 
     // resize number of groups for key
-    SInt32 numGroups = item.m_group + 1;
+    std::int32_t numGroups = item.m_group + 1;
     if (getNumGroups() > numGroups) {
         numGroups = getNumGroups();
     }
@@ -108,13 +108,9 @@ KeyMap::addKeyEntry(const KeyItem& item)
     LOG((CLOG_DEBUG5 "add key: %04x %d %03x %04x (%04x %04x %04x)%s", newItem.m_id, newItem.m_group, newItem.m_button, newItem.m_client, newItem.m_required, newItem.m_sensitive, newItem.m_generates, newItem.m_dead ? " dead" : ""));
 }
 
-void
-KeyMap::addKeyAliasEntry(KeyID targetID, SInt32 group,
-                KeyModifierMask targetRequired,
-                KeyModifierMask targetSensitive,
-                KeyID sourceID,
-                KeyModifierMask sourceRequired,
-                KeyModifierMask sourceSensitive)
+void KeyMap::addKeyAliasEntry(KeyID targetID, std::int32_t group, KeyModifierMask targetRequired,
+                              KeyModifierMask targetSensitive, KeyID sourceID,
+                              KeyModifierMask sourceRequired, KeyModifierMask sourceSensitive)
 {
     // if we can already generate the target as desired then we're done.
     if (findCompatibleKey(targetID, group, targetRequired,
@@ -123,8 +119,8 @@ KeyMap::addKeyAliasEntry(KeyID targetID, SInt32 group,
     }
 
     // find a compatible source, preferably in the same group
-    for (SInt32 gd = 0, n = getNumGroups(); gd < n; ++gd) {
-        SInt32 eg = getEffectiveGroup(group, gd);
+    for (std::int32_t gd = 0, n = getNumGroups(); gd < n; ++gd) {
+        std::int32_t eg = getEffectiveGroup(group, gd);
         const KeyItemList* sourceEntry =
             findCompatibleKey(sourceID, eg,
                                 sourceRequired, sourceSensitive);
@@ -138,16 +134,15 @@ KeyMap::addKeyAliasEntry(KeyID targetID, SInt32 group,
     }
 }
 
-bool
-KeyMap::addKeyCombinationEntry(KeyID id, SInt32 group,
-                const KeyID* keys, UInt32 numKeys)
+bool KeyMap::addKeyCombinationEntry(KeyID id, std::int32_t group, const KeyID* keys,
+                                    std::uint32_t numKeys)
 {
     // disallow kKeyNone
     if (id == kKeyNone) {
         return false;
     }
 
-    SInt32 numGroups = group + 1;
+    std::int32_t numGroups = group + 1;
     if (getNumGroups() > numGroups) {
         numGroups = getNumGroups();
     }
@@ -162,7 +157,7 @@ KeyMap::addKeyCombinationEntry(KeyID id, SInt32 group,
 
     // convert to buttons
     KeyItemList items;
-    for (UInt32 i = 0; i < numKeys; ++i) {
+    for (std::uint32_t i = 0; i < numKeys; ++i) {
         KeyIDMap::const_iterator gtIndex = m_keyIDMap.find(keys[i]);
         if (gtIndex == m_keyIDMap.end()) {
             return false;
@@ -171,14 +166,14 @@ KeyMap::addKeyCombinationEntry(KeyID id, SInt32 group,
 
         // if we allow group switching during composition then search all
         // groups for keys, otherwise search just the given group.
-        SInt32 n = 1;
+        std::int32_t n = 1;
         if (m_composeAcrossGroups) {
-            n = static_cast<SInt32>(key_group_table.size());
+            n = static_cast<std::int32_t>(key_group_table.size());
         }
 
         bool found = false;
-        for (SInt32 gd = 0; gd < n && !found; ++gd) {
-            SInt32 eg = (group + gd) % getNumGroups();
+        for (std::int32_t gd = 0; gd < n && !found; ++gd) {
+            std::int32_t eg = (group + gd) % getNumGroups();
             const KeyEntryList& entries = key_group_table[eg];
             for (size_t j = 0; j < entries.size(); ++j) {
                 if (entries[j].size() == 1) {
@@ -249,7 +244,7 @@ KeyMap::foreachKey(ForeachKeyCallback cb, void* userData)
             for (size_t j = 0; j < entryList.size(); ++j) {
                 KeyItemList& itemList = entryList[j];
                 for (size_t k = 0; k < itemList.size(); ++k) {
-                    (*cb)(i->first, static_cast<SInt32>(group),
+                    (*cb)(i->first, static_cast<std::int32_t>(group),
                                 itemList[k], userData);
                 }
             }
@@ -257,12 +252,10 @@ KeyMap::foreachKey(ForeachKeyCallback cb, void* userData)
     }
 }
 
-const KeyMap::KeyItem*
-KeyMap::mapKey(Keystrokes& keys, KeyID id, SInt32 group,
-                ModifierToKeys& activeModifiers,
-                KeyModifierMask& currentState,
-                KeyModifierMask desiredMask,
-                bool isAutoRepeat) const
+const KeyMap::KeyItem* KeyMap::mapKey(Keystrokes& keys, KeyID id, std::int32_t group,
+                                      ModifierToKeys& activeModifiers,
+                                      KeyModifierMask& currentState, KeyModifierMask desiredMask,
+                                      bool isAutoRepeat) const
 {
     LOG((CLOG_DEBUG1 "mapKey %04x (%d) with mask %04x, start state: %04x", id, id, desiredMask, currentState));
 
@@ -331,21 +324,19 @@ KeyMap::mapKey(Keystrokes& keys, KeyID id, SInt32 group,
     return item;
 }
 
-SInt32
-KeyMap::getNumGroups() const
+std::int32_t KeyMap::getNumGroups() const
 {
     return m_numGroups;
 }
 
-SInt32
-KeyMap::getEffectiveGroup(SInt32 group, SInt32 offset) const
+std::int32_t KeyMap::getEffectiveGroup(std::int32_t group, std::int32_t offset) const
 {
     return (group + offset + getNumGroups()) % getNumGroups();
 }
 
-const KeyMap::KeyItemList*
-KeyMap::findCompatibleKey(KeyID id, SInt32 group,
-                KeyModifierMask required, KeyModifierMask sensitive) const
+const KeyMap::KeyItemList* KeyMap::findCompatibleKey(KeyID id, std::int32_t group,
+                                                     KeyModifierMask required,
+                                                     KeyModifierMask sensitive) const
 {
     assert(group >= 0 && group < getNumGroups());
 
@@ -457,8 +448,7 @@ KeyMap::initModifierKey(KeyItem& item)
     }
 }
 
-SInt32
-KeyMap::findNumGroups() const
+std::int32_t KeyMap::findNumGroups() const
 {
     size_t max = 0;
     for (KeyIDMap::const_iterator i = m_keyIDMap.begin();
@@ -467,7 +457,7 @@ KeyMap::findNumGroups() const
             max = i->second.size();
         }
     }
-    return static_cast<SInt32>(max);
+    return static_cast<std::int32_t>(max);
 }
 
 void
@@ -493,10 +483,10 @@ KeyMap::setModifierKeys()
                 }
 
                 // add key to each indicated modifier in this group
-                for (SInt32 b = 0; b < kKeyModifierNumBits; ++b) {
+                for (std::int32_t b = 0; b < kKeyModifierNumBits; ++b) {
                     // skip if item doesn't generate bit b
                     if (((1u << b) & item.m_generates) != 0) {
-                        SInt32 mIndex = static_cast<SInt32>(g) * kKeyModifierNumBits + b;
+                        std::int32_t mIndex = static_cast<std::int32_t>(g) * kKeyModifierNumBits + b;
                         m_modifierKeys[mIndex].push_back(&item);
                     }
                 }
@@ -505,12 +495,10 @@ KeyMap::setModifierKeys()
     }
 }
 
-const KeyMap::KeyItem*
-KeyMap::mapCommandKey(Keystrokes& keys, KeyID id, SInt32 group,
-                ModifierToKeys& activeModifiers,
-                KeyModifierMask& currentState,
-                KeyModifierMask desiredMask,
-                bool isAutoRepeat) const
+const KeyMap::KeyItem* KeyMap::mapCommandKey(Keystrokes& keys, KeyID id, std::int32_t group,
+                                             ModifierToKeys& activeModifiers,
+                                             KeyModifierMask& currentState,
+                                             KeyModifierMask desiredMask, bool isAutoRepeat) const
 {
     static const KeyModifierMask s_overrideModifiers = 0xffffu;
 
@@ -525,9 +513,9 @@ KeyMap::mapCommandKey(Keystrokes& keys, KeyID id, SInt32 group,
 
     // find the first key that generates this KeyID
     const KeyItem* keyItem = NULL;
-    SInt32 numGroups       = getNumGroups();
-    for (SInt32 groupOffset = 0; groupOffset < numGroups; ++groupOffset) {
-        SInt32 effectiveGroup = getEffectiveGroup(group, groupOffset);
+    std::int32_t numGroups = getNumGroups();
+    for (std::int32_t groupOffset = 0; groupOffset < numGroups; ++groupOffset) {
+        std::int32_t effectiveGroup = getEffectiveGroup(group, groupOffset);
         const KeyEntryList& entryList = keyGroupTable[effectiveGroup];
         for (size_t i = 0; i < entryList.size(); ++i) {
             if (entryList[i].size() != 1) {
@@ -563,7 +551,7 @@ KeyMap::mapCommandKey(Keystrokes& keys, KeyID id, SInt32 group,
     // make working copy of modifiers
     ModifierToKeys newModifiers = activeModifiers;
     KeyModifierMask newState    = currentState;
-    SInt32 newGroup             = group;
+    std::int32_t newGroup = group;
 
     // don't try to change CapsLock
     desiredMask = (desiredMask & ~KeyModifierCapsLock) |
@@ -598,12 +586,10 @@ KeyMap::mapCommandKey(Keystrokes& keys, KeyID id, SInt32 group,
     return keyItem;
 }
 
-const KeyMap::KeyItem*
-KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, SInt32 group,
-                ModifierToKeys& activeModifiers,
-                KeyModifierMask& currentState,
-                KeyModifierMask desiredMask,
-                bool isAutoRepeat) const
+const KeyMap::KeyItem* KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, std::int32_t group,
+                                               ModifierToKeys& activeModifiers,
+                                               KeyModifierMask& currentState,
+                                               KeyModifierMask desiredMask, bool isAutoRepeat) const
 {
     // find KeySym in table
     KeyIDMap::const_iterator i = m_keyIDMap.find(id);
@@ -615,12 +601,12 @@ KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, SInt32 group,
     const KeyGroupTable& keyGroupTable = i->second;
 
     // find best key in any group, starting with the active group
-    SInt32 keyIndex  = -1;
-    SInt32 numGroups = getNumGroups();
-    SInt32 groupOffset;
+    std::int32_t keyIndex  = -1;
+    std::int32_t numGroups = getNumGroups();
+    std::int32_t groupOffset;
     LOG((CLOG_DEBUG1 "find best:  %04x %04x", currentState, desiredMask));
     for (groupOffset = 0; groupOffset < numGroups; ++groupOffset) {
-        SInt32 effectiveGroup = getEffectiveGroup(group, groupOffset);
+        std::int32_t effectiveGroup = getEffectiveGroup(group, groupOffset);
         keyIndex = findBestKey(keyGroupTable[effectiveGroup],
                                 currentState, desiredMask);
         if (keyIndex != -1) {
@@ -635,7 +621,7 @@ KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, SInt32 group,
     }
 
     // get keys to press for key
-    SInt32 effectiveGroup = getEffectiveGroup(group, groupOffset);
+    std::int32_t effectiveGroup = getEffectiveGroup(group, groupOffset);
     const KeyItemList& itemList = keyGroupTable[effectiveGroup][keyIndex];
     if (itemList.empty()) {
         return NULL;
@@ -645,7 +631,7 @@ KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, SInt32 group,
     // make working copy of modifiers
     ModifierToKeys newModifiers = activeModifiers;
     KeyModifierMask newState    = currentState;
-    SInt32 newGroup             = group;
+    std::int32_t newGroup = group;
 
     // add each key
     for (size_t j = 0; j < itemList.size(); ++j) {
@@ -678,24 +664,20 @@ KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, SInt32 group,
     return &keyItem;
 }
 
-const KeyMap::KeyItem*
-KeyMap::mapModifierKey(Keystrokes& keys, KeyID id, SInt32 group,
-                ModifierToKeys& activeModifiers,
-                KeyModifierMask& currentState,
-                KeyModifierMask desiredMask,
-                bool isAutoRepeat) const
+const KeyMap::KeyItem* KeyMap::mapModifierKey(Keystrokes& keys, KeyID id, std::int32_t group,
+                                              ModifierToKeys& activeModifiers,
+                                              KeyModifierMask& currentState,
+                                              KeyModifierMask desiredMask, bool isAutoRepeat) const
 {
     return mapCharacterKey(keys, id, group, activeModifiers,
                                 currentState, desiredMask, isAutoRepeat);
 }
 
-SInt32
-KeyMap::findBestKey(const KeyEntryList& entryList,
-                KeyModifierMask /*currentState*/,
-                KeyModifierMask desiredState) const
+std::int32_t KeyMap::findBestKey(const KeyEntryList& entryList, KeyModifierMask /*currentState*/,
+                                 KeyModifierMask desiredState) const
 {
     // check for an item that can accommodate the desiredState exactly
-    for (SInt32 i = 0; i < static_cast<SInt32>(entryList.size()); ++i) {
+    for (std::int32_t i = 0; i < static_cast<std::int32_t>(entryList.size()); ++i) {
         const KeyItem& item = entryList[i].back();
         if ((item.m_required & desiredState) == item.m_required &&
             (item.m_required & desiredState) == (item.m_sensitive & desiredState)) {
@@ -705,13 +687,13 @@ KeyMap::findBestKey(const KeyEntryList& entryList,
     }
 
     // choose the item that requires the fewest modifier changes
-    SInt32 bestCount = 32;
-    SInt32 bestIndex = -1;
-    for (SInt32 i = 0; i < static_cast<SInt32>(entryList.size()); ++i) {
+    std::int32_t bestCount = 32;
+    std::int32_t bestIndex = -1;
+    for (std::int32_t i = 0; i < static_cast<std::int32_t>(entryList.size()); ++i) {
         const KeyItem& item = entryList[i].back();
         KeyModifierMask change =
             ((item.m_required ^ desiredState) & item.m_sensitive);
-        SInt32 n = getNumModifiers(change);
+        std::int32_t n = getNumModifiers(change);
         if (n < bestCount) {
             bestCount = n;
             bestIndex = i;
@@ -726,9 +708,8 @@ KeyMap::findBestKey(const KeyEntryList& entryList,
 }
 
 
-const KeyMap::KeyItem*
-KeyMap::keyForModifier(KeyButton button, SInt32 group,
-                SInt32 modifierBit) const
+const KeyMap::KeyItem* KeyMap::keyForModifier(KeyButton button, std::int32_t group,
+                                              std::int32_t modifierBit) const
 {
     assert(modifierBit >= 0 && modifierBit < kKeyModifierNumBits);
     assert(group >= 0 && group < getNumGroups());
@@ -749,13 +730,10 @@ KeyMap::keyForModifier(KeyButton button, SInt32 group,
     return NULL;
 }
 
-bool
-KeyMap::keysForKeyItem(const KeyItem& keyItem, SInt32& group,
-                ModifierToKeys& activeModifiers,
-                KeyModifierMask& currentState, KeyModifierMask desiredState,
-                KeyModifierMask overrideModifiers,
-                bool isAutoRepeat,
-                Keystrokes& keystrokes) const
+bool KeyMap::keysForKeyItem(const KeyItem& keyItem, std::int32_t& group,
+                            ModifierToKeys& activeModifiers, KeyModifierMask& currentState,
+                            KeyModifierMask desiredState, KeyModifierMask overrideModifiers,
+                            bool isAutoRepeat, Keystrokes& keystrokes) const
 {
     static const KeyModifierMask s_notRequiredMask =
         KeyModifierAltGr | KeyModifierNumLock | KeyModifierScrollLock;
@@ -822,12 +800,10 @@ KeyMap::keysForKeyItem(const KeyItem& keyItem, SInt32& group,
     return true;
 }
 
-bool
-KeyMap::keysToRestoreModifiers(const KeyItem& keyItem, SInt32,
-                ModifierToKeys& activeModifiers,
-                KeyModifierMask& currentState,
-                const ModifierToKeys& desiredModifiers,
-                Keystrokes& keystrokes) const
+bool KeyMap::keysToRestoreModifiers(const KeyItem& keyItem, std::int32_t,
+                                    ModifierToKeys& activeModifiers, KeyModifierMask& currentState,
+                                    const ModifierToKeys& desiredModifiers,
+                                    Keystrokes& keystrokes) const
 {
     // XXX -- we're not considering modified modifiers here
 
@@ -869,13 +845,10 @@ KeyMap::keysToRestoreModifiers(const KeyItem& keyItem, SInt32,
     return true;
 }
 
-bool
-KeyMap::keysForModifierState(KeyButton button, SInt32 group,
-                ModifierToKeys& activeModifiers,
-                KeyModifierMask& currentState,
-                KeyModifierMask requiredState, KeyModifierMask sensitiveMask,
-                KeyModifierMask notRequiredMask,
-                Keystrokes& keystrokes) const
+bool KeyMap::keysForModifierState(KeyButton button, std::int32_t group,
+                                  ModifierToKeys& activeModifiers, KeyModifierMask& currentState,
+                                  KeyModifierMask requiredState, KeyModifierMask sensitiveMask,
+                                  KeyModifierMask notRequiredMask, Keystrokes& keystrokes) const
 {
     // compute which modifiers need changing
     KeyModifierMask flipMask = ((currentState ^ requiredState) & sensitiveMask);
@@ -896,7 +869,7 @@ KeyMap::keysForModifierState(KeyButton button, SInt32 group,
     // we'll assume that modifiers with higher bits are affected by modifiers
     // with lower bits.  there's not much basis for that assumption except
     // that we're pretty sure shift isn't changed by other modifiers.
-    for (SInt32 bit = kKeyModifierNumBits; bit-- > 0; ) {
+    for (std::int32_t bit = kKeyModifierNumBits; bit-- > 0; ) {
         KeyModifierMask mask = (1u << bit);
         if ((flipMask & mask) == 0) {
             // modifier is already correct
@@ -971,7 +944,7 @@ KeyMap::addKeystrokes(EKeystroke type, const KeyItem& keyItem,
                 Keystrokes& keystrokes) const
 {
     KeyButton button = keyItem.m_button;
-    UInt32 data      = keyItem.m_client;
+    std::uint32_t data = keyItem.m_client;
     switch (type) {
     case kKeystrokePress:
         keystrokes.push_back(Keystroke(button, true, false, data));
@@ -1076,10 +1049,9 @@ KeyMap::addKeystrokes(EKeystroke type, const KeyItem& keyItem,
     }
 }
 
-SInt32
-KeyMap::getNumModifiers(KeyModifierMask state)
+std::int32_t KeyMap::getNumModifiers(KeyModifierMask state)
 {
-    SInt32 n = 0;
+    std::int32_t n = 0;
     for (; state != 0; state >>= 1) {
         if ((state & 1) != 0) {
             ++n;
@@ -1159,7 +1131,7 @@ std::string KeyMap::formatKey(KeyID key, KeyModifierMask mask)
     initKeyNameMaps();
 
     std::string x;
-    for (SInt32 i = 0; i < kKeyModifierNumBits; ++i) {
+    for (std::int32_t i = 0; i < kKeyModifierNumBits; ++i) {
         KeyModifierMask mod = (1u << i);
         if ((mask & mod) != 0 && s_modifierToNameMap->count(mod) > 0) {
             x += s_modifierToNameMap->find(mod)->second;
@@ -1323,8 +1295,7 @@ KeyMap::KeyItem::operator==(const KeyItem& x) const
 // KeyMap::Keystroke
 //
 
-KeyMap::Keystroke::Keystroke(KeyButton button,
-                bool press, bool repeat, UInt32 data) :
+KeyMap::Keystroke::Keystroke(KeyButton button, bool press, bool repeat, std::uint32_t data) :
     m_type(kButton)
 {
     m_data.m_button.m_button = button;
@@ -1333,7 +1304,7 @@ KeyMap::Keystroke::Keystroke(KeyButton button,
     m_data.m_button.m_client = data;
 }
 
-KeyMap::Keystroke::Keystroke(SInt32 group, bool absolute, bool restore) :
+KeyMap::Keystroke::Keystroke(std::int32_t group, bool absolute, bool restore) :
     m_type(kGroup)
 {
     m_data.m_group.m_group    = group;

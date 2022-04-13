@@ -44,9 +44,6 @@ public:
     //! @name manipulators
     //@{
 
-    //! Convert multibyte string to wide character string
-    virtual int convStringMBToWC(wchar_t*, const char*, std::uint32_t n, bool* errors);
-
     //! Return the architecture's native wide character encoding
     virtual EWideCharEncoding
                         getWideCharEncoding() = 0;

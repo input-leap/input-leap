@@ -318,23 +318,61 @@ Unicode::UTF32ToUTF8(const std::string& src, bool* errors)
     return doUTF32ToUTF8(reinterpret_cast<const std::uint8_t*>(src.data()), n, errors);
 }
 
+static std::wstring convert_current_mb_to_wide(const char* src, std::uint32_t n, bool& errors)
+{
+    std::mbstate_t state = { };
+    std::wstring result;
+
+    while (n > 0) {
+        wchar_t tmp_char = {};
+        std::size_t mblen = std::mbrtowc(&tmp_char, src, n, &state);
+        switch (mblen) {
+        case static_cast<std::size_t>(-2):
+            // incomplete character.  convert to unknown character.
+            errors = true;
+            tmp_char = static_cast<wchar_t>(0xfffd);
+            n = 0;
+            break;
+
+        case static_cast<std::size_t>(-1):
+            // invalid character.  count one unknown character and
+            // start at the next byte.
+            errors = true;
+            tmp_char = static_cast<wchar_t>(0xfffd);
+            src += 1;
+            n -= 1;
+            break;
+
+        case 0:
+            tmp_char = static_cast<wchar_t>(0x0000);
+            src += 1;
+            n -= 1;
+            break;
+
+        default:
+            // normal character
+            src += mblen;
+            n -= mblen;
+            break;
+        }
+        result.push_back(tmp_char);
+    }
+
+    return result;
+}
+
+
 std::string
 Unicode::textToUTF8(const std::string& src, bool* errors)
 {
-    // default to success
-    resetError(errors);
+    bool dummy_errors;
+    if (errors == nullptr) {
+        errors = &dummy_errors;
+    }
+    *errors = false;
 
-    // convert string to wide characters
-    std::uint32_t n = static_cast<std::uint32_t>(src.size());
-    int len      = ARCH->convStringMBToWC(NULL, src.c_str(), n, errors);
-    wchar_t* wcs = new wchar_t[len + 1];
-    ARCH->convStringMBToWC(wcs, src.c_str(), n, errors);
-
-    // convert to UTF8
-    std::string utf8 = wideCharToUTF8(wcs, len, errors);
-
-    // clean up
-    delete[] wcs;
+    auto wide_string = convert_current_mb_to_wide(src.c_str(), src.size(), *errors);
+    std::string utf8 = wideCharToUTF8(wide_string.data(), wide_string.size(), errors);
 
     return utf8;
 }

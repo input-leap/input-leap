@@ -20,6 +20,7 @@
 #include "test/mock/inputleap/MockEventQueue.h"
 #include "platform/OSXKeyState.h"
 #include "base/Log.h"
+#include "base/Time.h"
 
 #include "test/global/gtest.h"
 #include "test/global/gmock.h"
@@ -100,7 +101,7 @@ bool
 OSXKeyStateTests::isKeyPressed(const OSXKeyState& keyState, KeyButton button)
 {
     // HACK: allow os to realize key state changes.
-    ARCH->sleep(.2);
+    inputleap::this_thread_sleep(.2);
 
     IKeyState::KeyButtonSet pressed;
     keyState.pollPressedKeys(pressed);

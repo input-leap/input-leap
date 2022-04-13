@@ -32,6 +32,7 @@
 #include "base/Stopwatch.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
+#include "base/Time.h"
 
 #include <cstring>
 #include <cstdlib>
@@ -1962,7 +1963,7 @@ XWindowsScreen::grabMouseAndKeyboard()
 			assert(result != GrabNotViewable);
 			if (result != GrabSuccess) {
 				LOG((CLOG_DEBUG2 "waiting to grab keyboard"));
-				ARCH->sleep(0.05);
+                inputleap::this_thread_sleep(0.05);
 				if (timer.getTime() >= s_timeout) {
 					LOG((CLOG_DEBUG2 "grab keyboard timed out"));
 					return false;
@@ -1980,7 +1981,7 @@ XWindowsScreen::grabMouseAndKeyboard()
 			// back off to avoid grab deadlock
             m_impl->XUngrabKeyboard(m_display, CurrentTime);
 			LOG((CLOG_DEBUG2 "ungrabbed keyboard, waiting to grab pointer"));
-			ARCH->sleep(0.05);
+            inputleap::this_thread_sleep(0.05);
 			if (timer.getTime() >= s_timeout) {
 				LOG((CLOG_DEBUG2 "grab pointer timed out"));
 				return false;

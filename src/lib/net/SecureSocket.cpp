@@ -25,6 +25,7 @@
 #include "base/Log.h"
 #include "base/String.h"
 #include "base/finally.h"
+#include "base/Time.h"
 #include "common/DataDirectories.h"
 #include "io/filesystem.h"
 #include "net/FingerprintDatabase.h"
@@ -87,7 +88,7 @@ SecureSocket::~SecureSocket()
 
     // removing sleep() because I have no idea why you would want to do it
     // ... smells of trying to cover up a bug you don't understand
-    //ARCH->sleep(1);
+    //inputleap::this_thread_sleep(1);
     delete m_ssl;
 }
 
@@ -452,7 +453,7 @@ SecureSocket::secureAccept(int socket)
         LOG((CLOG_ERR "failed to accept secure socket"));
         LOG((CLOG_INFO "client connection may not be secure"));
         m_secureReady = false;
-        ARCH->sleep(1);
+        inputleap::this_thread_sleep(1);
         secure_accept_retry_ = 0;
         return -1; // Failed, error out
     }
@@ -485,7 +486,7 @@ SecureSocket::secureAccept(int socket)
     if (secure_accept_retry_ > 0) {
         LOG((CLOG_DEBUG2 "retry accepting secure socket"));
         m_secureReady = false;
-        ARCH->sleep(s_retryDelay);
+        inputleap::this_thread_sleep(s_retryDelay);
         return 0;
     }
 
@@ -526,7 +527,7 @@ SecureSocket::secureConnect(int socket)
     if (secure_connect_retry_ > 0) {
         LOG((CLOG_DEBUG2 "retry connect secure socket"));
         m_secureReady = false;
-        ARCH->sleep(s_retryDelay);
+        inputleap::this_thread_sleep(s_retryDelay);
         return 0;
     }
 

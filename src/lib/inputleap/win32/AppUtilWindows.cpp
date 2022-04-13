@@ -30,6 +30,7 @@
 #include "base/IEventQueue.h"
 #include "base/Event.h"
 #include "base/EventQueue.h"
+#include "base/Time.h"
 #include "common/Version.h"
 
 #include <sstream>
@@ -172,7 +173,7 @@ AppUtilWindows::debugServiceWait()
             // windows service controller (and --debug-service-wait arg is
             // used). to debug, set a breakpoint on this line so that
             // execution is delayed until the debugger is attached.
-            ARCH->sleep(1);
+            inputleap::this_thread_sleep(1);
             LOG((CLOG_INFO "waiting for debugger to attach"));
         }
     }

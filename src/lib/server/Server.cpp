@@ -41,6 +41,7 @@
 #include "arch/Arch.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
+#include "base/Time.h"
 #include "base/TMethodEventJob.h"
 
 #include <cstring>
@@ -2084,7 +2085,7 @@ void Server::write_to_drop_dir_thread()
 	LOG((CLOG_DEBUG "starting write to drop dir thread"));
 
 	while (m_screen->isFakeDraggingStarted()) {
-		ARCH->sleep(.1f);
+		inputleap::this_thread_sleep(.1f);
 	}
 
 	DropHelper::writeToDir(m_screen->getDropTarget(), m_fakeDragFileList,

@@ -23,6 +23,7 @@
 #include "arch/unix/ArchMultithreadPosix.h"
 #include "arch/unix/XArchUnix.h"
 #include "arch/Arch.h"
+#include "base/Time.h"
 
 #if HAVE_UNISTD_H
 #    include <unistd.h>
@@ -296,7 +297,7 @@ ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout)
     // return if nothing to do
     if (num == 0) {
         if (timeout > 0.0) {
-            ARCH->sleep(timeout);
+            inputleap::this_thread_sleep(timeout);
         }
         return 0;
     }

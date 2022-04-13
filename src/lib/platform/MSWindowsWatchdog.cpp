@@ -30,6 +30,7 @@
 #include "arch/Arch.h"
 #include "base/log_outputters.h"
 #include "base/Log.h"
+#include "base/Time.h"
 #include "common/Version.h"
 
 #include <sstream>
@@ -189,7 +190,7 @@ void MSWindowsWatchdog::main_loop()
                 // increasing backoff period, maximum of 10 seconds.
                 int timeout = (m_processFailures * 2) < 10 ? (m_processFailures * 2) : 10;
                 LOG((CLOG_INFO "backing off, wait=%ds, failures=%d", timeout, m_processFailures));
-                ARCH->sleep(timeout);
+                inputleap::this_thread_sleep(timeout);
             }
 
             if (!getCommand().empty() && ((m_processFailures != 0) || m_session.hasChanged() || m_commandChanged)) {
@@ -222,7 +223,7 @@ void MSWindowsWatchdog::main_loop()
             }
 
             // if the sas event failed, wait by sleeping.
-            ARCH->sleep(1);
+            inputleap::this_thread_sleep(1);
 
         }
         catch (std::exception& e) {
@@ -307,7 +308,7 @@ MSWindowsWatchdog::startProcess()
     }
     else {
         // wait for program to fail.
-        ARCH->sleep(1);
+        inputleap::this_thread_sleep(1);
         if (!isProcessActive()) {
             throw XMSWindowsWatchdogError("process immediately stopped");
         }
@@ -429,7 +430,7 @@ void MSWindowsWatchdog::output_loop()
         // assume the process has gone away? slow down
         // the reads until another one turns up.
         if (!success || bytesRead == 0) {
-            ARCH->sleep(1);
+            inputleap::this_thread_sleep(1);
         }
         else {
             buffer[bytesRead] = '\0';
@@ -476,7 +477,7 @@ MSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
                 break;
             }
 
-            ARCH->sleep(1);
+            inputleap::this_thread_sleep(1);
         }
     }
 }

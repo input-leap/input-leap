@@ -23,6 +23,7 @@
 #include "arch/Arch.h"
 #include "arch/win32/ArchMiscWindows.h"
 #include "base/Log.h"
+#include "base/Time.h"
 
 #include <malloc.h>
 #include <tchar.h>
@@ -264,7 +265,7 @@ void MSWindowsScreenSaver::watch_desktop_thread()
 
     for (;;) {
         // wait a bit
-        ARCH->sleep(0.2);
+        inputleap::this_thread_sleep(0.2);
 
         BOOL running;
         SystemParametersInfo(SPI_GETSCREENSAVERRUNNING, 0, &running, 0);

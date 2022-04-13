@@ -191,7 +191,6 @@ MSWindowsServerTaskBarReceiver::runMenu(int x, int y)
         break;
 
     case IDC_TASKBAR_SHOW_LOG:
-        ARCH->showConsole(true);
         break;
 
     case IDC_RELOAD_CONFIG:

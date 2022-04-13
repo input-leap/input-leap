@@ -21,6 +21,7 @@
 #include "base/String.h"
 #include "io/filesystem.h"
 #include <fstream>
+#include <iostream>
 
 enum EFileLogOutputter {
     kFileSizeLimit = 1024 // kb
@@ -80,25 +81,27 @@ ConsoleLogOutputter::~ConsoleLogOutputter()
 void
 ConsoleLogOutputter::open(const char* title)
 {
-    ARCH->openConsole(title);
 }
 
 void
 ConsoleLogOutputter::close()
 {
-    ARCH->closeConsole();
 }
 
 void
 ConsoleLogOutputter::show(bool showIfEmpty)
 {
-    ARCH->showConsole(showIfEmpty);
 }
 
 bool
 ConsoleLogOutputter::write(ELevel level, const char* msg)
 {
-    ARCH->writeConsole(level, msg);
+    if ((level >= kFATAL) && (level <= kWARNING))
+        std::cerr << msg << std::endl;
+    else
+        std::cout << msg << std::endl;
+
+    std::cout.flush();
     return true;
 }
 

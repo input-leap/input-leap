@@ -45,7 +45,6 @@
 #    include "arch/win32/ArchMultithreadWindows.h"
 #    include "arch/win32/ArchNetworkWinsock.h"
 #    include "arch/win32/ArchSleepWindows.h"
-#    include "arch/win32/ArchStringWindows.h"
 #    include "arch/win32/ArchSystemWindows.h"
 #    include "arch/win32/ArchTaskBarWindows.h"
 #    include "arch/win32/ArchTimeWindows.h"
@@ -57,7 +56,6 @@
 #    include "arch/unix/ArchMultithreadPosix.h"
 #    include "arch/unix/ArchNetworkBSD.h"
 #    include "arch/unix/ArchSleepUnix.h"
-#    include "arch/unix/ArchStringUnix.h"
 #    include "arch/unix/ArchSystemUnix.h"
 #    include "arch/unix/ArchTaskBarXWindows.h"
 #    include "arch/unix/ArchTimeUnix.h"
@@ -88,7 +86,6 @@ class Arch : public ARCH_CONSOLE,
                 public ARCH_MULTITHREAD,
                 public ARCH_NETWORK,
                 public ARCH_SLEEP,
-                public ARCH_STRING,
                 public ARCH_SYSTEM,
                 public ARCH_TASKBAR,
                 public ARCH_TIME {

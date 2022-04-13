@@ -22,9 +22,28 @@
 #include <climits>
 #include <cstring>
 
-//
-// local utility functions
-//
+namespace {
+
+enum EWideCharEncoding {
+    kUCS2,        //!< The UCS-2 encoding
+    kUCS4,        //!< The UCS-4 encoding
+    kUTF16,       //!< The UTF-16 encoding
+    kUTF32        //!< The UTF-32 encoding
+};
+
+EWideCharEncoding get_wide_char_encoding()
+{
+#if SYSAPI_WIN32
+    return kUTF16;
+#elif SYSAPI_UNIX
+    return kUCS4;
+#else
+#error "Unknown system API"
+#endif
+}
+
+
+} // namespace
 
 inline static std::uint16_t decode16(const std::uint8_t* n, bool byteSwapped)
 {
@@ -381,23 +400,23 @@ wchar_t* Unicode::UTF8ToWideChar(const std::string& src, std::uint32_t& size, bo
 {
     // convert to platform's wide character encoding
     std::string tmp;
-    switch (ARCH->getWideCharEncoding()) {
-    case IArchString::kUCS2:
+    switch (get_wide_char_encoding()) {
+    case kUCS2:
         tmp = UTF8ToUCS2(src, errors);
         size = static_cast<std::uint32_t>(tmp.size()) >> 1;
         break;
 
-    case IArchString::kUCS4:
+    case kUCS4:
         tmp = UTF8ToUCS4(src, errors);
         size = static_cast<std::uint32_t>(tmp.size()) >> 2;
         break;
 
-    case IArchString::kUTF16:
+    case kUTF16:
         tmp = UTF8ToUTF16(src, errors);
         size = static_cast<std::uint32_t>(tmp.size()) >> 1;
         break;
 
-    case IArchString::kUTF32:
+    case kUTF32:
         tmp = UTF8ToUTF32(src, errors);
         size = static_cast<std::uint32_t>(tmp.size()) >> 2;
         break;
@@ -418,17 +437,17 @@ Unicode::wideCharToUTF8(const wchar_t* src, std::uint32_t size, bool* errors)
     // convert from platform's wide character encoding.
     // note -- this must include a wide nul character (independent of
     // the std::string's nul character).
-    switch (ARCH->getWideCharEncoding()) {
-    case IArchString::kUCS2:
+    switch (get_wide_char_encoding()) {
+    case kUCS2:
         return doUCS2ToUTF8(reinterpret_cast<const std::uint8_t*>(src), size, errors);
 
-    case IArchString::kUCS4:
+    case kUCS4:
         return doUCS4ToUTF8(reinterpret_cast<const std::uint8_t*>(src), size, errors);
 
-    case IArchString::kUTF16:
+    case kUTF16:
         return doUTF16ToUTF8(reinterpret_cast<const std::uint8_t*>(src), size, errors);
 
-    case IArchString::kUTF32:
+    case kUTF32:
         return doUTF32ToUTF8(reinterpret_cast<const std::uint8_t*>(src), size, errors);
 
     default:

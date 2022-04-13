@@ -21,7 +21,6 @@
 #include "inputleap/clipboard_types.h"
 #include "inputleap/key_types.h"
 #include "base/Event.h"
-#include "base/Stopwatch.h"
 
 class Client;
 class ClientInfo;

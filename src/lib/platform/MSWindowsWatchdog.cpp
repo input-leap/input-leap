@@ -455,7 +455,7 @@ MSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
     m_ipcServer.send(shutdown, kIpcClientNode);
 
     // wait for process to exit gracefully.
-    double start = ARCH->time();
+    double start = inputleap::current_time_seconds();
     while (true) {
 
         GetExitCodeProcess(handle, &exitCode);
@@ -466,7 +466,7 @@ MSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
         }
         else {
 
-            double elapsed = (ARCH->time() - start);
+            double elapsed = (inputleap::current_time_seconds() - start);
             if (elapsed > timeout) {
                 // if timeout reached, kill forcefully.
                 // calling TerminateProcess on barrier is very bad!

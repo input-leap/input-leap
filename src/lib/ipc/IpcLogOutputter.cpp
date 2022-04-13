@@ -27,6 +27,7 @@
 #include "arch/XArch.h"
 #include "base/Event.h"
 #include "base/EventQueue.h"
+#include "base/Time.h"
 #include "base/TMethodEventJob.h"
 
 enum EIpcLogOutputter {
@@ -47,7 +48,7 @@ IpcLogOutputter::IpcLogOutputter(IpcServer& ipcServer, EIpcClientType clientType
     m_bufferRateWriteLimit(kBufferRateWriteLimit),
     m_bufferRateTimeLimit(kBufferRateTimeLimit),
     m_bufferWriteCount(0),
-    m_bufferRateStart(ARCH->time()),
+    m_bufferRateStart(inputleap::current_time_seconds()),
     m_clientType(clientType)
 {
     if (useThread) {
@@ -108,7 +109,7 @@ void IpcLogOutputter::appendBuffer(const std::string& text)
 {
     std::lock_guard<std::mutex> lock(m_bufferMutex);
 
-    double elapsed = ARCH->time() - m_bufferRateStart;
+    double elapsed = inputleap::current_time_seconds() - m_bufferRateStart;
     if (elapsed < m_bufferRateTimeLimit) {
         if (m_bufferWriteCount >= m_bufferRateWriteLimit) {
             // discard the log line if we've logged too much.
@@ -117,7 +118,7 @@ void IpcLogOutputter::appendBuffer(const std::string& text)
     }
     else {
         m_bufferWriteCount = 0;
-        m_bufferRateStart = ARCH->time();
+        m_bufferRateStart = inputleap::current_time_seconds();
     }
 
     if (m_buffer.size() >= m_bufferMaxSize) {

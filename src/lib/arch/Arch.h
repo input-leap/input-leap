@@ -45,7 +45,6 @@
 #    include "arch/win32/ArchNetworkWinsock.h"
 #    include "arch/win32/ArchSystemWindows.h"
 #    include "arch/win32/ArchTaskBarWindows.h"
-#    include "arch/win32/ArchTimeWindows.h"
 #    include "arch/win32/ArchInternetWindows.h"
 #elif SYSAPI_UNIX
 #    include "arch/unix/ArchDaemonUnix.h"
@@ -54,7 +53,6 @@
 #    include "arch/unix/ArchNetworkBSD.h"
 #    include "arch/unix/ArchSystemUnix.h"
 #    include "arch/unix/ArchTaskBarXWindows.h"
-#    include "arch/unix/ArchTimeUnix.h"
 #    include "arch/unix/ArchInternetUnix.h"
 #endif
 
@@ -81,8 +79,7 @@ class Arch : public ARCH_DAEMON,
                 public ARCH_MULTITHREAD,
                 public ARCH_NETWORK,
                 public ARCH_SYSTEM,
-                public ARCH_TASKBAR,
-                public ARCH_TIME {
+                public ARCH_TASKBAR {
 public:
     Arch();
     Arch(Arch* arch);

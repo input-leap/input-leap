@@ -18,6 +18,7 @@
 #include "platform/OSXScreen.h"
 #include "arch/Arch.h"
 #include "base/EventQueue.h"
+#include "base/Time.h"
 
 #include "test/global/gtest.h"
 
@@ -33,7 +34,7 @@ TEST(OSXScreenTests, hideCursor_notPrimary)
     EXPECT_EQ(false, CGCursorIsVisible());
 
     // workaround for screen class race condition.
-    ARCH->sleep(.1f);
+    inputleap::this_thread_sleep(.1f);
 }
 
 TEST(OSXScreenTests, showCursor_notPrimary)
@@ -46,6 +47,6 @@ TEST(OSXScreenTests, showCursor_notPrimary)
     EXPECT_EQ(true, CGCursorIsVisible());
 
     // workaround for screen class race condition.
-    ARCH->sleep(.1f);
+    inputleap::this_thread_sleep(.1f);
 }
 */

@@ -35,6 +35,7 @@
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
+#include "base/Time.h"
 
 #include <math.h>
 #include <mach-o/dyld.h>
@@ -572,7 +573,7 @@ void OSXScreen::get_drop_target_thread()
 		if (cstr != NULL) {
 			break;
 		}
-		ARCH->sleep(.1f);
+		inputleap::this_thread_sleep(.1f);
 	}
 
 	if (cstr != NULL) {

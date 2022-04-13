@@ -27,6 +27,7 @@
 #include "mt/Thread.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
+#include "base/Time.h"
 #include "base/Stopwatch.h"
 #include "common/stdvector.h"
 
@@ -1357,7 +1358,7 @@ XWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
             }
         }
         else {
-            ARCH->sleep(0.01);
+            inputleap::this_thread_sleep(0.01);
         }
     }
 

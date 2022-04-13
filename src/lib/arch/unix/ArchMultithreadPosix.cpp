@@ -20,6 +20,7 @@
 
 #include "arch/Arch.h"
 #include "arch/XArch.h"
+#include "base/Time.h"
 
 #include <signal.h>
 #if TIME_WITH_SYS_TIME
@@ -325,8 +326,7 @@ ArchMultithreadPosix::wait(ArchThread target, double timeout)
         if (timeout != 0.0) {
             const double start = ARCH->time();
             do {
-                // wait a little
-                ARCH->sleep(0.05);
+                inputleap::this_thread_sleep(0.05);
 
                 // repeat test
                 testCancelThreadImpl(self);

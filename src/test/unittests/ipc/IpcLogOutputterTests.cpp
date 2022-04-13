@@ -22,6 +22,7 @@
 #include "mt/Thread.h"
 #include "ipc/IpcLogOutputter.h"
 #include "common/common.h"
+#include "base/Time.h"
 
 #include "test/global/gmock.h"
 #include "test/global/gtest.h"
@@ -125,7 +126,7 @@ TEST(IpcLogOutputterTests, write_overBufferRateLimit_lastLineTruncated)
     // we can log after the time limit passes.
     // HACK: sleep causes the unit test to fail intermittently,
     // so lets try 100ms (there must be a better way to solve this)
-    ARCH->sleep(2); // 2s
+    inputleap::this_thread_sleep(2); // 2s
     outputter.write(kNOTE, "mock 4");
     outputter.write(kNOTE, "mock 5");
     outputter.write(kNOTE, "mock 6");

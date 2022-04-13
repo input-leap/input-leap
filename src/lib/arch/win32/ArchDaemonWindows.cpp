@@ -20,6 +20,7 @@
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/XArchWindows.h"
 #include "arch/Arch.h"
+#include "base/Time.h"
 #include "common/stdvector.h"
 
 #include <sstream>
@@ -201,7 +202,7 @@ ArchDaemonWindows::uninstallDaemon(const char* name)
 
     // give windows a chance to remove the service before
     // we check if it still exists.
-    ARCH->sleep(1);
+    inputleap::this_thread_sleep(1);
 
     // handle failure.  ignore error if service isn't installed anymore.
     if (!okay && isDaemonInstalled(name)) {

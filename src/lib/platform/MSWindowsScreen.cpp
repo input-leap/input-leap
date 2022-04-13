@@ -38,6 +38,7 @@
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
+#include "base/Time.h"
 
 #include <string.h>
 #include <Shlobj.h>
@@ -1521,7 +1522,7 @@ void MSWindowsScreen::warpCursorNoFlush(std::int32_t x, std::int32_t y)
     // chance of undesired behavior.  we'll also check for very
     // large motions that look suspiciously like about half width
     // or height of the screen.
-    ARCH->sleep(0.0);
+    inputleap::this_thread_sleep(0.0);
 
     // send an event that we can recognize after the mouse warp
     PostThreadMessage(GetCurrentThreadId(), INPUTLEAP_MSG_POST_WARP, 0, 0);
@@ -1853,7 +1854,7 @@ std::string& MSWindowsScreen::getDraggingFilename()
             SWP_SHOWWINDOW);
 
         // TODO: fake these keys properly
-        ARCH->sleep(.05f); // A tiny sleep here makes the DragEnter event on m_dropWindow trigger much more consistently
+        inputleap::this_thread_sleep(.05f); // A tiny sleep here makes the DragEnter event on m_dropWindow trigger much more consistently
         fakeKeyDown(kKeyEscape, 8192, 1);
         fakeKeyUp(1);
         fakeMouseButton(kButtonLeft, false);
@@ -1861,7 +1862,7 @@ std::string& MSWindowsScreen::getDraggingFilename()
         std::string filename;
         DOUBLE timeout = ARCH->time() + .5f;
         while (ARCH->time() < timeout) {
-            ARCH->sleep(.05f);
+            inputleap::this_thread_sleep(.05f);
             filename = m_dropTarget->getDraggingFilename();
             if (!filename.empty()) {
                 break;

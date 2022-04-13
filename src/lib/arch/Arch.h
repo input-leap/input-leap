@@ -43,7 +43,6 @@
 #    include "arch/win32/ArchMiscWindows.h"
 #    include "arch/win32/ArchMultithreadWindows.h"
 #    include "arch/win32/ArchNetworkWinsock.h"
-#    include "arch/win32/ArchSleepWindows.h"
 #    include "arch/win32/ArchSystemWindows.h"
 #    include "arch/win32/ArchTaskBarWindows.h"
 #    include "arch/win32/ArchTimeWindows.h"
@@ -53,7 +52,6 @@
 #    include "arch/unix/ArchLogUnix.h"
 #    include "arch/unix/ArchMultithreadPosix.h"
 #    include "arch/unix/ArchNetworkBSD.h"
-#    include "arch/unix/ArchSleepUnix.h"
 #    include "arch/unix/ArchSystemUnix.h"
 #    include "arch/unix/ArchTaskBarXWindows.h"
 #    include "arch/unix/ArchTimeUnix.h"
@@ -82,7 +80,6 @@ class Arch : public ARCH_DAEMON,
                 public ARCH_LOG,
                 public ARCH_MULTITHREAD,
                 public ARCH_NETWORK,
-                public ARCH_SLEEP,
                 public ARCH_SYSTEM,
                 public ARCH_TASKBAR,
                 public ARCH_TIME {

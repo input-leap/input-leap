@@ -18,6 +18,7 @@
 
 #include "arch/Arch.h"
 #include "base/Log.h"
+#include "base/Time.h"
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
@@ -93,7 +94,7 @@ lock(string lockFile)
         }
 
         // check every second if file has gone.
-        ARCH->sleep(1);
+        inputleap::this_thread_sleep(1);
     }
 
     // write empty lock file.

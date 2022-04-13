@@ -24,7 +24,7 @@
 
 #define ARCH_SYSTEM ArchSystemUnix
 
-//! Unix implementation of IArchString
+//! Unix implementation of IArchSystem
 class ArchSystemUnix : public IArchSystem {
 public:
     ArchSystemUnix();

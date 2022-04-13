@@ -22,7 +22,7 @@
 
 #define ARCH_SYSTEM ArchSystemWindows
 
-//! Win32 implementation of IArchString
+//! Win32 implementation of IArchSystem
 class ArchSystemWindows : public IArchSystem {
 public:
     ArchSystemWindows();

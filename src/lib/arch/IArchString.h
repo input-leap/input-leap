@@ -47,9 +47,6 @@ public:
     //! Convert multibyte string to wide character string
     virtual int convStringMBToWC(wchar_t*, const char*, std::uint32_t n, bool* errors);
 
-    //! Convert wide character string to multibyte string
-    virtual int convStringWCToMB(char*, const wchar_t*, std::uint32_t n, bool* errors);
-
     //! Return the architecture's native wide character encoding
     virtual EWideCharEncoding
                         getWideCharEncoding() = 0;

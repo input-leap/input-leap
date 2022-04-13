@@ -33,54 +33,6 @@ IArchString::~IArchString()
 {
 }
 
-int IArchString::convStringWCToMB(char* dst, const wchar_t* src, std::uint32_t n, bool* errors)
-{
-    ptrdiff_t len = 0;
-    std::mbstate_t state = { };
-
-    bool dummyErrors;
-    if (errors == NULL) {
-        errors = &dummyErrors;
-    }
-
-    if (dst == NULL) {
-        char dummy[MB_LEN_MAX];
-        for (const wchar_t* scan = src; n > 0; ++scan, --n) {
-            std::size_t mblen = std::wcrtomb(dummy, *scan, &state);
-            if (mblen == static_cast<std::size_t>(-1)) {
-                *errors = true;
-                mblen   = 1;
-            }
-            len += mblen;
-        }
-        std::size_t mblen = std::wcrtomb(dummy, L'\0', &state);
-        if (mblen != static_cast<std::size_t>(-1)) {
-            len += mblen - 1;
-        }
-    }
-    else {
-        char* dst0 = dst;
-        for (const wchar_t* scan = src; n > 0; ++scan, --n) {
-            std::size_t mblen = std::wcrtomb(dst, *scan, &state);
-            if (mblen == static_cast<std::size_t>(-1)) {
-                *errors = true;
-                *dst++  = '?';
-            }
-            else {
-                dst    += mblen;
-            }
-        }
-        std::size_t mblen = std::wcrtomb(dst, L'\0', &state);
-        if (mblen != static_cast<std::size_t>(-1)) {
-            // don't include nul terminator
-            dst += mblen - 1;
-        }
-        len = dst - dst0;
-    }
-
-    return static_cast<int>(len);
-}
-
 int IArchString::convStringMBToWC(wchar_t* dst, const char* src, std::uint32_t n_param,
                                   bool* errors)
 {

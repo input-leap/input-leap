@@ -19,6 +19,7 @@
 #include "arch/Arch.h"
 #include "base/Unicode.h"
 
+#include <climits>
 #include <cstring>
 
 //
@@ -221,24 +222,53 @@ Unicode::UTF8ToUTF32(const std::string& src, bool* errors)
     return dst;
 }
 
+static std::string convert_wide_to_current_mb(const wchar_t* src, std::uint32_t n, bool& errors)
+{
+    ptrdiff_t len = 0;
+    std::mbstate_t state = { };
+
+    std::string result;
+    result.reserve(n);
+
+    char tmp_chars[MB_LEN_MAX];
+    for (const wchar_t* scan = src; n > 0; ++scan, --n) {
+        std::size_t mblen = std::wcrtomb(tmp_chars, *scan, &state);
+        if (mblen == static_cast<std::size_t>(-1)) {
+            errors = true;
+            result.push_back('?');
+        } else {
+            for (std::size_t i = 0; i < mblen; ++i) {
+                result.push_back(tmp_chars[i]);
+            }
+        }
+    }
+    std::size_t mblen = std::wcrtomb(tmp_chars, L'\0', &state);
+    if (mblen != static_cast<std::size_t>(-1)) {
+        // don't include nul terminator
+        for (std::size_t i = 0; i < mblen - 1; ++i) {
+            result.push_back(tmp_chars[i]);
+        }
+    }
+    return result;
+}
+
 std::string
 Unicode::UTF8ToText(const std::string& src, bool* errors)
 {
-    // default to success
-    resetError(errors);
+    bool dummy_errors;
+    if (errors == nullptr) {
+        errors = &dummy_errors;
+    }
+    *errors = false;
 
     // convert to wide char
     std::uint32_t size;
     wchar_t* tmp = UTF8ToWideChar(src, size, errors);
 
     // convert string to multibyte
-    int len   = ARCH->convStringWCToMB(NULL, tmp, size, errors);
-    char* mbs = new char[len + 1];
-    ARCH->convStringWCToMB(mbs, tmp, size, errors);
-    std::string text(mbs, len);
+    auto text = convert_wide_to_current_mb(tmp, size, *errors);
 
     // clean up
-    delete[] mbs;
     delete[] tmp;
 
     return text;

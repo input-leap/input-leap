@@ -1,17 +1,20 @@
-#define MyAppName "Barrier"
+#define MyAppName "Input Leap"
 #define MyAppVersion "@INPUTLEAP_VERSION_MAJOR@.@INPUTLEAP_VERSION_MINOR@.@INPUTLEAP_VERSION_PATCH@.@INPUTLEAP_BUILD_NUMBER@"
 #define MyAppTextVersion "@INPUTLEAP_VERSION@"
-#define MyAppPublisher "Debauchee Open Source Group"
-#define MyAppURL "https://github.com/debauchee/barrier/wiki"
-#define MyAppCopyright "Copyright (C) 2018 Debauchee Open Source Group"
+#define MyAppPublisher "The Input Leap Developers"
+#define MyAppURL "https://github.com/input-leap/input-leap"
+#define MyAppCopyright "Copyright (C) 2022 The Input Leap Developers"
 #define MyAppExeName "barrier.exe"
 #define MyAppServiceName "Barrier"
 #define MyAppServiceExe "barrierd.exe"
 #define MyAppServiceDesc "Manages the Barrier background processes."
 #define MyAppListenerDesc "Barrier Listener"
 
+#define public Dependency_NoExampleSetup
+#include "scripts\CodeDependencies.iss"
+
 [Setup]
-AppId={{41036EA6-3F7A-4803-8AE0-469E5E91EFCC}
+AppId={{41086EA6-3F7A-4803-8AE0-469E5E91EFCC}
 AppName={#MyAppName}
 AppVersion={#MyAppTextVersion}
 AppVerName={#MyAppName} {#MyAppTextVersion}
@@ -19,7 +22,7 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={pf}\{#MyAppName}
+DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
 LicenseFile=@CMAKE_CURRENT_SOURCE_DIR@/res/License.rtf
 OutputDir=@CMAKE_RUNTIME_OUTPUT_DIRECTORY@/../installer-inno/bin
@@ -71,20 +74,10 @@ Filename: {sys}\netsh.exe; Parameters: "advfirewall firewall delete rule name=""
 [CustomMessages]
 DependenciesDir="redist"
 
-; shared code for installing the products
-#include "scripts\products.iss"
-#include "scripts\products\stringversion.iss"
-#include "scripts\products\winversion.iss"
-#include "scripts\products\msiproduct.iss"
-#include "scripts\products\vcredist2017.iss"
-
 [Code]
-function InitializeSetup(): boolean;
+function InitializeSetup: boolean;
 begin
-	// initialize windows version
-	initwinversion();
-
-	vcredist2017('14'); // min allowed version is 14.0
+	Dependency_AddVC2015To2022;
 
 	Result := true;
 end;

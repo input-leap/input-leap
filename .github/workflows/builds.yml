@@ -1,0 +1,129 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Set the build type here
+env:
+  CI_ENV_BUILD_TYPE: Release
+  B_BUILD_TYPE: Release
+  INPUTLEAP_VERSION_STAGE: Release
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  linux-build:
+    # The type of runner that the job will run on
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, ubuntu-20.04]
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Runs a set of commands using the runners shell
+      - name: Update image and install pre-reqs
+        run: |
+          sudo apt-get update -y
+          sudo apt-get dist-upgrade -y
+          sudo apt-get install -y libxtst-dev qtdeclarative5-dev libavahi-compat-libdnssd-dev libcurl4-openssl-dev cmake ninja-build
+
+      - name: Run the build
+        run: ./clean_build.sh
+
+  mac-build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-11, macos-10.15]
+
+    env:
+      VERBOSE: 1
+      TERM: xterm-256color
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Runs a set of commands using the runners shell
+      - name: Setup the image
+        run: |
+          brew update
+          brew install qt5
+      - name: Run the build
+        run: ./clean_build.sh
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Publish the DMG for ${{ matrix.os }}
+          path: ./build/bundle/*.dmg
+        if: ${{ env.B_BUILD_TYPE == 'Release' }}
+
+  win-build-2019:
+    runs-on: windows-2019
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+          architecture: 'x64'
+      - name: Download Bonjour SDK-like
+        run: ./.github/workflows/download_install_bonjour_sdk_like.ps1
+      - name: Installing QT
+        run: ./.github/workflows/download_install_qt.ps1
+      - name: Get build env
+        run: Copy-Item azure-pipelines\build_env_tmpl.bat build_env.bat
+      - name: Build
+        run: call "%ProgramFiles(x86)%\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=amd64 && clean_build.bat
+        shell: cmd
+
+  win-build-2022:
+    runs-on: windows-2022
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+          architecture: 'x64'
+      - name: Download Bonjour SDK-like
+        run: ./.github/workflows/download_install_bonjour_sdk_like.ps1
+      - name: Installing QT
+        run: ./.github/workflows/download_install_qt.ps1
+      - name: Get build env
+        run: Copy-Item azure-pipelines\build_env_tmpl.bat build_env.bat
+      - name: Build
+        run: call "%ProgramFiles%\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=amd64 && clean_build.bat
+        shell: cmd
+      - uses: papeloto/action-zip@v1
+        with:
+          files: build\bin\${{ env.CI_ENV_BUILD_TYPE }}
+          dest: ${{ env.CI_ENV_BUILD_TYPE }}.zip
+        name: Archive Completed Build Directory
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Windows ${{ env.CI_ENV_BUILD_TYPE }}
+          path: ${{ env.CI_ENV_BUILD_TYPE }}.zip
+      - name: Build the Installer
+        run: .\build_installer.bat
+        if: ${{ env.CI_ENV_BUILD_TYPE == 'Release' }}
+        shell: cmd
+      - uses: actions/upload-artifact@v3
+        if: ${{ env.CI_ENV_BUILD_TYPE == 'Release' }}
+        with:
+          name: Publish the Installer
+          path: .\build\installer-inno\bin

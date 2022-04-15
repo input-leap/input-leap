@@ -18,7 +18,6 @@
 #pragma once
 
 #include "server/ClientProxy1_4.h"
-#include "base/Stopwatch.h"
 #include "common/stdvector.h"
 
 class Server;

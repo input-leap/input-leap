@@ -17,6 +17,7 @@
 
 #include "Time.h"
 #include "arch/Arch.h"
+#include <chrono>
 #include <thread>
 
 namespace inputleap {
@@ -30,6 +31,13 @@ void this_thread_sleep(double timeout_seconds)
 
     auto milliseconds = static_cast<std::uint64_t>(timeout_seconds * 1000);
     std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
+}
+
+double current_time_seconds()
+{
+    auto since_epoch = std::chrono::steady_clock::now().time_since_epoch();
+    auto us_since_epoch = std::chrono::duration_cast<std::chrono::microseconds>(since_epoch).count();
+    return us_since_epoch / 1000000.0;
 }
 
 } // namespace inputleap

@@ -29,6 +29,14 @@ Blocks the calling thread for \c timeout seconds.  If
 */
 void this_thread_sleep(double timeout);
 
+
+//! Get the current time
+/*!
+Returns the number of seconds since some arbitrary starting time.
+This should return as high a precision as reasonable.
+*/
+double current_time_seconds();
+
 } // namespace inputleap
 
 #endif // INPUTLEAP_LIB_NET_SECUREUTILS_H

@@ -80,10 +80,10 @@ main(int argc, char **argv)
 void
 lock(string lockFile)
 {
-    double start = ARCH->time();
+    double start = inputleap::current_time_seconds();
 
     // keep checking until timeout is reached.
-    while ((ARCH->time() - start) < LOCK_TIMEOUT) {
+    while ((inputleap::current_time_seconds() - start) < LOCK_TIMEOUT) {
 
         ifstream is(lockFile.c_str());
         bool noLock = !is;

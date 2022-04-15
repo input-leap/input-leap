@@ -17,7 +17,7 @@
  */
 
 #include "base/Stopwatch.h"
-#include "arch/Arch.h"
+#include "base/Time.h"
 
 //
 // Stopwatch
@@ -29,7 +29,7 @@ Stopwatch::Stopwatch(bool triggered) :
     m_stopped(triggered)
 {
     if (!triggered) {
-        m_mark = ARCH->time();
+        m_mark = inputleap::current_time_seconds();
     }
 }
 
@@ -47,7 +47,7 @@ Stopwatch::reset()
         return dt;
     }
     else {
-        const double t    = ARCH->time();
+        const double t = inputleap::current_time_seconds();
         const double dt = t - m_mark;
         m_mark = t;
         return dt;
@@ -62,7 +62,7 @@ Stopwatch::stop()
     }
 
     // save the elapsed time
-    m_mark      = ARCH->time() - m_mark;
+    m_mark = inputleap::current_time_seconds() - m_mark;
     m_stopped = true;
 }
 
@@ -75,7 +75,7 @@ Stopwatch::start()
     }
 
     // set the mark such that it reports the time elapsed at stop()
-    m_mark      = ARCH->time() - m_mark;
+    m_mark = inputleap::current_time_seconds() - m_mark;
     m_stopped = false;
 }
 
@@ -98,7 +98,7 @@ Stopwatch::getTime()
         return m_mark;
     }
     else {
-        return ARCH->time() - m_mark;
+        return inputleap::current_time_seconds() - m_mark;
     }
 }
 
@@ -120,7 +120,7 @@ Stopwatch::getTime() const
         return m_mark;
     }
     else {
-        return ARCH->time() - m_mark;
+        return inputleap::current_time_seconds() - m_mark;
     }
 }
 

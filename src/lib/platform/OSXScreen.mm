@@ -513,14 +513,14 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
     // This will allow for higher than triple click but the quartz documentation
     // does not specify that this should be limited to triple click
     if (press) {
-        if ((ARCH->time() - m_lastClickTime) <= clickTime && diff <= maxDiff) {
+        if ((inputleap::current_time_seconds() - m_lastClickTime) <= clickTime && diff <= maxDiff) {
             m_clickState++;
         }
         else {
             m_clickState = 1;
         }
 
-        m_lastClickTime = ARCH->time();
+        m_lastClickTime = inputleap::current_time_seconds();
     }
 
     if (m_clickState == 1) {
@@ -563,9 +563,9 @@ void OSXScreen::get_drop_target_thread()
 	char* cstr = NULL;
 
 	// wait for 5 secs for the drop destinaiton string to be filled.
-	std::uint32_t timeout = ARCH->time() + 5;
+    std::uint32_t timeout = inputleap::current_time_seconds() + 5;
 
-	while (ARCH->time() < timeout) {
+    while (inputleap::current_time_seconds() < timeout) {
 		CFStringRef cfstr = getCocoaDropTarget();
 		cstr = CFStringRefToUTF8String(cfstr);
 		CFRelease(cfstr);

@@ -25,7 +25,6 @@
 #include "base/IEventQueue.h"
 #include "base/EventTypes.h"
 #include "base/Log.h"
-#include "base/Stopwatch.h"
 #include "base/String.h"
 
 #include <fstream>

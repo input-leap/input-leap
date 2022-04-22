@@ -31,7 +31,7 @@ m_Enabled(false)
 {
     m_Socket = new QTcpSocket(this);
     connect(m_Socket, SIGNAL(connected()), this, SLOT(connected()));
-    connect(m_Socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
+    connect(m_Socket, SIGNAL(errorOccurred(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
 
     m_Reader = new IpcReader(m_Socket);
     connect(m_Reader, SIGNAL(readLogLine(const QString&)), this, SLOT(handleReadLogLine(const QString&)));

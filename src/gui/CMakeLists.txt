@@ -1,6 +1,11 @@
 cmake_minimum_required (VERSION 3.4)
 
-find_package (Qt5 REQUIRED COMPONENTS Core Widgets Network LinguistTools)
+find_package (QT NAMES Qt6 Qt5 REQUIRED)
+find_package (Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets Network LinguistTools REQUIRED)
+# If Qt6 is in use, also link to Core5Compat
+if (Qt6_FOUND)
+    find_package (Qt6 REQUIRED COMPONENTS Core5Compat)
+endif()
 
 set (CMAKE_AUTOMOC ON)
 set (CMAKE_AUTORCC ON)
@@ -167,7 +172,11 @@ set(TS_FILES
 )
 
 set_source_files_properties(${TS_FILES} PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/res/lang")
-qt5_add_translation(QM_FILES ${TS_FILES} OPTIONS -silent)
+if (Qt5_FOUND)
+    qt5_add_translation(QM_FILES ${TS_FILES} OPTIONS -silent)
+else()
+    qt_add_translation(QM_FILES ${TS_FILES} OPTIONS -silent)
+endif()
 
 # The following file includes X11 headers that later break Qt headers.
 set_source_files_properties("src/DisplayIsValid.cpp" PROPERTIES SKIP_UNITY_BUILD_INCLUSION TRUE)
@@ -189,7 +198,7 @@ add_executable (input-leap WIN32
 
 include_directories (./src)
 
-target_link_libraries(input-leap net arch base io Qt5::Core Qt5::Widgets Qt5::Network ${OPENSSL_LIBS})
+target_link_libraries(input-leap net arch base io Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network ${OPENSSL_LIBS})
 target_compile_definitions (input-leap PRIVATE -DINPUTLEAP_VERSION_STAGE="${INPUTLEAP_VERSION_STAGE}")
 target_compile_definitions (input-leap PRIVATE -DINPUTLEAP_REVISION="${INPUTLEAP_REVISION}")
 
@@ -235,5 +244,5 @@ if(INPUTLEAP_BUILD_TESTS)
              WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
     target_include_directories(guiunittests PUBLIC ../../ext)
-    target_link_libraries(guiunittests gtest gmock Qt5::Core Qt5::Widgets Qt5::Network ${libs})
+    target_link_libraries(guiunittests gtest gmock Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network ${libs})
 endif()

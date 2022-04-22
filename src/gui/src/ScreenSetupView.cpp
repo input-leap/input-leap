@@ -216,6 +216,7 @@ void ScreenSetupView::startDrag(Qt::DropActions)
     }
 }
 
+/*
 QStyleOptionViewItem ScreenSetupView::viewOptions() const
 {
     QStyleOptionViewItem option = QTableView::viewOptions();
@@ -224,4 +225,4 @@ QStyleOptionViewItem ScreenSetupView::viewOptions() const
     option.displayAlignment = Qt::AlignCenter;
     option.textElideMode = Qt::ElideMiddle;
     return option;
-}
+} */

@@ -38,7 +38,7 @@ AboutDialog::AboutDialog(QWidget* parent, const QString& barrierApp) :
 
 	QString buildDateString = QString::fromLocal8Bit(__DATE__).simplified();
 	QDate buildDate = QLocale("en_US").toDate(buildDateString, "MMM d yyyy");
-	m_pLabelBuildDate->setText(buildDate.toString(Qt::SystemLocaleLongDate));
+	m_pLabelBuildDate->setText(QLocale::system().toString(buildDate, QLocale::LongFormat));
 
 	// change default size based on os
 #if defined(Q_OS_MAC)

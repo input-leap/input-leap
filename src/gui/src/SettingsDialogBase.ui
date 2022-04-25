@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>368</width>
-    <height>428</height>
+    <height>527</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -128,8 +128,21 @@
       </item>
       <item row="5" column="0">
        <widget class="QCheckBox" name="m_pCheckBoxAutoStart">
+        <property name="whatsThis">
+         <string>Run barrier to connect/serve when application starts.</string>
+        </property>
         <property name="text">
          <string>Start &amp;Barrier on startup</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QCheckBox" name="m_pCheckBoxStartWithComputer">
+        <property name="whatsThis">
+         <string>Launch application when computer starts.</string>
+        </property>
+        <property name="text">
+         <string>Run when computer starts</string>
         </property>
        </widget>
       </item>

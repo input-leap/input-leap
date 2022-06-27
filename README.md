@@ -1,99 +1,119 @@
-# Barrier
+# Input Leap
 
-Eliminate the barrier between your machines.
-Find [releases for windows and macOS here](https://github.com/debauchee/barrier/releases).
-Your distro probably already has barrier packaged for it, see [distro specific packages](#distro-specific-packages)
-below for a list. Alternatively, we also provide a [flatpak](https://github.com/flathub/com.github.debauchee.barrier)
-and a [snap](https://snapcraft.io/barrier).
+<!-- add CI badges, flatpak, snap, use github actions badges or Azure? Decide on
+*one* -->
 
 ### Contact info:
 
-- `#barrier` on LiberaChat IRC network
-
-#### CI Build Status
-
-Master branch overall build status: [![Build Status](https://dev.azure.com/debauchee/Barrier/_apis/build/status/debauchee.barrier?branchName=master)](https://dev.azure.com/debauchee/Barrier/_build/latest?definitionId=1&branchName=master)
-
-|Platform       |Build Status|
-|            --:|:--         |
-|Linux          |[![Build Status](https://dev.azure.com/debauchee/Barrier/_apis/build/status/debauchee.barrier?branchName=master&jobName=Linux%20Build)](https://dev.azure.com/debauchee/Barrier/_build/latest?definitionId=1&branchName=master)|
-|Mac            |[![Build Status](https://dev.azure.com/debauchee/Barrier/_apis/build/status/debauchee.barrier?branchName=master&jobName=Mac%20Build)](https://dev.azure.com/debauchee/Barrier/_build/latest?definitionId=1&branchName=master)|
-|Windows Debug  |[![Build Status](https://dev.azure.com/debauchee/Barrier/_apis/build/status/debauchee.barrier?branchName=master&jobName=Windows%20Build&configuration=Windows%20Build%20Debug)](https://dev.azure.com/debauchee/Barrier/_build/latest?definitionId=1&branchName=master)|
-|Windows Release|[![Build Status](https://dev.azure.com/debauchee/Barrier/_apis/build/status/debauchee.barrier?branchName=master&jobName=Windows%20Build&configuration=Windows%20Build%20Release%20with%20Release%20Installer)](https://dev.azure.com/debauchee/Barrier/_build/latest?definitionId=1&branchName=master)|
-|Snap           |[![Snap Status](https://build.snapcraft.io/badge/debauchee/barrier.svg)](https://build.snapcraft.io/user/debauchee/barrier)|
-
-Our CI Builds are provided by Microsoft Azure Pipelines, Flathub, and Canonical.
+- `#inputleap` on LiberaChat IRC network, for support with Input Leap.
+- `#inputleap-dev` on LiberaChat IRC network, for discussing development of Input Leap.
 
 ### What is it?
 
-Barrier is software that mimics the functionality of a KVM switch, which historically would allow you to use a single keyboard and mouse to control multiple computers by physically turning a dial on the box to switch the machine you're controlling at any given moment. Barrier does this in software, allowing you to tell it which machine to control by moving your mouse to the edge of the screen, or by using a keypress to switch focus to a different system.
+Input Leap is software that mimics the functionality of a KVM switch, which
+historically would allow you to use a single keyboard and mouse to control
+multiple computers by physically turning a dial on the box to switch the machine
+you're controlling at any given moment. Input Leap does this in software, allowing
+you to tell it which machine to control by moving your mouse to the edge of the
+screen, or by using a keypress to switch focus to a different system.
 
-Barrier was forked from Symless's Synergy 1.9 codebase. Synergy was a commercialized reimplementation of the original CosmoSynergy written by Chris Schoeneman.
+<!-- add info about fork from barrier
+Input Leap was forked from Symless's Synergy 1.9 codebase. Synergy was a
+commercialized reimplementation of the original CosmoSynergy written by Chris
+Schoeneman.  -->
 
-At the moment, barrier is not compatible with synergy. Barrier needs to be installed on all machines that will share keyboard and mouse.
+At the moment, Input Leap is not compatible with Synergy.
+
+Input Leap needs to be installed on all machines that will share keyboard and
+mouse.
 
 ### What's different?
 
-Whereas Synergy has moved beyond its goals from the 1.x era, Barrier aims to maintain that simplicity.
-Barrier will let you use your keyboard and mouse from one computer to control one or more other computers.
+Whereas Synergy has moved beyond its goals from the 1.x era, Input Leap aims to
+maintain that simplicity. Input Leap will let you use your keyboard and mouse
+from one computer to control one or more other computers.
+
 Clipboard sharing is supported.
+
 That's it.
 
 ### Project goals
 
-Hassle-free reliability. We are users, too. Barrier was created so that we could solve the issues we had with synergy and then share these fixes with other users.
+Hassle-free reliability. We are users, too. Input Leap was created so that we could
+solve the issues we had with synergy and then share these fixes with other
+users.
 
-Compatibility. We use more than one operating system and you probably do, too. Windows, OSX, Linux, FreeBSD... Barrier should "just work". We will also have our eye on Wayland when the time comes.
+Compatibility. We use more than one operating system and you probably do, too.
+Windows, OSX, Linux, FreeBSD... Input Leap should "just work". We will also have
+our eye on Wayland when the time comes.
 
-Communication. Everything we do is in the open. Our issue tracker will let you see if others are having the same problem you're having and will allow you to add additional information. You will also be able to see when progress is made and how the issue gets resolved.
+Communication. Everything we do is in the open. Our issue tracker will let you
+see if others are having the same problem you're having and will allow you to
+add additional information. You will also be able to see when progress is made
+and how the issue gets resolved.
 
 ### Usage
 
-Install and run barrier on each machine that will be sharing.
-On the machine with the keyboard and mouse, make it the server.
+1. Install and run Input Leap on each machine that will be sharing.
+2. On the machine with the keyboard and mouse, make it the server.
+3. Click the "Configure server" button and drag a new screen onto the grid for
+    each client machine.
+4. Ensure the "screen name" matches exactly (case-sensitive) for each configured
+    screen -- the clients' Input Leap windows will tell you their screen names
+    (just above the server IP).
+5. On the client(s), put in the server machine's IP address (or use Bonjour/auto
+    configuration when prompted) and "start" them.
 
-Click the "Configure server" button and drag a new screen onto the grid for each client machine.
-Ensure the "screen name" matches exactly (case-sensitive) for each configured screen -- the clients' barrier windows will tell you their screen names (just above the server IP).
+You should see `Input Leap is running` on both server and clients.
 
-On the client(s), put in the server machine's IP address (or use Bonjour/auto configuration when prompted) and "start" them.
-You should see `Barrier is running` on both server and clients.
-You should now be able to move the mouse between all the screens as if they were the same machine.
+You should now be able to move the mouse between all the screens as if they were
+the same machine.
 
-Note that if the keyboard's Scroll Lock is active then this will prevent the mouse from switching screens.
+Note that if the keyboard's Scroll Lock is active then this will prevent the
+mouse from switching screens.
 
 ### Contact & support
 
-Please be aware that the *only* way to draw our attention to a bug is to create a new issue in [the issue tracker](https://github.com/debauchee/barrier/issues). Write a clear, concise, detailed report and you will get a clear, concise, detailed response. Priority is always given to issues that affect a wider range of users.
+Please be aware that the *only* way to draw our attention to a bug is to create
+a new issue in [the issue tracker](https://github.com/input-leap/input-leap/issues).
 
-For short and simple questions or to just say hello find us on the LiberaChat IRC network in the #barrier channel.
+Always follow the template, it's there for a reason. Failure to do so will
+inevitably result in a delay in the issue being fixed!
+
+Please also see the IRC channels at the top of the README for other methods of
+support.
 
 ### Contributions
 
-At this time we are looking for developers to help fix the issues found in the issue tracker.
-Submit pull requests once you've polished up your patch and we'll review and possibly merge it.
+At this time we are looking for developers to help fix the issues found in the
+issue tracker.
+
+Submit pull requests once you've polished up your patch and we'll review and
+possibly merge it.
 
 Most pull requests will need to include a release note.
-See docs/newsfragments/README.md for documentation of how to do that.
+
+See `docs/newsfragments/README.md` for documentation of how to do that.
 
 ## Distro specific packages
 
 While not a comprehensive list, repology provides a decent list of distro
 specific packages.
 
-[![Packaging status](https://repology.org/badge/vertical-allrepos/barrier.svg)](https://repology.org/project/barrier/versions)
+[![Packaging status](https://repology.org/badge/vertical-allrepos/input-leap.svg)](https://repology.org/project/input-leap/versions)
 
 ## FAQ - Frequently Asked Questions
 
 **Q: Does drag and drop work on linux?**
 
-> A: No *(see [#855](https://github.com/debauchee/barrier/issues/855) if you'd like to change that)*
+> A: No *(see [#855](https://github.com/input-leap/input-leap/issues/855) if you'd like to change that)*
 
 
 **Q: What OSes are supported?**
 
-> A: The [most recent release](https://github.com/debauchee/barrier/releases/latest) of Barrier is known to work on:
+> A: The [most recent release](https://github.com/input-leap/input-leap/releases/latest) of Input Leap is known to work on:
 >  - Windows 7, 8, 8.1, 10, and 11
->  - macOS *(previously known as OS X or Mac OS X)*  
+>  - macOS *(previously known as OS X or Mac OS X)*
 >    - _The current GUI does **not** work on OS versions prior to macOS 10.12 Sierra (but see the related answer below)_
 >  - Linux
 >  - FreeBSD
@@ -102,21 +122,21 @@ specific packages.
 
 **Q: Are 32-bit versions of Windows supported?**
 
-> A: No
+> A: Not officially.
 
 
-__Q: Is it possible to use Barrier on Mac OS X / OS X versions prior to 10.12?__
+__Q: Is it possible to use Input Leap on Mac OS X / OS X versions prior to 10.12?__
 
 > A: Not officially.
 >   - For OS X 10.10 Yosemite and later:
->     - [Barrier v2.1.0](https://github.com/debauchee/barrier/releases/tag/v2.1.0) or earlier _may_ work.
+>     - [Input Leap v2.1.0](https://github.com/input-leap/input-leap/releases/tag/v2.1.0) or earlier _may_ work.
 >   - For Mac OS X 10.9 Mavericks _(and perhaps earlier)_:
->     1. the command-line portions of the [current release](https://github.com/debauchee/barrier/releases/latest) _should_ run fine.
+>     1. the command-line portions of the [current release](https://github.com/input-leap/input-leap/releases/latest) _should_ run fine.
 >     2. The GUI will _not_ run, as that OS version does not include Apple's *Metal* framework.
->         - _(For a GUI workaround for Mac OS X 10.9, see the [discussion at issue #544](https://github.com/debauchee/barrier/issues/544))_
+>         - _(For a GUI workaround for Mac OS X 10.9, see the [discussion at issue #544](https://github.com/input-leap/input-leap/issues/544))_
 
-> Note: Only versions [v2.3.4](https://github.com/debauchee/barrier/releases/tag/v2.3.4) and [later](https://github.com/debauchee/barrier/releases/latest) of Barrier can be supported by this project.
->  - Anyone using an earlier version is advised to upgrade due to recently-addressed security vulnerabilities *(and other bug fixes)*. 
+> Note: Only versions [v2.3.4](https://github.com/input-leap/input-leap/releases/tag/v2.3.4) and [later](https://github.com/input-leap/input-leap/releases/latest) of Input Leap can be supported by this project.
+>  - Anyone using an earlier version is advised to upgrade due to recently-addressed security vulnerabilities *(and other bug fixes)*.
 >    - This is especially important for computers accessible from the public Internet *(or from other shared/untrusted networks, such as when using shared WiFi)*.
 
 
@@ -128,7 +148,7 @@ __Q: Is it possible to use Barrier on Mac OS X / OS X versions prior to 10.12?__
 **Q: After loading my configuration on the client the field 'Server IP' is still empty!**
 
 > A: Edit your configuration to include the server's ip address manually with
-> 
+>
 >```
 >(...)
 >
@@ -136,13 +156,13 @@ __Q: Is it possible to use Barrier on Mac OS X / OS X versions prior to 10.12?__
 >    serverhostname=<AAA.BBB.CCC.DDD>
 >```
 
-**Q: Are there any other significant limitations with the current version of Barrier?**
+**Q: Are there any other significant limitations with the current version of Input Leap?**
 
 > A: Currently:
->    - Barrier currently has limited UTF-8 support; issues have been reported with processing various languages.
->      - *(see [#860](https://github.com/debauchee/barrier/issues/860))*
+>    - Input Leap currently has limited UTF-8 support; issues have been reported with processing various languages.
+>      - *(see [#860](https://github.com/input-leap/input-leap/issues/860))*
 >    - There is interest in future support for the Wayland compositor/display server protocol *([official site](https://wayland.freedesktop.org/) | [Wikipedia article](https://en.wikipedia.org/wiki/Wayland_(display_server_protocol)))* on Linux.
->      - As of late 2021, there is no expected completion date for *Wayland* support.
->      - *(see [#109](https://github.com/debauchee/barrier/issues/109) and [#1251](https://github.com/debauchee/barrier/issues/1251) for status or to volunteer your talents)*
+>      - As of mid-2022, there is no expected completion date for *Wayland* support.
+>      - *(see [#109](https://github.com/input-leap/input-leap/issues/109) and [#1251](https://github.com/input-leap/input-leap/issues/1251) for status or to volunteer your talents)*
 >
-> The complete list of open issues can be found in the ['Issues' tab on GitHub](https://github.com/debauchee/barrier/issues?q=is%3Aissue+is%3Aopen). Help is always appreciated.
+> The complete list of open issues can be found in the ['Issues' tab on GitHub](https://github.com/input-leap/input-leap/issues?q=is%3Aissue+is%3Aopen). Help is always appreciated.

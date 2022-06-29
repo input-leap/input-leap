@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2018 Ding-Yi Chen <dchen@redhat.com> -->
+<component type="desktop-application">
+  <id></id>
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>GPLv2</project_license>
+  <name>barrier</name>
+  <summary>Share mouse and keyboard between multiple computers over the network</summary>
+
+  <description>
+    <p>
+      Barrier allows you to share one mouse and keyboard between multiple computers.
+      Work seamlessly across Windows, macOS and Linux.
+    </p>
+  </description>
+
+  <launchable type="desktop-id">barrier.desktop</launchable>
+
+  <url type="homepage">https://github.com/input-leap/input-leap</url>
+
+  <provides>
+    <binary>barrier</binary>
+    <binary>barrierc</binary>
+    <binary>barriers</binary>
+  </provides>
+
+  <releases>
+    <release version="${INPUTLEAP_VERSION}" date="${INPUTLEAP_BUILD_DATE_ISO}" />
+  </releases>
+</component>
+

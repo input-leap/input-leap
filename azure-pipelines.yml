@@ -14,12 +14,9 @@ jobs:
 #        windows-2022-Release:
 #            imageName: "windows-2022"
 #            CI_ENV_BUILD_TYPE: Release
-#        windows-2019-Release:
-#            imageName: "windows-2019"
-#            CI_ENV_BUILD_TYPE: Release
-        windows-2016-Release:
+        windows-2019-Release:
+            imageName: "windows-2019"
             CI_ENV_BUILD_TYPE: Release
-            imageName: "vs2017-win2016"
   pool:
     vmImage: $(imageName)
   steps:
@@ -41,7 +38,7 @@ jobs:
     - powershell: Copy-Item azure-pipelines\build_env_tmpl.bat build_env.bat
       displayName: Layering Azure Pipeline's build_env.bat
     - script: |
-          call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Enterprise\\Common7\\Tools\\vsdevcmd" -arch=x64 && clean_build.bat
+          call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise\\Common7\\Tools\\vsdevcmd" -arch=x64 && clean_build.bat
       displayName: Clean Build
     - task: ArchiveFiles@2
       displayName: Archive Completed Build Directory

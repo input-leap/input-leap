@@ -24,21 +24,28 @@ jobs:
   # This workflow contains a single job called "build"
   linux-build:
     # The type of runner that the job will run on
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
+    container: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-18.04, ubuntu-20.04]
+        os: ["ubuntu:18.04", "ubuntu:20.04"]
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
 
-      # Runs a set of commands using the runners shell
       - name: Update image and install pre-reqs
         run: |
-          sudo apt-get update -y
-          sudo apt-get dist-upgrade -y
-          sudo apt-get install -y libxtst-dev qtdeclarative5-dev libavahi-compat-libdnssd-dev libcurl4-openssl-dev cmake ninja-build
+          apt-get update -y
+          # needed for add-apt-repository
+          apt-get install -y software-properties-common
+          # actions/checkout@v3 wants newer git than what's in default repositories
+          add-apt-repository ppa:git-core/ppa
+          apt-get update -y
+          apt-get dist-upgrade -y
+          apt-get install -y git g++ libxtst-dev qtdeclarative5-dev libavahi-compat-libdnssd-dev libcurl4-openssl-dev libssl-dev cmake ninja-build
+
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       - name: Run the build
         run: ./clean_build.sh

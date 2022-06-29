@@ -17,6 +17,13 @@ else
     fi
 fi
 
+CMAKE_VERSION="$("$B_CMAKE" --version)"
+if [ "$(printf '%s\n' "3.12.0" "$currentver" | sort -V | head -n1)" = "3.12.0" ]; then
+    CMAKE_HAS_PARALLEL=1
+else
+    CMAKE_HAS_PARALLEL=0
+fi
+
 B_BUILD_TYPE="${B_BUILD_TYPE:-Debug}"
 B_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=${B_BUILD_TYPE} ${B_CMAKE_FLAGS:-}"
 
@@ -42,5 +49,15 @@ mkdir build || exit 1
 cd build || exit 1
 echo "Starting Input Leap $B_BUILD_TYPE build..."
 "$B_CMAKE" $B_CMAKE_FLAGS .. || exit 1
-"$B_CMAKE" --build . --parallel || exit 1
+
+if [ "$CMAKE_HAS_PARALLEL" -eq "1" ]; then
+    "$B_CMAKE" --build . --parallel || exit 1
+else
+    if command -v ninja 2>/dev/null; then
+        ninja || exit 1
+    else
+        make || exit 1
+    fi
+fi
+
 echo "Build completed successfully"

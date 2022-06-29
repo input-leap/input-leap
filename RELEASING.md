@@ -1,7 +1,7 @@
 Creating a release
 ==================
 
-This document is documentation intednded for maintainers of Barrier.
+This document is documentation intended for maintainers of Barrier.
 It documents the release process of Barrier.
 
 Step 1: Setup environment variables

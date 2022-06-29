@@ -443,6 +443,8 @@ endif()
 # Linux installation
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    install(FILES doc/barrierc.1 doc/barriers.1 DESTINATION share/man/man1)
+
     configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/rpm ${CMAKE_BINARY_DIR}/rpm)
     install(FILES res/barrier.svg DESTINATION share/icons/hicolor/scalable/apps)
     if("${VERSION_MAJOR}" STREQUAL "2")

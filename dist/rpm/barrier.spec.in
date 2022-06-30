@@ -1,11 +1,12 @@
 %global package_version @INPUTLEAP_VERSION_MAJOR@.@INPUTLEAP_VERSION_MINOR@.@INPUTLEAP_VERSION_PATCH@
 %global tarname InputLeap-%{version}-Source
-
 %global barrier_revision @INPUTLEAP_REVISION@
+%global timestamp @INPUTLEAP_BUILD_DATE@@INPUTLEAP_BUILD_TIME@
+
 Summary: Keyboard and mouse sharing solution
 Name: input-leap
 Version: %{package_version}
-Release: @INPUTLEAP_BUILD_NUMBER@%{?dist}
+Release: %{timestamp}.git%{barrier_revision}%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 URL: https://github.com/input-leap/input-leap

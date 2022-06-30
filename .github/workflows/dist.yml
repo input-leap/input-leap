@@ -20,6 +20,8 @@ jobs:
           uses: actions/checkout@v3
           with:
             submodules: 'true'
+        - name: Work around git safe directory check
+          run: git config --global --add safe.directory $GITHUB_WORKSPACE
         - name: Install dependencies
           run: |
               grep -oP "^BuildRequires: \K.*" dist/rpm/barrier.spec.in | xargs dnf install -y
@@ -30,7 +32,21 @@ jobs:
               cmake ..
               make package_source
               popd
+        - name: create target directory
+          run: mkdir _rpms
         - name: build RPM package
           run: |
               pushd _build
-              rpmbuild -D="%_sourcedir $PWD" -bb rpm/*.spec
+              rpmbuild -D="%_sourcedir $PWD" -D="%_rpmdir ${PWD}/../_rpms" -bb rpm/*.spec
+              popd
+        - name:  build SRPM package
+          run: |
+              pushd _build
+              rpmbuild -D="%_sourcedir $PWD" -D="%_srcrpmdir ${PWD}/../_rpms" -bs rpm/*.spec
+              popd
+        - name: Archive RPM package
+          uses: actions/upload-artifact@v3
+          with:
+            name: input-leap-rpms
+            path: |
+                _rpms/**/*.rpm

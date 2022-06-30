@@ -1,0 +1,52 @@
+name: distribution builds
+
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  fedora:
+    runs-on: ubuntu-latest
+    container: fedora:36
+
+    steps:
+        - name: Install extra build dependencies
+          run: dnf install -y git rpm-build
+        # submodules require git to be installed
+        - name: Check out repository
+          uses: actions/checkout@v3
+          with:
+            submodules: 'true'
+        - name: Work around git safe directory check
+          run: git config --global --add safe.directory $GITHUB_WORKSPACE
+        - name: Install dependencies
+          run: |
+              grep -oP "^BuildRequires: \K.*" dist/rpm/barrier.spec.in | xargs dnf install -y
+        - name: prep tree
+          run: |
+              mkdir _build
+              pushd _build
+              cmake ..
+              make package_source
+              popd
+        - name: create target directory
+          run: mkdir _rpms
+        - name: build RPM package
+          run: |
+              pushd _build
+              rpmbuild -D="%_sourcedir $PWD" -D="%_rpmdir ${PWD}/../_rpms" -bb rpm/*.spec
+              popd
+        - name:  build SRPM package
+          run: |
+              pushd _build
+              rpmbuild -D="%_sourcedir $PWD" -D="%_srcrpmdir ${PWD}/../_rpms" -bs rpm/*.spec
+              popd
+        - name: Archive RPM package
+          uses: actions/upload-artifact@v3
+          with:
+            name: input-leap-rpms
+            path: |
+                _rpms/**/*.rpm

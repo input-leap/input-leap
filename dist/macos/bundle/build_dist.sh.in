@@ -35,8 +35,11 @@ info "Copying binaries into bundle"
 # Copy the folder instead of globbing unquoted path
 cp -r "$B_BINDIR" "$B_MACOS" || exit 1
 
+info "Checking if macdeployqt is in PATH"
+DEPLOYQT=$(which macdeployqt)
+
 # Check for macdeployqt on MacPorts
-if which -s port ; then
+if test -z "$DEPLOYQT" && which -s port ; then
     info "MacPorts found, searching for macdeployqt"
     DEPLOYQT="$(port contents qt5-qttools | grep --only --max-count 1 '/.*macdeployqt')"
     if [ ! -x "$DEPLOYQT" ]; then
@@ -46,7 +49,7 @@ if which -s port ; then
 fi
 
 # Check for macdeployqt on Homebrew
-if which -s brew ; then
+if test -z $DEPLOYQT && which -s brew ; then
     info "Homebrew found, searching for macdeployqt"
     DEPLOYQT="$(brew list qt@5 | grep --only '/.*macdeployqt' | head -1)"
     if [ ! -x "$DEPLOYQT" ]; then

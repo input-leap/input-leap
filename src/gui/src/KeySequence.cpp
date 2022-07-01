@@ -191,7 +191,7 @@ QString KeySequence::keyToString(int key)
         {
             case Qt::LeftButton: return "1";
             case Qt::RightButton: return "2";
-            case Qt::MidButton: return "3";
+            case Qt::MiddleButton: return "3";
         default:
             break;
         }

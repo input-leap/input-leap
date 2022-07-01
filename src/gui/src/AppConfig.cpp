@@ -22,6 +22,8 @@
 #include <QtCore>
 #include <QtNetwork>
 
+#include <fstream>
+
 #if defined(Q_OS_WIN)
 const char AppConfig::m_BarriersName[] = "barriers.exe";
 const char AppConfig::m_BarriercName[] = "barrierc.exe";
@@ -243,3 +245,44 @@ bool AppConfig::getAutoStart() { return m_AutoStart; }
 void AppConfig::setMinimizeToTray(bool b) { m_MinimizeToTray = b; }
 
 bool AppConfig::getMinimizeToTray() { return m_MinimizeToTray; }
+
+void AppConfig::setStartWithComputer(bool b)
+{
+    m_StartWithComputer = b;
+#ifdef __APPLE__
+    QString path = QString("%1/Library/LaunchAgents/com.barrier.plist").arg(QDir::homePath());
+    if (b) {
+        // Write an autostart plist file to user's ~/Library/LaunchAgents folder
+        std::ofstream plistfile(path.toStdString().c_str(), std::ofstream::out);
+
+        if (plistfile.is_open()) {
+            plistfile << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                         "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n"
+                         "<plist version=\"1.0\">"
+                         "<dict>\n"
+                         "    <key>Label</key>\n"
+                         "    <string>com.barrier</string>\n"
+                         "    <key>Program</key>\n"
+                         "    <string>/Applications/Barrier.app/Contents/MacOS/barrier</string>\n"
+                         "    <key>ProgramArguments</key>\n"
+                         "    <array>\n"
+                         "        <string>/Applications/Barrier.app/Contents/MacOS/barrier</string>\n"
+                         "    </array>\n"
+                         "    <key>RunAtLoad</key>\n"
+                         "    <true/>\n"
+                         "    <key>ThrottleInterval</key>\n"
+                         "    <integer>60</integer>\n"
+                         "</dict>\n"
+                         "</plist>";
+        }
+    } else {
+        // Set to not auto start for this user, delete the plist file
+        remove(path.toStdString().c_str());
+    }
+#endif
+}
+
+bool AppConfig::getStartWithComputer()
+{
+    return m_StartWithComputer;
+}

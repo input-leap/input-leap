@@ -45,7 +45,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QDesktopServices>
-#include <QDesktopWidget>
+#include <QRegularExpression>
 
 #if defined(Q_OS_MAC)
 #include <ApplicationServices/ApplicationServices.h>
@@ -354,7 +354,7 @@ void MainWindow::logOutput()
     if (m_pBarrier)
     {
         QString text(m_pBarrier->readAllStandardOutput());
-        for (QString line : text.split(QRegExp("\r|\n|\r\n"))) {
+        for (QString line : text.split(QRegularExpression("\r|\n|\r\n"))) {
             if (!line.isEmpty())
             {
                 appendLogRaw(line);
@@ -391,7 +391,7 @@ void MainWindow::appendLogError(const QString& text)
 
 void MainWindow::appendLogRaw(const QString& text)
 {
-    for (QString line : text.split(QRegExp("\r|\n|\r\n"))) {
+    for (QString line : text.split(QRegularExpression("\r|\n|\r\n"))) {
         if (!line.isEmpty()) {
             m_pLogWindow->appendRaw(line);
             updateFromLogLine(line);
@@ -430,19 +430,20 @@ void MainWindow::checkConnected(const QString& line)
 
 void MainWindow::checkFingerprint(const QString& line)
 {
-    QRegExp fingerprintRegex(".*peer fingerprint \\(SHA1\\): ([A-F0-9:]+) \\(SHA256\\): ([A-F0-9:]+)");
-    if (!fingerprintRegex.exactMatch(line)) {
+    QRegularExpression fingerprintRegex(QRegularExpression::anchoredPattern(".*peer fingerprint \\(SHA1\\): ([A-F0-9:]+) \\(SHA256\\): ([A-F0-9:]+)"));
+    QRegularExpressionMatch match = fingerprintRegex.match(line);
+    if (!match.hasMatch()) {
         return;
     }
 
     inputleap::FingerprintData fingerprint_sha1 = {
         inputleap::fingerprint_type_to_string(inputleap::FingerprintType::SHA1),
-        inputleap::string::from_hex(fingerprintRegex.cap(1).toStdString())
+        inputleap::string::from_hex(match.captured(1).toStdString())
     };
 
     inputleap::FingerprintData fingerprint_sha256 = {
         inputleap::fingerprint_type_to_string(inputleap::FingerprintType::SHA256),
-        inputleap::string::from_hex(fingerprintRegex.cap(2).toStdString())
+        inputleap::string::from_hex(match.captured(2).toStdString())
     };
 
     bool is_client = barrier_type() == BarrierType::Client;

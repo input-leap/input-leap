@@ -49,6 +49,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     setIndexFromItemData(m_pComboLanguage, appConfig().language());
     m_pCheckBoxAutoHide->setChecked(appConfig().getAutoHide());
     m_pCheckBoxAutoStart->setChecked(appConfig().getAutoStart());
+    m_pCheckBoxStartWithComputer->setChecked(appConfig().getStartWithComputer());
     m_pCheckBoxMinimizeToTray->setChecked(appConfig().getMinimizeToTray());
     m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
     checkbox_require_client_certificate->setChecked(m_appConfig.getRequireClientCertificate());
@@ -77,6 +78,7 @@ void SettingsDialog::accept()
     m_appConfig.setAutoHide(m_pCheckBoxAutoHide->isChecked());
     m_appConfig.setAutoStart(m_pCheckBoxAutoStart->isChecked());
     m_appConfig.setMinimizeToTray(m_pCheckBoxMinimizeToTray->isChecked());
+    m_appConfig.setStartWithComputer(m_pCheckBoxStartWithComputer->isChecked());
     m_appConfig.saveSettings();
     QDialog::accept();
 }

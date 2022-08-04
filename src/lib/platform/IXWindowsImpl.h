@@ -8,27 +8,17 @@
 #define XK_MISCELLANY
 #define XK_XKB_KEYS
 #include <X11/keysymdef.h>
-#if HAVE_X11_EXTENSIONS_DPMS_H
      extern "C" {
 #	include <X11/extensions/dpms.h>
      }
-#endif
 #include <X11/extensions/XTest.h>
-#if HAVE_X11_EXTENSIONS_XINERAMA_H
      // Xinerama.h may lack extern "C" for inclusion by C++
      extern "C" {
-#	include <X11/extensions/Xinerama.h>
+#include <X11/extensions/Xinerama.h>
      }
-#endif
-#if HAVE_X11_EXTENSIONS_XRANDR_H
-#	include <X11/extensions/Xrandr.h>
-#endif
-#if HAVE_XKB_EXTENSION
-#	include <X11/XKBlib.h>
-#endif
-#ifdef HAVE_XI2
-#	include <X11/extensions/XInput2.h>
-#endif
+#include <X11/extensions/Xrandr.h>
+#include <X11/XKBlib.h>
+#include <X11/extensions/XInput2.h>
 
 class IXWindowsImpl {
 public:

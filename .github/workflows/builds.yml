@@ -41,7 +41,7 @@ jobs:
           add-apt-repository ppa:git-core/ppa
           apt-get update -y
           apt-get dist-upgrade -y
-          apt-get install -y git g++ libxtst-dev qtdeclarative5-dev libavahi-compat-libdnssd-dev libcurl4-openssl-dev libssl-dev cmake ninja-build
+          apt-get install -y git g++ libxtst-dev libxinerama-dev libxrandr-dev libice-dev libsm-dev qtdeclarative5-dev libavahi-compat-libdnssd-dev libcurl4-openssl-dev libssl-dev cmake ninja-build
 
       - uses: actions/checkout@v3
         with:

@@ -242,57 +242,28 @@ Bool XWindowsImpl::XRRQueryExtension(Display* display, int* event_base_return,
     (void) event_base_return;
     (void) error_base_return;
 
-#if HAVE_X11_EXTENSIONS_XRANDR_H
     return ::XRRQueryExtension(display, event_base_return, error_base_return);
-#else
-    return false;
-#endif
 }
 
 void XWindowsImpl::XRRSelectInput(Display *display, Window window, int mask)
 {
-#if HAVE_X11_EXTENSIONS_XRANDR_H
     ::XRRSelectInput(display, window, mask);
-#else
-    (void) display; (void) window; (void) mask;
-#endif
 }
 
 Bool XWindowsImpl::XineramaQueryExtension(Display* display, int* event_base,
                                           int* error_base)
 {
-#if HAVE_X11_EXTENSIONS_XINERAMA_H
     return ::XineramaQueryExtension(display, event_base, error_base);
-#else
-    (void) display;
-    (void) event_base;
-    (void) error_base;
-
-    return false;
-#endif
 }
 
 Bool XWindowsImpl::XineramaIsActive(Display* display)
 {
-#if HAVE_X11_EXTENSIONS_XINERAMA_H
     return ::XineramaIsActive(display);
-#else
-    (void) display;
-
-    return false;
-#endif
 }
 
 void* XWindowsImpl::XineramaQueryScreens(Display* display, int* number)
 {
-#if HAVE_X11_EXTENSIONS_XINERAMA_H
     return ::XineramaQueryScreens(display, number);
-#else
-    (void) display;
-    (void) number;
-
-    return nullptr;
-#endif
 }
 
 Window XWindowsImpl::XCreateWindow(Display* display, Window parent,

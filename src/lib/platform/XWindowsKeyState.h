@@ -27,9 +27,7 @@
 
 #include <X11/Xlib.h>
 #include <X11/extensions/XTest.h>
-#if HAVE_XKB_EXTENSION
 #    include <X11/extensions/XKBstr.h>
-#endif
 
 class IEventQueue;
 
@@ -142,9 +140,7 @@ private:
     IXWindowsImpl* m_impl;
 
     Display*            m_display;
-#if HAVE_XKB_EXTENSION
     XkbDescPtr            m_xkb;
-#endif
     std::int32_t m_group;
     XKBModifierMap        m_lastGoodXKBModifiers;
     NonXKBModifierMap    m_lastGoodNonXKBModifiers;

@@ -486,15 +486,11 @@ ArchMultithreadPosix::testCancelThreadImpl(ArchThreadImpl* thread)
     std::lock_guard<std::mutex> lock(m_threadMutex);
 
     // update cancel state
-    bool cancel = false;
     if (thread->m_cancel && !thread->m_cancelling) {
         thread->m_cancelling = true;
         thread->m_cancel     = false;
-        cancel               = true;
-    }
 
-    // unwind thread's stack if cancelling
-    if (cancel) {
+        // unwind thread's stack if cancelling
         throw XThreadCancel();
     }
 }

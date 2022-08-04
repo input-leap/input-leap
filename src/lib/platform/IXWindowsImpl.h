@@ -8,14 +8,9 @@
 #define XK_MISCELLANY
 #define XK_XKB_KEYS
 #include <X11/keysymdef.h>
-     extern "C" {
-#	include <X11/extensions/dpms.h>
-     }
+#include <X11/extensions/dpms.h>
 #include <X11/extensions/XTest.h>
-     // Xinerama.h may lack extern "C" for inclusion by C++
-     extern "C" {
 #include <X11/extensions/Xinerama.h>
-     }
 #include <X11/extensions/Xrandr.h>
 #include <X11/XKBlib.h>
 #include <X11/extensions/XInput2.h>

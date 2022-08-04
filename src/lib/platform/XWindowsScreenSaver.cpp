@@ -27,10 +27,8 @@
 
 #include <X11/Xatom.h>
 #include <X11/extensions/XTest.h>
-extern "C" {
-#    include <X11/Xmd.h>
-#    include <X11/extensions/dpms.h>
-}
+#include <X11/Xmd.h>
+#include <X11/extensions/dpms.h>
 
 //
 // XWindowsScreenSaver

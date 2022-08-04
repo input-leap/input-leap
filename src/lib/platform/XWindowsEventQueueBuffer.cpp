@@ -103,8 +103,6 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 
     char buf[16];
     ssize_t read_response = read(m_pipefd[0], buf, 15);
-
-    // with linux automake, warnings are treated as errors by default
     if (read_response < 0)
     {
         // todo: handle read response
@@ -180,8 +178,6 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
         retval = poll(pfds, 2, TIMEOUT_DELAY); //16ms = 60hz, but we make it > to play nicely with the cpu
         if (pfds[1].revents & POLLIN) {
             read_response = read(m_pipefd[0], buf, 15);
-
-            // with linux automake, warnings are treated as errors by default
             if (read_response < 0)
             {
                 // todo: handle read response
@@ -257,11 +253,9 @@ bool XWindowsEventQueueBuffer::addEvent(std::uint32_t dataID)
         // The flush call can read incoming data from the socket and put
         // it in Xlib's input buffer.  That sneaks it past the other thread.
         ssize_t write_response = write(m_pipefd[1], "!", 1);
-
-        // with linux automake, warnings are treated as errors by default
         if (write_response < 0)
         {
-            // todo: handle read response
+            // todo: handle write response
         }
     }
 

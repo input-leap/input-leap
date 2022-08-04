@@ -97,7 +97,7 @@ See `docs/newsfragments/README.md` for documentation of how to do that.
 
 ## Distro specific packages
 
-While not a comprehensive list, repology provides a decent list of distro
+While not a comprehensive list, [repology](https://repology.org/project/input-leap/versions) provides a decent list of distro
 specific packages.
 
 [![Packaging status](https://repology.org/badge/vertical-allrepos/input-leap.svg)](https://repology.org/project/input-leap/versions)

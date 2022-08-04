@@ -40,12 +40,12 @@ That's it.
 ### Project goals
 
 Hassle-free reliability. We are users, too. Input Leap was created so that we could
-solve the issues we had with synergy and then share these fixes with other
+solve the issues we had with Synergy and then share these fixes with other
 users.
 
 Compatibility. We use more than one operating system and you probably do, too.
-Windows, OSX, Linux, FreeBSD... Input Leap should "just work". We will also have
-our eye on Wayland when the time comes.
+Windows, macOS, Linux, FreeBSD... Input Leap should "just work". We will also
+have our eye on Wayland when the time comes.
 
 Communication. Everything we do is in the open. Our issue tracker will let you
 see if others are having the same problem you're having and will allow you to
@@ -97,12 +97,17 @@ See `docs/newsfragments/README.md` for documentation of how to do that.
 
 ## Distro specific packages
 
-While not a comprehensive list, repology provides a decent list of distro
+While not a comprehensive list, [repology](https://repology.org/project/input-leap/versions) provides a decent list of distro
 specific packages.
 
 [![Packaging status](https://repology.org/badge/vertical-allrepos/input-leap.svg)](https://repology.org/project/input-leap/versions)
 
 ## FAQ - Frequently Asked Questions
+
+**Q: Input Leap vs. barrier?**
+
+> A: Input Leap is a fork of barrier, by **barrier's active maintainers**. See [issue #1414](https://github.com/input-leap/input-leap/issues/1414)
+>    for more details. barrier is considered unmaintained.
 
 **Q: Does drag and drop work on linux?**
 

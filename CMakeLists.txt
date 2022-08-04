@@ -220,7 +220,7 @@ if (UNIX)
     set (TIME_WITH_SYS_TIME 1)
     set (HAVE_SOCKLEN_T 1)
 
-    add_definitions (-DSYSAPI_UNIX=1 -DHAVE_CONFIG_H)
+    add_definitions (-DSYSAPI_UNIX=1)
 
     if (APPLE)
         add_definitions (-DWINAPI_CARBON=1 -D_THREAD_SAFE)

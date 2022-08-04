@@ -104,6 +104,11 @@ specific packages.
 
 ## FAQ - Frequently Asked Questions
 
+**Q: Input Leap vs. barrier?**
+
+> A: Input Leap is a fork of barrier, by **barrier's active maintainers**. See [issue #1414](https://github.com/input-leap/input-leap/issues/1414)
+>    for more details. barrier is considered unmaintained.
+
 **Q: Does drag and drop work on linux?**
 
 > A: No *(see [#855](https://github.com/input-leap/input-leap/issues/855) if you'd like to change that)*

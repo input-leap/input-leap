@@ -49,6 +49,8 @@ jobs:
 
       - name: Run the build
         run: ./clean_build.sh
+        env:
+            VERBOSE: 1
 
   mac-build:
     runs-on: ${{ matrix.os }}

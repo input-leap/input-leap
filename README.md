@@ -40,7 +40,7 @@ That's it.
 ### Project goals
 
 Hassle-free reliability. We are users, too. Input Leap was created so that we could
-solve the issues we had with synergy and then share these fixes with other
+solve the issues we had with Synergy and then share these fixes with other
 users.
 
 Compatibility. We use more than one operating system and you probably do, too.

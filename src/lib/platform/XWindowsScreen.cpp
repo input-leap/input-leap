@@ -131,12 +131,10 @@ XWindowsScreen::XWindowsScreen(
 
 	// primary/secondary screen only initialization
 	if (m_isPrimary) {
-#ifdef HAVE_XI2
 		m_xi2detected = detectXI2();
 		if (m_xi2detected) {
 			selectXIRawMotion();
 		} else
-#endif
 		{
 			// start watching for events on other windows
 			selectEvents(m_root);
@@ -253,7 +251,6 @@ XWindowsScreen::enter()
         m_impl->XSetInputFocus(m_display, m_lastFocus, m_lastFocusRevert, CurrentTime);
 	}
 
-	#if HAVE_X11_EXTENSIONS_DPMS_H
 	// Force the DPMS to turn screen back on since we don't
 	// actually cause physical hardware input to trigger it
 	int dummy;
@@ -266,7 +263,6 @@ XWindowsScreen::enter()
 		if (enabled && powerlevel != DPMSModeOn)
             m_impl->DPMSForceLevel(m_display, DPMSModeOn);
 	}
-	#endif
 
 	// unmap the hider/grab window.  this also ungrabs the mouse and
 	// keyboard if they're grabbed.
@@ -891,7 +887,6 @@ XWindowsScreen::openDisplay(const char* displayName)
 		}
 	}
 
-#if HAVE_XKB_EXTENSION
 	{
 		m_xkb = false;
 		int major = XkbMajorVersion, minor = XkbMinorVersion;
@@ -908,9 +903,7 @@ XWindowsScreen::openDisplay(const char* displayName)
 			}
 		}
 	}
-#endif
 
-#if HAVE_X11_EXTENSIONS_XRANDR_H
 	// query for XRandR extension
 	int dummyError;
     m_xrandr = m_impl->XRRQueryExtension(display, &m_xrandrEventBase, &dummyError);
@@ -918,7 +911,6 @@ XWindowsScreen::openDisplay(const char* displayName)
 		// enable XRRScreenChangeNotifyEvent
         m_impl->XRRSelectInput(display, DefaultRootWindow(display), RRScreenChangeNotifyMask | RRCrtcChangeNotifyMask);
 	}
-#endif
 
 	return display;
 }
@@ -951,7 +943,6 @@ XWindowsScreen::saveShape()
 	// we warp the pointer to the center of the first physical
 	// screen instead of the logical screen.
 	m_xinerama = false;
-#if HAVE_X11_EXTENSIONS_XINERAMA_H
 	int eventBase, errorBase;
     if (m_impl->XineramaQueryExtension(m_display, &eventBase, &errorBase) &&
         m_impl->XineramaIsActive(m_display)) {
@@ -969,7 +960,6 @@ XWindowsScreen::saveShape()
 			XFree(screens);
 		}
 	}
-#endif
 }
 
 Window
@@ -1206,7 +1196,6 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 		return;
 	}
 
-#ifdef HAVE_XI2
 	if (m_xi2detected) {
 		// Process RawMotion
         XGenericEventCookie *cookie = static_cast<XGenericEventCookie*>(&xevent->xcookie);
@@ -1236,7 +1225,6 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
                 m_impl->XFreeEventData(m_display, cookie);
 		}
 	}
-#endif
 
 	// handle the event ourself
 	switch (xevent->type) {
@@ -1347,7 +1335,6 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 		return;
 
 	default:
-#if HAVE_XKB_EXTENSION
 		if (m_xkb && xevent->type == m_xkbEventBase) {
 			XkbEvent* xkbEvent = reinterpret_cast<XkbEvent*>(xevent);
 			switch (xkbEvent->any.xkb_type) {
@@ -1363,9 +1350,7 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
                 break;
 			}
 		}
-#endif
 
-#if HAVE_X11_EXTENSIONS_XRANDR_H
 		if (m_xrandr) {
 			if (xevent->type == m_xrandrEventBase + RRScreenChangeNotify ||
 			    (xevent->type == m_xrandrEventBase + RRNotify &&
@@ -1389,7 +1374,6 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 				sendEvent(m_events->forIScreen().shapeChanged());
 			}
 		}
-#endif
 
 		break;
 	}
@@ -2007,16 +1991,10 @@ XWindowsScreen::refreshKeyboard(XEvent* event)
 	}
 
 	// keyboard mapping changed
-#if HAVE_XKB_EXTENSION
 	if (m_xkb && event->type == m_xkbEventBase) {
         m_impl->XkbRefreshKeyboardMapping(reinterpret_cast<XkbMapNotifyEvent*>(event));
 	}
 	else
-#else
-	{
-        m_impl->XRefreshKeyboardMapping(&event->xmapping);
-	}
-#endif
 	m_keyState->updateKeyMap();
 	m_keyState->updateKeyState();
 }
@@ -2048,7 +2026,6 @@ XWindowsScreen::detectXI2()
 			"XInputExtension", &xi_opcode, &event, &error);
 }
 
-#ifdef HAVE_XI2
 void
 XWindowsScreen::selectXIRawMotion()
 {
@@ -2064,4 +2041,3 @@ XWindowsScreen::selectXIRawMotion()
     m_impl->XISelectEvents(m_display, DefaultRootWindow(m_display), &mask, 1);
 	free(mask.mask);
 }
-#endif

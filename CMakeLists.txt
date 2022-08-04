@@ -156,6 +156,10 @@ if (UNIX)
         )
 
     else() # not-apple
+        if (NOT ${PKG_CONFIG_FOUND})
+            message (FATAL_ERROR "pkg-config not found, required for dependencies")
+        endif ()
+
         # FreeBSD uses /usr/local for anything not part of base
         # Also package avahi-libdns puts dns_sd.h a bit deeper
         if (${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
@@ -179,83 +183,26 @@ if (UNIX)
             set (CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${AVAHI_COMPAT_INCLUDE_DIRS}")
         endif ()
 
-        set (XKBlib "X11/Xlib.h;X11/XKBlib.h")
-        set (CMAKE_EXTRA_INCLUDE_FILES "${XKBlib};X11/extensions/Xrandr.h")
-        check_type_size ("XRRNotifyEvent" X11_EXTENSIONS_XRANDR_H)
-        set (HAVE_X11_EXTENSIONS_XRANDR_H "${X11_EXTENSIONS_XRANDR_H}")
-        set (CMAKE_EXTRA_INCLUDE_FILES)
+        pkg_check_modules (XLIB REQUIRED x11 xext xrandr xinerama xtst xi)
+        pkg_check_modules (ICE REQUIRED ice sm)
+        include_directories (${XLIB_INCLUDE_DIRS} ${ICE_INCLUDE_DIRS})
 
-        check_include_files ("${XKBlib};X11/extensions/dpms.h" HAVE_X11_EXTENSIONS_DPMS_H)
-        check_include_files ("X11/extensions/Xinerama.h" HAVE_X11_EXTENSIONS_XINERAMA_H)
-        check_include_files ("${XKBlib};X11/extensions/XKBstr.h" HAVE_X11_EXTENSIONS_XKBSTR_H)
-        check_include_files ("X11/extensions/XKB.h" HAVE_XKB_EXTENSION)
-        check_include_files ("X11/extensions/XTest.h" HAVE_X11_EXTENSIONS_XTEST_H)
-        check_include_files ("${XKBlib}" HAVE_X11_XKBLIB_H)
-        check_include_files ("X11/extensions/XInput2.h" HAVE_XI2)
+        # Old cmake doesn't populate LINK_LIBRARIES.
+        # Use the "normal" libraries but this won't pick up non-standard
+        # library directories paths.
+        # Fixed in cmake 3.12, released July 2018 (commit 92ac721a44)
+        if(${CMAKE_VERSION} VERSION_LESS "3.12.0")
+            list (APPEND libs ${XLIB_LIBRARIES} ${ICE_LIBRARIES})
+        else()
+            list (APPEND libs ${XLIB_LINK_LIBRARIES} ${ICE_LINK_LIBRARIES})
+        endif()
+
+        set (HAVE_X11 1)
+
         check_include_files ("dns_sd.h" HAVE_DNSSD)
-
-        if (NOT HAVE_X11_EXTENSIONS_XTEST_H)
-            message (FATAL_ERROR "Missing header: X11/extensions/XTest.h")
-        endif()
-
-        if (NOT HAVE_X11_XKBLIB_H)
-            message (FATAL_ERROR "Missing header: " ${XKBlib})
-        endif()
-
         if(INPUTLEAP_BUILD_GUI AND NOT HAVE_DNSSD)
             message (FATAL_ERROR "Missing header: dns_sd.h")
         endif()
-
-        check_library_exists ("SM;ICE" IceConnectionNumber "" HAVE_ICE)
-        check_library_exists ("Xext;X11" DPMSQueryExtension "" HAVE_Xext)
-        check_library_exists ("Xtst;Xext;X11" XTestQueryExtension "" HAVE_Xtst)
-        check_library_exists ("Xinerama" XineramaQueryExtension "" HAVE_Xinerama)
-        check_library_exists ("Xi" XISelectEvents "" HAVE_Xi)
-        check_library_exists ("Xrandr" XRRQueryExtension "" HAVE_Xrandr)
-
-        if (HAVE_ICE)
-
-            # Assume we have SM if we have ICE.
-            set (HAVE_SM 1)
-            list (APPEND libs SM ICE)
-
-        endif()
-
-        if (HAVE_Xtst)
-
-            # Xtxt depends on X11.
-            set (HAVE_X11 1)
-            list (APPEND libs Xtst X11)
-
-        else()
-
-            message (FATAL_ERROR "Missing library: Xtst")
-
-        endif()
-
-        if (HAVE_Xext)
-            list (APPEND libs Xext)
-        endif()
-
-        if (HAVE_Xinerama)
-            list (APPEND libs Xinerama)
-        else (HAVE_Xinerama)
-            if (HAVE_X11_EXTENSIONS_XINERAMA_H)
-                set (HAVE_X11_EXTENSIONS_XINERAMA_H 0)
-                message (WARNING "Old Xinerama implementation detected, disabled")
-            endif()
-        endif()
-
-        if (HAVE_Xrandr)
-            list (APPEND libs Xrandr)
-        endif()
-
-        # this was outside of the linux scope,
-        # not sure why, moving it back inside.
-        if (HAVE_Xi)
-            list (APPEND libs Xi)
-        endif()
-
     endif()
 
     # For config.h, set some static values; it may be a good idea to make
@@ -273,7 +220,7 @@ if (UNIX)
     set (TIME_WITH_SYS_TIME 1)
     set (HAVE_SOCKLEN_T 1)
 
-    add_definitions (-DSYSAPI_UNIX=1 -DHAVE_CONFIG_H)
+    add_definitions (-DSYSAPI_UNIX=1)
 
     if (APPLE)
         add_definitions (-DWINAPI_CARBON=1 -D_THREAD_SAFE)

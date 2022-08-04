@@ -29,9 +29,7 @@
 #define XK_MISCELLANY
 #define XK_XKB_KEYS
 #include <X11/keysymdef.h>
-#if HAVE_XKB_EXTENSION
-#    include <X11/XKBlib.h>
-#endif
+#include <X11/XKBlib.h>
 
 static const size_t ModifiersFromXDefaultSize = 32;
 
@@ -60,11 +58,9 @@ XWindowsKeyState::XWindowsKeyState(IXWindowsImpl* impl,
 
 XWindowsKeyState::~XWindowsKeyState()
 {
-#if HAVE_XKB_EXTENSION
     if (m_xkb != NULL) {
         m_impl->XkbFreeKeyboard(m_xkb, 0, True);
     }
-#endif
 }
 
 void
@@ -74,7 +70,6 @@ XWindowsKeyState::init(Display* display, bool useXKB)
     (void) useXKB;
 
     XGetKeyboardControl(m_display, &m_keyboardState);
-#if HAVE_XKB_EXTENSION
     if (useXKB) {
         m_xkb = m_impl->XkbGetMap(m_display,
                                   XkbKeyActionsMask | XkbKeyBehaviorsMask |
@@ -83,7 +78,6 @@ XWindowsKeyState::init(Display* display, bool useXKB)
     else {
         m_xkb = NULL;
     }
-#endif
     setActiveGroup(kGroupPollAndSet);
 }
 
@@ -193,14 +187,12 @@ std::int32_t XWindowsKeyState::pollActiveGroup() const
         return m_group;
     }
 
-#if HAVE_XKB_EXTENSION
     if (m_xkb != NULL) {
         XkbStateRec state;
         if (m_impl->XkbGetState(m_display, XkbUseCoreKbd, &state) == Success) {
             return state.group;
         }
     }
-#endif
     return 0;
 }
 
@@ -227,7 +219,6 @@ XWindowsKeyState::getKeyMap(inputleap::KeyMap& keyMap)
     XGetKeyboardControl(m_display, &m_keyboardState);
     m_keyboardState.global_auto_repeat = oldGlobalAutoRepeat;
 
-#if HAVE_XKB_EXTENSION
     if (m_xkb != NULL) {
         unsigned mask = XkbKeyActionsMask | XkbKeyBehaviorsMask |
                         XkbAllClientInfoMask;
@@ -236,7 +227,6 @@ XWindowsKeyState::getKeyMap(inputleap::KeyMap& keyMap)
             return;
         }
     }
-#endif
     updateKeysymMap(keyMap);
 }
 
@@ -264,7 +254,6 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
     case Keystroke::kGroup:
         if (keystroke.m_data.m_group.m_absolute) {
             LOG((CLOG_DEBUG1 "  group %d", keystroke.m_data.m_group.m_group));
-#if HAVE_XKB_EXTENSION
             if (m_xkb != NULL) {
                 if (m_impl->XkbLockGroup(m_display, XkbUseCoreKbd,
                                          keystroke.m_data.m_group.m_group
@@ -273,14 +262,12 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
                 }
             }
             else
-#endif
             {
                 LOG((CLOG_DEBUG1 "  ignored"));
             }
         }
         else {
             LOG((CLOG_DEBUG1 "  group %+d", keystroke.m_data.m_group.m_group));
-#if HAVE_XKB_EXTENSION
             if (m_xkb != NULL) {
                 if (m_impl->XkbLockGroup(m_display, XkbUseCoreKbd,
                                          getEffectiveGroup(pollActiveGroup(),
@@ -290,7 +277,6 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
                 }
             }
             else
-#endif
             {
                 LOG((CLOG_DEBUG1 "  ignored"));
             }
@@ -547,7 +533,6 @@ XWindowsKeyState::updateKeysymMap(inputleap::KeyMap& keyMap)
     delete[] allKeysyms;
 }
 
-#if HAVE_XKB_EXTENSION
 void
 XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
 {
@@ -788,7 +773,6 @@ XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
     // allow composition across groups
     keyMap.allowGroupSwitchDuringCompose();
 }
-#endif
 
 void XWindowsKeyState::remapKeyModifiers(KeyID id, std::int32_t group,
                                          inputleap::KeyMap::KeyItem& item, void* vself)
@@ -805,7 +789,6 @@ void XWindowsKeyState::remapKeyModifiers(KeyID id, std::int32_t group,
 bool
 XWindowsKeyState::hasModifiersXKB() const
 {
-#if HAVE_XKB_EXTENSION
     // iterate over all keycodes
     for (int i = m_xkb->min_key_code; i <= m_xkb->max_key_code; ++i) {
         KeyCode keycode = static_cast<KeyCode>(i);
@@ -830,7 +813,6 @@ XWindowsKeyState::hasModifiersXKB() const
             }
         }
     }
-#endif
     return false;
 }
 
@@ -838,7 +820,6 @@ int
 XWindowsKeyState::getEffectiveGroup(KeyCode keycode, int group) const
 {
     (void)keycode;
-#if HAVE_XKB_EXTENSION
     // get effective group for key
     int numGroups = m_impl->do_XkbKeyNumGroups(m_xkb, keycode);
     if (group >= numGroups) {
@@ -861,16 +842,13 @@ XWindowsKeyState::getEffectiveGroup(KeyCode keycode, int group) const
             break;
         }
     }
-#endif
     return group;
 }
 
 std::uint32_t XWindowsKeyState::getGroupFromState(unsigned int state) const
 {
-#if HAVE_XKB_EXTENSION
     if (m_xkb != NULL) {
         return XkbGroupForCoreState(state);
     }
-#endif
     return 0;
 }

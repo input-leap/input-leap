@@ -21,7 +21,8 @@ BuildRequires: gmock-devel
 BuildRequires: gtest-devel
 BuildRequires: gulrak-filesystem-devel
 BuildRequires: libX11-devel
-BuildRequires: libXtst-devel
+BuildRequires: libXtst-devel libXinerama-devel libXrandr-devel
+BuildRequires: libICE-devel libSM-devel
 BuildRequires: libcurl-devel
 BuildRequires: openssl-devel
 BuildRequires: qt5-qtbase-devel

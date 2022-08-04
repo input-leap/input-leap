@@ -29,9 +29,7 @@
 #define XK_MISCELLANY
 #include <X11/keysymdef.h>
 
-#if HAVE_XKB_EXTENSION
-#    include <X11/XKBlib.h>
-#endif
+#include <X11/XKBlib.h>
 
 #include "test/global/gtest.h"
 #include "test/global/gmock.h"
@@ -209,7 +207,6 @@ TEST_F(XWindowsKeyStateTests, pollActiveGroup_positiveGroup_returnsGroup)
 
 TEST_F(XWindowsKeyStateTests, pollActiveGroup_xkb_areEqual)
 {
-#if HAVE_XKB_EXTENSION
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
     XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
@@ -228,8 +225,5 @@ TEST_F(XWindowsKeyStateTests, pollActiveGroup_xkb_areEqual)
     else {
         FAIL() << "XkbGetState() returned error " << errno;
     }
-#else
-    SUCCEED() << "Xkb extension not installed";
-#endif
 }
 

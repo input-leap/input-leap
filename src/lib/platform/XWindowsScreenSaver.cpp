@@ -27,12 +27,8 @@
 
 #include <X11/Xatom.h>
 #include <X11/extensions/XTest.h>
-#if HAVE_X11_EXTENSIONS_DPMS_H
-extern "C" {
-#    include <X11/Xmd.h>
-#    include <X11/extensions/dpms.h>
-}
-#endif
+#include <X11/Xmd.h>
+#include <X11/extensions/dpms.h>
 
 //
 // XWindowsScreenSaver
@@ -66,7 +62,6 @@ XWindowsScreenSaver::XWindowsScreenSaver(IXWindowsImpl* impl, Display* display,
 
     // check for DPMS extension.  this is an alternative screen saver
     // that powers down the display.
-#if HAVE_X11_EXTENSIONS_DPMS_H
     int eventBase, errorBase;
     if (m_impl->DPMSQueryExtension(m_display, &eventBase, &errorBase)) {
         if (m_impl->DPMSCapable(m_display)) {
@@ -74,7 +69,6 @@ XWindowsScreenSaver::XWindowsScreenSaver(IXWindowsImpl* impl, Display* display,
             m_dpms  = true;
         }
     }
-#endif
 
     // watch top-level windows for changes
     bool error = false;
@@ -530,20 +524,17 @@ XWindowsScreenSaver::handleDisableTimer(const Event&, void*)
 void
 XWindowsScreenSaver::activateDPMS(bool activate)
 {
-#if HAVE_X11_EXTENSIONS_DPMS_H
     if (m_dpms) {
         // DPMSForceLevel will generate a BadMatch if DPMS is disabled
         XWindowsUtil::ErrorLock lock(m_display);
         m_impl->DPMSForceLevel(m_display,
                                activate ? DPMSModeStandby : DPMSModeOn);
     }
-#endif
 }
 
 void
 XWindowsScreenSaver::enableDPMS(bool enable)
 {
-#if HAVE_X11_EXTENSIONS_DPMS_H
     if (m_dpms) {
         if (enable) {
             m_impl->DPMSEnable(m_display);
@@ -552,13 +543,11 @@ XWindowsScreenSaver::enableDPMS(bool enable)
             m_impl->DPMSDisable(m_display);
         }
     }
-#endif
 }
 
 bool
 XWindowsScreenSaver::isDPMSEnabled() const
 {
-#if HAVE_X11_EXTENSIONS_DPMS_H
     if (m_dpms) {
         CARD16 level;
         BOOL state;
@@ -568,15 +557,11 @@ XWindowsScreenSaver::isDPMSEnabled() const
     else {
         return false;
     }
-#else
-    return false;
-#endif
 }
 
 bool
 XWindowsScreenSaver::isDPMSActivated() const
 {
-#if HAVE_X11_EXTENSIONS_DPMS_H
     if (m_dpms) {
         CARD16 level;
         BOOL state;
@@ -586,7 +571,4 @@ XWindowsScreenSaver::isDPMSActivated() const
     else {
         return false;
     }
-#else
-    return false;
-#endif
 }

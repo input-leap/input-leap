@@ -128,7 +128,10 @@ ServerApp::help()
            << " [--address <address>]"
            << " [--config <pathname>]"
 #ifdef WINAPI_XWINDOWS
-           << " [--display <display>]"
+           << " [--use-x11] [--display <display>]"
+#endif
+#ifdef WINAPI_LIBEI
+           << " [--use-ei]"
 #endif
            << HELP_SYS_ARGS
            << HELP_COMMON_ARGS
@@ -141,10 +144,14 @@ ServerApp::help()
            << "      --disable-client-cert-checking disable client SSL certificate \n"
               "                                     checking (deprecated)\n"
 #ifdef WINAPI_XWINDOWS
+           << "      --use-x11            use the X11 backend\n"
            << "      --display <display>  connect to the X server at <display>\n"
            << "      --screen-change-script <path>\n"
            << "                           full path to script to run on screen change\n"
            << "                           first argument is the new screen name\n"
+#endif
+#ifdef WINAPI_LIBEI
+           << "      --use-ei             use the EI backend\n"
 #endif
            << HELP_SYS_INFO
            << HELP_COMMON_INFO_2

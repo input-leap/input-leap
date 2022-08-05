@@ -62,7 +62,7 @@ static fs::path unix_home()
 
 static fs::path profile_basedir()
 {
-#ifdef WINAPI_XWINDOWS
+#if defined(WINAPI_XWINDOWS) || defined(WINAPI_LIBEI)
     // linux/bsd adheres to freedesktop standards
     // https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
     const char* dir = std::getenv("XDG_DATA_HOME");

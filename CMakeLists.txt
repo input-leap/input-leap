@@ -72,7 +72,6 @@ if (UNIX)
     check_include_files (sys/utsname.h HAVE_SYS_UTSNAME_H)
 
     check_function_exists (getpwuid_r HAVE_GETPWUID_R)
-    check_function_exists (poll HAVE_POLL)
     check_function_exists (sigwait HAVE_POSIX_SIGWAIT)
     check_function_exists (inet_aton HAVE_INET_ATON)
 

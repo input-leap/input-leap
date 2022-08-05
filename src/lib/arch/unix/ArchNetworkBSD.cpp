@@ -25,9 +25,7 @@
 #include "arch/Arch.h"
 #include "base/Time.h"
 
-#if HAVE_UNISTD_H
-#    include <unistd.h>
-#endif
+#include <unistd.h>
 #include <netinet/in.h>
 #include <netdb.h>
 #if !defined(TCP_NODELAY)

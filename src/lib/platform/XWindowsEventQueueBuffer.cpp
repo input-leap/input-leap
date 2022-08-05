@@ -23,9 +23,7 @@
 #include "base/IEventQueue.h"
 
 #include <fcntl.h>
-#if HAVE_UNISTD_H
-#    include <unistd.h>
-#endif
+#include <unistd.h>
 #if HAVE_POLL
 #    include <poll.h>
 #else

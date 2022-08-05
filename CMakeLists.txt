@@ -70,7 +70,6 @@ if (UNIX)
     check_include_files (sys/socket.h HAVE_SYS_SOCKET_H)
     check_include_files (sys/time.h HAVE_SYS_TIME_H)
     check_include_files (sys/utsname.h HAVE_SYS_UTSNAME_H)
-    check_include_files (unistd.h HAVE_UNISTD_H)
 
     check_function_exists (getpwuid_r HAVE_GETPWUID_R)
     check_function_exists (poll HAVE_POLL)

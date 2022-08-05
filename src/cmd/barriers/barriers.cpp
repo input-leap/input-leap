@@ -24,11 +24,8 @@
 #if WINAPI_MSWINDOWS
 #include "MSWindowsServerTaskBarReceiver.h"
 #endif
-#if WINAPI_XWINDOWS
-#include "XWindowsServerTaskBarReceiver.h"
-#endif
-#if WINAPI_CARBON
-#include "OSXServerTaskBarReceiver.h"
+#if WINAPI_XWINDOWS || WINAPI_CARBON
+#include "FallbackServerTaskBarReceiver.h"
 #endif
 
 int

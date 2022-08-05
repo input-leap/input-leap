@@ -16,14 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "XWindowsClientTaskBarReceiver.h"
+#include "FallbackClientTaskBarReceiver.h"
 #include "arch/Arch.h"
 
 //
-// CXWindowsClientTaskBarReceiver
+// CFallbackClientTaskBarReceiver
 //
 
-CXWindowsClientTaskBarReceiver::CXWindowsClientTaskBarReceiver(
+CFallbackClientTaskBarReceiver::CFallbackClientTaskBarReceiver(
         const BufferedLogOutputter*,
         IEventQueue* events) :
     ClientTaskBarReceiver(events)
@@ -32,30 +32,30 @@ CXWindowsClientTaskBarReceiver::CXWindowsClientTaskBarReceiver(
     ARCH->addReceiver(this);
 }
 
-CXWindowsClientTaskBarReceiver::~CXWindowsClientTaskBarReceiver()
+CFallbackClientTaskBarReceiver::~CFallbackClientTaskBarReceiver()
 {
     ARCH->removeReceiver(this);
 }
 
 void
-CXWindowsClientTaskBarReceiver::showStatus()
+CFallbackClientTaskBarReceiver::showStatus()
 {
     // do nothing
 }
 
 void
-CXWindowsClientTaskBarReceiver::runMenu(int, int)
+CFallbackClientTaskBarReceiver::runMenu(int, int)
 {
     // do nothing
 }
 
 void
-CXWindowsClientTaskBarReceiver::primaryAction()
+CFallbackClientTaskBarReceiver::primaryAction()
 {
     // do nothing
 }
 
-IArchTaskBarReceiver::Icon CXWindowsClientTaskBarReceiver::getIcon() const
+IArchTaskBarReceiver::Icon CFallbackClientTaskBarReceiver::getIcon() const
 {
     return nullptr;
 }
@@ -63,5 +63,5 @@ IArchTaskBarReceiver::Icon CXWindowsClientTaskBarReceiver::getIcon() const
 IArchTaskBarReceiver*
 createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events)
 {
-    return new CXWindowsClientTaskBarReceiver(logBuffer, events);
+    return new CFallbackClientTaskBarReceiver(logBuffer, events);
 }

@@ -1,7 +1,7 @@
 /*
  * InputLeap -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
- * Copyright (C) 2004 Chris Schoeneman
+ * Copyright (C) 2003 Chris Schoeneman
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,15 +23,16 @@
 class BufferedLogOutputter;
 class IEventQueue;
 
-//! Implementation of ClientTaskBarReceiver for OS X
-class OSXClientTaskBarReceiver : public ClientTaskBarReceiver {
+//! Implementation of ClientTaskBarReceiver for X Windows
+class CFallbackClientTaskBarReceiver : public ClientTaskBarReceiver {
 public:
-    OSXClientTaskBarReceiver(const BufferedLogOutputter*, IEventQueue* events);
-    virtual ~OSXClientTaskBarReceiver();
+    CFallbackClientTaskBarReceiver(
+        const BufferedLogOutputter*, IEventQueue* events);
+    ~CFallbackClientTaskBarReceiver() override;
 
     // IArchTaskBarReceiver overrides
-    virtual void showStatus();
-    virtual void runMenu(int x, int y);
-    virtual void primaryAction();
-    virtual Icon getIcon() const;
+    void showStatus() override;
+    void runMenu(int x, int y) override;
+    void primaryAction() override;
+    Icon getIcon() const override;
 };

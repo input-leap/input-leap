@@ -38,16 +38,16 @@ public:
     typedef std::uint32_t Type;
     enum {
         kUnknown,    //!< The event type is unknown
-        kQuit,        //!< The quit event
-        kSystem,    //!< The data points to a system event type
-        kTimer,        //!< The data points to timer info
+        kQuit,       //!< The quit event
+        kSystem,     //!< The data points to a system event type
+        kTimer,      //!< The data points to timer info
         kLast        //!< Must be last
     };
 
     typedef std::uint32_t Flags;
     enum {
         kNone                = 0x00,    //!< No flags
-        kDeliverImmediately    = 0x01,    //!< Dispatch and free event immediately
+        kDeliverImmediately  = 0x01,    //!< Dispatch and free event immediately
         kDontFreeData        = 0x02    //!< Don't free data in deleteData
     };
 
@@ -72,14 +72,14 @@ public:
     /*!
     Deletes event data for the given event (using free()).
     */
-    static void            deleteData(const Event&);
+    static void     deleteData(const Event&);
 
     //! Set data (non-POD)
     /*!
     Set non-POD (non plain old data), where delete is called when the event
     is deleted, and the destructor is called.
     */
-    void                setDataObject(EventData* dataObject);
+    void            setDataObject(EventData* dataObject);
 
     //@}
     //! @name accessors
@@ -89,19 +89,19 @@ public:
     /*!
     Returns the event type.
     */
-    Type                getType() const;
+    Type            getType() const;
 
     //! Get the event target
     /*!
     Returns the event target.
     */
-    void*                getTarget() const;
+    void*           getTarget() const;
 
     //! Get the event data (POD).
     /*!
     Returns the event data (POD).
     */
-    void*                getData() const;
+    void*           getData() const;
 
     //! Get the event data (non-POD)
     /*!
@@ -109,20 +109,20 @@ public:
     \c getData() is that when delete is called on this data, so non-POD
     (non plain old data) dtor is called.
     */
-    EventData*            getDataObject() const;
+    EventData*      getDataObject() const;
 
     //! Get event flags
     /*!
     Returns the event flags.
     */
-    Flags                getFlags() const;
+    Flags           getFlags() const;
 
     //@}
 
 private:
-    Type                m_type;
-    void*                m_target;
-    void*                m_data;
-    Flags                m_flags;
-    EventData*            m_dataObject;
+    Type            m_type;
+    void*           m_target;
+    void*           m_data;
+    Flags           m_flags;
+    EventData*      m_dataObject;
 };

@@ -67,10 +67,6 @@ if (UNIX)
     include (CheckCSourceCompiles)
     include (FindPkgConfig)
 
-    check_include_file_cxx (istream HAVE_ISTREAM)
-    check_include_file_cxx (ostream HAVE_OSTREAM)
-    check_include_file_cxx (sstream HAVE_SSTREAM)
-
     check_include_files (sys/socket.h HAVE_SYS_SOCKET_H)
     check_include_files (sys/time.h HAVE_SYS_TIME_H)
     check_include_files (sys/utsname.h HAVE_SYS_UTSNAME_H)

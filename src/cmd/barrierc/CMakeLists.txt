@@ -18,15 +18,15 @@ set(sources
     barrierc.cpp
 )
 
-if (WIN32)
+if (BUILD_MSWINDOWS)
     file(GLOB arch_headers "MSWindows*.h")
     file(GLOB arch_sources "MSWindows*.cpp")
     list(APPEND sources barrierc.rc)
     set_property(SOURCE barrierc.rc PROPERTY COMPILE_FLAGS /nologo)
-elseif (APPLE)
+elseif (BUILD_CARBON)
     file(GLOB arch_headers "OSX*.h")
     file(GLOB arch_sources "OSX*.cpp")
-elseif (UNIX)
+elseif (BUILD_XWINDOWS)
     file(GLOB arch_headers "XWindows*.h")
     file(GLOB arch_sources "XWindows*.cpp")
 endif()

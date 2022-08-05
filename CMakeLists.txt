@@ -166,8 +166,10 @@ if (UNIX)
 
     if (APPLE)
         add_definitions (-DWINAPI_CARBON=1 -D_THREAD_SAFE)
+        set (BUILD_CARBON 1)
     else()
         add_definitions (-DWINAPI_XWINDOWS=1)
+        set (BUILD_XWINDOWS 1)
     endif()
 
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
@@ -186,6 +188,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         /DINPUTLEAP_VERSION=\"${INPUTLEAP_VERSION}\"
         /D_XKEYCHECK_H
     )
+    set (BUILD_MSWINDOWS 1)
 endif()
 
 # For config.h, save the results based on a template (config.h.in).

@@ -14,13 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if (WIN32)
+if (BUILD_MSWINDOWS)
     file(GLOB headers "MSWindows*.h" "ImmuneKeysReader.h" "synwinhk.h")
     file(GLOB sources "MSWindows*.cpp" "ImmuneKeysReader.cpp")
-elseif (APPLE)
+elseif (BUILD_CARBON)
     file(GLOB headers "OSX*.h" "IOSX*.h")
     file(GLOB sources "OSX*.cpp" "IOSX*.cpp" "OSX*.m" "OSX*.mm")
-elseif (UNIX)
+elseif (BUILD_XWINDOWS)
     file(GLOB headers "XWindows*.h")
     file(GLOB sources "XWindows*.cpp")
 endif()

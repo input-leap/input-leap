@@ -24,20 +24,20 @@ set(sources
 )
 
 # platform
-if (WIN32)
+if (BUILD_MSWINDOWS)
     set(platform_sources
         platform/MSWindowsClipboardTests.cpp
         platform/MSWindowsKeyStateTests.cpp
     )
     set(platform_headers)
-elseif (APPLE)
+elseif (BUILD_CARBON)
     set(platform_sources
         platform/OSXClipboardTests.cpp
         platform/OSXKeyStateTests.cpp
         platform/OSXScreenTests.cpp
     )
     set(platform_headers)
-elseif (UNIX)
+elseif (BUILD_XWINDOWS)
     set(platform_sources
         platform/XWindowsClipboardTests.cpp
         platform/XWindowsKeyStateTests.cpp

@@ -571,12 +571,8 @@ ArchMultithreadPosix::threadSignalHandler(void*)
     // we exit the loop via thread cancellation in sigwait()
     for (;;) {
         // wait
-#if HAVE_POSIX_SIGWAIT
         int signal = 0;
         sigwait(&sigset, &signal);
-#else
-        sigwait(&sigset);
-#endif
 
         // if we get here then the signal was raised
         switch (signal) {

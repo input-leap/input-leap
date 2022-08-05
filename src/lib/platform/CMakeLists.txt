@@ -15,15 +15,20 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 if (BUILD_MSWINDOWS)
-    file(GLOB headers "MSWindows*.h" "ImmuneKeysReader.h" "synwinhk.h")
-    file(GLOB sources "MSWindows*.cpp" "ImmuneKeysReader.cpp")
-elseif (BUILD_CARBON)
-    file(GLOB headers "OSX*.h" "IOSX*.h")
-    file(GLOB sources "OSX*.cpp" "IOSX*.cpp" "OSX*.m" "OSX*.mm")
-elseif (BUILD_XWINDOWS)
-    file(GLOB headers "XWindows*.h")
-    file(GLOB sources "XWindows*.cpp")
+    file(GLOB mswin_headers "MSWindows*.h" "ImmuneKeysReader.h" "synwinhk.h")
+    file(GLOB mswin_sources "MSWindows*.cpp" "ImmuneKeysReader.cpp")
 endif()
+if (BUILD_CARBON)
+    file(GLOB carbon_headers "OSX*.h" "IOSX*.h")
+    file(GLOB carbon_sources "OSX*.cpp" "IOSX*.cpp" "OSX*.m" "OSX*.mm")
+endif()
+if (BUILD_XWINDOWS)
+    file(GLOB xwin_headers "XWindows*.h")
+    file(GLOB xwin_sources "XWindows*.cpp")
+endif()
+
+list(APPEND sources ${mswin_sources} ${carbon_sources} ${xwin_sources})
+list(APPEND headers ${mswin_headers} ${carbon_headers} ${xwin_headers})
 
 if(INPUTLEAP_ADD_HEADERS)
     list(APPEND sources ${headers})

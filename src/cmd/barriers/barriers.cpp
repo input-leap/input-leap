@@ -23,12 +23,12 @@
 
 #if WINAPI_MSWINDOWS
 #include "MSWindowsServerTaskBarReceiver.h"
-#elif WINAPI_XWINDOWS
+#endif
+#if WINAPI_XWINDOWS
 #include "XWindowsServerTaskBarReceiver.h"
-#elif WINAPI_CARBON
+#endif
+#if WINAPI_CARBON
 #include "OSXServerTaskBarReceiver.h"
-#else
-#error Platform not supported.
 #endif
 
 int

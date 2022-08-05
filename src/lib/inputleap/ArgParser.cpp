@@ -191,11 +191,14 @@ ArgParser::parsePlatformArg(ArgsBase& argsBase, const int& argc, const char* con
 {
 #if WINAPI_MSWINDOWS
     return parseMSWindowsArg(argsBase, argc, argv, i);
-#elif WINAPI_CARBON
+#endif
+#if WINAPI_CARBON
     return parseCarbonArg(argsBase, argc, argv, i);
-#elif WINAPI_XWINDOWS
+#endif
+#if WINAPI_XWINDOWS
     return parseXWindowsArg(argsBase, argc, argv, i);
 #endif
+    return false;
 }
 
 bool

@@ -31,7 +31,7 @@
 Thread::Thread(const std::function<void()>& fun)
 {
     m_thread = ARCH->newThread([=](){ threadFunc(fun); });
-    if (m_thread == NULL) {
+    if (m_thread == nullptr) {
         throw XMTThreadUnavailable();
     }
 }

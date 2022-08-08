@@ -86,7 +86,7 @@ ClientProxy1_5::fileChunkReceived()
 
 
     if (result == kFinish) {
-        m_events->addEvent(Event(m_events->forFile().fileRecieveCompleted(), server));
+        m_events->addEvent(Event(m_events->forFile().fileReceiveCompleted(), server));
     }
     else if (result == kStart) {
         if (server->getFakeDragFileList().size() > 0) {

@@ -46,7 +46,7 @@ MSWindowsClientTaskBarReceiver::MSWindowsClientTaskBarReceiver(
                 HINSTANCE appInstance, const BufferedLogOutputter* logBuffer, IEventQueue* events) :
     ClientTaskBarReceiver(events),
     m_appInstance(appInstance),
-    m_window(NULL),
+    m_window(nullptr),
     m_logBuffer(logBuffer)
 {
     for (std::uint32_t i = 0; i < kMaxState; ++i) {
@@ -161,7 +161,7 @@ MSWindowsClientTaskBarReceiver::runMenu(int x, int y)
                             TPM_RETURNCMD |
                             TPM_LEFTBUTTON |
                             TPM_RIGHTBUTTON,
-                            x, y, 0, m_window, NULL);
+                            x, y, 0, m_window, nullptr);
     SendMessage(m_window, WM_NULL, 0, 0);
 
     // perform the requested operation
@@ -225,7 +225,7 @@ IArchTaskBarReceiver::Icon MSWindowsClientTaskBarReceiver::getIcon() const
 void
 MSWindowsClientTaskBarReceiver::copyLog() const
 {
-    if (m_logBuffer != NULL) {
+    if (m_logBuffer != nullptr) {
         // collect log buffer
         std::string data;
         for (BufferedLogOutputter::const_iterator index = m_logBuffer->begin();
@@ -267,7 +267,7 @@ MSWindowsClientTaskBarReceiver::loadIcon(UINT id)
 void
 MSWindowsClientTaskBarReceiver::deleteIcon(HICON icon)
 {
-    if (icon != NULL) {
+    if (icon != nullptr) {
         DestroyIcon(icon);
     }
 }
@@ -276,14 +276,14 @@ void
 MSWindowsClientTaskBarReceiver::createWindow()
 {
     // ignore if already created
-    if (m_window != NULL) {
+    if (m_window != nullptr) {
         return;
     }
 
     // get the status dialog
     m_window = CreateDialogParam(m_appInstance,
                             MAKEINTRESOURCE(IDD_TASKBAR_STATUS),
-                            NULL,
+                            nullptr,
                             (DLGPROC)&MSWindowsClientTaskBarReceiver::staticDlgProc,
                             reinterpret_cast<LPARAM>(
                                 static_cast<void*>(this)));
@@ -301,10 +301,10 @@ MSWindowsClientTaskBarReceiver::createWindow()
 void
 MSWindowsClientTaskBarReceiver::destroyWindow()
 {
-    if (m_window != NULL) {
+    if (m_window != nullptr) {
         ArchTaskBarWindows::removeDialog(m_window);
         DestroyWindow(m_window);
-        m_window = NULL;
+        m_window = nullptr;
     }
 }
 
@@ -333,7 +333,7 @@ MSWindowsClientTaskBarReceiver::staticDlgProc(HWND hwnd,
 {
     // if msg is WM_INITDIALOG, extract the MSWindowsClientTaskBarReceiver*
     // and put it in the extra window data then forward the call.
-    MSWindowsClientTaskBarReceiver* self = NULL;
+    MSWindowsClientTaskBarReceiver* self = nullptr;
     if (msg == WM_INITDIALOG) {
         self = static_cast<MSWindowsClientTaskBarReceiver*>(
                             reinterpret_cast<void*>(lParam));
@@ -348,7 +348,7 @@ MSWindowsClientTaskBarReceiver::staticDlgProc(HWND hwnd,
     }
 
     // forward the message
-    if (self != NULL) {
+    if (self != nullptr) {
         return self->dlgProc(hwnd, msg, wParam, lParam);
     }
     else {

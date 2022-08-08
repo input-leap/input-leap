@@ -41,8 +41,8 @@ public:
         static bool            equal(const ButtonInfo*, const ButtonInfo*);
 
     public:
-        ButtonID        m_button;
-        KeyModifierMask    m_mask;
+        ButtonID m_button;
+        KeyModifierMask m_mask;
     };
     //! Motion event data
     class MotionInfo {

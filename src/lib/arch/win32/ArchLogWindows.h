@@ -38,5 +38,5 @@ public:
     virtual void        writeLog(ELevel, const char*);
 
 private:
-    HANDLE                m_eventLog;
+    HANDLE m_eventLog;
 };

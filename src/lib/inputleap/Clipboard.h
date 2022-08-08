@@ -62,10 +62,10 @@ public:
     std::string get(EFormat) const override;
 
 private:
-    mutable bool        m_open;
-    mutable Time        m_time;
-    bool                m_owner;
-    Time                m_timeOwned;
-    bool                m_added[kNumFormats];
+    mutable bool m_open;
+    mutable Time m_time;
+    bool m_owner;
+    Time m_timeOwned;
+    bool m_added[kNumFormats];
     std::string m_data[kNumFormats];
 };

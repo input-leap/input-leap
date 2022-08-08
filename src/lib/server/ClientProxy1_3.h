@@ -42,7 +42,7 @@ protected:
     virtual void        keepAlive();
 
 private:
-    double                m_keepAliveRate;
-    EventQueueTimer*    m_keepAliveTimer;
-    IEventQueue*        m_events;
+    double m_keepAliveRate;
+    EventQueueTimer* m_keepAliveTimer;
+    IEventQueue* m_events;
 };

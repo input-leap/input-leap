@@ -77,7 +77,7 @@ public:
     Client* getClientPtr() { return m_client; }
 
 private:
-    Client*            m_client;
-    inputleap::Screen*m_clientScreen;
-    NetworkAddress*    m_serverAddress;
+    Client* m_client;
+    inputleap::Screen* m_clientScreen;
+    NetworkAddress* m_serverAddress;
 };

@@ -48,7 +48,7 @@ protected:
     */
     virtual std::string format(const char* id, const char* defaultFormat, ...) const noexcept;
 private:
-    mutable std::string        m_what;
+    mutable std::string m_what;
 };
 
 /*!
@@ -119,6 +119,6 @@ protected:                                                                \
     std::string getWhat() const noexcept override;                        \
                                                                         \
 private:                                                                \
-    mutable EState                m_state;                                \
-    mutable std::string            m_formatted;                            \
+    mutable EState m_state;                                \
+    mutable std::string m_formatted;                            \
 }

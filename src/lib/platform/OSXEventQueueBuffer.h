@@ -41,7 +41,7 @@ public:
     virtual void        deleteTimer(EventQueueTimer*) const;
 
 private:
-    EventRef            m_event;
-    IEventQueue*        m_eventQueue;
-    EventQueueRef        m_carbonEventQueue;
+    EventRef m_event;
+    IEventQueue* m_eventQueue;
+    EventQueueRef m_carbonEventQueue;
 };

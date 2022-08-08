@@ -37,5 +37,5 @@ public:
     std::string toIClipboard(const std::string&) const override;
 
 private:
-    Atom                m_atom;
+    Atom m_atom;
 };

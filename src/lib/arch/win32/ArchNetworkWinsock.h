@@ -41,10 +41,10 @@
 
 class ArchSocketImpl {
 public:
-    SOCKET                m_socket;
-    int                    m_refCount;
-    WSAEVENT            m_event;
-    bool                m_pollWrite;
+    SOCKET m_socket;
+    int m_refCount;
+    WSAEVENT m_event;
+    bool m_pollWrite;
 };
 
 class ArchNetAddressImpl {
@@ -52,8 +52,8 @@ public:
     static ArchNetAddressImpl* alloc(size_t);
 
 public:
-    int                            m_len;
-    struct sockaddr_storage        m_addr;
+    int m_len;
+    struct sockaddr_storage m_addr;
 };
 #define ADDR_HDR_SIZE    offsetof(ArchNetAddressImpl, m_addr)
 #define TYPED_ADDR(type_, addr_) (reinterpret_cast<type_*>(&addr_->m_addr))
@@ -109,5 +109,5 @@ private:
     typedef std::list<WSAEVENT> EventList;
 
     std::mutex mutex_;
-    EventList            m_unblockEvents;
+    EventList m_unblockEvents;
 };

@@ -195,13 +195,13 @@ private:
     class Desk {
     public:
         std::string m_name;
-        Thread*        m_thread;
-        DWORD            m_threadID;
-        DWORD            m_targetID;
-        HDESK            m_desk;
-        HWND            m_window;
-        HWND            m_foregroundWindow;
-        bool            m_lowLevel;
+        Thread* m_thread;
+        DWORD m_threadID;
+        DWORD m_targetID;
+        HDESK m_desk;
+        HWND m_window;
+        HWND m_foregroundWindow;
+        bool m_lowLevel;
     };
     typedef std::map<std::string, Desk*> Desks;
 
@@ -245,17 +245,17 @@ private:
 
 private:
     // true if screen is being used as a primary screen, false otherwise
-    bool                m_isPrimary;
+    bool m_isPrimary;
 
     // true if hooks are not to be installed (useful for debugging)
-    bool                m_noHooks;
+    bool m_noHooks;
 
     // true if mouse has entered the screen
-    bool                m_isOnScreen;
+    bool m_isOnScreen;
 
     // our resources
-    ATOM                m_deskClass;
-    HCURSOR                m_cursor;
+    ATOM m_deskClass;
+    HCURSOR m_cursor;
 
     // screen shape stuff
     std::int32_t m_x, m_y;
@@ -263,35 +263,35 @@ private:
     std::int32_t m_xCenter, m_yCenter;
 
     // true if system appears to have multiple monitors
-    bool                m_multimon;
+    bool m_multimon;
 
     // the timer used to check for desktop switching
-    EventQueueTimer*    m_timer;
+    EventQueueTimer* m_timer;
 
     // screen saver stuff
-    DWORD                m_threadID;
-    const IScreenSaver*    m_screensaver;
-    bool                m_screensaverNotify;
+    DWORD m_threadID;
+    const IScreenSaver* m_screensaver;
+    bool m_screensaverNotify;
 
     // the current desk and it's name
-    Desk*                m_activeDesk;
+    Desk* m_activeDesk;
     std::string m_activeDeskName;
 
     // one desk per desktop and a cond var to communicate with it
     mutable std::mutex mutex_;
     mutable std::condition_variable desks_ready_cv_;
     bool is_desks_ready_ = false;
-    Desks                m_desks;
+    Desks m_desks;
 
     // keyboard stuff
     std::function<void()> m_updateKeys;
-    HKL                    m_keyLayout;
+    HKL m_keyLayout;
 
     // options
-    bool                m_leaveForegroundOption;
+    bool m_leaveForegroundOption;
 
-    IEventQueue*        m_events;
+    IEventQueue* m_events;
 
     // true if program should stop on desk switch.
-    bool                m_stopOnDeskSwitch;
+    bool m_stopOnDeskSwitch;
 };

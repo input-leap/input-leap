@@ -54,12 +54,12 @@ public:
         static void split(const char* screens, std::set<std::string>&);
 
     public:
-        KeyID            m_key;
-        KeyModifierMask    m_mask;
-        KeyButton        m_button;
+        KeyID m_key;
+        KeyModifierMask m_mask;
+        KeyButton m_button;
         std::int32_t m_count;
-        char*            m_screens;
-        char            m_screensBuffer[1];
+        char* m_screens;
+        char m_screensBuffer[1];
     };
 
     typedef std::set<KeyButton> KeyButtonSet;

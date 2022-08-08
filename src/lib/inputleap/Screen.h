@@ -315,31 +315,31 @@ protected:
 
 private:
     // our platform dependent screen
-    IPlatformScreen*    m_screen;
+    IPlatformScreen* m_screen;
 
     // true if screen is being used as a primary screen, false otherwise
-    bool                m_isPrimary;
+    bool m_isPrimary;
 
     // true if screen is enabled
-    bool                m_enabled;
+    bool m_enabled;
 
     // true if the cursor is on this screen
-    bool                m_entered;
+    bool m_entered;
 
     // true if screen saver should be synchronized to server
-    bool                m_screenSaverSync;
+    bool m_screenSaverSync;
 
     // note toggle keys that toggles on up/down (false) or on
     // transition (true)
-    KeyModifierMask        m_halfDuplex;
+    KeyModifierMask m_halfDuplex;
 
     // true if we're faking input on a primary screen
-    bool                m_fakeInput;
+    bool m_fakeInput;
 
-    IEventQueue*        m_events;
+    IEventQueue* m_events;
 
-    bool                m_mock;
-    bool                m_enableDragDrop;
+    bool m_mock;
+    bool m_enableDragDrop;
 };
 
 }

@@ -104,13 +104,13 @@ public:
 
     Server* getServerPtr() { return m_server; }
 
-    Server*                m_server;
-    EServerState        m_serverState;
+    Server* m_server;
+    EServerState m_serverState;
     inputleap::Screen* m_serverScreen;
-    PrimaryClient*        m_primaryClient;
-    ClientListener*        m_listener;
-    EventQueueTimer*    m_timer;
-    NetworkAddress*        m_barrierAddress;
+    PrimaryClient* m_primaryClient;
+    ClientListener* m_listener;
+    EventQueueTimer* m_timer;
+    NetworkAddress* m_barrierAddress;
 
 private:
     void handleScreenSwitched(const Event&, void*  data);

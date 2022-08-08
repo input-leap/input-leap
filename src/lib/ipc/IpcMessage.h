@@ -46,7 +46,7 @@ public:
     EIpcClientType            clientType() const { return m_clientType; }
 
 private:
-    EIpcClientType            m_clientType;
+    EIpcClientType m_clientType;
 };
 
 class IpcShutdownMessage : public IpcMessage {
@@ -81,5 +81,5 @@ public:
 
 private:
     std::string m_command;
-    bool                m_elevate;
+    bool m_elevate;
 };

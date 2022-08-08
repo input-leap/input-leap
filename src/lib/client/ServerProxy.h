@@ -109,23 +109,23 @@ private:
 private:
     typedef EResult (ServerProxy::*MessageParser)(const std::uint8_t*);
 
-    Client*            m_client;
+    Client* m_client;
     inputleap::IStream* m_stream;
 
     std::uint32_t m_seqNum;
 
-    bool                m_compressMouse;
-    bool                m_compressMouseRelative;
+    bool m_compressMouse;
+    bool m_compressMouseRelative;
     std::int32_t m_xMouse, m_yMouse;
     std::int32_t m_dxMouse, m_dyMouse;
 
-    bool                m_ignoreMouse;
+    bool m_ignoreMouse;
 
-    KeyModifierID        m_modifierTranslationTable[kKeyModifierIDLast];
+    KeyModifierID m_modifierTranslationTable[kKeyModifierIDLast];
 
-    double                m_keepAliveAlarm;
-    EventQueueTimer*    m_keepAliveAlarmTimer;
+    double m_keepAliveAlarm;
+    EventQueueTimer* m_keepAliveAlarmTimer;
 
-    MessageParser        m_parser;
-    IEventQueue*        m_events;
+    MessageParser m_parser;
+    IEventQueue* m_events;
 };

@@ -25,6 +25,6 @@ public:
     ~Chunk();
 
 public:
-    size_t                m_dataSize;
-    char*                m_chunk;
+    size_t m_dataSize;
+    char* m_chunk;
 };

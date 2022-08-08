@@ -59,9 +59,9 @@ public:
 
 private:
     RunFunction func_;
-    ArchSocket            m_socket;
-    bool                m_readable;
-    bool                m_writable;
+    ArchSocket m_socket;
+    bool m_readable;
+    bool m_writable;
 };
 
 

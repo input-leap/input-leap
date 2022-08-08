@@ -59,24 +59,24 @@ private:
     BOOL doStartProcessAsSelf(std::string& command);
 
 private:
-    Thread*                m_thread;
-    bool                m_autoDetectCommand;
-    std::string            m_command;
-    bool                m_monitoring;
-    bool                m_commandChanged;
-    HANDLE                m_stdOutWrite;
-    HANDLE                m_stdOutRead;
-    Thread*                m_outputThread;
-    IpcServer&            m_ipcServer;
-    IpcLogOutputter&    m_ipcLogOutputter;
-    bool                m_elevateProcess;
-    MSWindowsSession    m_session;
+    Thread* m_thread;
+    bool m_autoDetectCommand;
+    std::string m_command;
+    bool m_monitoring;
+    bool m_commandChanged;
+    HANDLE m_stdOutWrite;
+    HANDLE m_stdOutRead;
+    Thread* m_outputThread;
+    IpcServer& m_ipcServer;
+    IpcLogOutputter& m_ipcLogOutputter;
+    bool m_elevateProcess;
+    MSWindowsSession m_session;
     PROCESS_INFORMATION m_processInfo;
-    int                    m_processFailures;
-    bool                m_processRunning;
-    FileLogOutputter*    m_fileLogOutputter;
-    bool                m_autoElevated;
-    bool                m_daemonized;
+    int m_processFailures;
+    bool m_processRunning;
+    FileLogOutputter* m_fileLogOutputter;
+    bool m_autoElevated;
+    bool m_daemonized;
 };
 
 //! Relauncher error

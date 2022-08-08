@@ -87,19 +87,19 @@ protected:
         ClientClipboard();
 
     public:
-        Clipboard        m_clipboard;
+        Clipboard m_clipboard;
         std::uint32_t m_sequenceNumber;
-        bool            m_dirty;
+        bool m_dirty;
     };
 
-    ClientClipboard    m_clipboard[kClipboardEnd];
+    ClientClipboard m_clipboard[kClipboardEnd];
 
 private:
     typedef bool (ClientProxy1_0::*MessageParser)(const std::uint8_t*);
 
-    ClientInfo            m_info;
-    double                m_heartbeatAlarm;
-    EventQueueTimer*    m_heartbeatTimer;
-    MessageParser        m_parser;
-    IEventQueue*        m_events;
+    ClientInfo m_info;
+    double m_heartbeatAlarm;
+    EventQueueTimer* m_heartbeatTimer;
+    MessageParser m_parser;
+    IEventQueue* m_events;
 };

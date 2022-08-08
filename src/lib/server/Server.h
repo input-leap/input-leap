@@ -56,7 +56,7 @@ public:
         static LockCursorToScreenInfo* alloc(State state = kToggle);
 
     public:
-        State            m_state;
+        State m_state;
     };
 
     //! Switch to screen data
@@ -66,7 +66,7 @@ public:
 
     public:
         // this is a C-string;  this type is a variable size structure
-        char            m_screen[1];
+        char m_screen[1];
     };
 
     //! Switch in direction data
@@ -75,7 +75,7 @@ public:
         static SwitchInDirectionInfo* alloc(EDirection direction);
 
     public:
-        EDirection        m_direction;
+        EDirection m_direction;
     };
 
     //! Screen connected data
@@ -97,8 +97,8 @@ public:
                                             const std::string& screens);
 
     public:
-        State            m_state;
-        char            m_screens[1];
+        State m_state;
+        char m_screens[1];
     };
 
     /*!
@@ -112,7 +112,7 @@ public:
 
 #ifdef INPUTLEAP_TEST_ENV
     Server() : m_mock(true), m_config(nullptr) { }
-    void setActive(BaseClientProxy* active) {    m_active = active; }
+    void setActive(BaseClientProxy* active) { m_active = active; }
 #endif
 
     //! @name manipulators
@@ -365,7 +365,7 @@ private:
     void                sendDragInfo(BaseClientProxy* newScreen);
 
 public:
-    bool                m_mock;
+    bool m_mock;
 
 private:
     class ClipboardInfo {
@@ -373,27 +373,27 @@ private:
         ClipboardInfo();
 
     public:
-        Clipboard        m_clipboard;
+        Clipboard m_clipboard;
         std::string m_clipboardData;
         std::string m_clipboardOwner;
         std::uint32_t m_clipboardSeqNum;
     };
 
     // the primary screen client
-    PrimaryClient*        m_primaryClient;
+    PrimaryClient* m_primaryClient;
 
     // all clients (including the primary client) indexed by name
     typedef std::map<std::string, BaseClientProxy*> ClientList;
     typedef std::set<BaseClientProxy*> ClientSet;
-    ClientList            m_clients;
-    ClientSet            m_clientSet;
+    ClientList m_clients;
+    ClientSet m_clientSet;
 
     // all old connections that we're waiting to hangup
     typedef std::map<BaseClientProxy*, EventQueueTimer*> OldClients;
-    OldClients            m_oldClients;
+    OldClients m_oldClients;
 
     // the client with focus
-    BaseClientProxy*    m_active;
+    BaseClientProxy* m_active;
 
     // the sequence number of enter messages
     std::uint32_t m_seqNum;
@@ -410,70 +410,70 @@ private:
     std::int32_t m_xDelta2, m_yDelta2;
 
     // current configuration
-    Config*                m_config;
+    Config* m_config;
 
     // input filter (from m_config);
-    InputFilter*        m_inputFilter;
+    InputFilter* m_inputFilter;
 
     // clipboard cache
-    ClipboardInfo        m_clipboards[kClipboardEnd];
+    ClipboardInfo m_clipboards[kClipboardEnd];
 
     // state saved when screen saver activates
-    BaseClientProxy*    m_activeSaver;
+    BaseClientProxy* m_activeSaver;
     std::int32_t m_xSaver, m_ySaver;
 
     // common state for screen switch tests.  all tests are always
     // trying to reach the same screen in the same direction.
-    EDirection            m_switchDir;
-    BaseClientProxy*    m_switchScreen;
+    EDirection m_switchDir;
+    BaseClientProxy* m_switchScreen;
 
     // state for delayed screen switching
-    double                m_switchWaitDelay;
-    EventQueueTimer*    m_switchWaitTimer;
+    double m_switchWaitDelay;
+    EventQueueTimer* m_switchWaitTimer;
     std::int32_t m_switchWaitX, m_switchWaitY;
 
     // state for double-tap screen switching
-    double                m_switchTwoTapDelay;
-    Stopwatch            m_switchTwoTapTimer;
-    bool                m_switchTwoTapEngaged;
-    bool                m_switchTwoTapArmed;
+    double m_switchTwoTapDelay;
+    Stopwatch m_switchTwoTapTimer;
+    bool m_switchTwoTapEngaged;
+    bool m_switchTwoTapArmed;
     std::int32_t m_switchTwoTapZone;
 
     // modifiers needed before switching
-    bool                m_switchNeedsShift;
-    bool                m_switchNeedsControl;
-    bool                m_switchNeedsAlt;
+    bool m_switchNeedsShift;
+    bool m_switchNeedsControl;
+    bool m_switchNeedsAlt;
 
     // relative mouse move option
-    bool                m_relativeMoves;
+    bool m_relativeMoves;
 
     // flag whether or not we have broadcasting enabled and the screens to
     // which we should send broadcasted keys.
-    bool                m_keyboardBroadcasting;
+    bool m_keyboardBroadcasting;
     std::string m_keyboardBroadcastingScreens;
 
     // screen locking (former scroll lock)
-    bool                m_lockedToScreen;
+    bool m_lockedToScreen;
 
     // server screen
     inputleap::Screen* m_screen;
 
-    IEventQueue*        m_events;
+    IEventQueue* m_events;
 
     // file transfer
-    size_t                m_expectedFileSize;
+    size_t m_expectedFileSize;
     std::string m_receivedFileData;
-    DragFileList        m_dragFileList;
-    DragFileList        m_fakeDragFileList;
-    Thread*                m_sendFileThread;
-    Thread*                m_writeToDropDirThread;
+    DragFileList m_dragFileList;
+    DragFileList m_fakeDragFileList;
+    Thread* m_sendFileThread;
+    Thread* m_writeToDropDirThread;
     std::string m_dragFileExt;
-    bool                m_ignoreFileTransfer;
-    bool                m_enableClipboard;
+    bool m_ignoreFileTransfer;
+    bool m_enableClipboard;
 
-    Thread*                m_sendDragInfoThread;
-    bool                m_waitDragInfoThread;
+    Thread* m_sendDragInfoThread;
+    bool m_waitDragInfoThread;
 
-    ClientListener*        m_clientListener;
-    ServerArgs            m_args;
+    ClientListener* m_clientListener;
+    ServerArgs m_args;
 };

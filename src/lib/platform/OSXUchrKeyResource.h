@@ -44,11 +44,11 @@ private:
     bool            addSequence(KeySequence& keys, UCKeyCharSeq c) const;
 
 private:
-    const UCKeyboardLayout*            m_resource;
-    const UCKeyModifiersToTableNum*    m_m;
-    const UCKeyToCharTableIndex*    m_cti;
-    const UCKeySequenceDataIndex*    m_sdi;
-    const UCKeyStateRecordsIndex*    m_sri;
-    const UCKeyStateTerminators*    m_st;
+    const UCKeyboardLayout* m_resource;
+    const UCKeyModifiersToTableNum* m_m;
+    const UCKeyToCharTableIndex* m_cti;
+    const UCKeySequenceDataIndex* m_sdi;
+    const UCKeyStateRecordsIndex* m_sri;
+    const UCKeyStateTerminators* m_st;
     std::uint16_t m_spaceOutput;
 };

@@ -48,12 +48,12 @@ private:
 
 private:
     // the target for the events we generate
-    void*                m_eventTarget;
+    void* m_eventTarget;
 
-    bool                m_enabled;
-    void*                m_screenSaverController;
-    void*                m_autoReleasePool;
-    EventHandlerRef        m_launchTerminationEventHandlerRef;
-    ProcessSerialNumber    m_screenSaverPSN;
-    IEventQueue*        m_events;
+    bool m_enabled;
+    void* m_screenSaverController;
+    void* m_autoReleasePool;
+    EventHandlerRef m_launchTerminationEventHandlerRef;
+    ProcessSerialNumber m_screenSaverPSN;
+    IEventQueue* m_events;
 };

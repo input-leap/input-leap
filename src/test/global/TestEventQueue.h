@@ -34,5 +34,5 @@ private:
     void                timeoutThread(void*);
 
 private:
-    EventQueueTimer*    m_quitTimeoutTimer;
+    EventQueueTimer* m_quitTimeoutTimer;
 };

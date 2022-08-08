@@ -62,7 +62,7 @@ private:
     bool                parseXWindowsArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
 
 private:
-    App*                m_app;
+    App* m_app;
 
-    static ArgsBase*    m_argsBase;
+    static ArgsBase* m_argsBase;
 };

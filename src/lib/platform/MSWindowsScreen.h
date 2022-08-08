@@ -232,8 +232,8 @@ private:
         bool            operator<(const HotKeyItem&) const;
 
     private:
-        UINT            m_keycode;
-        UINT            m_mask;
+        UINT m_keycode;
+        UINT m_mask;
     };
     typedef std::map<std::uint32_t, HotKeyItem> HotKeyMap;
     typedef std::vector<std::uint32_t> HotKeyIDList;
@@ -243,16 +243,16 @@ private:
     static HINSTANCE    s_windowInstance;
 
     // true if screen is being used as a primary screen, false otherwise
-    bool                m_isPrimary;
+    bool m_isPrimary;
 
     // true if hooks are not to be installed (useful for debugging)
-    bool                m_noHooks;
+    bool m_noHooks;
 
     // true if mouse has entered the screen
-    bool                m_isOnScreen;
+    bool m_isOnScreen;
 
     // our resources
-    ATOM                m_class;
+    ATOM m_class;
 
     // screen shape stuff
     std::int32_t m_x, m_y;
@@ -260,7 +260,7 @@ private:
     std::int32_t m_xCenter, m_yCenter;
 
     // true if system appears to have multiple monitors
-    bool                m_multimon;
+    bool m_multimon;
 
     // last mouse position
     std::int32_t m_xCursor, m_yCursor;
@@ -273,39 +273,38 @@ private:
     std::uint32_t m_markReceived;
 
     // the main loop's thread id
-    DWORD                m_threadID;
+    DWORD m_threadID;
 
     // timer for periodically checking stuff that requires polling
-    EventQueueTimer*    m_fixTimer;
+    EventQueueTimer* m_fixTimer;
 
     // the keyboard layout to use when off primary screen
-    HKL                    m_keyLayout;
+    HKL m_keyLayout;
 
     // screen saver stuff
-    MSWindowsScreenSaver*
-                        m_screensaver;
-    bool                m_screensaverNotify;
-    bool                m_screensaverActive;
+    MSWindowsScreenSaver* m_screensaver;
+    bool m_screensaverNotify;
+    bool m_screensaverActive;
 
     // clipboard stuff.  our window is used mainly as a clipboard
     // owner and as a link in the clipboard viewer chain.
-    HWND                m_window;
-    HWND                m_nextClipboardWindow;
-    bool                m_ownClipboard;
+    HWND m_window;
+    HWND m_nextClipboardWindow;
+    bool m_ownClipboard;
 
     // one desk per desktop and a cond var to communicate with it
-    MSWindowsDesks*    m_desks;
+    MSWindowsDesks* m_desks;
 
     // keyboard stuff
-    MSWindowsKeyState*    m_keyState;
+    MSWindowsKeyState* m_keyState;
 
     // hot key stuff
-    HotKeyMap            m_hotKeys;
-    HotKeyIDList        m_oldHotKeyIDs;
-    HotKeyToIDMap        m_hotKeyToIDMap;
+    HotKeyMap m_hotKeys;
+    HotKeyIDList m_oldHotKeyIDs;
+    HotKeyToIDMap m_hotKeyToIDMap;
 
     // map of button state
-    bool                m_buttons[NumButtonIDs];
+    bool m_buttons[NumButtonIDs];
 
     // the system shows the mouse cursor when an internal display count
     // is >= 0.  this count is maintained per application but there's
@@ -318,27 +317,26 @@ private:
     // MouseKeys is simulating one.  we track this so we can force the
     // cursor to be displayed when the user has entered this screen.
     // m_showingMouse is true when we're doing that.
-    bool                m_hasMouse;
-    bool                m_showingMouse;
-    bool                m_gotOldMouseKeys;
-    MOUSEKEYS            m_mouseKeys;
-    MOUSEKEYS            m_oldMouseKeys;
+    bool m_hasMouse;
+    bool m_showingMouse;
+    bool m_gotOldMouseKeys;
+    MOUSEKEYS m_mouseKeys;
+    MOUSEKEYS m_oldMouseKeys;
 
-    MSWindowsHook        m_hook;
+    MSWindowsHook m_hook;
 
     static MSWindowsScreen*
                         s_screen;
 
-    IEventQueue*        m_events;
+    IEventQueue* m_events;
 
     mutable std::string m_dropTargetPath;
 
-    MSWindowsDropTarget*
-                        m_dropTarget;
-    HWND                m_dropWindow;
-    const int            m_dropWindowSize;
+    MSWindowsDropTarget* m_dropTarget;
+    HWND m_dropWindow;
+    const int m_dropWindowSize;
 
-    Thread*            m_sendDragThread;
+    Thread* m_sendDragThread;
 
-    PrimaryKeyDownList    m_primaryKeyDownList;
+    PrimaryKeyDownList m_primaryKeyDownList;
 };

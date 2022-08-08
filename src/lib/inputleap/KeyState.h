@@ -139,8 +139,8 @@ public:
 
     public:
         std::int32_t m_activeGroup;
-        KeyModifierMask    m_mask;
-        ModifierToKeys&    m_activeModifiers;
+        KeyModifierMask m_mask;
+        ModifierToKeys& m_activeModifiers;
 
     private:
         // not implemented
@@ -196,10 +196,10 @@ private:
     inputleap::KeyMap& m_keyMap;
 
     // current modifier state
-    KeyModifierMask        m_mask;
+    KeyModifierMask m_mask;
 
     // the active modifiers and the buttons activating them
-    ModifierToKeys        m_activeModifiers;
+    ModifierToKeys m_activeModifiers;
 
     // current keyboard state (> 0 if pressed, 0 otherwise).  this is
     // initialized to the keyboard state according to the system then
@@ -217,7 +217,7 @@ private:
 
     // server keyboard state.  an entry is 0 if not the key isn't pressed
     // otherwise it's the local KeyButton synthesized for the server key.
-    KeyButton            m_serverKeys[kNumButtons];
+    KeyButton m_serverKeys[kNumButtons];
 
-    IEventQueue*        m_events;
+    IEventQueue* m_events;
 };

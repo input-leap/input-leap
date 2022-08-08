@@ -193,5 +193,5 @@ private:
     static void threadFunc(const std::function<void()>& func);
 
 private:
-    ArchThread            m_thread;
+    ArchThread m_thread;
 };

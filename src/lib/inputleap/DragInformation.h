@@ -49,5 +49,5 @@ private:
 
 private:
     std::string m_filename;
-    size_t                m_filesize;
+    size_t m_filesize;
 };

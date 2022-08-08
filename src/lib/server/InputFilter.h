@@ -73,9 +73,9 @@ public:
 
     private:
         std::uint32_t m_id;
-        KeyID                    m_key;
-        KeyModifierMask            m_mask;
-        IEventQueue*            m_events;
+        KeyID m_key;
+        KeyModifierMask m_mask;
+        IEventQueue* m_events;
     };
 
     // MouseButtonCondition
@@ -94,9 +94,9 @@ public:
         EFilterStatus match(const Event&) override;
 
     private:
-        ButtonID                m_button;
-        KeyModifierMask            m_mask;
-        IEventQueue*            m_events;
+        ButtonID m_button;
+        KeyModifierMask m_mask;
+        IEventQueue* m_events;
     };
 
     // ScreenConnectedCondition
@@ -112,7 +112,7 @@ public:
 
     private:
         std::string m_screen;
-        IEventQueue*            m_events;
+        IEventQueue* m_events;
     };
 
     // -------------------------------------------------------------------------
@@ -145,8 +145,8 @@ public:
         void perform(const Event&) override;
 
     private:
-        Mode                    m_mode;
-        IEventQueue*            m_events;
+        Mode m_mode;
+        IEventQueue* m_events;
     };
 
     // SwitchToScreenAction
@@ -162,8 +162,8 @@ public:
         void perform(const Event&) override;
 
     private:
-        std::string                    m_screen;
-        IEventQueue*            m_events;
+        std::string m_screen;
+        IEventQueue* m_events;
     };
 
     // ToggleScreenAction
@@ -193,8 +193,8 @@ public:
         void perform(const Event&) override;
 
     private:
-        EDirection                m_direction;
-        IEventQueue*            m_events;
+        EDirection m_direction;
+        IEventQueue* m_events;
     };
 
     // KeyboardBroadcastAction
@@ -214,9 +214,9 @@ public:
         void perform(const Event&) override;
 
     private:
-        Mode                    m_mode;
-        std::string                    m_screens;
-        IEventQueue*            m_events;
+        Mode m_mode;
+        std::string m_screens;
+        IEventQueue* m_events;
     };
 
     // KeystrokeAction
@@ -239,9 +239,9 @@ public:
         virtual const char*        formatName() const;
 
     private:
-        IPlatformScreen::KeyInfo*    m_keyInfo;
-        bool                    m_press;
-        IEventQueue*            m_events;
+        IPlatformScreen::KeyInfo* m_keyInfo;
+        bool m_press;
+        IEventQueue* m_events;
     };
 
     // MouseButtonAction -- modifier combinations not implemented yet
@@ -265,9 +265,9 @@ public:
         virtual const char*        formatName() const;
 
     private:
-        IPlatformScreen::ButtonInfo*    m_buttonInfo;
-        bool                    m_press;
-        IEventQueue*            m_events;
+        IPlatformScreen::ButtonInfo* m_buttonInfo;
+        bool m_press;
+        IEventQueue* m_events;
     };
 
     class Rule {
@@ -318,9 +318,9 @@ public:
     private:
         typedef std::vector<Action*> ActionList;
 
-        Condition*        m_condition;
-        ActionList        m_activateActions;
-        ActionList        m_deactivateActions;
+        Condition* m_condition;
+        ActionList m_activateActions;
+        ActionList m_deactivateActions;
     };
 
     // -------------------------------------------------------------------------
@@ -367,7 +367,7 @@ private:
     void                handleEvent(const Event&, void*);
 
 private:
-    RuleList            m_ruleList;
-    PrimaryClient*        m_primaryClient;
-    IEventQueue*        m_events;
+    RuleList m_ruleList;
+    PrimaryClient* m_primaryClient;
+    IEventQueue* m_events;
 };

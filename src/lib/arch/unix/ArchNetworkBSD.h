@@ -42,8 +42,8 @@ typedef char optval_t;
 
 class ArchSocketImpl {
 public:
-    int                    m_fd;
-    int                    m_refCount;
+    int m_fd;
+    int m_refCount;
 };
 
 class ArchNetAddressImpl {
@@ -51,8 +51,8 @@ public:
     ArchNetAddressImpl() : m_len(sizeof(m_addr)) { }
 
 public:
-    struct sockaddr_storage        m_addr;
-    socklen_t                      m_len;
+    struct sockaddr_storage m_addr;
+    socklen_t m_len;
 };
 
 //! Berkeley (BSD) sockets implementation of IArchNetwork

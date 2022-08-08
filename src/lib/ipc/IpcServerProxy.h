@@ -42,5 +42,5 @@ private:
 
 private:
     inputleap::IStream& m_stream;
-    IEventQueue*        m_events;
+    IEventQueue* m_events;
 };

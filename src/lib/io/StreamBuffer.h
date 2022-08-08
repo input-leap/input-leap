@@ -73,7 +73,7 @@ private:
     typedef std::vector<std::uint8_t> Chunk;
     typedef std::list<Chunk> ChunkList;
 
-    ChunkList            m_chunks;
+    ChunkList m_chunks;
     std::uint32_t m_size;
     std::uint32_t m_headUsed;
 };

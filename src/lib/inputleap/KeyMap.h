@@ -50,14 +50,14 @@ public:
     */
     struct KeyItem {
     public:
-        KeyID            m_id;            //!< KeyID
+        KeyID m_id; //!< KeyID
         std::int32_t m_group;        //!< Group for key
-        KeyButton        m_button;        //!< Button to generate KeyID
-        KeyModifierMask    m_required;        //!< Modifiers required for KeyID
-        KeyModifierMask    m_sensitive;    //!< Modifiers key is sensitive to
-        KeyModifierMask    m_generates;    //!< Modifiers key is mapped to
-        bool            m_dead;            //!< \c true if this is a dead KeyID
-        bool            m_lock;            //!< \c true if this locks a modifier
+        KeyButton m_button; //!< Button to generate KeyID
+        KeyModifierMask m_required; //!< Modifiers required for KeyID
+        KeyModifierMask m_sensitive; //!< Modifiers key is sensitive to
+        KeyModifierMask m_generates; //!< Modifiers key is mapped to
+        bool m_dead; //!< \c true if this is a dead KeyID
+        bool m_lock; //!< \c true if this locks a modifier
         std::uint32_t m_client;        //!< Client data
 
     public:
@@ -90,25 +90,25 @@ public:
     public:
         struct Button {
         public:
-            KeyButton    m_button;        //!< Button to synthesize
-            bool        m_press;        //!< \c true iff press
-            bool        m_repeat;        //!< \c true iff for an autorepeat
+            KeyButton m_button; //!< Button to synthesize
+            bool m_press; //!< \c true iff press
+            bool m_repeat; //!< \c true iff for an autorepeat
             std::uint32_t m_client;        //!< Client data
         };
         struct Group {
         public:
             std::int32_t m_group;        //!< Group/offset to change to/by
-            bool        m_absolute;        //!< \c true iff change to, else by
-            bool        m_restore;        //!< \c true iff for restoring state
+            bool m_absolute; //!< \c true iff change to, else by
+            bool m_restore; //!< \c true iff for restoring state
         };
         union Data {
         public:
-            Button        m_button;
-            Group        m_group;
+            Button m_button;
+            Group m_group;
         };
 
-        EType            m_type;
-        Data            m_data;
+        EType m_type;
+        Data m_data;
     };
 
     //! A sequence of keystrokes
@@ -470,25 +470,25 @@ private:
     typedef std::map<KeyModifierMask, std::string> ModifierToNameMap;
 
     // KeyID info
-    KeyIDMap            m_keyIDMap;
+    KeyIDMap m_keyIDMap;
     std::int32_t m_numGroups;
-    ModifierToKeyTable    m_modifierKeys;
+    ModifierToKeyTable m_modifierKeys;
 
     // composition info
-    bool                m_composeAcrossGroups;
+    bool m_composeAcrossGroups;
 
     // half-duplex info
-    KeyButtonSet        m_halfDuplex;            // half-duplex set by barrier
-    KeySet                m_halfDuplexMods;        // half-duplex set by user
+    KeyButtonSet m_halfDuplex; // half-duplex set by barrier
+    KeySet m_halfDuplexMods; // half-duplex set by user
 
     // dummy KeyItem for changing modifiers
-    KeyItem                m_modifierKeyItem;
+    KeyItem m_modifierKeyItem;
 
     // parsing/formatting tables
-    static NameToKeyMap*        s_nameToKeyMap;
-    static NameToModifierMap*    s_nameToModifierMap;
-    static KeyToNameMap*        s_keyToNameMap;
-    static ModifierToNameMap*    s_modifierToNameMap;
+    static NameToKeyMap* s_nameToKeyMap;
+    static NameToModifierMap* s_nameToModifierMap;
+    static KeyToNameMap* s_keyToNameMap;
+    static ModifierToNameMap* s_modifierToNameMap;
 };
 
 }

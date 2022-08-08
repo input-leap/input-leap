@@ -149,6 +149,6 @@ public:
     bool isPrimary() const override{ return true; }
 private:
     inputleap::Screen* m_screen;
-    bool                m_clipboardDirty[kClipboardEnd];
+    bool m_clipboardDirty[kClipboardEnd];
     std::int32_t m_fakeInputCount;
 };

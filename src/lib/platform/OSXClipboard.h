@@ -51,9 +51,9 @@ private:
 private:
     typedef std::vector<IOSXClipboardConverter*> ConverterList;
 
-    mutable Time        m_time;
-    ConverterList        m_converters;
-    PasteboardRef        m_pboard;
+    mutable Time m_time;
+    ConverterList m_converters;
+    PasteboardRef m_pboard;
 };
 
 //! Clipboard format converter interface

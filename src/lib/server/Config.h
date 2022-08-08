@@ -92,8 +92,8 @@ public:
 
     private:
         std::string m_name;
-        EDirection        m_side;
-        Interval        m_interval;
+        EDirection m_side;
+        Interval m_interval;
     };
 
 private:
@@ -104,7 +104,7 @@ private:
         bool operator==(const std::string& name) const;
 
     private:
-        Config*            m_config;
+        Config* m_config;
         std::string m_name;
     };
 
@@ -134,10 +134,10 @@ private:
         const_iterator    end() const;
 
     private:
-        EdgeLinks        m_neighbors;
+        EdgeLinks m_neighbors;
 
     public:
-        ScreenOptions    m_options;
+        ScreenOptions m_options;
     };
     typedef std::map<std::string, Cell, inputleap::string::CaselessCmp> CellMap;
     typedef std::map<std::string, std::string, inputleap::string::CaselessCmp> NameMap;
@@ -169,7 +169,7 @@ public:
         }
 
     private:
-        internal_const_iterator    m_i;
+        internal_const_iterator m_i;
     };
 
     Config(IEventQueue* events);
@@ -458,13 +458,13 @@ private:
     static std::string getOptionValue(OptionID, OptionValue);
 
 private:
-    CellMap                m_map;
-    NameMap                m_nameToCanonicalName;
-    NetworkAddress        m_barrierAddress;
-    ScreenOptions        m_globalOptions;
-    InputFilter            m_inputFilter;
-    bool                m_hasLockToScreenAction;
-    IEventQueue*        m_events;
+    CellMap m_map;
+    NameMap m_nameToCanonicalName;
+    NetworkAddress m_barrierAddress;
+    ScreenOptions m_globalOptions;
+    InputFilter m_inputFilter;
+    bool m_hasLockToScreenAction;
+    IEventQueue* m_events;
 };
 
 //! Configuration read context
@@ -510,7 +510,7 @@ private:
     static std::string        concatArgs(const ArgList& args);
 
 private:
-    std::istream&        m_stream;
+    std::istream& m_stream;
     std::int32_t m_line;
 };
 
@@ -529,5 +529,5 @@ protected:
     std::string getWhat() const noexcept override;
 
 private:
-    std::string                m_error;
+    std::string m_error;
 };

@@ -28,7 +28,7 @@ public:
 
 public:
     std::string m_configFile;
-    Config*                m_config;
+    Config* m_config;
     std::string m_screenChangeScript;
     bool check_client_certificates = true;
 };

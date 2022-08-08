@@ -86,10 +86,10 @@ protected:
     virtual void        onStatusChanged(Server* server);
 
 private:
-    EState                m_state;
+    EState m_state;
     std::string m_errorMessage;
-    Clients            m_clients;
-    IEventQueue*        m_events;
+    Clients m_clients;
+    IEventQueue* m_events;
 };
 
 IArchTaskBarReceiver* createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events);

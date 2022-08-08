@@ -163,13 +163,13 @@ private:
     typedef std::map<CFDataRef, std::int32_t> GroupMap;
     typedef std::map<std::uint32_t, KeyID> VirtualKeyMap;
 
-    VirtualKeyMap        m_virtualKeyMap;
+    VirtualKeyMap m_virtualKeyMap;
     mutable std::uint32_t m_deadKeyState;
-    GroupList            m_groups;
-    GroupMap            m_groupMap;
-    bool                m_shiftPressed;
-    bool                m_controlPressed;
-    bool                m_altPressed;
-    bool                m_superPressed;
-    bool                m_capsPressed;
+    GroupList m_groups;
+    GroupMap m_groupMap;
+    bool m_shiftPressed;
+    bool m_controlPressed;
+    bool m_altPressed;
+    bool m_superPressed;
+    bool m_capsPressed;
 };

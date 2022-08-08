@@ -85,14 +85,14 @@ private:
 
     static ArchMultithreadPosix*    s_instance;
 
-    bool                m_newThreadCalled;
+    bool m_newThreadCalled;
 
     std::mutex m_threadMutex;
-    ArchThread            m_mainThread;
-    ThreadList            m_threadList;
-    ThreadID            m_nextID;
+    ArchThread m_mainThread;
+    ThreadList m_threadList;
+    ThreadID m_nextID;
 
-    pthread_t            m_signalThread;
-    SignalFunc            m_signalFunc[kNUM_SIGNALS];
-    void*                m_signalUserData[kNUM_SIGNALS];
+    pthread_t m_signalThread;
+    SignalFunc m_signalFunc[kNUM_SIGNALS];
+    void* m_signalUserData[kNUM_SIGNALS];
 };

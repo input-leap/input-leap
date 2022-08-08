@@ -96,17 +96,17 @@ private:
     MultiplexerJobStatus serviceConnected(ISocketMultiplexerJob*, bool, bool, bool);
 
 protected:
-    bool                m_readable;
-    bool                m_writable;
-    bool                m_connected;
-    IEventQueue*        m_events;
-    StreamBuffer        m_inputBuffer;
-    StreamBuffer        m_outputBuffer;
+    bool m_readable;
+    bool m_writable;
+    bool m_connected;
+    IEventQueue* m_events;
+    StreamBuffer m_inputBuffer;
+    StreamBuffer m_outputBuffer;
 
     mutable std::mutex tcp_mutex_;
 private:
-    ArchSocket            m_socket;
+    ArchSocket m_socket;
     std::condition_variable flushed_cv_;
     bool is_flushed_ = true;
-    SocketMultiplexer*    m_socketMultiplexer;
+    SocketMultiplexer* m_socketMultiplexer;
 };

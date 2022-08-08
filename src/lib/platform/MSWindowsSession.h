@@ -48,5 +48,5 @@ private:
     BOOL                nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry);
 
 private:
-    DWORD                m_activeSessionId;
+    DWORD m_activeSessionId;
 };

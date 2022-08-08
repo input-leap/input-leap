@@ -57,8 +57,8 @@ private:
     void                handleMessageReceived(const Event&, void*);
 
 private:
-    NetworkAddress        m_serverAddress;
-    TCPSocket            m_socket;
-    IpcServerProxy*    m_server;
-    IEventQueue*        m_events;
+    NetworkAddress m_serverAddress;
+    TCPSocket m_socket;
+    IpcServerProxy* m_server;
+    IEventQueue* m_events;
 };

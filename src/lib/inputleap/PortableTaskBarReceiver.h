@@ -79,13 +79,13 @@ protected:
     virtual void        onStatusChanged(INode* node);
 
 private:
-    EState                m_state;
+    EState m_state;
     std::string m_errorMessage;
 
     std::string m_server;
-    Clients            m_clients;
+    Clients m_clients;
 
-    IEventQueue*        m_events;
+    IEventQueue* m_events;
 };
 
 IArchTaskBarReceiver* createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events);

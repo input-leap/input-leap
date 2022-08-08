@@ -50,9 +50,9 @@ public:
 private:
     bool                queryDataObject(IDataObject* dataObject);
 
-    long                m_refCount;
-    bool                m_allowDrop;
-    std::string            m_dragFilename;
+    long m_refCount;
+    bool m_allowDrop;
+    std::string m_dragFilename;
 
     static MSWindowsDropTarget*
                         s_instance;

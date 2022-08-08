@@ -88,7 +88,7 @@ private:
     void                lockJobListLock();
 
     // lock the job list.  this blocks if the job list is already
-    // locked.  the calling thread must have called requestJobLock.
+    // locked.  the calling thread must have called lockJobListLock.
     void                lockJobList();
 
     // unlock the job list and the lock out on locking.

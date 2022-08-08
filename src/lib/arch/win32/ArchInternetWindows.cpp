@@ -88,9 +88,9 @@ std::string ArchInternetWindows::urlEncode(const std::string& url)
 static WinINetUrl parseUrl(const std::string& url);
 
 WinINetRequest::WinINetRequest(const std::string& url) :
-    m_session(NULL),
-    m_connect(NULL),
-    m_request(NULL),
+    m_session(nullptr),
+    m_connect(nullptr),
+    m_request(nullptr),
     m_used(false),
     m_url(parseUrl(url))
 {
@@ -98,15 +98,15 @@ WinINetRequest::WinINetRequest(const std::string& url) :
 
 WinINetRequest::~WinINetRequest()
 {
-    if (m_request != NULL) {
+    if (m_request != nullptr) {
         InternetCloseHandle(m_request);
     }
 
-    if (m_connect != NULL) {
+    if (m_connect != nullptr) {
         InternetCloseHandle(m_connect);
     }
 
-    if (m_session != NULL) {
+    if (m_session != nullptr) {
         InternetCloseHandle(m_session);
     }
 }
@@ -123,7 +123,7 @@ std::string WinINetRequest::send()
     openRequest();
 
     std::string headers("Content-Type: text/html");
-    if (!HttpSendRequest(m_request, headers.c_str(), (DWORD)headers.length(), NULL, NULL)) {
+    if (!HttpSendRequest(m_request, headers.c_str(), (DWORD)headers.length(), 0, 0)) {
         throw XArch(new XArchEvalWindows());
     }
 
@@ -146,14 +146,10 @@ void WinINetRequest::openSession()
     userAgent << "Barrier ";
     userAgent << kVersion;
 
-    m_session = InternetOpen(
-        userAgent.str().c_str(),
-        INTERNET_OPEN_TYPE_PRECONFIG,
-        NULL,
-        NULL,
-        NULL);
+    m_session = InternetOpen(userAgent.str().c_str(),
+                             INTERNET_OPEN_TYPE_PRECONFIG, nullptr, nullptr, 0);
 
-    if (m_session == NULL) {
+    if (m_session == nullptr) {
         throw XArch(new XArchEvalWindows());
     }
 }
@@ -161,17 +157,14 @@ void WinINetRequest::openSession()
 void
 WinINetRequest::connect()
 {
-    m_connect = InternetConnect(
-        m_session,
-        m_url.m_host.c_str(),
-        m_url.m_port,
-        NULL,
-        NULL,
-        INTERNET_SERVICE_HTTP,
-        NULL,
-        NULL);
+    m_connect = InternetConnect(m_session,
+                                m_url.m_host.c_str(),
+                                m_url.m_port,
+                                nullptr,
+                                nullptr,
+                                INTERNET_SERVICE_HTTP, 0, 0);
 
-    if (m_connect == NULL) {
+    if (m_connect == nullptr) {
         throw XArch(new XArchEvalWindows());
     }
 }
@@ -179,17 +172,15 @@ WinINetRequest::connect()
 void
 WinINetRequest::openRequest()
 {
-    m_request = HttpOpenRequest(
-        m_connect,
-        "GET",
-        m_url.m_path.c_str(),
-        HTTP_VERSION,
-        NULL,
-        NULL,
-        m_url.m_flags,
-        NULL);
+    m_request = HttpOpenRequest(m_connect,
+                                "GET",
+                                m_url.m_path.c_str(),
+                                HTTP_VERSION,
+                                nullptr,
+                                nullptr,
+                                m_url.m_flags, 0);
 
-    if (m_request == NULL) {
+    if (m_request == nullptr) {
         throw XArch(new XArchEvalWindows());
     }
 }

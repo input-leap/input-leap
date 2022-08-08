@@ -98,7 +98,7 @@ ArchNetworkBSD::newSocket(EAddressFamily family, ESocketType type)
 ArchSocket
 ArchNetworkBSD::copySocket(ArchSocket s)
 {
-    assert(s != NULL);
+    assert(s != nullptr);
 
     // ref the socket and return it
     std::lock_guard<std::mutex> lock(mutex_);
@@ -109,7 +109,7 @@ ArchNetworkBSD::copySocket(ArchSocket s)
 void
 ArchNetworkBSD::closeSocket(ArchSocket s)
 {
-    assert(s != NULL);
+    assert(s != nullptr);
 
     // unref the socket and note if it should be released
     bool doClose = false;
@@ -137,7 +137,7 @@ ArchNetworkBSD::closeSocket(ArchSocket s)
 void
 ArchNetworkBSD::closeSocketForRead(ArchSocket s)
 {
-    assert(s != NULL);
+    assert(s != nullptr);
 
     if (shutdown(s->m_fd, 0) == -1) {
         if (errno != ENOTCONN) {
@@ -149,7 +149,7 @@ ArchNetworkBSD::closeSocketForRead(ArchSocket s)
 void
 ArchNetworkBSD::closeSocketForWrite(ArchSocket s)
 {
-    assert(s != NULL);
+    assert(s != nullptr);
 
     if (shutdown(s->m_fd, 1) == -1) {
         if (errno != ENOTCONN) {
@@ -161,8 +161,8 @@ ArchNetworkBSD::closeSocketForWrite(ArchSocket s)
 void
 ArchNetworkBSD::bindSocket(ArchSocket s, ArchNetAddress addr)
 {
-    assert(s    != NULL);
-    assert(addr != NULL);
+    assert(s != nullptr);
+    assert(addr != nullptr);
 
     if (bind(s->m_fd, TYPED_ADDR(struct sockaddr, addr), addr->m_len) == -1) {
         throwError(errno);
@@ -172,7 +172,7 @@ ArchNetworkBSD::bindSocket(ArchSocket s, ArchNetAddress addr)
 void
 ArchNetworkBSD::listenOnSocket(ArchSocket s)
 {
-    assert(s != NULL);
+    assert(s != nullptr);
 
     // hardcoding backlog
     if (listen(s->m_fd, 3) == -1) {
@@ -183,11 +183,11 @@ ArchNetworkBSD::listenOnSocket(ArchSocket s)
 ArchSocket
 ArchNetworkBSD::acceptSocket(ArchSocket s, ArchNetAddress* addr)
 {
-    assert(s != NULL);
+    assert(s != nullptr);
 
-    // if user passed NULL in addr then use scratch space
+    // if user passed nullptr in addr then use scratch space
     ArchNetAddress dummy;
-    if (addr == NULL) {
+    if (addr == nullptr) {
         addr = &dummy;
     }
 
@@ -203,9 +203,9 @@ ArchNetworkBSD::acceptSocket(ArchSocket s, ArchNetAddress* addr)
         int err = errno;
         delete newSocket;
         delete *addr;
-        *addr = NULL;
+        *addr = nullptr;
         if (err == EAGAIN) {
-            return NULL;
+            return nullptr;
         }
         throwError(err);
     }
@@ -217,7 +217,7 @@ ArchNetworkBSD::acceptSocket(ArchSocket s, ArchNetAddress* addr)
         close(fd);
         delete newSocket;
         delete *addr;
-        *addr = NULL;
+        *addr = nullptr;
         throw;
     }
 
@@ -236,8 +236,8 @@ ArchNetworkBSD::acceptSocket(ArchSocket s, ArchNetAddress* addr)
 bool
 ArchNetworkBSD::connectSocket(ArchSocket s, ArchNetAddress addr)
 {
-    assert(s    != NULL);
-    assert(addr != NULL);
+    assert(s != nullptr);
+    assert(addr != nullptr);
 
     if (connect(s->m_fd, TYPED_ADDR(struct sockaddr, addr), addr->m_len) == -1) {
         if (errno == EISCONN) {
@@ -255,7 +255,7 @@ ArchNetworkBSD::connectSocket(ArchSocket s, ArchNetAddress addr)
 int
 ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout)
 {
-    assert(pe != NULL || num == 0);
+    assert(pe != nullptr || num == 0);
 
     // return if nothing to do
     if (num == 0) {
@@ -270,7 +270,7 @@ ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout)
 
     // translate query
     for (int i = 0; i < num; ++i) {
-        pfd[i].fd     = (pe[i].m_socket == NULL) ? -1 : pe[i].m_socket->m_fd;
+        pfd[i].fd     = (pe[i].m_socket == nullptr) ? -1 : pe[i].m_socket->m_fd;
         pfd[i].events = 0;
         if ((pe[i].m_events & kPOLLIN) != 0) {
             pfd[i].events |= POLLIN;
@@ -283,7 +283,7 @@ ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout)
 
     // add the unblock pipe
     const int* unblockPipe = getUnblockPipe();
-    if (unblockPipe != NULL) {
+    if (unblockPipe != nullptr) {
         pfd[n].fd     = unblockPipe[0];
         pfd[n].events = POLLIN;
         ++n;
@@ -296,7 +296,7 @@ ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout)
     n = poll(pfd, n, t);
 
     // reset the unblock pipe
-    if (n > 0 && unblockPipe != NULL && (pfd[num].revents & POLLIN) != 0) {
+    if (n > 0 && unblockPipe != nullptr && (pfd[num].revents & POLLIN) != 0) {
         // the unblock event was signalled.  flush the pipe.
         char dummy[100];
         int ignore;
@@ -348,7 +348,7 @@ void
 ArchNetworkBSD::unblockPollSocket(ArchThread thread)
 {
     const int* unblockPipe = getUnblockPipeForThread(thread);
-    if (unblockPipe != NULL) {
+    if (unblockPipe != nullptr) {
         char dummy = 0;
         int ignore;
 
@@ -360,7 +360,7 @@ ArchNetworkBSD::unblockPollSocket(ArchThread thread)
 size_t
 ArchNetworkBSD::readSocket(ArchSocket s, void* buf, size_t len)
 {
-    assert(s != NULL);
+    assert(s != nullptr);
 
     ssize_t n = read(s->m_fd, buf, len);
     if (n == -1) {
@@ -375,7 +375,7 @@ ArchNetworkBSD::readSocket(ArchSocket s, void* buf, size_t len)
 size_t
 ArchNetworkBSD::writeSocket(ArchSocket s, const void* buf, size_t len)
 {
-    assert(s != NULL);
+    assert(s != nullptr);
 
     ssize_t n = write(s->m_fd, buf, len);
     if (n == -1) {
@@ -390,7 +390,7 @@ ArchNetworkBSD::writeSocket(ArchSocket s, const void* buf, size_t len)
 void
 ArchNetworkBSD::throwErrorOnSocket(ArchSocket s)
 {
-    assert(s != NULL);
+    assert(s != nullptr);
 
     // get the error from the socket layer
     int err        = 0;
@@ -428,7 +428,7 @@ ArchNetworkBSD::setBlockingOnSocket(int fd, bool blocking)
 bool
 ArchNetworkBSD::setNoDelayOnSocket(ArchSocket s, bool noDelay)
 {
-    assert(s != NULL);
+    assert(s != nullptr);
 
     // get old state
     int oflag;
@@ -451,7 +451,7 @@ ArchNetworkBSD::setNoDelayOnSocket(ArchSocket s, bool noDelay)
 bool
 ArchNetworkBSD::setReuseAddrOnSocket(ArchSocket s, bool reuse)
 {
-    assert(s != NULL);
+    assert(s != nullptr);
 
     // get old state
     int oflag;
@@ -520,7 +520,7 @@ ArchNetworkBSD::newAnyAddr(EAddressFamily family)
 ArchNetAddress
 ArchNetworkBSD::copyAddr(ArchNetAddress addr)
 {
-    assert(addr != NULL);
+    assert(addr != nullptr);
 
     // allocate and copy address
     return new ArchNetAddressImpl(*addr);
@@ -540,7 +540,7 @@ ArchNetworkBSD::nameToAddr(const std::string& name)
     hints.ai_family = AF_UNSPEC;
 
     std::lock_guard<std::mutex> lock(mutex_);
-    if ((ret = getaddrinfo(name.c_str(), NULL, &hints, &p)) != 0) {
+    if ((ret = getaddrinfo(name.c_str(), nullptr, &hints, &p)) != 0) {
         delete addr;
         throwNameError(ret);
     }
@@ -560,7 +560,7 @@ ArchNetworkBSD::nameToAddr(const std::string& name)
 void
 ArchNetworkBSD::closeAddr(ArchNetAddress addr)
 {
-    assert(addr != NULL);
+    assert(addr != nullptr);
 
     delete addr;
 }
@@ -568,7 +568,7 @@ ArchNetworkBSD::closeAddr(ArchNetAddress addr)
 std::string
 ArchNetworkBSD::addrToName(ArchNetAddress addr)
 {
-    assert(addr != NULL);
+    assert(addr != nullptr);
 
     // mutexed name lookup (ugh)
     std::lock_guard<std::mutex> lock(mutex_);
@@ -586,7 +586,7 @@ ArchNetworkBSD::addrToName(ArchNetAddress addr)
 std::string
 ArchNetworkBSD::addrToString(ArchNetAddress addr)
 {
-    assert(addr != NULL);
+    assert(addr != nullptr);
 
     switch (getAddrFamily(addr)) {
     case kINET: {
@@ -614,7 +614,7 @@ ArchNetworkBSD::addrToString(ArchNetAddress addr)
 IArchNetwork::EAddressFamily
 ArchNetworkBSD::getAddrFamily(ArchNetAddress addr)
 {
-    assert(addr != NULL);
+    assert(addr != nullptr);
 
     switch (addr->m_addr.ss_family) {
     case AF_INET:
@@ -630,7 +630,7 @@ ArchNetworkBSD::getAddrFamily(ArchNetAddress addr)
 void
 ArchNetworkBSD::setAddrPort(ArchNetAddress addr, int port)
 {
-    assert(addr != NULL);
+    assert(addr != nullptr);
 
     switch (getAddrFamily(addr)) {
     case kINET: {
@@ -654,7 +654,7 @@ ArchNetworkBSD::setAddrPort(ArchNetAddress addr, int port)
 int
 ArchNetworkBSD::getAddrPort(ArchNetAddress addr)
 {
-    assert(addr != NULL);
+    assert(addr != nullptr);
 
     switch (getAddrFamily(addr)) {
     case kINET: {
@@ -676,7 +676,7 @@ ArchNetworkBSD::getAddrPort(ArchNetAddress addr)
 bool
 ArchNetworkBSD::isAnyAddr(ArchNetAddress addr)
 {
-    assert(addr != NULL);
+    assert(addr != nullptr);
 
     switch (getAddrFamily(addr)) {
     case kINET: {
@@ -719,7 +719,7 @@ ArchNetworkBSD::getUnblockPipeForThread(ArchThread thread)
 {
     ArchMultithreadPosix* mt = ArchMultithreadPosix::getInstance();
     int* unblockPipe = reinterpret_cast<int*>(mt->getNetworkDataForThread(thread));
-    if (unblockPipe == NULL) {
+    if (unblockPipe == nullptr) {
         unblockPipe = new int[2];
         if (pipe(unblockPipe) != -1) {
             try {
@@ -728,12 +728,12 @@ ArchNetworkBSD::getUnblockPipeForThread(ArchThread thread)
             }
             catch (...) {
                 delete[] unblockPipe;
-                unblockPipe = NULL;
+                unblockPipe = nullptr;
             }
         }
         else {
             delete[] unblockPipe;
-            unblockPipe = NULL;
+            unblockPipe = nullptr;
         }
     }
     return unblockPipe;

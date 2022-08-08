@@ -29,7 +29,7 @@
 static const char* s_settingsKeyNames[] = {
     _T("SOFTWARE"),
     _T("Barrier"),
-    NULL
+    nullptr
 };
 
 //
@@ -55,11 +55,11 @@ ArchSystemWindows::getOSName() const
         _T("Microsoft"),
         _T("Windows NT"),
         _T("CurrentVersion"),
-        NULL
+        nullptr
     };
 
     HKEY key = ArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, windowsVersionKeyNames);
-    if (key == NULL) {
+    if (key == nullptr) {
         return osName;
     }
 
@@ -92,7 +92,7 @@ std::string
 ArchSystemWindows::setting(const std::string& valueName) const
 {
     HKEY key = ArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, s_settingsKeyNames);
-    if (key == NULL)
+    if (key == nullptr)
         return "";
 
     return ArchMiscWindows::readValueString(key, valueName.c_str());
@@ -102,7 +102,7 @@ void
 ArchSystemWindows::setting(const std::string& valueName, const std::string& valueString) const
 {
     HKEY key = ArchMiscWindows::addKey(HKEY_LOCAL_MACHINE, s_settingsKeyNames);
-    if (key == NULL)
+    if (key == nullptr)
         throw XArch(std::string("could not access registry key: ") + valueName);
     ArchMiscWindows::setValue(key, valueName.c_str(), valueString.c_str());
 }
@@ -119,7 +119,7 @@ ArchSystemWindows::isWOW64() const
         (LPFN_ISWOW64PROCESS) GetProcAddress(hModule, "IsWow64Process");
 
     BOOL bIsWow64 = FALSE;
-    if (NULL != fnIsWow64Process &&
+    if (nullptr != fnIsWow64Process &&
         fnIsWow64Process(GetCurrentProcess(), &bIsWow64) &&
         bIsWow64)
     {
@@ -145,7 +145,7 @@ ArchSystemWindows::getLibsUsed(void) const
 
     hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid);
 
-    if (NULL == hProcess) {
+    if (nullptr == hProcess) {
         return msg;
     }
 

@@ -63,7 +63,7 @@ curlWriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
 }
 
 CurlFacade::CurlFacade() :
-    m_curl(NULL)
+    m_curl(nullptr)
 {
     CURLcode init = curl_global_init(CURL_GLOBAL_ALL);
     if (init != CURLE_OK) {
@@ -71,14 +71,14 @@ CurlFacade::CurlFacade() :
     }
 
     m_curl = curl_easy_init();
-    if (m_curl == NULL) {
+    if (m_curl == nullptr) {
         throw XArch("CURL easy init failed.");
     }
 }
 
 CurlFacade::~CurlFacade()
 {
-    if (m_curl != NULL) {
+    if (m_curl != nullptr) {
         curl_easy_cleanup(m_curl);
     }
 
@@ -111,7 +111,7 @@ std::string CurlFacade::urlEncode(const std::string& url)
 {
     char* resultCStr = curl_easy_escape(m_curl, url.c_str(), 0);
 
-    if (resultCStr == NULL) {
+    if (resultCStr == nullptr) {
         throw XArch("CURL escape failed.");
     }
 

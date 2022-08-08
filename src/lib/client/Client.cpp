@@ -91,10 +91,10 @@ Client::Client(IEventQueue* events, const std::string& name, const NetworkAddres
                                 this,
                                 new TMethodEventJob<Client>(this,
                                     &Client::handleFileChunkSending));
-        m_events->adoptHandler(m_events->forFile().fileRecieveCompleted(),
+        m_events->adoptHandler(m_events->forFile().fileReceiveCompleted(),
                                 this,
                                 new TMethodEventJob<Client>(this,
-                                    &Client::handleFileRecieveCompleted));
+                                    &Client::handleFileReceiveCompleted));
     }
 }
 
@@ -743,15 +743,15 @@ Client::handleFileChunkSending(const Event& event, void*)
 }
 
 void
-Client::handleFileRecieveCompleted(const Event& event, void*)
+Client::handleFileReceiveCompleted(const Event& event, void*)
 {
     (void) event;
 
-    onFileRecieveCompleted();
+    onFileReceiveCompleted();
 }
 
 void
-Client::onFileRecieveCompleted()
+Client::onFileReceiveCompleted()
 {
     if (isReceivedFileSizeValid()) {
         m_writeToDropDirThread = new Thread([this](){ write_to_drop_dir_thread(); });

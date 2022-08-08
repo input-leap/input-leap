@@ -23,16 +23,8 @@
 #include "base/Time.h"
 
 #include <signal.h>
-#if TIME_WITH_SYS_TIME
-#    include <sys/time.h>
-#    include <time.h>
-#else
-#    if HAVE_SYS_TIME_H
-#        include <sys/time.h>
-#    else
-#        include <time.h>
-#    endif
-#endif
+#include <sys/time.h>
+#include <time.h>
 #include <cerrno>
 
 #define SIGWAKEUP SIGUSR1
@@ -579,12 +571,8 @@ ArchMultithreadPosix::threadSignalHandler(void*)
     // we exit the loop via thread cancellation in sigwait()
     for (;;) {
         // wait
-#if HAVE_POSIX_SIGWAIT
         int signal = 0;
         sigwait(&sigset, &signal);
-#else
-        sigwait(&sigset);
-#endif
 
         // if we get here then the signal was raised
         switch (signal) {

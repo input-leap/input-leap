@@ -67,60 +67,11 @@ if (UNIX)
     include (CheckCSourceCompiles)
     include (FindPkgConfig)
 
-    check_include_file_cxx (istream HAVE_ISTREAM)
-    check_include_file_cxx (ostream HAVE_OSTREAM)
-    check_include_file_cxx (sstream HAVE_SSTREAM)
-
-    check_include_files (inttypes.h HAVE_INTTYPES_H)
-    check_include_files (locale.h HAVE_LOCALE_H)
-    check_include_files (memory.h HAVE_MEMORY_H)
-    check_include_files (stdlib.h HAVE_STDLIB_H)
-    check_include_files (strings.h HAVE_STRINGS_H)
-    check_include_files (string.h HAVE_STRING_H)
-    check_include_files (sys/select.h HAVE_SYS_SELECT_H)
     check_include_files (sys/socket.h HAVE_SYS_SOCKET_H)
-    check_include_files (sys/stat.h HAVE_SYS_STAT_H)
     check_include_files (sys/time.h HAVE_SYS_TIME_H)
     check_include_files (sys/utsname.h HAVE_SYS_UTSNAME_H)
-    check_include_files (unistd.h HAVE_UNISTD_H)
-    check_include_files (wchar.h HAVE_WCHAR_H)
 
     check_function_exists (getpwuid_r HAVE_GETPWUID_R)
-    check_function_exists (gmtime_r HAVE_GMTIME_R)
-    check_function_exists (nanosleep HAVE_NANOSLEEP)
-    check_function_exists (poll HAVE_POLL)
-    check_function_exists (sigwait HAVE_POSIX_SIGWAIT)
-    check_function_exists (strftime HAVE_STRFTIME)
-    check_function_exists (inet_aton HAVE_INET_ATON)
-
-    # For some reason, the check_function_exists macro doesn't detect
-    # the inet_aton on some pure Unix platforms (e.g. sunos5). So we
-    # need to do a more detailed check and also include some extra libs.
-    if (NOT HAVE_INET_ATON)
-        set (CMAKE_REQUIRED_LIBRARIES nsl)
-
-        check_c_source_compiles (
-            "#include <arpa/inet.h>\n int main() { inet_aton (0, 0); }"
-            HAVE_INET_ATON_ADV)
-
-        set (CMAKE_REQUIRED_LIBRARIES)
-
-        if (HAVE_INET_ATON_ADV)
-            # Override the previous fail.
-            set (HAVE_INET_ATON 1)
-
-            # Assume that both nsl and socket will be needed,
-            # it seems safe to add socket on the back of nsl,
-            # since socket only ever needed when nsl is needed.
-            list (APPEND libs nsl socket)
-        endif()
-
-    endif()
-
-    check_type_size (char SIZEOF_CHAR)
-    check_type_size (int SIZEOF_INT)
-    check_type_size (long SIZEOF_LONG)
-    check_type_size (short SIZEOF_SHORT)
 
     # pthread is used on both Linux and Mac
     set (CMAKE_THREAD_PREFER_PTHREAD TRUE)
@@ -208,17 +159,9 @@ if (UNIX)
     # For config.h, set some static values; it may be a good idea to make
     # these values dynamic for non-standard UNIX compilers.
     set (ACCEPT_TYPE_ARG3 socklen_t)
-    set (HAVE_CXX_BOOL 1)
-    set (HAVE_CXX_CASTS 1)
-    set (HAVE_CXX_EXCEPTIONS 1)
-    set (HAVE_CXX_MUTABLE 1)
-    set (HAVE_CXX_STDLIB 1)
     set (SELECT_TYPE_ARG1 int)
     set (SELECT_TYPE_ARG234 " (fd_set *)")
     set (SELECT_TYPE_ARG5 " (struct timeval *)")
-    set (STDC_HEADERS 1)
-    set (TIME_WITH_SYS_TIME 1)
-    set (HAVE_SOCKLEN_T 1)
 
     add_definitions (-DSYSAPI_UNIX=1)
 

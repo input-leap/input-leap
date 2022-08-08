@@ -31,9 +31,6 @@
 #    include <sys/socket.h>
 #endif
 
-#if !HAVE_SOCKLEN_T
-typedef int socklen_t;
-#endif
 
 // old systems may use char* for [gs]etsockopt()'s optval argument.
 // this should be void on modern systems but char is forwards

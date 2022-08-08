@@ -47,6 +47,9 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Work around git safe directory check
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
+
       - name: Run the build
         run: ./clean_build.sh
         env:

@@ -99,13 +99,13 @@ private:
     Thread*                m_thread;
     bool                m_update;
     std::condition_variable cv_jobs_ready_;
-    bool are_jobs_ready_ = false;
+    bool jobs_are_ready_ = false;
 
     std::condition_variable cv_jobs_list_lock_;
-    bool is_jobs_list_lock_locked_ = false;
+    bool jobs_list_lock_is_locked_ = false;
 
     std::condition_variable cv_job_list_lock_locked_;
-    bool is_job_list_lock_lock_locked_ = false;
+    bool job_list_lock_lock_is_locked_ = false;
 
     Thread*                m_jobListLocker;
     Thread*                m_jobListLockLocker;

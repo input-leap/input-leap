@@ -61,6 +61,11 @@ SocketMultiplexer::~SocketMultiplexer()
 {
     m_thread->cancel();
     m_thread->unblockPollSocket();
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        jobs_are_ready_ = true;
+        cv_jobs_ready_.notify_all();
+    }
     m_thread->wait();
     delete m_thread;
     delete m_jobListLocker;

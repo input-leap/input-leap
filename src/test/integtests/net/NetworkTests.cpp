@@ -68,7 +68,7 @@ class NetworkTests : public ::testing::Test
 {
 public:
     NetworkTests() :
-        m_mockData(NULL),
+        m_mockData(nullptr),
         m_mockDataSize(0),
         m_mockFileSize(0)
     {
@@ -344,7 +344,7 @@ NetworkTests::sendToClient_mockData_handleClientConnected(const Event&, void* vl
     Server* server = listener->getServer();
 
     ClientProxy* client = listener->getNextClient();
-    if (client == NULL) {
+    if (client == nullptr) {
         throw runtime_error("client is null");
     }
 
@@ -371,7 +371,7 @@ NetworkTests::sendToClient_mockFile_handleClientConnected(const Event&, void* vl
     Server* server = listener->getServer();
 
     ClientProxy* client = listener->getNextClient();
-    if (client == NULL) {
+    if (client == nullptr) {
         throw runtime_error("client is null");
     }
 

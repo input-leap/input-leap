@@ -30,7 +30,7 @@ protected:
     virtual void
     SetUp()
     {
-        m_display = XOpenDisplay(NULL);
+        m_display = XOpenDisplay(nullptr);
         int screen = DefaultScreen(m_display);
         Window root = XRootWindow(m_display, screen);
 

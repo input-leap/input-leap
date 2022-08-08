@@ -61,6 +61,11 @@ SocketMultiplexer::~SocketMultiplexer()
 {
     m_thread->cancel();
     m_thread->unblockPollSocket();
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        jobs_are_ready_ = true;
+        cv_jobs_ready_.notify_all();
+    }
     m_thread->wait();
     delete m_thread;
     delete m_jobListLocker;
@@ -141,7 +146,7 @@ void SocketMultiplexer::service_thread()
         // wait until there are jobs to handle
         {
             std::unique_lock<std::mutex> lock(mutex_);
-            cv_jobs_ready_.wait(lock, [this](){ return are_jobs_ready_; });
+            cv_jobs_ready_.wait(lock, [this](){ return jobs_are_ready_; });
         }
 
         // lock the job list
@@ -281,10 +286,10 @@ SocketMultiplexer::lockJobListLock()
     std::unique_lock<std::mutex> lock(mutex_);
 
     // wait for the lock on the lock
-    cv_job_list_lock_locked_.wait(lock, [this](){ return !is_job_list_lock_lock_locked_; });
+    cv_job_list_lock_locked_.wait(lock, [this](){ return !job_list_lock_lock_is_locked_; });
 
     // take ownership of the lock on the lock
-    is_job_list_lock_lock_locked_ = true;
+    job_list_lock_lock_is_locked_ = true;
     m_jobListLockLocker  = new Thread(Thread::getCurrentThread());
 }
 
@@ -297,15 +302,15 @@ SocketMultiplexer::lockJobList()
     assert(*m_jobListLockLocker == Thread::getCurrentThread());
 
     // wait for the job list lock
-    cv_jobs_list_lock_.wait(lock, [this]() { return !is_jobs_list_lock_locked_; });
+    cv_jobs_list_lock_.wait(lock, [this]() { return !jobs_list_lock_is_locked_; });
 
     // take ownership of the lock
-    is_jobs_list_lock_locked_ = true;
+    jobs_list_lock_is_locked_ = true;
     m_jobListLocker     = m_jobListLockLocker;
     m_jobListLockLocker = NULL;
 
     // release the lock on the lock
-    is_job_list_lock_lock_locked_ = false;
+    job_list_lock_lock_is_locked_ = false;
     cv_job_list_lock_locked_.notify_all();
 }
 
@@ -320,13 +325,13 @@ SocketMultiplexer::unlockJobList()
     // release the lock
     delete m_jobListLocker;
     m_jobListLocker = NULL;
-    is_jobs_list_lock_locked_ = false;
+    jobs_list_lock_is_locked_ = false;
     cv_jobs_list_lock_.notify_one();
 
     // set new jobs ready state
     bool isReady = !m_socketJobMap.empty();
-    if (are_jobs_ready_ != isReady) {
-        are_jobs_ready_ = isReady;
+    if (jobs_are_ready_ != isReady) {
+        jobs_are_ready_ = isReady;
         cv_jobs_ready_.notify_one();
     }
 }

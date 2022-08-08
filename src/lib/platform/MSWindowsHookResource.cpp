@@ -1,7 +1,7 @@
 #include "MSWindowsHookResource.h"
 
 WindowsHookResource::WindowsHookResource() :
-    _hook(NULL)
+    _hook(nullptr)
 {
 }
 
@@ -24,10 +24,10 @@ bool WindowsHookResource::unset()
         if (UnhookWindowsHookEx(_hook) == 0) {
             return false;
         }
-        _hook = NULL;
+        _hook = nullptr;
     }
     return true;
 }
 
-bool WindowsHookResource::is_set() const { return _hook != NULL; }
+bool WindowsHookResource::is_set() const { return _hook != nullptr; }
 WindowsHookResource::operator HHOOK() const { return _hook; }

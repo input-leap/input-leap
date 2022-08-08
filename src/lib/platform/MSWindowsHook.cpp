@@ -577,12 +577,12 @@ MSWindowsHook::install()
 
 #if NO_GRAB_KEYBOARD
     // we only need the mouse hook
-    if (!g_hkMouse.set(WH_MOUSE_LL, &mouseLLHook, NULL, 0))
+    if (!g_hkMouse.set(WH_MOUSE_LL, &mouseLLHook, nullptr, 0))
         return false;
 #else
     // we need both hooks. if either fails, discard the other
-    if (!g_hkMouse.set(WH_MOUSE_LL, &mouseLLHook, NULL, 0) ||
-        !g_hkKeyboard.set(WH_KEYBOARD_LL, &keyboardLLHook, NULL, 0)) {
+    if (!g_hkMouse.set(WH_MOUSE_LL, &mouseLLHook, nullptr, 0) ||
+        !g_hkKeyboard.set(WH_KEYBOARD_LL, &keyboardLLHook, nullptr, 0)) {
         g_hkMouse.unset();
         g_hkKeyboard.unset();
         return false;
@@ -628,7 +628,7 @@ MSWindowsHook::installScreenSaver()
     // install hook unless it's already installed
     if (g_hkMessage.is_set())
         return true;
-    return g_hkMessage.set(WH_GETMESSAGE, &getMessageHook, NULL, 0);
+    return g_hkMessage.set(WH_GETMESSAGE, &getMessageHook, nullptr, 0);
 }
 
 void

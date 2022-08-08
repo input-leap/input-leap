@@ -1335,7 +1335,7 @@ bool XWindowsUtil::getWindowProperty(Display* display, Window window, Atom prope
                                      std::string* data, Atom* type, std::int32_t* format,
                                      bool deleteProperty)
 {
-    assert(display != NULL);
+    assert(display != nullptr);
 
     Atom actualType;
     int actualDatumSize;
@@ -1383,7 +1383,7 @@ bool XWindowsUtil::getWindowProperty(Display* display, Window window, Atom prope
         }
 
         // append data
-        if (data != NULL) {
+        if (data != nullptr) {
             data->append(reinterpret_cast<char*>(rawData), numBytes);
         }
         else {
@@ -1401,15 +1401,15 @@ bool XWindowsUtil::getWindowProperty(Display* display, Window window, Atom prope
     }
 
     // save property info
-    if (type != NULL) {
+    if (type != nullptr) {
         *type = actualType;
     }
-    if (format != NULL) {
+    if (format != nullptr) {
         *format = static_cast<std::int32_t>(actualDatumSize);
     }
 
     if (okay) {
-        LOG((CLOG_DEBUG2 "read property %d on window 0x%08x: bytes=%d", property, window, (data == NULL) ? 0 : data->size()));
+        LOG((CLOG_DEBUG2 "read property %d on window 0x%08x: bytes=%d", property, window, (data == nullptr) ? 0 : data->size()));
         return true;
     }
     else {
@@ -1749,12 +1749,12 @@ XWindowsUtil::initKeyMaps()
 // XWindowsUtil::ErrorLock
 //
 
-XWindowsUtil::ErrorLock*    XWindowsUtil::ErrorLock::s_top = NULL;
+XWindowsUtil::ErrorLock* XWindowsUtil::ErrorLock::s_top = nullptr;
 
 XWindowsUtil::ErrorLock::ErrorLock(Display* display) :
     m_display(display)
 {
-    install(&XWindowsUtil::ErrorLock::ignoreHandler, NULL);
+    install(&XWindowsUtil::ErrorLock::ignoreHandler, nullptr);
 }
 
 XWindowsUtil::ErrorLock::ErrorLock(Display* display, bool* flag) :
@@ -1773,7 +1773,7 @@ XWindowsUtil::ErrorLock::ErrorLock(Display* display,
 XWindowsUtil::ErrorLock::~ErrorLock()
 {
     // make sure everything finishes before uninstalling handler
-    if (m_display != NULL) {
+    if (m_display != nullptr) {
         XSync(m_display, False);
     }
 
@@ -1786,7 +1786,7 @@ void
 XWindowsUtil::ErrorLock::install(ErrorHandler handler, void* data)
 {
     // make sure everything finishes before installing handler
-    if (m_display != NULL) {
+    if (m_display != nullptr) {
         XSync(m_display, False);
     }
 
@@ -1802,7 +1802,7 @@ XWindowsUtil::ErrorLock::install(ErrorHandler handler, void* data)
 int
 XWindowsUtil::ErrorLock::internalHandler(Display* display, XErrorEvent* event)
 {
-    if (s_top != NULL && s_top->m_handler != NULL) {
+    if (s_top != nullptr && s_top->m_handler != nullptr) {
         s_top->m_handler(display, event, s_top->m_userData);
     }
     return 0;

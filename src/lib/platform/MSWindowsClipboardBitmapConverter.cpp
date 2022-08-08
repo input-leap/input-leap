@@ -50,16 +50,16 @@ HANDLE MSWindowsClipboardBitmapConverter::fromIClipboard(const std::string& data
 {
     // copy to memory handle
     HGLOBAL gData = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, data.size());
-    if (gData != NULL) {
+    if (gData != nullptr) {
         // get a pointer to the allocated memory
         char* dst = (char*)GlobalLock(gData);
-        if (dst != NULL) {
+        if (dst != nullptr) {
             memcpy(dst, data.data(), data.size());
             GlobalUnlock(gData);
         }
         else {
             GlobalFree(gData);
-            gData = NULL;
+            gData = nullptr;
         }
     }
 
@@ -70,7 +70,7 @@ std::string MSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const
 {
     // get datator
     LPVOID src = GlobalLock(data);
-    if (src == NULL) {
+    if (src == nullptr) {
         return {};
     }
     std::uint32_t srcSize = (std::uint32_t)GlobalSize(data);
@@ -105,9 +105,9 @@ std::string MSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const
     info.biYPelsPerMeter = 1000;
     info.biClrUsed       = 0;
     info.biClrImportant  = 0;
-    HDC dc      = GetDC(NULL);
+    HDC dc = GetDC(nullptr);
     HBITMAP dst = CreateDIBSection(dc, (BITMAPINFO*)&info,
-                            DIB_RGB_COLORS, &raw, NULL, 0);
+                                   DIB_RGB_COLORS, &raw, nullptr, 0);
 
     // find the start of the pixel data
     const char* srcBits = (const char*)bitmap + bitmap->bmiHeader.biSize;
@@ -141,7 +141,7 @@ std::string MSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const
 
     // clean up GDI
     DeleteObject(dst);
-    ReleaseDC(NULL, dc);
+    ReleaseDC(nullptr, dc);
 
     // release handle
     GlobalUnlock(data);

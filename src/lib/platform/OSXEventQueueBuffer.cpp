@@ -32,9 +32,9 @@ class EventQueueTimer { };
 //
 
 OSXEventQueueBuffer::OSXEventQueueBuffer(IEventQueue* events) :
-    m_event(NULL),
+    m_event(nullptr),
     m_eventQueue(events),
-    m_carbonEventQueue(NULL)
+    m_carbonEventQueue(nullptr)
 {
     // do nothing
 }
@@ -42,7 +42,7 @@ OSXEventQueueBuffer::OSXEventQueueBuffer(IEventQueue* events) :
 OSXEventQueueBuffer::~OSXEventQueueBuffer()
 {
     // release the last event
-    if (m_event != NULL) {
+    if (m_event != nullptr) {
         ReleaseEvent(m_event);
     }
 }
@@ -57,19 +57,19 @@ void
 OSXEventQueueBuffer::waitForEvent(double timeout)
 {
     EventRef event;
-    ReceiveNextEvent(0, NULL, timeout, false, &event);
+    ReceiveNextEvent(0, nullptr, timeout, false, &event);
 }
 
 IEventQueueBuffer::Type OSXEventQueueBuffer::getEvent(Event& event, std::uint32_t& dataID)
 {
     // release the previous event
-    if (m_event != NULL) {
+    if (m_event != nullptr) {
         ReleaseEvent(m_event);
-        m_event = NULL;
+        m_event = nullptr;
     }
 
     // get the next event
-    OSStatus error = ReceiveNextEvent(0, NULL, 0.0, true, &m_event);
+    OSStatus error = ReceiveNextEvent(0, nullptr, 0.0, true, &m_event);
 
     // handle the event
     if (error == eventLoopQuitErr) {
@@ -107,7 +107,7 @@ bool OSXEventQueueBuffer::addEvent(std::uint32_t dataID)
 
     if (error == noErr) {
 
-        assert(m_carbonEventQueue != NULL);
+        assert(m_carbonEventQueue != nullptr);
 
         error = PostEventToQueue(
             m_carbonEventQueue,
@@ -124,7 +124,7 @@ bool
 OSXEventQueueBuffer::isEmpty() const
 {
     EventRef event;
-    OSStatus status = ReceiveNextEvent(0, NULL, 0.0, false, &event);
+    OSStatus status = ReceiveNextEvent(0, nullptr, 0.0, false, &event);
     return (status == eventLoopTimedOutErr);
 }
 

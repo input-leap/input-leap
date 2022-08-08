@@ -48,7 +48,7 @@ MSWindowsEventQueueBuffer::MSWindowsEventQueueBuffer(IEventQueue* events) :
 
     // make sure this thread has a message queue
     MSG dummy;
-    PeekMessage(&dummy, NULL, WM_USER, WM_USER, PM_NOREMOVE);
+    PeekMessage(&dummy, nullptr, WM_USER, WM_USER, PM_NOREMOVE);
 
     m_os_supported_message_types = QS_ALLINPUT;
     if (!IsWindows8OrGreater())
@@ -98,13 +98,13 @@ IEventQueueBuffer::Type MSWindowsEventQueueBuffer::getEvent(Event& event, std::u
     // if a message has been sent to our window but GetMessage will
     // dispatch that message behind our backs and block.  PeekMessage
     // will also dispatch behind our backs but won't block.
-    if (!PeekMessage(&m_event, NULL, 0, 0, PM_NOREMOVE) &&
+    if (!PeekMessage(&m_event, nullptr, 0, 0, PM_NOREMOVE) &&
         !PeekMessage(&m_event, (HWND)-1, 0, 0, PM_NOREMOVE)) {
         return kNone;
     }
 
     // BOOL.  yeah, right.
-    BOOL result = GetMessage(&m_event, NULL, 0, 0);
+    BOOL result = GetMessage(&m_event, nullptr, 0, 0);
     if (result == -1) {
         return kNone;
     }

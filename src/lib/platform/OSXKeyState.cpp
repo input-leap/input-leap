@@ -234,7 +234,7 @@ OSXKeyState::mapKeyFromEvent(KeyIDs& ids,
     ids.clear();
 
     // map modifier key
-    if (maskOut != NULL) {
+    if (maskOut != nullptr) {
         KeyModifierMask activeMask = getActiveModifiers();
         activeMask &= ~KeyModifierAltGr;
         *maskOut    = activeMask;
@@ -264,7 +264,7 @@ OSXKeyState::mapKeyFromEvent(KeyIDs& ids,
     // get keyboard info
     TISInputSourceRef currentKeyboardLayout = TISCopyCurrentKeyboardLayoutInputSource();
 
-    if (currentKeyboardLayout == NULL) {
+    if (currentKeyboardLayout == nullptr) {
         return kKeyNone;
     }
 
@@ -300,7 +300,7 @@ OSXKeyState::mapKeyFromEvent(KeyIDs& ids,
     CFDataRef ref = (CFDataRef) TISGetInputSourceProperty(currentKeyboardLayout,
                                 kTISPropertyUnicodeKeyLayoutData);
     const UCKeyboardLayout* layout = (const UCKeyboardLayout*) CFDataGetBytePtr(ref);
-    const bool layoutValid = (layout != NULL);
+    const bool layoutValid = (layout != nullptr);
 
     if (layoutValid) {
         // translate key
@@ -461,7 +461,7 @@ OSXKeyState::getKeyMap(inputleap::KeyMap& keyMap)
         CFDataRef resourceRef = (CFDataRef)TISGetInputSourceProperty(
             m_groups[g], kTISPropertyUnicodeKeyLayoutData);
 
-        layoutValid = resourceRef != NULL;
+        layoutValid = resourceRef != nullptr;
         if (layoutValid)
             resource = CFDataGetBytePtr(resourceRef);
 
@@ -843,7 +843,7 @@ OSXKeyState::getGroups(GroupList& groups) const
     // get number of layouts
     CFStringRef keys[] = { kTISPropertyInputSourceCategory };
     CFStringRef values[] = { kTISCategoryKeyboardInputSource };
-    CFDictionaryRef dict = CFDictionaryCreate(NULL, (const void **)keys, (const void **)values, 1, NULL, NULL);
+    CFDictionaryRef dict = CFDictionaryCreate(nullptr, (const void **)keys, (const void **)values, 1, nullptr, nullptr);
     CFArrayRef kbds = TISCreateInputSourceList(dict, false);
     n = CFArrayGetCount(kbds);
     gotLayouts = (n != 0);

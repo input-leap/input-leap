@@ -186,7 +186,7 @@ XWindowsClipboard::addSimpleRequest(Window requestor,
     }
     else {
         IXWindowsClipboardConverter* converter = getConverter(target);
-        if (converter != NULL) {
+        if (converter != nullptr) {
             IClipboard::EFormat clipboardFormat = converter->getFormat();
             if (m_added[clipboardFormat]) {
                 try {
@@ -412,7 +412,7 @@ XWindowsClipboard::clearConverters()
 IXWindowsClipboardConverter*
 XWindowsClipboard::getConverter(Atom target, bool onlyIfNotAdded) const
 {
-    IXWindowsClipboardConverter* converter = NULL;
+    IXWindowsClipboardConverter* converter = nullptr;
     for (ConverterList::const_iterator index = m_converters.begin();
                                 index != m_converters.end(); ++index) {
         converter = *index;
@@ -420,16 +420,16 @@ XWindowsClipboard::getConverter(Atom target, bool onlyIfNotAdded) const
             break;
         }
     }
-    if (converter == NULL) {
+    if (converter == nullptr) {
         LOG((CLOG_DEBUG1 "  no converter for target %s", XWindowsUtil::atomToString(m_display, target).c_str()));
-        return NULL;
+        return nullptr;
     }
 
     // optionally skip already handled targets
     if (onlyIfNotAdded) {
         if (m_added[converter->getFormat()]) {
             LOG((CLOG_DEBUG1 "  skipping handled format %d", converter->getFormat()));
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -577,8 +577,8 @@ bool
 XWindowsClipboard::icccmGetSelection(Atom target,
                 Atom* actualTarget, std::string* data) const
 {
-    assert(actualTarget != NULL);
-    assert(data         != NULL);
+    assert(actualTarget != nullptr);
+    assert(data != nullptr);
 
     // request data conversion
     CICCCMGetClipboard getter(m_window, m_time, m_atomData);
@@ -834,9 +834,8 @@ XWindowsClipboard::motifGetSelection(const MotifClipFormat* format,
     sprintf(name, "_MOTIF_CLIP_ITEM_%d", format->m_data);
        Atom target = m_impl->XInternAtom(m_display, name, False);
     Window root = RootWindow(m_display, DefaultScreen(m_display));
-    return XWindowsUtil::getWindowProperty(m_display, root,
-                                target, data,
-                                actualTarget, NULL, False);
+    return XWindowsUtil::getWindowProperty(m_display, root, target, data,
+                                           actualTarget, nullptr, False);
 }
 
 IClipboard::Time
@@ -898,7 +897,7 @@ XWindowsClipboard::insertMultipleReply(Window requestor,
 void
 XWindowsClipboard::insertReply(Reply* reply)
 {
-    assert(reply != NULL);
+    assert(reply != nullptr);
 
     // note -- we must respond to requests in order if requestor,target,time
     // are the same, otherwise we can use whatever order we like with one
@@ -999,7 +998,7 @@ XWindowsClipboard::pushReplies(ReplyMap::iterator& mapIndex,
 bool
 XWindowsClipboard::sendReply(Reply* reply)
 {
-    assert(reply != NULL);
+    assert(reply != nullptr);
 
     // bail out immediately if reply is done
     if (reply->m_done) {
@@ -1106,9 +1105,8 @@ XWindowsClipboard::sendReply(Reply* reply)
                 Atom target;
                 std::string data;
                 char* name = m_impl->XGetAtomName(m_display, props[i]);
-                if (!XWindowsUtil::getWindowProperty(m_display,
-                                reply->m_requestor,
-                                props[i], &data, &target, NULL, False)) {
+                if (!XWindowsUtil::getWindowProperty(m_display, reply->m_requestor,
+                                                     props[i], &data, &target, nullptr, False)) {
                     LOG((CLOG_DEBUG2 "  %s: <can't read property>", name));
                 }
                 else {
@@ -1131,15 +1129,15 @@ XWindowsClipboard::sendReply(Reply* reply)
                     }
                     char* type = m_impl->XGetAtomName(m_display, target);
                     LOG((CLOG_DEBUG2 "  %s (%s): %s", name, type, data.c_str()));
-                    if (type != NULL) {
+                    if (type != nullptr) {
                         m_impl->XFree(type);
                     }
                 }
-                if (name != NULL) {
+                if (name != nullptr) {
                     m_impl->XFree(name);
                 }
             }
-            if (props != NULL) {
+            if (props != nullptr) {
                 m_impl->XFree(props);
             }
         }
@@ -1226,7 +1224,7 @@ XWindowsClipboard::wasOwnedAtTime(::Time time) const
 
 Atom XWindowsClipboard::getTargetsData(std::string& data, int* format) const
 {
-    assert(format != NULL);
+    assert(format != nullptr);
 
     // add standard targets
     XWindowsUtil::appendAtomData(data, m_atomTargets);
@@ -1250,7 +1248,7 @@ Atom XWindowsClipboard::getTargetsData(std::string& data, int* format) const
 
 Atom XWindowsClipboard::getTimestampData(std::string& data, int* format) const
 {
-    assert(format != NULL);
+    assert(format != nullptr);
 
     checkCache();
     XWindowsUtil::appendTimeData(data, m_timeOwned);
@@ -1272,8 +1270,8 @@ XWindowsClipboard::CICCCMGetClipboard::CICCCMGetClipboard(
     m_failed(false),
     m_done(false),
     m_reading(false),
-    m_data(NULL),
-    m_actualTarget(NULL),
+    m_data(nullptr),
+    m_actualTarget(nullptr),
     m_error(false)
 {
     // do nothing
@@ -1288,8 +1286,8 @@ bool
 XWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
                 Atom selection, Atom target, Atom* actualTarget, std::string* data)
 {
-    assert(actualTarget != NULL);
-    assert(data         != NULL);
+    assert(actualTarget != nullptr);
+    assert(data != nullptr);
 
     LOG((CLOG_DEBUG1 "request selection=%s, target=%s, window=%x", XWindowsUtil::atomToString(display, selection).c_str(), XWindowsUtil::atomToString(display, target).c_str(), m_requestor));
 
@@ -1433,7 +1431,7 @@ XWindowsClipboard::CICCCMGetClipboard::processEvent(
     Atom target;
     const std::string::size_type oldSize = m_data->size();
     if (!XWindowsUtil::getWindowProperty(display, m_requestor,
-                                m_property, m_data, &target, NULL, True)) {
+                                         m_property, m_data, &target, nullptr, True)) {
         // unable to read property
         m_failed = true;
         return true;

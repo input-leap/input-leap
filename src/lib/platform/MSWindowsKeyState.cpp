@@ -580,7 +580,7 @@ MSWindowsKeyState::MSWindowsKeyState(
 	m_eventTarget(eventTarget),
 	m_desks(desks),
 	m_keyLayout(GetKeyboardLayout(0)),
-	m_fixTimer(NULL),
+	m_fixTimer(nullptr),
 	m_lastDown(0),
 	m_useSavedModifiers(false),
 	m_savedModifiers(0),
@@ -596,7 +596,7 @@ MSWindowsKeyState::MSWindowsKeyState(
 	m_eventTarget(eventTarget),
 	m_desks(desks),
 	m_keyLayout(GetKeyboardLayout(0)),
-	m_fixTimer(NULL),
+	m_fixTimer(nullptr),
 	m_lastDown(0),
 	m_useSavedModifiers(false),
 	m_savedModifiers(0),
@@ -622,10 +622,10 @@ MSWindowsKeyState::init()
 void
 MSWindowsKeyState::disable()
 {
-	if (m_fixTimer != NULL) {
+	if (m_fixTimer != nullptr) {
 		m_events->removeHandler(Event::kTimer, m_fixTimer);
 		m_events->deleteTimer(m_fixTimer);
-		m_fixTimer = NULL;
+		m_fixTimer = nullptr;
 	}
 	m_lastDown = 0;
 }
@@ -700,7 +700,7 @@ MSWindowsKeyState::mapKeyFromEvent(WPARAM charAndVirtKey,
 	}
 
 	// set modifier mask
-	if (maskOut != NULL) {
+	if (maskOut != nullptr) {
 		KeyModifierMask active = getActiveModifiers();
 		if (!noAltGr && (active & s_controlAlt) == s_controlAlt) {
 			// if !noAltGr then we're only interested in matching the
@@ -809,7 +809,7 @@ void MSWindowsKeyState::ctrl_alt_del_thread()
 {
 	// get the Winlogon desktop at whatever privilege we can
 	HDESK desk = OpenDesktop("Winlogon", 0, FALSE, MAXIMUM_ALLOWED);
-	if (desk != NULL) {
+	if (desk != nullptr) {
 		if (SetThreadDesktop(desk)) {
 			PostMessage(HWND_BROADCAST, WM_HOTKEY, 0,
 						MAKELPARAM(MOD_CONTROL | MOD_ALT, VK_DELETE));
@@ -855,7 +855,7 @@ std::int32_t MSWindowsKeyState::pollActiveGroup() const
 {
 	// determine the thread that'll receive this event
 	HWND  targetWindow = GetForegroundWindow();
-	DWORD targetThread = GetWindowThreadProcessId(targetWindow, NULL);
+	DWORD targetThread = GetWindowThreadProcessId(targetWindow, nullptr);
 
 	// get keyboard layout for the thread
 	HKL hkl            = GetKeyboardLayout(targetThread);
@@ -864,7 +864,7 @@ std::int32_t MSWindowsKeyState::pollActiveGroup() const
 		// GetKeyboardLayout failed. Maybe targetWindow is a console window.
 		// We're getting the keyboard layout of the desktop instead.
 		targetWindow = GetDesktopWindow();
-		targetThread = GetWindowThreadProcessId(targetWindow, NULL);
+		targetThread = GetWindowThreadProcessId(targetWindow, nullptr);
 		hkl          = GetKeyboardLayout(targetThread);
 	}
 
@@ -1274,7 +1274,7 @@ bool
 MSWindowsKeyState::getGroups(GroupList& groups) const
 {
 	// get keyboard layouts
-	std::uint32_t newNumLayouts = GetKeyboardLayoutList(0, NULL);
+	std::uint32_t newNumLayouts = GetKeyboardLayoutList(0, nullptr);
 	if (newNumLayouts == 0) {
 		LOG((CLOG_DEBUG1 "can't get keyboard layouts"));
 		return false;

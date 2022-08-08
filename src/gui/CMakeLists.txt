@@ -175,7 +175,9 @@ if(INPUTLEAP_BUILD_TESTS)
         ${GUI_COMMON_HEADER_FILES}
     )
 
-    add_test(guiunittests guiunittests)
+    add_test(NAME guiunittests
+             COMMAND guiunittests
+             WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
     target_include_directories(guiunittests PUBLIC ../../ext)
     target_link_libraries(guiunittests gtest gmock Qt5::Core Qt5::Widgets Qt5::Network ${libs})

@@ -16,6 +16,7 @@ on:
 # Set the build type here
 env:
   CI_ENV_BUILD_TYPE: Debug
+  B_BUILD_DIR: build
   B_BUILD_TYPE: Debug
   INPUTLEAP_VERSION_STAGE: Debug
 

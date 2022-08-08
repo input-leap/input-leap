@@ -65,26 +65,26 @@ interrupt(Arch::ESignal, void* data)
 EventQueue::EventQueue() :
     m_systemTarget(0),
     m_nextType(Event::kLast),
-    m_typesForClient(NULL),
-    m_typesForIStream(NULL),
-    m_typesForIpcClient(NULL),
-    m_typesForIpcClientProxy(NULL),
-    m_typesForIpcServer(NULL),
-    m_typesForIpcServerProxy(NULL),
-    m_typesForIDataSocket(NULL),
-    m_typesForIListenSocket(NULL),
-    m_typesForISocket(NULL),
-    m_typesForOSXScreen(NULL),
-    m_typesForClientListener(NULL),
-    m_typesForClientProxy(NULL),
-    m_typesForClientProxyUnknown(NULL),
-    m_typesForServer(NULL),
-    m_typesForServerApp(NULL),
-    m_typesForIKeyState(NULL),
-    m_typesForIPrimaryScreen(NULL),
-    m_typesForIScreen(NULL),
-    m_typesForClipboard(NULL),
-    m_typesForFile(NULL)
+    m_typesForClient(nullptr),
+    m_typesForIStream(nullptr),
+    m_typesForIpcClient(nullptr),
+    m_typesForIpcClientProxy(nullptr),
+    m_typesForIpcServer(nullptr),
+    m_typesForIpcServerProxy(nullptr),
+    m_typesForIDataSocket(nullptr),
+    m_typesForIListenSocket(nullptr),
+    m_typesForISocket(nullptr),
+    m_typesForOSXScreen(nullptr),
+    m_typesForClientListener(nullptr),
+    m_typesForClientProxy(nullptr),
+    m_typesForClientProxyUnknown(nullptr),
+    m_typesForServer(nullptr),
+    m_typesForServerApp(nullptr),
+    m_typesForIKeyState(nullptr),
+    m_typesForIPrimaryScreen(nullptr),
+    m_typesForIScreen(nullptr),
+    m_typesForClipboard(nullptr),
+    m_typesForFile(nullptr)
 {
     ARCH->setSignalHandler(Arch::kINTERRUPT, &interrupt, this);
     ARCH->setSignalHandler(Arch::kTERMINATE, &interrupt, this);
@@ -94,8 +94,8 @@ EventQueue::EventQueue() :
 EventQueue::~EventQueue()
 {
     delete m_buffer;
-    ARCH->setSignalHandler(Arch::kINTERRUPT, NULL, NULL);
-    ARCH->setSignalHandler(Arch::kTERMINATE, NULL, NULL);
+    ARCH->setSignalHandler(Arch::kINTERRUPT, nullptr, nullptr);
+    ARCH->setSignalHandler(Arch::kTERMINATE, nullptr, nullptr);
 }
 
 void
@@ -187,7 +187,7 @@ EventQueue::adoptBuffer(IEventQueueBuffer* buffer)
 
     // use new buffer
     m_buffer = buffer;
-    if (m_buffer == NULL) {
+    if (m_buffer == nullptr) {
         m_buffer = new SimpleEventQueueBuffer;
     }
 }
@@ -268,10 +268,10 @@ EventQueue::dispatchEvent(const Event& event)
 {
     void* target   = event.getTarget();
     IEventJob* job = getHandler(event.getType(), target);
-    if (job == NULL) {
+    if (job == nullptr) {
         job = getHandler(Event::kUnknown, target);
     }
-    if (job != NULL) {
+    if (job != nullptr) {
         job->run(event);
         return true;
     }
@@ -326,7 +326,7 @@ EventQueue::newTimer(double duration, void* target)
     assert(duration > 0.0);
 
     EventQueueTimer* timer = m_buffer->newTimer(duration, false);
-    if (target == NULL) {
+    if (target == nullptr) {
         target = timer;
     }
     std::lock_guard<std::mutex> lock(mutex_);
@@ -345,7 +345,7 @@ EventQueue::newOneShotTimer(double duration, void* target)
     assert(duration > 0.0);
 
     EventQueueTimer* timer = m_buffer->newTimer(duration, true);
-    if (target == NULL) {
+    if (target == nullptr) {
         target = timer;
     }
     std::lock_guard<std::mutex> lock(mutex_);
@@ -388,7 +388,7 @@ EventQueue::adoptHandler(Event::Type type, void* target, IEventJob* handler)
 void
 EventQueue::removeHandler(Event::Type type, void* target)
 {
-    IEventJob* handler = NULL;
+    IEventJob* handler = nullptr;
     {
         std::lock_guard<std::mutex> lock(mutex_);
         HandlerTable::iterator index = m_handlers.find(target);
@@ -441,7 +441,7 @@ EventQueue::getHandler(Event::Type type, void* target) const
             return index2->second;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 std::uint32_t EventQueue::saveEvent(const Event& event)

@@ -88,7 +88,7 @@ static
 void
 resetError(bool* errors)
 {
-    if (errors != NULL) {
+    if (errors != nullptr) {
         *errors = false;
     }
 }
@@ -98,7 +98,7 @@ static
 void
 setError(bool* errors)
 {
-    if (errors != NULL) {
+    if (errors != nullptr) {
         *errors = true;
     }
 }
@@ -561,7 +561,7 @@ std::string Unicode::doUTF16ToUTF8(const std::uint8_t* data, std::uint32_t n, bo
         else if (n == 1) {
             // error -- missing second word
             setError(errors);
-            toUTF8(dst, s_replacement, NULL);
+            toUTF8(dst, s_replacement, nullptr);
         }
         else if (c >= 0x0000d800 && c <= 0x0000dbff) {
             std::uint32_t c2 = decode16(data, byteSwapped);
@@ -570,7 +570,7 @@ std::string Unicode::doUTF16ToUTF8(const std::uint8_t* data, std::uint32_t n, bo
             if (c2 < 0x0000dc00 || c2 > 0x0000dfff) {
                 // error -- [d800,dbff] not followed by [dc00,dfff]
                 setError(errors);
-                toUTF8(dst, s_replacement, NULL);
+                toUTF8(dst, s_replacement, nullptr);
             }
             else {
                 c = (((c - 0x0000d800) << 10) | (c2 - 0x0000dc00)) + 0x00010000;
@@ -580,7 +580,7 @@ std::string Unicode::doUTF16ToUTF8(const std::uint8_t* data, std::uint32_t n, bo
         else {
             // error -- [dc00,dfff] without leading [d800,dbff]
             setError(errors);
-            toUTF8(dst, s_replacement, NULL);
+            toUTF8(dst, s_replacement, nullptr);
         }
     }
 
@@ -628,7 +628,7 @@ std::string Unicode::doUTF32ToUTF8(const std::uint8_t* data, std::uint32_t n, bo
 
 std::uint32_t Unicode::fromUTF8(const std::uint8_t*& data, std::uint32_t& n)
 {
-    assert(data != NULL);
+    assert(data != nullptr);
     assert(n    != 0);
 
     // compute character encoding length, checking for overlong

@@ -149,11 +149,7 @@ if (BUILD_CARBON)
     target_link_libraries(barrier ${APPSERVICES_LIB})
 endif()
 if (BUILD_XWINDOWS)
-    target_link_libraries (barrier dns_sd)
-endif()
-
-if (HAVE_X11)
-    target_link_libraries (barrier X11)
+    target_link_libraries (barrier dns_sd X11)
 endif()
 
 target_link_libraries (barrier common)

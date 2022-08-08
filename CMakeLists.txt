@@ -147,8 +147,6 @@ if (UNIX)
             list (APPEND libs ${XLIB_LINK_LIBRARIES} ${ICE_LINK_LIBRARIES})
         endif()
 
-        set (HAVE_X11 1)
-
         check_include_files ("dns_sd.h" HAVE_DNSSD)
         if(INPUTLEAP_BUILD_GUI AND NOT HAVE_DNSSD)
             message (FATAL_ERROR "Missing header: dns_sd.h")

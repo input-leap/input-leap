@@ -38,11 +38,11 @@ ClientListener::ClientListener(const NetworkAddress& address,
                 IEventQueue* events,
                                ConnectionSecurityLevel security_level) :
     m_socketFactory(socketFactory),
-    m_server(NULL),
+    m_server(nullptr),
     m_events(events),
     security_level_{security_level}
 {
-    assert(m_socketFactory != NULL);
+    assert(m_socketFactory != nullptr);
 
     try {
         m_listen = m_socketFactory->createListen(ARCH->getAddrFamily(address.getAddress()),
@@ -90,7 +90,7 @@ ClientListener::~ClientListener()
 
     // discard waiting clients
     ClientProxy* client = getNextClient();
-    while (client != NULL) {
+    while (client != nullptr) {
         delete client;
         client = getNextClient();
     }
@@ -104,14 +104,14 @@ ClientListener::~ClientListener()
 void
 ClientListener::setServer(Server* server)
 {
-    assert(server != NULL);
+    assert(server != nullptr);
     m_server = server;
 }
 
 ClientProxy*
 ClientListener::getNextClient()
 {
-    ClientProxy* client = NULL;
+    ClientProxy* client = nullptr;
     if (!m_waitingClients.empty()) {
         client = m_waitingClients.front();
         m_waitingClients.pop_front();
@@ -126,7 +126,7 @@ ClientListener::handleClientConnecting(const Event&, void*)
     // accept client connection
     IDataSocket* socket = m_listen->accept();
 
-    if (socket == NULL) {
+    if (socket == nullptr) {
         return;
     }
 
@@ -154,7 +154,7 @@ ClientListener::handleClientAccepted(const Event&, void* vsocket)
 
     // filter socket messages, including a packetizing filter
     inputleap::IStream* stream = new PacketStreamFilter(m_events, socket, false);
-    assert(m_server != NULL);
+    assert(m_server != nullptr);
 
     // create proxy for unknown client
     ClientProxyUnknown* client = new ClientProxyUnknown(stream, 30.0, m_server, m_events);
@@ -183,7 +183,7 @@ ClientListener::handleUnknownClient(const Event&, void* vclient)
 
     // get the real client proxy and install it
     ClientProxy* client = unknownClient->orphanClientProxy();
-    if (client != NULL) {
+    if (client != nullptr) {
         // handshake was successful
         m_waitingClients.push_back(client);
         m_events->addEvent(Event(m_events->forClientListener().connected(),

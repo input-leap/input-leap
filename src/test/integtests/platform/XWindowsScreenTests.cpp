@@ -27,7 +27,7 @@ using ::testing::_;
 TEST(CXWindowsScreenTests, fakeMouseMove_nonPrimary_getCursorPosValuesCorrect)
 {
     const char* displayName = std::getenv("DISPLAY");
-    if (displayName == NULL) {
+    if (displayName == nullptr) {
         displayName = ":0.0";
     }
 

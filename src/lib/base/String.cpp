@@ -169,7 +169,7 @@ sprintf(const char* fmt, ...)
     char* buffer = tmp;
     int len = static_cast<int>(sizeof(tmp) / sizeof(tmp[0]));
     std::string result;
-    while (buffer != NULL) {
+    while (buffer != nullptr) {
         // try printing into the buffer
         va_list args;
         va_start(args, fmt);
@@ -191,7 +191,7 @@ sprintf(const char* fmt, ...)
             if (buffer != tmp) {
                 delete[] buffer;
             }
-            buffer = NULL;
+            buffer = nullptr;
         }
     }
 

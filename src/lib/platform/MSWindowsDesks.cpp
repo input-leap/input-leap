@@ -104,10 +104,10 @@ MSWindowsDesks::MSWindowsDesks(bool isPrimary, bool noHooks,
     m_w(0), m_h(0),
     m_xCenter(0), m_yCenter(0),
     m_multimon(false),
-    m_timer(NULL),
+    m_timer(nullptr),
     m_screensaver(screensaver),
     m_screensaverNotify(false),
-    m_activeDesk(NULL),
+    m_activeDesk(nullptr),
     m_activeDeskName(),
     m_updateKeys(updateKeys),
     m_events(events),
@@ -138,7 +138,7 @@ MSWindowsDesks::enable()
     // which desk is active and reinstalls the hooks as necessary.
     // we wouldn't need this if windows notified us of a desktop
     // change but as far as i can tell it doesn't.
-    m_timer = m_events->newTimer(0.2, NULL);
+    m_timer = m_events->newTimer(0.2, nullptr);
     m_events->adoptHandler(Event::kTimer, m_timer,
                             new TMethodEventJob<MSWindowsDesks>(
                                 this, &MSWindowsDesks::handleCheckDesk));
@@ -150,10 +150,10 @@ void
 MSWindowsDesks::disable()
 {
     // remove timer
-    if (m_timer != NULL) {
+    if (m_timer != nullptr) {
         m_events->removeHandler(Event::kTimer, m_timer);
         m_events->deleteTimer(m_timer);
-        m_timer = NULL;
+        m_timer = nullptr;
     }
 
     // destroy desks
@@ -332,7 +332,7 @@ void MSWindowsDesks::fakeMouseWheel(std::int32_t xDelta, std::int32_t yDelta) co
 void
 MSWindowsDesks::sendMessage(UINT msg, WPARAM wParam, LPARAM lParam) const
 {
-    if (m_activeDesk != NULL && m_activeDesk->m_window != NULL) {
+    if (m_activeDesk != nullptr && m_activeDesk->m_window != nullptr) {
         PostThreadMessage(m_activeDesk->m_threadID, msg, wParam, lParam);
         waitForDesk();
     }
@@ -358,7 +358,7 @@ MSWindowsDesks::createBlankCursor() const
 void
 MSWindowsDesks::destroyCursor(HCURSOR cursor) const
 {
-    if (cursor != NULL) {
+    if (cursor != nullptr) {
         DestroyCursor(cursor);
     }
 }
@@ -375,12 +375,12 @@ MSWindowsDesks::createDeskWindowClass(bool isPrimary) const
     classInfo.cbClsExtra    = 0;
     classInfo.cbWndExtra    = 0;
     classInfo.hInstance     = MSWindowsScreen::getWindowInstance();
-    classInfo.hIcon         = NULL;
+    classInfo.hIcon = nullptr;
     classInfo.hCursor       = m_cursor;
-    classInfo.hbrBackground = NULL;
-    classInfo.lpszMenuName  = NULL;
+    classInfo.hbrBackground = nullptr;
+    classInfo.lpszMenuName = nullptr;
     classInfo.lpszClassName = "BarrierDesk";
-    classInfo.hIconSm       = NULL;
+    classInfo.hIconSm = nullptr;
     return RegisterClassEx(&classInfo);
 }
 
@@ -402,10 +402,10 @@ MSWindowsDesks::createWindow(ATOM windowClass, const char* name) const
                                 name,
                                 WS_POPUP,
                                 0, 0, 1, 1,
-                                NULL, NULL,
+                                nullptr, nullptr,
                                 MSWindowsScreen::getWindowInstance(),
-                                NULL);
-    if (window == NULL) {
+                                nullptr);
+    if (window == nullptr) {
         LOG((CLOG_ERR "failed to create window: %d", GetLastError()));
         throw XScreenOpenFailure();
     }
@@ -415,7 +415,7 @@ MSWindowsDesks::createWindow(ATOM windowClass, const char* name) const
 void
 MSWindowsDesks::destroyWindow(HWND hwnd) const
 {
-    if (hwnd != NULL) {
+    if (hwnd != nullptr) {
         DestroyWindow(hwnd);
     }
 }
@@ -518,14 +518,14 @@ MSWindowsDesks::deskEnter(Desk* desk)
     // the obvious workaround of using SetWindowPos() to move it back
     // after being raised doesn't work.
     DWORD thisThread =
-        GetWindowThreadProcessId(desk->m_window, NULL);
+        GetWindowThreadProcessId(desk->m_window, nullptr);
     DWORD thatThread =
-        GetWindowThreadProcessId(desk->m_foregroundWindow, NULL);
+        GetWindowThreadProcessId(desk->m_foregroundWindow, nullptr);
     AttachThreadInput(thatThread, thisThread, TRUE);
     SetForegroundWindow(desk->m_foregroundWindow);
     AttachThreadInput(thatThread, thisThread, FALSE);
     EnableWindow(desk->m_window, FALSE);
-    desk->m_foregroundWindow = NULL;
+    desk->m_foregroundWindow = nullptr;
 }
 
 void
@@ -555,13 +555,13 @@ MSWindowsDesks::deskLeave(Desk* desk, HKL keyLayout)
         // note that we must enable the window to activate it and we
         // need to disable the window on deskEnter.
         desk->m_foregroundWindow = getForegroundWindow();
-        if (desk->m_foregroundWindow != NULL) {
+        if (desk->m_foregroundWindow != nullptr) {
             EnableWindow(desk->m_window, TRUE);
             SetActiveWindow(desk->m_window);
             DWORD thisThread =
-                GetWindowThreadProcessId(desk->m_window, NULL);
+                GetWindowThreadProcessId(desk->m_window, nullptr);
             DWORD thatThread =
-                GetWindowThreadProcessId(desk->m_foregroundWindow, NULL);
+                GetWindowThreadProcessId(desk->m_foregroundWindow, nullptr);
             AttachThreadInput(thatThread, thisThread, TRUE);
             SetForegroundWindow(desk->m_window);
             AttachThreadInput(thatThread, thisThread, FALSE);
@@ -594,11 +594,11 @@ void MSWindowsDesks::desk_thread(Desk* desk)
 
     // use given desktop for this thread
     desk->m_threadID         = GetCurrentThreadId();
-    desk->m_window           = NULL;
-    desk->m_foregroundWindow = NULL;
-    if (desk->m_desk != NULL && SetThreadDesktop(desk->m_desk) != 0) {
+    desk->m_window = nullptr;
+    desk->m_foregroundWindow = nullptr;
+    if (desk->m_desk != nullptr && SetThreadDesktop(desk->m_desk) != 0) {
         // create a message queue
-        PeekMessage(&msg, NULL, 0,0, PM_NOREMOVE);
+        PeekMessage(&msg, nullptr, 0,0, PM_NOREMOVE);
 
         // create a window.  we use this window to hide the cursor.
         try {
@@ -618,7 +618,7 @@ void MSWindowsDesks::desk_thread(Desk* desk)
         desks_ready_cv_.notify_all();
     }
 
-    while (GetMessage(&msg, NULL, 0, 0)) {
+    while (GetMessage(&msg, nullptr, 0, 0)) {
         switch (msg.message) {
         default:
             TranslateMessage(&msg);
@@ -722,10 +722,10 @@ void MSWindowsDesks::desk_thread(Desk* desk)
 
     // clean up
     deskEnter(desk);
-    if (desk->m_window != NULL) {
+    if (desk->m_window != nullptr) {
         DestroyWindow(desk->m_window);
     }
-    if (desk->m_desk != NULL) {
+    if (desk->m_desk != nullptr) {
         closeDesktop(desk->m_desk);
     }
 }
@@ -754,7 +754,7 @@ MSWindowsDesks::removeDesks()
         delete desk;
     }
     m_desks.clear();
-    m_activeDesk     = NULL;
+    m_activeDesk  = nullptr;
     m_activeDeskName = "";
 }
 
@@ -778,7 +778,7 @@ MSWindowsDesks::checkDesk()
 
     // if we are told to shut down on desk switch, and this is not the
     // first switch, then shut down.
-    if (m_stopOnDeskSwitch && m_activeDesk != NULL && name != m_activeDeskName) {
+    if (m_stopOnDeskSwitch && m_activeDesk != nullptr && name != m_activeDeskName) {
         LOG((CLOG_DEBUG "shutting down because of desk switch to \"%s\"", name.c_str()));
         m_events->addEvent(Event(Event::kQuit));
         return;
@@ -837,7 +837,7 @@ MSWindowsDesks::checkDesk()
 bool
 MSWindowsDesks::isDeskAccessible(const Desk* desk) const
 {
-    return (desk != NULL && desk->m_desk != NULL);
+    return (desk != nullptr && desk->m_desk != nullptr);
 }
 
 void
@@ -875,19 +875,19 @@ MSWindowsDesks::openInputDesktop()
 void
 MSWindowsDesks::closeDesktop(HDESK desk)
 {
-    if (desk != NULL) {
+    if (desk != nullptr) {
         CloseDesktop(desk);
     }
 }
 
 std::string MSWindowsDesks::getDesktopName(HDESK desk)
 {
-    if (desk == NULL) {
+    if (desk == nullptr) {
         return {};
     }
     else {
         DWORD size;
-        GetUserObjectInformation(desk, UOI_NAME, NULL, 0, &size);
+        GetUserObjectInformation(desk, UOI_NAME, nullptr, 0, &size);
         TCHAR* name = (TCHAR*)alloca(size + sizeof(TCHAR));
         GetUserObjectInformation(desk, UOI_NAME, name, size, &size);
         std::string result(name);
@@ -898,12 +898,12 @@ std::string MSWindowsDesks::getDesktopName(HDESK desk)
 HWND
 MSWindowsDesks::getForegroundWindow() const
 {
-    // Ideally we'd return NULL as much as possible, only returning
+    // Ideally we'd return nullptr as much as possible, only returning
     // the actual foreground window when we know it's going to mess
     // up our keyboard input.  For now we'll just let the user
     // decide.
     if (m_leaveForegroundOption) {
-        return NULL;
+        return nullptr;
     }
     return GetForegroundWindow();
 }

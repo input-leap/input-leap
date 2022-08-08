@@ -28,7 +28,7 @@ namespace inputleap {
 
 static std::string pw_dir(struct passwd* pwentp)
 {
-    if (pwentp != NULL && pwentp->pw_dir != NULL)
+    if (pwentp != nullptr && pwentp->pw_dir != nullptr)
         return pwentp->pw_dir;
     return "";
 }
@@ -66,7 +66,7 @@ static fs::path profile_basedir()
     // linux/bsd adheres to freedesktop standards
     // https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
     const char* dir = std::getenv("XDG_DATA_HOME");
-    if (dir != NULL)
+    if (dir != nullptr)
         return fs::u8path(dir);
     return unix_home() / ".local/share";
 #else

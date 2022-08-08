@@ -145,7 +145,7 @@ public:
     void fileChunkSending(std::uint8_t mark, char* data, size_t dataSize) override;
 
     virtual inputleap::IStream*
-    getStream() const override{ return NULL; }
+    getStream() const override { return nullptr; }
     bool isPrimary() const override{ return true; }
 private:
     inputleap::Screen* m_screen;

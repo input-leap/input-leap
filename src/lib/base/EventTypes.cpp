@@ -22,14 +22,14 @@
 #include <stddef.h>
 
 EventTypes::EventTypes() :
-    m_events(NULL)
+    m_events(nullptr)
 {
 }
 
 IEventQueue*
 EventTypes::getEvents() const
 {
-    assert(m_events != NULL);
+    assert(m_events != nullptr);
     return m_events;
 }
 

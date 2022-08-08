@@ -35,7 +35,7 @@ ClientProxy1_4::ClientProxy1_4(const std::string& name, inputleap::IStream* stre
                                IEventQueue* events) :
     ClientProxy1_3(name, stream, events), m_server(server)
 {
-    assert(m_server != NULL);
+    assert(m_server != nullptr);
 }
 
 ClientProxy1_4::~ClientProxy1_4()

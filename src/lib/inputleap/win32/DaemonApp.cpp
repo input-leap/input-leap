@@ -52,7 +52,7 @@
 
 using namespace std;
 
-DaemonApp* DaemonApp::s_instance = NULL;
+DaemonApp* DaemonApp::s_instance = nullptr;
 
 int
 mainLoopStatic()
@@ -85,7 +85,7 @@ int
 DaemonApp::run(int argc, char** argv)
 {
     // win32 instance needed for threading, etc.
-    ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+    ArchMiscWindows::setInstanceWin32(GetModuleHandle(nullptr));
 
     Arch arch;
     arch.init();
@@ -236,7 +236,7 @@ DaemonApp::mainLoop(bool daemonized)
 void
 DaemonApp::foregroundError(const char* message)
 {
-    MessageBox(NULL, message, "Barrier Service", MB_OK | MB_ICONERROR);
+    MessageBox(nullptr, message, "Barrier Service", MB_OK | MB_ICONERROR);
 }
 
 std::string
@@ -268,13 +268,13 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
 
                 std::vector<std::string> argsArray;
                 ArgParser::splitCommandString(command, argsArray);
-                ArgParser argParser(NULL);
+                ArgParser argParser(nullptr);
                 const char** argv = argParser.getArgv(argsArray);
                 ServerArgs serverArgs;
                 ClientArgs clientArgs;
                 int argc = static_cast<int>(argsArray.size());
                 bool server = argsArray[0].find("barriers") != std::string::npos ? true : false;
-                ArgsBase* argBase = NULL;
+                ArgsBase* argBase = nullptr;
 
                 if (server) {
                     argParser.parseServerArgs(serverArgs, argc, argv);
@@ -303,7 +303,7 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
                 // eg. no log-to-file while running in foreground
                 if (m_fileLogOutputter != nullptr) {
                     std::string logFilename;
-                    if (argBase->m_logFile != NULL) {
+                    if (argBase->m_logFile != nullptr) {
                         logFilename = std::string(argBase->m_logFile);
                         ARCH->setting("LogFilename", logFilename);
                         m_watchdog->setFileLogOutputter(m_fileLogOutputter);
@@ -311,7 +311,7 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
                         LOG((CLOG_DEBUG "removed log file argument and filename %s from command ", logFilename.c_str()));
                         LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
                     } else {
-                        m_watchdog->setFileLogOutputter(NULL);
+                        m_watchdog->setFileLogOutputter(nullptr);
                     }
                     m_fileLogOutputter->setLogFilename(logFilename.c_str());
                 }

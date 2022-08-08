@@ -33,7 +33,7 @@ MSWindowsSession::~MSWindowsSession()
 }
 
 bool
-MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = NULL)
+MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = nullptr)
 {
     // first we need to take a snapshot of the running processes
     HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -106,7 +106,7 @@ MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = NULL)
     CloseHandle(snapshot);
 
     if (pid) {
-        if (process != NULL) {
+        if (process != nullptr) {
             // now get the process, which we'll use to get the process token.
             LOG((CLOG_DEBUG "found %s in session %i", name, m_activeSessionId));
             *process = OpenProcess(MAXIMUM_ALLOWED, FALSE, pid);
@@ -177,9 +177,9 @@ std::string MSWindowsSession::getActiveDesktopName()
     std::string result;
     try {
         HDESK hd = OpenInputDesktop(0, TRUE, GENERIC_READ);
-        if (hd != NULL) {
+        if (hd != nullptr) {
             DWORD size;
-            GetUserObjectInformation(hd, UOI_NAME, NULL, 0, &size);
+            GetUserObjectInformation(hd, UOI_NAME, nullptr, 0, &size);
             TCHAR* name = (TCHAR*)alloca(size + sizeof(TCHAR));
             GetUserObjectInformation(hd, UOI_NAME, name, size, &size);
             result = name;

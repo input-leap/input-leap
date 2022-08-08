@@ -43,7 +43,7 @@ void ServerTaskBarReceiver::updateStatus(Server* server, const std::string& erro
     {
         // update our status
         m_errorMessage = errorMsg;
-        if (server == NULL) {
+        if (server == nullptr) {
             if (m_errorMessage.empty()) {
                 m_state = kNotRunning;
             }

@@ -56,11 +56,11 @@ static const int        g_defaultMaxPriority = kINFO;
 // Log
 //
 
-Log*                 Log::s_log = NULL;
+Log* Log::s_log = nullptr;
 
 Log::Log()
 {
-    assert(s_log == NULL);
+    assert(s_log == nullptr);
 
     // other initialization
     m_maxPriority = g_defaultMaxPriority;
@@ -91,7 +91,7 @@ Log::~Log()
 Log*
 Log::getInstance()
 {
-    assert(s_log != NULL);
+    assert(s_log != nullptr);
     return s_log;
 }
 
@@ -207,7 +207,7 @@ Log::print(const char* file, int line, const char* fmt, ...)
 void
 Log::insert(ILogOutputter* outputter, bool alwaysAtHead)
 {
-    assert(outputter != NULL);
+    assert(outputter != nullptr);
 
     std::lock_guard<std::mutex> lock(m_mutex);
     if (alwaysAtHead) {
@@ -251,7 +251,7 @@ Log::pop_front(bool alwaysAtHead)
 bool
 Log::setFilter(const char* maxPriority)
 {
-    if (maxPriority != NULL) {
+    if (maxPriority != nullptr) {
         for (int i = 0; i < g_numPriority; ++i) {
             if (strcmp(maxPriority, g_priority[i]) == 0) {
                 setFilter(i);
@@ -281,7 +281,7 @@ void
 Log::output(ELevel priority, char* msg)
 {
     assert(priority >= -1 && priority < g_numPriority);
-    assert(msg != NULL);
+    assert(msg != nullptr);
     if (!msg) return;
 
     std::lock_guard<std::mutex> lock(m_mutex);

@@ -40,7 +40,7 @@ ClientProxy1_5::ClientProxy1_5(const std::string& name, inputleap::IStream* stre
     m_events->adoptHandler(m_events->forFile().keepAlive(),
                             this,
                             new TMethodEventJob<ClientProxy1_3>(this,
-                                &ClientProxy1_3::handleKeepAlive, NULL));
+                                &ClientProxy1_3::handleKeepAlive, nullptr));
 }
 
 ClientProxy1_5::~ClientProxy1_5()

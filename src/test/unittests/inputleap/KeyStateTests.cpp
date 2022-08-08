@@ -88,7 +88,7 @@ TEST(KeyStateTests, sendKeyEvent_halfDuplexAndRepeat_addEventNotCalled)
 
     EXPECT_CALL(eventQueue, addEvent(_)).Times(0);
 
-    keyState.sendKeyEvent(NULL, false, true, kKeyCapsLock, 0, 0, 0);
+    keyState.sendKeyEvent(nullptr, false, true, kKeyCapsLock, 0, 0, 0);
 }
 
 TEST(KeyStateTests, sendKeyEvent_halfDuplex_addEventCalledTwice)
@@ -104,7 +104,7 @@ TEST(KeyStateTests, sendKeyEvent_halfDuplex_addEventCalledTwice)
 
     EXPECT_CALL(eventQueue, addEvent(_)).Times(2);
 
-    keyState.sendKeyEvent(NULL, false, false, kKeyCapsLock, 0, 0, 0);
+    keyState.sendKeyEvent(nullptr, false, false, kKeyCapsLock, 0, 0, 0);
 }
 
 TEST(KeyStateTests, sendKeyEvent_keyRepeat_addEventCalledOnce)
@@ -119,7 +119,7 @@ TEST(KeyStateTests, sendKeyEvent_keyRepeat_addEventCalledOnce)
 
     EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
 
-    keyState.sendKeyEvent(NULL, false, true, 1, 0, 0, 0);
+    keyState.sendKeyEvent(nullptr, false, true, 1, 0, 0, 0);
 }
 
 TEST(KeyStateTests, sendKeyEvent_keyDown_addEventCalledOnce)
@@ -134,7 +134,7 @@ TEST(KeyStateTests, sendKeyEvent_keyDown_addEventCalledOnce)
 
     EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
 
-    keyState.sendKeyEvent(NULL, true, false, 1, 0, 0, 0);
+    keyState.sendKeyEvent(nullptr, true, false, 1, 0, 0, 0);
 }
 
 TEST(KeyStateTests, sendKeyEvent_keyUp_addEventCalledOnce)
@@ -149,7 +149,7 @@ TEST(KeyStateTests, sendKeyEvent_keyUp_addEventCalledOnce)
 
     EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
 
-    keyState.sendKeyEvent(NULL, false, false, 1, 0, 0, 0);
+    keyState.sendKeyEvent(nullptr, false, false, 1, 0, 0, 0);
 }
 
 TEST(KeyStateTests, updateKeyMap_mockKeyMap_keyMapGotMock)
@@ -328,8 +328,8 @@ TEST(KeyStateTests, fakeKeyRepeat_nullKey_returnsFalse)
     ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
     keyState.fakeKeyDown(1, 0, 0);
 
-    // change mapKey to return NULL so that fakeKeyRepeat exits early.
-    inputleap::KeyMap::KeyItem* nullKeyItem = NULL;
+    // change mapKey to return nullptr so that fakeKeyRepeat exits early.
+    inputleap::KeyMap::KeyItem* nullKeyItem = nullptr;
     ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(nullKeyItem));
 
     bool actual = keyState.fakeKeyRepeat(1, 0, 0, 0);

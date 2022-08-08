@@ -37,7 +37,7 @@ static const TCHAR* g_isSecure9x = "ScreenSaveUsePassword";
 static const TCHAR* const g_pathScreenSaverIsSecure[] = {
     "Control Panel",
     "Desktop",
-    NULL
+    nullptr
 };
 
 //
@@ -47,8 +47,8 @@ static const TCHAR* const g_pathScreenSaverIsSecure[] = {
 MSWindowsScreenSaver::MSWindowsScreenSaver() :
     m_wasSecure(false),
     m_wasSecureAnInt(false),
-    m_process(NULL),
-    m_watch(NULL),
+    m_process(nullptr),
+    m_watch(nullptr),
     m_threadID(0),
     m_msg(0),
     m_wParam(0),
@@ -141,12 +141,12 @@ MSWindowsScreenSaver::activate()
     if (!isActive()) {
         // activate
         HWND hwnd = GetForegroundWindow();
-        if (hwnd != NULL) {
+        if (hwnd != nullptr) {
             PostMessage(hwnd, WM_SYSCOMMAND, SC_SCREENSAVE, 0);
         }
         else {
             // no foreground window.  pretend we got the event instead.
-            DefWindowProc(NULL, WM_SYSCOMMAND, SC_SCREENSAVE, 0);
+            DefWindowProc(nullptr, WM_SYSCOMMAND, SC_SCREENSAVE, 0);
         }
 
         // restore power save when screen saver activates
@@ -162,7 +162,7 @@ MSWindowsScreenSaver::deactivate()
     // NT runs screen saver in another desktop
     HDESK desktop = OpenDesktop("Screen-saver", 0, FALSE,
                             DESKTOP_READOBJECTS | DESKTOP_WRITEOBJECTS);
-    if (desktop != NULL) {
+    if (desktop != nullptr) {
         EnumDesktopWindows(desktop,
                             &MSWindowsScreenSaver::killScreenSaverFunc,
                             reinterpret_cast<LPARAM>(&killed));
@@ -172,12 +172,12 @@ MSWindowsScreenSaver::deactivate()
     // if above failed or wasn't tried, try the windows 95 way
     if (!killed) {
         // find screen saver window and close it
-        HWND hwnd = FindWindow("WindowsScreenSaverClass", NULL);
-        if (hwnd == NULL) {
+        HWND hwnd = FindWindow("WindowsScreenSaverClass", nullptr);
+        if (hwnd == nullptr) {
             // win2k may use a different class
-            hwnd = FindWindow("Default Screen Saver", NULL);
+            hwnd = FindWindow("Default Screen Saver", nullptr);
         }
-        if (hwnd != NULL) {
+        if (hwnd != nullptr) {
             PostMessage(hwnd, WM_CLOSE, 0, 0);
         }
     }
@@ -233,7 +233,7 @@ MSWindowsScreenSaver::watchProcess(HANDLE process)
     unwatchProcess();
 
     // watch new process in another thread
-    if (process != NULL) {
+    if (process != nullptr) {
         LOG((CLOG_DEBUG "watching screen saver process"));
         m_process = process;
         m_active  = true;
@@ -244,24 +244,24 @@ MSWindowsScreenSaver::watchProcess(HANDLE process)
 void
 MSWindowsScreenSaver::unwatchProcess()
 {
-    if (m_watch != NULL) {
+    if (m_watch != nullptr) {
         LOG((CLOG_DEBUG "stopped watching screen saver process/desktop"));
         m_watch->cancel();
         m_watch->wait();
         delete m_watch;
-        m_watch  = NULL;
+        m_watch = nullptr;
         m_active = false;
     }
-    if (m_process != NULL) {
+    if (m_process != nullptr) {
         CloseHandle(m_process);
-        m_process = NULL;
+        m_process = nullptr;
     }
 }
 
 void MSWindowsScreenSaver::watch_desktop_thread()
 {
     DWORD reserved = 0;
-    TCHAR* name    = NULL;
+    TCHAR* name = nullptr;
 
     for (;;) {
         // wait a bit
@@ -301,7 +301,7 @@ MSWindowsScreenSaver::setSecure(bool secure, bool saveSecureAsInt)
 {
     HKEY hkey =
         ArchMiscWindows::addKey(HKEY_CURRENT_USER, g_pathScreenSaverIsSecure);
-    if (hkey == NULL) {
+    if (hkey == nullptr) {
         return;
     }
 
@@ -321,7 +321,7 @@ MSWindowsScreenSaver::isSecure(bool* wasSecureFlagAnInt) const
     // get the password protection setting key
     HKEY hkey =
         ArchMiscWindows::openKey(HKEY_CURRENT_USER, g_pathScreenSaverIsSecure);
-    if (hkey == NULL) {
+    if (hkey == nullptr) {
         return false;
     }
 

@@ -96,7 +96,7 @@ void
 IpcServer::handleClientConnecting(const Event&, void*)
 {
     inputleap::IStream* stream = m_socket->accept();
-    if (stream == NULL) {
+    if (stream == nullptr) {
         return;
     }
 

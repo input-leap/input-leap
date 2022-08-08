@@ -45,7 +45,7 @@ XWindowsScreenSaver::XWindowsScreenSaver(IXWindowsImpl* impl, Display* display,
     m_dpms(false),
     m_disabled(false),
     m_suppressDisable(false),
-    m_disableTimer(NULL),
+    m_disableTimer(nullptr),
     m_disablePos(0),
     m_events(events)
 {
@@ -107,12 +107,12 @@ XWindowsScreenSaver::XWindowsScreenSaver(IXWindowsImpl* impl, Display* display,
 XWindowsScreenSaver::~XWindowsScreenSaver()
 {
     // done with disable job
-    if (m_disableTimer != NULL) {
+    if (m_disableTimer != nullptr) {
         m_events->deleteTimer(m_disableTimer);
     }
     m_events->removeHandler(Event::kTimer, this);
 
-    if (m_display != NULL) {
+    if (m_display != nullptr) {
         enableDPMS(m_dpmsEnabled);
        m_impl->XSetScreenSaver(m_display, m_timeout, m_interval,
                                m_preferBlanking, m_allowExposures);
@@ -126,7 +126,7 @@ XWindowsScreenSaver::~XWindowsScreenSaver()
 void
 XWindowsScreenSaver::destroy()
 {
-    m_display = NULL;
+    m_display = nullptr;
     delete this;
 }
 
@@ -358,10 +358,8 @@ XWindowsScreenSaver::isXScreenSaver(Window w) const
 {
     // check for m_atomScreenSaverVersion string property
     Atom type;
-    return (XWindowsUtil::getWindowProperty(m_display, w,
-                                    m_atomScreenSaverVersion,
-                                    NULL, &type, NULL, False) &&
-                                type == XA_STRING);
+    return (XWindowsUtil::getWindowProperty(m_display, w, m_atomScreenSaverVersion,
+                                            nullptr, &type, nullptr, False) && type == XA_STRING);
 }
 
 void
@@ -484,13 +482,13 @@ XWindowsScreenSaver::addWatchXScreenSaver(Window window)
 void
 XWindowsScreenSaver::updateDisableTimer()
 {
-    if (m_disabled && !m_suppressDisable && m_disableTimer == NULL) {
+    if (m_disabled && !m_suppressDisable && m_disableTimer == nullptr) {
         // 5 seconds should be plenty often to suppress the screen saver
         m_disableTimer = m_events->newTimer(5.0, this);
     }
-    else if ((!m_disabled || m_suppressDisable) && m_disableTimer != NULL) {
+    else if ((!m_disabled || m_suppressDisable) && m_disableTimer != nullptr) {
         m_events->deleteTimer(m_disableTimer);
-        m_disableTimer = NULL;
+        m_disableTimer = nullptr;
     }
 }
 

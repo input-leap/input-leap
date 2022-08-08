@@ -27,7 +27,7 @@
 
 std::string MSWindowsUtil::getString(HINSTANCE instance, DWORD id)
 {
-    char* msg = NULL;
+    char* msg = nullptr;
     int n = LoadString(instance, id, reinterpret_cast<LPSTR>(&msg), 0);
 
     if (n <= 0) {
@@ -48,7 +48,7 @@ std::string MSWindowsUtil::getErrorString(HINSTANCE hinstance, DWORD error, DWOR
                                 MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
                                 (LPTSTR)&buffer,
                                 0,
-                                NULL) == 0) {
+                                nullptr) == 0) {
         std::string errorString = inputleap::string::sprintf("%d", error);
         return inputleap::string::format(getString(hinstance, id).c_str(),
                             errorString.c_str());
@@ -74,8 +74,8 @@ MSWindowsUtil::createDirectory(const std::string& path, bool stripLast)
 {
     // create parent directories
     for (auto pos = path.find_first_of('\\'); pos != std::string::npos; pos = path.find_first_of('\\', pos + 1))
-        CreateDirectory(path.substr(0, pos).c_str(), NULL);
+        CreateDirectory(path.substr(0, pos).c_str(), nullptr);
     if (!stripLast)
         // create innermost directory
-        CreateDirectory(path.c_str(), NULL);
+        CreateDirectory(path.c_str(), nullptr);
 }

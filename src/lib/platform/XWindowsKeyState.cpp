@@ -58,7 +58,7 @@ XWindowsKeyState::XWindowsKeyState(IXWindowsImpl* impl,
 
 XWindowsKeyState::~XWindowsKeyState()
 {
-    if (m_xkb != NULL) {
+    if (m_xkb != nullptr) {
         m_impl->XkbFreeKeyboard(m_xkb, 0, True);
     }
 }
@@ -76,7 +76,7 @@ XWindowsKeyState::init(Display* display, bool useXKB)
                                   XkbAllClientInfoMask, XkbUseCoreKbd);
     }
     else {
-        m_xkb = NULL;
+        m_xkb = nullptr;
     }
     setActiveGroup(kGroupPollAndSet);
 }
@@ -187,7 +187,7 @@ std::int32_t XWindowsKeyState::pollActiveGroup() const
         return m_group;
     }
 
-    if (m_xkb != NULL) {
+    if (m_xkb != nullptr) {
         XkbStateRec state;
         if (m_impl->XkbGetState(m_display, XkbUseCoreKbd, &state) == Success) {
             return state.group;
@@ -219,7 +219,7 @@ XWindowsKeyState::getKeyMap(inputleap::KeyMap& keyMap)
     XGetKeyboardControl(m_display, &m_keyboardState);
     m_keyboardState.global_auto_repeat = oldGlobalAutoRepeat;
 
-    if (m_xkb != NULL) {
+    if (m_xkb != nullptr) {
         unsigned mask = XkbKeyActionsMask | XkbKeyBehaviorsMask |
                         XkbAllClientInfoMask;
         if (m_impl->XkbGetUpdatedMap(m_display, mask, m_xkb) == Success) {
@@ -254,7 +254,7 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
     case Keystroke::kGroup:
         if (keystroke.m_data.m_group.m_absolute) {
             LOG((CLOG_DEBUG1 "  group %d", keystroke.m_data.m_group.m_group));
-            if (m_xkb != NULL) {
+            if (m_xkb != nullptr) {
                 if (m_impl->XkbLockGroup(m_display, XkbUseCoreKbd,
                                          keystroke.m_data.m_group.m_group
                                          ) == False) {
@@ -268,7 +268,7 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
         }
         else {
             LOG((CLOG_DEBUG1 "  group %+d", keystroke.m_data.m_group.m_group));
-            if (m_xkb != NULL) {
+            if (m_xkb != nullptr) {
                 if (m_impl->XkbLockGroup(m_display, XkbUseCoreKbd,
                                          getEffectiveGroup(pollActiveGroup(),
                                          keystroke.m_data.m_group.m_group)
@@ -621,7 +621,7 @@ XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
                 // set required modifiers for this item
                 item.m_required = mapEntry->mods.mask;
                 if ((item.m_required & LockMask) != 0 &&
-                    j != -1 && type->preserve != NULL &&
+                    j != -1 && type->preserve != nullptr &&
                     (type->preserve[j].mask & LockMask) != 0) {
                     // sensitive caps lock and we preserve caps-lock.
                     // preserving caps-lock means we Xlib functions would
@@ -847,7 +847,7 @@ XWindowsKeyState::getEffectiveGroup(KeyCode keycode, int group) const
 
 std::uint32_t XWindowsKeyState::getGroupFromState(unsigned int state) const
 {
-    if (m_xkb != NULL) {
+    if (m_xkb != nullptr) {
         return XkbGroupForCoreState(state);
     }
     return 0;

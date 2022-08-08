@@ -61,7 +61,7 @@ execSelfNonDaemonized()
 }
 
 bool alreadyDaemonized() {
-    return std::getenv("_INPUTLEAP_DAEMONIZED") != NULL;
+    return std::getenv("_INPUTLEAP_DAEMONIZED") != nullptr;
 }
 
 #endif

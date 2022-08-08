@@ -26,7 +26,7 @@
 class MockApp : public App
 {
 public:
-    MockApp() : App(NULL, NULL, NULL) { }
+    MockApp() : App(nullptr, nullptr, nullptr) { }
 
     MOCK_METHOD0(help, void());
     MOCK_METHOD0(loadConfig, void());

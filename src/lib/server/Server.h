@@ -111,7 +111,7 @@ public:
     ~Server();
 
 #ifdef INPUTLEAP_TEST_ENV
-    Server() : m_mock(true), m_config(NULL) { }
+    Server() : m_mock(true), m_config(nullptr) { }
     void setActive(BaseClientProxy* active) {    m_active = active; }
 #endif
 
@@ -227,7 +227,7 @@ private:
     // source screen, find the screen we should move onto and where.
     // if the position is sufficiently far from the source then we
     // cross multiple screens.  if there is no suitable screen then
-    // return NULL and x,y are not modified.
+    // return nullptr and x,y are not modified.
     BaseClientProxy* mapToNeighbor(BaseClientProxy*, EDirection, std::int32_t& x,
                                    std::int32_t& y) const;
 

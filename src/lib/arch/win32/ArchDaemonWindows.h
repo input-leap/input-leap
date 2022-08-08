@@ -149,5 +149,5 @@ static const TCHAR* const g_daemonKeyPath[] = {
     _T("The Barrier Project"),
     _T("Barrier"),
     _T("Service"),
-    NULL
+    nullptr
 };

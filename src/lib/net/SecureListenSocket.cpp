@@ -36,20 +36,20 @@ SecureListenSocket::SecureListenSocket(IEventQueue* events, SocketMultiplexer* s
 IDataSocket*
 SecureListenSocket::accept()
 {
-    SecureSocket* socket = NULL;
+    SecureSocket* socket = nullptr;
     try {
         socket = new SecureSocket(m_events, m_socketMultiplexer,
-                                  ARCH->acceptSocket(m_socket, NULL), security_level_);
+                                  ARCH->acceptSocket(m_socket, nullptr), security_level_);
         socket->initSsl(true);
 
-        if (socket != NULL) {
+        if (socket != nullptr) {
             setListeningJob();
         }
 
         bool loaded = socket->load_certificates(inputleap::DataDirectories::ssl_certificate_path());
         if (!loaded) {
             delete socket;
-            return NULL;
+            return nullptr;
         }
 
         socket->secureAccept();
@@ -57,14 +57,14 @@ SecureListenSocket::accept()
         return dynamic_cast<IDataSocket*>(socket);
     }
     catch (XArchNetwork&) {
-        if (socket != NULL) {
+        if (socket != nullptr) {
             delete socket;
             setListeningJob();
         }
-        return NULL;
+        return nullptr;
     }
     catch (std::exception &ex) {
-        if (socket != NULL) {
+        if (socket != nullptr) {
             delete socket;
             setListeningJob();
         }

@@ -36,13 +36,13 @@ static const UINT        kFirstReceiverID = WM_USER + 14;
 // ArchTaskBarWindows
 //
 
-ArchTaskBarWindows*    ArchTaskBarWindows::s_instance    = NULL;
+ArchTaskBarWindows* ArchTaskBarWindows::s_instance = nullptr;
 
 ArchTaskBarWindows::ArchTaskBarWindows() :
     m_ready(false),
     m_result(0),
-    m_thread(NULL),
-    m_hwnd(NULL),
+    m_thread(nullptr),
+    m_hwnd(nullptr),
     m_taskBarRestart(0),
     m_nextID(kFirstReceiverID)
 {
@@ -52,12 +52,12 @@ ArchTaskBarWindows::ArchTaskBarWindows() :
 
 ArchTaskBarWindows::~ArchTaskBarWindows()
 {
-    if (m_thread != NULL) {
+    if (m_thread != nullptr) {
         PostMessage(m_hwnd, WM_QUIT, 0, 0);
         ARCH->wait(m_thread, -1.0);
         ARCH->closeThread(m_thread);
     }
-    s_instance = NULL;
+    s_instance = nullptr;
 }
 
 void
@@ -101,7 +101,7 @@ void
 ArchTaskBarWindows::addReceiver(IArchTaskBarReceiver* receiver)
 {
     // ignore bogus receiver
-    if (receiver == NULL) {
+    if (receiver == nullptr) {
         return;
     }
 
@@ -247,7 +247,7 @@ ArchTaskBarWindows::modifyIconNoLock(
     data.uFlags           = NIF_MESSAGE;
     data.uCallbackMessage = kNotifyReceiver;
     data.hIcon            = icon;
-    if (icon != NULL) {
+    if (icon != nullptr) {
         data.uFlags |= NIF_ICON;
     }
     if (!toolTip.empty()) {
@@ -393,7 +393,7 @@ ArchTaskBarWindows::staticWndProc(HWND hwnd, UINT msg,
 {
     // if msg is WM_NCCREATE, extract the ArchTaskBarWindows* and put
     // it in the extra window data then forward the call.
-    ArchTaskBarWindows* self = NULL;
+    ArchTaskBarWindows* self = nullptr;
     if (msg == WM_NCCREATE) {
         CREATESTRUCT* createInfo;
         createInfo = reinterpret_cast<CREATESTRUCT*>(lParam);
@@ -410,7 +410,7 @@ ArchTaskBarWindows::staticWndProc(HWND hwnd, UINT msg,
     }
 
     // forward the message
-    if (self != NULL) {
+    if (self != nullptr) {
         return self->wndProc(hwnd, msg, wParam, lParam);
     }
     else {
@@ -433,12 +433,12 @@ ArchTaskBarWindows::threadMainLoop()
     classInfo.cbClsExtra    = 0;
     classInfo.cbWndExtra    = sizeof(ArchTaskBarWindows*);
     classInfo.hInstance     = instanceWin32();
-    classInfo.hIcon         = NULL;
-    classInfo.hCursor       = NULL;
-    classInfo.hbrBackground = NULL;
-    classInfo.lpszMenuName  = NULL;
+    classInfo.hIcon = nullptr;
+    classInfo.hCursor = nullptr;
+    classInfo.hbrBackground = nullptr;
+    classInfo.lpszMenuName = nullptr;
     classInfo.lpszClassName = className;
-    classInfo.hIconSm       = NULL;
+    classInfo.hIconSm = nullptr;
     ATOM windowClass        = RegisterClassEx(&classInfo);
 
     // create window
@@ -447,8 +447,8 @@ ArchTaskBarWindows::threadMainLoop()
                             TEXT("Barrier Task Bar"),
                             WS_POPUP,
                             0, 0, 1, 1,
-                            NULL,
-                            NULL,
+                            nullptr,
+                            nullptr,
                             instanceWin32(),
                             static_cast<void*>(this));
 
@@ -460,14 +460,14 @@ ArchTaskBarWindows::threadMainLoop()
     }
 
     // handle failure
-    if (m_hwnd == NULL) {
+    if (m_hwnd == nullptr) {
         UnregisterClass(className, instanceWin32());
         return;
     }
 
     // main loop
     MSG msg;
-    while (GetMessage(&msg, NULL, 0, 0)) {
+    while (GetMessage(&msg, nullptr, 0, 0)) {
         if (!processDialogs(&msg)) {
             TranslateMessage(&msg);
             DispatchMessage(&msg);

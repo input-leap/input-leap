@@ -32,7 +32,7 @@ using ::testing::_;
 TEST(CXWindowsScreenSaverTests, activate_defaultScreen_todo)
 {
     const char* displayName = std::getenv("DISPLAY");
-    if (displayName == NULL) {
+    if (displayName == nullptr) {
         displayName = ":0.0";
     }
 
@@ -41,7 +41,7 @@ TEST(CXWindowsScreenSaverTests, activate_defaultScreen_todo)
     MockEventQueue eventQueue;
     EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(1);
     CXWindowsScreenSaver screenSaver(
-        display, window, NULL, &eventQueue);
+        display, window, nullptr, &eventQueue);
 
     screenSaver.activate();
 

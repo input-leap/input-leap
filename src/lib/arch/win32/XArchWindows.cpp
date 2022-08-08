@@ -36,8 +36,8 @@ XArchEvalWindows::eval() const noexcept
                             MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
                             (LPTSTR)&cmsg,
                             0,
-                            NULL) == 0) {
-        cmsg = NULL;
+                            nullptr) == 0) {
+        cmsg = nullptr;
         return inputleap::string::sprintf("Unknown error, code %d", m_error);
     }
     std::string smsg(cmsg);
@@ -108,7 +108,7 @@ XArchEvalWinsock::eval() const noexcept
         /* 11002 */{WSATRY_AGAIN,       "A temporary error occurred on an authoritative name server"},
         /* 11003 */{WSANO_RECOVERY,     "A non-recoverable name server error occurred"},
         /* 11004 */{WSANO_DATA,         "The requested name is valid but does not have an IP address"},
-        /* end   */{0,                  NULL}
+        /* end   */{0,                  nullptr}
     };
 
     for (unsigned int i = 0; s_netErrorCodes[i].m_code != 0; ++i) {

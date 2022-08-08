@@ -59,7 +59,7 @@ public:
     void sendDragInfo(std::uint32_t fileCount, const char* info, size_t size);
 
 #ifdef INPUTLEAP_TEST_ENV
-    void                handleDataForTest() { handleData(Event(), NULL); }
+    void handleDataForTest() { handleData(Event(), nullptr); }
 #endif
 
 protected:

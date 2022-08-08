@@ -26,7 +26,7 @@
 class MockArgParser : public ArgParser
 {
 public:
-    MockArgParser() : ArgParser(NULL) { }
+    MockArgParser() : ArgParser(nullptr) { }
 
     MOCK_METHOD3(parseGenericArgs, bool(int, const char* const*, int&));
     MOCK_METHOD0(checkUnexpectedArgs, bool());

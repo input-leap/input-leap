@@ -58,13 +58,13 @@ public:
 
 ArchThreadImpl::ArchThreadImpl() :
     m_refCount(1),
-    m_thread(NULL),
+    m_thread(nullptr),
     m_id(0),
     m_cancelling(false),
-    m_networkData(NULL)
+    m_networkData(nullptr)
 {
-    m_exit   = CreateEvent(NULL, TRUE, FALSE, NULL);
-    m_cancel = CreateEvent(NULL, TRUE, FALSE, NULL);
+    m_exit = CreateEvent(nullptr, TRUE, FALSE, nullptr);
+    m_cancel = CreateEvent(nullptr, TRUE, FALSE, nullptr);
 }
 
 ArchThreadImpl::~ArchThreadImpl()
@@ -78,30 +78,30 @@ ArchThreadImpl::~ArchThreadImpl()
 // ArchMultithreadWindows
 //
 
-ArchMultithreadWindows*    ArchMultithreadWindows::s_instance = NULL;
+ArchMultithreadWindows* ArchMultithreadWindows::s_instance = nullptr;
 
 ArchMultithreadWindows::ArchMultithreadWindows()
 {
-    assert(s_instance == NULL);
+    assert(s_instance == nullptr);
     s_instance = this;
 
     // no signal handlers
     for (size_t i = 0; i < kNUM_SIGNALS; ++i) {
-        m_signalFunc[i]     = NULL;
-        m_signalUserData[i] = NULL;
+        m_signalFunc[i] = nullptr;
+        m_signalUserData[i] = nullptr;
     }
 
     // create thread for calling (main) thread and add it to our
     // list.  no need to lock the mutex since we're the only thread.
     m_mainThread           = new ArchThreadImpl;
-    m_mainThread->m_thread = NULL;
+    m_mainThread->m_thread = nullptr;
     m_mainThread->m_id     = GetCurrentThreadId();
     insert(m_mainThread);
 }
 
 ArchMultithreadWindows::~ArchMultithreadWindows()
 {
-    s_instance = NULL;
+    s_instance = nullptr;
 
     // clean up thread list
     for (ThreadList::iterator index  = m_threadList.begin();
@@ -150,15 +150,15 @@ ArchThread ArchMultithreadWindows::newThread(const std::function<void()>& func)
 
     // create thread
     unsigned int id = 0;
-    thread->m_thread = reinterpret_cast<HANDLE>(_beginthreadex(NULL, 0,
-                                threadFunc, (void*)thread, 0, &id));
+    thread->m_thread = reinterpret_cast<HANDLE>(
+                _beginthreadex(nullptr, 0, threadFunc, (void*)thread, 0, &id));
     thread->m_id     = static_cast<DWORD>(id);
 
     // check if thread was started
     if (thread->m_thread == 0) {
         // failed to start thread so clean up
         delete thread;
-        thread = NULL;
+        thread = nullptr;
     }
     else {
         // add thread to list
@@ -177,19 +177,19 @@ ArchMultithreadWindows::newCurrentThread()
     std::lock_guard<std::mutex> lock(thread_mutex_);
 
     ArchThreadImpl* thread = find(GetCurrentThreadId());
-    assert(thread != NULL);
+    assert(thread != nullptr);
     return thread;
 }
 
 void
 ArchMultithreadWindows::closeThread(ArchThread thread)
 {
-    assert(thread != NULL);
+    assert(thread != nullptr);
 
     // decrement ref count and clean up thread if no more references
     if (--thread->m_refCount == 0) {
-        // close the handle (main thread has a NULL handle)
-        if (thread->m_thread != NULL) {
+        // close the handle (main thread has a nullptr handle)
+        if (thread->m_thread != nullptr) {
             CloseHandle(thread->m_thread);
         }
 
@@ -211,7 +211,7 @@ ArchMultithreadWindows::copyThread(ArchThread thread)
 void
 ArchMultithreadWindows::cancelThread(ArchThread thread)
 {
-    assert(thread != NULL);
+    assert(thread != nullptr);
 
     // set cancel flag
     SetEvent(thread->m_cancel);
@@ -258,7 +258,7 @@ ArchMultithreadWindows::setPriorityOfThread(ArchThread thread, int n)
 #endif
     static const size_t s_pBase = 8;    // index of normal priority
 
-    assert(thread != NULL);
+    assert(thread != nullptr);
 
     size_t index;
     if (n > 0 && s_pBase < (size_t)n) {
@@ -292,7 +292,7 @@ ArchMultithreadWindows::testCancelThread()
 bool
 ArchMultithreadWindows::wait(ArchThread target, double timeout)
 {
-    assert(target != NULL);
+    assert(target != nullptr);
 
     ArchThreadImpl* self = nullptr;
     {
@@ -383,7 +383,7 @@ void
 ArchMultithreadWindows::raiseSignal(ESignal signal)
 {
     std::lock_guard<std::mutex> lock(thread_mutex_);
-    if (m_signalFunc[signal] != NULL) {
+    if (m_signalFunc[signal] != nullptr) {
         m_signalFunc[signal](signal, m_signalUserData[signal]);
         ARCH->unblockPollSocket(m_mainThread);
     }
@@ -396,7 +396,7 @@ ArchThreadImpl*
 ArchMultithreadWindows::find(DWORD id)
 {
     ArchThreadImpl* impl = findNoRef(id);
-    if (impl != NULL) {
+    if (impl != nullptr) {
         refThread(impl);
     }
     return impl;
@@ -406,13 +406,13 @@ ArchThreadImpl*
 ArchMultithreadWindows::findNoRef(DWORD id)
 {
     ArchThreadImpl* impl = findNoRefOrCreate(id);
-    if (impl == NULL) {
+    if (impl == nullptr) {
         // create thread for calling thread which isn't in our list and
         // add it to the list.  this won't normally happen but it can if
         // the system calls us under a new thread, like it does when we
         // run as a service.
         impl           = new ArchThreadImpl;
-        impl->m_thread = NULL;
+        impl->m_thread = nullptr;
         impl->m_id     = GetCurrentThreadId();
         insert(impl);
     }
@@ -429,16 +429,16 @@ ArchMultithreadWindows::findNoRefOrCreate(DWORD id)
             return *index;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 void
 ArchMultithreadWindows::insert(ArchThreadImpl* thread)
 {
-    assert(thread != NULL);
+    assert(thread != nullptr);
 
     // thread shouldn't already be on the list
-    assert(findNoRefOrCreate(thread->m_id) == NULL);
+    assert(findNoRefOrCreate(thread->m_id) == nullptr);
 
     // append to list
     m_threadList.push_back(thread);
@@ -459,15 +459,15 @@ ArchMultithreadWindows::erase(ArchThreadImpl* thread)
 void
 ArchMultithreadWindows::refThread(ArchThreadImpl* thread)
 {
-    assert(thread != NULL);
-    assert(findNoRefOrCreate(thread->m_id) != NULL);
+    assert(thread != nullptr);
+    assert(findNoRefOrCreate(thread->m_id) != nullptr);
     ++thread->m_refCount;
 }
 
 void
 ArchMultithreadWindows::testCancelThreadImpl(ArchThreadImpl* thread)
 {
-    assert(thread != NULL);
+    assert(thread != nullptr);
 
     // poll cancel event.  return if not set.
     const DWORD result = WaitForSingleObject(thread->m_cancel, 0);

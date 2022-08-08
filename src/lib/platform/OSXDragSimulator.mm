@@ -22,9 +22,9 @@
 
 #if defined(MAC_OS_X_VERSION_10_7)
 
-NSWindow* g_dragWindow = NULL;
-OSXDragView* g_dragView = NULL;
-NSString* g_ext = NULL;
+NSWindow* g_dragWindow = nullptr;
+OSXDragView* g_dragView = nullptr;
+NSString* g_ext = nullptr;
 
 void
 runCocoaApp()

@@ -333,7 +333,7 @@ public:
     virtual ~InputFilter();
 
 #ifdef INPUTLEAP_TEST_ENV
-    InputFilter() : m_primaryClient(NULL) { }
+    InputFilter() : m_primaryClient(nullptr) { }
 #endif
 
     InputFilter&        operator=(const InputFilter&);
@@ -348,7 +348,7 @@ public:
     Rule& getRule(std::uint32_t index);
 
     // enable event filtering using the given primary client.  disable
-    // if client is NULL.
+    // if client is nullptr.
     virtual void        setPrimaryClient(PrimaryClient* client);
 
     // convert rules to a string

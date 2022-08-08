@@ -26,7 +26,7 @@ fs::path known_folder_path(const KNOWNFOLDERID& id)
 {
     fs::path path;
     WCHAR* buffer;
-    HRESULT result = SHGetKnownFolderPath(id, 0, NULL, &buffer);
+    HRESULT result = SHGetKnownFolderPath(id, 0, nullptr, &buffer);
     if (result == S_OK) {
         path = fs::path(std::wstring(buffer));
         CoTaskMemFree(buffer);

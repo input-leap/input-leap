@@ -54,7 +54,7 @@ XWindowsEventQueueBuffer::XWindowsEventQueueBuffer(IXWindowsImpl* impl,
     m_events(events)
 {
     m_impl = impl;
-    assert(m_display != NULL);
+    assert(m_display != nullptr);
     assert(m_window  != None);
 
     m_userEvent = m_impl->XInternAtom(m_display, "INPUTLEAP_USER_EVENT", False);

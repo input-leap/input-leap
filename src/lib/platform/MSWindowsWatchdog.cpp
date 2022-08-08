@@ -49,9 +49,9 @@ std::string activeDesktopName()
     const std::size_t BufferLength = 1024;
     std::string name;
     HDESK desk = OpenInputDesktop(0, FALSE, GENERIC_READ);
-    if (desk != NULL) {
+    if (desk != nullptr) {
         TCHAR buffer[BufferLength];
-        if (GetUserObjectInformation(desk, UOI_NAME, buffer, BufferLength - 1, NULL) == TRUE)
+        if (GetUserObjectInformation(desk, UOI_NAME, buffer, BufferLength - 1, nullptr) == TRUE)
             name = buffer;
         CloseDesktop(desk);
     }
@@ -64,18 +64,18 @@ MSWindowsWatchdog::MSWindowsWatchdog(
     bool autoDetectCommand,
     IpcServer& ipcServer,
     IpcLogOutputter& ipcLogOutputter) :
-    m_thread(NULL),
+    m_thread(nullptr),
     m_autoDetectCommand(autoDetectCommand),
     m_monitoring(true),
     m_commandChanged(false),
-    m_stdOutWrite(NULL),
-    m_stdOutRead(NULL),
+    m_stdOutWrite(nullptr),
+    m_stdOutRead(nullptr),
     m_ipcServer(ipcServer),
     m_ipcLogOutputter(ipcLogOutputter),
     m_elevateProcess(false),
     m_processFailures(0),
     m_processRunning(false),
-    m_fileLogOutputter(NULL),
+    m_fileLogOutputter(nullptr),
     m_autoElevated(false),
     m_daemonized(daemonized)
 {
@@ -158,7 +158,7 @@ void MSWindowsWatchdog::main_loop()
 {
     shutdownExistingProcesses();
 
-    SendSas sendSasFunc = NULL;
+    SendSas sendSasFunc = nullptr;
     HINSTANCE sasLib = LoadLibrary("sas.dll");
     if (sasLib) {
         LOG((CLOG_DEBUG "found sas.dll"));
@@ -168,7 +168,7 @@ void MSWindowsWatchdog::main_loop()
     SECURITY_ATTRIBUTES saAttr;
     saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
     saAttr.bInheritHandle = TRUE;
-    saAttr.lpSecurityDescriptor = NULL;
+    saAttr.lpSecurityDescriptor = nullptr;
 
     if (!CreatePipe(&m_stdOutRead, &m_stdOutWrite, &saAttr, 0)) {
         throw XArch(new XArchEvalWindows());
@@ -206,10 +206,10 @@ void MSWindowsWatchdog::main_loop()
                     m_processInfo.dwProcessId));
             }
 
-            if (sendSasFunc != NULL) {
+            if (sendSasFunc != nullptr) {
 
-                HANDLE sendSasEvent = CreateEvent(NULL, FALSE, FALSE, "Global\\SendSAS");
-                if (sendSasEvent != NULL) {
+                HANDLE sendSasEvent = CreateEvent(nullptr, FALSE, FALSE, "Global\\SendSAS");
+                if (sendSasEvent != nullptr) {
 
                     // use SendSAS event to wait for next session (timeout 1 second).
                     if (WaitForSingleObject(sendSasEvent, 1000) == WAIT_OBJECT_0) {
@@ -339,7 +339,7 @@ BOOL MSWindowsWatchdog::doStartProcessAsSelf(std::string& command)
     si.dwFlags |= STARTF_USESTDHANDLES;
 
     LOG((CLOG_INFO "starting new process as self"));
-    return CreateProcess(NULL, LPSTR(command.c_str()), NULL, NULL, FALSE, creationFlags, NULL, NULL, &si, &m_processInfo);
+    return CreateProcess(nullptr, LPSTR(command.c_str()), nullptr, nullptr, FALSE, creationFlags, nullptr, nullptr, &si, &m_processInfo);
 }
 
 BOOL MSWindowsWatchdog::doStartProcessAsUser(std::string& command, HANDLE userToken,
@@ -370,10 +370,9 @@ BOOL MSWindowsWatchdog::doStartProcessAsUser(std::string& command, HANDLE userTo
 
     // re-launch in current active user session
     LOG((CLOG_INFO "starting new process as privileged user"));
-    BOOL createRet = CreateProcessAsUser(
-        userToken, NULL, LPSTR(command.c_str()),
-        sa, NULL, TRUE, creationFlags,
-        environment, NULL, &si, &m_processInfo);
+    BOOL createRet = CreateProcessAsUser(userToken, nullptr, LPSTR(command.c_str()),
+                                         sa, nullptr, TRUE, creationFlags,
+                                         environment, nullptr, &si, &m_processInfo);
 
     DestroyEnvironmentBlock(environment);
     CloseHandle(userToken);
@@ -425,7 +424,7 @@ void MSWindowsWatchdog::output_loop()
     while (m_monitoring) {
 
         DWORD bytesRead;
-        BOOL success = ReadFile(m_stdOutRead, buffer, kOutputBufferSize, &bytesRead, NULL);
+        BOOL success = ReadFile(m_stdOutRead, buffer, kOutputBufferSize, &bytesRead, nullptr);
 
         // assume the process has gone away? slow down
         // the reads until another one turns up.
@@ -435,7 +434,7 @@ void MSWindowsWatchdog::output_loop()
         else {
             buffer[bytesRead] = '\0';
             m_ipcLogOutputter.write(kINFO, buffer);
-            if (m_fileLogOutputter != NULL) {
+            if (m_fileLogOutputter != nullptr) {
                 m_fileLogOutputter->write(kINFO, buffer);
             }
         }

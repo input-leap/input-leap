@@ -140,7 +140,7 @@ AppUtilWindows::run(int argc, char** argv)
     }
 
     // record window instance for tray icon, etc
-    ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+    ArchMiscWindows::setInstanceWin32(GetModuleHandle(nullptr));
 
     MSWindowsScreen::init(ArchMiscWindows::instanceWin32());
     Thread::getCurrentThread().setPriority(-14);
@@ -153,7 +153,7 @@ AppUtilWindows::run(int argc, char** argv)
         app().argsBase().m_daemon = false;
     }
 
-    return app().runInner(argc, argv, NULL, startup);
+    return app().runInner(argc, argv, nullptr, startup);
 }
 
 AppUtilWindows&

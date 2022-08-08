@@ -104,15 +104,15 @@ void SecureSocket::freeSSLResources()
 {
     std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
 
-    if (m_ssl->m_ssl != NULL) {
+    if (m_ssl->m_ssl != nullptr) {
         SSL_shutdown(m_ssl->m_ssl);
         SSL_free(m_ssl->m_ssl);
-        m_ssl->m_ssl = NULL;
+        m_ssl->m_ssl = nullptr;
     }
 
-    if (m_ssl->m_context != NULL) {
+    if (m_ssl->m_context != nullptr) {
         SSL_CTX_free(m_ssl->m_context);
-        m_ssl->m_context = NULL;
+        m_ssl->m_context = nullptr;
     }
 }
 
@@ -265,7 +265,7 @@ SecureSocket::secureRead(void* buffer, int size, int& read)
 {
     std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
 
-    if (m_ssl->m_ssl != NULL) {
+    if (m_ssl->m_ssl != nullptr) {
         LOG((CLOG_DEBUG2 "reading secure socket"));
         read = SSL_read(m_ssl->m_ssl, buffer, size);
 
@@ -291,7 +291,7 @@ SecureSocket::secureWrite(const void* buffer, int size, int& wrote)
 {
     std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
 
-    if (m_ssl->m_ssl != NULL) {
+    if (m_ssl->m_ssl != nullptr) {
         LOG((CLOG_DEBUG2 "writing secure socket:%p", this));
 
         wrote = SSL_write(m_ssl->m_ssl, buffer, size);
@@ -325,8 +325,8 @@ SecureSocket::initSsl(bool server)
     std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
 
     m_ssl = new Ssl();
-    m_ssl->m_context = NULL;
-    m_ssl->m_ssl = NULL;
+    m_ssl->m_context = nullptr;
+    m_ssl->m_ssl = nullptr;
 
     initContext(server);
 }
@@ -407,7 +407,7 @@ SecureSocket::initContext(bool server)
     // drop SSLv3 support
     SSL_CTX_set_options(m_ssl->m_context, SSL_OP_NO_SSLv3);
 
-    if (m_ssl->m_context == NULL) {
+    if (m_ssl->m_context == nullptr) {
         showError("");
     }
 
@@ -427,8 +427,8 @@ SecureSocket::createSSL()
 
     // I assume just one instance is needed
     // get new SSL state with context
-    if (m_ssl->m_ssl == NULL) {
-        assert(m_ssl->m_context != NULL);
+    if (m_ssl->m_ssl == nullptr) {
+        assert(m_ssl->m_context != nullptr);
         m_ssl->m_ssl = SSL_new(m_ssl->m_context);
     }
 }
@@ -822,7 +822,7 @@ SecureSocket::showSecureCipherInfo()
 
     STACK_OF(SSL_CIPHER) * sStack = SSL_get_ciphers(m_ssl->m_ssl);
 
-    if (sStack == NULL) {
+    if (sStack == nullptr) {
         LOG((CLOG_DEBUG1 "local cipher list not available"));
     }
     else {
@@ -838,7 +838,7 @@ SecureSocket::showSecureCipherInfo()
 	// Use SSL_get_client_ciphers() for newer versions
 	STACK_OF(SSL_CIPHER) * cStack = SSL_get_client_ciphers(m_ssl->m_ssl);
 #endif
-	if (cStack == NULL) {
+	if (cStack == nullptr) {
         LOG((CLOG_DEBUG1 "remote cipher list not available"));
     }
     else {
@@ -866,7 +866,7 @@ SecureSocket::showSecureConnectInfo()
 
     const SSL_CIPHER* cipher = SSL_get_current_cipher(m_ssl->m_ssl);
 
-    if (cipher != NULL) {
+    if (cipher != nullptr) {
         char msg[kMsgSize];
         SSL_CIPHER_description(cipher, msg, kMsgSize);
         LOG((CLOG_INFO "%s", msg));

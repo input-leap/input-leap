@@ -70,7 +70,7 @@ static bool parse_address(const std::string& address, std::string& host, int& po
 // name re-resolution adapted from a patch by Brent Priddy.
 
 NetworkAddress::NetworkAddress() :
-    m_address(NULL),
+    m_address(nullptr),
     m_hostname(),
     m_port(0)
 {
@@ -79,7 +79,7 @@ NetworkAddress::NetworkAddress() :
 }
 
 NetworkAddress::NetworkAddress(int port) :
-    m_address(NULL),
+    m_address(nullptr),
     m_hostname(),
     m_port(port)
 {
@@ -89,7 +89,7 @@ NetworkAddress::NetworkAddress(int port) :
 }
 
 NetworkAddress::NetworkAddress(const NetworkAddress& addr) :
-    m_address(addr.m_address != NULL ? ARCH->copyAddr(addr.m_address) : NULL),
+    m_address(addr.m_address != nullptr ? ARCH->copyAddr(addr.m_address) : nullptr),
     m_hostname(addr.m_hostname),
     m_port(addr.m_port)
 {
@@ -97,7 +97,7 @@ NetworkAddress::NetworkAddress(const NetworkAddress& addr) :
 }
 
 NetworkAddress::NetworkAddress(const std::string& hostname, int port) :
-    m_address(NULL),
+    m_address(nullptr),
     m_hostname(hostname),
     m_port(port)
 {
@@ -109,7 +109,7 @@ NetworkAddress::NetworkAddress(const std::string& hostname, int port) :
 
 NetworkAddress::~NetworkAddress()
 {
-    if (m_address != NULL) {
+    if (m_address != nullptr) {
         ARCH->closeAddr(m_address);
     }
 }
@@ -117,11 +117,11 @@ NetworkAddress::~NetworkAddress()
 NetworkAddress&
 NetworkAddress::operator=(const NetworkAddress& addr)
 {
-    ArchNetAddress newAddr = NULL;
-    if (addr.m_address != NULL) {
+    ArchNetAddress newAddr = nullptr;
+    if (addr.m_address != nullptr) {
         newAddr = ARCH->copyAddr(addr.m_address);
     }
-    if (m_address != NULL) {
+    if (m_address != nullptr) {
         ARCH->closeAddr(m_address);
     }
     m_address  = newAddr;
@@ -134,9 +134,9 @@ void
 NetworkAddress::resolve()
 {
     // discard previous address
-    if (m_address != NULL) {
+    if (m_address != nullptr) {
         ARCH->closeAddr(m_address);
-        m_address = NULL;
+        m_address = nullptr;
     }
 
     try {
@@ -181,7 +181,7 @@ NetworkAddress::operator!=(const NetworkAddress& addr) const
 bool
 NetworkAddress::isValid() const
 {
-    return (m_address != NULL);
+    return (m_address != nullptr);
 }
 
 const ArchNetAddress&

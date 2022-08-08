@@ -22,9 +22,9 @@
 std::string win_wchar_to_utf8(const WCHAR* utfStr)
 {
     int utfLength = lstrlenW(utfStr);
-    int mbLength = WideCharToMultiByte(CP_UTF8, 0, utfStr, utfLength, NULL, 0, NULL, NULL);
+    int mbLength = WideCharToMultiByte(CP_UTF8, 0, utfStr, utfLength, nullptr, 0, nullptr, nullptr);
     std::string mbStr(mbLength, 0);
-    WideCharToMultiByte(CP_UTF8, 0, utfStr, utfLength, &mbStr[0], mbLength, NULL, NULL);
+    WideCharToMultiByte(CP_UTF8, 0, utfStr, utfLength, &mbStr[0], mbLength, nullptr, nullptr);
     return mbStr;
 }
 
@@ -33,7 +33,7 @@ std::vector<WCHAR> utf8_to_win_char(const std::string& str)
     if (str.size() > std::numeric_limits<int>::max())
         return {};
     int input_len = static_cast<int>(str.size());
-    int result_len = MultiByteToWideChar(CP_UTF8, 0, str.data(), input_len, NULL, 0);
+    int result_len = MultiByteToWideChar(CP_UTF8, 0, str.data(), input_len, nullptr, 0);
     std::vector<WCHAR> result;
     result.resize(result_len + 1, 0);
     MultiByteToWideChar(CP_UTF8, 0, str.data(), input_len, result.data(), result_len);

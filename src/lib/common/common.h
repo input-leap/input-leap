@@ -20,7 +20,7 @@
 
 #include "config.h"
 
-// define NULL
+// define nullptr
 #include <stddef.h>
 
 // make assert available since we use it a lot

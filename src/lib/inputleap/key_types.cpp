@@ -201,7 +201,7 @@ const KeyNameMapEntry kKeyNameMap[] = {
     { "Paste",          kKeyPaste },
     { "Props",          kKeyProps },
     { "Front",          kKeyFront },
-    { NULL, 0 },
+    { nullptr, 0 },
 };
 
 const KeyModifierNameMapEntry kModifierNameMap[] = {
@@ -214,5 +214,5 @@ const KeyModifierNameMapEntry kModifierNameMap[] = {
 //    { "ScrollLock",        KeyModifierScrollLock },
     { "Shift",            KeyModifierShift },
     { "Super",            KeyModifierSuper },
-    { NULL, 0 },
+    { nullptr, 0 },
 };

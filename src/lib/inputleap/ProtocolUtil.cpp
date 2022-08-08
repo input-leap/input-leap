@@ -33,8 +33,8 @@
 void
 ProtocolUtil::writef(inputleap::IStream* stream, const char* fmt, ...)
 {
-    assert(stream != NULL);
-    assert(fmt != NULL);
+    assert(stream != nullptr);
+    assert(fmt != nullptr);
     LOG((CLOG_DEBUG2 "writef(%s)", fmt));
 
     va_list args;
@@ -49,8 +49,8 @@ ProtocolUtil::writef(inputleap::IStream* stream, const char* fmt, ...)
 bool
 ProtocolUtil::readf(inputleap::IStream* stream, const char* fmt, ...)
 {
-    assert(stream != NULL);
-    assert(fmt != NULL);
+    assert(stream != nullptr);
+    assert(fmt != nullptr);
     LOG((CLOG_DEBUG2 "readf(%s)", fmt));
 
     bool result;
@@ -70,8 +70,8 @@ ProtocolUtil::readf(inputleap::IStream* stream, const char* fmt, ...)
 void ProtocolUtil::vwritef(inputleap::IStream* stream, const char* fmt, std::uint32_t size,
                            va_list args)
 {
-    assert(stream != NULL);
-    assert(fmt != NULL);
+    assert(stream != nullptr);
+    assert(fmt != nullptr);
 
     // done if nothing to write
     if (size == 0) {
@@ -98,8 +98,8 @@ void ProtocolUtil::vwritef(inputleap::IStream* stream, const char* fmt, std::uin
 void
 ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
 {
-    assert(stream != NULL);
-    assert(fmt != NULL);
+    assert(stream != nullptr);
+    assert(fmt != nullptr);
 
     // begin scanning
     while (*fmt) {
@@ -467,7 +467,7 @@ ProtocolUtil::writef_void(void* buffer, const char* fmt, va_list args)
                 assert(len == 0);
                 const std::string* src = va_arg(args, std::string*);
                 const std::uint32_t str_len =
-                        (src != NULL) ? static_cast<std::uint32_t>(src->size()) : 0;
+                        (src != nullptr) ? static_cast<std::uint32_t>(src->size()) : 0;
                 *dst++ = static_cast<std::uint8_t>((str_len >> 24) & 0xff);
                 *dst++ = static_cast<std::uint8_t>((str_len >> 16) & 0xff);
                 *dst++ = static_cast<std::uint8_t>((str_len >> 8) & 0xff);
@@ -537,8 +537,8 @@ std::uint32_t ProtocolUtil::eatLength(const char** pfmt)
 
 void ProtocolUtil::read(inputleap::IStream* stream, void* vbuffer, std::uint32_t count)
 {
-    assert(stream != NULL);
-    assert(vbuffer != NULL);
+    assert(stream != nullptr);
+    assert(vbuffer != nullptr);
 
     std::uint8_t* buffer = static_cast<std::uint8_t*>(vbuffer);
     while (count > 0) {

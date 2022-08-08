@@ -70,7 +70,7 @@ std::uint32_t PacketStreamFilter::read(void* buffer, std::uint32_t n)
     }
 
     // read it
-    if (buffer != NULL) {
+    if (buffer != nullptr) {
         memcpy(buffer, m_buffer.peek(n), n);
     }
     m_buffer.pop(n);
@@ -82,7 +82,7 @@ std::uint32_t PacketStreamFilter::read(void* buffer, std::uint32_t n)
 
     if (m_inputShutdown && m_size == 0) {
         m_events->addEvent(Event(m_events->forIStream().inputShutdown(),
-                        getEventTarget(), NULL));
+                                 getEventTarget(), nullptr));
     }
 
     return n;

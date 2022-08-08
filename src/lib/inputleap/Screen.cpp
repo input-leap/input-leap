@@ -41,7 +41,7 @@ Screen::Screen(IPlatformScreen* platformScreen, IEventQueue* events) :
     m_mock(false),
     m_enableDragDrop(false)
 {
-    assert(m_screen != NULL);
+    assert(m_screen != nullptr);
 
     // reset options
     resetOptions();
@@ -170,7 +170,7 @@ Screen::setClipboard(ClipboardID id, const IClipboard* clipboard)
 void
 Screen::grabClipboard(ClipboardID id)
 {
-    m_screen->setClipboard(id, NULL);
+    m_screen->setClipboard(id, nullptr);
 }
 
 void

@@ -43,7 +43,7 @@ void PortableTaskBarReceiver::updateStatus(INode* node, const std::string& error
     {
         // update our status
         m_errorMessage = errorMsg;
-        if (node == NULL) {
+        if (node == nullptr) {
             if (m_errorMessage.empty()) {
                 m_state = kNotRunning;
             }

@@ -566,7 +566,7 @@ KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
     const inputleap::KeyMap::KeyItem* keyItem =
         m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers,
                                 getActiveModifiersRValue(), mask, false);
-    if (keyItem == NULL) {
+    if (keyItem == nullptr) {
         // a media key won't be mapped on mac, so we need to fake it in a
         // special way
         if (id == kKeyAudioDown || id == kKeyAudioUp ||
@@ -611,7 +611,7 @@ bool KeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask, std::int32_t count,
     const inputleap::KeyMap::KeyItem* keyItem =
         m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers,
                                 getActiveModifiersRValue(), mask, true);
-    if (keyItem == NULL) {
+    if (keyItem == nullptr) {
         return false;
     }
     KeyButton localID = static_cast<KeyButton>(keyItem->m_button & kButtonMask);
@@ -765,7 +765,7 @@ KeyButton KeyState::getButton(KeyID id, std::int32_t group) const
 {
     const inputleap::KeyMap::KeyItemList* items =
         m_keyMap.findCompatibleKey(id, group, 0, 0);
-    if (items == NULL) {
+    if (items == nullptr) {
         return 0;
     }
     else {

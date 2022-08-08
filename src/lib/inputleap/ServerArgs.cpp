@@ -19,7 +19,7 @@
 
 ServerArgs::ServerArgs() :
     m_configFile(),
-    m_config(NULL),
+    m_config(nullptr),
     m_screenChangeScript()
 {
 }

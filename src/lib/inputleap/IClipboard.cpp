@@ -26,7 +26,7 @@
 
 void IClipboard::unmarshall(IClipboard* clipboard, const std::string& data, Time time)
 {
-    assert(clipboard != NULL);
+    assert(clipboard != nullptr);
 
     const char* index = data.data();
 
@@ -72,7 +72,7 @@ std::string IClipboard::marshall(const IClipboard* clipboard)
     // n bytes => clipboard data
     // back to the second 4 bytes if there is another format
 
-    assert(clipboard != NULL);
+    assert(clipboard != nullptr);
 
     std::string data;
 
@@ -114,8 +114,8 @@ std::string IClipboard::marshall(const IClipboard* clipboard)
 bool
 IClipboard::copy(IClipboard* dst, const IClipboard* src)
 {
-    assert(dst != NULL);
-    assert(src != NULL);
+    assert(dst != nullptr);
+    assert(src != nullptr);
 
     return copy(dst, src, src->getTime());
 }
@@ -123,8 +123,8 @@ IClipboard::copy(IClipboard* dst, const IClipboard* src)
 bool
 IClipboard::copy(IClipboard* dst, const IClipboard* src, Time time)
 {
-    assert(dst != NULL);
-    assert(src != NULL);
+    assert(dst != nullptr);
+    assert(src != nullptr);
 
     bool success = false;
     if (src->open(time)) {

@@ -45,7 +45,7 @@ ClientTaskBarReceiver::updateStatus(Client* client, const std::string& errorMsg)
     {
         // update our status
         m_errorMessage = errorMsg;
-        if (client == NULL) {
+        if (client == nullptr) {
             if (m_errorMessage.empty()) {
                 m_state = kNotRunning;
             }

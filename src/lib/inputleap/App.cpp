@@ -55,7 +55,7 @@ App* App::s_instance = nullptr;
 
 App::App(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver, ArgsBase* args) :
     m_bye(&exit),
-    m_taskBarReceiver(NULL),
+    m_taskBarReceiver(nullptr),
     m_suspended(false),
     m_events(events),
     m_args(args),
@@ -139,7 +139,7 @@ App::daemonMainLoop(int, const char**)
 void
 App::setupFileLogging()
 {
-    if (argsBase().m_logFile != NULL) {
+    if (argsBase().m_logFile != nullptr) {
         m_fileLog = new FileLogOutputter(argsBase().m_logFile);
         CLOG->insert(m_fileLog);
         LOG((CLOG_DEBUG1 "logging to file (%s) enabled", argsBase().m_logFile));
@@ -150,7 +150,7 @@ void
 App::loggingFilterWarning()
 {
     if (CLOG->getFilter() > CLOG->getConsoleMaxLevel()) {
-        if (argsBase().m_logFile == NULL) {
+        if (argsBase().m_logFile == nullptr) {
             LOG((CLOG_WARN "log messages above %s are NOT sent to console (use file logging)",
                 CLOG->getFilterName(CLOG->getConsoleMaxLevel())));
         }
@@ -244,7 +244,7 @@ void App::run_events_loop()
 //
 
 MinimalApp::MinimalApp() :
-    App(NULL, NULL, new ArgsBase())
+    App(nullptr, nullptr, new ArgsBase())
 {
     m_arch.init();
     setEvents(m_events);
@@ -297,7 +297,7 @@ MinimalApp::foregroundStartup(int argc, char** argv)
 inputleap::Screen*
 MinimalApp::createScreen()
 {
-    return NULL;
+    return nullptr;
 }
 
 void

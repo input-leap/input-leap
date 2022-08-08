@@ -5,10 +5,10 @@
 
 bool display_is_valid()
 {
-    auto dsp = XOpenDisplay(NULL);
-    if (dsp != NULL)
+    auto dsp = XOpenDisplay(nullptr);
+    if (dsp != nullptr)
         XCloseDisplay(dsp);
-    return dsp != NULL;
+    return dsp != nullptr;
 }
 
 #endif

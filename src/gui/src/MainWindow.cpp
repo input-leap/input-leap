@@ -99,25 +99,25 @@ static const char* barrierLargeIcon = ":/res/icons/256x256/barrier.ico";
 MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     m_Settings(settings),
     m_AppConfig(&appConfig),
-    m_pBarrier(NULL),
+    m_pBarrier(nullptr),
     m_BarrierState(barrierDisconnected),
     m_ServerConfig(&m_Settings, 5, 3, m_AppConfig->screenName(), this),
-    m_pTempConfigFile(NULL),
-    m_pTrayIcon(NULL),
-    m_pTrayIconMenu(NULL),
+    m_pTempConfigFile(nullptr),
+    m_pTrayIcon(nullptr),
+    m_pTrayIconMenu(nullptr),
     m_AlreadyHidden(false),
-    m_pMenuBar(NULL),
-    m_pMenuBarrier(NULL),
-    m_pMenuHelp(NULL),
-    m_pZeroconfService(NULL),
-    m_pDataDownloader(NULL),
-    m_DownloadMessageBox(NULL),
-    m_pCancelButton(NULL),
+    m_pMenuBar(nullptr),
+    m_pMenuBarrier(nullptr),
+    m_pMenuHelp(nullptr),
+    m_pZeroconfService(nullptr),
+    m_pDataDownloader(nullptr),
+    m_DownloadMessageBox(nullptr),
+    m_pCancelButton(nullptr),
     m_SuppressAutoConfigWarning(false),
-    m_BonjourInstall(NULL),
+    m_BonjourInstall(nullptr),
     m_SuppressEmptyServerWarning(false),
     m_ExpectedRunningState(kStopped),
-    m_pSslCertificate(NULL),
+    m_pSslCertificate(nullptr),
     m_pLogWindow(new LogWindow(nullptr))
 {
     // explicitly unset DeleteOnClose so the window can be show and hidden
@@ -765,7 +765,7 @@ void MainWindow::stopBarrier()
 #if !defined(Q_OS_WIN)
     delete m_pTempConfigFile;
 #endif
-    m_pTempConfigFile = NULL;
+    m_pTempConfigFile = nullptr;
 
     // reset so that new connects cause auto-hide.
     m_AlreadyHidden = false;
@@ -794,7 +794,7 @@ void MainWindow::stopDesktop()
     }
 
     delete barrierProcess();
-    setBarrierProcess(NULL);
+    setBarrierProcess(nullptr);
 }
 
 void MainWindow::barrierFinished(int exitCode, QProcess::ExitStatus)
@@ -986,7 +986,7 @@ void MainWindow::updateZeroconfService()
         if (!m_AppConfig->wizardShouldRun()) {
             if (m_pZeroconfService) {
                 delete m_pZeroconfService;
-                m_pZeroconfService = NULL;
+                m_pZeroconfService = nullptr;
             }
 
             if (m_AppConfig->autoConfig() || barrier_type() == BarrierType::Server) {
@@ -1163,8 +1163,8 @@ void MainWindow::on_m_pButtonReload_clicked()
 bool MainWindow::isServiceRunning(QString name)
 {
     SC_HANDLE hSCManager;
-    hSCManager = OpenSCManager(NULL, NULL, SC_MANAGER_CONNECT);
-    if (hSCManager == NULL) {
+    hSCManager = OpenSCManager(nullptr, nullptr, SC_MANAGER_CONNECT);
+    if (hSCManager == nullptr) {
         appendLogError("failed to open a service controller manager, error: " +
             GetLastError());
         return false;
@@ -1173,7 +1173,7 @@ bool MainWindow::isServiceRunning(QString name)
     auto array = name.toLocal8Bit();
     SC_HANDLE hService = OpenService(hSCManager, array.data(), SERVICE_QUERY_STATUS);
 
-    if (hService == NULL) {
+    if (hService == nullptr) {
         appendLogDebug("failed to open service: " + name);
         return false;
     }
@@ -1227,14 +1227,14 @@ void MainWindow::downloadBonjour()
         return;
     }
 
-    if (m_pDataDownloader == NULL) {
+    if (m_pDataDownloader == nullptr) {
         m_pDataDownloader = new DataDownloader(this);
         connect(m_pDataDownloader, SIGNAL(isComplete()), SLOT(installBonjour()));
     }
 
     m_pDataDownloader->download(url);
 
-    if (m_DownloadMessageBox == NULL) {
+    if (m_DownloadMessageBox == nullptr) {
         m_DownloadMessageBox = new QMessageBox(this);
         m_DownloadMessageBox->setWindowTitle("Barrier");
         m_DownloadMessageBox->setIcon(QMessageBox::Information);
@@ -1282,7 +1282,7 @@ void MainWindow::installBonjour()
     QString winFilename = QDir::toNativeSeparators(filename);
     arguments.append(winFilename);
     arguments.append("/passive");
-    if (m_BonjourInstall == NULL) {
+    if (m_BonjourInstall == nullptr) {
         m_BonjourInstall = new CommandProcess("msiexec", arguments);
     }
 

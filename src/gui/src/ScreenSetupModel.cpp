@@ -25,7 +25,7 @@
 const QString ScreenSetupModel::m_MimeType = "application/x-qbarrier-screen";
 
 ScreenSetupModel::ScreenSetupModel(std::vector<Screen>& screens, int numColumns, int numRows) :
-    QAbstractTableModel(NULL),
+    QAbstractTableModel(nullptr),
     m_Screens(screens),
     m_NumColumns(numColumns),
     m_NumRows(numRows)

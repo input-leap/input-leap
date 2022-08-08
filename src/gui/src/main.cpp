@@ -81,9 +81,9 @@ int main(int argc, char* argv[])
         // especially if an identically named application already exists in
         // /Applications). Thus we require Barrier to reside in the /Applications
         // folder
-		QMessageBox::information(
-			NULL, "Barrier",
-			"Please drag Barrier to the Applications folder, and open it from there.");
+		QMessageBox::information(nullptr, "Barrier",
+                                 "Please drag Barrier to the Applications folder, "
+                                 "and open it from there.");
 		return 1;
 	}
 
@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
 
     if (QGuiApplication::platformName() == "wayland") {
         QMessageBox::warning(
-        NULL, "Barrier",
+        nullptr, "Barrier",
         "You are using wayland session, which is currently not fully supported by Barrier.");
     }
 
@@ -170,7 +170,7 @@ bool checkMacAssistiveDevices()
 
 	const void* keys[] = { kAXTrustedCheckOptionPrompt };
 	const void* trueValue[] = { kCFBooleanTrue };
-	CFDictionaryRef options = CFDictionaryCreate(NULL, keys, trueValue, 1, NULL, NULL);
+	CFDictionaryRef options = CFDictionaryCreate(nullptr, keys, trueValue, 1, nullptr, nullptr);
 
 	bool result = AXIsProcessTrustedWithOptions(options);
 	CFRelease(options);
@@ -182,7 +182,7 @@ bool checkMacAssistiveDevices()
 	bool result = AXAPIEnabled();
 	if (!result) {
 		QMessageBox::information(
-			NULL, "Barrier",
+			nullptr, "Barrier",
 			"Please enable access to assistive devices "
 			"System Preferences -> Security & Privacy -> "
 			"Privacy -> Accessibility, then re-open Barrier.");

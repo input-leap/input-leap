@@ -34,7 +34,7 @@
 ClientProxy1_0::ClientProxy1_0(const std::string& name, inputleap::IStream* stream,
                                IEventQueue* events) :
     ClientProxy(name, stream),
-    m_heartbeatTimer(NULL),
+    m_heartbeatTimer(nullptr),
     m_parser(&ClientProxy1_0::parseHandshakeMessage),
     m_events(events)
 {
@@ -42,26 +42,26 @@ ClientProxy1_0::ClientProxy1_0(const std::string& name, inputleap::IStream* stre
     m_events->adoptHandler(m_events->forIStream().inputReady(),
                             stream->getEventTarget(),
                             new TMethodEventJob<ClientProxy1_0>(this,
-                                &ClientProxy1_0::handleData, NULL));
+                                &ClientProxy1_0::handleData, nullptr));
     m_events->adoptHandler(m_events->forIStream().outputError(),
                             stream->getEventTarget(),
                             new TMethodEventJob<ClientProxy1_0>(this,
-                                &ClientProxy1_0::handleWriteError, NULL));
+                                &ClientProxy1_0::handleWriteError, nullptr));
     m_events->adoptHandler(m_events->forIStream().inputShutdown(),
                             stream->getEventTarget(),
                             new TMethodEventJob<ClientProxy1_0>(this,
-                                &ClientProxy1_0::handleDisconnect, NULL));
+                                &ClientProxy1_0::handleDisconnect, nullptr));
     m_events->adoptHandler(m_events->forIStream().inputFormatError(),
                            stream->getEventTarget(),
                            new TMethodEventJob<ClientProxy1_0>(this,
-                                &ClientProxy1_0::handleDisconnect, NULL));
+                                &ClientProxy1_0::handleDisconnect, nullptr));
     m_events->adoptHandler(m_events->forIStream().outputShutdown(),
                             stream->getEventTarget(),
                             new TMethodEventJob<ClientProxy1_0>(this,
-                                &ClientProxy1_0::handleWriteError, NULL));
+                                &ClientProxy1_0::handleWriteError, nullptr));
     m_events->adoptHandler(Event::kTimer, this,
                             new TMethodEventJob<ClientProxy1_0>(this,
-                                &ClientProxy1_0::handleFlatline, NULL));
+                                &ClientProxy1_0::handleFlatline, nullptr));
 
     setHeartbeatRate(kHeartRate, kHeartRate * kHeartBeatsUntilDeath);
 
@@ -113,9 +113,9 @@ ClientProxy1_0::addHeartbeatTimer()
 void
 ClientProxy1_0::removeHeartbeatTimer()
 {
-    if (m_heartbeatTimer != NULL) {
+    if (m_heartbeatTimer != nullptr) {
         m_events->deleteTimer(m_heartbeatTimer);
-        m_heartbeatTimer = NULL;
+        m_heartbeatTimer = nullptr;
     }
 }
 

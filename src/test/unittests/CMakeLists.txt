@@ -66,3 +66,7 @@ endif()
 add_executable(unittests ${sources})
 target_link_libraries(unittests
     base client server common io net platform server synlib mt arch ipc ${GTEST_LIBRARIES} ${GMOCK_LIBRARIES} ${libs} ${OPENSSL_LIBS})
+
+add_test(NAME unittests
+         COMMAND unittests
+         WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

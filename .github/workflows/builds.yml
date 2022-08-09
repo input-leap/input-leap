@@ -16,6 +16,7 @@ on:
 # Set the build type here
 env:
   CI_ENV_BUILD_TYPE: Debug
+  B_BUILD_DIR: build
   B_BUILD_TYPE: Debug
   INPUTLEAP_VERSION_STAGE: Debug
 
@@ -47,8 +48,11 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Work around git safe directory check
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
+
       - name: Run the build
-        run: ./clean_build.sh
+        run: sh -x ./clean_build.sh
         env:
             VERBOSE: 1
 

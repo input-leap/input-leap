@@ -113,20 +113,6 @@ ServerApp::parseArgs(int argc, const char* const* argv)
 void
 ServerApp::help()
 {
-    // window api args (windows/x-windows/carbon)
-#if WINAPI_XWINDOWS
-#  define WINAPI_ARGS \
-    " [--display <display>]"
-#  define WINAPI_INFO \
-    "      --display <display>  connect to the X server at <display>\n" \
-    "      --screen-change-script <path>\n" \
-    "                           full path to script to run on screen change\n" \
-    "                           first argument is the new screen name\n"
-#else
-#  define WINAPI_ARGS ""
-#  define WINAPI_INFO ""
-#endif
-
     // refer to custom profile directory even if not saved yet
     inputleap::fs::path profile_path = argsBase().m_profileDirectory;
     if (profile_path.empty()) {
@@ -145,7 +131,12 @@ ServerApp::help()
            << "Usage: " << args().m_exename
            << " [--address <address>]"
            << " [--config <pathname>]"
-           << WINAPI_ARGS << HELP_SYS_ARGS << HELP_COMMON_ARGS << "\n"
+#ifdef WINAPI_XWINDOWS
+           << " [--display <display>]"
+#endif
+           << HELP_SYS_ARGS
+           << HELP_COMMON_ARGS
+           << "\n"
            << "\n"
            << "Options:\n"
            << "  -a, --address <address>  listen for clients on the given address.\n"
@@ -153,7 +144,15 @@ ServerApp::help()
            << HELP_COMMON_INFO_1
            << "      --disable-client-cert-checking disable client SSL certificate \n"
               "                                     checking (deprecated)\n"
-           << WINAPI_INFO << HELP_SYS_INFO << HELP_COMMON_INFO_2 << "\n"
+#ifdef WINAPI_XWINDOWS
+           << "      --display <display>  connect to the X server at <display>\n"
+           << "      --screen-change-script <path>\n"
+           << "                           full path to script to run on screen change\n"
+           << "                           first argument is the new screen name\n"
+#endif
+           << HELP_SYS_INFO
+           << HELP_COMMON_INFO_2
+           << "\n"
            << "Default options are marked with a *\n"
            << "\n"
            << "The argument for --address is of the form: [<hostname>][:<port>].  The\n"

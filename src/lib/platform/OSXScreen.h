@@ -212,7 +212,7 @@ private:
         bool            operator<(const HotKeyItem&) const;
 
     private:
-        EventHotKeyRef    m_ref;
+        EventHotKeyRef m_ref;
         std::uint32_t m_keycode;
         std::uint32_t m_mask;
     };
@@ -235,7 +235,7 @@ private:
         bool test(std::uint32_t button) const;
         std::int8_t getFirstButtonDown() const;
     private:
-        std::bitset<NumButtonIDs>      m_buttons;
+        std::bitset<NumButtonIDs> m_buttons;
     };
 
     typedef std::map<std::uint32_t, HotKeyItem> HotKeyMap;
@@ -244,13 +244,13 @@ private:
     typedef std::map<HotKeyItem, std::uint32_t> HotKeyToIDMap;
 
     // true if screen is being used as a primary screen, false otherwise
-    bool                m_isPrimary;
+    bool m_isPrimary;
 
     // true if mouse has entered the screen
-    bool                m_isOnScreen;
+    bool m_isOnScreen;
 
     // the display
-    CGDirectDisplayID    m_displayID;
+    CGDirectDisplayID m_displayID;
 
     // screen shape stuff
     std::int32_t m_x, m_y;
@@ -259,7 +259,7 @@ private:
 
     // mouse state
     mutable std::int32_t m_xCursor, m_yCursor;
-    mutable bool        m_cursorPosValid;
+    mutable bool m_cursorPosValid;
 
     /* FIXME: this data structure is explicitly marked mutable due
        to a need to track the state of buttons since the remote
@@ -271,72 +271,72 @@ private:
     typedef std::map<std::uint16_t, CGEventType> MouseButtonEventMapType;
     std::vector<MouseButtonEventMapType> MouseButtonEventMap;
 
-    bool                m_cursorHidden;
+    bool m_cursorHidden;
     std::int32_t m_dragNumButtonsDown;
-    Point                m_dragLastPoint;
-    EventQueueTimer*    m_dragTimer;
+    Point m_dragLastPoint;
+    EventQueueTimer* m_dragTimer;
 
     // keyboard stuff
-    OSXKeyState*        m_keyState;
+    OSXKeyState* m_keyState;
 
     // clipboards
-    OSXClipboard       m_pasteboard;
+    OSXClipboard m_pasteboard;
     std::uint32_t m_sequenceNumber;
 
     // screen saver stuff
-    OSXScreenSaver*    m_screensaver;
-    bool                m_screensaverNotify;
+    OSXScreenSaver* m_screensaver;
+    bool m_screensaverNotify;
 
     // clipboard stuff
-    bool                m_ownClipboard;
-    EventQueueTimer*    m_clipboardTimer;
+    bool m_ownClipboard;
+    EventQueueTimer* m_clipboardTimer;
 
     // window object that gets user input events when the server
     // has focus.
-    WindowRef            m_hiddenWindow;
+    WindowRef m_hiddenWindow;
     // window object that gets user input events when the server
     // does not have focus.
-    WindowRef            m_userInputWindow;
+    WindowRef m_userInputWindow;
 
     // fast user switching
-    EventHandlerRef            m_switchEventHandlerRef;
+    EventHandlerRef m_switchEventHandlerRef;
 
     // sleep / wakeup
     std::mutex pm_mutex_;
-    Thread*                m_pmWatchThread;
+    Thread* m_pmWatchThread;
     std::condition_variable pm_thread_ready_cv_;
     bool is_pm_thread_ready_ = false;
-    CFRunLoopRef            m_pmRunloop;
-    io_connect_t            m_pmRootPort;
+    CFRunLoopRef m_pmRunloop;
+    io_connect_t m_pmRootPort;
 
     // hot key stuff
-    HotKeyMap                m_hotKeys;
-    HotKeyIDList            m_oldHotKeyIDs;
-    ModifierHotKeyMap        m_modifierHotKeys;
+    HotKeyMap m_hotKeys;
+    HotKeyIDList m_oldHotKeyIDs;
+    ModifierHotKeyMap m_modifierHotKeys;
     std::uint32_t m_activeModifierHotKey;
-    KeyModifierMask            m_activeModifierHotKeyMask;
-    HotKeyToIDMap            m_hotKeyToIDMap;
+    KeyModifierMask m_activeModifierHotKeyMask;
+    HotKeyToIDMap m_hotKeyToIDMap;
 
     // global hotkey operating mode
     static bool                s_testedForGHOM;
     static bool                s_hasGHOM;
 
     // Quartz input event support
-    CFMachPortRef            m_eventTapPort;
-    CFRunLoopSourceRef        m_eventTapRLSR;
+    CFMachPortRef m_eventTapPort;
+    CFRunLoopSourceRef m_eventTapRLSR;
 
     // for double click coalescing.
-    double                    m_lastClickTime;
-    int                     m_clickState;
+    double m_lastClickTime;
+    int m_clickState;
     std::int32_t m_lastSingleClickXCursor;
     std::int32_t m_lastSingleClickYCursor;
 
     // cursor will hide and show on enable and disable if true.
-    bool                    m_autoShowHideCursor;
+    bool m_autoShowHideCursor;
 
-    IEventQueue*            m_events;
+    IEventQueue* m_events;
 
-    Thread*                m_getDropTargetThread;
+    Thread* m_getDropTargetThread;
     std::string m_dropTarget;
 
 #if defined(MAC_OS_X_VERSION_10_7)
@@ -345,5 +345,5 @@ private:
     bool is_carbon_loop_ready_ = false;
 #endif
 
-    class OSXScreenImpl*    m_impl;
+    class OSXScreenImpl* m_impl;
 };

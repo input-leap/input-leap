@@ -54,8 +54,8 @@ public:
     void startNode();
 
 private:
-    AppExitMode            m_exitMode;
-    IEventQueue*        m_events;
+    AppExitMode m_exitMode;
+    IEventQueue* m_events;
 
     static BOOL WINAPI consoleHandler(DWORD Event);
 };

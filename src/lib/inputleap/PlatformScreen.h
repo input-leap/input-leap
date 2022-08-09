@@ -80,7 +80,7 @@ protected:
     virtual IKeyState*    getKeyState() const = 0;
 
 protected:
-    std::string                m_draggingFilename;
-    bool                m_draggingStarted;
-    bool                m_fakeDraggingStarted;
+    std::string m_draggingFilename;
+    bool m_draggingStarted;
+    bool m_fakeDraggingStarted;
 };

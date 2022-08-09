@@ -152,19 +152,19 @@ public:
     private:
         typedef int (*XErrorHandler)(Display*, XErrorEvent*);
 
-        Display*        m_display;
-        ErrorHandler    m_handler;
-        void*            m_userData;
-        XErrorHandler    m_oldXHandler;
-        ErrorLock*        m_next;
+        Display* m_display;
+        ErrorHandler m_handler;
+        void* m_userData;
+        XErrorHandler m_oldXHandler;
+        ErrorLock* m_next;
         static ErrorLock*    s_top;
     };
 
 private:
     class PropertyNotifyPredicateInfo {
     public:
-        Window            m_window;
-        Atom            m_property;
+        Window m_window;
+        Atom m_property;
     };
 
     static Bool            propertyNotifyPredicate(Display*,

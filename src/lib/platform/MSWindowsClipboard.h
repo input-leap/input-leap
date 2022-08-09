@@ -76,9 +76,9 @@ private:
 private:
     typedef std::vector<IMSWindowsClipboardConverter*> ConverterList;
 
-    HWND                m_window;
-    mutable Time        m_time;
-    ConverterList        m_converters;
+    HWND m_window;
+    mutable Time m_time;
+    ConverterList m_converters;
     static UINT            s_ownershipFormat;
     IMSWindowsClipboardFacade* m_facade;
     bool m_deleteFacade;

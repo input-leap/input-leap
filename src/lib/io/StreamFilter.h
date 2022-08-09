@@ -68,6 +68,6 @@ private:
 
 private:
     inputleap::IStream* m_stream;
-    bool                m_adopted;
-    IEventQueue*        m_events;
+    bool m_adopted;
+    IEventQueue* m_events;
 };

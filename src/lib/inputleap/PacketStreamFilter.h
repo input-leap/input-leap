@@ -56,7 +56,7 @@ private:
 private:
     mutable std::mutex mutex_;
     std::uint32_t m_size;
-    StreamBuffer        m_buffer;
-    bool                m_inputShutdown;
-    IEventQueue*        m_events;
+    StreamBuffer m_buffer;
+    bool m_inputShutdown;
+    IEventQueue* m_events;
 };

@@ -29,5 +29,5 @@ public:
     std::string eval() const override;
 
 private:
-    int                    m_error;
+    int m_error;
 };

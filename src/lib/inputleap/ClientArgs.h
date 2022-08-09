@@ -26,5 +26,5 @@ public:
     ClientArgs();
 
 public:
-    int                    m_yscroll;
+    int m_yscroll;
 };

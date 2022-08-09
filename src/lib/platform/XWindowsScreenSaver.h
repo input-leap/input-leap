@@ -112,60 +112,60 @@ private:
 private:
     typedef std::map<Window, long> WatchList;
 
-    IXWindowsImpl*       m_impl;
+    IXWindowsImpl* m_impl;
 
     // the X display
-    Display*            m_display;
+    Display* m_display;
 
     // window to receive xscreensaver responses
-    Window                m_xscreensaverSink;
+    Window m_xscreensaverSink;
 
     // the target for the events we generate
-    void*                m_eventTarget;
+    void* m_eventTarget;
 
     // xscreensaver's window
-    Window                m_xscreensaver;
+    Window m_xscreensaver;
 
     // xscreensaver activation state
-    bool                m_xscreensaverActive;
+    bool m_xscreensaverActive;
 
     // old event mask on root window
-    long                m_rootEventMask;
+    long m_rootEventMask;
 
     // potential xscreensaver windows being watched
-    WatchList            m_watchWindows;
+    WatchList m_watchWindows;
 
     // atoms used to communicate with xscreensaver's window
-    Atom                m_atomScreenSaver;
-    Atom                m_atomScreenSaverVersion;
-    Atom                m_atomScreenSaverActivate;
-    Atom                m_atomScreenSaverDeactivate;
+    Atom m_atomScreenSaver;
+    Atom m_atomScreenSaverVersion;
+    Atom m_atomScreenSaverActivate;
+    Atom m_atomScreenSaverDeactivate;
 
     // built-in screen saver settings
-    int                    m_timeout;
-    int                    m_interval;
-    int                    m_preferBlanking;
-    int                    m_allowExposures;
+    int m_timeout;
+    int m_interval;
+    int m_preferBlanking;
+    int m_allowExposures;
 
     // DPMS screen saver settings
-    bool                m_dpms;
-    bool                m_dpmsEnabled;
+    bool m_dpms;
+    bool m_dpmsEnabled;
 
     // true iff the client wants the screen saver suppressed
-    bool                m_disabled;
+    bool m_disabled;
 
     // true iff we're ignoring m_disabled.  this is true, for example,
     // when the client has called activate() and so presumably wants
     // to activate the screen saver even if disabled.
-    bool                m_suppressDisable;
+    bool m_suppressDisable;
 
     // the disable timer (nullptr if not installed)
-    EventQueueTimer*    m_disableTimer;
+    EventQueueTimer* m_disableTimer;
 
     // fake mouse motion position for suppressing the screen saver.
     // xscreensaver since 2.21 requires the mouse to move more than 10
     // pixels to be considered significant.
     std::int32_t m_disablePos;
 
-    IEventQueue*        m_events;
+    IEventQueue* m_events;
 };

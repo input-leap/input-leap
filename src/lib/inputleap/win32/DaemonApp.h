@@ -46,13 +46,13 @@ private:
 public:
     static DaemonApp* s_instance;
 
-    MSWindowsWatchdog*    m_watchdog;
+    MSWindowsWatchdog* m_watchdog;
 
 private:
-    IpcServer*            m_ipcServer;
-    IpcLogOutputter*    m_ipcLogOutputter;
-    IEventQueue*        m_events;
-    FileLogOutputter*    m_fileLogOutputter;
+    IpcServer* m_ipcServer;
+    IpcLogOutputter* m_ipcLogOutputter;
+    IEventQueue* m_events;
+    FileLogOutputter* m_fileLogOutputter;
 };
 
 #define LOG_FILENAME "barrierd.log"

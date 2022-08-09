@@ -119,9 +119,9 @@ public:
     //@}
 
 private:
-    Type            m_type;
-    void*           m_target;
-    void*           m_data;
-    Flags           m_flags;
-    EventData*      m_dataObject;
+    Type m_type;
+    void* m_target;
+    void* m_data;
+    Flags m_flags;
+    EventData* m_dataObject;
 };

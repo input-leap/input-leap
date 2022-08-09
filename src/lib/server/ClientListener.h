@@ -79,12 +79,12 @@ private:
     typedef std::deque<ClientProxy*> WaitingClients;
     typedef std::set<IDataSocket*> ClientSockets;
 
-    IListenSocket*        m_listen;
-    ISocketFactory*        m_socketFactory;
-    NewClients            m_newClients;
-    WaitingClients        m_waitingClients;
-    Server*                m_server;
-    IEventQueue*        m_events;
+    IListenSocket* m_listen;
+    ISocketFactory* m_socketFactory;
+    NewClients m_newClients;
+    WaitingClients m_waitingClients;
+    Server* m_server;
+    IEventQueue* m_events;
     ConnectionSecurityLevel security_level_;
-    ClientSockets      m_clientSockets;
+    ClientSockets m_clientSockets;
 };

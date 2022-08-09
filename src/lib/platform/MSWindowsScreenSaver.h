@@ -55,8 +55,8 @@ public:
 private:
     class FindScreenSaverInfo {
     public:
-        HDESK            m_desktop;
-        HWND            m_window;
+        HDESK m_desktop;
+        HWND m_window;
     };
 
     static BOOL CALLBACK    killScreenSaverFunc(HWND hwnd, LPARAM lParam);
@@ -71,18 +71,18 @@ private:
     bool                isSecure(bool* wasSecureAnInt) const;
 
 private:
-    BOOL                m_wasEnabled;
-    bool                m_wasSecure;
-    bool                m_wasSecureAnInt;
+    BOOL m_wasEnabled;
+    bool m_wasSecure;
+    bool m_wasSecureAnInt;
 
-    HANDLE                m_process;
-    Thread*            m_watch;
-    DWORD                m_threadID;
-    UINT                m_msg;
-    WPARAM                m_wParam;
-    LPARAM                m_lParam;
+    HANDLE m_process;
+    Thread* m_watch;
+    DWORD m_threadID;
+    UINT m_msg;
+    WPARAM m_wParam;
+    LPARAM m_lParam;
 
     // checkActive state.  true if the screen saver is being watched
     // for deactivation (and is therefore active).
-    bool                m_active;
+    bool m_active;
 };

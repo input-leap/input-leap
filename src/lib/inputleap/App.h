@@ -111,7 +111,7 @@ protected:
 
     IArchTaskBarReceiver* m_taskBarReceiver;
     bool m_suspended;
-    IEventQueue*        m_events;
+    IEventQueue* m_events;
 
 private:
     ArgsBase* m_args;
@@ -119,7 +119,7 @@ private:
     FileLogOutputter* m_fileLog;
     CreateTaskBarReceiverFunc m_createTaskBarReceiver;
     ARCH_APP_UTIL m_appUtil;
-    IpcClient*            m_ipcClient;
+    IpcClient* m_ipcClient;
     std::unique_ptr<SocketMultiplexer> m_socketMultiplexer;
 };
 
@@ -142,9 +142,9 @@ public:
     void parseArgs(int argc, const char* const* argv) override;
 
 private:
-    Arch                m_arch;
-    Log                    m_log;
-    EventQueue            m_events;
+    Arch m_arch;
+    Log m_log;
+    EventQueue m_events;
 };
 
 #if WINAPI_MSWINDOWS

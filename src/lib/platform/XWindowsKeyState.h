@@ -121,9 +121,9 @@ private:
 private:
     struct XKBModifierInfo {
     public:
-        unsigned char    m_level;
+        unsigned char m_level;
         std::uint32_t m_mask;
-        bool            m_lock;
+        bool m_lock;
     };
 
 #ifdef INPUTLEAP_TEST_ENV
@@ -139,23 +139,23 @@ private:
 
     IXWindowsImpl* m_impl;
 
-    Display*            m_display;
-    XkbDescPtr            m_xkb;
+    Display* m_display;
+    XkbDescPtr m_xkb;
     std::int32_t m_group;
-    XKBModifierMap        m_lastGoodXKBModifiers;
-    NonXKBModifierMap    m_lastGoodNonXKBModifiers;
+    XKBModifierMap m_lastGoodXKBModifiers;
+    NonXKBModifierMap m_lastGoodNonXKBModifiers;
 
     // X modifier (bit number) to barrier modifier (mask) mapping
-    KeyModifierMaskList    m_modifierFromX;
+    KeyModifierMaskList m_modifierFromX;
 
     // barrier modifier (mask) to X modifier (mask)
-    KeyModifierToXMask    m_modifierToX;
+    KeyModifierToXMask m_modifierToX;
 
     // map KeyID to all keycodes that can synthesize that KeyID
-    KeyToKeyCodeMap        m_keyCodeFromKey;
+    KeyToKeyCodeMap m_keyCodeFromKey;
 
     // autorepeat state
-    XKeyboardState        m_keyboardState;
+    XKeyboardState m_keyboardState;
 
 #ifdef INPUTLEAP_TEST_ENV
 public:

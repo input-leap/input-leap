@@ -61,9 +61,9 @@ protected:
     std::string getWhat() const noexcept override;
 
 private:
-    EError                m_error;
+    EError m_error;
     std::string m_hostname;
-    int                    m_port;
+    int m_port;
 };
 
 //! I/O closing exception

@@ -41,5 +41,5 @@ private:
     std::string findArg(const std::string& data, const std::string& name) const;
 
 private:
-    UINT                m_format;
+    UINT m_format;
 };

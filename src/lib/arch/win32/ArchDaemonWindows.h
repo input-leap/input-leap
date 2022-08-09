@@ -118,7 +118,7 @@ private:
         XArchDaemonRunFailed(int result) : m_result(result) { }
 
     public:
-        int                m_result;
+        int m_result;
     };
 
 private:
@@ -126,19 +126,19 @@ private:
 
     std::mutex service_mutex_;
     std::condition_variable service_cv_;
-    DWORD                m_serviceState;
-    bool                m_serviceHandlerWaiting;
-    bool                m_serviceRunning;
+    DWORD m_serviceState;
+    bool m_serviceHandlerWaiting;
+    bool m_serviceRunning;
 
-    DWORD                m_daemonThreadID;
-    DaemonFunc            m_daemonFunc;
-    int                    m_daemonResult;
+    DWORD m_daemonThreadID;
+    DaemonFunc m_daemonFunc;
+    int m_daemonResult;
 
     SERVICE_STATUS_HANDLE m_statusHandle;
 
-    UINT                m_quitMessage;
+    UINT m_quitMessage;
 
-    std::string            m_commandLine;
+    std::string m_commandLine;
 };
 
 #define DEFAULT_DAEMON_NAME _T("Barrier")

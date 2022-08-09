@@ -64,5 +64,5 @@ protected:
     std::string getWhat() const noexcept override;
 
 private:
-    double                m_timeUntilRetry;
+    double m_timeUntilRetry;
 };

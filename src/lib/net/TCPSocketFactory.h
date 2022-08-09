@@ -38,6 +38,6 @@ public:
                                         ConnectionSecurityLevel security_level) const override;
 
 private:
-    IEventQueue*        m_events;
-    SocketMultiplexer*    m_socketMultiplexer;
+    IEventQueue* m_events;
+    SocketMultiplexer* m_socketMultiplexer;
 };

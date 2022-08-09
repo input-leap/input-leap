@@ -109,5 +109,5 @@ public:
 
 private:
     static Arch*        s_instance;
-    ARCH_INTERNET        m_internet;
+    ARCH_INTERNET m_internet;
 };

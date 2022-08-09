@@ -42,10 +42,10 @@ public:
     virtual void        deleteTimer(EventQueueTimer*) const;
 
 private:
-    DWORD                m_thread;
-    UINT                m_userEvent;
-    MSG                    m_event;
-    UINT                m_daemonQuit;
-    IEventQueue*        m_events;
-    UINT                m_os_supported_message_types;
+    DWORD m_thread;
+    UINT m_userEvent;
+    MSG m_event;
+    UINT m_daemonQuit;
+    IEventQueue* m_events;
+    UINT m_os_supported_message_types;
 };

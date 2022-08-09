@@ -49,9 +49,9 @@ private:
 
 private:
     inputleap::IStream& m_stream;
-    EIpcClientType        m_clientType;
-    bool                m_disconnecting;
+    EIpcClientType m_clientType;
+    bool m_disconnecting;
     std::mutex m_readMutex;
     std::mutex m_writeMutex;
-    IEventQueue*        m_events;
+    IEventQueue* m_events;
 };

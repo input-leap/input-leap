@@ -91,10 +91,10 @@ private:
 
     private:
         EventQueueTimer* m_timer;
-        double           m_timeout;
-        void*            m_target;
-        bool             m_oneShot;
-        double           m_time;
+        double m_timeout;
+        void* m_target;
+        bool m_oneShot;
+        double m_time;
     };
 
     typedef std::set<EventQueueTimer*> Timers;
@@ -106,29 +106,29 @@ private:
     typedef std::map<Event::Type, IEventJob*> TypeHandlerTable;
     typedef std::map<void*, TypeHandlerTable> HandlerTable;
 
-    int                    m_systemTarget;
+    int m_systemTarget;
     mutable std::mutex mutex_;
 
     // registered events
-    Event::Type        m_nextType;
-    TypeMap            m_typeMap;
-    NameMap            m_nameMap;
+    Event::Type m_nextType;
+    TypeMap m_typeMap;
+    NameMap m_nameMap;
 
     // buffer of events
     IEventQueueBuffer* m_buffer;
 
     // saved events
-    EventTable         m_events;
-    EventIDList        m_oldEventIDs;
+    EventTable m_events;
+    EventIDList m_oldEventIDs;
 
     // timers
-    Stopwatch          m_time;
-    Timers             m_timers;
-    TimerQueue         m_timerQueue;
-    TimerEvent         m_timerEvent;
+    Stopwatch m_time;
+    Timers m_timers;
+    TimerQueue m_timerQueue;
+    TimerEvent m_timerEvent;
 
     // event handlers
-    HandlerTable       m_handlers;
+    HandlerTable m_handlers;
 
 public:
     //
@@ -156,31 +156,31 @@ public:
     FileEvents& forFile() override;
 
 private:
-    ClientEvents*               m_typesForClient;
-    IStreamEvents*              m_typesForIStream;
-    IpcClientEvents*            m_typesForIpcClient;
-    IpcClientProxyEvents*       m_typesForIpcClientProxy;
-    IpcServerEvents*            m_typesForIpcServer;
-    IpcServerProxyEvents*       m_typesForIpcServerProxy;
-    IDataSocketEvents*          m_typesForIDataSocket;
-    IListenSocketEvents*        m_typesForIListenSocket;
-    ISocketEvents*              m_typesForISocket;
-    OSXScreenEvents*            m_typesForOSXScreen;
-    ClientListenerEvents*       m_typesForClientListener;
-    ClientProxyEvents*          m_typesForClientProxy;
-    ClientProxyUnknownEvents*   m_typesForClientProxyUnknown;
-    ServerEvents*               m_typesForServer;
-    ServerAppEvents*            m_typesForServerApp;
-    IKeyStateEvents*            m_typesForIKeyState;
-    IPrimaryScreenEvents*       m_typesForIPrimaryScreen;
-    IScreenEvents*              m_typesForIScreen;
-    ClipboardEvents*            m_typesForClipboard;
-    FileEvents*                 m_typesForFile;
+    ClientEvents* m_typesForClient;
+    IStreamEvents* m_typesForIStream;
+    IpcClientEvents* m_typesForIpcClient;
+    IpcClientProxyEvents* m_typesForIpcClientProxy;
+    IpcServerEvents* m_typesForIpcServer;
+    IpcServerProxyEvents* m_typesForIpcServerProxy;
+    IDataSocketEvents* m_typesForIDataSocket;
+    IListenSocketEvents* m_typesForIListenSocket;
+    ISocketEvents* m_typesForISocket;
+    OSXScreenEvents* m_typesForOSXScreen;
+    ClientListenerEvents* m_typesForClientListener;
+    ClientProxyEvents* m_typesForClientProxy;
+    ClientProxyUnknownEvents* m_typesForClientProxyUnknown;
+    ServerEvents* m_typesForServer;
+    ServerAppEvents* m_typesForServerApp;
+    IKeyStateEvents* m_typesForIKeyState;
+    IPrimaryScreenEvents* m_typesForIPrimaryScreen;
+    IScreenEvents* m_typesForIScreen;
+    ClipboardEvents* m_typesForClipboard;
+    FileEvents* m_typesForFile;
     mutable std::mutex          ready_mutex_;
     mutable std::condition_variable ready_cv_;
     bool                        is_ready_ = false;
-    std::queue<Event>           m_pending;
-    NonBlockingStream           m_parentStream;
+    std::queue<Event> m_pending;
+    NonBlockingStream m_parentStream;
 };
 
 #define EVENT_TYPE_ACCESSOR(type_)                                            \

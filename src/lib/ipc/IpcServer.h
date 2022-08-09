@@ -74,12 +74,12 @@ private:
 private:
     typedef std::list<IpcClientProxy*> ClientList;
 
-    bool                m_mock;
-    IEventQueue*        m_events;
-    SocketMultiplexer*    m_socketMultiplexer;
-    TCPListenSocket*    m_socket;
-    NetworkAddress        m_address;
-    ClientList            m_clients;
+    bool m_mock;
+    IEventQueue* m_events;
+    SocketMultiplexer* m_socketMultiplexer;
+    TCPListenSocket* m_socket;
+    NetworkAddress m_address;
+    ClientList m_clients;
     mutable std::mutex m_clientsMutex;
 
 #ifdef INPUTLEAP_TEST_ENV

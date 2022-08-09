@@ -85,9 +85,9 @@ private:
 
     std::mutex thread_mutex_;
 
-    ThreadList            m_threadList;
-    ArchThread            m_mainThread;
+    ThreadList m_threadList;
+    ArchThread m_mainThread;
 
-    SignalFunc            m_signalFunc[kNUM_SIGNALS];
-    void*                m_signalUserData[kNUM_SIGNALS];
+    SignalFunc m_signalFunc[kNUM_SIGNALS];
+    void* m_signalUserData[kNUM_SIGNALS];
 };

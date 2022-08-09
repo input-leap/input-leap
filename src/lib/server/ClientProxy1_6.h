@@ -36,5 +36,5 @@ private:
     void                handleClipboardSendingEvent(const Event&, void*);
 
 private:
-    IEventQueue*        m_events;
+    IEventQueue* m_events;
 };

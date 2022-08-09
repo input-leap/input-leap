@@ -35,6 +35,6 @@ public:
     void run(const Event&) override;
 
 private:
-    void                (*m_func)(const Event&, void*);
-    void*                m_arg;
+    void  (*m_func)(const Event&, void*);
+    void* m_arg;
 };

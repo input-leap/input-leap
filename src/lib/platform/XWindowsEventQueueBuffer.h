@@ -52,15 +52,15 @@ private:
 
 private:
     typedef std::vector<XEvent> EventList;
-    IXWindowsImpl*      m_impl;
+    IXWindowsImpl* m_impl;
 
     mutable std::mutex  mutex_;
-    Display*            m_display;
-    Window              m_window;
-    Atom                m_userEvent;
-    XEvent              m_event;
-    EventList           m_postedEvents;
-    bool                m_waiting;
-    int                 m_pipefd[2];
-    IEventQueue*        m_events;
+    Display* m_display;
+    Window m_window;
+    Atom m_userEvent;
+    XEvent m_event;
+    EventList m_postedEvents;
+    bool m_waiting;
+    int m_pipefd[2];
+    IEventQueue* m_events;
 };

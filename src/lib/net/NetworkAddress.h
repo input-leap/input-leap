@@ -116,7 +116,7 @@ private:
     void                checkPort();
 
 private:
-    ArchNetAddress        m_address;
+    ArchNetAddress m_address;
     std::string m_hostname;
-    int                    m_port;
+    int m_port;
 };

@@ -43,5 +43,5 @@ public:
     void keyUp(KeyID key, KeyModifierMask mask, KeyButton button) override;
     void keepAlive() override;
 
-    Server*            m_server;
+    Server* m_server;
 };

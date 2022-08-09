@@ -46,7 +46,7 @@ public:
     class FailInfo {
     public:
         FailInfo(const char* what) : m_retry(false), m_what(what) { }
-        bool            m_retry;
+        bool m_retry;
         std::string m_what;
     };
 
@@ -192,33 +192,33 @@ private:
     void                sendClipboardThread(void*);
 
 public:
-    bool                m_mock;
+    bool m_mock;
 
 private:
-    std::string                m_name;
-    NetworkAddress        m_serverAddress;
-    ISocketFactory*        m_socketFactory;
+    std::string m_name;
+    NetworkAddress m_serverAddress;
+    ISocketFactory* m_socketFactory;
     inputleap::Screen* m_screen;
     inputleap::IStream* m_stream;
-    EventQueueTimer*    m_timer;
-    ServerProxy*        m_server;
-    bool                m_ready;
-    bool                m_active;
-    bool                m_suspended;
-    bool                m_connectOnResume;
-    bool                m_ownClipboard[kClipboardEnd];
-    bool                m_sentClipboard[kClipboardEnd];
-    IClipboard::Time    m_timeClipboard[kClipboardEnd];
+    EventQueueTimer* m_timer;
+    ServerProxy* m_server;
+    bool m_ready;
+    bool m_active;
+    bool m_suspended;
+    bool m_connectOnResume;
+    bool m_ownClipboard[kClipboardEnd];
+    bool m_sentClipboard[kClipboardEnd];
+    IClipboard::Time m_timeClipboard[kClipboardEnd];
     std::string m_dataClipboard[kClipboardEnd];
-    IEventQueue*        m_events;
-    std::size_t            m_expectedFileSize;
+    IEventQueue* m_events;
+    std::size_t m_expectedFileSize;
     std::string m_receivedFileData;
-    DragFileList        m_dragFileList;
+    DragFileList m_dragFileList;
     std::string m_dragFileExt;
-    Thread*                m_sendFileThread;
-    Thread*                m_writeToDropDirThread;
-    TCPSocket*            m_socket;
-    bool                m_useSecureNetwork;
-    ClientArgs            m_args;
-    bool                m_enableClipboard;
+    Thread* m_sendFileThread;
+    Thread* m_writeToDropDirThread;
+    TCPSocket* m_socket;
+    bool m_useSecureNetwork;
+    ClientArgs m_args;
+    bool m_enableClipboard;
 };

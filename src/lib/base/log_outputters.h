@@ -83,7 +83,7 @@ public:
     void                setLogFilename(const char* title);
 
 private:
-    std::string            m_fileName;
+    std::string m_fileName;
 };
 
 //! Write log to system log
@@ -116,8 +116,8 @@ public:
     ~SystemLogger();
 
 private:
-    ILogOutputter*        m_syslog;
-    ILogOutputter*        m_stop;
+    ILogOutputter* m_syslog;
+    ILogOutputter* m_stop;
 };
 
 //! Save log history
@@ -152,7 +152,7 @@ public:
     bool write(ELevel level, const char* message) override;
 private:
     std::uint32_t m_maxBufferSize;
-    Buffer                m_buffer;
+    Buffer m_buffer;
 };
 
 //! Write log to message box

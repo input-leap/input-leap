@@ -103,7 +103,7 @@ private:
     double                getClock() const;
 
 private:
-    double                m_mark;
-    bool                m_triggered;
-    bool                m_stopped;
+    double m_mark;
+    bool m_triggered;
+    bool m_stopped;
 };

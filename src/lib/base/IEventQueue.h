@@ -62,8 +62,8 @@ public:
     virtual ~IEventQueue() { }
     class TimerEvent {
     public:
-        EventQueueTimer*    m_timer;    //!< The timer
-        std::uint32_t       m_count;    //!< Number of repeats
+        EventQueueTimer* m_timer; //!< The timer
+        std::uint32_t m_count; //!< Number of repeats
     };
 
     //! @name manipulators

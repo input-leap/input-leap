@@ -150,30 +150,30 @@ private:
         bool            processEvent(Display* display, XEvent* event);
 
     private:
-        Window            m_requestor;
-        Time            m_time;
-        Atom            m_property;
-        bool            m_incr;
-        bool            m_failed;
-        bool            m_done;
+        Window m_requestor;
+        Time m_time;
+        Atom m_property;
+        bool m_incr;
+        bool m_failed;
+        bool m_done;
 
         // atoms needed for the protocol
-        Atom            m_atomNone;        // NONE, not None
-        Atom            m_atomIncr;
+        Atom m_atomNone;        // NONE, not None
+        Atom m_atomIncr;
 
         // true iff we've received the selection notify
-        bool            m_reading;
+        bool m_reading;
 
         // the converted selection data
         std::string* m_data;
 
         // the actual type of the data.  if this is None then the
         // selection owner cannot convert to the requested type.
-        Atom*            m_actualTarget;
+        Atom* m_actualTarget;
 
     public:
         // true iff the selection owner didn't follow ICCCM conventions
-        bool            m_error;
+        bool m_error;
     };
 
     // Motif structure IDs
@@ -225,21 +225,21 @@ private:
 
     public:
         // information about the request
-        Window            m_requestor;
-        Atom            m_target;
-        ::Time            m_time;
-        Atom            m_property;
+        Window m_requestor;
+        Atom m_target;
+        ::Time m_time;
+        Atom m_property;
 
         // true iff we've sent the notification for this reply
-        bool            m_replied;
+        bool m_replied;
 
         // true iff the reply has sent its last message
-        bool            m_done;
+        bool m_done;
 
         // the data to send and its type and format
         std::string m_data;
-        Atom            m_type;
-        int                m_format;
+        Atom m_type;
+        int m_format;
 
         // index of next byte in m_data to send
         std::uint32_t m_ptr;
@@ -280,48 +280,48 @@ private:
 
 private:
     typedef std::vector<IXWindowsClipboardConverter*> ConverterList;
-    IXWindowsImpl*       m_impl;
+    IXWindowsImpl* m_impl;
 
-    Display*            m_display;
-    Window                m_window;
-    ClipboardID            m_id;
-    Atom                m_selection;
-    mutable bool        m_open;
-    mutable Time        m_time;
-    bool                m_owner;
-    mutable Time        m_timeOwned;
-    Time                m_timeLost;
+    Display* m_display;
+    Window m_window;
+    ClipboardID m_id;
+    Atom m_selection;
+    mutable bool m_open;
+    mutable Time m_time;
+    bool m_owner;
+    mutable Time m_timeOwned;
+    Time m_timeLost;
 
     // true iff open and clipboard owned by a motif app
-    mutable bool        m_motif;
+    mutable bool m_motif;
 
     // the added/cached clipboard data
-    mutable bool        m_checkCache;
-    bool                m_cached;
-    Time                m_cacheTime;
-    bool                m_added[kNumFormats];
+    mutable bool m_checkCache;
+    bool m_cached;
+    Time m_cacheTime;
+    bool m_added[kNumFormats];
     std::string m_data[kNumFormats];
 
     // conversion request replies
-    ReplyMap            m_replies;
-    ReplyEventMask        m_eventMasks;
+    ReplyMap m_replies;
+    ReplyEventMask m_eventMasks;
 
     // clipboard format converters
-    ConverterList        m_converters;
+    ConverterList m_converters;
 
     // atoms we'll need
-    Atom                m_atomTargets;
-    Atom                m_atomMultiple;
-    Atom                m_atomTimestamp;
-    Atom                m_atomInteger;
-    Atom                m_atomAtom;
-    Atom                m_atomAtomPair;
-    Atom                m_atomData;
-    Atom                m_atomINCR;
-    Atom                m_atomMotifClipLock;
-    Atom                m_atomMotifClipHeader;
-    Atom                m_atomMotifClipAccess;
-    Atom                m_atomGDKSelection;
+    Atom m_atomTargets;
+    Atom m_atomMultiple;
+    Atom m_atomTimestamp;
+    Atom m_atomInteger;
+    Atom m_atomAtom;
+    Atom m_atomAtomPair;
+    Atom m_atomData;
+    Atom m_atomINCR;
+    Atom m_atomMotifClipLock;
+    Atom m_atomMotifClipHeader;
+    Atom m_atomMotifClipAccess;
+    Atom m_atomGDKSelection;
 };
 
 //! Clipboard format converter interface

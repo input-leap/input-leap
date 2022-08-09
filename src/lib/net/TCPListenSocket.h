@@ -51,8 +51,8 @@ public:
     MultiplexerJobStatus serviceListening(ISocketMultiplexerJob*, bool, bool, bool);
 
 protected:
-    ArchSocket            m_socket;
+    ArchSocket m_socket;
     std::mutex mutex_;
-    IEventQueue*        m_events;
-    SocketMultiplexer*    m_socketMultiplexer;
+    IEventQueue* m_events;
+    SocketMultiplexer* m_socketMultiplexer;
 };

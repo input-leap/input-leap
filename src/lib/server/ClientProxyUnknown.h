@@ -62,10 +62,10 @@ private:
     void                handleReady(const Event&, void*);
 
 private:
-    inputleap::IStream*    m_stream;
-    EventQueueTimer*    m_timer;
-    ClientProxy*        m_proxy;
-    bool                m_ready;
-    Server*                m_server;
-    IEventQueue*        m_events;
+    inputleap::IStream* m_stream;
+    EventQueueTimer* m_timer;
+    ClientProxy* m_proxy;
+    bool m_ready;
+    Server* m_server;
+    IEventQueue* m_events;
 };

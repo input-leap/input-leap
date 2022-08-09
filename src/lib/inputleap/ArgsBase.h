@@ -26,30 +26,30 @@ public:
     virtual ~ArgsBase();
 
 public:
-    bool                m_daemon;
-    bool                m_backend;
-    bool                m_restartable;
-    bool                m_noHooks;
-    std::string         m_exename;
-    const char*         m_logFilter;
-    const char*         m_logFile;
-    const char*         m_display;
-    std::string         m_name;
-    bool                m_disableTray;
-    bool                m_enableIpc;
-    bool                m_enableDragDrop;
+    bool m_daemon;
+    bool m_backend;
+    bool m_restartable;
+    bool m_noHooks;
+    std::string m_exename;
+    const char* m_logFilter;
+    const char* m_logFile;
+    const char* m_display;
+    std::string m_name;
+    bool m_disableTray;
+    bool m_enableIpc;
+    bool m_enableDragDrop;
     std::string m_dropTarget;
 #if SYSAPI_WIN32
-    bool                m_debugServiceWait;
-    bool                m_pauseOnExit;
-    bool                m_stopOnDeskSwitch;
+    bool m_debugServiceWait;
+    bool m_pauseOnExit;
+    bool m_stopOnDeskSwitch;
 #endif
 #if WINAPI_XWINDOWS
-    bool                m_disableXInitThreads;
+    bool m_disableXInitThreads;
 #endif
-    bool                m_shouldExit;
-    std::string         m_barrierAddress;
-    bool                m_enableCrypto;
+    bool m_shouldExit;
+    std::string m_barrierAddress;
+    bool m_enableCrypto;
     inputleap::fs::path m_profileDirectory;
     inputleap::fs::path m_pluginDirectory;
 };

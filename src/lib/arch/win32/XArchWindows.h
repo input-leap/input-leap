@@ -33,7 +33,7 @@ public:
     virtual std::string    eval() const noexcept;
 
 private:
-    DWORD                m_error;
+    DWORD m_error;
 };
 
 //! Lazy error message string evaluation for winsock
@@ -45,5 +45,5 @@ public:
     virtual std::string    eval() const noexcept;
 
 private:
-    int                    m_error;
+    int m_error;
 };

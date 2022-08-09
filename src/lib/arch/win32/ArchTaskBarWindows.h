@@ -60,7 +60,7 @@ public:
 private:
     class ReceiverInfo {
     public:
-        UINT            m_id;
+        UINT m_id;
     };
 
     typedef std::map<IArchTaskBarReceiver*, ReceiverInfo> ReceiverToInfoMap;
@@ -95,21 +95,21 @@ private:
     // multithread data
     std::mutex mutex_;
     std::condition_variable cond_var_;
-    bool                m_ready;
-    int                    m_result;
-    ArchThread            m_thread;
+    bool m_ready;
+    int m_result;
+    ArchThread m_thread;
 
     // child thread data
-    HWND                m_hwnd;
-    UINT                m_taskBarRestart;
+    HWND m_hwnd;
+    UINT m_taskBarRestart;
 
     // shared data
-    ReceiverToInfoMap    m_receivers;
-    CIDToReceiverMap    m_idTable;
-    CIDStack            m_oldIDs;
-    UINT                m_nextID;
+    ReceiverToInfoMap m_receivers;
+    CIDToReceiverMap m_idTable;
+    CIDStack m_oldIDs;
+    UINT m_nextID;
 
     // dialogs
-    Dialogs            m_dialogs;
-    Dialogs            m_addedDialogs;
+    Dialogs m_dialogs;
+    Dialogs m_addedDialogs;
 };

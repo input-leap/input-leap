@@ -96,8 +96,8 @@ private:
 
 private:
     std::mutex mutex_;
-    Thread*                m_thread;
-    bool                m_update;
+    Thread* m_thread;
+    bool m_update;
     std::condition_variable cv_jobs_ready_;
     bool jobs_are_ready_ = false;
 
@@ -107,9 +107,9 @@ private:
     std::condition_variable cv_job_list_lock_locked_;
     bool job_list_lock_lock_is_locked_ = false;
 
-    Thread*                m_jobListLocker;
-    Thread*                m_jobListLockLocker;
+    Thread* m_jobListLocker;
+    Thread* m_jobListLockLocker;
 
-    SocketJobs            m_socketJobs;
-    SocketJobMap        m_socketJobMap;
+    SocketJobs m_socketJobs;
+    SocketJobMap m_socketJobMap;
 };

@@ -37,5 +37,5 @@ public:
     void                dragInfoReceived();
 
 private:
-    IEventQueue*        m_events;
+    IEventQueue* m_events;
 };

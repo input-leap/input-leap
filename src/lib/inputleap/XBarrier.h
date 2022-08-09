@@ -57,8 +57,8 @@ protected:
     std::string getWhat() const noexcept override;
 
 private:
-    int                    m_major;
-    int                    m_minor;
+    int m_major;
+    int m_minor;
 };
 
 //! Client already connected exception
@@ -108,7 +108,7 @@ protected:
     std::string getWhat() const noexcept override;
 
 private:
-    std::string                m_name;
+    std::string m_name;
 };
 
 //! Generic exit eception
@@ -129,5 +129,5 @@ protected:
     std::string getWhat() const noexcept override;
 
 private:
-    int    m_code;
+    int m_code;
 };

@@ -46,7 +46,7 @@ private:
 
     mutable std::mutex queue_mutex_;
     std::condition_variable queue_ready_cv_;
-    bool                m_queueReady;
-    EventDeque            m_queue;
+    bool m_queueReady;
+    EventDeque m_queue;
 };
 

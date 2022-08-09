@@ -134,10 +134,10 @@ private:
     static Log*        s_log;
 
     mutable std::mutex m_mutex;
-    OutputterList        m_outputters;
-    OutputterList        m_alwaysOutputters;
-    int                    m_maxNewlineLength;
-    int                    m_maxPriority;
+    OutputterList m_outputters;
+    OutputterList m_alwaysOutputters;
+    int m_maxNewlineLength;
+    int m_maxPriority;
 };
 
 /*!

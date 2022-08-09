@@ -93,9 +93,9 @@ private:
     // by it.
     std::mutex ssl_mutex_;
 
-    Ssl*                m_ssl;
-    bool                m_secureReady;
-    bool                m_fatal;
+    Ssl* m_ssl;
+    bool m_secureReady;
+    bool m_fatal;
     ConnectionSecurityLevel security_level_ = ConnectionSecurityLevel::ENCRYPTED;
 
     int secure_accept_retry_ = 0; // used only in secureAccept()

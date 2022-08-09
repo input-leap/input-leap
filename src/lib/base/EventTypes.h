@@ -30,7 +30,7 @@ protected:
     IEventQueue*        getEvents() const;
 
 private:
-    IEventQueue*        m_events;
+    IEventQueue* m_events;
 };
 
 #define REGISTER_EVENT(type_, name_)                                    \
@@ -75,9 +75,9 @@ public:
     //@}
 
 private:
-    Event::Type        m_connected;
-    Event::Type        m_connectionFailed;
-    Event::Type        m_disconnected;
+    Event::Type m_connected;
+    Event::Type m_connectionFailed;
+    Event::Type m_disconnected;
 };
 
 class IStreamEvents : public EventTypes {
@@ -141,11 +141,11 @@ public:
     //@}
 
 private:
-    Event::Type        m_inputReady;
-    Event::Type        m_outputFlushed;
-    Event::Type        m_outputError;
-    Event::Type        m_inputShutdown;
-    Event::Type        m_outputShutdown;
+    Event::Type m_inputReady;
+    Event::Type m_outputFlushed;
+    Event::Type m_outputError;
+    Event::Type m_inputShutdown;
+    Event::Type m_outputShutdown;
     Event::Type m_inputFormatError;
 };
 
@@ -167,8 +167,8 @@ public:
     //@}
 
 private:
-    Event::Type        m_connected;
-    Event::Type        m_messageReceived;
+    Event::Type m_connected;
+    Event::Type m_messageReceived;
 };
 
 class IpcClientProxyEvents : public EventTypes {
@@ -189,8 +189,8 @@ public:
     //@}
 
 private:
-    Event::Type        m_messageReceived;
-    Event::Type        m_disconnected;
+    Event::Type m_messageReceived;
+    Event::Type m_disconnected;
 };
 
 class IpcServerEvents : public EventTypes {
@@ -211,8 +211,8 @@ public:
     //@}
 
 private:
-    Event::Type        m_clientConnected;
-    Event::Type        m_messageReceived;
+    Event::Type m_clientConnected;
+    Event::Type m_messageReceived;
 };
 
 class IpcServerProxyEvents : public EventTypes {
@@ -229,7 +229,7 @@ public:
     //@}
 
 private:
-    Event::Type        m_messageReceived;
+    Event::Type m_messageReceived;
 };
 
 class IDataSocketEvents : public EventTypes {
@@ -267,9 +267,9 @@ public:
     //@}
 
 private:
-    Event::Type        m_connected;
-    Event::Type        m_secureConnected;
-    Event::Type        m_connectionFailed;
+    Event::Type m_connected;
+    Event::Type m_secureConnected;
+    Event::Type m_connectionFailed;
 };
 
 class IListenSocketEvents : public EventTypes {
@@ -290,7 +290,7 @@ public:
     //@}
 
 private:
-    Event::Type        m_connecting;
+    Event::Type m_connecting;
 };
 
 class ISocketEvents : public EventTypes {
@@ -320,8 +320,8 @@ public:
     //@}
 
 private:
-    Event::Type        m_disconnected;
-    Event::Type        m_stopRetry;
+    Event::Type m_disconnected;
+    Event::Type m_stopRetry;
 };
 
 class OSXScreenEvents : public EventTypes {
@@ -337,7 +337,7 @@ public:
     //@}
 
 private:
-    Event::Type        m_confirmSleep;
+    Event::Type m_confirmSleep;
 };
 
 class ClientListenerEvents : public EventTypes {
@@ -366,8 +366,8 @@ public:
     //@}
 
 private:
-    Event::Type        m_accepted;
-    Event::Type        m_connected;
+    Event::Type m_accepted;
+    Event::Type m_connected;
 };
 
 class ClientProxyEvents : public EventTypes {
@@ -397,8 +397,8 @@ public:
     //@}
 
 private:
-    Event::Type        m_ready;
-    Event::Type        m_disconnected;
+    Event::Type m_ready;
+    Event::Type m_disconnected;
 };
 
 class ClientProxyUnknownEvents : public EventTypes {
@@ -427,8 +427,8 @@ public:
     //@}
 
 private:
-    Event::Type        m_success;
-    Event::Type        m_failure;
+    Event::Type m_success;
+    Event::Type m_failure;
 };
 
 class ServerEvents : public EventTypes {
@@ -518,15 +518,15 @@ public:
     //@}
 
 private:
-    Event::Type        m_error;
-    Event::Type        m_connected;
-    Event::Type        m_disconnected;
-    Event::Type        m_switchToScreen;
-    Event::Type        m_toggleScreen;
-    Event::Type        m_switchInDirection;
-    Event::Type        m_keyboardBroadcast;
-    Event::Type        m_lockCursorToScreen;
-    Event::Type        m_screenSwitched;
+    Event::Type m_error;
+    Event::Type m_connected;
+    Event::Type m_disconnected;
+    Event::Type m_switchToScreen;
+    Event::Type m_toggleScreen;
+    Event::Type m_switchInDirection;
+    Event::Type m_keyboardBroadcast;
+    Event::Type m_lockCursorToScreen;
+    Event::Type m_screenSwitched;
 };
 
 class ServerAppEvents : public EventTypes {
@@ -546,9 +546,9 @@ public:
     //@}
 
 private:
-    Event::Type        m_reloadConfig;
-    Event::Type        m_forceReconnect;
-    Event::Type        m_resetServer;
+    Event::Type m_reloadConfig;
+    Event::Type m_forceReconnect;
+    Event::Type m_resetServer;
 };
 
 class IKeyStateEvents : public EventTypes {
@@ -573,9 +573,9 @@ public:
     //@}
 
 private:
-    Event::Type        m_keyDown;
-    Event::Type        m_keyUp;
-    Event::Type        m_keyRepeat;
+    Event::Type m_keyDown;
+    Event::Type m_keyUp;
+    Event::Type m_keyRepeat;
 };
 
 class IPrimaryScreenEvents : public EventTypes {
@@ -639,17 +639,17 @@ public:
     //@}
 
 private:
-    Event::Type        m_buttonDown;
-    Event::Type        m_buttonUp;
-    Event::Type        m_motionOnPrimary;
-    Event::Type        m_motionOnSecondary;
-    Event::Type        m_wheel;
-    Event::Type        m_screensaverActivated;
-    Event::Type        m_screensaverDeactivated;
-    Event::Type        m_hotKeyDown;
-    Event::Type        m_hotKeyUp;
-    Event::Type        m_fakeInputBegin;
-    Event::Type        m_fakeInputEnd;
+    Event::Type m_buttonDown;
+    Event::Type m_buttonUp;
+    Event::Type m_motionOnPrimary;
+    Event::Type m_motionOnSecondary;
+    Event::Type m_wheel;
+    Event::Type m_screensaverActivated;
+    Event::Type m_screensaverDeactivated;
+    Event::Type m_hotKeyDown;
+    Event::Type m_hotKeyUp;
+    Event::Type m_fakeInputBegin;
+    Event::Type m_fakeInputEnd;
 };
 
 class IScreenEvents : public EventTypes {
@@ -694,10 +694,10 @@ public:
     //@}
 
 private:
-    Event::Type        m_error;
-    Event::Type        m_shapeChanged;
-    Event::Type        m_suspend;
-    Event::Type        m_resume;
+    Event::Type m_error;
+    Event::Type m_shapeChanged;
+    Event::Type m_suspend;
+    Event::Type m_resume;
 };
 
 class ClipboardEvents : public EventTypes {
@@ -736,9 +736,9 @@ public:
     //@}
 
 private:
-    Event::Type        m_clipboardGrabbed;
-    Event::Type        m_clipboardChanged;
-    Event::Type        m_clipboardSending;
+    Event::Type m_clipboardGrabbed;
+    Event::Type m_clipboardChanged;
+    Event::Type m_clipboardSending;
 };
 
 class FileEvents : public EventTypes {
@@ -763,7 +763,7 @@ public:
     //@}
 
 private:
-    Event::Type        m_fileChunkSending;
-    Event::Type        m_fileReceiveCompleted;
-    Event::Type        m_keepAlive;
+    Event::Type m_fileChunkSending;
+    Event::Type m_fileReceiveCompleted;
+    Event::Type m_keepAlive;
 };

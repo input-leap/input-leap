@@ -100,22 +100,22 @@ private:
 private:
     typedef std::deque<std::string> Buffer;
 
-    IpcServer&            m_ipcServer;
-    Buffer                m_buffer;
+    IpcServer& m_ipcServer;
+    Buffer m_buffer;
     std::mutex m_bufferMutex;
-    bool                m_sending;
-    Thread*                m_bufferThread;
-    bool                m_running;
+    bool m_sending;
+    Thread* m_bufferThread;
+    bool m_running;
     std::condition_variable notify_cv_;
     std::mutex notify_mutex_;
-    bool                m_bufferWaiting;
+    bool m_bufferWaiting;
     IArchMultithread::ThreadID
-                        m_bufferThreadId;
+ m_bufferThreadId;
     std::uint16_t m_bufferMaxSize;
     std::uint16_t m_bufferRateWriteLimit;
-    double                m_bufferRateTimeLimit;
+    double m_bufferRateTimeLimit;
     std::uint16_t m_bufferWriteCount;
-    double                m_bufferRateStart;
-    EIpcClientType        m_clientType;
+    double m_bufferRateStart;
+    EIpcClientType m_clientType;
     std::mutex m_runningMutex;
 };

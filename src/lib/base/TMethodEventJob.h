@@ -35,9 +35,9 @@ public:
     void run(const Event&)  override;
 
 private:
-    T*                    m_object;
-    void                (T::*m_method)(const Event&, void*);
-    void*                m_arg;
+    T* m_object;
+    void (T::*m_method)(const Event&, void*);
+    void* m_arg;
 };
 
 template <class T>

@@ -90,17 +90,17 @@ public:
     class PollEntry {
     public:
         //! The socket to query
-        ArchSocket        m_socket;
+        ArchSocket m_socket;
 
         //! The events to query for
         /*!
         The events to query for can be any combination of kPOLLIN and
         kPOLLOUT.
         */
-        unsigned short    m_events;
+        unsigned short m_events;
 
         //! The result events
-        unsigned short    m_revents;
+        unsigned short m_revents;
     };
 
     //! @name manipulators

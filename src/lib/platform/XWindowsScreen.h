@@ -36,7 +36,7 @@ class XWindowsScreenSaver;
 class XWindowsScreen : public PlatformScreen {
 public:
     XWindowsScreen(IXWindowsImpl* impl, const char* displayName, bool isPrimary,
-        bool disableXInitThreads, int mouseScrollDelta,
+        int mouseScrollDelta,
         IEventQueue* events);
     ~XWindowsScreen() override;
 

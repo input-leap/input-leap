@@ -108,10 +108,9 @@ ClientApp::help()
 {
 #if WINAPI_XWINDOWS
 #  define WINAPI_ARG \
-    " [--display <display>] [--no-xinitthreads]"
+    " [--display <display>]"
 #  define WINAPI_INFO \
-    "      --display <display>  connect to the X server at <display>\n" \
-    "      --no-xinitthreads    do not call XInitThreads()\n"
+    "      --display <display>  connect to the X server at <display>\n"
 #else
 #  define WINAPI_ARG ""
 #  define WINAPI_INFO ""
@@ -169,7 +168,7 @@ ClientApp::createScreen()
 #if WINAPI_XWINDOWS
     return new inputleap::Screen(new XWindowsScreen(
         new XWindowsImpl(),
-        args().m_display, false, args().m_disableXInitThreads,
+        args().m_display, false,
         args().m_yscroll, m_events), m_events);
 #endif
 #if WINAPI_CARBON

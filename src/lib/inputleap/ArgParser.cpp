@@ -176,7 +176,7 @@ ArgParser::parseXWindowsArg(ArgsBase& argsBase, const int& argc, const char* con
         argsBase.m_display = argv[++i];
     }
     else if (isArg(i, argc, argv, nullptr, "--no-xinitthreads")) {
-        argsBase.m_disableXInitThreads = true;
+        LOG((CLOG_NOTE "--no-xinitthreads is deprecated"));
     } else {
         // option not supported here
         return false;

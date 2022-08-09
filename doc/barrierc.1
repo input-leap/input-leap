@@ -4,7 +4,7 @@
 barrierc \- Barrier Keyboard/Mouse Client
 .SH SYNOPSIS
 .B barrierc
-[\fI\,--yscroll <delta>\/\fR] [\fI\,--display <display>\/\fR] [\fI\,--no-xinitthreads\/\fR] [\fI\,--daemon|--no-daemon\/\fR] [\fI\,--name <screen-name>\/\fR] [\fI\,--restart|--no-restart\/\fR] [\fI\,--debug <level>\/\fR] \fI\,<server-address>\/\fR
+[\fI\,--yscroll <delta>\/\fR] [\fI\,--display <display>\/\fR] [\fI\,--daemon|--no-daemon\/\fR] [\fI\,--name <screen-name>\/\fR] [\fI\,--restart|--no-restart\/\fR] [\fI\,--debug <level>\/\fR] \fI\,<server-address>\/\fR
 .SH DESCRIPTION
 Start the barrier client and connect to a remote server component.
 .SH OPTIONS
@@ -37,9 +37,6 @@ enable the crypto (ssl) plugin.
 .TP
 \fB\-\-display\fR <display>
 connect to the X server at <display>
-.TP
-\fB\-\-no\-xinitthreads\fR
-do not call XInitThreads()
 .TP
 \fB\-f\fR, \fB\-\-no\-daemon\fR
 run in the foreground.

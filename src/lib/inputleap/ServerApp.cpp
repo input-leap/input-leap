@@ -116,10 +116,9 @@ ServerApp::help()
     // window api args (windows/x-windows/carbon)
 #if WINAPI_XWINDOWS
 #  define WINAPI_ARGS \
-    " [--display <display>] [--no-xinitthreads]"
+    " [--display <display>]"
 #  define WINAPI_INFO \
     "      --display <display>  connect to the X server at <display>\n" \
-    "      --no-xinitthreads    do not call XInitThreads()\n" \
     "      --screen-change-script <path>\n" \
     "                           full path to script to run on screen change\n" \
     "                           first argument is the new screen name\n"
@@ -619,7 +618,7 @@ ServerApp::createScreen()
 #if WINAPI_XWINDOWS
     return new inputleap::Screen(new XWindowsScreen(
         new XWindowsImpl(),
-        args().m_display, true, args().m_disableXInitThreads, 0, m_events), m_events);
+        args().m_display, true, 0, m_events), m_events);
 #endif
 #if WINAPI_CARBON
     return new inputleap::Screen(new OSXScreen(m_events, true), m_events);

@@ -136,22 +136,20 @@ target_link_libraries(barrier net base io Qt5::Core Qt5::Widgets Qt5::Network ${
 target_compile_definitions (barrier PRIVATE -DINPUTLEAP_VERSION_STAGE="${INPUTLEAP_VERSION_STAGE}")
 target_compile_definitions (barrier PRIVATE -DINPUTLEAP_REVISION="${INPUTLEAP_REVISION}")
 
-if (WIN32)
+if (BUILD_MSWINDOWS)
     include_directories ($ENV{BONJOUR_SDK_HOME}/Include)
     find_library (DNSSD_LIB dnssd.lib
                   HINTS ENV BONJOUR_SDK_HOME
                   PATH_SUFFIXES "Lib/x64")
     set_target_properties (barrier PROPERTIES LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
     target_link_libraries (barrier ${DNSSD_LIB})
-elseif (APPLE)
+endif()
+if (BUILD_CARBON)
     find_library(APPSERVICES_LIB ApplicationServices)
     target_link_libraries(barrier ${APPSERVICES_LIB})
-else()
-    target_link_libraries (barrier dns_sd)
 endif()
-
-if (HAVE_X11)
-    target_link_libraries (barrier X11)
+if (BUILD_XWINDOWS)
+    target_link_libraries (barrier dns_sd X11)
 endif()
 
 target_link_libraries (barrier common)

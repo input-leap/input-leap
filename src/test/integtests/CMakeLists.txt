@@ -24,31 +24,33 @@ set(sources
 )
 
 # platform
-if (WIN32)
-    set(platform_sources
+if (BUILD_MSWINDOWS)
+    set(mswin_sources
         platform/MSWindowsClipboardTests.cpp
         platform/MSWindowsKeyStateTests.cpp
     )
-    set(platform_headers)
-elseif (APPLE)
-    set(platform_sources
+    set(mswin_headers)
+endif()
+if (BUILD_CARBON)
+    set(carbon_sources
         platform/OSXClipboardTests.cpp
         platform/OSXKeyStateTests.cpp
         platform/OSXScreenTests.cpp
     )
-    set(platform_headers)
-elseif (UNIX)
-    set(platform_sources
+    set(carbon_headers)
+endif()
+if (BUILD_XWINDOWS)
+    set(xwin_sources
         platform/XWindowsClipboardTests.cpp
         platform/XWindowsKeyStateTests.cpp
         platform/XWindowsScreenSaverTests.cpp
         platform/XWindowsScreenTests.cpp
     )
-    set(platform_headers)
+    set(xwin_headers)
 endif()
 
-list(APPEND sources ${platform_sources})
-list(APPEND headers ${platform_headers})
+list(APPEND sources ${mswin_sources} ${carbon_sources} ${xwin_sources})
+list(APPEND headers ${mswin_headers} ${carbon_headers} ${xwin_headers})
 
 file(GLOB_RECURSE global_headers "../../test/global/*.h")
 file(GLOB_RECURSE global_sources "../../test/global/*.cpp")

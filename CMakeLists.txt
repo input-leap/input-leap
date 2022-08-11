@@ -147,8 +147,6 @@ if (UNIX)
             list (APPEND libs ${XLIB_LINK_LIBRARIES} ${ICE_LINK_LIBRARIES})
         endif()
 
-        set (HAVE_X11 1)
-
         check_include_files ("dns_sd.h" HAVE_DNSSD)
         if(INPUTLEAP_BUILD_GUI AND NOT HAVE_DNSSD)
             message (FATAL_ERROR "Missing header: dns_sd.h")
@@ -166,8 +164,10 @@ if (UNIX)
 
     if (APPLE)
         add_definitions (-DWINAPI_CARBON=1 -D_THREAD_SAFE)
+        set (BUILD_CARBON 1)
     else()
         add_definitions (-DWINAPI_XWINDOWS=1)
+        set (BUILD_XWINDOWS 1)
     endif()
 
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
@@ -186,6 +186,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         /DINPUTLEAP_VERSION=\"${INPUTLEAP_VERSION}\"
         /D_XKEYCHECK_H
     )
+    set (BUILD_MSWINDOWS 1)
 endif()
 
 # For config.h, save the results based on a template (config.h.in).

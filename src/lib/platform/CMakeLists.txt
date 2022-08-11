@@ -14,16 +14,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if (WIN32)
-    file(GLOB headers "MSWindows*.h" "ImmuneKeysReader.h" "synwinhk.h")
-    file(GLOB sources "MSWindows*.cpp" "ImmuneKeysReader.cpp")
-elseif (APPLE)
-    file(GLOB headers "OSX*.h" "IOSX*.h")
-    file(GLOB sources "OSX*.cpp" "IOSX*.cpp" "OSX*.m" "OSX*.mm")
-elseif (UNIX)
-    file(GLOB headers "XWindows*.h")
-    file(GLOB sources "XWindows*.cpp")
+if (BUILD_MSWINDOWS)
+    file(GLOB mswin_headers "MSWindows*.h" "ImmuneKeysReader.h" "synwinhk.h")
+    file(GLOB mswin_sources "MSWindows*.cpp" "ImmuneKeysReader.cpp")
 endif()
+if (BUILD_CARBON)
+    file(GLOB carbon_headers "OSX*.h" "IOSX*.h")
+    file(GLOB carbon_sources "OSX*.cpp" "IOSX*.cpp" "OSX*.m" "OSX*.mm")
+endif()
+if (BUILD_XWINDOWS)
+    file(GLOB xwin_headers "XWindows*.h")
+    file(GLOB xwin_sources "XWindows*.cpp")
+endif()
+
+list(APPEND sources ${mswin_sources} ${carbon_sources} ${xwin_sources})
+list(APPEND headers ${mswin_headers} ${carbon_headers} ${xwin_headers})
 
 if(INPUTLEAP_ADD_HEADERS)
     list(APPEND sources ${headers})

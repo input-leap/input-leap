@@ -34,19 +34,21 @@ list(APPEND headers ${mock_headers})
 list(APPEND sources ${mock_sources})
 
 # platform
-if (WIN32)
-    file(GLOB platform_sources "platform/MSWindows*.cpp")
-    file(GLOB platform_headers "platform/MSWindows*.h")
-elseif (APPLE)
-    file(GLOB platform_sources "platform/OSX*.cpp")
-    file(GLOB platform_headers "platform/OSX*.h")
-elseif (UNIX)
-    file(GLOB platform_sources "platform/XWindows*.cpp")
-    file(GLOB platform_headers "platform/XWindows*.h")
+if (BUILD_MSWINDOWS)
+    file(GLOB mswin_sources "platform/MSWindows*.cpp")
+    file(GLOB mswin_headers "platform/MSWindows*.h")
+endif()
+if (BUILD_CARBON)
+    file(GLOB carbon_sources "platform/OSX*.cpp")
+    file(GLOB carbon_headers "platform/OSX*.h")
+endif()
+if (BUILD_XWINDOWS)
+    file(GLOB xwin_sources "platform/XWindows*.cpp")
+    file(GLOB xwin_headers "platform/XWindows*.h")
 endif()
 
-list(APPEND sources ${platform_sources})
-list(APPEND headers ${platform_headers})
+list(APPEND sources ${mswin_sources} ${carbon_sources} ${xwin_sources})
+list(APPEND headers ${mswin_headers} ${carbon_headers} ${xwin_headers})
 
 include_directories(
     ../../

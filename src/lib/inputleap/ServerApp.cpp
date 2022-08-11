@@ -46,11 +46,13 @@
 
 #if WINAPI_MSWINDOWS
 #include "platform/MSWindowsScreen.h"
-#elif WINAPI_XWINDOWS
+#endif
+#if WINAPI_XWINDOWS
 #include <unistd.h>
 #include <signal.h>
 #include "platform/XWindowsScreen.h"
-#elif WINAPI_CARBON
+#endif
+#if WINAPI_CARBON
 #include "platform/OSXScreen.h"
 #endif
 
@@ -613,13 +615,16 @@ ServerApp::createScreen()
 #if WINAPI_MSWINDOWS
     return new inputleap::Screen(new MSWindowsScreen(
         true, args().m_noHooks, args().m_stopOnDeskSwitch, m_events), m_events);
-#elif WINAPI_XWINDOWS
+#endif
+#if WINAPI_XWINDOWS
     return new inputleap::Screen(new XWindowsScreen(
         new XWindowsImpl(),
         args().m_display, true, args().m_disableXInitThreads, 0, m_events), m_events);
-#elif WINAPI_CARBON
+#endif
+#if WINAPI_CARBON
     return new inputleap::Screen(new OSXScreen(m_events, true), m_events);
 #endif
+    throw std::runtime_error("Failed to create screen, this shouldn't happen");
 }
 
 PrimaryClient* ServerApp::openPrimaryClient(const std::string& name, inputleap::Screen* screen)

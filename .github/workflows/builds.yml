@@ -75,8 +75,9 @@ jobs:
         run: |
           brew update
           brew install qt5
+          brew install ninja
       - name: Run the build
-        run: ./clean_build.sh
+        run: sh -x ./clean_build.sh
       - uses: actions/upload-artifact@v3
         with:
           name: Publish the DMG for ${{ matrix.os }}

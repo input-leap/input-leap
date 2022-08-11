@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
     // QApplication's constructor will call a fscking abort() if
     // DISPLAY is bad. Let's check it first and handle it gracefully
     if (!display_is_valid()) {
-        fprintf(stderr, "The Barrier GUI requires a display. Quitting...\n");
+        fprintf(stderr, "The Barrier GUI requires the DISPLAY environment variable to be set. Quitting...\n");
         return 1;
     }
 #endif

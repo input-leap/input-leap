@@ -11,20 +11,6 @@ if [ -z "$B_CMAKE" ]; then
     exit 1
 fi
 
-if [ "$(uname)" = "Darwin" ]; then
-    nproc=$(sysctl -n hw.ncpu)
-else
-    nproc=$(nproc)
-fi
-if [ -z "$nproc" ]; then
-    nproc=8
-fi
-if [ $nproc -gt 32 ]; then
-    nproc=32
-fi
-
-export CMAKE_BUILD_PARALLEL_LEVEL=${nproc}
-
 B_BUILD_DIR="${B_BUILD_DIR:-build}"
 B_BUILD_TYPE="${B_BUILD_TYPE:-Debug}"
 B_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=${B_BUILD_TYPE} ${B_CMAKE_FLAGS:-}"

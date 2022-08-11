@@ -75,6 +75,7 @@ jobs:
         run: |
           brew update
           brew install qt5
+          brew install ninja
       - name: Run the build
         run: sh -x ./clean_build.sh
       - uses: actions/upload-artifact@v3

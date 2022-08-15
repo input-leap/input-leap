@@ -25,6 +25,7 @@
 class NonBlockingStream
 {
 public:
+    explicit NonBlockingStream(int fd = -1) { };
     bool try_read_char(char &ch) const { return false; };
 };
 
@@ -35,7 +36,7 @@ struct termios;
 class NonBlockingStream
 {
 public:
-    explicit NonBlockingStream(int fd = 0);
+    explicit NonBlockingStream(int fd = -1);
     ~NonBlockingStream();
 
     bool try_read_char(char &ch) const;

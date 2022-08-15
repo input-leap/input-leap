@@ -66,7 +66,7 @@ private:
     bool hasTimerExpired(Event& event);
     double getNextTimerTimeout() const;
     void addEventToBuffer(const Event& event);
-    bool parent_requests_shutdown() const;
+    virtual bool parent_requests_shutdown() const;
 
 private:
     class Timer {

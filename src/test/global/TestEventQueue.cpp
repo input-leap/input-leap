@@ -53,3 +53,9 @@ TestEventQueue::handleQuitTimeout(const Event&, void* vclient)
 
     throw std::runtime_error("test event queue timeout");
 }
+
+bool
+TestEventQueue::parent_requests_shutdown() const
+{
+    return false;
+}

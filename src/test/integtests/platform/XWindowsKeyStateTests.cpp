@@ -31,8 +31,8 @@
 
 #include <X11/XKBlib.h>
 
-#include "test/global/gtest.h"
-#include "test/global/gmock.h"
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 #include <errno.h>
 
 class XWindowsKeyStateTests : public ::testing::Test

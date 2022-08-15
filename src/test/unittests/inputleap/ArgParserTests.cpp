@@ -18,7 +18,7 @@
 #include "inputleap/ArgParser.h"
 #include "inputleap/ArgsBase.h"
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 
 TEST(ArgParserTests, isArg_abbreviationsArg_returnTrue)
 {

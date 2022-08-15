@@ -19,7 +19,7 @@
 #include "inputleap/ClientArgs.h"
 #include "test/mock/inputleap/MockArgParser.h"
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 
 using ::testing::_;
 using ::testing::Invoke;

@@ -17,7 +17,7 @@
 
 #include "inputleap/ArgParser.h"
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 
 TEST(DeprecatedArgsParsingTests, parseDeprecatedArgs_cryptoPass_returnTrue)
 {

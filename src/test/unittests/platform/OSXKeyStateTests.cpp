@@ -20,8 +20,8 @@
 #include "test/mock/inputleap/MockEventQueue.h"
 #include "platform/OSXKeyState.h"
 
-#include "test/global/gtest.h"
-#include "test/global/gmock.h"
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 TEST(OSXKeyStateTests, mapModifiersFromOSX_OSXMask_returnBarrierMask)
 {

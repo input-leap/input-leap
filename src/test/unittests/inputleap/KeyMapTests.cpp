@@ -19,8 +19,8 @@
 
 #include "inputleap/KeyMap.h"
 
-#include "test/global/gtest.h"
-#include "test/global/gmock.h"
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 using ::testing::_;
 using ::testing::NiceMock;

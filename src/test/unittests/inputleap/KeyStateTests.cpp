@@ -20,8 +20,8 @@
 #include "test/mock/inputleap/MockEventQueue.h"
 #include "test/mock/inputleap/MockKeyMap.h"
 
-#include "test/global/gtest.h"
-#include "test/global/gmock.h"
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 using ::testing::_;
 using ::testing::NiceMock;

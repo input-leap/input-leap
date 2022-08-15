@@ -24,7 +24,7 @@
 #include "arch/win32/ArchMiscWindows.h"
 #endif
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 #include <iostream>
 #include <fstream>
 

@@ -35,7 +35,7 @@
 #include "base/EventQueue.h"
 #include "base/TMethodEventJob.h"
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 
 #define TEST_IPC_PORT 24802
 

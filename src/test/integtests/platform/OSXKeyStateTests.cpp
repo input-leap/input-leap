@@ -22,8 +22,8 @@
 #include "base/Log.h"
 #include "base/Time.h"
 
-#include "test/global/gtest.h"
-#include "test/global/gmock.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #define SHIFT_ID_L kKeyShift_L
 #define SHIFT_ID_R kKeyShift_R

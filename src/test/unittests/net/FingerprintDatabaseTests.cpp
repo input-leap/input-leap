@@ -16,7 +16,7 @@
 */
 
 #include "net/FingerprintDatabase.h"
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 
 namespace inputleap {
 

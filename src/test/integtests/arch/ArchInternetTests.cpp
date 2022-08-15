@@ -17,7 +17,7 @@
 
 #include "arch/Arch.h"
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 
 #define TEST_URL "https://symless.com/tests/?testString"
 //#define TEST_URL "http://localhost/barrier/tests/?testString"

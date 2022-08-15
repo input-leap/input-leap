@@ -19,7 +19,7 @@
 #include "test/mock/inputleap/MockEventQueue.h"
 #include "platform/XWindowsScreen.h"
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 #include <cstdlib>
 
 using ::testing::_;

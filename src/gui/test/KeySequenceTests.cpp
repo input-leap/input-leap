@@ -121,7 +121,7 @@ TEST_P(KeySequenceLoadSaveTestFixture, SupportsSpecialSymbols)
     QFile::remove(filename);
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
         KeySequenceLoadSaveTests,
         KeySequenceLoadSaveTestFixture,
         ::testing::ValuesIn(s_key_sequence_test_keys));

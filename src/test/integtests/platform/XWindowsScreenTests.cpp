@@ -27,9 +27,9 @@ using ::testing::_;
 TEST(CXWindowsScreenTests, fakeMouseMove_nonPrimary_getCursorPosValuesCorrect)
 {
     const char* displayName = std::getenv("DISPLAY");
-    if (displayName == nullptr) {
-        displayName = ":0.0";
-    }
+
+    if (displayName == nullptr)
+        GTEST_SKIP() << "DISPLAY environment variable not set, skipping test";
 
     MockEventQueue eventQueue;
     EXPECT_CALL(eventQueue, adoptHandler(_, _, _)).Times(2);

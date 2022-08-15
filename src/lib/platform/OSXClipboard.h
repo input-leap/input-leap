@@ -33,20 +33,20 @@ public:
     virtual ~OSXClipboard();
 
     //! Test if clipboard is owned by barrier
-    static bool            isOwnedByBarrier();
+    static bool isOwnedByBarrier();
 
     // IClipboard overrides
-    virtual bool        empty();
+    virtual bool empty();
     virtual void add(EFormat, const std::string& data);
-    virtual bool        open(Time) const;
-    virtual void        close() const;
-    virtual Time        getTime() const;
-    virtual bool        has(EFormat) const;
+    virtual bool open(Time) const;
+    virtual void close() const;
+    virtual Time getTime() const;
+    virtual bool has(EFormat) const;
     virtual std::string get(EFormat) const;
 
-    bool                synchronize();
+    bool synchronize();
 private:
-    void                clearConverters();
+    void clearConverters();
 
 private:
     typedef std::vector<IOSXClipboardConverter*> ConverterList;

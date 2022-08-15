@@ -42,5 +42,5 @@ public:
     virtual const char* daemonName() const = 0;
     virtual int foregroundStartup(int argc, char** argv) = 0;
     virtual inputleap::Screen* createScreen() = 0;
-    virtual IEventQueue*            getEvents() const = 0;
+    virtual IEventQueue* getEvents() const = 0;
 };

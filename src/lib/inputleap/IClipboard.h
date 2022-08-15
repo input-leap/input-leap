@@ -73,7 +73,7 @@ public:
     Return false if the clipboard ownership could not be taken;
     the clipboard should not be emptied in this case.
     */
-    virtual bool        empty() = 0;
+    virtual bool empty() = 0;
 
     //! Add data
     /*!
@@ -95,7 +95,7 @@ public:
     a time in the past when the open should effectively have taken
     place.
     */
-    virtual bool        open(Time time) const = 0;
+    virtual bool open(Time time) const = 0;
 
     //! Close clipboard
     /*!
@@ -105,20 +105,20 @@ public:
     mean the clipboard ownership should be released (if it was
     taken).
     */
-    virtual void        close() const = 0;
+    virtual void close() const = 0;
 
     //! Get time
     /*!
     Return the timestamp passed to the last successful open().
     */
-    virtual Time        getTime() const = 0;
+    virtual Time getTime() const = 0;
 
     //! Check for data
     /*!
     Return true iff the clipboard contains data in the given
     format.  Must be called between a successful open() and close().
     */
-    virtual bool        has(EFormat) const = 0;
+    virtual bool has(EFormat) const = 0;
 
     //! Get data
     /*!
@@ -150,7 +150,7 @@ public:
     the destination clipboard's timestamp to source clipboard's
     timestamp.  Returns true iff the copy succeeded.
     */
-    static bool            copy(IClipboard* dst, const IClipboard* src);
+    static bool copy(IClipboard* dst, const IClipboard* src);
 
     //! Copy clipboard
     /*!
@@ -159,7 +159,7 @@ public:
     don't have to be the same type).  This also sets the
     timestamp to \c time.  Returns true iff the copy succeeded.
     */
-    static bool            copy(IClipboard* dst, const IClipboard* src, Time);
+    static bool copy(IClipboard* dst, const IClipboard* src, Time);
 
     //@}
 

@@ -66,7 +66,7 @@ public:
     Throws XSocketAddress if resolution is unsuccessful, after which
     \c isValid returns false until the next call to this method.
     */
-    void                resolve();
+    void resolve();
 
     //@}
     //! @name accessors
@@ -88,21 +88,21 @@ public:
     /*!
     Returns true if this is not the invalid address.
     */
-    bool                isValid() const;
+    bool isValid() const;
 
     //! Get address
     /*!
     Returns the address in the platform's native network address
     structure.
     */
-    const ArchNetAddress&    getAddress() const;
+    const ArchNetAddress& getAddress() const;
 
     //! Get port
     /*!
     Returns the port passed to the c'tor as a suffix to the hostname,
     if that existed, otherwise as passed directly to the c'tor.
     */
-    int                    getPort() const;
+    int getPort() const;
 
     //! Get hostname
     /*!
@@ -113,7 +113,7 @@ public:
     //@}
 
 private:
-    void                checkPort();
+    void checkPort();
 
 private:
     ArchNetAddress m_address;

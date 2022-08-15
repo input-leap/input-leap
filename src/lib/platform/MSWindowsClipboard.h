@@ -48,30 +48,30 @@ public:
     server and doesn't need to be sent back.  emptyUnowned()
     makes barrier send the data to the server.
     */
-    bool                emptyUnowned();
+    bool emptyUnowned();
 
     //! Test if clipboard is owned by barrier
-    static bool            isOwnedByBarrier();
+    static bool isOwnedByBarrier();
 
     // IClipboard overrides
-    virtual bool        empty();
+    virtual bool empty();
     virtual void add(EFormat, const std::string& data);
-    virtual bool        open(Time) const;
-    virtual void        close() const;
-    virtual Time        getTime() const;
-    virtual bool        has(EFormat) const;
+    virtual bool open(Time) const;
+    virtual void close() const;
+    virtual Time getTime() const;
+    virtual bool has(EFormat) const;
     virtual std::string get(EFormat) const;
 
     void setFacade(IMSWindowsClipboardFacade& facade);
 
 private:
-    void                clearConverters();
+    void clearConverters();
 
     UINT convertFormatToWin32(EFormat) const;
     HANDLE convertTextToWin32(const std::string& data) const;
     std::string convertTextFromWin32(HANDLE) const;
 
-    static UINT            getOwnershipFormat();
+    static UINT getOwnershipFormat();
 
 private:
     typedef std::vector<IMSWindowsClipboardConverter*> ConverterList;
@@ -100,7 +100,7 @@ public:
 
     // return the atom representing the win32 clipboard format that
     // this object converts from/to
-    virtual UINT        getWin32Format() const = 0;
+    virtual UINT getWin32Format() const = 0;
 
     // convert from the IClipboard format to the win32 clipboard format.
     // the input data must be in the IClipboard format returned by

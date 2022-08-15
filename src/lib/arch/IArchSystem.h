@@ -35,7 +35,7 @@ public:
     /*!
     Returns a string identifying the operating system.
     */
-    virtual std::string    getOSName() const = 0;
+    virtual std::string getOSName() const = 0;
 
     //! Identify the platform
     /*!

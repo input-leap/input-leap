@@ -70,13 +70,13 @@ public:
     ensures that we ignore it.  Calls to \c fakeInputBegin() and
     \c fakeInputEnd() may be nested;  only the outermost have an effect.
     */
-    void                fakeInputBegin();
+    void fakeInputBegin();
 
     //! Done synthesizing input on primary screen
     /*!
     Undoes whatever \c fakeInputBegin() did.
     */
-    void                fakeInputEnd();
+    void fakeInputEnd();
 
     //@}
     //! @name accessors
@@ -101,20 +101,19 @@ public:
     /*!
     Returns the primary screen's current toggle modifier key state.
     */
-    virtual KeyModifierMask
-                        getToggleMask() const;
+    virtual KeyModifierMask getToggleMask() const;
 
     //! Get screen lock state
     /*!
     Returns true if the user is locked to the screen.
     */
-    bool                isLockedToScreen() const;
+    bool isLockedToScreen() const;
 
     //@}
 
     // FIXME -- these probably belong on IScreen
-    virtual void        enable();
-    virtual void        disable();
+    virtual void enable();
+    virtual void disable();
 
     // IScreen overrides
     void* getEventTarget() const override;

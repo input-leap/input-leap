@@ -44,14 +44,14 @@ public:
     /*!
     Useful for platform-specific initialisation from a specific thread.
     */
-    virtual    void        init() = 0;
+    virtual    void init() = 0;
 
     //! Block waiting for an event
     /*!
     Wait for an event in the event queue buffer for up to \p timeout
     seconds.
     */
-    virtual void        waitForEvent(double timeout) = 0;
+    virtual void waitForEvent(double timeout) = 0;
 
     //! Get the next event
     /*!
@@ -81,7 +81,7 @@ public:
     /*!
     Return true iff the event queue buffer  is empty.
     */
-    virtual bool        isEmpty() const = 0;
+    virtual bool isEmpty() const = 0;
 
     //! Create a timer object
     /*!
@@ -96,7 +96,7 @@ public:
     /*!
     Destroy a timer object previously returned by \c newTimer().
     */
-    virtual void        deleteTimer(EventQueueTimer*) const = 0;
+    virtual void deleteTimer(EventQueueTimer*) const = 0;
 
     //@}
 };

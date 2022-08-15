@@ -32,20 +32,20 @@ public:
     /*!
     Returns true if the session ID has changed since updateActiveSession was called.
     */
-    BOOL                hasChanged();
+    BOOL hasChanged();
 
-    bool                isProcessInSession(const char* name, PHANDLE process);
+    bool isProcessInSession(const char* name, PHANDLE process);
 
-    HANDLE                getUserToken(LPSECURITY_ATTRIBUTES security);
+    HANDLE getUserToken(LPSECURITY_ATTRIBUTES security);
 
-    DWORD                getActiveSessionId() { return m_activeSessionId; }
+    DWORD getActiveSessionId() { return m_activeSessionId; }
 
-    void                updateActiveSession();
+    void updateActiveSession();
 
     std::string getActiveDesktopName();
 
 private:
-    BOOL                nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry);
+    BOOL nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry);
 
 private:
     DWORD m_activeSessionId;

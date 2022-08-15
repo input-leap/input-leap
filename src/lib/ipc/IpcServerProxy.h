@@ -34,11 +34,11 @@ public:
     virtual ~IpcServerProxy();
 
 private:
-    void                send(const IpcMessage& message);
+    void send(const IpcMessage& message);
 
-    void                handleData(const Event&, void*);
-    IpcLogLineMessage*    parseLogLine();
-    void                disconnect();
+    void handleData(const Event&, void*);
+    IpcLogLineMessage* parseLogLine();
+    void disconnect();
 
 private:
     inputleap::IStream& m_stream;

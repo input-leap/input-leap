@@ -70,25 +70,25 @@ public:
     Starts an attempt to connect to the server.  This is ignored if
     the client is trying to connect or is already connected.
     */
-    void                connect();
+    void connect();
 
     //! Disconnect
     /*!
     Disconnects from the server with an optional error message.
     */
-    void                disconnect(const char* msg);
+    void disconnect(const char* msg);
 
     //! Notify of handshake complete
     /*!
     Notifies the client that the connection handshake has completed.
     */
-    virtual void        handshakeComplete();
+    virtual void handshakeComplete();
 
     //! Received drag information
     void dragInfoReceived(std::uint32_t fileNum, std::string data);
 
     //! Create a new thread and use it to send file to Server
-    void                sendFileToServer(const char* filename);
+    void sendFileToServer(const char* filename);
 
     //! Send dragging file information back to server
     void sendDragInfo(std::uint32_t fileCount, std::string& info, size_t size);
@@ -102,33 +102,33 @@ public:
     /*!
     Returns true iff the client is successfully connected to the server.
     */
-    bool                isConnected() const;
+    bool isConnected() const;
 
     //! Test if connecting
     /*!
     Returns true iff the client is currently attempting to connect to
     the server.
     */
-    bool                isConnecting() const;
+    bool isConnecting() const;
 
     //! Get address of server
     /*!
     Returns the address of the server the client is connected (or wants
     to connect) to.
     */
-    NetworkAddress        getServerAddress() const;
+    NetworkAddress getServerAddress() const;
 
     //! Return true if received file size is valid
-    bool                isReceivedFileSizeValid();
+    bool isReceivedFileSizeValid();
 
     //! Return expected file size
-    size_t&                getExpectedFileSize() { return m_expectedFileSize; }
+    size_t& getExpectedFileSize() { return m_expectedFileSize; }
 
     //! Return received file data
     std::string& getReceivedFileData() { return m_receivedFileData; }
 
     //! Return drag file list
-    DragFileList        getDragFileList() { return m_dragFileList; }
+    DragFileList getDragFileList() { return m_dragFileList; }
 
     //@}
 
@@ -160,36 +160,36 @@ public:
     virtual std::string getName() const override;
 
 private:
-    void                sendClipboard(ClipboardID);
-    void                sendEvent(Event::Type, void*);
-    void                sendConnectionFailedEvent(const char* msg);
-    void                sendFileChunk(const void* data);
+    void sendClipboard(ClipboardID);
+    void sendEvent(Event::Type, void*);
+    void sendConnectionFailedEvent(const char* msg);
+    void sendFileChunk(const void* data);
     void send_file_thread(const char* filename);
     void write_to_drop_dir_thread();
-    void                setupConnecting();
-    void                setupConnection();
-    void                setupScreen();
-    void                setupTimer();
-    void                cleanupConnecting();
-    void                cleanupConnection();
-    void                cleanupScreen();
-    void                cleanupTimer();
-    void                cleanupStream();
-    void                handleConnected(const Event&, void*);
-    void                handleConnectionFailed(const Event&, void*);
-    void                handleConnectTimeout(const Event&, void*);
-    void                handleOutputError(const Event&, void*);
-    void                handleDisconnected(const Event&, void*);
-    void                handleShapeChanged(const Event&, void*);
-    void                handleClipboardGrabbed(const Event&, void*);
-    void                handleHello(const Event&, void*);
-    void                handleSuspend(const Event& event, void*);
-    void                handleResume(const Event& event, void*);
-    void                handleFileChunkSending(const Event&, void*);
-    void                handleFileReceiveCompleted(const Event&, void*);
-    void                handleStopRetry(const Event&, void*);
-    void                onFileReceiveCompleted();
-    void                sendClipboardThread(void*);
+    void setupConnecting();
+    void setupConnection();
+    void setupScreen();
+    void setupTimer();
+    void cleanupConnecting();
+    void cleanupConnection();
+    void cleanupScreen();
+    void cleanupTimer();
+    void cleanupStream();
+    void handleConnected(const Event&, void*);
+    void handleConnectionFailed(const Event&, void*);
+    void handleConnectTimeout(const Event&, void*);
+    void handleOutputError(const Event&, void*);
+    void handleDisconnected(const Event&, void*);
+    void handleShapeChanged(const Event&, void*);
+    void handleClipboardGrabbed(const Event&, void*);
+    void handleHello(const Event&, void*);
+    void handleSuspend(const Event& event, void*);
+    void handleResume(const Event& event, void*);
+    void handleFileChunkSending(const Event&, void*);
+    void handleFileReceiveCompleted(const Event&, void*);
+    void handleStopRetry(const Event&, void*);
+    void onFileReceiveCompleted();
+    void sendClipboardThread(void*);
 
 public:
     bool m_mock;

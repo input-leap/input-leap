@@ -44,20 +44,20 @@ public:
     Open a window displaying current status.  This should return
     immediately without waiting for the window to be closed.
     */
-    virtual void        showStatus() = 0;
+    virtual void showStatus() = 0;
 
     //! Popup menu
     /*!
     Popup a menu of operations at or around \c x,y and perform the
     chosen operation.
     */
-    virtual void        runMenu(int x, int y) = 0;
+    virtual void runMenu(int x, int y) = 0;
 
     //! Perform primary action
     /*!
     Perform the primary (default) action.
     */
-    virtual void        primaryAction() = 0;
+    virtual void primaryAction() = 0;
 
     //@}
     //! @name accessors
@@ -70,10 +70,10 @@ public:
     Each call to \c lock() must have a matching \c unlock() and
     locks cannot be nested.
     */
-    virtual void        lock() const = 0;
+    virtual void lock() const = 0;
 
     //! Unlock receiver
-    virtual void        unlock() const = 0;
+    virtual void unlock() const = 0;
 
     //! Get icon
     /*!

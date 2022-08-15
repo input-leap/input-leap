@@ -81,45 +81,45 @@ public:
     on the new desk.  \c setShape should be called at least once
     before calling \c enable.
     */
-    void                enable();
+    void enable();
 
     //! Disable desk tracking
     /*!
     Disables desk tracking.  \sa enable.
     */
-    void                disable();
+    void disable();
 
     //! Notify of entering a desk
     /*!
     Prepares a desk for when the cursor enters it.
     */
-    void                enter();
+    void enter();
 
     //! Notify of leaving a desk
     /*!
     Prepares a desk for when the cursor leaves it.
     */
-    void                leave(HKL keyLayout);
+    void leave(HKL keyLayout);
 
     //! Notify of options changes
     /*!
     Resets all options to their default values.
     */
-    void                resetOptions();
+    void resetOptions();
 
     //! Notify of options changes
     /*!
     Set options to given values.  Ignores unknown options and doesn't
     modify options that aren't given in \c options.
     */
-    void                setOptions(const OptionsList& options);
+    void setOptions(const OptionsList& options);
 
     //! Update the key state
     /*!
     Causes the key state to get updated to reflect the physical keyboard
     state and current keyboard mapping.
     */
-    void                updateKeys();
+    void updateKeys();
 
     //! Tell desk about new size
     /*!
@@ -134,19 +134,19 @@ public:
     if desk tracking is enabled, updated whenever the desk changes.  If
     \p install is false then the screensaver hooks are uninstalled.
     */
-    void                installScreensaverHooks(bool install);
+    void installScreensaverHooks(bool install);
 
     //! Start ignoring user input
     /*!
     Starts ignoring user input so we don't pick up our own synthesized events.
     */
-    void                fakeInputBegin();
+    void fakeInputBegin();
 
     //! Stop ignoring user input
     /*!
     Undoes whatever \c fakeInputBegin() did.
     */
-    void                fakeInputEnd();
+    void fakeInputEnd();
 
     //@}
     //! @name accessors
@@ -162,14 +162,14 @@ public:
     /*!
     Synthesize a press or release of key \c button.
     */
-    void                fakeKeyEvent(KeyButton button, UINT virtualKey,
+    void fakeKeyEvent(KeyButton button, UINT virtualKey,
                             bool press, bool isAutoRepeat) const;
 
     //! Fake mouse press/release
     /*!
     Synthesize a press or release of mouse button \c id.
     */
-    void                fakeMouseButton(ButtonID id, bool press);
+    void fakeMouseButton(ButtonID id, bool press);
 
     //! Fake mouse move
     /*!
@@ -206,37 +206,37 @@ private:
     typedef std::map<std::string, Desk*> Desks;
 
     // initialization and shutdown operations
-    HCURSOR                createBlankCursor() const;
-    void                destroyCursor(HCURSOR cursor) const;
-    ATOM                createDeskWindowClass(bool isPrimary) const;
-    void                destroyClass(ATOM windowClass) const;
-    HWND                createWindow(ATOM windowClass, const char* name) const;
-    void                destroyWindow(HWND) const;
+    HCURSOR createBlankCursor() const;
+    void destroyCursor(HCURSOR cursor) const;
+    ATOM createDeskWindowClass(bool isPrimary) const;
+    void destroyClass(ATOM windowClass) const;
+    HWND createWindow(ATOM windowClass, const char* name) const;
+    void destroyWindow(HWND) const;
 
     // message handlers
     void deskMouseMove(std::int32_t x, std::int32_t y) const;
     void deskMouseRelativeMove(std::int32_t dx, std::int32_t dy) const;
-    void                deskEnter(Desk* desk);
-    void                deskLeave(Desk* desk, HKL keyLayout);
+    void deskEnter(Desk* desk);
+    void deskLeave(Desk* desk, HKL keyLayout);
     void desk_thread(Desk* desk);
 
     // desk switch checking and handling
     Desk* addDesk(const std::string& name, HDESK hdesk);
-    void                removeDesks();
-    void                checkDesk();
-    bool                isDeskAccessible(const Desk* desk) const;
-    void                handleCheckDesk(const Event& event, void*);
+    void removeDesks();
+    void checkDesk();
+    bool isDeskAccessible(const Desk* desk) const;
+    void handleCheckDesk(const Event& event, void*);
 
     // communication with desk threads
-    void                waitForDesk() const;
-    void                sendMessage(UINT, WPARAM, LPARAM) const;
+    void waitForDesk() const;
+    void sendMessage(UINT, WPARAM, LPARAM) const;
 
     // work around for messed up keyboard events from low-level hooks
-    HWND                getForegroundWindow() const;
+    HWND getForegroundWindow() const;
 
     // desk API wrappers
-    HDESK                openInputDesktop();
-    void                closeDesktop(HDESK);
+    HDESK openInputDesktop();
+    void closeDesktop(HDESK);
     std::string getDesktopName(HDESK);
 
     // our desk window procs

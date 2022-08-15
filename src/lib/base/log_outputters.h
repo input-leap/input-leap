@@ -60,7 +60,7 @@ public:
     void close() override;
     void show(bool showIfEmpty) override;
     bool write(ELevel level, const char* message) override;
-    virtual void        flush();
+    virtual void flush();
 };
 
 //! Write log to file
@@ -80,7 +80,7 @@ public:
     void show(bool showIfEmpty) override;
     bool write(ELevel level, const char* message) override;
 
-    void                setLogFilename(const char* title);
+    void setLogFilename(const char* title);
 
 private:
     std::string m_fileName;
@@ -138,10 +138,10 @@ public:
     //@{
 
     //! Get start of buffer
-    const_iterator        begin() const;
+    const_iterator begin() const;
 
     //! Get end of buffer
-    const_iterator        end() const;
+    const_iterator end() const;
 
     //@}
 

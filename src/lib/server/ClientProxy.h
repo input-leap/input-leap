@@ -40,7 +40,7 @@ public:
     /*!
     Ask the client to disconnect, using \p msg as the reason.
     */
-    void                close(const char* msg);
+    void close(const char* msg);
 
     //@}
     //! @name accessors

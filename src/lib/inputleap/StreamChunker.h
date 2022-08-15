@@ -28,7 +28,7 @@ public:
     static void sendFile(const char* filename, IEventQueue* events, void* eventTarget);
     static void sendClipboard(std::string& data, std::size_t size, ClipboardID id,
                               std::uint32_t sequence, IEventQueue* events, void* eventTarget);
-    static void            interruptFile();
+    static void interruptFile();
 
 private:
     static bool            s_isChunkingFile;

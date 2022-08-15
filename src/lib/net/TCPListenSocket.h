@@ -45,7 +45,7 @@ public:
     IDataSocket* accept() override;
 
 protected:
-    void                setListeningJob();
+    void setListeningJob();
 
 public:
     MultiplexerJobStatus serviceListening(ISocketMultiplexerJob*, bool, bool, bool);

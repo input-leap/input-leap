@@ -31,15 +31,15 @@ public:
     virtual ~OSXScreenSaver();
 
     // IScreenSaver overrides
-    virtual void        enable();
-    virtual void        disable();
-    virtual void        activate();
-    virtual void        deactivate();
-    virtual bool        isActive() const;
+    virtual void enable();
+    virtual void disable();
+    virtual void activate();
+    virtual void deactivate();
+    virtual bool isActive() const;
 
 private:
-    void                processLaunched(ProcessSerialNumber psn);
-    void                processTerminated(ProcessSerialNumber psn);
+    void processLaunched(ProcessSerialNumber psn);
+    void processTerminated(ProcessSerialNumber psn);
 
     static pascal OSStatus
                         launchTerminationCallback(

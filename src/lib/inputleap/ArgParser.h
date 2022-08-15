@@ -31,18 +31,18 @@ class ArgParser {
 public:
     ArgParser(App* app);
 
-    bool                parseServerArgs(ServerArgs& args, int argc, const char* const* argv);
-    bool                parseClientArgs(ClientArgs& args, int argc, const char* const* argv);
-    bool                parsePlatformArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
-    bool                parseGenericArgs(int argc, const char* const* argv, int& i);
-    bool                parseDeprecatedArgs(int argc, const char* const* argv, int& i);
-    void                setArgsBase(ArgsBase& argsBase) { m_argsBase = &argsBase; }
+    bool parseServerArgs(ServerArgs& args, int argc, const char* const* argv);
+    bool parseClientArgs(ClientArgs& args, int argc, const char* const* argv);
+    bool parsePlatformArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
+    bool parseGenericArgs(int argc, const char* const* argv, int& i);
+    bool parseDeprecatedArgs(int argc, const char* const* argv, int& i);
+    void setArgsBase(ArgsBase& argsBase) { m_argsBase = &argsBase; }
 
-    static    bool        isArg(int argi, int argc, const char* const* argv,
+    static bool isArg(int argi, int argc, const char* const* argv,
                             const char* name1, const char* name2,
                             int minRequiredParameters = 0);
     static void splitCommandString(std::string& command, std::vector<std::string>& argv);
-    static bool            searchDoubleQuotes(std::string& command, size_t& left,
+    static bool searchDoubleQuotes(std::string& command, size_t& left,
                             size_t& right, size_t startPos = 0);
     static void removeDoubleQuotes(std::string& arg);
     static const char** getArgv(std::vector<std::string>& argsArray);
@@ -52,14 +52,14 @@ public:
     static std::string parse_exename(const char* arg);
 
 private:
-    void                updateCommonArgs(const char* const* argv);
-    bool                checkUnexpectedArgs();
+    void updateCommonArgs(const char* const* argv);
+    bool checkUnexpectedArgs();
 
-    static ArgsBase&    argsBase() { return *m_argsBase; }
+    static ArgsBase& argsBase() { return *m_argsBase; }
 
-    bool                parseMSWindowsArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
-    bool                parseCarbonArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
-    bool                parseXWindowsArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
+    bool parseMSWindowsArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
+    bool parseCarbonArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
+    bool parseXWindowsArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
 
 private:
     App* m_app;

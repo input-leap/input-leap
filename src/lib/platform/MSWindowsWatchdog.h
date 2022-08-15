@@ -40,21 +40,21 @@ public:
         IpcServer& ipcServer,
         IpcLogOutputter& ipcLogOutputter);
 
-    void                startAsync();
-    std::string            getCommand() const;
-    void                setCommand(const std::string& command, bool elevate);
-    void                stop();
-    bool                isProcessActive();
-    void                setFileLogOutputter(FileLogOutputter* outputter);
+    void startAsync();
+    std::string getCommand() const;
+    void setCommand(const std::string& command, bool elevate);
+    void stop();
+    bool isProcessActive();
+    void setFileLogOutputter(FileLogOutputter* outputter);
 
 private:
     void main_loop();
     void output_loop();
-    void                shutdownProcess(HANDLE handle, DWORD pid, int timeout);
-    void                shutdownExistingProcesses();
-    HANDLE                duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security);
-    HANDLE                getUserToken(LPSECURITY_ATTRIBUTES security);
-    void                startProcess();
+    void shutdownProcess(HANDLE handle, DWORD pid, int timeout);
+    void shutdownExistingProcesses();
+    HANDLE duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security);
+    HANDLE getUserToken(LPSECURITY_ATTRIBUTES security);
+    void startProcess();
     BOOL doStartProcessAsUser(std::string& command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa);
     BOOL doStartProcessAsSelf(std::string& command);
 

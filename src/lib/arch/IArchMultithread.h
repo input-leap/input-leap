@@ -105,13 +105,13 @@ public:
     /*!
     Returns a thread representing the current (i.e. calling) thread.
     */
-    virtual ArchThread    newCurrentThread() = 0;
+    virtual ArchThread newCurrentThread() = 0;
 
     //! Copy a thread object
     /*!
     Returns a reference to to thread referred to by \c thread.
     */
-    virtual ArchThread    copyThread(ArchThread thread) = 0;
+    virtual ArchThread copyThread(ArchThread thread) = 0;
 
     //! Release a thread reference
     /*!
@@ -120,7 +120,7 @@ public:
     Use cancelThread() and waitThread() to stop a thread and wait for
     it to exit.
     */
-    virtual void        closeThread(ArchThread) = 0;
+    virtual void closeThread(ArchThread) = 0;
 
     //! Force a thread to exit
     /*!
@@ -130,7 +130,7 @@ public:
     must always let cancellation go to completion but may take as
     long as necessary to clean up.
     */
-    virtual void        cancelThread(ArchThread thread) = 0;
+    virtual void cancelThread(ArchThread thread) = 0;
 
     //! Change thread priority
     /*!
@@ -138,7 +138,7 @@ public:
     the thread has a lower priority and if negative a higher priority.
     Some architectures may not support either or both directions.
     */
-    virtual void        setPriorityOfThread(ArchThread, int n) = 0;
+    virtual void setPriorityOfThread(ArchThread, int n) = 0;
 
     //! Cancellation point
     /*!
@@ -148,7 +148,7 @@ public:
 
     (Cancellation point)
     */
-    virtual void        testCancelThread() = 0;
+    virtual void testCancelThread() = 0;
 
     //! Wait for a thread to exit
     /*!
@@ -159,20 +159,20 @@ public:
 
     (Cancellation point)
     */
-    virtual bool        wait(ArchThread thread, double timeout) = 0;
+    virtual bool wait(ArchThread thread, double timeout) = 0;
 
     //! Compare threads
     /*!
     Returns true iff two thread objects refer to the same thread.
     Note that comparing thread objects directly is meaningless.
     */
-    virtual bool        isSameThread(ArchThread, ArchThread) = 0;
+    virtual bool isSameThread(ArchThread, ArchThread) = 0;
 
     //! Test if thread exited
     /*!
     Returns true iff \c thread has exited.
     */
-    virtual bool        isExitedThread(ArchThread thread) = 0;
+    virtual bool isExitedThread(ArchThread thread) = 0;
 
     //! Returns an ID for a thread
     /*!
@@ -181,14 +181,14 @@ public:
     However, clients should us isSameThread() to compare thread objects
     instead of comparing IDs.
     */
-    virtual ThreadID    getIDOfThread(ArchThread thread) = 0;
+    virtual ThreadID getIDOfThread(ArchThread thread) = 0;
 
     //! Set the interrupt handler
     /*!
     Sets the function to call on receipt of an external interrupt.
     By default and when \p func is nullptr, the main thread is cancelled.
     */
-    virtual void        setSignalHandler(ESignal, SignalFunc func,
+    virtual void setSignalHandler(ESignal, SignalFunc func,
                             void* userData) = 0;
 
     //! Invoke the signal handler
@@ -197,7 +197,7 @@ public:
     cancels the main thread for \c kINTERRUPT and \c kTERMINATE and
     ignores the call otherwise.
     */
-    virtual void        raiseSignal(ESignal signal) = 0;
+    virtual void raiseSignal(ESignal signal) = 0;
 
     //@}
 };

@@ -48,7 +48,7 @@ public:
     Determines which modifier keys have changed and updates the modifier
     state and sends key events as appropriate.
     */
-    void                handleModifierKeys(void* target,
+    void handleModifierKeys(void* target,
                             KeyModifierMask oldMask, KeyModifierMask newMask);
 
     //@}
@@ -76,7 +76,7 @@ public:
     that was pressed or released, or 0 if the button doesn't map to a known
     KeyID.
     */
-    KeyButton            mapKeyFromEvent(KeyIDs& ids,
+    KeyButton mapKeyFromEvent(KeyIDs& ids,
                             KeyModifierMask* maskOut, CGEventRef event) const;
 
     //! Map key and mask to native values
@@ -90,18 +90,17 @@ public:
     //@}
 
     // IKeyState overrides
-    virtual bool        fakeCtrlAltDel();
-    virtual bool        fakeMediaKey(KeyID id);
-    virtual KeyModifierMask
-                        pollActiveModifiers() const;
+    virtual bool fakeCtrlAltDel();
+    virtual bool fakeMediaKey(KeyID id);
+    virtual KeyModifierMask pollActiveModifiers() const;
     virtual std::int32_t pollActiveGroup() const;
-    virtual void        pollPressedKeys(KeyButtonSet& pressedKeys) const;
+    virtual void pollPressedKeys(KeyButtonSet& pressedKeys) const;
 
     CGEventFlags getModifierStateAsOSXFlags();
 protected:
     // KeyState overrides
-    virtual void        getKeyMap(inputleap::KeyMap& keyMap);
-    virtual void        fakeKey(const Keystroke& keystroke);
+    virtual void getKeyMap(inputleap::KeyMap& keyMap);
+    virtual void fakeKey(const Keystroke& keystroke);
 
 private:
     class KeyResource;
@@ -114,14 +113,14 @@ private:
     bool getKeyMap(inputleap::KeyMap& keyMap, std::int32_t group, const IOSXKeyResource& r) const;
 
     // Get the available keyboard groups
-    bool                getGroups(GroupList&) const;
+    bool getGroups(GroupList&) const;
 
     // Change active keyboard group to group
     void setGroup(std::int32_t group);
 
     // Check if the keyboard layout has changed and update keyboard state
     // if so.
-    void                checkKeyboardLayout();
+    void checkKeyboardLayout();
 
     // Send an event for the given modifier key
     void handleModifierKey(void* target, std::uint32_t virtualKey, KeyID id, bool down,
@@ -133,7 +132,7 @@ private:
     // option is acting as AltGr (i.e. it generates a glyph and there are
     // no command modifiers active) then we don't send the super modifier
     // to clients because they'd try to match it as a command modifier.
-    void                adjustAltGrModifier(const KeyIDs& ids,
+    void adjustAltGrModifier(const KeyIDs& ids,
                             KeyModifierMask* mask, bool isCommand) const;
 
     // Maps an OS X virtual key id to a KeyButton.  This simply remaps
@@ -144,7 +143,7 @@ private:
     // mapVirtualKeyToKeyButton.
     static std::uint32_t mapKeyButtonToVirtualKey(KeyButton keyButton);
 
-    void                init();
+    void init();
 
     // Post a key event to HID manager. It posts an event to HID client, a
     // much lower level than window manager which's the target from carbon

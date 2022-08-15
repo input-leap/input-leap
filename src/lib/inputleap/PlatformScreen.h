@@ -70,14 +70,14 @@ protected:
     Subclasses must implement this method to update their internal mouse
     button mapping and, if desired, state tracking.
     */
-    virtual void        updateButtons() = 0;
+    virtual void updateButtons() = 0;
 
     //! Get the key state
     /*!
     Subclasses must implement this method to return the platform specific
     key state object that each subclass must have.
     */
-    virtual IKeyState*    getKeyState() const = 0;
+    virtual IKeyState* getKeyState() const = 0;
 
 protected:
     std::string m_draggingFilename;

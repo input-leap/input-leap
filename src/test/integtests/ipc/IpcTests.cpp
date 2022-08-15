@@ -45,21 +45,21 @@ public:
     IpcTests();
     virtual ~IpcTests();
 
-    void                connectToServer_handleMessageReceived(const Event&, void*);
-    void                sendMessageToServer_serverHandleMessageReceived(const Event&, void*);
-    void                sendMessageToClient_serverHandleClientConnected(const Event&, void*);
-    void                sendMessageToClient_clientHandleMessageReceived(const Event&, void*);
+    void connectToServer_handleMessageReceived(const Event&, void*);
+    void sendMessageToServer_serverHandleMessageReceived(const Event&, void*);
+    void sendMessageToClient_serverHandleClientConnected(const Event&, void*);
+    void sendMessageToClient_clientHandleMessageReceived(const Event&, void*);
 
 public:
-    SocketMultiplexer    m_multiplexer;
-    bool                m_connectToServer_helloMessageReceived;
-    bool                m_connectToServer_hasClientNode;
-    IpcServer*            m_connectToServer_server;
+    SocketMultiplexer m_multiplexer;
+    bool m_connectToServer_helloMessageReceived;
+    bool m_connectToServer_hasClientNode;
+    IpcServer* m_connectToServer_server;
     std::string m_sendMessageToServer_receivedString;
     std::string m_sendMessageToClient_receivedString;
-    IpcClient*            m_sendMessageToServer_client;
-    IpcServer*            m_sendMessageToClient_server;
-    TestEventQueue        m_events;
+    IpcClient* m_sendMessageToServer_client;
+    IpcServer* m_sendMessageToClient_server;
+    TestEventQueue m_events;
 
 };
 

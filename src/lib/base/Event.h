@@ -71,14 +71,14 @@ public:
     /*!
     Deletes event data for the given event (using free()).
     */
-    static void     deleteData(const Event&);
+    static void deleteData(const Event&);
 
     //! Set data (non-POD)
     /*!
     Set non-POD (non plain old data), where delete is called when the event
     is deleted, and the destructor is called.
     */
-    void            setDataObject(EventData* dataObject);
+    void setDataObject(EventData* dataObject);
 
     //@}
     //! @name accessors
@@ -88,19 +88,19 @@ public:
     /*!
     Returns the event type.
     */
-    Type            getType() const;
+    Type getType() const;
 
     //! Get the event target
     /*!
     Returns the event target.
     */
-    void*           getTarget() const;
+    void* getTarget() const;
 
     //! Get the event data (POD).
     /*!
     Returns the event data (POD).
     */
-    void*           getData() const;
+    void* getData() const;
 
     //! Get the event data (non-POD)
     /*!
@@ -108,13 +108,13 @@ public:
     \c getData() is that when delete is called on this data, so non-POD
     (non plain old data) dtor is called.
     */
-    EventData*      getDataObject() const;
+    EventData* getDataObject() const;
 
     //! Get event flags
     /*!
     Returns the event flags.
     */
-    Flags           getFlags() const;
+    Flags getFlags() const;
 
     //@}
 

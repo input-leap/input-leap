@@ -24,10 +24,10 @@ class IEventQueue;
 class EventTypes {
 public:
     EventTypes();
-    void                setEvents(IEventQueue* events);
+    void setEvents(IEventQueue* events);
 
 protected:
-    IEventQueue*        getEvents() const;
+    IEventQueue* getEvents() const;
 
 private:
     IEventQueue* m_events;
@@ -55,14 +55,14 @@ public:
     Returns the connected event type.  This is sent when the client has
     successfully connected to the server.
     */
-    Event::Type        connected();
+    Event::Type connected();
 
     //! Get connection failed event type
     /*!
     Returns the connection failed event type.  This is sent when the
     server fails for some reason.  The event data is a FailInfo*.
     */
-    Event::Type        connectionFailed();
+    Event::Type connectionFailed();
 
     //! Get disconnected event type
     /*!
@@ -70,7 +70,7 @@ public:
     has disconnected from the server (and only after having successfully
     connected).
     */
-    Event::Type        disconnected();
+    Event::Type disconnected();
 
     //@}
 
@@ -97,7 +97,7 @@ public:
     Returns the input ready event type.  A stream sends this event
     when \c read() will return with data.
     */
-    Event::Type        inputReady();
+    Event::Type inputReady();
 
     //! Get output flushed event type
     /*!
@@ -107,14 +107,14 @@ public:
     \c close() will not discard any data and \c flush() will return
     immediately.
     */
-    Event::Type        outputFlushed();
+    Event::Type outputFlushed();
 
     //! Get output error event type
     /*!
     Returns the output error event type.  A stream sends this event
     when a write has failed.
     */
-    Event::Type        outputError();
+    Event::Type outputError();
 
     //! Get input shutdown event type
     /*!
@@ -122,7 +122,7 @@ public:
     input side of the stream has shutdown.  When the input has
     shutdown, no more data will ever be available to read.
     */
-    Event::Type        inputShutdown();
+    Event::Type inputShutdown();
 
     //! Get output shutdown event type
     /*!
@@ -131,7 +131,7 @@ public:
     shutdown, no more data can ever be written to the stream.  Any
     attempt to do so will generate a output error event.
     */
-    Event::Type        outputShutdown();
+    Event::Type outputShutdown();
 
     /** Get input format error event type
 
@@ -159,10 +159,10 @@ public:
     //@{
 
     //! Raised when the socket is connected.
-    Event::Type        connected();
+    Event::Type connected();
 
     //! Raised when a message is received.
-    Event::Type        messageReceived();
+    Event::Type messageReceived();
 
     //@}
 
@@ -181,10 +181,10 @@ public:
     //@{
 
     //! Raised when the server receives a message from a client.
-    Event::Type        messageReceived();
+    Event::Type messageReceived();
 
     //! Raised when the client disconnects from the server.
-    Event::Type        disconnected();
+    Event::Type disconnected();
 
     //@}
 
@@ -203,10 +203,10 @@ public:
     //@{
 
     //! Raised when we have created the client proxy.
-    Event::Type        clientConnected();
+    Event::Type clientConnected();
 
     //! Raised when a message is received through a client proxy.
-    Event::Type        messageReceived();
+    Event::Type messageReceived();
 
     //@}
 
@@ -224,7 +224,7 @@ public:
     //@{
 
     //! Raised when the client receives a message from the server.
-    Event::Type        messageReceived();
+    Event::Type messageReceived();
 
     //@}
 
@@ -247,14 +247,14 @@ public:
     Returns the socket connected event type.  A socket sends this
     event when a remote connection has been established.
     */
-    Event::Type        connected();
+    Event::Type connected();
 
     //! Get secure connected event type
     /*!
      Returns the secure socket connected event type.  A secure socket sends
      this event when a remote connection has been established.
      */
-    Event::Type        secureConnected();
+    Event::Type secureConnected();
 
     //! Get connection failed event type
     /*!
@@ -262,7 +262,7 @@ public:
     this event when an attempt to connect to a remote port has failed.
     The data is a pointer to a ConnectionFailedInfo.
     */
-    Event::Type        connectionFailed();
+    Event::Type connectionFailed();
 
     //@}
 
@@ -285,7 +285,7 @@ public:
     Returns the socket connecting event type.  A socket sends this
     event when a remote connection is waiting to be accepted.
     */
-    Event::Type        connecting();
+    Event::Type connecting();
 
     //@}
 
@@ -308,14 +308,14 @@ public:
     event when the remote side of the socket has disconnected or
     shutdown both input and output.
     */
-    Event::Type        disconnected();
+    Event::Type disconnected();
 
     //! Get stop retry event type
     /*!
      Returns the stop retry event type.  This is sent when the client
      doesn't want to reconnect after it disconnects from the server.
      */
-    Event::Type        stopRetry();
+    Event::Type stopRetry();
 
     //@}
 
@@ -332,7 +332,7 @@ public:
     //! @name accessors
     //@{
 
-    Event::Type        confirmSleep();
+    Event::Type confirmSleep();
 
     //@}
 
@@ -354,14 +354,14 @@ public:
      Returns the accepted event type.  This is sent whenever a server
      accepts a client.
      */
-    Event::Type        accepted();
+    Event::Type accepted();
 
     //! Get connected event type
     /*!
     Returns the connected event type.  This is sent whenever a
     a client connects.
     */
-    Event::Type        connected();
+    Event::Type connected();
 
     //@}
 
@@ -385,14 +385,14 @@ public:
     completed the initial handshake.  Until it is sent, the client is
     not fully connected.
     */
-    Event::Type        ready();
+    Event::Type ready();
 
     //! Get disconnect event type
     /*!
     Returns the disconnect event type.  This is sent when the client
     disconnects or is disconnected.  The target is getEventTarget().
     */
-    Event::Type        disconnected();
+    Event::Type disconnected();
 
     //@}
 
@@ -415,14 +415,14 @@ public:
     Returns the success event type.  This is sent when the client has
     correctly responded to the hello message.  The target is this.
     */
-    Event::Type        success();
+    Event::Type success();
 
     //! Get failure event type
     /*!
     Returns the failure event type.  This is sent when a client fails
     to correctly respond to the hello message.  The target is this.
     */
-    Event::Type        failure();
+    Event::Type failure();
 
     //@}
 
@@ -452,7 +452,7 @@ public:
     Returns the error event type.  This is sent when the server fails
     for some reason.
     */
-    Event::Type        error();
+    Event::Type error();
 
     //! Get connected event type
     /*!
@@ -460,14 +460,14 @@ public:
     has connected.  The event data is a \c ScreenConnectedInfo* that
     indicates the connected screen.
     */
-    Event::Type        connected();
+    Event::Type connected();
 
     //! Get disconnected event type
     /*!
     Returns the disconnected event type.  This is sent when all the
     clients have disconnected.
     */
-    Event::Type        disconnected();
+    Event::Type disconnected();
 
     //! Get switch to screen event type
     /*!
@@ -475,14 +475,14 @@ public:
     by switching screens.  The event data is a \c SwitchToScreenInfo*
     that indicates the target screen.
     */
-    Event::Type        switchToScreen();
+    Event::Type switchToScreen();
 
     //! Get toggle screen event type
     /*!
     Returns the toggle screen event type.  The server responds to this
     by toggling screens.  These is no event data.
     */
-    Event::Type        toggleScreen();
+    Event::Type toggleScreen();
 
     //! Get switch in direction event type
     /*!
@@ -490,7 +490,7 @@ public:
     by switching screens.  The event data is a \c SwitchInDirectionInfo*
     that indicates the target direction.
     */
-    Event::Type        switchInDirection();
+    Event::Type switchInDirection();
 
     //! Get keyboard broadcast event type
     /*!
@@ -498,7 +498,7 @@ public:
     to this by turning on keyboard broadcasting or turning it off.  The
     event data is a \c KeyboardBroadcastInfo*.
     */
-    Event::Type        keyboardBroadcast();
+    Event::Type keyboardBroadcast();
 
     //! Get lock cursor event type
     /*!
@@ -506,14 +506,14 @@ public:
     by locking the cursor to the active screen or unlocking it.  The
     event data is a \c LockCursorToScreenInfo*.
     */
-    Event::Type        lockCursorToScreen();
+    Event::Type lockCursorToScreen();
 
     //! Get screen switched event type
     /*!
     Returns the screen switched event type.  This is raised when the
     screen has been switched to a client.
     */
-    Event::Type        screenSwitched();
+    Event::Type screenSwitched();
 
     //@}
 
@@ -539,9 +539,9 @@ public:
     //! @name accessors
     //@{
 
-    Event::Type        reloadConfig();
-    Event::Type        forceReconnect();
-    Event::Type        resetServer();
+    Event::Type reloadConfig();
+    Event::Type forceReconnect();
+    Event::Type resetServer();
 
     //@}
 
@@ -562,13 +562,13 @@ public:
     //@{
 
     //! Get key down event type.  Event data is KeyInfo*, count == 1.
-    Event::Type        keyDown();
+    Event::Type keyDown();
 
     //! Get key up event type.  Event data is KeyInfo*, count == 1.
-    Event::Type        keyUp();
+    Event::Type keyUp();
 
     //! Get key repeat event type.  Event data is KeyInfo*.
-    Event::Type        keyRepeat();
+    Event::Type keyRepeat();
 
     //@}
 
@@ -597,44 +597,44 @@ public:
     //@{
 
     //!  button down event type.  Event data is ButtonInfo*.
-    Event::Type        buttonDown();
+    Event::Type buttonDown();
 
     //!  button up event type.  Event data is ButtonInfo*.
-    Event::Type        buttonUp();
+    Event::Type buttonUp();
 
     //!  mouse motion on the primary screen event type
     /*!
     Event data is MotionInfo* and the values are an absolute position.
     */
-    Event::Type        motionOnPrimary();
+    Event::Type motionOnPrimary();
 
     //!  mouse motion on a secondary screen event type
     /*!
     Event data is MotionInfo* and the values are motion deltas not
     absolute coordinates.
     */
-    Event::Type        motionOnSecondary();
+    Event::Type motionOnSecondary();
 
     //!  mouse wheel event type.  Event data is WheelInfo*.
-    Event::Type        wheel();
+    Event::Type wheel();
 
     //!  screensaver activated event type
-    Event::Type        screensaverActivated();
+    Event::Type screensaverActivated();
 
     //!  screensaver deactivated event type
-    Event::Type        screensaverDeactivated();
+    Event::Type screensaverDeactivated();
 
     //!  hot key down event type.  Event data is HotKeyInfo*.
-    Event::Type        hotKeyDown();
+    Event::Type hotKeyDown();
 
     //!  hot key up event type.  Event data is HotKeyInfo*.
-    Event::Type        hotKeyUp();
+    Event::Type hotKeyUp();
 
     //!  start of fake input event type
-    Event::Type        fakeInputBegin();
+    Event::Type fakeInputBegin();
 
     //!  end of fake input event type
-    Event::Type        fakeInputEnd();
+    Event::Type fakeInputEnd();
 
     //@}
 
@@ -668,28 +668,28 @@ public:
     Returns the error event type.  This is sent whenever the screen has
     failed for some reason (e.g. the X Windows server died).
     */
-    Event::Type        error();
+    Event::Type error();
 
     //! Get shape changed event type
     /*!
     Returns the shape changed event type.  This is sent whenever the
     screen's shape changes.
     */
-    Event::Type        shapeChanged();
+    Event::Type shapeChanged();
 
     //! Get suspend event type
     /*!
     Returns the suspend event type. This is sent whenever the system goes
     to sleep or a user session is deactivated (fast user switching).
     */
-    Event::Type        suspend();
+    Event::Type suspend();
 
     //! Get resume event type
     /*!
     Returns the resume event type. This is sent whenever the system wakes
     up or a user session is activated (fast user switching).
     */
-    Event::Type        resume();
+    Event::Type resume();
 
     //@}
 
@@ -716,7 +716,7 @@ public:
     clipboard is grabbed by some other application so we don't own it
     anymore.  The data is a pointer to a ClipboardInfo.
     */
-    Event::Type        clipboardGrabbed();
+    Event::Type clipboardGrabbed();
 
     //! Get clipboard changed event type
     /*!
@@ -724,14 +724,14 @@ public:
     contents of the clipboard has changed.  The data is a pointer to a
     IScreen::ClipboardInfo.
     */
-    Event::Type        clipboardChanged();
+    Event::Type clipboardChanged();
 
     //! Clipboard sending event type
     /*!
     Returns the clipboard sending event type. This is used to send
     clipboard chunks.
     */
-    Event::Type        clipboardSending();
+    Event::Type clipboardSending();
 
     //@}
 
@@ -752,13 +752,13 @@ public:
     //@{
 
     //! Sending a file chunk
-    Event::Type        fileChunkSending();
+    Event::Type fileChunkSending();
 
     //! Completed receiving a file
-    Event::Type        fileReceiveCompleted();
+    Event::Type fileReceiveCompleted();
 
     //! Send a keep alive
-    Event::Type        keepAlive();
+    Event::Type keepAlive();
 
     //@}
 

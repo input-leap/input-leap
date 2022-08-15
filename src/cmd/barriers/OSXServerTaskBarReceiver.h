@@ -29,8 +29,8 @@ public:
     virtual ~OSXServerTaskBarReceiver();
 
     // IArchTaskBarReceiver overrides
-    virtual void        showStatus();
-    virtual void        runMenu(int x, int y);
-    virtual void        primaryAction();
+    virtual void showStatus();
+    virtual void runMenu(int x, int y);
+    virtual void primaryAction();
     virtual Icon getIcon() const;
 };

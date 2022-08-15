@@ -41,25 +41,25 @@ public:
     (i.e. when this object sends a success event).  Returns nullptr
     if the handshake is unsuccessful or incomplete.
     */
-    ClientProxy*        orphanClientProxy();
+    ClientProxy* orphanClientProxy();
 
     //! Get the stream
-    inputleap::IStream*    getStream() { return m_stream; }
+    inputleap::IStream* getStream() { return m_stream; }
 
     //@}
 
 private:
-    void                sendSuccess();
-    void                sendFailure();
-    void                addStreamHandlers();
-    void                addProxyHandlers();
-    void                removeHandlers();
-    void                removeTimer();
-    void                handleData(const Event&, void*);
-    void                handleWriteError(const Event&, void*);
-    void                handleTimeout(const Event&, void*);
-    void                handleDisconnect(const Event&, void*);
-    void                handleReady(const Event&, void*);
+    void sendSuccess();
+    void sendFailure();
+    void addStreamHandlers();
+    void addProxyHandlers();
+    void removeHandlers();
+    void removeTimer();
+    void handleData(const Event&, void*);
+    void handleWriteError(const Event&, void*);
+    void handleTimeout(const Event&, void*);
+    void handleDisconnect(const Event&, void*);
+    void handleReady(const Event&, void*);
 
 private:
     inputleap::IStream* m_stream;

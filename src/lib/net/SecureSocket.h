@@ -42,36 +42,36 @@ public:
     ~SecureSocket();
 
     // ISocket overrides
-    void                close() override;
+    void close() override;
 
     // IDataSocket overrides
-    virtual void        connect(const NetworkAddress&) override;
+    virtual void connect(const NetworkAddress&) override;
 
     std::unique_ptr<ISocketMultiplexerJob> newJob() override;
-    bool                isFatal() const override { return m_fatal; }
-    void                isFatal(bool b) { m_fatal = b; }
-    bool                isSecureReady();
-    void                secureConnect();
-    void                secureAccept();
-    int                    secureRead(void* buffer, int size, int& read);
-    int                    secureWrite(const void* buffer, int size, int& wrote);
-    EJobResult            doRead() override;
-    EJobResult            doWrite() override;
-    void                initSsl(bool server);
+    bool isFatal() const override { return m_fatal; }
+    void isFatal(bool b) { m_fatal = b; }
+    bool isSecureReady();
+    void secureConnect();
+    void secureAccept();
+    int secureRead(void* buffer, int size, int& read);
+    int secureWrite(const void* buffer, int size, int& wrote);
+    EJobResult doRead() override;
+    EJobResult doWrite() override;
+    void initSsl(bool server);
     bool load_certificates(const inputleap::fs::path& path);
 
 private:
     // SSL
     void initContext(bool server); // may only be called with ssl_mutex_ acquired
     void createSSL(); // may only be called with ssl_mutex_ acquired.
-    int                    secureAccept(int s);
-    int                    secureConnect(int s);
+    int secureAccept(int s);
+    int secureConnect(int s);
 
     void checkResult(int n, int& retry); // may only be called with m_ssl_mutex_ acquired.
 
-    void                showError(const std::string& reason);
+    void showError(const std::string& reason);
     std::string getError();
-    void                disconnect();
+    void disconnect();
 
     // may only be called with ssl_mutex_ acquired
     bool verify_peer_certificate(const inputleap::fs::path& fingerprint_db_path);
@@ -83,7 +83,7 @@ private:
     void showSecureLibInfo();
     void showSecureCipherInfo(); // may only be called with ssl_mutex_ acquired
 
-    void                handleTCPConnected(const Event& event, void*);
+    void handleTCPConnected(const Event& event, void*);
 
     void freeSSLResources();
 

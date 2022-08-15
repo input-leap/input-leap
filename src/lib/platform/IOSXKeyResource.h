@@ -23,7 +23,7 @@
 class IOSXKeyResource {
 public:
     virtual ~IOSXKeyResource() { }
-    virtual bool    isValid() const = 0;
+    virtual bool isValid() const = 0;
     virtual std::uint32_t getNumModifierCombinations() const = 0;
     virtual std::uint32_t getNumTables() const = 0;
     virtual std::uint32_t getNumButtons() const = 0;
@@ -34,5 +34,5 @@ public:
     static KeyID getKeyID(std::uint8_t);
 
     // Convert a unicode character to the equivalent KeyID.
-    static KeyID    unicharToKeyID(UniChar);
+    static KeyID unicharToKeyID(UniChar);
 };

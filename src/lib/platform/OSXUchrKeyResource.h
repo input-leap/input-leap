@@ -29,7 +29,7 @@ public:
     OSXUchrKeyResource(const void*, std::uint32_t keyboardType);
 
     // KeyResource overrides
-    virtual bool    isValid() const;
+    virtual bool isValid() const;
     virtual std::uint32_t getNumModifierCombinations() const;
     virtual std::uint32_t getNumTables() const;
     virtual std::uint32_t getNumButtons() const;
@@ -41,7 +41,7 @@ private:
 
     bool getDeadKey(KeySequence& keys, std::uint16_t index) const;
     bool getKeyRecord(KeySequence& keys, std::uint16_t index, std::uint16_t& state) const;
-    bool            addSequence(KeySequence& keys, UCKeyCharSeq c) const;
+    bool addSequence(KeySequence& keys, UCKeyCharSeq c) const;
 
 private:
     const UCKeyboardLayout* m_resource;

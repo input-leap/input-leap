@@ -51,7 +51,7 @@ public:
     Leave the screen.  Return false iff the user may not leave the
     client's screen (because, for example, a button is down).
     */
-    virtual bool        leave() = 0;
+    virtual bool leave() = 0;
 
     //! Set clipboard
     /*!
@@ -60,7 +60,7 @@ public:
     already known to be up to date then this may do nothing.  \c data
     has marshalled clipboard data.
     */
-    virtual void        setClipboard(ClipboardID, const IClipboard*) = 0;
+    virtual void setClipboard(ClipboardID, const IClipboard*) = 0;
 
     //! Grab clipboard
     /*!
@@ -68,14 +68,14 @@ public:
     is called when another client takes ownership of the clipboard it
     implies that the client's clipboard is out of date.
     */
-    virtual void        grabClipboard(ClipboardID) = 0;
+    virtual void grabClipboard(ClipboardID) = 0;
 
     //! Mark clipboard dirty
     /*!
     Mark the client's clipboard as dirty (out of date) or clean (up to
     date).
     */
-    virtual void        setClipboardDirty(ClipboardID, bool dirty) = 0;
+    virtual void setClipboardDirty(ClipboardID, bool dirty) = 0;
 
     //! Notify of key press
     /*!
@@ -86,7 +86,7 @@ public:
     synthesize an up or repeat for the same client key synthesized by
     keyDown().
     */
-    virtual void        keyDown(KeyID id, KeyModifierMask, KeyButton) = 0;
+    virtual void keyDown(KeyID id, KeyModifierMask, KeyButton) = 0;
 
     //! Notify of key repeat
     /*!
@@ -100,19 +100,19 @@ public:
     Synthesize key events to generate a release of key \c id.  If possible
     match the given modifier mask.
     */
-    virtual void        keyUp(KeyID id, KeyModifierMask, KeyButton) = 0;
+    virtual void keyUp(KeyID id, KeyModifierMask, KeyButton) = 0;
 
     //! Notify of mouse press
     /*!
     Synthesize mouse events to generate a press of mouse button \c id.
     */
-    virtual void        mouseDown(ButtonID id) = 0;
+    virtual void mouseDown(ButtonID id) = 0;
 
     //! Notify of mouse release
     /*!
     Synthesize mouse events to generate a release of mouse button \c id.
     */
-    virtual void        mouseUp(ButtonID id) = 0;
+    virtual void mouseUp(ButtonID id) = 0;
 
     //! Notify of mouse motion
     /*!
@@ -138,20 +138,20 @@ public:
     virtual void mouseWheel(std::int32_t xDelta, std::int32_t yDelta) = 0;
 
     //! Notify of screen saver change
-    virtual void        screensaver(bool activate) = 0;
+    virtual void screensaver(bool activate) = 0;
 
     //! Notify of options changes
     /*!
     Reset all options to their default values.
     */
-    virtual void        resetOptions() = 0;
+    virtual void resetOptions() = 0;
 
     //! Notify of options changes
     /*!
     Set options to given values.  Ignore unknown options and don't
     modify our options that aren't given in \c options.
     */
-    virtual void        setOptions(const OptionsList& options) = 0;
+    virtual void setOptions(const OptionsList& options) = 0;
 
     //@}
     //! @name accessors

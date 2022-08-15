@@ -40,27 +40,27 @@ public:
     wasn't previously called then it should keep the current settings
     or use reasonable defaults.
     */
-    virtual void        enable() = 0;
+    virtual void enable() = 0;
 
     //! Disable screen saver
     /*!
     Disable the screen saver, saving the old settings for the next
     call to enable().
     */
-    virtual void        disable() = 0;
+    virtual void disable() = 0;
 
     //! Activate screen saver
     /*!
     Activate (i.e. show) the screen saver.
     */
-    virtual void        activate() = 0;
+    virtual void activate() = 0;
 
     //! Deactivate screen saver
     /*!
     Deactivate (i.e. hide) the screen saver, resetting the screen saver
     timer.
     */
-    virtual void        deactivate() = 0;
+    virtual void deactivate() = 0;
 
     //@}
     //! @name accessors
@@ -70,7 +70,7 @@ public:
     /*!
     Returns true iff the screen saver is currently active (showing).
     */
-    virtual bool        isActive() const = 0;
+    virtual bool isActive() const = 0;
 
     //@}
 };

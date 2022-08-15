@@ -28,9 +28,8 @@ public:
     virtual ~MSWindowsClipboardBitmapConverter();
 
     // IMSWindowsClipboardConverter overrides
-    virtual IClipboard::EFormat
-                        getFormat() const;
-    virtual UINT        getWin32Format() const;
+    virtual IClipboard::EFormat getFormat() const;
+    virtual UINT getWin32Format() const;
     virtual HANDLE fromIClipboard(const std::string&) const;
     virtual std::string toIClipboard(HANDLE) const;
 };

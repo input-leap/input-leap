@@ -44,7 +44,7 @@ public:
     //! @name manipulators
     //@{
 
-    void                setServer(Server* server);
+    void setServer(Server* server);
 
     //@}
 
@@ -57,22 +57,22 @@ public:
     list.  The client is responsible for deleting the returned client.
     Returns nullptr if no clients are available.
     */
-    ClientProxy*        getNextClient();
+    ClientProxy* getNextClient();
 
     //! Get server which owns this listener
-    Server*                getServer() { return m_server; }
+    Server* getServer() { return m_server; }
 
     //@}
 
 private:
     // client connection event handlers
-    void                handleClientConnecting(const Event&, void*);
-    void                handleClientAccepted(const Event&, void*);
-    void                handleUnknownClient(const Event&, void*);
-    void                handleClientDisconnected(const Event&, void*);
+    void handleClientConnecting(const Event&, void*);
+    void handleClientAccepted(const Event&, void*);
+    void handleUnknownClient(const Event&, void*);
+    void handleClientDisconnected(const Event&, void*);
 
-    void                cleanupListenSocket();
-    void                cleanupClientSockets();
+    void cleanupListenSocket();
+    void cleanupClientSockets();
 
 private:
     typedef std::set<ClientProxyUnknown*> NewClients;

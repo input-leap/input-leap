@@ -43,7 +43,7 @@ public:
     virtual ~IpcHelloMessage();
 
     //! Gets the message type ID.
-    EIpcClientType            clientType() const { return m_clientType; }
+    EIpcClientType clientType() const { return m_clientType; }
 
 private:
     EIpcClientType m_clientType;
@@ -77,7 +77,7 @@ public:
     std::string command() const { return m_command; }
 
     //! Gets whether or not the process should be elevated on MS Windows.
-    bool                elevate() const { return m_elevate; }
+    bool elevate() const { return m_elevate; }
 
 private:
     std::string m_command;

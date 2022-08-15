@@ -51,7 +51,7 @@ public:
     what \c runFunc returns.  \c runFunc should call \c daemonFailed() if
     the daemon fails.
     */
-    static int            runDaemon(RunFunc runFunc);
+    static int runDaemon(RunFunc runFunc);
 
     //! Indicate daemon is in main loop
     /*!
@@ -59,14 +59,14 @@ public:
     to indicate when it has entered (\c running is \c true) or exited
     (\c running is \c false) the main loop.
     */
-    static void            daemonRunning(bool running);
+    static void daemonRunning(bool running);
 
     //! Indicate failure of running daemon
     /*!
     The \c runFunc passed to \c runDaemon() should call this function
     to indicate failure.  \c result is returned by \c daemonize().
     */
-    static void            daemonFailed(int result);
+    static void daemonFailed(int result);
 
     //! Get daemon quit message
     /*!
@@ -74,43 +74,43 @@ public:
     message to it.  The thread must, of course, have a message queue
     for this to work.
     */
-    static UINT            getDaemonQuitMessage();
+    static UINT getDaemonQuitMessage();
 
     // IArchDaemon overrides
-    virtual void        installDaemon(const char* name,
+    virtual void installDaemon(const char* name,
                             const char* description,
                             const char* pathname,
                             const char* commandLine,
                             const char* dependencies);
-    virtual void        uninstallDaemon(const char* name);
-    virtual void        installDaemon();
-    virtual void        uninstallDaemon();
-    virtual int            daemonize(const char* name, DaemonFunc func);
-    virtual bool        canInstallDaemon(const char* name);
-    virtual bool        isDaemonInstalled(const char* name);
-    std::string            commandLine() const { return m_commandLine; }
+    virtual void uninstallDaemon(const char* name);
+    virtual void installDaemon();
+    virtual void uninstallDaemon();
+    virtual int daemonize(const char* name, DaemonFunc func);
+    virtual bool canInstallDaemon(const char* name);
+    virtual bool isDaemonInstalled(const char* name);
+    std::string commandLine() const { return m_commandLine; }
 
 private:
-    static HKEY            openNTServicesKey();
+    static HKEY openNTServicesKey();
 
-    int                    doRunDaemon(RunFunc runFunc);
-    void                doDaemonRunning(bool running);
-    UINT                doGetDaemonQuitMessage();
+    int doRunDaemon(RunFunc runFunc);
+    void doDaemonRunning(bool running);
+    UINT doGetDaemonQuitMessage();
 
-    static void            setStatus(DWORD state);
-    static void            setStatus(DWORD state, DWORD step, DWORD waitHint);
-    static void            setStatusError(DWORD error);
+    static void setStatus(DWORD state);
+    static void setStatus(DWORD state, DWORD step, DWORD waitHint);
+    static void setStatusError(DWORD error);
 
-    static bool            isRunState(DWORD state);
+    static bool isRunState(DWORD state);
 
-    void                serviceMain(DWORD, LPTSTR*);
-    static void WINAPI    serviceMainEntry(DWORD, LPTSTR*);
+    void serviceMain(DWORD, LPTSTR*);
+    static void WINAPI serviceMainEntry(DWORD, LPTSTR*);
 
-    void                serviceHandler(DWORD ctrl);
-    static void WINAPI    serviceHandlerEntry(DWORD ctrl);
+    void serviceHandler(DWORD ctrl);
+    static void WINAPI serviceHandlerEntry(DWORD ctrl);
 
-    void                start(const char* name);
-    void                stop(const char* name);
+    void start(const char* name);
+    void stop(const char* name);
 
 private:
     class XArchDaemonRunFailed {

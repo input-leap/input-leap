@@ -54,7 +54,7 @@ public:
     /*!
     Return if this proxy is for client or primary.
     */
-    virtual bool        isPrimary() const { return false; }
+    virtual bool isPrimary() const { return false; }
 
     //@}
 
@@ -62,8 +62,7 @@ public:
     virtual void sendDragInfo(std::uint32_t fileCount, const char* info, size_t size) = 0;
     virtual void fileChunkSending(std::uint8_t mark, char* data, size_t dataSize) = 0;
     std::string getName() const override;
-    virtual inputleap::IStream*
-                        getStream() const = 0;
+    virtual inputleap::IStream* getStream() const = 0;
 
 private:
     std::string m_name;

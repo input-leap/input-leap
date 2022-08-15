@@ -54,11 +54,11 @@ public:
     OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCursor=true);
     virtual ~OSXScreen();
 
-    IEventQueue*        getEvents() const { return m_events; }
+    IEventQueue* getEvents() const { return m_events; }
 
     // IScreen overrides
-    virtual void*        getEventTarget() const;
-    virtual bool        getClipboard(ClipboardID id, IClipboard*) const;
+    virtual void* getEventTarget() const;
+    virtual bool getClipboard(ClipboardID id, IClipboard*) const;
     virtual void getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width,
                           std::int32_t& height) const;
     virtual void getCursorPos(std::int32_t& x, std::int32_t& y) const;
@@ -68,72 +68,72 @@ public:
     virtual void warpCursor(std::int32_t x, std::int32_t y);
     virtual std::uint32_t registerHotKey(KeyID key, KeyModifierMask mask);
     virtual void unregisterHotKey(std::uint32_t id);
-    virtual void        fakeInputBegin();
-    virtual void        fakeInputEnd();
+    virtual void fakeInputBegin();
+    virtual void fakeInputEnd();
     virtual std::int32_t getJumpZoneSize() const;
     virtual bool isAnyMouseButtonDown(std::uint32_t& buttonID) const;
     virtual void getCursorCenter(std::int32_t& x, std::int32_t& y) const;
 
     // ISecondaryScreen overrides
-    virtual void        fakeMouseButton(ButtonID id, bool press);
+    virtual void fakeMouseButton(ButtonID id, bool press);
     virtual void fakeMouseMove(std::int32_t x, std::int32_t y);
     virtual void fakeMouseRelativeMove(std::int32_t dx, std::int32_t dy) const;
     virtual void fakeMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const;
 
     // IPlatformScreen overrides
-    virtual void        enable();
-    virtual void        disable();
-    virtual void        enter();
-    virtual bool        leave();
-    virtual bool        setClipboard(ClipboardID, const IClipboard*);
-    virtual void        checkClipboards();
-    virtual void        openScreensaver(bool notify);
-    virtual void        closeScreensaver();
-    virtual void        screensaver(bool activate);
-    virtual void        resetOptions();
-    virtual void        setOptions(const OptionsList& options);
-    virtual void        setSequenceNumber(std::uint32_t);
-    virtual bool        isPrimary() const;
-    virtual void        fakeDraggingFiles(DragFileList fileList);
+    virtual void enable();
+    virtual void disable();
+    virtual void enter();
+    virtual bool leave();
+    virtual bool setClipboard(ClipboardID, const IClipboard*);
+    virtual void checkClipboards();
+    virtual void openScreensaver(bool notify);
+    virtual void closeScreensaver();
+    virtual void screensaver(bool activate);
+    virtual void resetOptions();
+    virtual void setOptions(const OptionsList& options);
+    virtual void setSequenceNumber(std::uint32_t);
+    virtual bool isPrimary() const;
+    virtual void fakeDraggingFiles(DragFileList fileList);
     virtual std::string& getDraggingFilename();
 
     const std::string& getDropTarget() const { return m_dropTarget; }
-    void                waitForCarbonLoop() const;
+    void waitForCarbonLoop() const;
 
 protected:
     // IPlatformScreen overrides
-    virtual void        handleSystemEvent(const Event&, void*);
-    virtual void        updateButtons();
-    virtual IKeyState*    getKeyState() const;
+    virtual void handleSystemEvent(const Event&, void*);
+    virtual void updateButtons();
+    virtual IKeyState* getKeyState() const;
 
 private:
-    void                updateScreenShape();
-    void                updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags);
-    void                postMouseEvent(CGPoint&) const;
+    void updateScreenShape();
+    void updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags);
+    void postMouseEvent(CGPoint&) const;
 
     // convenience function to send events
     void sendEvent(Event::Type type, void* = nullptr) const;
-    void                sendClipboardEvent(Event::Type type, ClipboardID id) const;
+    void sendClipboardEvent(Event::Type type, ClipboardID id) const;
 
     // message handlers
-    bool                onMouseMove(CGFloat mx, CGFloat my);
+    bool onMouseMove(CGFloat mx, CGFloat my);
     // mouse button handler.  pressed is true if this is a mousedown
     // event, false if it is a mouseup event.  macButton is the index
     // of the button pressed using the mac button mapping.
     bool onMouseButton(bool pressed, std::uint16_t macButton);
     bool onMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const;
 
-    void                constructMouseButtonEventMap();
+    void constructMouseButtonEventMap();
 
-    bool                onKey(CGEventRef event);
+    bool onKey(CGEventRef event);
 
-    void                onMediaKey(CGEventRef event);
+    void onMediaKey(CGEventRef event);
 
-    bool                onHotKey(EventRef event) const;
+    bool onHotKey(EventRef event) const;
 
     // Added here to allow the carbon cursor hack to be called.
-    void                showCursor();
-    void                hideCursor();
+    void showCursor();
+    void hideCursor();
 
     // map barrier mouse button to mac buttons
     ButtonID mapBarrierButtonToMac(std::uint16_t) const;
@@ -148,22 +148,22 @@ private:
     std::int32_t mapScrollWheelFromBarrier(float) const;
 
     // get the current scroll wheel speed
-    double                getScrollSpeed() const;
+    double getScrollSpeed() const;
 
     // get the current scroll wheel speed
-    double                getScrollSpeedFactor() const;
+    double getScrollSpeedFactor() const;
 
     // enable/disable drag handling for buttons 3 and up
-    void                enableDragTimer(bool enable);
+    void enableDragTimer(bool enable);
 
     // drag timer handler
-    void                handleDrag(const Event&, void*);
+    void handleDrag(const Event&, void*);
 
     // clipboard check timer handler
-    void                handleClipboardCheck(const Event&, void*);
+    void handleClipboardCheck(const Event&, void*);
 
     // Resolution switch callback
-    static void    displayReconfigurationCallback(CGDirectDisplayID,
+    static void displayReconfigurationCallback(CGDirectDisplayID,
                             CGDisplayChangeSummaryFlags, void*);
 
     // fast user switch callback
@@ -173,25 +173,25 @@ private:
 
     // sleep / wakeup support
     void watchSystemPowerThread();
-    static void            testCanceled(CFRunLoopTimerRef timer, void*info);
-    static void            powerChangeCallback(void* refcon, io_service_t service,
+    static void testCanceled(CFRunLoopTimerRef timer, void*info);
+    static void powerChangeCallback(void* refcon, io_service_t service,
                             natural_t messageType, void* messageArgument);
-    void                handlePowerChangeRequest(natural_t messageType,
+    void handlePowerChangeRequest(natural_t messageType,
                              void* messageArgument);
 
-    void                handleConfirmSleep(const Event& event, void*);
+    void handleConfirmSleep(const Event& event, void*);
 
     // global hotkey operating mode
-    static bool            isGlobalHotKeyOperatingModeAvailable();
-    static void            setGlobalHotKeysEnabled(bool enabled);
-    static bool            getGlobalHotKeysEnabled();
+    static bool isGlobalHotKeyOperatingModeAvailable();
+    static void setGlobalHotKeysEnabled(bool enabled);
+    static bool getGlobalHotKeysEnabled();
 
     // Quartz event tap support
-    static CGEventRef    handleCGInputEvent(CGEventTapProxy proxy,
+    static CGEventRef handleCGInputEvent(CGEventTapProxy proxy,
                                            CGEventType type,
                                            CGEventRef event,
                                            void* refcon);
-    static CGEventRef    handleCGInputEventSecondary(CGEventTapProxy proxy,
+    static CGEventRef handleCGInputEventSecondary(CGEventTapProxy proxy,
                                                     CGEventType type,
                                                     CGEventRef event,
                                                     void* refcon);
@@ -207,7 +207,7 @@ private:
         HotKeyItem(std::uint32_t, std::uint32_t);
         HotKeyItem(EventHotKeyRef, std::uint32_t, std::uint32_t);
 
-        EventHotKeyRef    getRef() const;
+        EventHotKeyRef getRef() const;
 
         bool            operator<(const HotKeyItem&) const;
 

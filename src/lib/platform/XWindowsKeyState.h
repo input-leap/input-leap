@@ -66,7 +66,7 @@ public:
     /*!
     Sets the auto-repeat state.
     */
-    void                setAutoRepeat(const XKeyboardState&);
+    void setAutoRepeat(const XKeyboardState&);
 
     //@}
     //! @name accessors
@@ -77,7 +77,7 @@ public:
     Returns the barrier modifier mask corresponding to the X modifier
     mask in \p state.
     */
-    KeyModifierMask        mapModifiersFromX(unsigned int state) const;
+    KeyModifierMask mapModifiersFromX(unsigned int state) const;
 
     //! Convert barrier modifier mask to X mask
     /*!
@@ -85,14 +85,14 @@ public:
     mask.  Returns \c true if successful and \c false if any modifier
     could not be converted.
     */
-    bool                mapModifiersToX(KeyModifierMask, unsigned int&) const;
+    bool mapModifiersToX(KeyModifierMask, unsigned int&) const;
 
     //! Convert barrier key to all corresponding X keycodes
     /*!
     Converts the barrier key \p key to all of the keycodes that map to
     that key.
     */
-    void                mapKeyToKeycodes(KeyID key,
+    void mapKeyToKeycodes(KeyID key,
                             KeycodeList& keycodes) const;
 
     //@}
@@ -109,11 +109,11 @@ protected:
     void fakeKey(const Keystroke& keystroke) override;
 
 private:
-    void                init(Display* display, bool useXKB);
-    void                updateKeysymMap(inputleap::KeyMap&);
-    void                updateKeysymMapXKB(inputleap::KeyMap&);
-    bool                hasModifiersXKB() const;
-    int                    getEffectiveGroup(KeyCode, int group) const;
+    void init(Display* display, bool useXKB);
+    void updateKeysymMap(inputleap::KeyMap&);
+    void updateKeysymMapXKB(inputleap::KeyMap&);
+    bool hasModifiersXKB() const;
+    int getEffectiveGroup(KeyCode, int group) const;
     std::uint32_t getGroupFromState(unsigned int state) const;
 
     static void remapKeyModifiers(KeyID, std::int32_t, inputleap::KeyMap::KeyItem&, void*);

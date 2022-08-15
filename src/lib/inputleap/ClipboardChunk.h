@@ -40,9 +40,9 @@ public:
     static int assemble(inputleap::IStream* stream, std::string& dataCached, ClipboardID& id,
                         std::uint32_t& sequence);
 
-    static void            send(inputleap::IStream* stream, void* data);
+    static void send(inputleap::IStream* stream, void* data);
 
-    static size_t        getExpectedSize() { return s_expectedSize; }
+    static size_t getExpectedSize() { return s_expectedSize; }
 
 private:
     static size_t        s_expectedSize;

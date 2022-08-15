@@ -124,14 +124,14 @@ public:
     configuration was accepted (it must include the server's name).
     This will disconnect any clients no longer in the configuration.
     */
-    bool                setConfig(const Config&);
+    bool setConfig(const Config&);
 
     //! Add a client
     /*!
     Adds \p client to the server.  The client is adopted and will be
     destroyed when the client disconnects or is disconnected.
     */
-    void                adoptClient(BaseClientProxy* client);
+    void adoptClient(BaseClientProxy* client);
 
     //! Disconnect clients
     /*!
@@ -140,16 +140,16 @@ public:
     when they're all disconnected (or immediately if none are connected).
     The caller can also just destroy this object to force the disconnection.
     */
-    void                disconnect();
+    void disconnect();
 
     //! Create a new thread and use it to send file to client
-    void                sendFileToClient(const char* filename);
+    void sendFileToClient(const char* filename);
 
     //! Received dragging information from client
     void dragInfoReceived(std::uint32_t fileNum, std::string content);
 
     //! Store ClientListener pointer
-    void                setListener(ClientListener* p) { m_clientListener = p; }
+    void setListener(ClientListener* p) { m_clientListener = p; }
 
     //@}
     //! @name accessors
@@ -168,16 +168,16 @@ public:
     void getClients(std::vector<std::string>& list) const;
 
     //! Return true if received file size is valid
-    bool                isReceivedFileSizeValid();
+    bool isReceivedFileSizeValid();
 
     //! Return expected file data size
-    size_t&                getExpectedFileSize() { return m_expectedFileSize; }
+    size_t& getExpectedFileSize() { return m_expectedFileSize; }
 
     //! Return received file data
     std::string& getReceivedFileData() { return m_receivedFileData; }
 
     //! Return fake drag file list
-    DragFileList        getFakeDragFileList() { return m_fakeDragFileList; }
+    DragFileList getFakeDragFileList() { return m_fakeDragFileList; }
 
     //@}
 
@@ -191,11 +191,11 @@ private:
     // returns true iff mouse should be locked to the current screen
     // according to this object only, ignoring what the primary client
     // says.
-    bool                isLockedToScreenServer() const;
+    bool isLockedToScreenServer() const;
 
     // returns true iff mouse should be locked to the current screen
     // according to this object or the primary client.
-    bool                isLockedToScreen() const;
+    bool isLockedToScreen() const;
 
     // returns the jump zone of the client
     std::int32_t getJumpZoneSize(BaseClientProxy*) const;
@@ -204,7 +204,7 @@ private:
     void switchScreen(BaseClientProxy*, std::int32_t x, std::int32_t y, bool forScreenSaver);
 
     // jump to screen
-    void                jumpToScreen(BaseClientProxy*);
+    void jumpToScreen(BaseClientProxy*);
 
     // convert pixel position to fraction, using x or y depending on the
     // direction.
@@ -216,7 +216,7 @@ private:
 
     // returns true if the client has a neighbor anywhere along the edge
     // indicated by the direction.
-    bool                hasAnyNeighbor(BaseClientProxy*, EDirection) const;
+    bool hasAnyNeighbor(BaseClientProxy*, EDirection) const;
 
     // lookup neighboring screen, mapping the coordinate independent of
     // the direction to the neighbor's coordinate space.
@@ -246,31 +246,31 @@ private:
     void noSwitch(std::int32_t x, std::int32_t y);
 
     // stop switch timers
-    void                stopSwitch();
+    void stopSwitch();
 
     // start two tap switch timer
-    void                startSwitchTwoTap();
+    void startSwitchTwoTap();
 
     // arm the two tap switch timer if \p x, \p y is outside the tap zone
     void armSwitchTwoTap(std::int32_t x, std::int32_t y);
 
     // stop the two tap switch timer
-    void                stopSwitchTwoTap();
+    void stopSwitchTwoTap();
 
     // returns true iff the two tap switch timer is started
-    bool                isSwitchTwoTapStarted() const;
+    bool isSwitchTwoTapStarted() const;
 
     // returns true iff should switch because of two tap
-    bool                shouldSwitchTwoTap() const;
+    bool shouldSwitchTwoTap() const;
 
     // start delay switch timer
     void startSwitchWait(std::int32_t x, std::int32_t y);
 
     // stop delay switch timer
-    void                stopSwitchWait();
+    void stopSwitchWait();
 
     // returns true iff the delay switch timer is started
-    bool                isSwitchWaitStarted() const;
+    bool isSwitchWaitStarted() const;
 
     // returns the corner (EScreenSwitchCornerMasks) where x,y is on the
     // given client.  corners have the given size.
@@ -278,79 +278,79 @@ private:
                             std::int32_t size) const;
 
     // stop relative mouse moves
-    void                stopRelativeMoves();
+    void stopRelativeMoves();
 
     // send screen options to \c client
-    void                sendOptions(BaseClientProxy* client) const;
+    void sendOptions(BaseClientProxy* client) const;
 
     // process options from configuration
-    void                processOptions();
+    void processOptions();
 
     // event handlers
-    void                handleShapeChanged(const Event&, void*);
-    void                handleClipboardGrabbed(const Event&, void*);
-    void                handleClipboardChanged(const Event&, void*);
-    void                handleKeyDownEvent(const Event&, void*);
-    void                handleKeyUpEvent(const Event&, void*);
-    void                handleKeyRepeatEvent(const Event&, void*);
-    void                handleButtonDownEvent(const Event&, void*);
-    void                handleButtonUpEvent(const Event&, void*);
-    void                handleMotionPrimaryEvent(const Event&, void*);
-    void                handleMotionSecondaryEvent(const Event&, void*);
-    void                handleWheelEvent(const Event&, void*);
-    void                handleScreensaverActivatedEvent(const Event&, void*);
-    void                handleScreensaverDeactivatedEvent(const Event&, void*);
-    void                handleSwitchWaitTimeout(const Event&, void*);
-    void                handleClientDisconnected(const Event&, void*);
-    void                handleClientCloseTimeout(const Event&, void*);
-    void                handleSwitchToScreenEvent(const Event&, void*);
-    void                handleToggleScreenEvent(const Event&, void*);
-    void                handleSwitchInDirectionEvent(const Event&, void*);
-    void                handleKeyboardBroadcastEvent(const Event&,void*);
-    void                handleLockCursorToScreenEvent(const Event&, void*);
-    void                handleFakeInputBeginEvent(const Event&, void*);
-    void                handleFakeInputEndEvent(const Event&, void*);
-    void                handleFileChunkSendingEvent(const Event&, void*);
-    void                handleFileReceiveCompletedEvent(const Event&, void*);
+    void handleShapeChanged(const Event&, void*);
+    void handleClipboardGrabbed(const Event&, void*);
+    void handleClipboardChanged(const Event&, void*);
+    void handleKeyDownEvent(const Event&, void*);
+    void handleKeyUpEvent(const Event&, void*);
+    void handleKeyRepeatEvent(const Event&, void*);
+    void handleButtonDownEvent(const Event&, void*);
+    void handleButtonUpEvent(const Event&, void*);
+    void handleMotionPrimaryEvent(const Event&, void*);
+    void handleMotionSecondaryEvent(const Event&, void*);
+    void handleWheelEvent(const Event&, void*);
+    void handleScreensaverActivatedEvent(const Event&, void*);
+    void handleScreensaverDeactivatedEvent(const Event&, void*);
+    void handleSwitchWaitTimeout(const Event&, void*);
+    void handleClientDisconnected(const Event&, void*);
+    void handleClientCloseTimeout(const Event&, void*);
+    void handleSwitchToScreenEvent(const Event&, void*);
+    void handleToggleScreenEvent(const Event&, void*);
+    void handleSwitchInDirectionEvent(const Event&, void*);
+    void handleKeyboardBroadcastEvent(const Event&,void*);
+    void handleLockCursorToScreenEvent(const Event&, void*);
+    void handleFakeInputBeginEvent(const Event&, void*);
+    void handleFakeInputEndEvent(const Event&, void*);
+    void handleFileChunkSendingEvent(const Event&, void*);
+    void handleFileReceiveCompletedEvent(const Event&, void*);
 
     // event processing
     void onClipboardChanged(BaseClientProxy* sender, ClipboardID id, std::uint32_t seqNum);
-    void                onScreensaver(bool activated);
-    void                onKeyDown(KeyID, KeyModifierMask, KeyButton,
+    void onScreensaver(bool activated);
+    void onKeyDown(KeyID, KeyModifierMask, KeyButton,
                             const char* screens);
-    void                onKeyUp(KeyID, KeyModifierMask, KeyButton,
+    void onKeyUp(KeyID, KeyModifierMask, KeyButton,
                             const char* screens);
     void onKeyRepeat(KeyID, KeyModifierMask, std::int32_t, KeyButton);
-    void                onMouseDown(ButtonID);
-    void                onMouseUp(ButtonID);
+    void onMouseDown(ButtonID);
+    void onMouseUp(ButtonID);
     bool onMouseMovePrimary(std::int32_t x, std::int32_t y);
     void onMouseMoveSecondary(std::int32_t dx, std::int32_t dy);
     void onMouseWheel(std::int32_t xDelta, std::int32_t yDelta);
-    void                onFileChunkSending(const void* data);
-    void                onFileReceiveCompleted();
+    void onFileChunkSending(const void* data);
+    void onFileReceiveCompleted();
 
     // add client to list and attach event handlers for client
-    bool                addClient(BaseClientProxy*);
+    bool addClient(BaseClientProxy*);
 
     // remove client from list and detach event handlers for client
-    bool                removeClient(BaseClientProxy*);
+    bool removeClient(BaseClientProxy*);
 
     // close a client
-    void                closeClient(BaseClientProxy*, const char* msg);
+    void closeClient(BaseClientProxy*, const char* msg);
 
     // close clients not in \p config
-    void                closeClients(const Config& config);
+    void closeClients(const Config& config);
 
     // close all clients whether they've completed the handshake or not,
     // except the primary client
-    void                closeAllClients();
+    void closeAllClients();
 
     // remove clients from internal state
-    void                removeActiveClient(BaseClientProxy*);
-    void                removeOldClient(BaseClientProxy*);
+    void removeActiveClient(BaseClientProxy*);
+    void removeOldClient(BaseClientProxy*);
 
     // force the cursor off of \p client
-    void                forceLeaveClient(BaseClientProxy* client);
+    void forceLeaveClient(BaseClientProxy* client);
 
     // thread function for sending file
     void send_file_thread(const char* filename);
@@ -362,7 +362,7 @@ private:
     void send_drag_info_thread(BaseClientProxy* newScreen);
 
     // send drag info to new client screen
-    void                sendDragInfo(BaseClientProxy* newScreen);
+    void sendDragInfo(BaseClientProxy* newScreen);
 
 public:
     bool m_mock;

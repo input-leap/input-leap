@@ -46,9 +46,9 @@ public:
     //! @name manipulators
     //@{
 
-    void                onInfoChanged();
-    bool                onGrabClipboard(ClipboardID);
-    void                onClipboardChanged(ClipboardID, const IClipboard*);
+    void onInfoChanged();
+    bool onGrabClipboard(ClipboardID);
+    void onClipboardChanged(ClipboardID, const IClipboard*);
 
     //@}
 
@@ -69,42 +69,42 @@ protected:
 
 private:
     // if compressing mouse motion then send the last motion now
-    void                flushCompressedMouse();
+    void flushCompressedMouse();
 
-    void                sendInfo(const ClientInfo&);
+    void sendInfo(const ClientInfo&);
 
-    void                resetKeepAliveAlarm();
-    void                setKeepAliveRate(double);
+    void resetKeepAliveAlarm();
+    void setKeepAliveRate(double);
 
     // modifier key translation
-    KeyID                translateKey(KeyID) const;
-    KeyModifierMask            translateModifierMask(KeyModifierMask) const;
+    KeyID translateKey(KeyID) const;
+    KeyModifierMask translateModifierMask(KeyModifierMask) const;
 
     // event handlers
-    void                handleData(const Event&, void*);
-    void                handleKeepAliveAlarm(const Event&, void*);
+    void handleData(const Event&, void*);
+    void handleKeepAliveAlarm(const Event&, void*);
 
     // message handlers
-    void                enter();
-    void                leave();
-    void                setClipboard();
-    void                grabClipboard();
-    void                keyDown();
-    void                keyRepeat();
-    void                keyUp();
-    void                mouseDown();
-    void                mouseUp();
-    void                mouseMove();
-    void                mouseRelativeMove();
-    void                mouseWheel();
-    void                screensaver();
-    void                resetOptions();
-    void                setOptions();
-    void                queryInfo();
-    void                infoAcknowledgment();
-    void                fileChunkReceived();
-    void                dragInfoReceived();
-    void                handleClipboardSendingEvent(const Event&, void*);
+    void enter();
+    void leave();
+    void setClipboard();
+    void grabClipboard();
+    void keyDown();
+    void keyRepeat();
+    void keyUp();
+    void mouseDown();
+    void mouseUp();
+    void mouseMove();
+    void mouseRelativeMove();
+    void mouseWheel();
+    void screensaver();
+    void resetOptions();
+    void setOptions();
+    void queryInfo();
+    void infoAcknowledgment();
+    void fileChunkReceived();
+    void dragInfoReceived();
+    void handleClipboardSendingEvent(const Event&, void*);
 
 private:
     typedef EResult (ServerProxy::*MessageParser)(const std::uint8_t*);

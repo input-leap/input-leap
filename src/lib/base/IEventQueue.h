@@ -73,14 +73,14 @@ public:
     /*!
     Dequeues and dispatches events until the kQuit event is found.
     */
-    virtual void        loop() = 0;
+    virtual void loop() = 0;
 
     //! Set the buffer
     /*!
     Replace the current event queue buffer.  Any queued events are
     discarded.  The queue takes ownership of the buffer.
     */
-    virtual void        adoptBuffer(IEventQueueBuffer*) = 0;
+    virtual void adoptBuffer(IEventQueueBuffer*) = 0;
 
     //! Remove event from queue
     /*!
@@ -88,20 +88,20 @@ public:
     available then blocks for up to \p timeout seconds, or forever if
     \p timeout is negative.  Returns true iff an event was available.
     */
-    virtual bool        getEvent(Event& event, double timeout = -1.0) = 0;
+    virtual bool getEvent(Event& event, double timeout = -1.0) = 0;
 
     //! Dispatch an event
     /*!
     Looks up the dispatcher for the event's target and invokes it.
     Returns true iff a dispatcher exists for the target.
     */
-    virtual bool        dispatchEvent(const Event& event) = 0;
+    virtual bool dispatchEvent(const Event& event) = 0;
 
     //! Add event to queue
     /*!
     Adds \p event to the end of the queue.
     */
-    virtual void        addEvent(const Event& event) = 0;
+    virtual void addEvent(const Event& event) = 0;
 
     //! Create a recurring timer
     /*!
@@ -142,7 +142,7 @@ public:
     Destroys a previously created timer.  The timer is removed from the
     queue and will not generate event, even if the timer has expired.
     */
-    virtual void        deleteTimer(EventQueueTimer*) = 0;
+    virtual void deleteTimer(EventQueueTimer*) = 0;
 
     //! Register an event handler for an event type
     /*!
@@ -152,7 +152,7 @@ public:
     of type \p type.  If no such handler exists it will use the handler
     for \p target and type \p kUnknown if it exists.
     */
-    virtual void        adoptHandler(Event::Type type,
+    virtual void adoptHandler(Event::Type type,
                             void* target, IEventJob* handler) = 0;
 
     //! Unregister an event handler for an event type
@@ -160,13 +160,13 @@ public:
     Unregisters an event handler for the \p type, \p target pair and
     deletes it.
     */
-    virtual void        removeHandler(Event::Type type, void* target) = 0;
+    virtual void removeHandler(Event::Type type, void* target) = 0;
 
     //! Unregister all event handlers for an event target
     /*!
     Unregisters all event handlers for the \p target and deletes them.
     */
-    virtual void        removeHandlers(void* target) = 0;
+    virtual void removeHandlers(void* target) = 0;
 
     //! Creates a new event type
     /*!
@@ -183,7 +183,7 @@ public:
     Blocks on the current thread until the event queue is ready for events to
     be added.
     */
-    virtual void        waitForReady() const = 0;
+    virtual void waitForReady() const = 0;
 
     //@}
     //! @name accessors
@@ -194,14 +194,14 @@ public:
     Finds and returns the event handler for the \p type, \p target pair
     if it exists, otherwise it returns nullptr.
     */
-    virtual IEventJob*    getHandler(Event::Type type, void* target) const = 0;
+    virtual IEventJob* getHandler(Event::Type type, void* target) const = 0;
 
     //! Get name for event
     /*!
     Returns the name for the event \p type.  This is primarily for
     debugging.
     */
-    virtual const char*    getTypeName(Event::Type type) = 0;
+    virtual const char* getTypeName(Event::Type type) = 0;
 
     //! Get an event type by name
     /*!
@@ -213,7 +213,7 @@ public:
     /*!
     Returns the target to use for dispatching \c Event::kSystem events.
     */
-    virtual void*        getSystemTarget() = 0;
+    virtual void* getSystemTarget() = 0;
 
     //@}
 
@@ -221,24 +221,24 @@ public:
     // Event type providers.
     //
 
-    virtual ClientEvents&               forClient() = 0;
-    virtual IStreamEvents&              forIStream() = 0;
-    virtual IpcClientEvents&            forIpcClient() = 0;
-    virtual IpcClientProxyEvents&       forIpcClientProxy() = 0;
-    virtual IpcServerEvents&            forIpcServer() = 0;
-    virtual IpcServerProxyEvents&       forIpcServerProxy() = 0;
-    virtual IDataSocketEvents&          forIDataSocket() = 0;
-    virtual IListenSocketEvents&        forIListenSocket() = 0;
-    virtual ISocketEvents&              forISocket() = 0;
-    virtual OSXScreenEvents&            forOSXScreen() = 0;
-    virtual ClientListenerEvents&       forClientListener() = 0;
-    virtual ClientProxyEvents&          forClientProxy() = 0;
-    virtual ClientProxyUnknownEvents&   forClientProxyUnknown() = 0;
-    virtual ServerEvents&               forServer() = 0;
-    virtual ServerAppEvents&            forServerApp() = 0;
-    virtual IKeyStateEvents&            forIKeyState() = 0;
-    virtual IPrimaryScreenEvents&       forIPrimaryScreen() = 0;
-    virtual IScreenEvents&              forIScreen() = 0;
-    virtual ClipboardEvents&            forClipboard() = 0;
-    virtual FileEvents&                 forFile() = 0;
+    virtual ClientEvents& forClient() = 0;
+    virtual IStreamEvents& forIStream() = 0;
+    virtual IpcClientEvents& forIpcClient() = 0;
+    virtual IpcClientProxyEvents& forIpcClientProxy() = 0;
+    virtual IpcServerEvents& forIpcServer() = 0;
+    virtual IpcServerProxyEvents& forIpcServerProxy() = 0;
+    virtual IDataSocketEvents& forIDataSocket() = 0;
+    virtual IListenSocketEvents& forIListenSocket() = 0;
+    virtual ISocketEvents& forISocket() = 0;
+    virtual OSXScreenEvents& forOSXScreen() = 0;
+    virtual ClientListenerEvents& forClientListener() = 0;
+    virtual ClientProxyEvents& forClientProxy() = 0;
+    virtual ClientProxyUnknownEvents& forClientProxyUnknown() = 0;
+    virtual ServerEvents& forServer() = 0;
+    virtual ServerAppEvents& forServerApp() = 0;
+    virtual IKeyStateEvents& forIKeyState() = 0;
+    virtual IPrimaryScreenEvents& forIPrimaryScreen() = 0;
+    virtual IScreenEvents& forIScreen() = 0;
+    virtual ClipboardEvents& forClipboard() = 0;
+    virtual FileEvents& forFile() = 0;
 };

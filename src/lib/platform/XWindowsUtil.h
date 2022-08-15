@@ -55,7 +55,7 @@ public:
     /*!
     Returns the current X server time.
     */
-    static Time            getCurrentTime(Display*, Window);
+    static Time getCurrentTime(Display*, Window);
 
     //! Convert KeySym to KeyID
     /*!
@@ -144,10 +144,10 @@ public:
         ~ErrorLock();
 
     private:
-        void            install(ErrorHandler, void*);
-        static int        internalHandler(Display*, XErrorEvent*);
-        static void        ignoreHandler(Display*, XErrorEvent*, void*);
-        static void        saveHandler(Display*, XErrorEvent*, void*);
+        void install(ErrorHandler, void*);
+        static int internalHandler(Display*, XErrorEvent*);
+        static void ignoreHandler(Display*, XErrorEvent*, void*);
+        static void saveHandler(Display*, XErrorEvent*, void*);
 
     private:
         typedef int (*XErrorHandler)(Display*, XErrorEvent*);
@@ -167,10 +167,10 @@ private:
         Atom m_property;
     };
 
-    static Bool            propertyNotifyPredicate(Display*,
+    static Bool propertyNotifyPredicate(Display*,
                             XEvent* xevent, XPointer arg);
 
-    static void            initKeyMaps();
+    static void initKeyMaps();
 
 private:
     typedef std::map<KeySym, std::uint32_t> KeySymMap;

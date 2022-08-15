@@ -29,7 +29,7 @@ public:
     // IClient overrides
     void mouseWheel(std::int32_t xDelta, std::int32_t yDelta) override;
 
-    void                handleKeepAlive(const Event&, void*);
+    void handleKeepAlive(const Event&, void*);
 
 protected:
     // ClientProxy overrides
@@ -39,7 +39,7 @@ protected:
     void resetHeartbeatTimer() override;
     void addHeartbeatTimer() override;
     void removeHeartbeatTimer() override;
-    virtual void        keepAlive();
+    virtual void keepAlive();
 
 private:
     double m_keepAliveRate;

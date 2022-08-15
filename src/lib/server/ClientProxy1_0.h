@@ -63,23 +63,23 @@ protected:
     virtual bool parseHandshakeMessage(const std::uint8_t* code);
     virtual bool parseMessage(const std::uint8_t* code);
 
-    virtual void        resetHeartbeatRate();
-    virtual void        setHeartbeatRate(double rate, double alarm);
-    virtual void        resetHeartbeatTimer();
-    virtual void        addHeartbeatTimer();
-    virtual void        removeHeartbeatTimer();
-    virtual bool        recvClipboard();
+    virtual void resetHeartbeatRate();
+    virtual void setHeartbeatRate(double rate, double alarm);
+    virtual void resetHeartbeatTimer();
+    virtual void addHeartbeatTimer();
+    virtual void removeHeartbeatTimer();
+    virtual bool recvClipboard();
 private:
-    void                disconnect();
-    void                removeHandlers();
+    void disconnect();
+    void removeHandlers();
 
-    void                handleData(const Event&, void*);
-    void                handleDisconnect(const Event&, void*);
-    void                handleWriteError(const Event&, void*);
-    void                handleFlatline(const Event&, void*);
+    void handleData(const Event&, void*);
+    void handleDisconnect(const Event&, void*);
+    void handleWriteError(const Event&, void*);
+    void handleFlatline(const Event&, void*);
 
-    bool                recvInfo();
-    bool                recvGrabClipboard();
+    bool recvInfo();
+    bool recvGrabClipboard();
 
 protected:
     struct ClientClipboard {

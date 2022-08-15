@@ -30,7 +30,7 @@ public:
     virtual IClipboard::EFormat
                         getFormat() const;
 
-    virtual CFStringRef    getOSXFormat() const;
+    virtual CFStringRef getOSXFormat() const;
 
 protected:
     // OSXClipboardAnyTextConverter overrides

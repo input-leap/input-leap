@@ -44,18 +44,18 @@ public:
     requires messages destined for modeless dialog boxes to be
     dispatched differently than other messages.
     */
-    static void            addDialog(HWND);
+    static void addDialog(HWND);
 
     //! Remove a dialog window
     /*!
     Remove a dialog window added via \c addDialog().
     */
-    static void            removeDialog(HWND);
+    static void removeDialog(HWND);
 
     // IArchTaskBar overrides
-    virtual void        addReceiver(IArchTaskBarReceiver*);
-    virtual void        removeReceiver(IArchTaskBarReceiver*);
-    virtual void        updateReceiver(IArchTaskBarReceiver*);
+    virtual void addReceiver(IArchTaskBarReceiver*);
+    virtual void removeReceiver(IArchTaskBarReceiver*);
+    virtual void updateReceiver(IArchTaskBarReceiver*);
 
 private:
     class ReceiverInfo {
@@ -68,26 +68,26 @@ private:
     typedef std::vector<UINT> CIDStack;
     typedef std::map<HWND, bool> Dialogs;
 
-    UINT                getNextID();
-    void                recycleID(UINT);
+    UINT getNextID();
+    void recycleID(UINT);
 
-    void                addIcon(UINT);
-    void                removeIcon(UINT);
-    void                updateIcon(UINT);
-    void                addAllIcons();
-    void                removeAllIcons();
-    void                modifyIconNoLock(ReceiverToInfoMap::const_iterator,
+    void addIcon(UINT);
+    void removeIcon(UINT);
+    void updateIcon(UINT);
+    void addAllIcons();
+    void removeAllIcons();
+    void modifyIconNoLock(ReceiverToInfoMap::const_iterator,
                             DWORD taskBarMessage);
-    void                removeIconNoLock(UINT id);
-    void                handleIconMessage(IArchTaskBarReceiver*, LPARAM);
+    void removeIconNoLock(UINT id);
+    void handleIconMessage(IArchTaskBarReceiver*, LPARAM);
 
-    bool                processDialogs(MSG*);
-    LRESULT                wndProc(HWND, UINT, WPARAM, LPARAM);
+    bool processDialogs(MSG*);
+    LRESULT wndProc(HWND, UINT, WPARAM, LPARAM);
     static LRESULT CALLBACK
                         staticWndProc(HWND, UINT, WPARAM, LPARAM);
-    void                threadMainLoop();
+    void threadMainLoop();
 
-    HINSTANCE            instanceWin32();
+    HINSTANCE instanceWin32();
 
 private:
     static ArchTaskBarWindows*    s_instance;

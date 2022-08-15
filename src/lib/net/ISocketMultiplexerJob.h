@@ -69,21 +69,21 @@ public:
     /*!
     Return the socket to multiplex
     */
-    virtual ArchSocket    getSocket() const = 0;
+    virtual ArchSocket getSocket() const = 0;
 
     //! Check for interest in readability
     /*!
     Return true if the job is interested in being run if the socket
     becomes readable.
     */
-    virtual bool        isReadable() const = 0;
+    virtual bool isReadable() const = 0;
 
     //! Check for interest in writability
     /*!
     Return true if the job is interested in being run if the socket
     becomes writable.
     */
-    virtual bool        isWritable() const = 0;
+    virtual bool isWritable() const = 0;
 
     virtual bool isCursor() const { return false; }
     //@}

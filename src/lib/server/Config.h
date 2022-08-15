@@ -67,18 +67,18 @@ public:
         CellEdge(const std::string& name, EDirection side, const Interval&);
         ~CellEdge();
 
-        Interval        getInterval() const;
+        Interval getInterval() const;
         void setName(const std::string& newName);
         std::string getName() const;
-        EDirection        getSide() const;
-        bool            overlaps(const CellEdge&) const;
-        bool            isInside(float x) const;
+        EDirection getSide() const;
+        bool overlaps(const CellEdge&) const;
+        bool isInside(float x) const;
 
         // transform position to [0,1]
-        float            transform(float x) const;
+        float transform(float x) const;
 
         // transform [0,1] to position
-        float            inverseTransform(float x) const;
+        float inverseTransform(float x) const;
 
         // compares side and start of interval
         bool            operator<(const CellEdge&) const;
@@ -115,23 +115,23 @@ private:
     public:
         typedef EdgeLinks::const_iterator const_iterator;
 
-        bool            add(const CellEdge& src, const CellEdge& dst);
-        void            remove(EDirection side);
-        void            remove(EDirection side, float position);
-        void            remove(const Name& destinationName);
-        void            rename(const Name& oldName, const std::string& newName);
+        bool add(const CellEdge& src, const CellEdge& dst);
+        void remove(EDirection side);
+        void remove(EDirection side, float position);
+        void remove(const Name& destinationName);
+        void rename(const Name& oldName, const std::string& newName);
 
-        bool            hasEdge(const CellEdge&) const;
-        bool            overlaps(const CellEdge&) const;
+        bool hasEdge(const CellEdge&) const;
+        bool overlaps(const CellEdge&) const;
 
-        bool            getLink(EDirection side, float position,
+        bool getLink(EDirection side, float position,
                             const CellEdge*& src, const CellEdge*& dst) const;
 
         bool            operator==(const Cell&) const;
         bool            operator!=(const Cell&) const;
 
-        const_iterator    begin() const;
-        const_iterator    end() const;
+        const_iterator begin() const;
+        const_iterator end() const;
 
     private:
         EdgeLinks m_neighbors;
@@ -208,7 +208,7 @@ public:
     /*!
     Removes all screens, aliases, and connections.
     */
-    void                removeAllScreens();
+    void removeAllScreens();
 
     //! Add alias
     /*!
@@ -237,7 +237,7 @@ public:
     /*!
     This removes all aliases but not the screens.
     */
-    void                removeAllAliases();
+    void removeAllAliases();
 
     //! Connect screens
     /*!
@@ -278,7 +278,7 @@ public:
     Set the barrier listen addresses.  There is no default address so
     this must be called to run a server using this configuration.
     */
-    void                setBarrierAddress(const NetworkAddress&);
+    void setBarrierAddress(const NetworkAddress&);
 
     //! Add a screen option
     /*!
@@ -308,8 +308,7 @@ public:
     Returns the hot key input filter.  Clients can modify hotkeys using
     that object.
     */
-    virtual InputFilter*
-                        getInputFilter();
+    virtual InputFilter* getInputFilter();
 
     //@}
     //! @name accessors
@@ -322,14 +321,14 @@ public:
     bool isValidScreenName(const std::string& name) const;
 
     //! Get beginning (canonical) screen name iterator
-    const_iterator        begin() const;
+    const_iterator begin() const;
     //! Get ending (canonical) screen name iterator
-    const_iterator        end() const;
+    const_iterator end() const;
 
     //! Get beginning screen name iterator
-    all_const_iterator    beginAll() const;
+    all_const_iterator beginAll() const;
     //! Get ending screen name iterator
-    all_const_iterator    endAll() const;
+    all_const_iterator endAll() const;
 
     //! Test for screen name
     /*!
@@ -381,8 +380,7 @@ public:
     link_const_iterator endNeighbor(const std::string&) const;
 
     //! Get the server address
-    const NetworkAddress&
-                        getBarrierAddress() const;
+    const NetworkAddress& getBarrierAddress() const;
 
     //! Get the screen options
     /*!
@@ -397,7 +395,7 @@ public:
     Returns \c true if this configuration has a lock to screen action.
     This is for backwards compatible support of ScrollLock locking.
     */
-    bool                hasLockToScreenAction() const;
+    bool hasLockToScreenAction() const;
 
     //! Compare configurations
     bool                operator==(const Config&) const;
@@ -409,7 +407,7 @@ public:
     Reads a configuration from a context.  Throws XConfigRead on error
     and context is unchanged.
     */
-    void                read(ConfigReadContext& context);
+    void read(ConfigReadContext& context);
 
     //! Read configuration
     /*!
@@ -429,7 +427,7 @@ public:
     /*!
     Returns the name of a direction (for debugging).
     */
-    static const char*    dirName(EDirection);
+    static const char* dirName(EDirection);
 
     //! Get interval as string
     /*!
@@ -440,11 +438,11 @@ public:
     //@}
 
 private:
-    void                readSection(ConfigReadContext&);
-    void                readSectionOptions(ConfigReadContext&);
-    void                readSectionScreens(ConfigReadContext&);
-    void                readSectionLinks(ConfigReadContext&);
-    void                readSectionAliases(ConfigReadContext&);
+    void readSection(ConfigReadContext&);
+    void readSectionOptions(ConfigReadContext&);
+    void readSectionScreens(ConfigReadContext&);
+    void readSectionLinks(ConfigReadContext&);
+    void readSectionAliases(ConfigReadContext&);
 
     InputFilter::Condition* parseCondition(ConfigReadContext&, const std::string& condition,
                                            const std::vector<std::string>& args);
@@ -454,7 +452,7 @@ private:
 
     void parseScreens(ConfigReadContext&, const std::string&, std::set<std::string>& screens) const;
 
-    static const char*    getOptionName(OptionID);
+    static const char* getOptionName(OptionID);
     static std::string getOptionValue(OptionID, OptionValue);
 
 private:
@@ -478,7 +476,7 @@ public:
     ConfigReadContext(std::istream&, std::int32_t firstLine = 1);
     ~ConfigReadContext();
 
-    bool                readLine(std::string&);
+    bool readLine(std::string&);
     std::uint32_t getLineNumber() const;
 
     bool                operator!() const;
@@ -501,13 +499,13 @@ public:
     IPlatformScreen::ButtonInfo* parseMouse(const std::string& mouse) const;
     KeyModifierMask parseModifier(const std::string& modifiers) const;
 
-    std::istream&        getStream() const { return m_stream; }
+    std::istream& getStream() const { return m_stream; }
 
 private:
     // not implemented
     ConfigReadContext&    operator=(const ConfigReadContext&);
 
-    static std::string        concatArgs(const ArgList& args);
+    static std::string concatArgs(const ArgList& args);
 
 private:
     std::istream& m_stream;

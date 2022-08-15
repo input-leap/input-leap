@@ -61,10 +61,10 @@ protected:
     Does the event filtering.  The default simply dispatches an event
     identical except using this object as the event target.
     */
-    virtual void        filterEvent(const Event&);
+    virtual void filterEvent(const Event&);
 
 private:
-    void                handleUpstreamEvent(const Event&, void*);
+    void handleUpstreamEvent(const Event&, void*);
 
 private:
     inputleap::IStream* m_stream;

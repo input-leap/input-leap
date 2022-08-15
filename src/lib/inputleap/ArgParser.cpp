@@ -259,14 +259,6 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
 
 #endif
 
-#ifdef WINAPI_MSWINDOWS
-
-        if (!IsWindowsVistaOrGreater()) {
-            useDragDrop = false;
-            LOG((CLOG_INFO "ignoring --enable-drag-drop, not supported below vista."));
-        }
-#endif
-
         if (useDragDrop) {
             argsBase().m_enableDragDrop = true;
         }

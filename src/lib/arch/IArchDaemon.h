@@ -48,7 +48,7 @@ public:
     followed by a NUL;  the daemon will be configured to startup after
     the listed daemons.  Throws an \c XArchDaemon exception on failure.
     */
-    virtual void        installDaemon(const char* name,
+    virtual void installDaemon(const char* name,
                             const char* description,
                             const char* pathname,
                             const char* commandLine,
@@ -58,19 +58,19 @@ public:
     /*!
     Uninstall a daemon.  Throws an \c XArchDaemon on failure.
     */
-    virtual void        uninstallDaemon(const char* name) = 0;
+    virtual void uninstallDaemon(const char* name) = 0;
 
     //! Install daemon
     /*!
     Installs the default daemon.
     */
-    virtual void        installDaemon() = 0;
+    virtual void installDaemon() = 0;
 
     //! Uninstall daemon
     /*!
     Uninstalls the default daemon.
     */
-    virtual void        uninstallDaemon() = 0;
+    virtual void uninstallDaemon() = 0;
 
     //! Daemonize the process
     /*!
@@ -99,7 +99,7 @@ public:
       \c ArchMiscWindows::daemonFailed() to indicate startup failure.
     </ul>
     */
-    virtual int            daemonize(const char* name, DaemonFunc func) = 0;
+    virtual int daemonize(const char* name, DaemonFunc func) = 0;
 
     //! Check if user has permission to install the daemon
     /*!
@@ -109,13 +109,13 @@ public:
     may still fail.  This method ignores whether or not the
     service is already installed.
     */
-    virtual bool        canInstallDaemon(const char* name) = 0;
+    virtual bool canInstallDaemon(const char* name) = 0;
 
     //! Check if the daemon is installed
     /*!
     Returns true iff the daemon is installed.
     */
-    virtual bool        isDaemonInstalled(const char* name) = 0;
+    virtual bool isDaemonInstalled(const char* name) = 0;
 
     //@}
 

@@ -47,11 +47,11 @@ protected:
     void filterEvent(const Event&) override;
 
 private:
-    bool                isReadyNoLock() const;
+    bool isReadyNoLock() const;
 
     // returns false on erroneous packet size
     bool readPacketSize();
-    bool                readMore();
+    bool readMore();
 
 private:
     mutable std::mutex mutex_;

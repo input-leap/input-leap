@@ -67,43 +67,43 @@ public:
     virtual void init();
 
     // IArchNetwork overrides
-    virtual ArchSocket    newSocket(EAddressFamily, ESocketType);
-    virtual ArchSocket    copySocket(ArchSocket s);
-    virtual void        closeSocket(ArchSocket s);
-    virtual void        closeSocketForRead(ArchSocket s);
-    virtual void        closeSocketForWrite(ArchSocket s);
-    virtual void        bindSocket(ArchSocket s, ArchNetAddress addr);
-    virtual void        listenOnSocket(ArchSocket s);
-    virtual ArchSocket    acceptSocket(ArchSocket s, ArchNetAddress* addr);
-    virtual bool        connectSocket(ArchSocket s, ArchNetAddress name);
-    virtual int            pollSocket(PollEntry[], int num, double timeout);
-    virtual void        unblockPollSocket(ArchThread thread);
-    virtual size_t        readSocket(ArchSocket s, void* buf, size_t len);
-    virtual size_t        writeSocket(ArchSocket s,
+    virtual ArchSocket newSocket(EAddressFamily, ESocketType);
+    virtual ArchSocket copySocket(ArchSocket s);
+    virtual void closeSocket(ArchSocket s);
+    virtual void closeSocketForRead(ArchSocket s);
+    virtual void closeSocketForWrite(ArchSocket s);
+    virtual void bindSocket(ArchSocket s, ArchNetAddress addr);
+    virtual void listenOnSocket(ArchSocket s);
+    virtual ArchSocket acceptSocket(ArchSocket s, ArchNetAddress* addr);
+    virtual bool connectSocket(ArchSocket s, ArchNetAddress name);
+    virtual int pollSocket(PollEntry[], int num, double timeout);
+    virtual void unblockPollSocket(ArchThread thread);
+    virtual size_t readSocket(ArchSocket s, void* buf, size_t len);
+    virtual size_t writeSocket(ArchSocket s,
                             const void* buf, size_t len);
-    virtual void        throwErrorOnSocket(ArchSocket);
-    virtual bool        setNoDelayOnSocket(ArchSocket, bool noDelay);
-    virtual bool        setReuseAddrOnSocket(ArchSocket, bool reuse);
-    virtual std::string        getHostName();
-    virtual ArchNetAddress    newAnyAddr(EAddressFamily);
-    virtual ArchNetAddress    copyAddr(ArchNetAddress);
-    virtual ArchNetAddress    nameToAddr(const std::string&);
-    virtual void            closeAddr(ArchNetAddress);
-    virtual std::string        addrToName(ArchNetAddress);
-    virtual std::string        addrToString(ArchNetAddress);
-    virtual EAddressFamily    getAddrFamily(ArchNetAddress);
-    virtual void            setAddrPort(ArchNetAddress, int port);
-    virtual int                getAddrPort(ArchNetAddress);
-    virtual bool            isAnyAddr(ArchNetAddress);
-    virtual bool            isEqualAddr(ArchNetAddress, ArchNetAddress);
+    virtual void throwErrorOnSocket(ArchSocket);
+    virtual bool setNoDelayOnSocket(ArchSocket, bool noDelay);
+    virtual bool setReuseAddrOnSocket(ArchSocket, bool reuse);
+    virtual std::string getHostName();
+    virtual ArchNetAddress newAnyAddr(EAddressFamily);
+    virtual ArchNetAddress copyAddr(ArchNetAddress);
+    virtual ArchNetAddress nameToAddr(const std::string&);
+    virtual void closeAddr(ArchNetAddress);
+    virtual std::string addrToName(ArchNetAddress);
+    virtual std::string addrToString(ArchNetAddress);
+    virtual EAddressFamily getAddrFamily(ArchNetAddress);
+    virtual void setAddrPort(ArchNetAddress, int port);
+    virtual int getAddrPort(ArchNetAddress);
+    virtual bool isAnyAddr(ArchNetAddress);
+    virtual bool isEqualAddr(ArchNetAddress, ArchNetAddress);
 
 private:
-    void                initModule(HMODULE);
+    void initModule(HMODULE);
 
-    void                setBlockingOnSocket(SOCKET, bool blocking);
+    void setBlockingOnSocket(SOCKET, bool blocking);
 
-    void                throwError(int);
-    void                throwNameError(int);
+    void throwError(int);
+    void throwNameError(int);
 
 private:
     typedef std::list<WSAEVENT> EventList;

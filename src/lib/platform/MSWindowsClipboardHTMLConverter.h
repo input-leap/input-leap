@@ -28,9 +28,8 @@ public:
     virtual ~MSWindowsClipboardHTMLConverter();
 
     // IMSWindowsClipboardConverter overrides
-    virtual IClipboard::EFormat
-                        getFormat() const;
-    virtual UINT        getWin32Format() const;
+    virtual IClipboard::EFormat getFormat() const;
+    virtual UINT getWin32Format() const;
 
 protected:
     // MSWindowsClipboardAnyTextConverter overrides

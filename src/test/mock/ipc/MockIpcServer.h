@@ -21,7 +21,7 @@
 #include "ipc/IpcMessage.h"
 #include "arch/Arch.h"
 
-#include "test/global/gmock.h"
+#include <gmock/gmock.h>
 
 #include <condition_variable>
 #include <mutex>

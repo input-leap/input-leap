@@ -40,15 +40,14 @@ public:
     HRESULT __stdcall    DragLeave(void);
     HRESULT __stdcall    Drop(IDataObject* dataObject, DWORD keyState, POINTL point, DWORD* effect);
 
-    void                setDraggingFilename(char* const);
-    std::string            getDraggingFilename();
-    void                clearDraggingFilename();
+    void setDraggingFilename(char* const);
+    std::string getDraggingFilename();
+    void clearDraggingFilename();
 
-    static MSWindowsDropTarget&
-                        instance();
+    static MSWindowsDropTarget& instance();
 
 private:
-    bool                queryDataObject(IDataObject* dataObject);
+    bool queryDataObject(IDataObject* dataObject);
 
     long m_refCount;
     bool m_allowDrop;

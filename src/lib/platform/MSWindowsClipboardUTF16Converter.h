@@ -28,7 +28,7 @@ public:
     virtual ~MSWindowsClipboardUTF16Converter();
 
     // IMSWindowsClipboardConverter overrides
-    virtual UINT        getWin32Format() const;
+    virtual UINT getWin32Format() const;
 
 protected:
     // MSWindowsClipboardAnyTextConverter overrides

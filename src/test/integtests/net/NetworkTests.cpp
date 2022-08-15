@@ -39,7 +39,7 @@
 #include "base/Log.h"
 #include <stdexcept>
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 #include <sstream>
 #include <fstream>
 #include <iostream>

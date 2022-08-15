@@ -72,14 +72,14 @@ public:
     Causes the key state to get updated to reflect the current keyboard
     mapping.
     */
-    virtual void        updateKeyMap() = 0;
+    virtual void updateKeyMap() = 0;
 
     //! Update the key state
     /*!
     Causes the key state to get updated to reflect the physical keyboard
     state.
     */
-    virtual void        updateKeyState() = 0;
+    virtual void updateKeyState() = 0;
 
     //! Set half-duplex mask
     /*!
@@ -87,13 +87,13 @@ public:
     toggle key doesn't report a key release when toggled on and
     doesn't report a key press when toggled off.
     */
-    virtual void        setHalfDuplexMask(KeyModifierMask) = 0;
+    virtual void setHalfDuplexMask(KeyModifierMask) = 0;
 
     //! Fake a key press
     /*!
     Synthesizes a key press event and updates the key state.
     */
-    virtual void        fakeKeyDown(KeyID id, KeyModifierMask mask,
+    virtual void fakeKeyDown(KeyID id, KeyModifierMask mask,
                             KeyButton button) = 0;
 
     //! Fake a key repeat
@@ -107,28 +107,28 @@ public:
     /*!
     Synthesizes a key release event and updates the key state.
     */
-    virtual bool        fakeKeyUp(KeyButton button) = 0;
+    virtual bool fakeKeyUp(KeyButton button) = 0;
 
     //! Fake key releases for all fake pressed keys
     /*!
     Synthesizes a key release event for every key that is synthetically
     pressed and updates the key state.
     */
-    virtual void        fakeAllKeysUp() = 0;
+    virtual void fakeAllKeysUp() = 0;
 
     //! Fake ctrl+alt+del
     /*!
     Synthesize a press of ctrl+alt+del.  Return true if processing is
     complete and false if normal key processing should continue.
     */
-    virtual bool        fakeCtrlAltDel() = 0;
+    virtual bool fakeCtrlAltDel() = 0;
 
     //! Fake a media key
     /*!
      Synthesizes a media key down and up. Only Mac would implement this by
      use cocoa appkit framework.
      */
-    virtual bool        fakeMediaKey(KeyID id) = 0;
+    virtual bool fakeMediaKey(KeyID id) = 0;
 
     //@}
     //! @name accessors
@@ -139,7 +139,7 @@ public:
     Returns true iff the given key is down.  Half-duplex toggles
     always return false.
     */
-    virtual bool        isKeyDown(KeyButton) const = 0;
+    virtual bool isKeyDown(KeyButton) const = 0;
 
     //! Get the active modifiers
     /*!
@@ -168,7 +168,7 @@ public:
     Adds any keys that are currently pressed according to the operating
     system to \p pressedKeys.
     */
-    virtual void        pollPressedKeys(KeyButtonSet& pressedKeys) const = 0;
+    virtual void pollPressedKeys(KeyButtonSet& pressedKeys) const = 0;
 
     //@}
 };

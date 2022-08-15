@@ -41,9 +41,9 @@ public:
     //! @name manipulators
     //@{
 
-    void                addSocket(ISocket*, std::unique_ptr<ISocketMultiplexerJob>&& job);
+    void addSocket(ISocket*, std::unique_ptr<ISocketMultiplexerJob>&& job);
 
-    void                removeSocket(ISocket*);
+    void removeSocket(ISocket*);
 
     //@}
     //! @name accessors
@@ -77,22 +77,22 @@ private:
     // nextCursor() finds the next non-dummy item, moves our dummy
     // item just past it, and returns an iterator for the non-dummy
     // item.  all cursor calls lock the mutex for their duration.
-    JobCursor            newCursor();
-    JobCursor            nextCursor(JobCursor);
-    void                deleteCursor(JobCursor);
+    JobCursor newCursor();
+    JobCursor nextCursor(JobCursor);
+    void deleteCursor(JobCursor);
 
     // lock out locking the job list.  this blocks if another thread
     // has already locked out locking.  once it returns, only the
     // calling thread will be able to lock the job list after any
     // current lock is released.
-    void                lockJobListLock();
+    void lockJobListLock();
 
     // lock the job list.  this blocks if the job list is already
     // locked.  the calling thread must have called lockJobListLock.
-    void                lockJobList();
+    void lockJobList();
 
     // unlock the job list and the lock out on locking.
-    void                unlockJobList();
+    void unlockJobList();
 
 private:
     std::mutex mutex_;

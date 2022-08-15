@@ -56,7 +56,7 @@ public:
     /*!
     Returns the suggested time to wait until retrying to open the screen.
     */
-    double                getRetryTime() const;
+    double getRetryTime() const;
 
     //@}
 

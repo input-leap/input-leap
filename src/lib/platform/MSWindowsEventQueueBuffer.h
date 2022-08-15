@@ -32,14 +32,13 @@ public:
     virtual ~MSWindowsEventQueueBuffer();
 
     // IEventQueueBuffer overrides
-    virtual    void        init() { }
-    virtual void        waitForEvent(double timeout);
+    virtual    void init() { }
+    virtual void waitForEvent(double timeout);
     virtual Type getEvent(Event& event, std::uint32_t& dataID);
     virtual bool addEvent(std::uint32_t dataID);
-    virtual bool        isEmpty() const;
-    virtual EventQueueTimer*
-                        newTimer(double duration, bool oneShot) const;
-    virtual void        deleteTimer(EventQueueTimer*) const;
+    virtual bool isEmpty() const;
+    virtual EventQueueTimer* newTimer(double duration, bool oneShot) const;
+    virtual void deleteTimer(EventQueueTimer*) const;
 
 private:
     DWORD m_thread;

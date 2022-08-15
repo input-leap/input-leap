@@ -19,7 +19,7 @@
 #include "inputleap/ArgsBase.h"
 #include "test/mock/inputleap/MockApp.h"
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 
 using namespace inputleap;
 using ::testing::_;

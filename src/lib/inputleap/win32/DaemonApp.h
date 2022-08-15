@@ -40,8 +40,8 @@ public:
 private:
     void daemonize();
     void foregroundError(const char* message);
-    std::string            logFilename();
-    void                handleIpcMessage(const Event&, void*);
+    std::string logFilename();
+    void handleIpcMessage(const Event&, void*);
 
 public:
     static DaemonApp* s_instance;

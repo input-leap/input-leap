@@ -61,33 +61,31 @@ public:
     void waitForReady() const override;
 
 private:
-    std::uint32_t       saveEvent(const Event& event);
-    Event               removeEvent(std::uint32_t eventID);
-    bool                hasTimerExpired(Event& event);
-    double              getNextTimerTimeout() const;
-    void                addEventToBuffer(const Event& event);
-    bool                parent_requests_shutdown() const;
+    std::uint32_t saveEvent(const Event& event);
+    Event removeEvent(std::uint32_t eventID);
+    bool hasTimerExpired(Event& event);
+    double getNextTimerTimeout() const;
+    void addEventToBuffer(const Event& event);
+    virtual bool parent_requests_shutdown() const;
 
 private:
     class Timer {
     public:
         Timer(EventQueueTimer*, double timeout, double initialTime,
-                            void* target, bool oneShot);
+              void* target, bool oneShot);
         ~Timer();
 
-        void            reset();
+        void reset();
 
-        Timer&          operator-=(double);
+        Timer& operator-=(double);
+        operator double() const;
 
-                        operator double() const;
+        bool isOneShot() const;
+        EventQueueTimer* getTimer() const;
+        void* getTarget() const;
+        void fillEvent(TimerEvent&) const;
 
-        bool            isOneShot() const;
-        EventQueueTimer*
-                        getTimer() const;
-        void*           getTarget() const;
-        void            fillEvent(TimerEvent&) const;
-
-        bool            operator<(const Timer&) const;
+        bool operator<(const Timer&) const;
 
     private:
         EventQueueTimer* m_timer;

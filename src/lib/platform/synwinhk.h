@@ -59,7 +59,7 @@ enum EHookMode {
 typedef void            (*SetImmuneKeysFunc)(const DWORD*, std::size_t);
 
 // do not call setImmuneKeys() while the hooks are active!
-CBARRIERHOOK_API void    setImmuneKeys(const DWORD *list, std::size_t size);
+CBARRIERHOOK_API void setImmuneKeys(const DWORD *list, std::size_t size);
 
 */
 

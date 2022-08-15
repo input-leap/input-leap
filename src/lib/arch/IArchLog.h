@@ -37,13 +37,13 @@ public:
     Opens the log for writing.  The log must be opened before being
     written to.
     */
-    virtual void        openLog(const char* name) = 0;
+    virtual void openLog(const char* name) = 0;
 
     //! Close the log
     /*!
     Close the log.
     */
-    virtual void        closeLog() = 0;
+    virtual void closeLog() = 0;
 
     //! Show the log
     /*!
@@ -52,13 +52,13 @@ public:
     will do nothing.  Iff \p showIfEmpty is \c false then the implementation
     may optionally only show the log if it's not empty.
     */
-    virtual void        showLog(bool showIfEmpty) = 0;
+    virtual void showLog(bool showIfEmpty) = 0;
 
     //! Write to the log
     /*!
     Writes the given string to the log with the given level.
     */
-    virtual void        writeLog(ELevel, const char*) = 0;
+    virtual void writeLog(ELevel, const char*) = 0;
 
     //@}
 };

@@ -40,14 +40,14 @@ public:
     the receiver is added to the task bar, its icon appears on
     the task bar.
     */
-    virtual void        addReceiver(IArchTaskBarReceiver*) = 0;
+    virtual void addReceiver(IArchTaskBarReceiver*) = 0;
 
     //! Remove a receiver
     /*!
     Remove a receiver object from the task bar.  This removes the
     icon from the task bar.
     */
-    virtual void        removeReceiver(IArchTaskBarReceiver*) = 0;
+    virtual void removeReceiver(IArchTaskBarReceiver*) = 0;
 
     //! Update a receiver
     /*!
@@ -55,7 +55,7 @@ public:
     should be called when the receiver appearance may have changed
     (e.g. it's icon or tool tip has changed).
     */
-    virtual void        updateReceiver(IArchTaskBarReceiver*) = 0;
+    virtual void updateReceiver(IArchTaskBarReceiver*) = 0;
 
     //@}
 

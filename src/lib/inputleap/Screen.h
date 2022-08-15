@@ -54,27 +54,27 @@ public:
     For a secondary screen it also means disabling the screen saver if
     synchronizing it and preparing to synthesize events.
     */
-    virtual void        enable();
+    virtual void enable();
 
     //! Deactivate screen
     /*!
     Undoes the operations in activate() and events are no longer
     reported.  It also releases keys that are logically pressed.
     */
-    virtual void        disable();
+    virtual void disable();
 
     //! Enter screen
     /*!
     Called when the user navigates to this screen.  \p toggleMask has the
     toggle keys that should be turned on on the secondary screen.
     */
-    void                enter(KeyModifierMask toggleMask);
+    void enter(KeyModifierMask toggleMask);
 
     //! Leave screen
     /*!
     Called when the user navigates off this screen.
     */
-    bool                leave();
+    bool leave();
 
     //! Update configuration
     /*!
@@ -97,20 +97,20 @@ public:
     Sets the system's clipboard contents.  This is usually called
     soon after an enter().
     */
-    void                setClipboard(ClipboardID, const IClipboard*);
+    void setClipboard(ClipboardID, const IClipboard*);
 
     //! Grab clipboard
     /*!
     Grabs (i.e. take ownership of) the system clipboard.
     */
-    void                grabClipboard(ClipboardID);
+    void grabClipboard(ClipboardID);
 
     //! Activate/deactivate screen saver
     /*!
     Forcibly activates the screen saver if \c activate is true otherwise
     forcibly deactivates it.
     */
-    void                screensaver(bool activate);
+    void screensaver(bool activate);
 
     //! Notify of key press
     /*!
@@ -121,7 +121,7 @@ public:
     synthesize an up or repeat for the same client key synthesized by
     keyDown().
     */
-    void                keyDown(KeyID id, KeyModifierMask, KeyButton);
+    void keyDown(KeyID id, KeyModifierMask, KeyButton);
 
     //! Notify of key repeat
     /*!
@@ -135,19 +135,19 @@ public:
     Synthesize key events to generate a release of key \c id.  If possible
     match the given modifier mask.
     */
-    void                keyUp(KeyID id, KeyModifierMask, KeyButton);
+    void keyUp(KeyID id, KeyModifierMask, KeyButton);
 
     //! Notify of mouse press
     /*!
     Synthesize mouse events to generate a press of mouse button \c id.
     */
-    void                mouseDown(ButtonID id);
+    void mouseDown(ButtonID id);
 
     //! Notify of mouse release
     /*!
     Synthesize mouse events to generate a release of mouse button \c id.
     */
-    void                mouseUp(ButtonID id);
+    void mouseUp(ButtonID id);
 
     //! Notify of mouse motion
     /*!
@@ -176,14 +176,14 @@ public:
     /*!
     Resets all options to their default values.
     */
-    virtual void        resetOptions();
+    virtual void resetOptions();
 
     //! Notify of options changes
     /*!
     Set options to given values.  Ignores unknown options and doesn't
     modify options that aren't given in \c options.
     */
-    virtual void        setOptions(const OptionsList& options);
+    virtual void setOptions(const OptionsList& options);
 
     //! Set clipboard sequence number
     /*!
@@ -211,21 +211,21 @@ public:
     ensures that we ignore it.  Calls to \c fakeInputBegin() may not be
     nested.
     */
-    void                fakeInputBegin();
+    void fakeInputBegin();
 
     //! Done synthesizing input on primary screen
     /*!
     Undoes whatever \c fakeInputBegin() did.
     */
-    void                fakeInputEnd();
+    void fakeInputEnd();
 
     //! Change dragging status
-    void                setDraggingStarted(bool started);
+    void setDraggingStarted(bool started);
 
     //! Fake a files dragging operation
-    void                startDraggingFiles(DragFileList& fileList);
+    void startDraggingFiles(DragFileList& fileList);
 
-    void                setEnableDragDrop(bool enabled);
+    void setEnableDragDrop(bool enabled);
     //@}
     //! @name accessors
     //@{
@@ -234,7 +234,7 @@ public:
     /*!
     Returns true iff the cursor is on the screen.
     */
-    bool                isOnScreen() const;
+    bool isOnScreen() const;
 
     //! Get screen lock state
     /*!
@@ -243,7 +243,7 @@ public:
     pressed).  If this method returns true it logs a message as to
     why at the CLOG_DEBUG level.
     */
-    bool                isLockedToScreen() const;
+    bool isLockedToScreen() const;
 
     //! Get jump zone size
     /*!
@@ -265,26 +265,26 @@ public:
     Returns the modifiers that are currently active according to our
     shadowed state.
     */
-    KeyModifierMask        getActiveModifiers() const;
+    KeyModifierMask getActiveModifiers() const;
 
     //! Get the active modifiers from OS
     /*!
     Returns the modifiers that are currently active according to the
     operating system.
     */
-    KeyModifierMask        pollActiveModifiers() const;
+    KeyModifierMask pollActiveModifiers() const;
 
     //! Test if file is dragged on primary screen
-    bool                isDraggingStarted() const;
+    bool isDraggingStarted() const;
 
     //! Test if file is dragged on secondary screen
-    bool                isFakeDraggingStarted() const;
+    bool isFakeDraggingStarted() const;
 
     //! Get the filename of the file being dragged
     std::string& getDraggingFilename() const;
 
     //! Clear the filename of the file that was dragged
-    void                clearDraggingFilename();
+    void clearDraggingFilename();
 
     //! Get the drop target directory
     const std::string& getDropTarget() const;
@@ -300,18 +300,18 @@ public:
                   std::int32_t& height) const override;
     void getCursorPos(std::int32_t& x, std::int32_t& y) const override;
 
-    IPlatformScreen*    getPlatformScreen() { return m_screen; }
+    IPlatformScreen* getPlatformScreen() { return m_screen; }
 
 protected:
-    void                enablePrimary();
-    void                enableSecondary();
-    void                disablePrimary();
-    void                disableSecondary();
+    void enablePrimary();
+    void enableSecondary();
+    void disablePrimary();
+    void disableSecondary();
 
-    void                enterPrimary();
-    void                enterSecondary(KeyModifierMask toggleMask);
-    void                leavePrimary();
-    void                leaveSecondary();
+    void enterPrimary();
+    void enterSecondary(KeyModifierMask toggleMask);
+    void leavePrimary();
+    void leaveSecondary();
 
 private:
     // our platform dependent screen

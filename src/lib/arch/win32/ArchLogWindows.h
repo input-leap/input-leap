@@ -32,10 +32,10 @@ public:
     virtual ~ArchLogWindows();
 
     // IArchLog overrides
-    virtual void        openLog(const char* name);
-    virtual void        closeLog();
-    virtual void        showLog(bool showIfEmpty);
-    virtual void        writeLog(ELevel, const char*);
+    virtual void openLog(const char* name);
+    virtual void closeLog();
+    virtual void showLog(bool showIfEmpty);
+    virtual void writeLog(ELevel, const char*);
 
 private:
     HANDLE m_eventLog;

@@ -21,7 +21,7 @@
 
 #include "inputleap/Screen.h"
 
-#include "test/global/gmock.h"
+#include <gmock/gmock.h>
 
 class MockScreen : public inputleap::Screen
 {

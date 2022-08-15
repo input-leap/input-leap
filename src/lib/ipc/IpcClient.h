@@ -41,20 +41,20 @@ public:
     //@{
 
     //! Connects to the IPC server at localhost.
-    void                connect();
+    void connect();
 
     //! Disconnects from the IPC server.
-    void                disconnect();
+    void disconnect();
 
     //! Sends a message to the server.
-    void                send(const IpcMessage& message);
+    void send(const IpcMessage& message);
 
     //@}
 
 private:
-    void                init();
-    void                handleConnected(const Event&, void*);
-    void                handleMessageReceived(const Event&, void*);
+    void init();
+    void handleConnected(const Event&, void*);
+    void handleMessageReceived(const Event&, void*);
 
 private:
     NetworkAddress m_serverAddress;

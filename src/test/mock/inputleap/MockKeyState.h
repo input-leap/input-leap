@@ -20,7 +20,7 @@
 
 #include "inputleap/KeyState.h"
 
-#include "test/global/gmock.h"
+#include <gmock/gmock.h>
 
 #include "MockEventQueue.h"
 #include "MockKeyMap.h"

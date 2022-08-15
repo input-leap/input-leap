@@ -46,7 +46,7 @@ public:
     void deleteTimer(EventQueueTimer*) const override;
 
 private:
-    void                flush();
+    void flush();
 
     int getPendingCountLocked();
 

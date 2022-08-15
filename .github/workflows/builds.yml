@@ -56,6 +56,11 @@ jobs:
         env:
             VERBOSE: 1
 
+      - name: Run the tests
+        run: |
+            cd ${B_BUILD_DIR}
+            ctest --verbose
+
   mac-build:
     runs-on: ${{ matrix.os }}
     strategy:

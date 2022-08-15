@@ -63,8 +63,7 @@ public:
     By default, the logger has one outputter installed which writes to
     the console.
     */
-    void                insert(ILogOutputter* adopted,
-                               bool alwaysAtHead = false);
+    void insert(ILogOutputter* adopted, bool alwaysAtHead = false);
 
     //! Remove an outputter from the list
     /*!
@@ -72,7 +71,7 @@ public:
     outputter list.  It does nothing if the outputter is not in the
     list.  The outputter is not deleted.
     */
-    void                remove(ILogOutputter* orphaned);
+    void remove(ILogOutputter* orphaned);
 
     //! Remove the outputter from the head of the list
     /*!
@@ -80,7 +79,7 @@ public:
     This does nothing if the outputter list is empty.  Only removes
     outputters that were inserted with the matching \c alwaysAtHead.
     */
-    void                pop_front(bool alwaysAtHead = false);
+    void pop_front(bool alwaysAtHead = false);
 
     //! Set the minimum priority filter.
     /*!
@@ -90,10 +89,10 @@ public:
     true if the priority \c name was recognized;  if \c name is nullptr
     then it simply returns true.
     */
-    bool                setFilter(const char* name);
+    bool setFilter(const char* name);
 
     //! Set the minimum priority filter (by ordinal).
-    void                setFilter(int);
+    void setFilter(int);
 
     //@}
     //! @name accessors
@@ -105,28 +104,28 @@ public:
     preceded by the filename and line number.  If \c file is nullptr then
     neither the file nor the line are printed.
     */
-    void                print(const char* file, int line,
+    void print(const char* file, int line,
                             const char* format, ...);
 
     //! Get the minimum priority level.
-    int                    getFilter() const;
+    int getFilter() const;
 
     //! Get the filter name of the current filter level.
-    const char*            getFilterName() const;
+    const char* getFilterName() const;
 
     //! Get the filter name of a specified filter level.
-    const char*            getFilterName(int level) const;
+    const char* getFilterName(int level) const;
 
     //! Get the singleton instance of the log
-    static Log*        getInstance();
+    static Log* getInstance();
 
     //! Get the console filter level (messages above this are not sent to console).
-    int                    getConsoleMaxLevel() const { return kDEBUG2; }
+    int getConsoleMaxLevel() const { return kDEBUG2; }
 
     //@}
 
 private:
-    void                output(ELevel priority, char* msg);
+    void output(ELevel priority, char* msg);
 
 private:
     typedef std::list<ILogOutputter*> OutputterList;

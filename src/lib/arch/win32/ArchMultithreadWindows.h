@@ -36,47 +36,47 @@ public:
     //! @name manipulators
     //@{
 
-    void                setNetworkDataForCurrentThread(void*);
+    void setNetworkDataForCurrentThread(void*);
 
     //@}
     //! @name accessors
     //@{
 
-    HANDLE                getCancelEventForCurrentThread();
+    HANDLE getCancelEventForCurrentThread();
 
-    void*                getNetworkDataForThread(ArchThread);
+    void* getNetworkDataForThread(ArchThread);
 
-    static ArchMultithreadWindows*    getInstance();
+    static ArchMultithreadWindows* getInstance();
 
     //@}
 
     // IArchMultithread overrides
     virtual ArchThread newThread(const std::function<void()>& func);
-    virtual ArchThread    newCurrentThread();
-    virtual ArchThread    copyThread(ArchThread);
-    virtual void        closeThread(ArchThread);
-    virtual void        cancelThread(ArchThread);
-    virtual void        setPriorityOfThread(ArchThread, int n);
-    virtual void        testCancelThread();
-    virtual bool        wait(ArchThread, double timeout);
-    virtual bool        isSameThread(ArchThread, ArchThread);
-    virtual bool        isExitedThread(ArchThread);
-    virtual ThreadID    getIDOfThread(ArchThread);
-    virtual void        setSignalHandler(ESignal, SignalFunc, void*);
-    virtual void        raiseSignal(ESignal);
+    virtual ArchThread newCurrentThread();
+    virtual ArchThread copyThread(ArchThread);
+    virtual void closeThread(ArchThread);
+    virtual void cancelThread(ArchThread);
+    virtual void setPriorityOfThread(ArchThread, int n);
+    virtual void testCancelThread();
+    virtual bool wait(ArchThread, double timeout);
+    virtual bool isSameThread(ArchThread, ArchThread);
+    virtual bool isExitedThread(ArchThread);
+    virtual ThreadID getIDOfThread(ArchThread);
+    virtual void setSignalHandler(ESignal, SignalFunc, void*);
+    virtual void raiseSignal(ESignal);
 
 private:
-    ArchThreadImpl*    find(DWORD id);
-    ArchThreadImpl*    findNoRef(DWORD id);
-    ArchThreadImpl*    findNoRefOrCreate(DWORD id);
-    void                insert(ArchThreadImpl* thread);
-    void                erase(ArchThreadImpl* thread);
+    ArchThreadImpl* find(DWORD id);
+    ArchThreadImpl* findNoRef(DWORD id);
+    ArchThreadImpl* findNoRefOrCreate(DWORD id);
+    void insert(ArchThreadImpl* thread);
+    void erase(ArchThreadImpl* thread);
 
-    void                refThread(ArchThreadImpl* rep);
-    void                testCancelThreadImpl(ArchThreadImpl* rep);
+    void refThread(ArchThreadImpl* rep);
+    void testCancelThreadImpl(ArchThreadImpl* rep);
 
-    void                doThreadFunc(ArchThread thread);
-    static unsigned int __stdcall    threadFunc(void* vrep);
+    void doThreadFunc(ArchThread thread);
+    static unsigned int __stdcall threadFunc(void* vrep);
 
 private:
     typedef std::list<ArchThread> ThreadList;

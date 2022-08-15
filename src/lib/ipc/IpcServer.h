@@ -50,26 +50,26 @@ public:
     //@{
 
     //! Opens a TCP socket only allowing local connections.
-    virtual void        listen();
+    virtual void listen();
 
     //! Send a message to all clients matching the filter type.
-    virtual void        send(const IpcMessage& message, EIpcClientType filterType);
+    virtual void send(const IpcMessage& message, EIpcClientType filterType);
 
     //@}
     //! @name accessors
     //@{
 
     //! Returns true when there are clients of the specified type connected.
-    virtual bool        hasClients(EIpcClientType clientType) const;
+    virtual bool hasClients(EIpcClientType clientType) const;
 
     //@}
 
 private:
-    void                init();
-    void                handleClientConnecting(const Event&, void*);
-    void                handleClientDisconnected(const Event&, void*);
-    void                handleMessageReceived(const Event&, void*);
-    void                deleteClient(IpcClientProxy* proxy);
+    void init();
+    void handleClientConnecting(const Event&, void*);
+    void handleClientDisconnected(const Event&, void*);
+    void handleMessageReceived(const Event&, void*);
+    void deleteClient(IpcClientProxy* proxy);
 
 private:
     typedef std::list<IpcClientProxy*> ClientList;

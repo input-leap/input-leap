@@ -64,26 +64,26 @@ protected:
     };
 
     //! Get status
-    EState                getStatus() const;
+    EState getStatus() const;
 
     //! Get error message
     const std::string& getErrorMessage() const;
 
     //! Get connected clients
-    const Clients&        getClients() const;
+    const Clients& getClients() const;
 
     //! Quit app
     /*!
     Causes the application to quit gracefully
     */
-    void                quit();
+    void quit();
 
     //! Status change notification
     /*!
     Called when status changes.  The default implementation does
     nothing.
     */
-    virtual void        onStatusChanged(Server* server);
+    virtual void onStatusChanged(Server* server);
 
 private:
     EState m_state;

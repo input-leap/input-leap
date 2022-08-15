@@ -42,7 +42,7 @@ public:
     primary screens only in response to local events.  For auto-repeat
     set \p down to \c true.  Overrides must forward to the superclass.
     */
-    virtual void        onKey(KeyButton button, bool down,
+    virtual void onKey(KeyButton button, bool down,
                             KeyModifierMask newState);
 
     //! Post a key event
@@ -86,13 +86,13 @@ protected:
     /*!
     Fills \p keyMap with the current keyboard map.
     */
-    virtual void        getKeyMap(inputleap::KeyMap& keyMap) = 0;
+    virtual void getKeyMap(inputleap::KeyMap& keyMap) = 0;
 
     //! Fake a key event
     /*!
     Synthesize an event for \p keystroke.
     */
-    virtual void        fakeKey(const Keystroke& keystroke) = 0;
+    virtual void fakeKey(const Keystroke& keystroke) = 0;
 
     //! Get the active modifiers
     /*!
@@ -117,7 +117,7 @@ protected:
     Returns \c true if and only if the key should always be ignored.
     The default returns \c true only for the toggle keys.
     */
-    virtual bool        isIgnoredKey(KeyID key, KeyModifierMask mask) const;
+    virtual bool isIgnoredKey(KeyID key, KeyModifierMask mask) const;
 
     //! Get button for a KeyID
     /*!
@@ -163,24 +163,24 @@ private:
     KeyState& operator=(const KeyState&);
 
     // called by all ctors.
-    void                init();
+    void init();
 
     // adds alias key sequences.  these are sequences that are equivalent
     // to other sequences.
-    void                addAliasEntries();
+    void addAliasEntries();
 
     // adds non-keypad key sequences for keypad KeyIDs
-    void                addKeypadEntries();
+    void addKeypadEntries();
 
     // adds key sequences for combination KeyIDs (those built using
     // dead keys)
-    void                addCombinationEntries();
+    void addCombinationEntries();
 
     // synthesize key events.  synthesize auto-repeat events count times.
     void fakeKeys(const Keystrokes&, std::uint32_t count);
 
     // update key state to match changes to modifiers
-    void                updateModifierKeyState(KeyButton button,
+    void updateModifierKeyState(KeyButton button,
                             const ModifierToKeys& oldModifiers,
                             const ModifierToKeys& newModifiers);
 

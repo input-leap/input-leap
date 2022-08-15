@@ -24,14 +24,14 @@ if(INPUTLEAP_USE_EXTERNAL_GTEST)
     )
 else()
     include_directories(SYSTEM
-        ../ext/gtest
-        ../ext/gtest/include
-        ../ext/gmock
-        ../ext/gmock/include
+        ../ext/gtest/googletest/
+        ../ext/gtest/googletest/include
+        ../ext/gtest/googlemock/
+        ../ext/gtest/googlemock/include
     )
 
-    add_library(gtest STATIC ../ext/gtest/src/gtest-all.cc)
-    add_library(gmock STATIC ../ext/gmock/src/gmock-all.cc)
+    add_library(gtest STATIC ../ext/gtest/googletest/src/gtest-all.cc)
+    add_library(gmock STATIC ../ext/gtest/googlemock/src/gmock-all.cc)
 
     set(GTEST_LIBRARIES gtest)
     set(GMOCK_LIBRARIES gmock)

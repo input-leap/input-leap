@@ -31,29 +31,26 @@ public:
     virtual ~MSWindowsClientTaskBarReceiver();
 
     // IArchTaskBarReceiver overrides
-    virtual void        showStatus();
-    virtual void        runMenu(int x, int y);
-    virtual void        primaryAction();
+    virtual void showStatus();
+    virtual void runMenu(int x, int y);
+    virtual void primaryAction();
     virtual Icon getIcon() const;
     void cleanup();
 
 protected:
-    void                copyLog() const;
+    void copyLog() const;
 
     // ClientTaskBarReceiver overrides
-    virtual void        onStatusChanged();
+    virtual void onStatusChanged();
 
 private:
-    HICON                loadIcon(UINT);
-    void                deleteIcon(HICON);
-    void                createWindow();
-    void                destroyWindow();
+    HICON loadIcon(UINT);
+    void deleteIcon(HICON);
+    void createWindow();
+    void destroyWindow();
 
-    BOOL                dlgProc(HWND hwnd,
-                            UINT msg, WPARAM wParam, LPARAM lParam);
-    static BOOL CALLBACK
-                        staticDlgProc(HWND hwnd,
-                            UINT msg, WPARAM wParam, LPARAM lParam);
+    BOOL dlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+    static BOOL CALLBACK staticDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 private:
     HINSTANCE m_appInstance;

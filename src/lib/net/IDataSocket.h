@@ -48,7 +48,7 @@ public:
     event when it fails.  The stream acts as if shutdown for input and
     output until the stream connects.
     */
-    virtual void        connect(const NetworkAddress&) = 0;
+    virtual void connect(const NetworkAddress&) = 0;
 
     //@}
 
@@ -61,5 +61,5 @@ public:
     void* getEventTarget() const override;
 
     // IStream overrides
-    virtual bool        isFatal() const = 0;
+    virtual bool isFatal() const = 0;
 };

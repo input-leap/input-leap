@@ -44,7 +44,7 @@ public:
     /*!
     Tells clipboard it lost ownership at the given time.
     */
-    void                lost(Time);
+    void lost(Time);
 
     //! Add clipboard request
     /*!
@@ -52,7 +52,7 @@ public:
     owner window isn't this clipboard's window then this simply
     sends a failure event to the requestor.
     */
-    void                addRequest(Window owner,
+    void addRequest(Window owner,
                             Window requestor, Atom target,
                             ::Time time, Atom property);
 
@@ -61,7 +61,7 @@ public:
     Continues processing a selection request.  Returns true if the
     request was handled, false if the request was unknown.
     */
-    bool                processRequest(Window requestor,
+    bool processRequest(Window requestor,
                             ::Time time, Atom property);
 
     //! Cancel clipboard request
@@ -69,20 +69,20 @@ public:
     Terminate a selection request.  Returns true iff the request
     was known and handled.
     */
-    bool                destroyRequest(Window requestor);
+    bool destroyRequest(Window requestor);
 
     //! Get window
     /*!
     Returns the clipboard's window (passed the c'tor).
     */
-    Window                getWindow() const;
+    Window getWindow() const;
 
     //! Get selection atom
     /*!
     Returns the selection atom that identifies the clipboard to X11
     (e.g. XA_PRIMARY).
     */
-    Atom                getSelection() const;
+    Atom getSelection() const;
 
     // IClipboard overrides
     bool empty() override;
@@ -95,7 +95,7 @@ public:
 
 private:
     // remove all converters from our list
-    void                clearConverters();
+    void clearConverters();
 
     // get the converter for a clipboard format.  returns nullptr if no
     // suitable converter.  iff onlyIfNotAdded is true then also
@@ -106,28 +106,28 @@ private:
                             bool onlyIfNotAdded = false) const;
 
     // convert target atom to clipboard format
-    EFormat                getFormat(Atom target) const;
+    EFormat getFormat(Atom target) const;
 
     // add a non-MULTIPLE request.  does not verify that the selection
     // was owned at the given time.  returns true if the conversion
     // could be performed, false otherwise.  in either case, the
     // reply is inserted.
-    bool                addSimpleRequest(
+    bool addSimpleRequest(
                             Window requestor, Atom target,
                             ::Time time, Atom property);
 
     // if not already checked then see if the cache is stale and, if so,
     // clear it.  this has the side effect of updating m_timeOwned.
-    void                checkCache() const;
+    void checkCache() const;
 
     // clear the cache, resetting the cached flag and the added flag for
     // each format.
-    void                clearCache() const;
-    void                doClearCache();
+    void clearCache() const;
+    void doClearCache();
 
     // cache all formats of the selection
-    void                fillCache() const;
-    void                doFillCache();
+    void fillCache() const;
+    void doFillCache();
 
     //
     // helper classes
@@ -142,12 +142,12 @@ private:
         // convert the given selection to the given type.  returns
         // true iff the conversion was successful or the conversion
         // cannot be performed (in which case *actualTarget == None).
-        bool            readClipboard(Display* display,
+        bool readClipboard(Display* display,
                             Atom selection, Atom target,
                             Atom* actualTarget, std::string* data);
 
     private:
-        bool            processEvent(Display* display, XEvent* event);
+        bool processEvent(Display* display, XEvent* event);
 
     private:
         Window m_requestor;
@@ -249,30 +249,30 @@ private:
     typedef std::map<Window, long> ReplyEventMask;
 
     // ICCCM interoperability methods
-    void                icccmFillCache();
+    void icccmFillCache();
     bool icccmGetSelection(Atom target, Atom* actualTarget, std::string* data) const;
-    Time                icccmGetTime() const;
+    Time icccmGetTime() const;
 
     // motif interoperability methods
-    bool                motifLockClipboard() const;
-    void                motifUnlockClipboard() const;
-    bool                motifOwnsClipboard() const;
-    void                motifFillCache();
+    bool motifLockClipboard() const;
+    void motifUnlockClipboard() const;
+    bool motifOwnsClipboard() const;
+    void motifFillCache();
     bool motifGetSelection(const MotifClipFormat*, Atom* actualTarget, std::string* data) const;
-    Time                motifGetTime() const;
+    Time motifGetTime() const;
 
     // reply methods
-    bool                insertMultipleReply(Window, ::Time, Atom);
-    void                insertReply(Reply*);
-    void                pushReplies();
-    void                pushReplies(ReplyMap::iterator&,
+    bool insertMultipleReply(Window, ::Time, Atom);
+    void insertReply(Reply*);
+    void pushReplies();
+    void pushReplies(ReplyMap::iterator&,
                             ReplyList&, ReplyList::iterator);
-    bool                sendReply(Reply*);
-    void                clearReplies();
-    void                clearReplies(ReplyList&);
-    void                sendNotify(Window requestor, Atom selection,
+    bool sendReply(Reply*);
+    void clearReplies();
+    void clearReplies(ReplyList&);
+    void sendNotify(Window requestor, Atom selection,
                             Atom target, Atom property, Time time);
-    bool                wasOwnedAtTime(::Time) const;
+    bool wasOwnedAtTime(::Time) const;
 
     // data conversion methods
     Atom getTargetsData(std::string&, int* format) const;
@@ -348,14 +348,14 @@ public:
     Return the atom representing the X selection format that
     this object converts from/to.
     */
-    virtual Atom        getAtom() const = 0;
+    virtual Atom getAtom() const = 0;
 
     //! Get X11 property datum size
     /*!
     Return the size (in bits) of data elements returned by
     toIClipboard().
     */
-    virtual int            getDataSize() const = 0;
+    virtual int getDataSize() const = 0;
 
     //! Convert from IClipboard format
     /*!

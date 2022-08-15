@@ -22,7 +22,7 @@
 #include "test/mock/inputleap/MockEventQueue.h"
 #include "platform/XWindowsScreenSaver.h"
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 #include <cstdlib>
 #include <X11/Xlib.h>
 

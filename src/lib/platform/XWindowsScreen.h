@@ -92,25 +92,25 @@ protected:
 private:
     // event sending
     void sendEvent(Event::Type, void* = nullptr);
-    void                sendClipboardEvent(Event::Type, ClipboardID);
+    void sendClipboardEvent(Event::Type, ClipboardID);
 
     // create the transparent cursor
-    Cursor              createBlankCursor() const;
+    Cursor createBlankCursor() const;
 
     // determine the clipboard from the X selection.  returns
     // kClipboardEnd if no such clipboard.
-    ClipboardID         getClipboardID(Atom selection) const;
+    ClipboardID getClipboardID(Atom selection) const;
 
     // continue processing a selection request
-    void                processClipboardRequest(Window window,
+    void processClipboardRequest(Window window,
                             Time time, Atom property);
 
     // terminate a selection request
-    void                destroyClipboardRequest(Window window);
+    void destroyClipboardRequest(Window window);
 
     // X I/O error handler
-    void                onError();
-    static int            ioErrorHandler(Display*);
+    void onError();
+    static int ioErrorHandler(Display*);
 
 private:
     class KeyEventFilter {
@@ -121,38 +121,38 @@ private:
         KeyCode m_keycode;
     };
 
-    Display*            openDisplay(const char* displayName);
-    void                saveShape();
-    Window              openWindow() const;
-    void                openIM();
+    Display* openDisplay(const char* displayName);
+    void saveShape();
+    Window openWindow() const;
+    void openIM();
 
-    bool                grabMouseAndKeyboard();
-    void                onKeyPress(XKeyEvent&);
-    void                onKeyRelease(XKeyEvent&, bool isRepeat);
-    bool                onHotKey(XKeyEvent&, bool isRepeat);
-    void                onMousePress(const XButtonEvent&);
-    void                onMouseRelease(const XButtonEvent&);
-    void                onMouseMove(const XMotionEvent&);
+    bool grabMouseAndKeyboard();
+    void onKeyPress(XKeyEvent&);
+    void onKeyRelease(XKeyEvent&, bool isRepeat);
+    bool onHotKey(XKeyEvent&, bool isRepeat);
+    void onMousePress(const XButtonEvent&);
+    void onMouseRelease(const XButtonEvent&);
+    void onMouseMove(const XMotionEvent&);
 
     // Returns the number of scroll events needed after the current delta has
     // been taken into account
     int x_accumulateMouseScroll(std::int32_t xDelta) const;
     int y_accumulateMouseScroll(std::int32_t yDelta) const;
 
-    bool                detectXI2();
-    void                selectXIRawMotion();
-    void                selectEvents(Window) const;
-    void                doSelectEvents(Window) const;
+    bool detectXI2();
+    void selectXIRawMotion();
+    void selectEvents(Window) const;
+    void doSelectEvents(Window) const;
 
-    KeyID               mapKeyFromX(XKeyEvent*) const;
-    ButtonID            mapButtonFromX(const XButtonEvent*) const;
-    unsigned int        mapButtonToX(ButtonID id) const;
+    KeyID mapKeyFromX(XKeyEvent*) const;
+    ButtonID mapButtonFromX(const XButtonEvent*) const;
+    unsigned int mapButtonToX(ButtonID id) const;
 
     void warpCursorNoFlush(std::int32_t x, std::int32_t y);
 
-    void                refreshKeyboard(XEvent*);
+    void refreshKeyboard(XEvent*);
 
-    static Bool         findKeyEvent(Display*, XEvent* xevent, XPointer arg);
+    static Bool findKeyEvent(Display*, XEvent* xevent, XPointer arg);
 
 private:
     struct HotKeyItem {

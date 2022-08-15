@@ -27,9 +27,8 @@ public:
     virtual ~OSXClipboardAnyBitmapConverter();
 
     // IOSXClipboardConverter overrides
-    virtual IClipboard::EFormat
-                        getFormat() const;
-    virtual CFStringRef    getOSXFormat() const = 0;
+    virtual IClipboard::EFormat getFormat() const;
+    virtual CFStringRef getOSXFormat() const = 0;
     virtual std::string fromIClipboard(const std::string &) const;
     virtual std::string toIClipboard(const std::string &) const;
 

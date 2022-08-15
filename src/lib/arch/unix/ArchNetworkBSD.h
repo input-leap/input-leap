@@ -91,11 +91,11 @@ public:
     bool isEqualAddr(ArchNetAddress, ArchNetAddress) override;
 
 private:
-    const int*            getUnblockPipe();
-    const int*            getUnblockPipeForThread(ArchThread);
-    void                setBlockingOnSocket(int fd, bool blocking);
-    void                throwError(int);
-    void                throwNameError(int);
+    const int* getUnblockPipe();
+    const int* getUnblockPipeForThread(ArchThread);
+    void setBlockingOnSocket(int fd, bool blocking);
+    void throwError(int);
+    void throwNameError(int);
 
 private:
     std::mutex mutex_;

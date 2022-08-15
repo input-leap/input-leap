@@ -30,5 +30,5 @@ public:
     virtual ~IEventJob() { }
 
     //! Run the job
-    virtual void        run(const Event&) = 0;
+    virtual void run(const Event&) = 0;
 };

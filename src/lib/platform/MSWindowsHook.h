@@ -31,7 +31,7 @@ public:
     void setSides(std::uint32_t sides);
     void setZone(std::int32_t x, std::int32_t y, std::int32_t w, std::int32_t h,
                  std::int32_t jumpZoneSize);
-    void                setMode(EHookMode mode);
+    void setMode(EHookMode mode);
 
     static bool install();
     static void uninstall();

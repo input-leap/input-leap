@@ -85,7 +85,7 @@ public:
     \endcode
     or add the \c RETHROW_XTHREAD macro to the \c catch(...) block.
     */
-    static void            exit(void*);
+    static void exit(void*);
 
     //! Cancel thread
     /*!
@@ -113,7 +113,7 @@ public:
     exception or include a \c catch(XThreadCancel) handler that
     rethrows.  The \c RETHROW_XTHREAD macro may be useful for that.
     */
-    void                cancel();
+    void cancel();
 
     //! Change thread priority
     /*!
@@ -121,14 +121,14 @@ public:
     the next lower, etc.  -1 is the next higher, etc. but boosting
     the priority may not be permitted and will be silently ignored.
     */
-    void                setPriority(int n);
+    void setPriority(int n);
 
     //! Force pollSocket() to return
     /*!
     Forces a currently blocked pollSocket() in the thread to return
     immediately.
     */
-    void                unblockPollSocket();
+    void unblockPollSocket();
 
     //@}
     //! @name accessors
@@ -138,7 +138,7 @@ public:
     /*!
     Return a Thread object representing the calling thread.
     */
-    static Thread        getCurrentThread();
+    static Thread getCurrentThread();
 
     //! Test for cancellation
     /*!
@@ -149,7 +149,7 @@ public:
 
     (cancellation point)
     */
-    static void            testCancel();
+    static void testCancel();
 
     //! Wait for thread to terminate
     /*!
@@ -162,7 +162,7 @@ public:
 
     (cancellation point)
     */
-    bool                wait(double timeout = -1.0) const;
+    bool wait(double timeout = -1.0) const;
 
     //! Get the thread id
     /*!

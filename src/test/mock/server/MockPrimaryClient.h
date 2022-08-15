@@ -21,7 +21,7 @@
 
 #include "server/PrimaryClient.h"
 
-#include "test/global/gmock.h"
+#include <gmock/gmock.h>
 
 class MockPrimaryClient : public PrimaryClient
 {

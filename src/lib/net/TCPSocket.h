@@ -68,29 +68,29 @@ protected:
         kNew            //!< Require a new job
     };
 
-    ArchSocket            getSocket() { return m_socket; }
-    IEventQueue*        getEvents() { return m_events; }
-    virtual EJobResult    doRead();
-    virtual EJobResult    doWrite();
+    ArchSocket getSocket() { return m_socket; }
+    IEventQueue* getEvents() { return m_events; }
+    virtual EJobResult doRead();
+    virtual EJobResult doWrite();
 
     void removeJob();
     void setJob(std::unique_ptr<ISocketMultiplexerJob>&& job);
     MultiplexerJobStatus newJobOrStopServicing();
 
-    bool                isReadable() { return m_readable; }
-    bool                isWritable() { return m_writable; }
+    bool isReadable() { return m_readable; }
+    bool isWritable() { return m_writable; }
 
-    void                sendEvent(Event::Type);
-    void                discardWrittenData(int bytesWrote);
+    void sendEvent(Event::Type);
+    void discardWrittenData(int bytesWrote);
 
 private:
-    void                init();
+    void init();
 
-    void                sendConnectionFailedEvent(const char*);
-    void                onConnected();
-    void                onInputShutdown();
-    void                onOutputShutdown();
-    void                onDisconnected();
+    void sendConnectionFailedEvent(const char*);
+    void onConnected();
+    void onInputShutdown();
+    void onOutputShutdown();
+    void onDisconnected();
 
     MultiplexerJobStatus serviceConnecting(ISocketMultiplexerJob*, bool, bool, bool);
     MultiplexerJobStatus serviceConnected(ISocketMultiplexerJob*, bool, bool, bool);

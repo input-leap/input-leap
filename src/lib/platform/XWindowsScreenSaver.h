@@ -45,14 +45,14 @@ public:
     Should be called for each system event before event translation and
     dispatch.  Returns true to skip translation and dispatch.
     */
-    bool                handleXEvent(const XEvent*);
+    bool handleXEvent(const XEvent*);
 
     //! Destroy without the display
     /*!
     Tells this object to delete itself without using the X11 display.
     It may leak some resources as a result.
     */
-    void                destroy();
+    void destroy();
 
     //@}
 
@@ -66,48 +66,48 @@ public:
 private:
     // find and set the running xscreensaver's window.  returns true iff
     // found.
-    bool                findXScreenSaver();
+    bool findXScreenSaver();
 
     // set the xscreensaver's window, updating the activation state flag
-    void                setXScreenSaver(Window);
+    void setXScreenSaver(Window);
 
     // returns true if the window appears to be the xscreensaver window
-    bool                isXScreenSaver(Window) const;
+    bool isXScreenSaver(Window) const;
 
     // set xscreensaver's activation state flag.  sends notification
     // if the state has changed.
-    void                setXScreenSaverActive(bool activated);
+    void setXScreenSaverActive(bool activated);
 
     // send a command to xscreensaver
-    void                sendXScreenSaverCommand(Atom, long = 0, long = 0);
+    void sendXScreenSaverCommand(Atom, long = 0, long = 0);
 
     // watch all windows that could potentially be the xscreensaver for
     // the events that will confirm it.
-    void                watchForXScreenSaver();
+    void watchForXScreenSaver();
 
     // stop watching all watched windows
-    void                clearWatchForXScreenSaver();
+    void clearWatchForXScreenSaver();
 
     // add window to the watch list
-    void                addWatchXScreenSaver(Window window);
+    void addWatchXScreenSaver(Window window);
 
     // install/uninstall the job used to suppress the screensaver
-    void                updateDisableTimer();
+    void updateDisableTimer();
 
     // called periodically to prevent the screen saver from starting
-    void                handleDisableTimer(const Event&, void*);
+    void handleDisableTimer(const Event&, void*);
 
     // force DPMS to activate or deactivate
-    void                activateDPMS(bool activate);
+    void activateDPMS(bool activate);
 
     // enable/disable DPMS screen saver
-    void                enableDPMS(bool);
+    void enableDPMS(bool);
 
     // check if DPMS is enabled
-    bool                isDPMSEnabled() const;
+    bool isDPMSEnabled() const;
 
     // check if DPMS is activate
-    bool                isDPMSActivated() const;
+    bool isDPMSActivated() const;
 
 private:
     typedef std::map<Window, long> WatchList;

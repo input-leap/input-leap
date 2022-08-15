@@ -75,7 +75,7 @@ private:
     static void vreadf(inputleap::IStream*, const char* fmt, va_list);
 
     static std::uint32_t getLength(const char* fmt, va_list);
-    static void            writef_void(void*, const char* fmt, va_list);
+    static void writef_void(void*, const char* fmt, va_list);
     static std::uint32_t eatLength(const char** fmt);
     static void read(inputleap::IStream*, void*, std::uint32_t);
 };

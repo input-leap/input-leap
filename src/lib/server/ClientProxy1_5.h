@@ -33,8 +33,8 @@ public:
     void sendDragInfo(std::uint32_t fileCount, const char* info, size_t size) override;
     void fileChunkSending(std::uint8_t mark, char* data, size_t dataSize) override;
     bool parseMessage(const std::uint8_t* code) override;
-    void                fileChunkReceived();
-    void                dragInfoReceived();
+    void fileChunkReceived();
+    void dragInfoReceived();
 
 private:
     IEventQueue* m_events;

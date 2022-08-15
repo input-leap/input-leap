@@ -97,16 +97,16 @@ public:
     IEventQueue* getEvents() const override { return m_events; }
 
     void setSocketMultiplexer(std::unique_ptr<SocketMultiplexer>&& sm) { m_socketMultiplexer = std::move(sm); }
-    SocketMultiplexer*    getSocketMultiplexer() const { return m_socketMultiplexer.get(); }
+    SocketMultiplexer* getSocketMultiplexer() const { return m_socketMultiplexer.get(); }
 
-    void                setEvents(EventQueue& events) { m_events = &events; }
+    void setEvents(EventQueue& events) { m_events = &events; }
 
 private:
-    void                handleIpcMessage(const Event&, void*);
+    void handleIpcMessage(const Event&, void*);
 
 protected:
-    void                initIpcClient();
-    void                cleanupIpcClient();
+    void initIpcClient();
+    void cleanupIpcClient();
     void run_events_loop();
 
     IArchTaskBarReceiver* m_taskBarReceiver;

@@ -62,7 +62,7 @@ protected:
     };
 
     //! Get status
-    EState                getStatus() const;
+    EState getStatus() const;
 
     //! Get error message
     const std::string& getErrorMessage() const;
@@ -71,13 +71,13 @@ protected:
     /*!
     Causes the application to quit gracefully
     */
-    void                quit();
+    void quit();
 
     //! Status change notification
     /*!
     Called when status changes.  The default implementation does nothing.
     */
-    virtual void        onStatusChanged(Client* client);
+    virtual void onStatusChanged(Client* client);
 
 private:
     EState m_state;

@@ -127,14 +127,14 @@ public:
     //@{
 
     //! Swap with another \c KeyMap
-    virtual void        swap(KeyMap&);
+    virtual void swap(KeyMap&);
 
     //! Add a key entry
     /*!
     Adds \p item to the entries for the item's id and group.  The
     \c m_dead member is set automatically.
     */
-    void                addKeyEntry(const KeyItem& item);
+    void addKeyEntry(const KeyItem& item);
 
     //! Add an alias key entry
     /*!
@@ -168,7 +168,7 @@ public:
     If called then the keyboard map will allow switching between groups
     during key composition.  Not all systems allow that.
     */
-    void                allowGroupSwitchDuringCompose();
+    void allowGroupSwitchDuringCompose();
 
     //! Add a half-duplex button
     /*!
@@ -176,33 +176,33 @@ public:
     when translating the system's keyboard map.  It's independent of the
     half-duplex modifier calls.
     */
-    void                addHalfDuplexButton(KeyButton button);
+    void addHalfDuplexButton(KeyButton button);
 
     //! Remove all half-duplex modifiers
     /*!
     Removes all half-duplex modifiers.  This is called to set user
     configurable half-duplex settings.
     */
-    void                clearHalfDuplexModifiers();
+    void clearHalfDuplexModifiers();
 
     //! Add a half-duplex modifier
     /*!
     Records that modifier key \p key is half-duplex.  This is called to
     set user configurable half-duplex settings.
     */
-    virtual void        addHalfDuplexModifier(KeyID key);
+    virtual void addHalfDuplexModifier(KeyID key);
 
     //! Finish adding entries
     /*!
     Called after adding entries, this does some internal housekeeping.
     */
-    virtual void        finish();
+    virtual void finish();
 
     //! Iterate over all added keys items
     /*!
     Calls \p cb for every key item.
     */
-    virtual void        foreachKey(ForeachKeyCallback cb, void* userData);
+    virtual void foreachKey(ForeachKeyCallback cb, void* userData);
 
     //@}
     //! @name accessors
@@ -249,7 +249,7 @@ public:
     Returns \c true iff modifier key \p key or button \p button is
     half-duplex.
     */
-    virtual bool        isHalfDuplex(KeyID key, KeyButton button) const;
+    virtual bool isHalfDuplex(KeyID key, KeyButton button) const;
 
     //! Test if modifiers indicate a command
     /*!
@@ -260,20 +260,20 @@ public:
     important to match the shift or AltGr state to achieve a character
     but it is important to match the modifier state exactly.
     */
-    bool                isCommand(KeyModifierMask mask) const;
+    bool isCommand(KeyModifierMask mask) const;
 
     // Get the modifiers that indicate a command
     /*!
     Returns the modifiers that when combined with other keys indicate
     a command (e.g. shortcut or hotkey).
     */
-    KeyModifierMask        getCommandModifiers() const;
+    KeyModifierMask getCommandModifiers() const;
 
     //! Get buttons from modifier map
     /*!
     Put all the keys in \p modifiers into \p keys.
     */
-    static void            collectButtons(const ModifierToKeys& modifiers,
+    static void collectButtons(const ModifierToKeys& modifiers,
                             ButtonToKeyMap& keys);
 
     //! Set modifier key state
@@ -281,20 +281,20 @@ public:
     Sets the modifier key state (\c m_generates and \c m_lock) in \p item
     based on the \c m_id in \p item.
     */
-    static void            initModifierKey(KeyItem& item);
+    static void initModifierKey(KeyItem& item);
 
     //! Test for a dead key
     /*!
     Returns \c true if \p key is a dead key.
     */
-    static bool            isDeadKey(KeyID key);
+    static bool isDeadKey(KeyID key);
 
     //! Get corresponding dead key
     /*!
     Returns the dead key corresponding to \p key if one exists, otherwise
     return \c kKeyNone.  This returns \p key if it's already a dead key.
     */
-    static KeyID        getDeadKey(KeyID key);
+    static KeyID getDeadKey(KeyID key);
 
     //! Get string for a key and modifier mask
     /*!
@@ -356,7 +356,7 @@ private:
     std::int32_t findNumGroups() const;
 
     // computes the map of modifiers to the keys that generate the modifiers
-    void                setModifierKeys();
+    void setModifierKeys();
 
     // maps a command key.  a command key is a keyboard shortcut and we're
     // trying to synthesize a button press with an exact sets of modifiers,
@@ -416,7 +416,7 @@ private:
     // \p requiredState for each modifier indicated in \p sensitiveMask.
     // returns \c true iff successful and sets \p currentState to the
     // resulting modifier state.
-    bool                keysForModifierState(KeyButton button, std::int32_t group,
+    bool keysForModifierState(KeyButton button, std::int32_t group,
                             ModifierToKeys& activeModifiers,
                             KeyModifierMask& currentState,
                             KeyModifierMask requiredState,
@@ -426,7 +426,7 @@ private:
 
     // Adds keystrokes to synthesize key \p keyItem in mode \p type to
     // \p keystrokes and to undo the synthesis to \p undo.
-    void                addKeystrokes(EKeystroke type,
+    void addKeystrokes(EKeystroke type,
                             const KeyItem& keyItem,
                             ModifierToKeys& activeModifiers,
                             KeyModifierMask& currentState,
@@ -436,7 +436,7 @@ private:
     static std::int32_t getNumModifiers(KeyModifierMask state);
 
     // Initialize key name/id maps
-    static void            initKeyNameMaps();
+    static void initKeyNameMaps();
 
     // not implemented
     KeyMap(const KeyMap&);

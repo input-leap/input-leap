@@ -58,7 +58,7 @@ public:
     XArchEval() { }
     virtual ~XArchEval() noexcept { }
 
-    virtual std::string    eval() const = 0;
+    virtual std::string eval() const = 0;
 };
 
 //! Generic exception architecture dependent library

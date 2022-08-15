@@ -25,13 +25,14 @@ class TestEventQueue : public EventQueue {
 public:
     TestEventQueue() : m_quitTimeoutTimer(nullptr) { }
 
-    void                handleQuitTimeout(const Event&, void* vclient);
-    void                raiseQuitEvent();
-    void                initQuitTimeout(double timeout);
-    void                cleanupQuitTimeout();
+    void handleQuitTimeout(const Event&, void* vclient);
+    void raiseQuitEvent();
+    void initQuitTimeout(double timeout);
+    void cleanupQuitTimeout();
+    bool parent_requests_shutdown() const override;
 
 private:
-    void                timeoutThread(void*);
+    void timeoutThread(void*);
 
 private:
     EventQueueTimer* m_quitTimeoutTimer;

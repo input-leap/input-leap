@@ -45,14 +45,14 @@ public:
     /*!
     Returns the target used for events created by this object.
     */
-    virtual void*        getEventTarget() const = 0;
+    virtual void* getEventTarget() const = 0;
 
     //! Get clipboard
     /*!
     Save the contents of the clipboard indicated by \c id and return
     true iff successful.
     */
-    virtual bool        getClipboard(ClipboardID id, IClipboard*) const = 0;
+    virtual bool getClipboard(ClipboardID id, IClipboard*) const = 0;
 
     //! Get screen shape
     /*!

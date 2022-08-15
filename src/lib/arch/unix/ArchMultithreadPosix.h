@@ -37,15 +37,15 @@ public:
     //! @name manipulators
     //@{
 
-    void                setNetworkDataForCurrentThread(void*);
+    void setNetworkDataForCurrentThread(void*);
 
     //@}
     //! @name accessors
     //@{
 
-    void*                getNetworkDataForThread(ArchThread);
+    void* getNetworkDataForThread(ArchThread);
 
-    static ArchMultithreadPosix*    getInstance();
+    static ArchMultithreadPosix* getInstance();
 
     //@}
 
@@ -65,20 +65,20 @@ public:
     void raiseSignal(ESignal) override;
 
 private:
-    void                startSignalHandler();
+    void startSignalHandler();
 
-    ArchThreadImpl*    find(pthread_t thread);
-    ArchThreadImpl*    findNoRef(pthread_t thread);
-    void                insert(ArchThreadImpl* thread);
-    void                erase(ArchThreadImpl* thread);
+    ArchThreadImpl* find(pthread_t thread);
+    ArchThreadImpl* findNoRef(pthread_t thread);
+    void insert(ArchThreadImpl* thread);
+    void erase(ArchThreadImpl* thread);
 
-    void                refThread(ArchThreadImpl* rep);
-    void                testCancelThreadImpl(ArchThreadImpl* rep);
+    void refThread(ArchThreadImpl* rep);
+    void testCancelThreadImpl(ArchThreadImpl* rep);
 
-    void                doThreadFunc(ArchThread thread);
-    static void*        threadFunc(void* vrep);
-    static void            threadCancel(int);
-    static void*        threadSignalHandler(void* vrep);
+    void doThreadFunc(ArchThread thread);
+    static void* threadFunc(void* vrep);
+    static void threadCancel(int);
+    static void* threadSignalHandler(void* vrep);
 
 private:
     typedef std::list<ArchThread> ThreadList;

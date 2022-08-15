@@ -31,8 +31,8 @@
 
 #include <X11/XKBlib.h>
 
-#include "test/global/gtest.h"
-#include "test/global/gmock.h"
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 #include <errno.h>
 
 class XWindowsKeyStateTests : public ::testing::Test
@@ -58,6 +58,11 @@ protected:
         if (this->m_display == nullptr) {
             LOG((CLOG_DEBUG "opening display"));
             this->m_display = XOpenDisplay(nullptr);
+
+            // failed to open the display and DISPLAY is null? probably
+            // running in a CI, let's skip
+            if (this->m_display == nullptr && std::getenv("DISPLAY") == nullptr)
+                GTEST_SKIP() << "DISPLAY environment variable not set, skipping test";
 
             ASSERT_TRUE(this->m_display != nullptr)
                 << "unable to open display: " << errno;

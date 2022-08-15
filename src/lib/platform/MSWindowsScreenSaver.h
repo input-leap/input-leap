@@ -41,16 +41,16 @@ public:
     be posted to the current thread's message queue with the given
     parameters.
     */
-    bool                checkStarted(UINT msg, WPARAM, LPARAM);
+    bool checkStarted(UINT msg, WPARAM, LPARAM);
 
     //@}
 
     // IScreenSaver overrides
-    virtual void        enable();
-    virtual void        disable();
-    virtual void        activate();
-    virtual void        deactivate();
-    virtual bool        isActive() const;
+    virtual void enable();
+    virtual void disable();
+    virtual void activate();
+    virtual void deactivate();
+    virtual bool isActive() const;
 
 private:
     class FindScreenSaverInfo {
@@ -59,16 +59,16 @@ private:
         HWND m_window;
     };
 
-    static BOOL CALLBACK    killScreenSaverFunc(HWND hwnd, LPARAM lParam);
+    static BOOL CALLBACK killScreenSaverFunc(HWND hwnd, LPARAM lParam);
 
-    void                watchDesktop();
-    void                watchProcess(HANDLE process);
-    void                unwatchProcess();
+    void watchDesktop();
+    void watchProcess(HANDLE process);
+    void unwatchProcess();
     void watch_desktop_thread();
     void watch_process_thread();
 
-    void                setSecure(bool secure, bool saveSecureAsInt);
-    bool                isSecure(bool* wasSecureAnInt) const;
+    void setSecure(bool secure, bool saveSecureAsInt);
+    bool isSecure(bool* wasSecureAnInt) const;
 
 private:
     BOOL m_wasEnabled;

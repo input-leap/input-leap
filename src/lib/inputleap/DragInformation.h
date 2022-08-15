@@ -31,8 +31,8 @@ public:
 
     std::string& getFilename() { return m_filename; }
     void setFilename(std::string& name) { m_filename = name; }
-    size_t                getFilesize() { return m_filesize; }
-    void                setFilesize(size_t size) { m_filesize = size; }
+    size_t getFilesize() { return m_filesize; }
+    void setFilesize(size_t size) { m_filesize = size; }
 
     static void parseDragInfo(DragFileList& dragFileList, std::uint32_t fileNum, std::string data);
     static std::string getDragFileExtension(std::string filename);

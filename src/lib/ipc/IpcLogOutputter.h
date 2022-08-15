@@ -55,7 +55,7 @@ public:
     //@{
 
     //! Notify that the buffer should be sent.
-    void                notifyBuffer();
+    void notifyBuffer();
 
     //! Set the buffer size
     /*!
@@ -75,7 +75,7 @@ public:
     Sends a chunk of the buffer to the IPC server, normally called
     when threaded mode is on.
     */
-    void                sendBuffer();
+    void sendBuffer();
 
     //@}
 
@@ -91,11 +91,11 @@ public:
     //@}
 
 private:
-    void                init();
+    void init();
     void buffer_thread();
     std::string getChunk(size_t count);
     void appendBuffer(const std::string& text);
-    bool                isRunning();
+    bool isRunning();
 
 private:
     typedef std::deque<std::string> Buffer;

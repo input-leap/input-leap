@@ -38,7 +38,7 @@ public:
         static ButtonInfo* alloc(ButtonID, KeyModifierMask);
         static ButtonInfo* alloc(const ButtonInfo&);
 
-        static bool            equal(const ButtonInfo*, const ButtonInfo*);
+        static bool equal(const ButtonInfo*, const ButtonInfo*);
 
     public:
         ButtonID m_button;
@@ -127,13 +127,13 @@ public:
     ensures that we ignore it.  Calls to \c fakeInputBegin() may not be
     nested.
     */
-    virtual void        fakeInputBegin() = 0;
+    virtual void fakeInputBegin() = 0;
 
     //! Done synthesizing input on primary screen
     /*!
     Undoes whatever \c fakeInputBegin() did.
     */
-    virtual void        fakeInputEnd() = 0;
+    virtual void fakeInputEnd() = 0;
 
     //@}
     //! @name accessors

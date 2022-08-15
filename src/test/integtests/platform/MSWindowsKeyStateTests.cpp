@@ -25,8 +25,8 @@
 #include "platform/MSWindowsScreen.h"
 #include "platform/MSWindowsScreenSaver.h"
 
-#include "test/global/gtest.h"
-#include "test/global/gmock.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 // wParam = flags, HIBYTE(lParam) = virtual key, LOBYTE(lParam) = scan code
 #define INPUTLEAP_MSG_FAKE_KEY		INPUTLEAP_HOOK_LAST_MSG + 4

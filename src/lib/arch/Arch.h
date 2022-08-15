@@ -101,9 +101,9 @@ public:
     The client must have instantiated exactly once Arch object before
     calling this function.
     */
-    static Arch*        getInstance();
+    static Arch* getInstance();
 
-    static void            setInstance(Arch* s) { s_instance = s; }
+    static void setInstance(Arch* s) { s_instance = s; }
 
     ARCH_INTERNET& internet() const { return const_cast<ARCH_INTERNET&>(m_internet); }
 

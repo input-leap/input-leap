@@ -39,13 +39,13 @@ public:
     virtual ~IpcClientProxy();
 
 private:
-    void                send(const IpcMessage& message);
-    void                handleData(const Event&, void*);
-    void                handleDisconnect(const Event&, void*);
-    void                handleWriteError(const Event&, void*);
-    IpcHelloMessage*    parseHello();
-    IpcCommandMessage*    parseCommand();
-    void                disconnect();
+    void send(const IpcMessage& message);
+    void handleData(const Event&, void*);
+    void handleDisconnect(const Event&, void*);
+    void handleWriteError(const Event&, void*);
+    IpcHelloMessage* parseHello();
+    IpcCommandMessage* parseCommand();
+    void disconnect();
 
 private:
     inputleap::IStream& m_stream;

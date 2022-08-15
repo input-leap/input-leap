@@ -50,9 +50,6 @@ ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
         else if (parseGenericArgs(argc, argv, i)) {
             continue;
         }
-        else if (parseDeprecatedArgs(argc, argv, i)) {
-            continue;
-        }
         else if (isArg(i, argc, argv, "-a", "--address", 1)) {
             // save listen address
             args.m_barrierAddress = argv[++i];
@@ -93,15 +90,6 @@ ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
         }
         else if (parseGenericArgs(argc, argv, i)) {
             continue;
-        }
-        else if (parseDeprecatedArgs(argc, argv, i)) {
-            continue;
-        }
-        else if (isArg(i, argc, argv, nullptr, "--camp")) {
-            // ignore -- included for backwards compatibility
-        }
-        else if (isArg(i, argc, argv, nullptr, "--no-camp")) {
-            // ignore -- included for backwards compatibility
         }
         else if (isArg(i, argc, argv, nullptr, "--yscroll", 1)) {
             // define scroll
@@ -304,38 +292,6 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
     }
 
     return true;
-}
-
-bool
-ArgParser::parseDeprecatedArgs(int argc, const char* const* argv, int& i)
-{
-    if (isArg(i, argc, argv, nullptr, "--crypto-pass")) {
-        LOG((CLOG_NOTE "--crypto-pass is deprecated"));
-        i++;
-        return true;
-    }
-    else if (isArg(i, argc, argv, nullptr, "--res-w")) {
-        LOG((CLOG_NOTE "--res-w is deprecated"));
-        i++;
-        return true;
-    }
-    else if (isArg(i, argc, argv, nullptr, "--res-h")) {
-        LOG((CLOG_NOTE "--res-h is deprecated"));
-        i++;
-        return true;
-    }
-    else if (isArg(i, argc, argv, nullptr, "--prm-wc")) {
-        LOG((CLOG_NOTE "--prm-wc is deprecated"));
-        i++;
-        return true;
-    }
-    else if (isArg(i, argc, argv, nullptr, "--prm-hc")) {
-        LOG((CLOG_NOTE "--prm-hc is deprecated"));
-        i++;
-        return true;
-    }
-
-    return false;
 }
 
 bool

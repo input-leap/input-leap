@@ -35,7 +35,6 @@ public:
     bool parseClientArgs(ClientArgs& args, int argc, const char* const* argv);
     bool parsePlatformArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
     bool parseGenericArgs(int argc, const char* const* argv, int& i);
-    bool parseDeprecatedArgs(int argc, const char* const* argv, int& i);
     void setArgsBase(ArgsBase& argsBase) { m_argsBase = &argsBase; }
 
     static bool isArg(int argi, int argc, const char* const* argv,

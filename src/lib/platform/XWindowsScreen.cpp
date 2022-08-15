@@ -61,7 +61,6 @@ XWindowsScreen::XWindowsScreen(
         IXWindowsImpl* impl,
 		const char* displayName,
 		bool isPrimary,
-		bool disableXInitThreads,
 		int mouseScrollDelta,
 		IEventQueue* events) :
     PlatformScreen(events),
@@ -99,13 +98,9 @@ XWindowsScreen::XWindowsScreen(
 	if (mouseScrollDelta==0) m_mouseScrollDelta=120;
 	s_screen = this;
 
-	if (!disableXInitThreads) {
-	  // initializes Xlib support for concurrent threads.
-      if (m_impl->XInitThreads() == 0)
-	    throw XArch("XInitThreads() returned zero");
-	} else {
-		LOG((CLOG_DEBUG "skipping XInitThreads()"));
-	}
+    // initializes Xlib support for concurrent threads.
+    if (m_impl->XInitThreads() == 0)
+        throw XArch("XInitThreads() returned zero");
 
 	// set the X I/O error handler so we catch the display disconnecting
     m_impl->XSetIOErrorHandler(&XWindowsScreen::ioErrorHandler);

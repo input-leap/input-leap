@@ -37,9 +37,6 @@ m_disableTray(false),
 m_enableIpc(false),
 m_enableDragDrop(false),
 m_dropTarget(""),
-#if WINAPI_XWINDOWS
-m_disableXInitThreads(false),
-#endif
 m_shouldExit(false),
 m_barrierAddress(),
     m_enableCrypto(true),

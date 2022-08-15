@@ -4,7 +4,7 @@
 barriers \- Barrier Keyboard/Mouse Server
 .SH SYNOPSIS
 .B barriers
-[\fI\,--address <address>\/\fR] [\fI\,--config <pathname>\/\fR] [\fI\,--display <display>\/\fR] [\fI\,--no-xinitthreads\/\fR] [\fI\,--daemon|--no-daemon\/\fR] [\fI\,--name <screen-name>\/\fR] [\fI\,--restart|--no-restart\/\fR] [\fI\,--debug <level>\/\fR]
+[\fI\,--address <address>\/\fR] [\fI\,--config <pathname>\/\fR] [\fI\,--display <display>\/\fR] [\fI\,--daemon|--no-daemon\/\fR] [\fI\,--name <screen-name>\/\fR] [\fI\,--restart|--no-restart\/\fR] [\fI\,--debug <level>\/\fR]
 .SH DESCRIPTION
 Start the barrier server component.
 .SH OPTIONS
@@ -43,9 +43,6 @@ enable the crypto (ssl) plugin.
 .TP
 \fB\-\-display\fR <display>
 connect to the X server at <display>
-.TP
-\fB\-\-no\-xinitthreads\fR
-do not call XInitThreads()
 .TP
 \fB\-\-screen\-change\-script\fR <path>
 full path to script to run on screen change

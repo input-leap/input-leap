@@ -44,9 +44,6 @@ public:
     bool m_pauseOnExit;
     bool m_stopOnDeskSwitch;
 #endif
-#if WINAPI_XWINDOWS
-    bool m_disableXInitThreads;
-#endif
     bool m_shouldExit;
     std::string m_barrierAddress;
     bool m_enableCrypto;

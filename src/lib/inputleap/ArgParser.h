@@ -88,7 +88,6 @@ public:
 
 private:
     void updateCommonArgs(Argv &argv);
-    bool checkUnexpectedArgs();
 
     static ArgsBase& argsBase() { return *m_argsBase; }
 

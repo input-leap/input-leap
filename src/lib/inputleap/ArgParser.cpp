@@ -131,10 +131,6 @@ ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
         return false;
     }
 
-    if (checkUnexpectedArgs()) {
-        return false;
-    }
-
     return true;
 }
 
@@ -181,10 +177,6 @@ ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
 
     if (args.m_shouldExit)
         return true;
-
-    if (checkUnexpectedArgs()) {
-        return false;
-    }
 
     return true;
 }
@@ -274,8 +266,18 @@ ArgParser::parseGenericArgs(Argv& argv)
         argsBase().m_daemon = false;
     }
     else if (argv.shift("--daemon")) {
+#if SYSAPI_WIN32
+        // suggest that user installs as a windows service. when launched as
+        // service, process should automatically detect that it should run in
+        // daemon mode.
+        throw XArgvParserError(
+            "the --daemon argument is not supported on windows. "
+            "instead, install %s as a service (--service install)",
+            argv.exename().c_str());
+#else
         // daemonize
         argsBase().m_daemon = true;
+#endif
     }
     else if (argv.shift("-n", "--name", &optarg)) {
         // save screen name
@@ -491,23 +493,4 @@ std::string ArgParser::parse_exename(const char* arg)
 {
     // FIXME: we assume UTF-8 encoding, but on Windows this is not correct
     return inputleap::fs::u8path(arg).filename().u8string();
-}
-
-bool
-ArgParser::checkUnexpectedArgs()
-{
-#if SYSAPI_WIN32
-    // suggest that user installs as a windows service. when launched as
-    // service, process should automatically detect that it should run in
-    // daemon mode.
-    if (argsBase().m_daemon) {
-        LOG((CLOG_ERR
-            "the --daemon argument is not supported on windows. "
-            "instead, install %s as a service (--service install)",
-            argsBase().m_exename.c_str()));
-        return true;
-    }
-#endif
-
-    return false;
 }

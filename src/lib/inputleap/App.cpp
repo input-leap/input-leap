@@ -195,7 +195,8 @@ App::initApp(int argc, const char** argv)
 
         // make the task bar receiver.  the user can control this app
         // through the task bar.
-        m_taskBarReceiver = m_createTaskBarReceiver(logBuffer, m_events);
+        if (m_createTaskBarReceiver != nullptr)
+            m_taskBarReceiver = m_createTaskBarReceiver(logBuffer, m_events);
     }
 }
 

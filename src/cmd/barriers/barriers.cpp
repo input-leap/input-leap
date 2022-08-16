@@ -25,7 +25,7 @@
 #include "MSWindowsServerTaskBarReceiver.h"
 #endif
 #if WINAPI_XWINDOWS || WINAPI_CARBON
-#include "FallbackServerTaskBarReceiver.h"
+CreateTaskBarReceiverFunc createTaskBarReceiver = nullptr;
 #endif
 
 int

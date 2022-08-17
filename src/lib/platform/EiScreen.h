@@ -33,11 +33,12 @@ namespace inputleap {
 
 class EiClipboard;
 class EiKeyState;
+class PortalRemoteDesktop;
 
 //! Implementation of IPlatformScreen for X11
 class EiScreen : public PlatformScreen {
 public:
-    EiScreen(bool is_primary, IEventQueue* events);
+    EiScreen(bool is_primary, IEventQueue* events, bool use_portal);
     ~EiScreen();
 
     // IScreen overrides
@@ -84,6 +85,7 @@ public:
 protected:
     // IPlatformScreen overrides
     void handle_system_event(const Event& event) override;
+    void handle_connected_to_eis_event(const Event& event);
     void updateButtons() override;
     IKeyState* getKeyState() const override;
 
@@ -113,6 +115,8 @@ private:
     std::uint32_t h_ = 0;
 
     mutable std::mutex mutex_;
+
+    PortalRemoteDesktop* portal_remote_desktop_;
 };
 
 } // namespace inputleap

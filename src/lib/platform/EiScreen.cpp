@@ -17,6 +17,7 @@
 #include "platform/EiScreen.h"
 
 #include "platform/EiEventQueueBuffer.h"
+#include "platform/PortalRemoteDesktop.h"
 #include "platform/EiKeyState.h"
 #include "inputleap/Clipboard.h"
 #include "inputleap/KeyMap.h"
@@ -37,7 +38,7 @@
 
 namespace inputleap {
 
-EiScreen::EiScreen(bool is_primary, IEventQueue* events) :
+EiScreen::EiScreen(bool is_primary, IEventQueue* events, bool use_portal) :
     is_primary_(is_primary),
     events_(events)
 {
@@ -47,19 +48,26 @@ EiScreen::EiScreen(bool is_primary, IEventQueue* events) :
     ei_ = ei_new(NULL);
     ei_log_set_priority(ei_, EI_LOG_PRIORITY_DEBUG);
     ei_configure_name(ei_, "InputLeap client");
-    auto rc = ei_setup_backend_socket(ei_, NULL);
-    if (rc != 0) {
-        LOG((CLOG_DEBUG "ei init error: %s", strerror(-rc)));
-        throw std::runtime_error("Failed to init ei context");
-    }
 
     key_state_ = new EiKeyState(this, events);
     // install event handlers
     events_->add_handler(EventType::SYSTEM, events_->getSystemTarget(),
                          [this](const auto& e){ handle_system_event(e); });
 
+    if (use_portal) {
+        events_->add_handler(EventType::EI_SCREEN_CONNECTED_TO_EIS, get_event_target(),
+                             [this](const auto& e){ handle_connected_to_eis_event(e); });
+        portal_remote_desktop_ = new PortalRemoteDesktop(this, events_);
+    } else {
+        auto rc = ei_setup_backend_socket(ei_, NULL);
+        if (rc != 0) {
+            LOG((CLOG_DEBUG "ei init error: %s", strerror(-rc)));
+            throw std::runtime_error("Failed to init ei context");
+        }
+    }
+
     // install the platform event queue
-    events_->set_buffer(std::make_unique<EiEventQueueBuffer>(ei_, events_));
+    events_->set_buffer(std::make_unique<EiEventQueueBuffer>(this, ei_, events_));
 }
 
 EiScreen::~EiScreen()
@@ -76,6 +84,8 @@ EiScreen::~EiScreen()
     }
     ei_devices_.clear();
     ei_unref(ei_);
+
+    delete portal_remote_desktop_;
 }
 
 const EventTarget* EiScreen::get_event_target() const
@@ -368,6 +378,17 @@ void EiScreen::remove_device(struct ei_device *device)
     }
 
     update_shape();
+}
+
+void EiScreen::handle_connected_to_eis_event(const Event& event)
+{
+    int fd = event.get_data_as<int>();
+    LOG((CLOG_DEBUG "We have an EIS connection! fd is %d", fd));
+
+    auto rc = ei_setup_backend_fd(ei_, fd);
+    if (rc != 0) {
+        LOG((CLOG_NOTE "Failed to set up ei: %s", strerror(-rc)));
+    }
 }
 
 void EiScreen::handle_system_event(const Event& sysevent)

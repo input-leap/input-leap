@@ -148,8 +148,19 @@ if (UNIX)
         if (INPUTLEAP_BUILD_LIBEI)
             pkg_check_modules(LIBEI REQUIRED libei libeis)
             pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
-            include_directories(${LIBEI_INCLUDE_DIRS} ${LIBXKBCOMMON_INCLUDE_DIRS})
-            list(APPEND libs ${LIBEI_LINK_LIBRARIES} ${LIBXKBCOMMON_LINK_LIBRARIES})
+            pkg_check_modules(GLIB2 REQUIRED glib-2.0 gio-2.0)
+            pkg_check_modules(LIBPORTAL REQUIRED libportal)
+            include_directories(${LIBEI_INCLUDE_DIRS} ${LIBXKBCOMMON_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS} ${LIBPORTAL_INCLUDE_DIRS})
+            list(APPEND libs ${LIBEI_LINK_LIBRARIES} ${LIBXKBCOMMON_LINK_LIBRARIES} ${GLIB2_LINK_LIBRARIES} ${LIBPORTAL_LINK_LIBRARIES})
+
+            # no libportal release has xdp_session_connect_to_eis, so let's check for that
+            # and enable the hackaround in the code
+            include(CMakePushCheckState)
+            cmake_push_check_state(RESET)
+            set(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${LIBPORTAL_INCLUDE_DIRS};${GLIB2_INCLUDE_DIRS}")
+            set(CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES};${LIBPORTAL_LINK_LIBRARIES};${GLIB2_LINK_LIBRARIES}")
+            check_symbol_exists(xdp_session_connect_to_eis "libportal/portal.h" HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS)
+            cmake_pop_check_state()
         endif()
 
         check_include_files ("dns_sd.h" HAVE_DNSSD)

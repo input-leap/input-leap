@@ -122,6 +122,11 @@ enum class EventType : std::uint32_t {
 
     OSX_SCREEN_CONFIRM_SLEEP,
 
+    /** This event is sent whenever connection to EIS is established and a file descriptor for
+        reading events is available.
+    */
+    EI_SCREEN_CONNECTED_TO_EIS,
+
     /// This event is sent whenever a server accepts a client.
     CLIENT_LISTENER_ACCEPTED,
 

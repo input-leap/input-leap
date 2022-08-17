@@ -133,6 +133,8 @@ ClientApp::help()
 #endif
 #ifdef WINAPI_LIBEI
            << "      --use-ei             use the EI backend\n"
+           << "      --disable-portal     do not use the org.freedesktop.portal.RemoteDesktop portal,\n"
+           << "                           connect to $LIBEI_SOCKET directly\n"
 #endif
            << HELP_SYS_INFO
            << "      --yscroll <delta>    defines the vertical scrolling delta, which is\n"
@@ -536,7 +538,7 @@ std::unique_ptr<IPlatformScreen> ClientApp::create_platform_screen()
 #endif
 #if WINAPI_LIBEI
     if (args().use_ei) {
-        return std::make_unique<EiScreen>(false, m_events);
+        return std::make_unique<EiScreen>(false, m_events, args().use_portal);
     }
 #endif
 #if WINAPI_XWINDOWS

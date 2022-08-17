@@ -27,8 +27,8 @@ if (BUILD_XWINDOWS)
     file(GLOB xwin_sources "XWindows*.cpp")
 endif()
 if (BUILD_LIBEI)
-    file(GLOB ei_headers "Ei*.h")
-    file(GLOB ei_sources "Ei*.cpp")
+    file(GLOB ei_headers "Ei*.h" "Portal*.h")
+    file(GLOB ei_sources "Ei*.cpp" "Portal*.cpp")
 endif()
 
 # CMake does not understand that .mm files should not go together with .cpp files into an Unity

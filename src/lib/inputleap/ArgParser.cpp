@@ -270,6 +270,8 @@ bool ArgParser::parse_ei_arg(ArgsBase& argsBase, Argv& argv)
 {
     if (argv.shift("--use-ei")) {
         // noop
+    } else if (argv.shift("--disable-portal")) {
+        argsBase.use_portal = false;
     } else {
         // option not supported here
         return false;
@@ -300,7 +302,7 @@ bool ArgParser::use_x11(Argv& argv)
         return true;
     }
 
-    if (argv.contains("--use-ei")) {
+    if (argv.contains("--use-ei") || argv.contains("--disable-portal")) {
         return false;
     }
 

@@ -19,6 +19,7 @@
 
 #include "mt/Thread.h"
 #include "base/Event.h"
+#include "base/EventTypes.h"
 #include "base/Log.h"
 #include "base/EventQueueTimer.h"
 #include "base/IEventQueue.h"
@@ -31,7 +32,7 @@
 
 namespace inputleap {
 
-EiEventQueueBuffer::EiEventQueueBuffer(ei *ei, IEventQueue* events) :
+EiEventQueueBuffer::EiEventQueueBuffer(EiScreen* screen, ei *ei, IEventQueue* events) :
     ei_(ei_ref(ei)),
     events_(events)
 {

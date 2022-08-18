@@ -18,6 +18,7 @@
 
 #include "platform/EiEventQueueBuffer.h"
 #include "platform/PortalRemoteDesktop.h"
+#include "platform/PortalInputCapture.h"
 #include "platform/EiKeyState.h"
 #include "inputleap/Clipboard.h"
 #include "inputleap/KeyMap.h"
@@ -42,9 +43,6 @@ EiScreen::EiScreen(bool is_primary, IEventQueue* events, bool use_portal) :
     is_primary_(is_primary),
     events_(events)
 {
-    // Server isn't supported yet
-    assert(!is_primary);
-
     ei_ = ei_new(NULL);
     ei_log_set_priority(ei_, EI_LOG_PRIORITY_DEBUG);
     ei_configure_name(ei_, "InputLeap client");
@@ -57,7 +55,15 @@ EiScreen::EiScreen(bool is_primary, IEventQueue* events, bool use_portal) :
     if (use_portal) {
         events_->add_handler(EventType::EI_SCREEN_CONNECTED_TO_EIS, get_event_target(),
                              [this](const auto& e){ handle_connected_to_eis_event(e); });
-        portal_remote_desktop_ = new PortalRemoteDesktop(this, events_);
+        if (is_primary) {
+#if HAVE_LIBPORTAL_INPUTCAPTURE
+            portal_input_capture_ = new PortalInputCapture(this, events_);
+#else
+            throw std::invalid_argument("Missing libportal InputCapture portal support");
+#endif
+        } else {
+            portal_remote_desktop_ = new PortalRemoteDesktop(this, events_);
+        }
     } else {
         auto rc = ei_setup_backend_socket(ei_, NULL);
         if (rc != 0) {
@@ -86,6 +92,9 @@ EiScreen::~EiScreen()
     ei_unref(ei_);
 
     delete portal_remote_desktop_;
+#if HAVE_LIBPORTAL_INPUTCAPTURE
+    delete portal_input_capture_;
+#endif
 }
 
 const EventTarget* EiScreen::get_event_target() const
@@ -348,6 +357,7 @@ void EiScreen::add_device(struct ei_device *device)
             LOG((CLOG_WARN "keyboard device %s does not have a keymap, we are guessing", ei_device_get_name(device)));
             key_state_->init_default_keymap();
         }
+        key_state_->updateKeyMap();
     }
 
     if (!ei_abs_ && ei_device_has_capability(device, EI_DEVICE_CAP_POINTER_ABSOLUTE))

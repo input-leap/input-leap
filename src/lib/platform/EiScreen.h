@@ -34,6 +34,9 @@ namespace inputleap {
 class EiClipboard;
 class EiKeyState;
 class PortalRemoteDesktop;
+#if HAVE_LIBPORTAL_INPUTCAPTURE
+class PortalInputCapture;
+#endif
 
 //! Implementation of IPlatformScreen for X11
 class EiScreen : public PlatformScreen {
@@ -117,6 +120,9 @@ private:
     mutable std::mutex mutex_;
 
     PortalRemoteDesktop* portal_remote_desktop_;
+#if HAVE_LIBPORTAL_INPUTCAPTURE
+    PortalInputCapture* portal_input_capture_;
+#endif
 };
 
 } // namespace inputleap

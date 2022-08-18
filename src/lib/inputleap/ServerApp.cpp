@@ -52,6 +52,9 @@
 #include <signal.h>
 #include "platform/XWindowsScreen.h"
 #endif
+#if WINAPI_LIBEI
+#include "platform/EiScreen.h"
+#endif
 #if WINAPI_CARBON
 #include "platform/OSXScreen.h"
 #endif
@@ -871,8 +874,15 @@ std::unique_ptr<IPlatformScreen> ServerApp::create_platform_screen()
                                              m_events);
 #endif
 #if WINAPI_XWINDOWS
-    return std::make_unique<XWindowsScreen>(new XWindowsImpl(), args().m_display, true, 0,
-                                            m_events);
+    if (args().use_x11) {
+        return std::make_unique<XWindowsScreen>(new XWindowsImpl(), args().m_display, true, 0,
+                                                m_events);
+    }
+#endif
+#if WINAPI_LIBEI
+    if (args().use_ei) {
+        return std::make_unique<EiScreen>(true, m_events, true /* use_portal */);
+    }
 #endif
 #if WINAPI_CARBON
     return std::make_unique<OSXScreen>(m_events, true);

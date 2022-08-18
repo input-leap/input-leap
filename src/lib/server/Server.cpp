@@ -162,10 +162,10 @@ Server::Server(
 							m_inputFilter,
 							new TMethodEventJob<Server>(this,
 								&Server::handleSwitchToScreenEvent));
-  m_events->adoptHandler(m_events->forServer().toggleScreen(),
-              m_inputFilter,
-              new TMethodEventJob<Server>(this,
-                &Server::handleToggleScreenEvent));
+    m_events->adoptHandler(m_events->forServer().toggleScreen(),
+                           m_inputFilter,
+                           new TMethodEventJob<Server>(this,
+                               &Server::handleToggleScreenEvent));
 	m_events->adoptHandler(m_events->forServer().switchInDirection(),
 							m_inputFilter,
 							new TMethodEventJob<Server>(this,

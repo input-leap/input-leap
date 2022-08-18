@@ -20,7 +20,7 @@
 #include "common/stdvector.h"
 
 #include <string>
-#include <queue>
+#include <deque>
 
 class ServerArgs;
 class ClientArgs;
@@ -52,6 +52,9 @@ public:
     // Return the next argument (excluding argv[0]) but do not remove it from the list
     const char* peek() { return m_argv.front(); }
 
+    // Return true if the given name is in the argument list
+    bool contains(const char *name);
+
     // True if no more arguments are available
     bool empty() { return m_argv.empty(); }
 
@@ -61,7 +64,7 @@ public:
     const std::string& exename() { return m_exename; };
 
 private:
-    std::queue<const char*> m_argv;
+    std::deque<const char*> m_argv;
     std::string m_exename;
 };
 

@@ -106,24 +106,22 @@ ClientApp::parseArgs(int argc, const char* const* argv)
 void
 ClientApp::help()
 {
-#if WINAPI_XWINDOWS
-#  define WINAPI_ARG \
-    " [--display <display>]"
-#  define WINAPI_INFO \
-    "      --display <display>  connect to the X server at <display>\n"
-#else
-#  define WINAPI_ARG ""
-#  define WINAPI_INFO ""
-#endif
-
     std::ostringstream buffer;
     buffer << "Start the barrier client and connect to a remote server component.\n"
            << "\n"
-           << "Usage: " << args().m_exename << " [--yscroll <delta>]" <<  WINAPI_ARG << HELP_SYS_ARGS
+           << "Usage: " << args().m_exename << " [--yscroll <delta>]"
+#ifdef WINAPI_XWINDOWS
+           << " [--display <display>]"
+#endif
+           << HELP_SYS_ARGS
            << HELP_COMMON_ARGS << " <server-address>\n"
            << "\n"
            << "Options:\n"
-           << HELP_COMMON_INFO_1 << WINAPI_INFO << HELP_SYS_INFO
+           << HELP_COMMON_INFO_1
+#if WINAPI_XWINDOWS
+           << "      --display <display>  connect to the X server at <display>\n"
+#endif
+           << HELP_SYS_INFO
            << "      --yscroll <delta>    defines the vertical scrolling delta, which is\n"
            << "                           120 by default.\n"
            << HELP_COMMON_INFO_2

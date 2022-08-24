@@ -22,37 +22,53 @@
 
 TEST(ArgParserTests, isArg_abbreviationsArg_returnTrue)
 {
-    int i = 1;
     const int argc = 2;
     const char* argv[argc] = { "stub", "-t" };
-    bool result = ArgParser::isArg(i, argc, argv, "-t", nullptr);
+    Argv a(argc, argv);
 
-    EXPECT_EQ(true, result);
+    auto result = a.shift("-t", nullptr);
+    EXPECT_STREQ(result, "-t");
 }
 
 TEST(ArgParserTests, isArg_fullArg_returnTrue)
 {
-    int i = 1;
     const int argc = 2;
     const char* argv[argc] = { "stub", "--test" };
-    bool result = ArgParser::isArg(i, argc, argv, nullptr, "--test");
+    Argv a(argc, argv);
 
-    EXPECT_EQ(true, result);
+    auto result = a.shift(nullptr, "--test");
+    EXPECT_STREQ(result, "--test");
 }
 
-TEST(ArgParserTests, isArg_missingArgs_returnFalse)
+TEST(ArgParserTests, isArg_hasOptarg)
 {
-    int i = 1;
+    const int argc = 3;
+    const char* argv[argc] = { "stub", "-t", "foo" };
+    Argv a(argc, argv);
+
+     const char *optarg = NULL;
+     auto result = a.shift("-t", nullptr, &optarg);
+
+     EXPECT_STREQ(result, "-t");
+     EXPECT_STREQ(optarg, "foo");
+}
+
+TEST(ArgParserTests, isArg_missingArgs_throws)
+{
     const int argc = 2;
     const char* argv[argc] = { "stub", "-t" };
-    ArgParser argParser(nullptr);
-    ArgsBase argsBase;
-    argParser.setArgsBase(argsBase);
+    Argv a(argc, argv);
 
-    bool result = ArgParser::isArg(i, argc, argv, "-t", nullptr, 1);
-
-    EXPECT_FALSE(result);
-    EXPECT_EQ(true, argsBase.m_shouldExit);
+    EXPECT_THROW({
+             try {
+                 const char *optarg = NULL;
+                 auto result = a.shift("-t", nullptr, &optarg);
+             } catch (XArgvParserError e) {
+                 EXPECT_STREQ(e.message.c_str(), "missing argument for `-t'");
+                 throw;
+             }
+         },
+         XArgvParserError);
 }
 
 TEST(ArgParserTests, searchDoubleQuotes_doubleQuotedArg_returnTrue)

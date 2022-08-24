@@ -30,6 +30,59 @@
 #include <VersionHelpers.h>
 #endif
 
+XArgvParserError::XArgvParserError(const char *fmt, ...) :
+    message("Unknown reason")
+{
+    char buf[1024] = {0}; // we accept truncation of too long messages
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(buf, sizeof(buf) - 1, fmt, args);
+    va_end(args);
+
+    message = std::string(buf);
+}
+
+Argv::Argv(int argc, const char* const* argv) :
+    // FIXME: we assume UTF-8 encoding, but on Windows this is not correct
+    m_exename(inputleap::fs::u8path(argv[0]).filename().u8string())
+{
+    for (int i = 1; i < argc; i++)
+        m_argv.push(argv[i]);
+}
+
+const char*
+Argv::shift()
+{
+    if (m_argv.empty())
+        return nullptr;
+
+    auto a = m_argv.front();
+    m_argv.pop();
+    return a;
+}
+
+const char*
+Argv::shift(const char *name1, const char* name2, const char **optarg)
+{
+    if (m_argv.empty())
+        return nullptr;
+
+    auto a = m_argv.front();
+    if ((name1 != nullptr && strcmp(a, name1) == 0) ||
+        (name2 != nullptr && strcmp(a, name2) == 0)) {
+        if (optarg != nullptr && m_argv.size() <= 1) {
+            throw XArgvParserError("missing argument for `%s'", a);
+        }
+        m_argv.pop();
+        if (optarg != nullptr) {
+            *optarg = m_argv.front();
+            m_argv.pop();
+        }
+        return a;
+    }
+    return nullptr;
+}
+
 ArgsBase* ArgParser::m_argsBase = nullptr;
 
 ArgParser::ArgParser(App* app) :
@@ -41,39 +94,40 @@ bool
 ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
 {
     setArgsBase(args);
-    updateCommonArgs(argv);
 
-    for (int i = 1; i < argc; ++i) {
-        if (parsePlatformArg(args, argc, argv, i)) {
-            continue;
-        }
-        else if (parseGenericArgs(argc, argv, i)) {
-            continue;
-        }
-        else if (parseDeprecatedArgs(argc, argv, i)) {
-            continue;
-        }
-        else if (isArg(i, argc, argv, "-a", "--address", 1)) {
-            // save listen address
-            args.m_barrierAddress = argv[++i];
-        }
-        else if (isArg(i, argc, argv, "-c", "--config", 1)) {
-            // save configuration file path
-            args.m_configFile = argv[++i];
-        }
-        else if (isArg(i, argc, argv, nullptr, "--screen-change-script", 1)) {
-            // save screen change script path
-            args.m_screenChangeScript = argv[++i];
-        }
-        else if (isArg(i, argc, argv, nullptr, "--disable-client-cert-checking")) {
-            args.check_client_certificates = false;
-        } else {
-            LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE, args.m_exename.c_str(), argv[i], args.m_exename.c_str()));
-            return false;
-        }
-    }
+    Argv a(argc, argv);
+    updateCommonArgs(a);
 
-    if (checkUnexpectedArgs()) {
+    try {
+        while (!a.empty()) {
+            const char *optarg = NULL;
+
+            if (parsePlatformArg(args, a)) {
+                continue;
+            }
+            else if (parseGenericArgs(a)) {
+                continue;
+            }
+            else if (a.shift("-a", "--address", &optarg)) {
+                // save listen address
+                args.m_barrierAddress = optarg;
+            }
+            else if (a.shift("-c", "--config", &optarg)) {
+                // save configuration file path
+                args.m_configFile = optarg;
+            }
+            else if (a.shift("--screen-change-script", nullptr, &optarg)) {
+                // save screen change script path
+                args.m_screenChangeScript = optarg;
+            }
+            else if (a.shift("--disable-client-cert-checking")) {
+                args.check_client_certificates = false;
+            } else {
+                throw XArgvParserError("unrecognized option `%s'", a.peek());
+            }
+        }
+    } catch (XArgvParserError e) {
+        LOG((CLOG_PRINT "%s: %s" BYE, a.exename().c_str(), e.message.c_str(), a.exename().c_str()));
         return false;
     }
 
@@ -84,69 +138,61 @@ bool
 ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
 {
     setArgsBase(args);
-    updateCommonArgs(argv);
 
-    int i;
-    for (i = 1; i < argc; ++i) {
-        if (parsePlatformArg(args, argc, argv, i)) {
-            continue;
-        }
-        else if (parseGenericArgs(argc, argv, i)) {
-            continue;
-        }
-        else if (parseDeprecatedArgs(argc, argv, i)) {
-            continue;
-        }
-        else if (isArg(i, argc, argv, nullptr, "--camp")) {
-            // ignore -- included for backwards compatibility
-        }
-        else if (isArg(i, argc, argv, nullptr, "--no-camp")) {
-            // ignore -- included for backwards compatibility
-        }
-        else if (isArg(i, argc, argv, nullptr, "--yscroll", 1)) {
-            // define scroll
-            args.m_yscroll = atoi(argv[++i]);
-        }
-        else {
-            if (i + 1 == argc) {
-                args.m_barrierAddress = argv[i];
-                return true;
+    Argv a(argc, argv);
+    updateCommonArgs(a);
+
+    try {
+        if (a.empty())
+            throw XArgvParserError("a server address or name is required");
+
+        while (!a.empty()) {
+            const char *optarg = NULL;
+
+            if (parsePlatformArg(args, a)) {
+                continue;
             }
-
-            LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE, args.m_exename.c_str(), argv[i], args.m_exename.c_str()));
-            return false;
+            else if (parseGenericArgs(a)) {
+                continue;
+            }
+            else if (a.shift("--yscroll", nullptr, &optarg)) {
+                // define scroll
+                args.m_yscroll = atoi(optarg);
+            }
+            else if (a.size() == 1) {
+                args.m_barrierAddress = a.shift();
+                return true;
+            } else {
+                throw XArgvParserError("unrecognized option `%s'", a.peek());
+            }
         }
+
+        if (args.m_barrierAddress.empty())
+            throw XArgvParserError("a server address or name is required");
+
+    } catch (XArgvParserError e) {
+        LOG((CLOG_PRINT "%s: %s" BYE, a.exename().c_str(), e.message.c_str(), a.exename().c_str()));
+        return false;
     }
 
     if (args.m_shouldExit)
         return true;
-
-    // exactly one non-option argument (server-address)
-    if (i == argc) {
-        LOG((CLOG_PRINT "%s: a server address or name is required" BYE,
-            args.m_exename.c_str(), args.m_exename.c_str()));
-        return false;
-    }
-
-    if (checkUnexpectedArgs()) {
-        return false;
-    }
 
     return true;
 }
 
 #if WINAPI_MSWINDOWS
 bool
-ArgParser::parseMSWindowsArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i)
+ArgParser::parseMSWindowsArg(ArgsBase& argsBase, Argv& argv)
 {
-    if (isArg(i, argc, argv, nullptr, "--service")) {
+    if (argv.shift("--service")) {
         LOG((CLOG_WARN "obsolete argument --service, use barrierd instead."));
         argsBase.m_shouldExit = true;
     }
-    else if (isArg(i, argc, argv, nullptr, "--exit-pause")) {
+    else if (argv.shift("--exit-pause")) {
         argsBase.m_pauseOnExit = true;
     }
-    else if (isArg(i, argc, argv, nullptr, "--stop-on-desk-switch")) {
+    else if (argv.shift("--stop-on-desk-switch")) {
         argsBase.m_stopOnDeskSwitch = true;
     }
     else {
@@ -160,7 +206,7 @@ ArgParser::parseMSWindowsArg(ArgsBase& argsBase, const int& argc, const char* co
 
 #if WINAPI_CARBON
 bool
-ArgParser::parseCarbonArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i)
+ArgParser::parseCarbonArg(ArgsBase& argsBase, Argv& argv)
 {
     // no options for carbon
     return false;
@@ -169,13 +215,15 @@ ArgParser::parseCarbonArg(ArgsBase& argsBase, const int& argc, const char* const
 
 #if WINAPI_XWINDOWS
 bool
-ArgParser::parseXWindowsArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i)
+ArgParser::parseXWindowsArg(ArgsBase& argsBase, Argv& argv)
 {
-    if (isArg(i, argc, argv, "-display", "--display", 1)) {
+    const char* optarg = NULL;
+
+    if (argv.shift("-display", "--display", &optarg)) {
         // use alternative display
-        argsBase.m_display = argv[++i];
+        argsBase.m_display = optarg;
     }
-    else if (isArg(i, argc, argv, nullptr, "--no-xinitthreads")) {
+    else if (argv.shift("--no-xinitthreads")) {
         LOG((CLOG_NOTE "--no-xinitthreads is deprecated"));
     } else {
         // option not supported here
@@ -187,81 +235,93 @@ ArgParser::parseXWindowsArg(ArgsBase& argsBase, const int& argc, const char* con
 #endif
 
 bool
-ArgParser::parsePlatformArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i)
+ArgParser::parsePlatformArg(ArgsBase& argsBase, Argv& argv)
 {
 #if WINAPI_MSWINDOWS
-    return parseMSWindowsArg(argsBase, argc, argv, i);
+    return parseMSWindowsArg(argsBase, argv);
 #endif
 #if WINAPI_CARBON
-    return parseCarbonArg(argsBase, argc, argv, i);
+    return parseCarbonArg(argsBase, argv);
 #endif
 #if WINAPI_XWINDOWS
-    return parseXWindowsArg(argsBase, argc, argv, i);
+    return parseXWindowsArg(argsBase, argv);
 #endif
     return false;
 }
 
 bool
-ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
+ArgParser::parseGenericArgs(Argv& argv)
 {
-    if (isArg(i, argc, argv, "-d", "--debug", 1)) {
+    const char *optarg = NULL;
+
+    if (argv.shift("-d", "--debug", &optarg)) {
         // change logging level
-        argsBase().m_logFilter = argv[++i];
+        argsBase().m_logFilter = optarg;
     }
-    else if (isArg(i, argc, argv, "-l", "--log", 1)) {
-        argsBase().m_logFile = argv[++i];
+    else if (argv.shift("-l", "--log", &optarg)) {
+        argsBase().m_logFile = optarg;
     }
-    else if (isArg(i, argc, argv, "-f", "--no-daemon")) {
+    else if (argv.shift("-f", "--no-daemon")) {
         // not a daemon
         argsBase().m_daemon = false;
     }
-    else if (isArg(i, argc, argv, nullptr, "--daemon")) {
+    else if (argv.shift("--daemon")) {
+#if SYSAPI_WIN32
+        // suggest that user installs as a windows service. when launched as
+        // service, process should automatically detect that it should run in
+        // daemon mode.
+        throw XArgvParserError(
+            "the --daemon argument is not supported on windows. "
+            "instead, install %s as a service (--service install)",
+            argv.exename().c_str());
+#else
         // daemonize
         argsBase().m_daemon = true;
+#endif
     }
-    else if (isArg(i, argc, argv, "-n", "--name", 1)) {
+    else if (argv.shift("-n", "--name", &optarg)) {
         // save screen name
-        argsBase().m_name = argv[++i];
+        argsBase().m_name = optarg;
     }
-    else if (isArg(i, argc, argv, "-1", "--no-restart")) {
+    else if (argv.shift("-1", "--no-restart")) {
         // don't try to restart
         argsBase().m_restartable = false;
     }
-    else if (isArg(i, argc, argv, nullptr, "--restart")) {
+    else if (argv.shift("--restart")) {
         // try to restart
         argsBase().m_restartable = true;
     }
-    else if (isArg(i, argc, argv, "-z", nullptr)) {
+    else if (argv.shift("-z")) {
         argsBase().m_backend = true;
     }
-    else if (isArg(i, argc, argv, nullptr, "--no-hooks")) {
+    else if (argv.shift("--no-hooks")) {
         argsBase().m_noHooks = true;
     }
-    else if (isArg(i, argc, argv, "-h", "--help")) {
+    else if (argv.shift("-h", "--help")) {
         if (m_app) {
             m_app->help();
         }
         argsBase().m_shouldExit = true;
     }
-    else if (isArg(i, argc, argv, nullptr, "--version")) {
+    else if (argv.shift("--version")) {
         if (m_app) {
             m_app->version();
         }
         argsBase().m_shouldExit = true;
     }
-    else if (isArg(i, argc, argv, nullptr, "--no-tray")) {
+    else if (argv.shift("--no-tray")) {
         argsBase().m_disableTray = true;
     }
-    else if (isArg(i, argc, argv, nullptr, "--ipc")) {
+    else if (argv.shift("--ipc")) {
         argsBase().m_enableIpc = true;
     }
-    else if (isArg(i, argc, argv, nullptr, "--server")) {
+    else if (argv.shift("--server")) {
         // HACK: stop error happening when using portable (barrierp)
     }
-    else if (isArg(i, argc, argv, nullptr, "--client")) {
+    else if (argv.shift("--client")) {
         // HACK: stop error happening when using portable (barrierp)
     }
-    else if (isArg(i, argc, argv, nullptr, "--enable-drag-drop")) {
+    else if (argv.shift("--enable-drag-drop")) {
         bool useDragDrop = true;
 
 #ifdef WINAPI_XWINDOWS
@@ -271,32 +331,24 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
 
 #endif
 
-#ifdef WINAPI_MSWINDOWS
-
-        if (!IsWindowsVistaOrGreater()) {
-            useDragDrop = false;
-            LOG((CLOG_INFO "ignoring --enable-drag-drop, not supported below vista."));
-        }
-#endif
-
         if (useDragDrop) {
             argsBase().m_enableDragDrop = true;
         }
     }
-    else if (isArg(i, argc, argv, nullptr, "--drop-dir")) {
-        argsBase().m_dropTarget = argv[++i];
+    else if (argv.shift("--drop-dir")) {
+        argsBase().m_dropTarget = argv.shift();
     }
-    else if (isArg(i, argc, argv, nullptr, "--enable-crypto")) {
+    else if (argv.shift("--enable-crypto")) {
         LOG((CLOG_INFO "--enable-crypto is used by default. The option is deprecated."));
     }
-    else if (isArg(i, argc, argv, nullptr, "--disable-crypto")) {
+    else if (argv.shift("--disable-crypto")) {
         argsBase().m_enableCrypto = false;
     }
-    else if (isArg(i, argc, argv, nullptr, "--profile-dir", 1)) {
-        argsBase().m_profileDirectory = inputleap::fs::u8path(argv[++i]);
+    else if (argv.shift("--profile-dir", nullptr, &optarg)) {
+        argsBase().m_profileDirectory = inputleap::fs::u8path(optarg);
     }
-    else if (isArg(i, argc, argv, nullptr, "--plugin-dir", 1)) {
-        argsBase().m_pluginDirectory = inputleap::fs::u8path(argv[++i]);
+    else if (argv.shift("--plugin-dir", nullptr, &optarg)) {
+        argsBase().m_pluginDirectory = inputleap::fs::u8path(optarg);
     }
     else {
         // option not supported here
@@ -304,60 +356,6 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
     }
 
     return true;
-}
-
-bool
-ArgParser::parseDeprecatedArgs(int argc, const char* const* argv, int& i)
-{
-    if (isArg(i, argc, argv, nullptr, "--crypto-pass")) {
-        LOG((CLOG_NOTE "--crypto-pass is deprecated"));
-        i++;
-        return true;
-    }
-    else if (isArg(i, argc, argv, nullptr, "--res-w")) {
-        LOG((CLOG_NOTE "--res-w is deprecated"));
-        i++;
-        return true;
-    }
-    else if (isArg(i, argc, argv, nullptr, "--res-h")) {
-        LOG((CLOG_NOTE "--res-h is deprecated"));
-        i++;
-        return true;
-    }
-    else if (isArg(i, argc, argv, nullptr, "--prm-wc")) {
-        LOG((CLOG_NOTE "--prm-wc is deprecated"));
-        i++;
-        return true;
-    }
-    else if (isArg(i, argc, argv, nullptr, "--prm-hc")) {
-        LOG((CLOG_NOTE "--prm-hc is deprecated"));
-        i++;
-        return true;
-    }
-
-    return false;
-}
-
-bool
-ArgParser::isArg(
-    int argi, int argc, const char* const* argv,
-    const char* name1, const char* name2,
-    int minRequiredParameters)
-{
-    if ((name1 != nullptr && strcmp(argv[argi], name1) == 0) ||
-        (name2 != nullptr && strcmp(argv[argi], name2) == 0)) {
-            // match.  check args left.
-            if (argi + minRequiredParameters >= argc) {
-                LOG((CLOG_PRINT "%s: missing arguments for `%s'" BYE,
-                    argsBase().m_exename.c_str(), argv[argi], argsBase().m_exename.c_str()));
-                argsBase().m_shouldExit = true;
-                return false;
-            }
-            return true;
-    }
-
-    // no match
-    return false;
 }
 
 void ArgParser::splitCommandString(std::string& command, std::vector<std::string>& argv)
@@ -485,33 +483,14 @@ std::string ArgParser::assembleCommand(std::vector<std::string>& argsArray,
 }
 
 void
-ArgParser::updateCommonArgs(const char* const* argv)
+ArgParser::updateCommonArgs(Argv &argv)
 {
     argsBase().m_name = ARCH->getHostName();
-    argsBase().m_exename = parse_exename(argv[0]);
+    argsBase().m_exename = std::string(argv.exename());
 }
 
 std::string ArgParser::parse_exename(const char* arg)
 {
     // FIXME: we assume UTF-8 encoding, but on Windows this is not correct
     return inputleap::fs::u8path(arg).filename().u8string();
-}
-
-bool
-ArgParser::checkUnexpectedArgs()
-{
-#if SYSAPI_WIN32
-    // suggest that user installs as a windows service. when launched as
-    // service, process should automatically detect that it should run in
-    // daemon mode.
-    if (argsBase().m_daemon) {
-        LOG((CLOG_ERR
-            "the --daemon argument is not supported on windows. "
-            "instead, install %s as a service (--service install)",
-            argsBase().m_exename.c_str()));
-        return true;
-    }
-#endif
-
-    return false;
 }

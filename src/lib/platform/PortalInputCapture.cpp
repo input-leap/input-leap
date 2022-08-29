@@ -28,6 +28,7 @@ namespace inputleap {
 
 enum signals {
     SESSION_CLOSED,
+    DISABLED,
     ACTIVATED,
     DEACTIVATED,
     ZONES_CHANGED,
@@ -162,6 +163,9 @@ void PortalInputCapture::cb_init_input_capture_session(GObject* object, GAsyncRe
     signals_[SESSION_CLOSED] = g_signal_connect(G_OBJECT(session), "closed",
                                                 G_CALLBACK(cb_session_closed_cb),
                                                 this);
+    signals_[DISABLED] = g_signal_connect(G_OBJECT(session), "disabled",
+                                          G_CALLBACK(cb_disabled_cb),
+                                          this);
     signals_[ACTIVATED] = g_signal_connect(G_OBJECT(session_), "activated",
                                             G_CALLBACK(cb_activated_cb),
                                             this);
@@ -226,6 +230,24 @@ void PortalInputCapture::enable()
         xdp_input_capture_session_enable(session_);
         enabled_ = true;
     }
+}
+
+void PortalInputCapture::cb_disabled(XdpInputCaptureSession* session)
+{
+    LOG((CLOG_DEBUG "PortalInputCapture::cb_disabled"));
+
+    enabled_ = false;
+
+    // FIXME: need some better heuristics here of when we want to enable again
+    // But we don't know *why* we got disabled (and it's doubtfull we ever will), so
+    // we just assume that the zones will change or something and we can re-enable again
+    // ... very soon
+    g_timeout_add(1000,
+                  [](gpointer data) -> gboolean {
+                      reinterpret_cast<PortalInputCapture*>(data)->enable();
+                  return false;
+                  },
+                  this);
 }
 
 void PortalInputCapture::cb_activated(XdpInputCaptureSession* session, GVariant* options)

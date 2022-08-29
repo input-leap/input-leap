@@ -26,6 +26,7 @@
 #include <vector>
 
 struct ei;
+struct ei_event;
 struct ei_seat;
 struct ei_device;
 
@@ -97,6 +98,12 @@ protected:
     void remove_device(ei_device* device);
 
 private:
+    void on_key_event(ei_event *event);
+    void on_button_event(ei_event *event);
+    void on_motion_event(ei_event *event);
+    void on_abs_motion_event(ei_event *event);
+
+private:
     // true if screen is being used as a primary screen, false otherwise
     bool is_primary_ = false;
     IEventQueue* events_ = nullptr;
@@ -116,6 +123,13 @@ private:
     std::uint32_t y_ = 0;
     std::uint32_t w_ = 0;
     std::uint32_t h_ = 0;
+
+    // true if mouse has entered the screen
+    bool is_on_screen_;
+
+    // last pointer position
+    std::int32_t cursor_x_ = 0;
+    std::int32_t cursor_y_ = 0;
 
     mutable std::mutex mutex_;
 

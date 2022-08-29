@@ -41,9 +41,13 @@ namespace inputleap {
 
 EiScreen::EiScreen(bool is_primary, IEventQueue* events, bool use_portal) :
     is_primary_(is_primary),
-    events_(events)
+    events_(events),
+    is_on_screen_(is_primary)
 {
-    ei_ = ei_new(NULL);
+    if (is_primary)
+        ei_ = ei_new_receiver(nullptr); // we receive from the display server
+    else
+        ei_ = ei_new_sender(nullptr); // we send to the display server
     ei_log_set_priority(ei_, EI_LOG_PRIORITY_DEBUG);
     ei_configure_name(ei_, "InputLeap client");
 
@@ -233,6 +237,7 @@ void EiScreen::disable()
 
 void EiScreen::enter()
 {
+    is_on_screen_ = true;
     if (!is_primary_) {
         if (ei_pointer_) {
             ei_device_start_emulating(ei_pointer_);
@@ -260,6 +265,7 @@ bool EiScreen::leave()
         }
     }
 
+    is_on_screen_ = false;
     return true;
 }
 
@@ -390,6 +396,46 @@ void EiScreen::remove_device(struct ei_device *device)
     update_shape();
 }
 
+void EiScreen::on_key_event(ei_event* event)
+{
+    LOG((CLOG_DEBUG "on_button_event"));
+    assert(is_primary_);
+}
+
+void EiScreen::on_button_event(ei_event* event)
+{
+    LOG((CLOG_DEBUG "on_button_event"));
+    assert(is_primary_);
+}
+
+void EiScreen::on_motion_event(ei_event* event)
+{
+    LOG((CLOG_DEBUG "on_motion_event"));
+    assert(is_primary_);
+
+    double dx = ei_event_pointer_get_dx(event);
+    double dy = ei_event_pointer_get_dy(event);
+
+    cursor_x_ += dx;
+    cursor_y_ += dy;
+
+    // motion on primary screen
+    if (is_on_screen_) {
+        events_->add_event(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY, get_event_target(),
+                           create_event_data<MotionInfo>(MotionInfo{cursor_x_, cursor_y_}));
+    } else {
+        // motion on secondary screen
+        events_->add_event(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY, get_event_target(),
+                           create_event_data<MotionInfo>(MotionInfo{static_cast<std::int32_t>(dx),
+                                                                    static_cast<std::int32_t>(dy)}));
+    }
+}
+
+void EiScreen::on_abs_motion_event(ei_event* event)
+{
+    assert(is_primary_);
+}
+
 void EiScreen::handle_connected_to_eis_event(const Event& event)
 {
     int fd = event.get_data_as<int>();
@@ -461,12 +507,25 @@ void EiScreen::handle_system_event(const Event& sysevent)
 
             // events below are for a receiver context (barriers)
             case EI_EVENT_FRAME:
+                break;
             case EI_EVENT_DEVICE_START_EMULATING:
+                LOG((CLOG_DEBUG "device %s starts emulating", ei_device_get_name(device)));
+                break;
             case EI_EVENT_DEVICE_STOP_EMULATING:
+                LOG((CLOG_DEBUG "device %s stops emulating", ei_device_get_name(device)));
+                break;
             case EI_EVENT_KEYBOARD_KEY:
+                on_key_event(event);
+                break;
             case EI_EVENT_POINTER_BUTTON:
+                on_button_event(event);
+                break;
             case EI_EVENT_POINTER_MOTION:
+                on_motion_event(event);
+                break;
             case EI_EVENT_POINTER_MOTION_ABSOLUTE:
+                on_abs_motion_event(event);
+                break;
             case EI_EVENT_TOUCH_UP:
             case EI_EVENT_TOUCH_MOTION:
             case EI_EVENT_TOUCH_DOWN:

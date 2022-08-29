@@ -62,7 +62,7 @@ TEST(ArgParserTests, isArg_missingArgs_throws)
     EXPECT_THROW({
              try {
                  const char *optarg = NULL;
-                 auto result = a.shift("-t", nullptr, &optarg);
+                 a.shift("-t", nullptr, &optarg);
              } catch (XArgvParserError e) {
                  EXPECT_STREQ(e.message.c_str(), "missing argument for `-t'");
                  throw;

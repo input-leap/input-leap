@@ -29,7 +29,7 @@ jobs:
     container: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ["ubuntu:18.04", "ubuntu:20.04"]
+        os: ["ubuntu:18.04", "ubuntu:20.04", "ubuntu:22.04"]
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
 

@@ -43,19 +43,19 @@ jobs:
           apt-get update -y
           apt-get dist-upgrade -y
           apt-get install -y \
-                  git \
+                  cmake \
                   g++ \
-                  libxtst-dev \
-                  libxinerama-dev \
-                  libxrandr-dev \
-                  libice-dev \
-                  libsm-dev \
-                  qtdeclarative5-dev \
+                  git \
                   libavahi-compat-libdnssd-dev \
                   libcurl4-openssl-dev \
+                  libice-dev \
+                  libsm-dev \
                   libssl-dev \
-                  cmake \
-                  ninja-build
+                  libxinerama-dev \
+                  libxrandr-dev \
+                  libxtst-dev \
+                  ninja-build \
+                  qtdeclarative5-dev
 
       - uses: actions/checkout@v3
         with:

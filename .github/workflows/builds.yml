@@ -19,6 +19,7 @@ env:
   B_BUILD_DIR: build
   B_BUILD_TYPE: Debug
   INPUTLEAP_VERSION_STAGE: Debug
+  DEBIAN_FRONTEND: noninteractive
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:

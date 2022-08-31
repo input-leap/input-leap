@@ -145,7 +145,6 @@ TEST(GenericArgsParsingTests, parseGenericArgs_nameCmd_saveName)
 
 TEST(GenericArgsParsingTests, parseGenericArgs_noRestartCmd_restartFalse)
 {
-    int i = 1;
     const int argc = 2;
     const char* kNoRestartCmd[argc] = { "stub", "--no-restart" };
     Argv a(argc, kNoRestartCmd);
@@ -162,7 +161,6 @@ TEST(GenericArgsParsingTests, parseGenericArgs_noRestartCmd_restartFalse)
 
 TEST(GenericArgsParsingTests, parseGenericArgs_restartCmd_restartTrue)
 {
-    int i = 1;
     const int argc = 2;
     const char* kRestartCmd[argc] = { "stub", "--restart" };
     Argv a(argc, kRestartCmd);
@@ -179,7 +177,6 @@ TEST(GenericArgsParsingTests, parseGenericArgs_restartCmd_restartTrue)
 
 TEST(GenericArgsParsingTests, parseGenericArgs_backendCmd_backendTrue)
 {
-    int i = 1;
     const int argc = 2;
     const char* kBackendCmd[argc] = { "stub", "-z" };
     Argv a(argc, kBackendCmd);
@@ -196,7 +193,6 @@ TEST(GenericArgsParsingTests, parseGenericArgs_backendCmd_backendTrue)
 
 TEST(GenericArgsParsingTests, parseGenericArgs_noHookCmd_noHookTrue)
 {
-    int i = 1;
     const int argc = 2;
     const char* kNoHookCmd[argc] = { "stub", "--no-hooks" };
     Argv a(argc, kNoHookCmd);
@@ -214,7 +210,6 @@ TEST(GenericArgsParsingTests, parseGenericArgs_noHookCmd_noHookTrue)
 TEST(GenericArgsParsingTests, parseGenericArgs_helpCmd_showHelp)
 {
     g_helpShowed = false;
-    int i = 1;
     const int argc = 2;
     const char* kHelpCmd[argc] = { "stub", "--help" };
     Argv a(argc, kHelpCmd);
@@ -235,7 +230,6 @@ TEST(GenericArgsParsingTests, parseGenericArgs_helpCmd_showHelp)
 TEST(GenericArgsParsingTests, parseGenericArgs_versionCmd_showVersion)
 {
     g_versionShowed = false;
-    int i = 1;
     const int argc = 2;
     const char* kVersionCmd[argc] = { "stub", "--version" };
     Argv a(argc, kVersionCmd);
@@ -254,7 +248,6 @@ TEST(GenericArgsParsingTests, parseGenericArgs_versionCmd_showVersion)
 
 TEST(GenericArgsParsingTests, parseGenericArgs_noTrayCmd_disableTrayTrue)
 {
-    int i = 1;
     const int argc = 2;
     const char* kNoTrayCmd[argc] = { "stub", "--no-tray" };
     Argv a(argc, kNoTrayCmd);
@@ -271,7 +264,6 @@ TEST(GenericArgsParsingTests, parseGenericArgs_noTrayCmd_disableTrayTrue)
 
 TEST(GenericArgsParsingTests, parseGenericArgs_ipcCmd_enableIpcTrue)
 {
-    int i = 1;
     const int argc = 2;
     const char* kIpcCmd[argc] = { "stub", "--ipc" };
     Argv a(argc, kIpcCmd);
@@ -289,7 +281,6 @@ TEST(GenericArgsParsingTests, parseGenericArgs_ipcCmd_enableIpcTrue)
 #ifndef  WINAPI_XWINDOWS
 TEST(GenericArgsParsingTests, parseGenericArgs_dragDropCmdOnNonLinux_enableDragDropTrue)
 {
-    int i = 1;
     const int argc = 2;
     const char* kDragDropCmd[argc] = { "stub", "--enable-drag-drop" };
     Argv a(argc, kDragDropCmd);
@@ -308,7 +299,6 @@ TEST(GenericArgsParsingTests, parseGenericArgs_dragDropCmdOnNonLinux_enableDragD
 #ifdef  WINAPI_XWINDOWS
 TEST(GenericArgsParsingTests, parseGenericArgs_dragDropCmdOnLinux_enableDragDropFalse)
 {
-    int i = 1;
     const int argc = 2;
     const char* kDragDropCmd[argc] = { "stub", "--enable-drag-drop" };
     Argv a(argc, kDragDropCmd);

@@ -243,7 +243,6 @@ Unicode::UTF8ToUTF32(const std::string& src, bool* errors)
 
 static std::string convert_wide_to_current_mb(const wchar_t* src, std::uint32_t n, bool& errors)
 {
-    ptrdiff_t len = 0;
     std::mbstate_t state = { };
 
     std::string result;

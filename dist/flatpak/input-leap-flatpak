@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+set -x
+
+if [[ -z "$XDG_CONFIG_HOME" ]]; then
+    XDG_CONFIG_HOME=$HOME/.config
+fi
+
+if [[ -z "$XDG_RUNTIME_DIR" ]]; then
+    XDG_RUNTIME_DIR="/tmp"
+fi
+export LIBEI_SOCKET=$XDG_RUNTIME_DIR/eis-0
+
+client_config_file=$XDG_CONFIG_HOME/InputLeap/server.name
+server_config_file=$XDG_CONFIG_HOME/InputLeap/InputLeap.conf
+
+if [[ -e $client_config_file ]]; then
+    exec input-leapc --no-daemon --disable-crypto $(cat $client_config_file)
+fi
+
+if [[ -e $server_config_file ]]; then
+    exec input-leaps --no-daemon --name $HOSTNAME --disable-crypto -c $server_config_file
+fi
+
+echo "Neither config file found"
+exit 1

@@ -162,6 +162,11 @@ if (UNIX)
             check_symbol_exists(xdp_session_connect_to_eis "libportal/portal.h" HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS)
             check_symbol_exists(xdp_input_capture_session_connect_to_eis "libportal/inputcapture.h" HAVE_LIBPORTAL_INPUTCAPTURE)
             cmake_pop_check_state()
+
+            # Flatpak bits
+            install(FILES "dist/flatpak/input-leap-flatpak"
+                    DESTINATION bin
+                    PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
         endif()
 
         check_include_files ("dns_sd.h" HAVE_DNSSD)

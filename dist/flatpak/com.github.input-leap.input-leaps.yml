@@ -1,0 +1,122 @@
+# This is an example flatpak manifest only and needs some improvements.
+#
+# Notably: the input-leap-flatpak script is merely a shell wrapper that checks if
+# $XDG_CONFIG_HOME/InputLeap/server.name exists and if it does, it effectively runs
+#    input-leapc $that-server-name
+# Otherwise, it tries to run
+#   input-leapc $XDG_CONFIG_HOME/InputLeap/InputLeap.conf
+#
+# Note: mDNS (foo.local) does NOT work, so server.name needs to be a FQDN or an ip address
+# https://gitlab.com/freedesktop-sdk/freedesktop-sdk/-/issues/1013
+
+app-id: com.github.inputleap.InputLeap
+runtime: org.gnome.Platform
+runtime-version: '42'
+sdk: org.gnome.Sdk
+command: input-leap-flatpak
+
+finish-args:
+    # We want to talk to the network
+    - --share=network
+    # Need to read our config from somewhere
+    - --filesystem=xdg-config/input-leap
+    # HACK: so we can put our EIS socket somewhere accessible
+    # This won't be needed once the portal actually supports our interfaces
+    - --filesystem=xdg-run/eis-0
+    # Let's show off :)
+    - --nosocket=x11
+    - --nosocket=wayland
+
+modules:
+    # Protobuf is required by libei, which is required by inputleap
+    - name: protobuf
+      buildsystem: autotools
+      sources:
+          - type: git
+            url: https://github.com/protocolbuffers/protobuf
+            tag: v3.19.4  # F36 as of writing this manifest
+
+    - name: libprotobuf-c
+      buildsystem: autotools
+      sources:
+          - type: git
+            url: https://github.com/protobuf-c/protobuf-c
+            tag: v1.4.0 # F36 as of writing this manifest
+
+    - name: libei
+      buildsystem: meson
+      config-opts:
+          - -Ddocumentation=false
+          - -Dtests=false
+          - -Dportal=false  # wrong portal for our use
+      sources:
+          - type: git
+            url: https://gitlab.freedesktop.org/libinput/libei
+            branch: main
+
+    # Required by avahi
+    - name: libdaemon
+      buildsystem: autotools
+      sources:
+          - type: archive
+            url: http://0pointer.de/lennart/projects/libdaemon/libdaemon-0.14.tar.gz
+            sha256: fd23eb5f6f986dcc7e708307355ba3289abe03cc381fc47a80bca4a50aa6b834
+
+    # Required by avahi
+    - name: libevent
+      buildsystem: autotools
+      sources:
+          - type: git
+            url: https://github.com/libevent/libevent
+            tag: release-2.1.12-stable
+
+    # Required by inputleap
+    - name: avahi
+      buildsystem: autotools
+      config-opts:
+          - --with-distro=none
+          - --enable-compat-libdns_sd
+          - --disable-qt5
+          - --disable-mono
+          - --disable-monodoc
+          - --disable-gtk
+          - --disable-gtk3
+          - --disable-compat-howl
+          - --disable-python
+          - --disable-core-docs
+          - --disable-manpages
+          - --disable-xmltoman
+          - --disable-tests
+      sources:
+          - type: git
+            url: https://github.com/lathiat/avahi
+            tag: v0.8
+
+    # Required by inputleap
+    - name: libportal
+      buildsystem: meson
+      config-opts:
+          - -Ddocs=false
+          - -Dtests=false
+          - -Dportal-tests=false
+          - -Dvapi=false
+          - -Dbackends=gtk4
+      sources:
+          - type: git
+            url: https://github.com/whot/libportal
+            branch: wip/inputcapture
+
+    - name: input-leap
+      buildsystem: cmake
+      config-opts:
+          - -DINPUTLEAP_BUILD_GUI=OFF
+          - -DINPUTLEAP_BUILD_TESTS=OFF
+          - -DINPUTLEAP_BUILD_INSTALLER=OFF
+          - -DINPUTLEAP_BUILD_X11=ON  # FIXME: undefined reference to `XWindowsUtil::mapKeySymToKeyID otherwise
+          - -DINPUTLEAP_BUILD_LIBEI=ON
+      sources:
+          - type: git
+            url: https://github.com/whot/input-leap
+            branch: wip/libei
+
+#

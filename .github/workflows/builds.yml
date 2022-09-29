@@ -101,6 +101,7 @@ jobs:
         with:
           name: Publish the DMG for ${{ matrix.os }}
           path: ./build/bundle/*.dmg
+          if-no-files-found: warn
         if: ${{ env.B_BUILD_TYPE == 'Release' }}
 
   win-build-2019:
@@ -131,6 +132,7 @@ jobs:
         with:
           name: Windows ${{ env.CI_ENV_BUILD_TYPE }}
           path: ${{ env.CI_ENV_BUILD_TYPE }}.zip
+          if-no-files-found: warn
 
   win-build-2022:
     runs-on: windows-2022
@@ -169,3 +171,4 @@ jobs:
         with:
           name: Publish the Installer
           path: .\build\installer-inno\bin
+          if-no-files-found: warn

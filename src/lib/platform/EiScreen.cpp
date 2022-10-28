@@ -249,6 +249,12 @@ void EiScreen::enter()
             ei_device_start_emulating(ei_abs_);
         }
     }
+#if HAVE_LIBPORTAL_INPUTCAPTURE
+    else {
+        LOG((CLOG_DEBUG "Releasing input capture"));
+        portal_input_capture_->release(cursor_x_, cursor_y_);
+    }
+#endif
 }
 
 bool EiScreen::leave()

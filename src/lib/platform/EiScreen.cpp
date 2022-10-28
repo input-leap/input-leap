@@ -134,8 +134,8 @@ void EiScreen::reconfigure(uint32_t)
 
 void EiScreen::warpCursor(int32_t x, int32_t y)
 {
-    // FIXME
-    assert(!"Not Implemented");
+    cursor_x_ = x;
+    cursor_y_ = y;
 }
 
 std::uint32_t EiScreen::registerHotKey(KeyID key, KeyModifierMask mask)

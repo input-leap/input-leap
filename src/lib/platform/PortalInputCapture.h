@@ -26,6 +26,7 @@
 
 #include <glib.h>
 #include <libportal/portal.h>
+#include <libportal/inputcapture.h>
 
 namespace inputleap {
 
@@ -34,6 +35,10 @@ public:
     PortalInputCapture(EiScreen *screen, IEventQueue *events);
     ~PortalInputCapture();
     void enable();
+    void disable();
+    void release();
+    void release(double x, double y);
+
 
 private:
     void glib_thread();
@@ -87,6 +92,7 @@ private:
     std::vector<guint> signals_;
 
     bool enabled_ = false;
+    std::uint32_t activation_id_ = 0;
 
     std::vector<XdpInputCapturePointerBarrier*> barriers_;
 };

@@ -232,9 +232,33 @@ void PortalInputCapture::enable()
     }
 }
 
+void PortalInputCapture::disable()
+{
+    if (enabled_) {
+        LOG((CLOG_DEBUG "Disabling the InputCapture session"));
+        xdp_input_capture_session_disable(session_);
+        enabled_ = false;
+    }
+}
+
+void PortalInputCapture::release()
+{
+    LOG((CLOG_DEBUG "Releasing InputCapture with activation id %d", activation_id_));
+    xdp_input_capture_session_release(session_, activation_id_);
+}
+
+void PortalInputCapture::release(double x, double y)
+{
+    LOG((CLOG_DEBUG "Releasing InputCapture with activation id %d at (%.1f,%.1f)", activation_id_, x, y));
+    xdp_input_capture_session_release_at(session_, activation_id_, x, y);
+}
+
 void PortalInputCapture::cb_disabled(XdpInputCaptureSession* session)
 {
     LOG((CLOG_DEBUG "PortalInputCapture::cb_disabled"));
+
+    if (!enabled_)
+        return; // Nothing to do
 
     enabled_ = false;
 
@@ -253,11 +277,24 @@ void PortalInputCapture::cb_disabled(XdpInputCaptureSession* session)
 void PortalInputCapture::cb_activated(XdpInputCaptureSession* session, GVariant* options)
 {
     LOG((CLOG_DEBUG "PortalInputCapture::cb_activated()"));
+    std::uint32_t activation_id = 0;
+    if (!options || !g_variant_lookup (options, "activation_id", "u", &activation_id)) {
+        LOG((CLOG_WARN "Failed to get activation_id"));
+        return;
+    }
+    activation_id_ = activation_id;
 }
 
 void PortalInputCapture::cb_deactivated(XdpInputCaptureSession* session, GVariant* options)
 {
     LOG((CLOG_DEBUG "PortalInputCapture::cb_deactivated"));
+    std::uint32_t activation_id = 0;
+
+    if (!options || !g_variant_lookup (options, "activation_id", "u", &activation_id)) {
+        LOG((CLOG_WARN "Failed to get activation_id"));
+        return;
+    }
+    activation_id_ = activation_id;
 }
 
 void PortalInputCapture::cb_zones_changed(XdpInputCaptureSession* session, GVariant* options)

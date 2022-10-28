@@ -432,8 +432,18 @@ ButtonID EiScreen::map_button_from_evdev(ei_event* event) const
 
 void EiScreen::on_key_event(ei_event* event)
 {
-    LOG((CLOG_DEBUG "on_button_event"));
-    assert(is_primary_);
+    uint32_t keycode = ei_event_keyboard_get_key(event);
+    bool pressed = ei_event_keyboard_get_key_is_press(event);
+    KeyID keyid = key_state_->map_key_from_keyval(keycode + 8);
+    KeyButton keybutton = static_cast<KeyButton>(keycode + 8);
+    KeyModifierMask mask = 0; // FIXME
+
+    LOG((CLOG_DEBUG1 "event: Key %s keycode=%d keyid=%d", pressed ? "press" : "release", keycode, keyid));
+
+    if (keyid != kKeyNone) {
+        key_state_->sendKeyEvent(get_event_target(), pressed, false, keyid,
+                                 mask, 1, keybutton);
+    }
 }
 
 void EiScreen::on_button_event(ei_event* event)

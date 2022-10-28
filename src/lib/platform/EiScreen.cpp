@@ -396,6 +396,11 @@ void EiScreen::remove_device(struct ei_device *device)
     update_shape();
 }
 
+void EiScreen::send_event(EventType type, EventDataBase* data)
+{
+    events_->add_event(type, get_event_target(), data);
+}
+
 void EiScreen::on_key_event(ei_event* event)
 {
     LOG((CLOG_DEBUG "on_button_event"));
@@ -419,15 +424,15 @@ void EiScreen::on_motion_event(ei_event* event)
     cursor_x_ += dx;
     cursor_y_ += dy;
 
-    // motion on primary screen
     if (is_on_screen_) {
-        events_->add_event(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY, get_event_target(),
-                           create_event_data<MotionInfo>(MotionInfo{cursor_x_, cursor_y_}));
+        // motion on primary screen
+        send_event(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY,
+                   create_event_data<MotionInfo>(MotionInfo{cursor_x_, cursor_y_}));
     } else {
         // motion on secondary screen
-        events_->add_event(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY, get_event_target(),
-                           create_event_data<MotionInfo>(MotionInfo{static_cast<std::int32_t>(dx),
-                                                                    static_cast<std::int32_t>(dy)}));
+        send_event(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY,
+                   create_event_data<MotionInfo>(MotionInfo{static_cast<std::int32_t>(dx),
+                                                            static_cast<std::int32_t>(dy)}));
     }
 }
 

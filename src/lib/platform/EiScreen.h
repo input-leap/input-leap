@@ -98,6 +98,7 @@ protected:
     void remove_device(ei_device* device);
 
 private:
+    void send_event(EventType type, EventDataBase* data);
     void on_key_event(ei_event *event);
     void on_button_event(ei_event *event);
     void on_motion_event(ei_event *event);

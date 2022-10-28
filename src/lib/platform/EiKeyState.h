@@ -40,6 +40,7 @@ public:
     KeyModifierMask pollActiveModifiers() const override;
     std::int32_t pollActiveGroup() const override;
     void pollPressedKeys(KeyButtonSet& pressedKeys) const override;
+    KeyID map_key_from_keyval(std::uint32_t keyval) const;
 
 protected:
     // KeyState overrides

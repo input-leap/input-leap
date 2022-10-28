@@ -247,4 +247,22 @@ void EiKeyState::fakeKey(const Keystroke& keystroke)
     }
 }
 
+KeyID EiKeyState::map_key_from_keyval(uint32_t keyval) const
+{
+    auto state = xkb_state_new(xkb_keymap_);
+    LOG((CLOG_DEBUG1 "map_key_from_keyval keyval=%d", keyval));
+
+    // FIXME: That might be a bit crude...?
+    xkb_keysym_t xkb_keysym = xkb_state_key_get_one_sym(state, keyval);
+    KeySym keysym = static_cast<KeySym>(xkb_keysym);
+    LOG((CLOG_DEBUG1 "mapped code=%d to keysym=0x%04x", keyval, keysym));
+
+    KeyID keyid = XWindowsUtil::mapKeySymToKeyID(keysym);
+    LOG((CLOG_DEBUG1 "mapped keysym=0x%04x to keyID=%d", keysym, keyid));
+
+    xkb_state_unref(state);
+
+    return keyid;
+}
+
 } // namespace inputleap

@@ -99,6 +99,7 @@ protected:
 
 private:
     void send_event(EventType type, EventDataBase* data);
+    ButtonID map_button_from_evdev(ei_event* event) const;
     void on_key_event(ei_event *event);
     void on_button_event(ei_event *event);
     void on_motion_event(ei_event *event);

@@ -92,14 +92,13 @@ bool EiKeyState::fakeCtrlAltDel()
 
 KeyModifierMask EiKeyState::pollActiveModifiers() const
 {
-    // FIXME
-    return 0;
+    std::uint32_t xkb_mask = xkb_state_serialize_mods(xkb_state_, XKB_STATE_MODS_EFFECTIVE);
+    return convert_mod_mask(xkb_mask);
 }
 
 std::int32_t EiKeyState::pollActiveGroup() const
 {
-    // FIXME
-    return 0;
+    return xkb_state_serialize_layout(xkb_state_, XKB_STATE_LAYOUT_EFFECTIVE);
 }
 
 void EiKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const

@@ -23,6 +23,7 @@
 
 struct xkb_context;
 struct xkb_keymap;
+struct xkb_state;
 
 namespace inputleap {
 
@@ -41,6 +42,7 @@ public:
     std::int32_t pollActiveGroup() const override;
     void pollPressedKeys(KeyButtonSet& pressedKeys) const override;
     KeyID map_key_from_keyval(std::uint32_t keyval) const;
+    void update_xkb_state(std::uint32_t keyval, bool is_pressed);
 
 protected:
     // KeyState overrides
@@ -55,6 +57,7 @@ private:
 
     xkb_context* xkb_ = nullptr;
     xkb_keymap* xkb_keymap_ = nullptr;
+    xkb_state* xkb_state_ = nullptr;
 };
 
 } // namespace inputleap

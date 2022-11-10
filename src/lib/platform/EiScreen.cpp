@@ -121,10 +121,8 @@ void EiScreen::getShape(int32_t& x, int32_t& y, int32_t& w, int32_t& h) const
 
 void EiScreen::getCursorPos(int32_t& x, int32_t& y) const
 {
-    // We cannot get the cursor position on EI, so we
-    // always return the center of the screen
-    x = x_ + w_/2;
-    y = y_ + y_/2;
+    x = cursor_x_;
+    y = cursor_y_;
 }
 
 void EiScreen::reconfigure(uint32_t)
@@ -259,7 +257,8 @@ void EiScreen::enter()
     }
 #if HAVE_LIBPORTAL_INPUTCAPTURE
     else {
-        LOG((CLOG_DEBUG "Releasing input capture"));
+        LOG((CLOG_DEBUG "Releasing input capture at (cursor_x_,cursor_y_) = (%i,%i)",
+             cursor_x_, cursor_y_));
         portal_input_capture_->release(cursor_x_, cursor_y_);
     }
 #endif
@@ -522,15 +521,13 @@ void EiScreen::on_motion_event(ei_event* event)
     double dx = ei_event_pointer_get_dx(event);
     double dy = ei_event_pointer_get_dy(event);
 
-    cursor_x_ += dx;
-    cursor_y_ += dy;
-
     if (is_on_screen_) {
-        // motion on primary screen
+        LOG((CLOG_DEBUG "on_motion_event on primary at (cursor_x_,cursor_y_)=(%i,%i)",
+             cursor_x_, cursor_y_));
         send_event(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY,
                    create_event_data<MotionInfo>(MotionInfo{cursor_x_, cursor_y_}));
     } else {
-        // motion on secondary screen
+        LOG((CLOG_DEBUG "on_motion_event on secondary at (dx,dy)=(%.2f,%.2f)", dx, dy));
         send_event(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY,
                    create_event_data<MotionInfo>(MotionInfo{static_cast<std::int32_t>(dx),
                                                             static_cast<std::int32_t>(dy)}));

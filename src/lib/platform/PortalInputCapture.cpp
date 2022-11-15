@@ -245,12 +245,14 @@ void PortalInputCapture::release()
 {
     LOG((CLOG_DEBUG "Releasing InputCapture with activation id %d", activation_id_));
     xdp_input_capture_session_release(session_, activation_id_);
+    is_active_ = false;
 }
 
 void PortalInputCapture::release(double x, double y)
 {
     LOG((CLOG_DEBUG "Releasing InputCapture with activation id %d at (%.1f,%.1f)", activation_id_, x, y));
     xdp_input_capture_session_release_at(session_, activation_id_, x, y);
+    is_active_ = false;
 }
 
 void PortalInputCapture::cb_disabled(XdpInputCaptureSession* session)
@@ -261,6 +263,7 @@ void PortalInputCapture::cb_disabled(XdpInputCaptureSession* session)
         return; // Nothing to do
 
     enabled_ = false;
+    is_active_ = false;
 
     // FIXME: need some better heuristics here of when we want to enable again
     // But we don't know *why* we got disabled (and it's doubtfull we ever will), so
@@ -291,12 +294,14 @@ void PortalInputCapture::cb_activated(XdpInputCaptureSession* session, std::uint
         LOG((CLOG_WARN "Activation has no options!"));
     }
     activation_id_ = activation_id;
+    is_active_ = true;
 }
 
 void PortalInputCapture::cb_deactivated(XdpInputCaptureSession* session,
                                         std::uint32_t activation_id, GVariant* options)
 {
     LOG((CLOG_DEBUG "PortalInputCapture::cb_deactivated() activation id=%i", activation_id));
+    is_active_ = false;
 }
 
 void PortalInputCapture::cb_zones_changed(XdpInputCaptureSession* session, GVariant* options)

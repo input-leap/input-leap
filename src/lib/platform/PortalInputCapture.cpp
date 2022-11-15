@@ -274,27 +274,29 @@ void PortalInputCapture::cb_disabled(XdpInputCaptureSession* session)
                   this);
 }
 
-void PortalInputCapture::cb_activated(XdpInputCaptureSession* session, GVariant* options)
+void PortalInputCapture::cb_activated(XdpInputCaptureSession* session, std::uint32_t activation_id,
+                                      GVariant* options)
 {
-    LOG((CLOG_DEBUG "PortalInputCapture::cb_activated()"));
-    std::uint32_t activation_id = 0;
-    if (!options || !g_variant_lookup (options, "activation_id", "u", &activation_id)) {
-        LOG((CLOG_WARN "Failed to get activation_id"));
-        return;
+    LOG((CLOG_DEBUG "PortalInputCapture::cb_activated() activation_id=%d", activation_id));
+
+    if (options) {
+        gdouble x, y;
+        if (g_variant_lookup(options, "cursor_position", "(dd)", &x, &y)) {
+            screen_->warpCursor((int) x, (int) y);
+        } else {
+            LOG((CLOG_WARN "Failed to get cursor_position"));
+        }
+    }
+    else {
+        LOG((CLOG_WARN "Activation has no options!"));
     }
     activation_id_ = activation_id;
 }
 
-void PortalInputCapture::cb_deactivated(XdpInputCaptureSession* session, GVariant* options)
+void PortalInputCapture::cb_deactivated(XdpInputCaptureSession* session,
+                                        std::uint32_t activation_id, GVariant* options)
 {
-    LOG((CLOG_DEBUG "PortalInputCapture::cb_deactivated"));
-    std::uint32_t activation_id = 0;
-
-    if (!options || !g_variant_lookup (options, "activation_id", "u", &activation_id)) {
-        LOG((CLOG_WARN "Failed to get activation_id"));
-        return;
-    }
-    activation_id_ = activation_id;
+    LOG((CLOG_DEBUG "PortalInputCapture::cb_deactivated() activation id=%i", activation_id));
 }
 
 void PortalInputCapture::cb_zones_changed(XdpInputCaptureSession* session, GVariant* options)

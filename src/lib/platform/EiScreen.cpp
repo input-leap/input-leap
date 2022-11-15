@@ -526,6 +526,12 @@ void EiScreen::on_motion_event(ei_event* event)
              cursor_x_, cursor_y_));
         send_event(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY,
                    create_event_data<MotionInfo>(MotionInfo{cursor_x_, cursor_y_}));
+
+#if HAVE_LIBPORTAL_INPUTCAPTURE
+         if (portal_input_capture_->is_active()) {
+             portal_input_capture_->release();
+         }
+#endif
     } else {
         LOG((CLOG_DEBUG "on_motion_event on secondary at (dx,dy)=(%.2f,%.2f)", dx, dy));
         send_event(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY,

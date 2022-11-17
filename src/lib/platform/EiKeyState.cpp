@@ -38,8 +38,6 @@ EiKeyState::EiKeyState(EiScreen* screen, IEventQueue* events) :
     // one during initial startup - even before we know what our actual keymap is.
     // Once we get the actual keymap from EIS, we swap it out so hopefully that's enough.
     init_default_keymap();
-
-    xkb_state_ = xkb_state_new(xkb_keymap_);
 }
 
 void EiKeyState::init_default_keymap()
@@ -48,7 +46,15 @@ void EiKeyState::init_default_keymap()
         NULL, // Use libxkbcommon compile-time defaults/env vars
     };
 
+    if (xkb_keymap_) {
+        xkb_keymap_unref(xkb_keymap_);
+    }
     xkb_keymap_ = xkb_keymap_new_from_names(xkb_, &names, XKB_KEYMAP_COMPILE_NO_FLAGS);
+
+    if (xkb_state_) {
+        xkb_state_unref(xkb_state_);
+    }
+    xkb_state_ = xkb_state_new(xkb_keymap_);
 }
 
 void EiKeyState::init(int fd, size_t len)
@@ -76,8 +82,15 @@ void EiKeyState::init(int fd, size_t len)
         return;
     }
 
-    xkb_keymap_unref(xkb_keymap_);
+    if (xkb_keymap_) {
+        xkb_keymap_unref(xkb_keymap_);
+    }
     xkb_keymap_ = keymap;
+
+    if (xkb_state_) {
+        xkb_state_unref(xkb_state_);
+    }
+    xkb_state_ = xkb_state_new(xkb_keymap_);
 }
 
 

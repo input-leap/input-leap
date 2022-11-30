@@ -54,7 +54,6 @@ void EiKeyState::init_default_keymap()
 void EiKeyState::init(int fd, size_t len)
 {
     auto buffer = std::make_unique<char[]>(len + 1);
-    buffer[len] = '\0'; // guarantee null-termination
     auto sz = read(fd, buffer.get(), len);
 
     if ((size_t)sz < len) {
@@ -62,7 +61,12 @@ void EiKeyState::init(int fd, size_t len)
         return;
     }
 
-    auto keymap = xkb_keymap_new_from_buffer(xkb_, buffer.get(), len,
+    // See xkbcommon/libxkbcommon issue #307, xkb_keymap_new_from_buffer fails if we have a
+    // terminating null byte. Since we can't control whether the other end sends that byte,
+    // enforce null-termination in our buffer and pass the whole thing as string.
+
+    buffer[len] = '\0'; // guarantee null-termination
+    auto keymap = xkb_keymap_new_from_string(xkb_, buffer.get(),
                                              XKB_KEYMAP_FORMAT_TEXT_V1,
                                              XKB_KEYMAP_COMPILE_NO_FLAGS);
     if (!keymap) {

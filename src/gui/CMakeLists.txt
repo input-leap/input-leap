@@ -198,7 +198,12 @@ add_executable (input-leap WIN32
 
 include_directories (./src)
 
-target_link_libraries(input-leap net arch base io Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network ${OPENSSL_LIBS})
+target_link_libraries(input-leap net arch base io Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network)
+if (Qt6_FOUND)
+    target_link_libraries(input-leap Qt6::Core5Compat)
+endif()
+target_link_libraries(input-leap ${OPENSSL_LIBS})
+
 target_compile_definitions (input-leap PRIVATE -DINPUTLEAP_VERSION_STAGE="${INPUTLEAP_VERSION_STAGE}")
 target_compile_definitions (input-leap PRIVATE -DINPUTLEAP_REVISION="${INPUTLEAP_REVISION}")
 

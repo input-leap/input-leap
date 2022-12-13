@@ -41,6 +41,11 @@ The Barrier GUI is based on QSynergy by Volker Lanz.
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="res/AboutDialogBase.ui" line="167"/>
+        <source>Build Date: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="res/AboutDialogBase.ui" line="163"/>
         <source>&amp;Ok</source>
         <translation type="unfinished"></translation>
@@ -141,6 +146,11 @@ The Barrier GUI is based on QSynergy by Volker Lanz.
     <message>
         <location filename="res/ActionDialogBase.ui" line="264"/>
         <source>the hotkey is released</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/ActionDialogBase.ui" line="148"/>
+        <source>Toggle screen</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -356,7 +366,7 @@ Do you want to install Bonjour?</source>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="408"/>
-        <source>Barrier is now connected, You can close the config window. Barrier will remain connected in the background.</source>
+        <source>Barrier is now connected. You can close the config window and Barrier will remain connected in the background.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -370,7 +380,7 @@ Do you want to install Bonjour?</source>
 
 %1
 
-This is a server fingerprint. You should compare this fingerprint to the one on your server&apos;s screen. If the two don&apos;t match exactly, then it&apos;s probably not the server you&apos;re expecting (it could be a malicious user).
+This is a server fingerprint. You should compare this fingerprint to the one on your server's screen. If the two don't match exactly, then it's probably not the server you're expecting (it could be a malicious user).
 
 To automatically trust this fingerprint for future connections, click Yes. To reject this fingerprint and disconnect from the server, click No.</source>
         <translation type="unfinished"></translation>
@@ -422,6 +432,11 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/MainWindowBase.ui" line="181"/>
         <source>Use existing configuration:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/MainWindowBase.ui" line="218"/>
+        <source>SSL Fingerprint:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -559,6 +574,26 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <source>Run Wizard</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="res/MainWindowBase.ui" line="435"/>
+        <source>S&amp;ave configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/MainWindowBase.ui" line="446"/>
+        <source>Change &amp;Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/MainWindowBase.ui" line="457"/>
+        <source>Show &amp;Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/MainWindowBase.ui" line="457"/>
+        <source>Show Log</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>NewScreenWidget</name>
@@ -650,17 +685,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <name>QObject</name>
     <message>
         <location filename="src/MainWindow.cpp" line="60"/>
-        <source>All files (*.*)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/MainWindow.cpp" line="60"/>
-        <source>Barrier Configurations (*.sgc)</source>
+        <source>Barrier Configurations (*.sgc);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="67"/>
-        <source>Barrier Configurations (*.conf)</source>
+        <source>Barrier Configurations (*.conf);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -858,6 +888,11 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <source>Fix XTest for Xinerama</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="res/ScreenSettingsDialogBase.ui" line="468"/>
+        <source>Fix Preserve Focus</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ScreenSetupModel</name>
@@ -982,8 +1017,23 @@ Double click on a screen to edit its settings.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="res/ServerConfigDialogBase.ui" line="394"/>
+        <source>Bump against the screen edge with the mouse pointer twice in quick succession.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="res/ServerConfigDialogBase.ui" line="408"/>
         <source>&amp;Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/ServerConfigDialogBase.ui" line="416"/>
+        <source>Enable clipboard sharing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/ServerConfigDialogBase.ui" line="461"/>
+        <source>Enable drag and drop file transfers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1167,6 +1217,84 @@ This allows Barrier to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/SettingsDialogBase.ui" line="243"/>
         <source>Debug2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="29"/>
+        <source>General</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="86"/>
+        <source>Elevate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="93"/>
+        <source>Specify when the Barrier service should run at an elevated privilege level</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="100"/>
+        <source>As Needed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="105"/>
+        <source>Always</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="110"/>
+        <source>Never</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="118"/>
+        <source>Minimize to System &amp;Tray</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="135"/>
+        <source>Networking</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="170"/>
+        <source>&amp;Address:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="187"/>
+        <source>Enable &amp;SSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="132"/>
+        <source>Start &amp;Barrier on startup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="201"/>
+        <source>Require client certificate</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>LogWindowBase</name>
+    <message>
+        <location filename="res/LogWindowBase.ui" line="26"/>
+        <source>Log - Barrier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/LogWindowBase.ui" line="71"/>
+        <source>&amp;Clear Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/LogWindowBase.ui" line="78"/>
+        <source>&amp;Hide</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

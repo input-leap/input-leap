@@ -370,19 +370,32 @@ Do you want to install Bonjour?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="434"/>
+        <location filename="src/FingerprintAcceptDialog.ui" line="20"/>
         <source>Security question</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="435"/>
-        <source>Do you trust this fingerprint?
-
-%1
-
-This is a server fingerprint. You should compare this fingerprint to the one on your server's screen. If the two don't match exactly, then it's probably not the server you're expecting (it could be a malicious user).
+        <location filename="src/FingerprintAcceptDialog.ui" line="45"/>
+        <source>SHA1 (deprecated, compare to old servers only)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/FingerprintAcceptDialog.ui" line="85"/>
+        <source>Do you trust this fingerprint?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/FingerprintAcceptDialog.cpp" line="45"/>
+        <source>This is a server fingerprint. You should compare this fingerprint to the one on your server's screen. If the two don't match exactly, then it's probably not the server you're expecting (it could be a malicious user).
 
 To automatically trust this fingerprint for future connections, click Yes. To reject this fingerprint and disconnect from the server, click No.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/FingerprintAcceptDialog.cpp" line="45"/>
+        <source>This is a client fingerprint. You should compare this fingerprint to the one on your client's screen. If the two don't match exactly, then it's probably not the client you're expecting (it could be a malicious user).
+
+To automatically trust this fingerprint for future connections, click Yes. To reject this fingerprint and disconnect the client, click No.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -685,12 +698,17 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <name>QObject</name>
     <message>
         <location filename="src/MainWindow.cpp" line="60"/>
-        <source>Barrier Configurations (*.sgc);;All files (*.*)</source>
+        <source>All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/MainWindow.cpp" line="60"/>
+        <source>Barrier Configurations (*.sgc)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="67"/>
-        <source>Barrier Configurations (*.conf);;All files (*.*)</source>
+        <source>Barrier Configurations (*.conf)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

@@ -17,7 +17,7 @@ body:
     id: version
     attributes:
       label: Version
-      description: What version of Barrier are you running?
+      description: What version of Input Leap are you running?
       options:
         - v2.0.0-RC1
         - v2.0.0-RC2
@@ -38,14 +38,14 @@ body:
     id: git-commit-if
     attributes:
       label: Git commit hash (if applicable)
-      description: "When building Barrier from Git, what commit hash did you checkout from?"
+      description: "When building Input Leap from Git, what commit hash did you checkout from?"
       placeholder: b0c0b42b
     validations:
       required: false
   - type: textarea
     id: pkg-mgr-origin
     attributes:
-      label: If applicable, where did you install Barrier from?
+      label: If applicable, where did you install Input Leap from?
       description: This includes Snaps, Flatpaks, and self-built executables.
     validations:
       required: false

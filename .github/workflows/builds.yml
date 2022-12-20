@@ -102,7 +102,6 @@ jobs:
           name: Publish the DMG for ${{ matrix.os }}
           path: ./build/bundle/*.dmg
           if-no-files-found: warn
-        if: ${{ env.B_BUILD_TYPE == 'Release' }}
 
   win-build-2019:
     runs-on: windows-2019

@@ -56,18 +56,9 @@ if which -s brew ; then
 fi
 
 # Use macdeployqt to include libraries and create dmg
-if [ "$B_BUILDTYPE" = "Release" ]; then
-    info "Building Release disk image (dmg)"
-    "$DEPLOYQT" Barrier.app -dmg \
-    -executable="$B_BARRIERC" \
-    -executable="$B_BARRIERS" || exit 1
-    mv "Barrier.dmg" "Barrier-$B_VERSION.dmg" || exit 1
-    success "Created Barrier-$B_VERSION.dmg"
-else
-    warn "Disk image (dmg) only created for Release builds"
-    info "Building debug bundle"
-    "$DEPLOYQT" Barrier.app -no-strip \
-    -executable="$B_BARRIERC" \
-    -executable="$B_BARRIERS" || exit 1
-    success "Bundle created successfully"
-fi
+info "Building Release disk image (dmg)"
+"$DEPLOYQT" Barrier.app -dmg \
+-executable="$B_BARRIERC" \
+-executable="$B_BARRIERS" || exit 1
+mv "Barrier.dmg" "Barrier-$B_VERSION.dmg" || exit 1
+success "Created Barrier-$B_VERSION.dmg"

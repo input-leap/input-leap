@@ -85,7 +85,7 @@ EventQueue::EventQueue() :
     m_typesForIScreen(nullptr),
     m_typesForClipboard(nullptr),
     m_typesForFile(nullptr),
-    m_parentStream(NonBlockingStream(0)) // STDIN_FILENO
+    m_parentStream{0} // STDIN_FILENO
 {
     ARCH->setSignalHandler(Arch::kINTERRUPT, &interrupt, this);
     ARCH->setSignalHandler(Arch::kTERMINATE, &interrupt, this);

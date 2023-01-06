@@ -25,16 +25,12 @@
 QBarrierApplication* QBarrierApplication::s_Instance = nullptr;
 
 QBarrierApplication::QBarrierApplication(int& argc, char** argv) :
-    QApplication(argc, argv),
-    m_Translator(nullptr)
+    QApplication(argc, argv)
 {
     s_Instance = this;
 }
 
-QBarrierApplication::~QBarrierApplication()
-{
-    delete m_Translator;
-}
+QBarrierApplication::~QBarrierApplication() = default;
 
 void QBarrierApplication::commitData(QSessionManager&)
 {
@@ -52,20 +48,19 @@ QBarrierApplication* QBarrierApplication::getInstance()
 
 void QBarrierApplication::switchTranslator(QString lang)
 {
-    if (m_Translator != nullptr)
-    {
-        removeTranslator(m_Translator);
-        delete m_Translator;
+    if (translator_) {
+        removeTranslator(translator_.get());
+        translator_.reset();
     }
 
     QResource locale(":/res/lang/gui_" + lang + ".qm");
-    m_Translator = new QTranslator();
-    m_Translator->load(locale.data(), locale.size());
-    installTranslator(m_Translator);
+    translator_ = std::make_unique<QTranslator>();
+    translator_->load(locale.data(), locale.size());
+    installTranslator(translator_.get());
 }
 
 void QBarrierApplication::setTranslator(QTranslator* translator)
 {
-    m_Translator = translator;
-    installTranslator(m_Translator);
+    translator_.reset(translator);
+    installTranslator(translator_.get());
 }

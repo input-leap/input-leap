@@ -27,6 +27,7 @@
 
 #include <condition_variable>
 #include <map>
+#include <memory>
 #include <mutex>
 #include <queue>
 #include <set>
@@ -101,7 +102,7 @@ private:
     typedef std::vector<std::uint32_t> EventIDList;
     typedef std::map<Event::Type, const char*> TypeMap;
     typedef std::map<std::string, Event::Type> NameMap;
-    typedef std::map<Event::Type, IEventJob*> TypeHandlerTable;
+    using TypeHandlerTable = std::map<Event::Type, std::unique_ptr<IEventJob>>;
     typedef std::map<void*, TypeHandlerTable> HandlerTable;
 
     int m_systemTarget;
@@ -113,7 +114,7 @@ private:
     NameMap m_nameMap;
 
     // buffer of events
-    IEventQueueBuffer* m_buffer;
+    std::unique_ptr<IEventQueueBuffer> buffer_;
 
     // saved events
     EventTable m_events;

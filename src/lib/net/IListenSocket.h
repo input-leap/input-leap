@@ -20,6 +20,7 @@
 
 #include "net/ISocket.h"
 #include "base/EventTypes.h"
+#include <memory>
 
 class IDataSocket;
 
@@ -30,17 +31,11 @@ listen for incoming connections.
 */
 class IListenSocket : public ISocket {
 public:
-    //! @name manipulators
-    //@{
-
     //! Accept connection
     /*!
     Accept a connection, returning a socket representing the full-duplex
     data stream.  Returns nullptr if no socket is waiting to be accepted.
     This is only valid after a call to \c bind().
     */
-    virtual IDataSocket*
-                        accept() = 0;
-
-    //@}
+    virtual std::unique_ptr<IDataSocket> accept() = 0;
 };

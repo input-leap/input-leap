@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include <memory>
+
 // windows doesn't have a unistd.h so this class won't work as-written.
 // at the moment barrier doesn't need this functionality on windows so
 // it's left as a stub to be optimized out
@@ -43,7 +45,7 @@ public:
 
 private:
     int _fd;
-    termios * _p_ta_previous;
+    std::unique_ptr<termios> _p_ta_previous;
     int _cntl_previous;
 };
 

@@ -124,24 +124,25 @@ void
 ClientListener::handleClientConnecting(const Event&, void*)
 {
     // accept client connection
-    IDataSocket* socket = m_listen->accept();
+    auto socket = m_listen->accept();
 
-    if (socket == nullptr) {
+    if (!socket) {
         return;
     }
 
-    m_clientSockets.insert(socket);
+    auto socket_ptr = socket.get();
+    client_sockets_.insert(std::move(socket));
 
     m_events->adoptHandler(m_events->forClientListener().accepted(),
-                socket->getEventTarget(),
+                socket_ptr->getEventTarget(),
                 new TMethodEventJob<ClientListener>(this,
-                        &ClientListener::handleClientAccepted, socket));
+                        &ClientListener::handleClientAccepted, socket_ptr));
 
     // When using non SSL, server accepts clients immediately, while SSL
     // has to call secure accept which may require retry
     if (security_level_ == ConnectionSecurityLevel::PLAINTEXT) {
         m_events->addEvent(Event(m_events->forClientListener().accepted(),
-                                socket->getEventTarget()));
+                                 socket_ptr->getEventTarget()));
     }
 }
 
@@ -226,8 +227,7 @@ ClientListener::handleClientDisconnected(const Event&, void* vclient)
             // we know which socket we no longer need
             IDataSocket* socket = static_cast<IDataSocket*>(client->getStream());
             delete client;
-            m_clientSockets.erase(socket);
-            delete socket;
+            client_sockets_.erase(socket);
 
             break;
         }
@@ -243,9 +243,5 @@ ClientListener::cleanupListenSocket()
 void
 ClientListener::cleanupClientSockets()
 {
-    ClientSockets::iterator it;
-    for (it = m_clientSockets.begin(); it != m_clientSockets.end(); it++) {
-        delete *it;
-    }
-    m_clientSockets.clear();
+    client_sockets_.clear();
 }

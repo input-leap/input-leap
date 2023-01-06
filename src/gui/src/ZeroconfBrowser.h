@@ -24,6 +24,8 @@
 #include <stdint.h>
 #include <dns_sd.h>
 
+#include <memory>
+
 class QSocketNotifier;
 
 class ZeroconfBrowser : public QObject
@@ -51,7 +53,7 @@ private:
 
 private:
     DNSServiceRef m_DnsServiceRef;
-    QSocketNotifier* m_pSocket;
+    std::unique_ptr<QSocketNotifier> socket_;
     QList<ZeroconfRecord> m_Records;
     QString m_BrowsingType;
 };

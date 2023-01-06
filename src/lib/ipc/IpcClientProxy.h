@@ -35,7 +35,7 @@ class IpcClientProxy {
     friend class IpcServer;
 
 public:
-    IpcClientProxy(inputleap::IStream& stream, IEventQueue* events);
+    IpcClientProxy(std::unique_ptr<inputleap::IStream>&& stream, IEventQueue* events);
     virtual ~IpcClientProxy();
 
 private:
@@ -48,7 +48,7 @@ private:
     void disconnect();
 
 private:
-    inputleap::IStream& m_stream;
+    std::unique_ptr<inputleap::IStream> stream_;
     EIpcClientType m_clientType;
     bool m_disconnecting;
     std::mutex m_readMutex;

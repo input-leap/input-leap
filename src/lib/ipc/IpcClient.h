@@ -21,6 +21,7 @@
 #include "net/NetworkAddress.h"
 #include "net/TCPSocket.h"
 #include "base/EventTypes.h"
+#include <memory>
 
 class IpcServerProxy;
 class IpcMessage;
@@ -59,6 +60,6 @@ private:
 private:
     NetworkAddress m_serverAddress;
     TCPSocket m_socket;
-    IpcServerProxy* m_server;
+    std::unique_ptr<IpcServerProxy> server_;
     IEventQueue* m_events;
 };

@@ -77,7 +77,7 @@ private:
     bool m_mock;
     IEventQueue* m_events;
     SocketMultiplexer* m_socketMultiplexer;
-    TCPListenSocket* m_socket;
+    std::unique_ptr<TCPListenSocket> socket_;
     NetworkAddress m_address;
     ClientList m_clients;
     mutable std::mutex m_clientsMutex;
@@ -87,7 +87,6 @@ public:
     IpcServer() :
         m_mock(true),
         m_events(nullptr),
-        m_socketMultiplexer(nullptr),
-        m_socket(nullptr) { }
+        m_socketMultiplexer(nullptr) { }
 #endif
 };

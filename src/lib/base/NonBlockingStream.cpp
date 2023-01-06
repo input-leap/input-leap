@@ -32,7 +32,7 @@ NonBlockingStream::NonBlockingStream(int fd) :
     // before we get data (and to keep it from being echoed back out)
     termios ta;
     tcgetattr(fd, &ta);
-    _p_ta_previous = new termios(ta);
+    _p_ta_previous = std::make_unique<termios>(ta);
     ta.c_lflag &= ~(ICANON | ECHO);
     tcsetattr(fd, TCSANOW, &ta);
 
@@ -43,9 +43,8 @@ NonBlockingStream::NonBlockingStream(int fd) :
 
 NonBlockingStream::~NonBlockingStream()
 {
-    tcsetattr(_fd, TCSANOW, _p_ta_previous);
+    tcsetattr(_fd, TCSANOW, _p_ta_previous.get());
     fcntl(_fd, F_SETFL, _cntl_previous);
-    delete _p_ta_previous;
 }
 
 bool NonBlockingStream::try_read_char(char &ch) const

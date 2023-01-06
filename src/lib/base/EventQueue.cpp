@@ -85,16 +85,15 @@ EventQueue::EventQueue() :
     m_typesForIScreen(nullptr),
     m_typesForClipboard(nullptr),
     m_typesForFile(nullptr),
-    m_parentStream(NonBlockingStream(0)) // STDIN_FILENO
+    m_parentStream{0} // STDIN_FILENO
 {
     ARCH->setSignalHandler(Arch::kINTERRUPT, &interrupt, this);
     ARCH->setSignalHandler(Arch::kTERMINATE, &interrupt, this);
-    m_buffer = new SimpleEventQueueBuffer;
+    buffer_ = std::make_unique<SimpleEventQueueBuffer>();
 }
 
 EventQueue::~EventQueue()
 {
-    delete m_buffer;
     ARCH->setSignalHandler(Arch::kINTERRUPT, nullptr, nullptr);
     ARCH->setSignalHandler(Arch::kTERMINATE, nullptr, nullptr);
 }
@@ -102,7 +101,7 @@ EventQueue::~EventQueue()
 void
 EventQueue::loop()
 {
-    m_buffer->init();
+    buffer_->init();
     {
         std::unique_lock<std::mutex> lock(ready_mutex_);
         is_ready_ = true;
@@ -179,7 +178,7 @@ EventQueue::adoptBuffer(IEventQueueBuffer* buffer)
     }
 
     // discard old buffer and old events
-    delete m_buffer;
+    buffer_.reset();
     for (EventTable::iterator i = m_events.begin(); i != m_events.end(); ++i) {
         Event::deleteData(i->second);
     }
@@ -187,9 +186,9 @@ EventQueue::adoptBuffer(IEventQueueBuffer* buffer)
     m_oldEventIDs.clear();
 
     // use new buffer
-    m_buffer = buffer;
-    if (m_buffer == nullptr) {
-        m_buffer = new SimpleEventQueueBuffer;
+    buffer_.reset(buffer);
+    if (buffer_ == nullptr) {
+        buffer_ = std::make_unique<SimpleEventQueueBuffer>();
     }
 }
 
@@ -211,7 +210,7 @@ retry:
         return false;
     }
     // if no events are waiting then handle timers and then wait
-    while (m_buffer->isEmpty()) {
+    while (buffer_->isEmpty()) {
         // handle timers first
         if (hasTimerExpired(event)) {
             return true;
@@ -232,12 +231,12 @@ retry:
         }
 
         // wait for an event
-        m_buffer->waitForEvent(timeLeft);
+        buffer_->waitForEvent(timeLeft);
     }
 
     // get the event
     std::uint32_t dataID;
-    IEventQueueBuffer::Type type = m_buffer->getEvent(event, dataID);
+    IEventQueueBuffer::Type type = buffer_->getEvent(event, dataID);
     switch (type) {
     case IEventQueueBuffer::kNone:
         if (timeout < 0.0 || timeout <= timer.getTime()) {
@@ -314,7 +313,7 @@ EventQueue::addEventToBuffer(const Event& event)
     std::uint32_t eventID = saveEvent(event);
 
     // add it
-    if (!m_buffer->addEvent(eventID)) {
+    if (!buffer_->addEvent(eventID)) {
         // failed to send event
         removeEvent(eventID);
         Event::deleteData(event);
@@ -326,7 +325,7 @@ EventQueue::newTimer(double duration, void* target)
 {
     assert(duration > 0.0);
 
-    EventQueueTimer* timer = m_buffer->newTimer(duration, false);
+    EventQueueTimer* timer = buffer_->newTimer(duration, false);
     if (target == nullptr) {
         target = timer;
     }
@@ -345,7 +344,7 @@ EventQueue::newOneShotTimer(double duration, void* target)
 {
     assert(duration > 0.0);
 
-    EventQueueTimer* timer = m_buffer->newTimer(duration, true);
+    EventQueueTimer* timer = buffer_->newTimer(duration, true);
     if (target == nullptr) {
         target = timer;
     }
@@ -374,22 +373,20 @@ EventQueue::deleteTimer(EventQueueTimer* timer)
     if (index != m_timers.end()) {
         m_timers.erase(index);
     }
-    m_buffer->deleteTimer(timer);
+    buffer_->deleteTimer(timer);
 }
 
 void
 EventQueue::adoptHandler(Event::Type type, void* target, IEventJob* handler)
 {
     std::lock_guard<std::mutex> lock(mutex_);
-    IEventJob*& job = m_handlers[target][type];
-    delete job;
-    job = handler;
+    m_handlers[target][type].reset(handler);
 }
 
 void
 EventQueue::removeHandler(Event::Type type, void* target)
 {
-    IEventJob* handler = nullptr;
+    std::unique_ptr<IEventJob> handler;
     {
         std::lock_guard<std::mutex> lock(mutex_);
         HandlerTable::iterator index = m_handlers.find(target);
@@ -397,18 +394,19 @@ EventQueue::removeHandler(Event::Type type, void* target)
             TypeHandlerTable& typeHandlers = index->second;
             TypeHandlerTable::iterator index2 = typeHandlers.find(type);
             if (index2 != typeHandlers.end()) {
-                handler = index2->second;
+                handler = std::move(index2->second);
                 typeHandlers.erase(index2);
             }
         }
     }
-    delete handler;
+    // handler is erased here. It is done outside of lock in order to avoid potential deadlock.
+    // TODO: check if it is the case
 }
 
 void
 EventQueue::removeHandlers(void* target)
 {
-    std::vector<IEventJob*> handlers;
+    std::vector<std::unique_ptr<IEventJob>> handlers;
     {
         std::lock_guard<std::mutex> lock(mutex_);
         HandlerTable::iterator index = m_handlers.find(target);
@@ -417,17 +415,14 @@ EventQueue::removeHandlers(void* target)
             TypeHandlerTable& typeHandlers = index->second;
             for (TypeHandlerTable::iterator index2 = typeHandlers.begin();
                             index2 != typeHandlers.end(); ++index2) {
-                handlers.push_back(index2->second);
+                handlers.push_back(std::move(index2->second));
             }
             typeHandlers.clear();
         }
     }
 
-    // delete handlers
-    for (std::vector<IEventJob*>::iterator index = handlers.begin();
-                            index != handlers.end(); ++index) {
-        delete *index;
-    }
+    // handlers are erased here. It is done outside of lock in order to avoid potential deadlock.
+    // TODO: check if it is the case
 }
 
 IEventJob*
@@ -439,7 +434,7 @@ EventQueue::getHandler(Event::Type type, void* target) const
         const TypeHandlerTable& typeHandlers = index->second;
         TypeHandlerTable::const_iterator index2 = typeHandlers.find(type);
         if (index2 != typeHandlers.end()) {
-            return index2->second;
+            return index2->second.get();
         }
     }
     return nullptr;

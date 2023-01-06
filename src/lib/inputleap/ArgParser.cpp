@@ -47,7 +47,7 @@ Argv::Argv(int argc, const char* const* argv) :
     m_exename(inputleap::fs::u8path(argv[0]).filename().u8string())
 {
     for (int i = 1; i < argc; i++)
-        m_argv.push(argv[i]);
+        m_argv.push_back(argv[i]);
 }
 
 const char*
@@ -57,7 +57,7 @@ Argv::shift()
         return nullptr;
 
     auto a = m_argv.front();
-    m_argv.pop();
+    m_argv.pop_front();
     return a;
 }
 
@@ -73,15 +73,26 @@ Argv::shift(const char *name1, const char* name2, const char **optarg)
         if (optarg != nullptr && m_argv.size() <= 1) {
             throw XArgvParserError("missing argument for `%s'", a);
         }
-        m_argv.pop();
+        m_argv.pop_front();
         if (optarg != nullptr) {
             *optarg = m_argv.front();
-            m_argv.pop();
+            m_argv.pop_front();
         }
         return a;
     }
     return nullptr;
 }
+
+bool
+Argv::contains(const char *name)
+{
+    for (auto it = m_argv.begin(); it != m_argv.end(); it++) {
+        if (strcmp(*it, name) == 0)
+            return true;
+    }
+    return false;
+}
+
 
 ArgsBase* ArgParser::m_argsBase = nullptr;
 

@@ -21,6 +21,7 @@
 #define QBARRIERAPPLICATION__H
 
 #include <QApplication>
+#include <memory>
 
 class QSessionManager;
 
@@ -33,12 +34,13 @@ class QBarrierApplication : public QApplication
     public:
         void commitData(QSessionManager& manager);
         void switchTranslator(QString lang);
+        // takes ownership
         void setTranslator(QTranslator* translator);
 
         static QBarrierApplication* getInstance();
 
     private:
-        QTranslator* m_Translator;
+        std::unique_ptr<QTranslator> translator_;
 
         static QBarrierApplication* s_Instance;
 };

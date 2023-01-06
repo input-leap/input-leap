@@ -36,7 +36,6 @@ IpcServer::IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer) 
     m_mock(false),
     m_events(events),
     m_socketMultiplexer(socketMultiplexer),
-    m_socket(nullptr),
     m_address(NetworkAddress(IPC_HOST, IPC_PORT))
 {
     init();
@@ -54,12 +53,12 @@ IpcServer::IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer, 
 void
 IpcServer::init()
 {
-    m_socket = new TCPListenSocket(m_events, m_socketMultiplexer, IArchNetwork::kINET);
+    socket_ = std::make_unique<TCPListenSocket>(m_events, m_socketMultiplexer, IArchNetwork::kINET);
 
     m_address.resolve();
 
     m_events->adoptHandler(
-        m_events->forIListenSocket().connecting(), m_socket,
+        m_events->forIListenSocket().connecting(), socket_.get(),
         new TMethodEventJob<IpcServer>(
         this, &IpcServer::handleClientConnecting));
 }
@@ -70,11 +69,8 @@ IpcServer::~IpcServer()
         return;
     }
 
-    m_events->removeHandler(m_events->forIListenSocket().connecting(), m_socket);
-
-    if (m_socket != nullptr) {
-        delete m_socket;
-    }
+    m_events->removeHandler(m_events->forIListenSocket().connecting(), socket_.get());
+    socket_.reset();
 
     {
         std::lock_guard<std::mutex> lock(m_clientsMutex);
@@ -89,13 +85,13 @@ IpcServer::~IpcServer()
 void
 IpcServer::listen()
 {
-    m_socket->bind(m_address);
+    socket_->bind(m_address);
 }
 
 void
 IpcServer::handleClientConnecting(const Event&, void*)
 {
-    inputleap::IStream* stream = m_socket->accept();
+    inputleap::IStream* stream = socket_->accept();
     if (stream == nullptr) {
         return;
     }

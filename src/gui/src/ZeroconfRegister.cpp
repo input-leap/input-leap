@@ -21,17 +21,12 @@
 
 ZeroconfRegister::ZeroconfRegister(QObject* parent) :
     QObject(parent),
-    m_DnsServiceRef(nullptr),
-    m_pSocket(nullptr)
+    m_DnsServiceRef(nullptr)
 {
 }
 
 ZeroconfRegister::~ZeroconfRegister()
 {
-    if (m_pSocket) {
-        delete m_pSocket;
-    }
-
     if (m_DnsServiceRef) {
         DNSServiceRefDeallocate(m_DnsServiceRef);
         m_DnsServiceRef = nullptr;
@@ -69,8 +64,8 @@ void ZeroconfRegister::registerService(const ZeroconfRecord& record,
             emit error(kDNSServiceErr_Invalid);
         }
         else {
-            m_pSocket = new QSocketNotifier(sockfd, QSocketNotifier::Read, this);
-            connect(m_pSocket, SIGNAL(activated(int)), this, SLOT(socketReadyRead()));
+            socket_ = std::make_unique<QSocketNotifier>(sockfd, QSocketNotifier::Read, this);
+            connect(socket_.get(), SIGNAL(activated(int)), this, SLOT(socketReadyRead()));
         }
     }
 }

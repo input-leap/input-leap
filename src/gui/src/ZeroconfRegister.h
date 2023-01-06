@@ -30,6 +30,7 @@ class QSocketNotifier;
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <dns_sd.h>
+#include <memory>
 
 class ZeroconfRegister : public QObject
 {
@@ -56,6 +57,6 @@ private:
 
 private:
     DNSServiceRef m_DnsServiceRef;
-    QSocketNotifier* m_pSocket;
+    std::unique_ptr<QSocketNotifier> socket_;
     ZeroconfRecord finalRecord;
 };

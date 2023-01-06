@@ -102,7 +102,7 @@ private:
     typedef std::vector<std::uint32_t> EventIDList;
     typedef std::map<Event::Type, const char*> TypeMap;
     typedef std::map<std::string, Event::Type> NameMap;
-    typedef std::map<Event::Type, IEventJob*> TypeHandlerTable;
+    using TypeHandlerTable = std::map<Event::Type, std::unique_ptr<IEventJob>>;
     typedef std::map<void*, TypeHandlerTable> HandlerTable;
 
     int m_systemTarget;

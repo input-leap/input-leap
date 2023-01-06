@@ -27,6 +27,7 @@
 
 #include <condition_variable>
 #include <map>
+#include <memory>
 #include <mutex>
 #include <queue>
 #include <set>
@@ -113,7 +114,7 @@ private:
     NameMap m_nameMap;
 
     // buffer of events
-    IEventQueueBuffer* m_buffer;
+    std::unique_ptr<IEventQueueBuffer> buffer_;
 
     // saved events
     EventTable m_events;

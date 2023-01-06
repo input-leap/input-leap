@@ -22,6 +22,7 @@ option(INPUTLEAP_BUILD_GUI "Build the GUI" ON)
 option(INPUTLEAP_BUILD_INSTALLER "Build the installer" ON)
 option(INPUTLEAP_BUILD_TESTS "Build the tests" ON)
 option(INPUTLEAP_USE_EXTERNAL_GTEST "Use external installation of Google Test framework" OFF)
+option(INPUTLEAP_BUILD_X11 "Build with XWindows support" ON)
 
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set (CMAKE_CXX_STANDARD 14)
@@ -133,18 +134,22 @@ if (UNIX)
             set (CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${AVAHI_COMPAT_INCLUDE_DIRS}")
         endif ()
 
-        pkg_check_modules (XLIB REQUIRED x11 xext xrandr xinerama xtst xi)
-        pkg_check_modules (ICE REQUIRED ice sm)
-        include_directories (${XLIB_INCLUDE_DIRS} ${ICE_INCLUDE_DIRS})
+        if (INPUTLEAP_BUILD_X11)
+            pkg_check_modules (XLIB REQUIRED x11 xext xrandr xinerama xtst xi)
+            pkg_check_modules (ICE REQUIRED ice sm)
+            include_directories (${XLIB_INCLUDE_DIRS} ${ICE_INCLUDE_DIRS})
 
-        # Old cmake doesn't populate LINK_LIBRARIES.
-        # Use the "normal" libraries but this won't pick up non-standard
-        # library directories paths.
-        # Fixed in cmake 3.12, released July 2018 (commit 92ac721a44)
-        if(${CMAKE_VERSION} VERSION_LESS "3.12.0")
-            list (APPEND libs ${XLIB_LIBRARIES} ${ICE_LIBRARIES})
-        else()
-            list (APPEND libs ${XLIB_LINK_LIBRARIES} ${ICE_LINK_LIBRARIES})
+            # Old cmake doesn't populate LINK_LIBRARIES.
+            # Use the "normal" libraries but this won't pick up non-standard
+            # library directories paths.
+            # Fixed in cmake 3.12, released July 2018 (commit 92ac721a44)
+            if(${CMAKE_VERSION} VERSION_LESS "3.12.0")
+                list (APPEND libs ${XLIB_LIBRARIES} ${ICE_LIBRARIES})
+            else()
+                list (APPEND libs ${XLIB_LINK_LIBRARIES} ${ICE_LINK_LIBRARIES})
+            endif()
+
+            set (HAVE_X11 1)
         endif()
 
         check_include_files ("dns_sd.h" HAVE_DNSSD)
@@ -166,8 +171,12 @@ if (UNIX)
         add_definitions (-DWINAPI_CARBON=1 -D_THREAD_SAFE)
         set (BUILD_CARBON 1)
     else()
-        add_definitions (-DWINAPI_XWINDOWS=1)
-        set (BUILD_XWINDOWS 1)
+        if (INPUTLEAP_BUILD_X11)
+            add_definitions (-DWINAPI_XWINDOWS=1)
+            set (BUILD_XWINDOWS 1)
+        else()
+            message(FATAL_ERROR "X11 build must be enabled on unix")
+        endif()
     endif()
 
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")

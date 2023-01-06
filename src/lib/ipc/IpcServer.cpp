@@ -70,6 +70,8 @@ IpcServer::~IpcServer()
         return;
     }
 
+    m_events->removeHandler(m_events->forIListenSocket().connecting(), m_socket);
+
     if (m_socket != nullptr) {
         delete m_socket;
     }
@@ -82,8 +84,6 @@ IpcServer::~IpcServer()
         }
         m_clients.clear();
     }
-
-    m_events->removeHandler(m_events->forIListenSocket().connecting(), m_socket);
 }
 
 void

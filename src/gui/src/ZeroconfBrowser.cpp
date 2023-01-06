@@ -21,17 +21,12 @@
 
 ZeroconfBrowser::ZeroconfBrowser(QObject* parent) :
     QObject(parent),
-    m_DnsServiceRef(nullptr),
-    m_pSocket(nullptr)
+    m_DnsServiceRef(nullptr)
 {
 }
 
 ZeroconfBrowser::~ZeroconfBrowser()
 {
-    if (m_pSocket) {
-        delete m_pSocket;
-    }
-
     if (m_DnsServiceRef) {
         DNSServiceRefDeallocate(m_DnsServiceRef);
         m_DnsServiceRef = nullptr;
@@ -52,8 +47,8 @@ void ZeroconfBrowser::browseForType(const QString& type)
             emit error(kDNSServiceErr_Invalid);
         }
         else {
-            m_pSocket = new QSocketNotifier(sockFD, QSocketNotifier::Read, this);
-            connect(m_pSocket, SIGNAL(activated(int)), this,
+            socket_ = std::make_unique<QSocketNotifier>(sockFD, QSocketNotifier::Read, this);
+            connect(socket_.get(), SIGNAL(activated(int)), this,
                 SLOT(socketReadyRead()));
         }
     }

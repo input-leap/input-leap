@@ -1,0 +1,1 @@
+Fixed out of bounds write which sometimes causes crash when switching screens.

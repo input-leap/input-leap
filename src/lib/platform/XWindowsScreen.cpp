@@ -100,7 +100,7 @@ XWindowsScreen::XWindowsScreen(
 
     // initializes Xlib support for concurrent threads.
     if (m_impl->XInitThreads() == 0)
-        throw XArch("XInitThreads() returned zero");
+        throw std::runtime_error("XInitThreads() returned zero");
 
 	// set the X I/O error handler so we catch the display disconnecting
     m_impl->XSetIOErrorHandler(&XWindowsScreen::ioErrorHandler);

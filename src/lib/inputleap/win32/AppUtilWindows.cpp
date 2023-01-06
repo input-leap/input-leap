@@ -44,7 +44,7 @@ AppUtilWindows::AppUtilWindows(IEventQueue* events) :
 {
     if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)consoleHandler, TRUE) == FALSE)
     {
-        throw XArch(error_code_to_string_windows(GetLastError()));
+        throw std::runtime_error(error_code_to_string_windows(GetLastError()));
     }
 }
 

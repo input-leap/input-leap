@@ -39,7 +39,7 @@ MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = nullptr
     HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
     if (snapshot == INVALID_HANDLE_VALUE) {
         LOG((CLOG_ERR "could not get process snapshot"));
-        throw XArch(error_code_to_string_windows(GetLastError()));
+        throw std::runtime_error(error_code_to_string_windows(GetLastError()));
     }
 
     PROCESSENTRY32 entry;
@@ -50,7 +50,7 @@ MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = nullptr
     BOOL gotEntry = Process32First(snapshot, &entry);
     if (!gotEntry) {
         LOG((CLOG_ERR "could not get first process entry"));
-        throw XArch(error_code_to_string_windows(GetLastError()));
+        throw std::runtime_error(error_code_to_string_windows(GetLastError()));
     }
 
     // used to record process names for debug info
@@ -125,7 +125,7 @@ MSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security)
     HANDLE sourceToken;
     if (!WTSQueryUserToken(m_activeSessionId, &sourceToken)) {
         LOG((CLOG_ERR "could not get token from session %d", m_activeSessionId));
-        throw XArch(error_code_to_string_windows(GetLastError());
+        throw std::runtime_error(error_code_to_string_windows(GetLastError()));
     }
 
     HANDLE newToken;
@@ -134,7 +134,7 @@ MSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security)
         SecurityImpersonation, TokenPrimary, &newToken)) {
 
         LOG((CLOG_ERR "could not duplicate token"));
-        throw XArch(error_code_to_string_windows(GetLastError());
+        throw std::runtime_error(error_code_to_string_windows(GetLastError()));
     }
 
     LOG((CLOG_DEBUG "duplicated, new token: %i", newToken));
@@ -165,7 +165,7 @@ MSWindowsSession::nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry)
 
             // only worry about error if it's not the end of the snapshot
             LOG((CLOG_ERR "could not get next process entry"));
-            throw XArch(error_code_to_string_windows(GetLastError()));
+            throw std::runtime_error(error_code_to_string_windows(GetLastError()));
         }
     }
 

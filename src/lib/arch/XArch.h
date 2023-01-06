@@ -46,19 +46,12 @@ cleanup but before leaving or returning from the handler.
 #define RETHROW_XTHREAD \
     try { throw; } catch (XThread&) { throw; } catch (...) { }
 
-//! Generic exception architecture dependent library
-class XArch : public std::runtime_error {
-public:
-    XArch(const std::string& msg) : std::runtime_error(msg) { }
-    virtual ~XArch() noexcept { }
-};
-
 //! Generic network exception
 /*!
 Exceptions derived from this class are used by the networking
 library to indicate various errors.
 */
-class XArchNetwork : public XArch { using XArch::XArch; };
+class XArchNetwork : public std::runtime_error { using std::runtime_error::runtime_error; };
 
 //! Operation was interrupted
 class XArchNetworkInterrupted : public XArchNetwork { using XArchNetwork::XArchNetwork; };
@@ -132,7 +125,7 @@ class XArchNetworkNameUnsupported : public XArchNetworkName {
 Exceptions derived from this class are used by the daemon
 library to indicate various errors.
 */
-class XArchDaemon : public XArch { using XArch::XArch; };
+class XArchDaemon : public std::runtime_error { using std::runtime_error::runtime_error; };
 
 //! Could not daemonize
 class XArchDaemonFailed : public XArchDaemon { using XArchDaemon::XArchDaemon; };

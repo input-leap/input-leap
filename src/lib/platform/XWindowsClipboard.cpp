@@ -29,11 +29,12 @@
 #include "base/Log.h"
 #include "base/Time.h"
 #include "base/Stopwatch.h"
-#include "common/stdvector.h"
+
+#include <X11/Xatom.h>
 
 #include <cstdio>
 #include <cstring>
-#include <X11/Xatom.h>
+#include <vector>
 
 //
 // XWindowsClipboard

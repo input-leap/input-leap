@@ -19,9 +19,9 @@
 #pragma once
 
 #include "arch/IArchNetwork.h"
-#include "common/stdlist.h"
-#include "common/stdmap.h"
 #include <condition_variable>
+#include <list>
+#include <map>
 #include <memory>
 #include <mutex>
 

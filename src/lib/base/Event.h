@@ -18,10 +18,9 @@
 
 #pragma once
 
-#include "common/stdmap.h"
-
 #include <cstddef>
 #include <cstdint>
+#include <map>
 
 class EventData {
 public:

@@ -22,10 +22,11 @@
 
 #include "inputleap/IScreenSaver.h"
 #include "base/IEventQueue.h"
-#include "common/stdmap.h"
 #include "XWindowsImpl.h"
 
 #include <X11/Xlib.h>
+
+#include <map>
 
 class Event;
 class EventQueueTimer;

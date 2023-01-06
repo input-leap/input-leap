@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "common/stdstring.h"
+#include <string>
 
 class ArchThreadImpl;
 typedef ArchThreadImpl* ArchThread;

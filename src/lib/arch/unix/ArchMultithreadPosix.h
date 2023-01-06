@@ -21,9 +21,9 @@
 #include "config.h"
 
 #include "arch/IArchMultithread.h"
-#include "common/stdlist.h"
 
 #include <pthread.h>
+#include <list>
 #include <mutex>
 
 #define ARCH_MULTITHREAD ArchMultithreadPosix

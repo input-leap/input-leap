@@ -19,8 +19,8 @@
 #pragma once
 
 #include "base/EventTypes.h"
-#include "common/stdlist.h"
-#include "common/stdvector.h"
+#include <list>
+#include <vector>
 
 //! FIFO of bytes
 /*!

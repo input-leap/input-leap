@@ -17,10 +17,9 @@
 
 #pragma once
 
-#include "common/stdvector.h"
-
-#include <string>
 #include <deque>
+#include <string>
+#include <vector>
 
 class ServerArgs;
 class ClientArgs;

@@ -21,9 +21,9 @@
 #include "server/Config.h"
 #include "base/EventTypes.h"
 #include "base/Event.h"
-#include "common/stddeque.h"
-#include "common/stdset.h"
 #include "net/ConnectionSecurityLevel.h"
+#include <deque>
+#include <set>
 
 class ClientProxy;
 class ClientProxyUnknown;

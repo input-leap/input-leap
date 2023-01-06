@@ -24,7 +24,7 @@
 #include "base/EventTypes.h"
 #include "base/String.h"
 #include "base/Event.h"
-#include "common/stdvector.h"
+#include <vector>
 
 class IEventQueue;
 

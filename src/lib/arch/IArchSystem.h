@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "common/stdstring.h"
+#include <string>
 
 //! Interface for architecture dependent system queries
 /*!

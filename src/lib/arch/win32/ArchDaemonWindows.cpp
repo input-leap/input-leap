@@ -21,9 +21,8 @@
 #include "arch/win32/XArchWindows.h"
 #include "arch/Arch.h"
 #include "base/Time.h"
-#include "common/stdvector.h"
-
 #include <sstream>
+#include <vector>
 
 //
 // ArchDaemonWindows

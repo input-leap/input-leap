@@ -20,13 +20,13 @@
 
 #include "arch/IArchDaemon.h"
 #include "arch/IArchMultithread.h"
-#include "common/stdstring.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <tchar.h>
 
 #include <condition_variable>
+#include <string>
 
 #define ARCH_DAEMON ArchDaemonWindows
 

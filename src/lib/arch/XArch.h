@@ -19,8 +19,8 @@
 #pragma once
 
 #include "common/common.h"
-#include "common/stdstring.h"
 #include <stdexcept>
+#include <string>
 
 //! Generic thread exception
 /*!

@@ -20,13 +20,14 @@
 
 #include "inputleap/key_types.h"
 #include "base/String.h"
-#include "common/stdmap.h"
-#include "common/stdset.h"
-#include "common/stdvector.h"
 
 #ifdef INPUTLEAP_TEST_ENV
 #include <gtest/gtest_prod.h>
 #endif
+
+#include <map>
+#include <set>
+#include <vector>
 
 namespace inputleap {
 

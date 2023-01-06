@@ -20,8 +20,8 @@
 
 #include "base/IEventQueueBuffer.h"
 #include "arch/IArchMultithread.h"
-#include "common/stddeque.h"
 #include <condition_variable>
+#include <deque>
 
 //! In-memory event queue buffer
 /*!

@@ -25,10 +25,10 @@
 #include "net/NetworkAddress.h"
 #include "base/String.h"
 #include "base/XBase.h"
-#include "common/stdmap.h"
-#include "common/stdset.h"
 
 #include <iosfwd>
+#include <map>
+#include <set>
 
 class Config;
 class ConfigReadContext;

@@ -21,11 +21,11 @@
 #include "config.h"
 
 #include "base/IEventQueueBuffer.h"
-#include "common/stdvector.h"
 #include "XWindowsImpl.h"
 
 #include <X11/Xlib.h>
 #include <mutex>
+#include <vector>
 
 class IEventQueue;
 

@@ -20,13 +20,13 @@
 
 #include "arch/IArchTaskBar.h"
 #include "arch/IArchMultithread.h"
-#include "common/stdmap.h"
-#include "common/stdvector.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
 #include <condition_variable>
+#include <map>
+#include <vector>
 
 #define ARCH_TASKBAR ArchTaskBarWindows
 

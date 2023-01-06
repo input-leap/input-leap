@@ -22,11 +22,12 @@
 
 #include "inputleap/PlatformScreen.h"
 #include "inputleap/KeyMap.h"
-#include "common/stdset.h"
-#include "common/stdvector.h"
 #include "XWindowsImpl.h"
 
 #include <X11/Xlib.h>
+
+#include <set>
+#include <vector>
 
 class XWindowsClipboard;
 class XWindowsKeyState;

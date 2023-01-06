@@ -22,8 +22,9 @@
 #include "inputleap/mouse_types.h"
 #include "inputleap/protocol_types.h"
 #include "inputleap/IPlatformScreen.h"
-#include "common/stdmap.h"
-#include "common/stdset.h"
+
+#include <map>
+#include <set>
 
 class PrimaryClient;
 class Event;

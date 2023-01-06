@@ -29,9 +29,10 @@
 #include "base/Event.h"
 #include "base/Stopwatch.h"
 #include "base/EventTypes.h"
-#include "common/stdmap.h"
-#include "common/stdset.h"
-#include "common/stdvector.h"
+
+#include <map>
+#include <set>
+#include <vector>
 
 class BaseClientProxy;
 class EventQueueTimer;

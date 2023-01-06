@@ -22,8 +22,6 @@
 #include "inputleap/PlatformScreen.h"
 #include "inputleap/DragInformation.h"
 #include "base/EventTypes.h"
-#include "common/stdmap.h"
-#include "common/stdvector.h"
 
 #include <Carbon/Carbon.h>
 #include <mach/mach_port.h>
@@ -34,7 +32,9 @@
 
 #include <condition_variable>
 #include <bitset>
+#include <map>
 #include <mutex>
+#include <vector>
 
 extern "C" {
     typedef int CGSConnectionID;

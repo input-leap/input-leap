@@ -19,12 +19,13 @@
 #pragma once
 
 #include "common/common.h"
-#include "common/stdstring.h"
-#include "common/stdset.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <Tlhelp32.h>
+
+#include <set>
+#include <string>
 
 //! Miscellaneous win32 functions.
 class ArchMiscWindows {

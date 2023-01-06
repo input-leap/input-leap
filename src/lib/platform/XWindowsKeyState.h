@@ -21,13 +21,14 @@
 #include "config.h"
 
 #include "inputleap/KeyState.h"
-#include "common/stdmap.h"
-#include "common/stdvector.h"
 #include "XWindowsImpl.h"
 
 #include <X11/Xlib.h>
 #include <X11/extensions/XTest.h>
 #    include <X11/extensions/XKBstr.h>
+
+#include <map>
+#include <vector>
 
 class IEventQueue;
 

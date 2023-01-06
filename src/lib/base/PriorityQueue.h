@@ -18,10 +18,9 @@
 
 #pragma once
 
-#include "common/stdvector.h"
-
 #include <algorithm>
 #include <functional>
+#include <vector>
 
 //! A priority queue with an iterator
 /*!

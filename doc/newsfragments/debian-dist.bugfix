@@ -1,0 +1,1 @@
+The source distribution tarball no longer contains ``debian`` folder which previously clashed with data provided by the Debian packaging.

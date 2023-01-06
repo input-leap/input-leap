@@ -61,43 +61,31 @@ static void silence_avahi_warning()
 
 ZeroconfService::ZeroconfService(MainWindow* mainWindow) :
     m_pMainWindow(mainWindow),
-    m_pZeroconfBrowser(nullptr),
-    m_pZeroconfRegister(nullptr),
     m_ServiceRegistered(false)
 {
     silence_avahi_warning();
     if (m_pMainWindow->barrier_type() == BarrierType::Server) {
         if (registerService(true)) {
-            m_pZeroconfBrowser = new ZeroconfBrowser(this);
-            connect(m_pZeroconfBrowser, SIGNAL(
+            zeroconf_browser_ = std::make_unique<ZeroconfBrowser>(this);
+            connect(zeroconf_browser_.get(), SIGNAL(
                 currentRecordsChanged(const QList<ZeroconfRecord>&)),
                 this, SLOT(clientDetected(const QList<ZeroconfRecord>&)));
-            m_pZeroconfBrowser->browseForType(
-                QLatin1String(m_ClientServiceName));
+            zeroconf_browser_->browseForType(QLatin1String(m_ClientServiceName));
         }
     }
     else {
-        m_pZeroconfBrowser = new ZeroconfBrowser(this);
-        connect(m_pZeroconfBrowser, SIGNAL(
+        zeroconf_browser_ = std::make_unique<ZeroconfBrowser>(this);
+        connect(zeroconf_browser_.get(), SIGNAL(
             currentRecordsChanged(const QList<ZeroconfRecord>&)),
             this, SLOT(serverDetected(const QList<ZeroconfRecord>&)));
-        m_pZeroconfBrowser->browseForType(
-            QLatin1String(m_ServerServiceName));
+        zeroconf_browser_->browseForType(QLatin1String(m_ServerServiceName));
     }
 
-    connect(m_pZeroconfBrowser, SIGNAL(error(DNSServiceErrorType)),
+    connect(zeroconf_browser_.get(), SIGNAL(error(DNSServiceErrorType)),
         this, SLOT(errorHandle(DNSServiceErrorType)));
 }
 
-ZeroconfService::~ZeroconfService()
-{
-    if (m_pZeroconfBrowser) {
-        delete m_pZeroconfBrowser;
-    }
-    if (m_pZeroconfRegister) {
-        delete m_pZeroconfRegister;
-    }
-}
+ZeroconfService::~ZeroconfService() = default;
 
 void ZeroconfService::serverDetected(const QList<ZeroconfRecord>& list)
 {
@@ -136,15 +124,15 @@ bool ZeroconfService::registerService(bool server)
             result = false;
         }
         else {
-            m_pZeroconfRegister = new ZeroconfRegister(this);
+            zeroconf_register_ = std::make_unique<ZeroconfRegister>(this);
             if (server) {
-                m_pZeroconfRegister->registerService(
+                zeroconf_register_->registerService(
                     ZeroconfRecord(tr("%1").arg(m_pMainWindow->getScreenName()),
                     QLatin1String(m_ServerServiceName), QString()),
                     m_zeroconfServer.serverPort());
             }
             else {
-                m_pZeroconfRegister->registerService(
+                zeroconf_register_->registerService(
                     ZeroconfRecord(tr("%1").arg(m_pMainWindow->getScreenName()),
                     QLatin1String(m_ClientServiceName), QString()),
                     m_zeroconfServer.serverPort());

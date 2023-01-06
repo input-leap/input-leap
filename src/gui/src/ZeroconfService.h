@@ -22,6 +22,8 @@
 
 #include <QtCore/QObject>
 
+#include <memory>
+
 typedef int32_t  DNSServiceErrorType;
 
 class ZeroconfRegister;
@@ -47,8 +49,8 @@ private:
 private:
     MainWindow* m_pMainWindow;
     ZeroconfServer m_zeroconfServer;
-    ZeroconfBrowser* m_pZeroconfBrowser;
-    ZeroconfRegister* m_pZeroconfRegister;
+    std::unique_ptr<ZeroconfBrowser> zeroconf_browser_;
+    std::unique_ptr<ZeroconfRegister> zeroconf_register_;
     bool m_ServiceRegistered;
 
     static const char* m_ServerServiceName;

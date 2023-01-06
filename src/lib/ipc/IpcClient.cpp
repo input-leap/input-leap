@@ -30,7 +30,6 @@
 IpcClient::IpcClient(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
     m_serverAddress(NetworkAddress(IPC_HOST, IPC_PORT)),
     m_socket(events, socketMultiplexer, IArchNetwork::kINET),
-    m_server(nullptr),
     m_events(events)
 {
     init();
@@ -39,7 +38,6 @@ IpcClient::IpcClient(IEventQueue* events, SocketMultiplexer* socketMultiplexer) 
 IpcClient::IpcClient(IEventQueue* events, SocketMultiplexer* socketMultiplexer, int port) :
     m_serverAddress(NetworkAddress(IPC_HOST, port)),
     m_socket(events, socketMultiplexer, IArchNetwork::kINET),
-    m_server(nullptr),
     m_events(events)
 {
     init();
@@ -64,10 +62,10 @@ IpcClient::connect()
         this, &IpcClient::handleConnected));
 
     m_socket.connect(m_serverAddress);
-    m_server = new IpcServerProxy(m_socket, m_events);
+    server_ = std::make_unique<IpcServerProxy>(m_socket, m_events);
 
     m_events->adoptHandler(
-        m_events->forIpcServerProxy().messageReceived(), m_server,
+        m_events->forIpcServerProxy().messageReceived(), server_.get(),
         new TMethodEventJob<IpcClient>(
         this, &IpcClient::handleMessageReceived));
 }
@@ -76,25 +74,24 @@ void
 IpcClient::disconnect()
 {
     m_events->removeHandler(m_events->forIDataSocket().connected(), m_socket.getEventTarget());
-    m_events->removeHandler(m_events->forIpcServerProxy().messageReceived(), m_server);
+    m_events->removeHandler(m_events->forIpcServerProxy().messageReceived(), server_.get());
 
-    m_server->disconnect();
-    delete m_server;
-    m_server = nullptr;
+    server_->disconnect();
+    server_.reset();
 }
 
 void
 IpcClient::send(const IpcMessage& message)
 {
-    assert(m_server != nullptr);
-    m_server->send(message);
+    assert(server_);
+    server_->send(message);
 }
 
 void
 IpcClient::handleConnected(const Event&, void*)
 {
-    m_events->addEvent(Event(
-        m_events->forIpcClient().connected(), this, m_server, Event::kDontFreeData));
+    m_events->addEvent(Event(m_events->forIpcClient().connected(), this,
+                             server_.get(), Event::kDontFreeData));
 
     IpcHelloMessage message(kIpcClientNode);
     send(message);

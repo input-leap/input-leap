@@ -46,25 +46,9 @@ cleanup but before leaving or returning from the handler.
 #define RETHROW_XTHREAD \
     try { throw; } catch (XThread&) { throw; } catch (...) { }
 
-//! Lazy error message string evaluation
-/*!
-This class encapsulates platform dependent error string lookup.
-Platforms subclass this type, taking an appropriate error code
-type in the c'tor and overriding eval() to return the error
-string for that error code.
-*/
-class XArchEval {
-public:
-    XArchEval() { }
-    virtual ~XArchEval() noexcept { }
-
-    virtual std::string eval() const = 0;
-};
-
 //! Generic exception architecture dependent library
 class XArch : public std::runtime_error {
 public:
-    XArch(XArchEval* adopted) : std::runtime_error(adopted->eval()) { delete adopted; }
     XArch(const std::string& msg) : std::runtime_error(msg) { }
     virtual ~XArch() noexcept { }
 };
@@ -73,7 +57,6 @@ public:
 #define XARCH_SUBCLASS(name_, super_)                                    \
 class name_ : public super_ {                                            \
 public:                                                                    \
-    name_(XArchEval* adoptedEvaluator) : super_(adoptedEvaluator) { }    \
     name_(const std::string& msg) : super_(msg) { }                        \
 }
 

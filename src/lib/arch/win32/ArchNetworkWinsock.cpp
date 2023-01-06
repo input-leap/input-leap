@@ -21,6 +21,7 @@
 #include "arch/win32/XArchWindows.h"
 #include "arch/IArchMultithread.h"
 #include "arch/Arch.h"
+#include "arch/XArch.h"
 
 #include <malloc.h>
 
@@ -154,7 +155,7 @@ ArchNetworkWinsock::initModule(HMODULE module)
     WSADATA data;
     int err = startup(version, &data);
     if (data.wVersion != version) {
-        throw XArchNetworkSupport(new XArchEvalWinsock(err));
+        throw XArchNetworkSupport(error_code_to_string_winsock(err));
     }
     if (err != 0) {
         // some other initialization error
@@ -889,12 +890,12 @@ ArchNetworkWinsock::throwError(int err)
 {
     switch (err) {
     case WSAEACCES:
-        throw XArchNetworkAccess(new XArchEvalWinsock(err));
+        throw XArchNetworkAccess(error_code_to_string_winsock(err));
 
     case WSAEMFILE:
     case WSAENOBUFS:
     case WSAENETDOWN:
-        throw XArchNetworkResource(new XArchEvalWinsock(err));
+        throw XArchNetworkResource(error_code_to_string_winsock(err));
 
     case WSAEPROTOTYPE:
     case WSAEPROTONOSUPPORT:
@@ -908,50 +909,50 @@ ArchNetworkWinsock::throwError(int err)
     case WSANOTINITIALISED:
     case WSAVERNOTSUPPORTED:
     case WSASYSNOTREADY:
-        throw XArchNetworkSupport(new XArchEvalWinsock(err));
+        throw XArchNetworkSupport(error_code_to_string_winsock(err));
 
     case WSAEADDRNOTAVAIL:
-        throw XArchNetworkNoAddress(new XArchEvalWinsock(err));
+        throw XArchNetworkNoAddress(error_code_to_string_winsock(err));
 
     case WSAEADDRINUSE:
-        throw XArchNetworkAddressInUse(new XArchEvalWinsock(err));
+        throw XArchNetworkAddressInUse(error_code_to_string_winsock(err));
 
     case WSAEHOSTUNREACH:
     case WSAENETUNREACH:
-        throw XArchNetworkNoRoute(new XArchEvalWinsock(err));
+        throw XArchNetworkNoRoute(error_code_to_string_winsock(err));
 
     case WSAENOTCONN:
-        throw XArchNetworkNotConnected(new XArchEvalWinsock(err));
+        throw XArchNetworkNotConnected(error_code_to_string_winsock(err));
 
     case WSAEDISCON:
-        throw XArchNetworkShutdown(new XArchEvalWinsock(err));
+        throw XArchNetworkShutdown(error_code_to_string_winsock(err));
 
     case WSAENETRESET:
     case WSAECONNABORTED:
     case WSAECONNRESET:
-        throw XArchNetworkDisconnected(new XArchEvalWinsock(err));
+        throw XArchNetworkDisconnected(error_code_to_string_winsock(err));
 
     case WSAECONNREFUSED:
-        throw XArchNetworkConnectionRefused(new XArchEvalWinsock(err));
+        throw XArchNetworkConnectionRefused(error_code_to_string_winsock(err));
 
     case WSAEHOSTDOWN:
     case WSAETIMEDOUT:
-        throw XArchNetworkTimedOut(new XArchEvalWinsock(err));
+        throw XArchNetworkTimedOut(error_code_to_string_winsock(err));
 
     case WSAHOST_NOT_FOUND:
-        throw XArchNetworkNameUnknown(new XArchEvalWinsock(err));
+        throw XArchNetworkNameUnknown(error_code_to_string_winsock(err));
 
     case WSANO_DATA:
-        throw XArchNetworkNameNoAddress(new XArchEvalWinsock(err));
+        throw XArchNetworkNameNoAddress(error_code_to_string_winsock(err));
 
     case WSANO_RECOVERY:
-        throw XArchNetworkNameFailure(new XArchEvalWinsock(err));
+        throw XArchNetworkNameFailure(error_code_to_string_winsock(err));
 
     case WSATRY_AGAIN:
-        throw XArchNetworkNameUnavailable(new XArchEvalWinsock(err));
+        throw XArchNetworkNameUnavailable(error_code_to_string_winsock(err));
 
     default:
-        throw XArchNetwork(new XArchEvalWinsock(err));
+        throw XArchNetwork(error_code_to_string_winsock(err));
     }
 }
 
@@ -960,18 +961,18 @@ ArchNetworkWinsock::throwNameError(int err)
 {
     switch (err) {
     case WSAHOST_NOT_FOUND:
-        throw XArchNetworkNameUnknown(new XArchEvalWinsock(err));
+        throw XArchNetworkNameUnknown(error_code_to_string_winsock(err));
 
     case WSANO_DATA:
-        throw XArchNetworkNameNoAddress(new XArchEvalWinsock(err));
+        throw XArchNetworkNameNoAddress(error_code_to_string_winsock(err));
 
     case WSANO_RECOVERY:
-        throw XArchNetworkNameFailure(new XArchEvalWinsock(err));
+        throw XArchNetworkNameFailure(error_code_to_string_winsock(err));
 
     case WSATRY_AGAIN:
-        throw XArchNetworkNameUnavailable(new XArchEvalWinsock(err));
+        throw XArchNetworkNameUnavailable(error_code_to_string_winsock(err));
 
     default:
-        throw XArchNetworkName(new XArchEvalWinsock(err));
+        throw XArchNetworkName(error_code_to_string_winsock(err));
     }
 }

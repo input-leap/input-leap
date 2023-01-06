@@ -200,7 +200,7 @@ The Barrier GUI is based on QSynergy by Volker Lanz.
   </layout>
  </widget>
  <resources>
-  <include location="Barrier.qrc"/>
+  <include location="../res/Barrier.qrc"/>
  </resources>
  <connections>
   <connection>

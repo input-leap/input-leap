@@ -87,7 +87,7 @@ The Barrier GUI is based on QSynergy by Volker Lanz.
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="Barrier.qrc">:/res/image/about.png</pixmap>
+      <pixmap resource="../res/Barrier.qrc">:/res/image/about.png</pixmap>
      </property>
      <property name="margin">
       <number>0</number>

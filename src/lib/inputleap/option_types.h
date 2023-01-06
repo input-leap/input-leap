@@ -19,7 +19,7 @@
 #pragma once
 
 #include "base/EventTypes.h"
-#include "common/stdvector.h"
+#include <vector>
 
 //! Option ID
 /*!

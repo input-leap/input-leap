@@ -18,7 +18,6 @@
 #include "arch/Arch.h"
 #include "base/String.h"
 #include "common/common.h"
-#include "common/stdvector.h"
 
 #include <cctype>
 #include <cstdio>
@@ -31,6 +30,7 @@
 #include <iomanip>
 #include <algorithm>
 #include <cerrno>
+#include <vector>
 
 namespace inputleap {
 namespace string {

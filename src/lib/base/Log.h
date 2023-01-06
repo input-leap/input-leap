@@ -21,9 +21,9 @@
 #include "arch/IArchMultithread.h"
 #include "arch/Arch.h"
 #include "common/common.h"
-#include "common/stdlist.h"
 
 #include <stdarg.h>
+#include <list>
 #include <mutex>
 
 #define CLOG (Log::getInstance())

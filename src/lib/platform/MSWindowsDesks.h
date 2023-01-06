@@ -23,7 +23,6 @@
 #include "inputleap/key_types.h"
 #include "inputleap/mouse_types.h"
 #include "inputleap/option_types.h"
-#include "common/stdmap.h"
 #include <condition_variable>
 #include <functional>
 #include <mutex>
@@ -31,6 +30,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+
+#include <map>
 
 class Event;
 class EventQueueTimer;

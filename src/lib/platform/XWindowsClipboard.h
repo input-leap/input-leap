@@ -20,12 +20,13 @@
 
 #include "inputleap/clipboard_types.h"
 #include "inputleap/IClipboard.h"
-#include "common/stdmap.h"
-#include "common/stdlist.h"
-#include "common/stdvector.h"
 #include "XWindowsImpl.h"
 
 #include <X11/Xlib.h>
+
+#include <map>
+#include <list>
+#include <vector>
 
 class IXWindowsClipboardConverter;
 

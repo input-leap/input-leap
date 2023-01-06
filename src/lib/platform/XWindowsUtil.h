@@ -19,12 +19,12 @@
 #pragma once
 
 #include "base/EventTypes.h"
-#include "common/stdmap.h"
-#include "common/stdvector.h"
 
 #include <X11/Xlib.h>
 
+#include <map>
 #include <string>
+#include <vector>
 
 //! X11 utility functions
 class XWindowsUtil {

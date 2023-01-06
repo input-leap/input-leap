@@ -22,7 +22,7 @@
 #include "base/Event.h"
 #include "base/IEventQueue.h"
 #include "base/EventTypes.h"
-#include "common/stdset.h"
+#include <set>
 
 //! Key state interface
 /*!

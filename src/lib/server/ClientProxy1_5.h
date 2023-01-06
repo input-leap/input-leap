@@ -18,7 +18,7 @@
 #pragma once
 
 #include "server/ClientProxy1_4.h"
-#include "common/stdvector.h"
+#include <vector>
 
 class Server;
 class IEventQueue;

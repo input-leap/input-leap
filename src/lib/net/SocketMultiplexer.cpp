@@ -23,7 +23,7 @@
 #include "arch/Arch.h"
 #include "arch/XArch.h"
 #include "base/Log.h"
-#include "common/stdvector.h"
+#include <vector>
 
 //
 // SocketMultiplexer

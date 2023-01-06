@@ -19,11 +19,12 @@
 #pragma once
 
 #include "inputleap/KeyState.h"
-#include "common/stdmap.h"
-#include "common/stdset.h"
-#include "common/stdvector.h"
 
 #include <Carbon/Carbon.h>
+
+#include <map>
+#include <set>
+#include <vector>
 
 typedef TISInputSourceRef KeyLayout;
 class IOSXKeyResource;

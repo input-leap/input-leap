@@ -19,10 +19,11 @@
 #pragma once
 
 #include "arch/IArchMultithread.h"
-#include "common/stdlist.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+
+#include <list>
 #include <mutex>
 
 #define ARCH_MULTITHREAD ArchMultithreadWindows

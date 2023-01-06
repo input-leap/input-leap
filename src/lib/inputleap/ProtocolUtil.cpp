@@ -21,10 +21,10 @@
 #include "base/Log.h"
 #include "inputleap/protocol_types.h"
 #include "inputleap/XBarrier.h"
-#include "common/stdvector.h"
 
 #include <cctype>
 #include <cstring>
+#include <vector>
 
 //
 // ProtocolUtil

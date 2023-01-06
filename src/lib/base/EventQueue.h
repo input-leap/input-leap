@@ -23,13 +23,13 @@
 #include "base/Event.h"
 #include "base/PriorityQueue.h"
 #include "base/Stopwatch.h"
-#include "common/stdmap.h"
-#include "common/stdset.h"
 #include "base/NonBlockingStream.h"
 
 #include <condition_variable>
+#include <map>
 #include <mutex>
 #include <queue>
+#include <set>
 
 //! Event queue
 /*!

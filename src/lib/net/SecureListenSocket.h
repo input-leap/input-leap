@@ -18,7 +18,6 @@
 #pragma once
 
 #include "net/TCPListenSocket.h"
-#include "common/stdset.h"
 #include "ConnectionSecurityLevel.h"
 
 class IEventQueue;

@@ -130,8 +130,8 @@ ClientListener::handleClientConnecting(const Event&, void*)
         return;
     }
 
-    auto socket_ptr = socket.release();
-    m_clientSockets.insert(socket_ptr);
+    auto socket_ptr = socket.get();
+    client_sockets_.insert(std::move(socket));
 
     m_events->adoptHandler(m_events->forClientListener().accepted(),
                 socket_ptr->getEventTarget(),
@@ -227,8 +227,7 @@ ClientListener::handleClientDisconnected(const Event&, void* vclient)
             // we know which socket we no longer need
             IDataSocket* socket = static_cast<IDataSocket*>(client->getStream());
             delete client;
-            m_clientSockets.erase(socket);
-            delete socket;
+            client_sockets_.erase(socket);
 
             break;
         }
@@ -244,9 +243,5 @@ ClientListener::cleanupListenSocket()
 void
 ClientListener::cleanupClientSockets()
 {
-    ClientSockets::iterator it;
-    for (it = m_clientSockets.begin(); it != m_clientSockets.end(); it++) {
-        delete *it;
-    }
-    m_clientSockets.clear();
+    client_sockets_.clear();
 }

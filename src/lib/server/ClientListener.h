@@ -21,8 +21,10 @@
 #include "server/Config.h"
 #include "base/EventTypes.h"
 #include "base/Event.h"
+#include "base/UniquePtrContainer.h"
 #include "net/ConnectionSecurityLevel.h"
 #include <deque>
+#include <memory>
 #include <set>
 
 class ClientProxy;
@@ -77,7 +79,6 @@ private:
 private:
     typedef std::set<ClientProxyUnknown*> NewClients;
     typedef std::deque<ClientProxy*> WaitingClients;
-    typedef std::set<IDataSocket*> ClientSockets;
 
     IListenSocket* m_listen;
     ISocketFactory* m_socketFactory;
@@ -86,5 +87,5 @@ private:
     Server* m_server;
     IEventQueue* m_events;
     ConnectionSecurityLevel security_level_;
-    ClientSockets m_clientSockets;
+    UniquePtrContainer<IDataSocket> client_sockets_;
 };

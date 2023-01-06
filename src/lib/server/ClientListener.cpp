@@ -124,24 +124,25 @@ void
 ClientListener::handleClientConnecting(const Event&, void*)
 {
     // accept client connection
-    IDataSocket* socket = m_listen->accept();
+    auto socket = m_listen->accept();
 
-    if (socket == nullptr) {
+    if (!socket) {
         return;
     }
 
-    m_clientSockets.insert(socket);
+    auto socket_ptr = socket.release();
+    m_clientSockets.insert(socket_ptr);
 
     m_events->adoptHandler(m_events->forClientListener().accepted(),
-                socket->getEventTarget(),
+                socket_ptr->getEventTarget(),
                 new TMethodEventJob<ClientListener>(this,
-                        &ClientListener::handleClientAccepted, socket));
+                        &ClientListener::handleClientAccepted, socket_ptr));
 
     // When using non SSL, server accepts clients immediately, while SSL
     // has to call secure accept which may require retry
     if (security_level_ == ConnectionSecurityLevel::PLAINTEXT) {
         m_events->addEvent(Event(m_events->forClientListener().accepted(),
-                                socket->getEventTarget()));
+                                 socket_ptr->getEventTarget()));
     }
 }
 

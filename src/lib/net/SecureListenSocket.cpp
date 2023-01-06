@@ -33,39 +33,33 @@ SecureListenSocket::SecureListenSocket(IEventQueue* events, SocketMultiplexer* s
 {
 }
 
-IDataSocket*
-SecureListenSocket::accept()
+std::unique_ptr<IDataSocket> SecureListenSocket::accept()
 {
-    SecureSocket* socket = nullptr;
+    std::unique_ptr<SecureSocket> socket;
     try {
-        socket = new SecureSocket(m_events, m_socketMultiplexer,
-                                  ARCH->acceptSocket(m_socket, nullptr), security_level_);
+        socket = std::make_unique<SecureSocket>(m_events, m_socketMultiplexer,
+                                                 ARCH->acceptSocket(m_socket, nullptr),
+                                                security_level_);
         socket->initSsl(true);
-
-        if (socket != nullptr) {
-            setListeningJob();
-        }
+        setListeningJob();
 
         bool loaded = socket->load_certificates(inputleap::DataDirectories::ssl_certificate_path());
         if (!loaded) {
-            delete socket;
             return nullptr;
         }
 
         socket->secureAccept();
 
-        return dynamic_cast<IDataSocket*>(socket);
+        return socket;
     }
     catch (XArchNetwork&) {
-        if (socket != nullptr) {
-            delete socket;
+        if (socket) {
             setListeningJob();
         }
         return nullptr;
     }
     catch (std::exception &ex) {
-        if (socket != nullptr) {
-            delete socket;
+        if (socket) {
             setListeningJob();
         }
         throw ex;

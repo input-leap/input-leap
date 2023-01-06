@@ -31,7 +31,7 @@ public:
                        ConnectionSecurityLevel security_level);
 
     // IListenSocket overrides
-    IDataSocket* accept() override;
+    std::unique_ptr<IDataSocket> accept() override;
 private:
     ConnectionSecurityLevel security_level_;
 };

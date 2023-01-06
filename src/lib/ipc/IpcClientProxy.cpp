@@ -30,29 +30,29 @@
 // IpcClientProxy
 //
 
-IpcClientProxy::IpcClientProxy(inputleap::IStream& stream, IEventQueue* events) :
-    m_stream(stream),
+IpcClientProxy::IpcClientProxy(std::unique_ptr<inputleap::IStream>&& stream, IEventQueue* events) :
+    stream_(std::move(stream)),
     m_clientType(kIpcClientUnknown),
     m_disconnecting(false),
     m_events(events)
 {
     m_events->adoptHandler(
-        m_events->forIStream().inputReady(), stream.getEventTarget(),
+        m_events->forIStream().inputReady(), stream_->getEventTarget(),
         new TMethodEventJob<IpcClientProxy>(
         this, &IpcClientProxy::handleData));
 
     m_events->adoptHandler(
-        m_events->forIStream().outputError(), stream.getEventTarget(),
+        m_events->forIStream().outputError(), stream_->getEventTarget(),
         new TMethodEventJob<IpcClientProxy>(
         this, &IpcClientProxy::handleWriteError));
 
     m_events->adoptHandler(
-        m_events->forIStream().inputShutdown(), stream.getEventTarget(),
+        m_events->forIStream().inputShutdown(), stream_->getEventTarget(),
         new TMethodEventJob<IpcClientProxy>(
         this, &IpcClientProxy::handleDisconnect));
 
     m_events->adoptHandler(
-        m_events->forIStream().outputShutdown(), stream.getEventTarget(),
+        m_events->forIStream().outputShutdown(), stream_->getEventTarget(),
         new TMethodEventJob<IpcClientProxy>(
         this, &IpcClientProxy::handleWriteError));
 }
@@ -60,19 +60,18 @@ IpcClientProxy::IpcClientProxy(inputleap::IStream& stream, IEventQueue* events) 
 IpcClientProxy::~IpcClientProxy()
 {
     m_events->removeHandler(
-        m_events->forIStream().inputReady(), m_stream.getEventTarget());
+        m_events->forIStream().inputReady(), stream_->getEventTarget());
     m_events->removeHandler(
-        m_events->forIStream().outputError(), m_stream.getEventTarget());
+        m_events->forIStream().outputError(), stream_->getEventTarget());
     m_events->removeHandler(
-        m_events->forIStream().inputShutdown(), m_stream.getEventTarget());
+        m_events->forIStream().inputShutdown(), stream_->getEventTarget());
     m_events->removeHandler(
-        m_events->forIStream().outputShutdown(), m_stream.getEventTarget());
+        m_events->forIStream().outputShutdown(), stream_->getEventTarget());
 
-    // don't delete the stream while it's being used.
+    // Ensure that client proxy is not deleted from below some active client feet
     {
         std::lock_guard<std::mutex> lock_read(m_readMutex);
         std::lock_guard<std::mutex> lock_write(m_writeMutex);
-        delete &m_stream;
     }
 }
 
@@ -99,7 +98,7 @@ IpcClientProxy::handleData(const Event&, void*)
     LOG((CLOG_DEBUG "start ipc handle data"));
 
     std::uint8_t code[4];
-    std::uint32_t n = m_stream.read(code, 4);
+    std::uint32_t n = stream_->read(code, 4);
     while (n != 0) {
 
         LOG((CLOG_DEBUG "ipc read: %c%c%c%c",
@@ -122,7 +121,7 @@ IpcClientProxy::handleData(const Event&, void*)
         e.setDataObject(m);
         m_events->addEvent(e);
 
-        n = m_stream.read(code, 4);
+        n = stream_->read(code, 4);
     }
 
     LOG((CLOG_DEBUG "finished ipc handle data"));
@@ -142,12 +141,12 @@ IpcClientProxy::send(const IpcMessage& message)
     case kIpcLogLine: {
         const IpcLogLineMessage& llm = static_cast<const IpcLogLineMessage&>(message);
         const std::string logLine = llm.logLine();
-        ProtocolUtil::writef(&m_stream, kIpcMsgLogLine, &logLine);
+        ProtocolUtil::writef(stream_.get(), kIpcMsgLogLine, &logLine);
         break;
     }
 
     case kIpcShutdown:
-        ProtocolUtil::writef(&m_stream, kIpcMsgShutdown);
+        ProtocolUtil::writef(stream_.get(), kIpcMsgShutdown);
         break;
 
     default:
@@ -160,7 +159,7 @@ IpcHelloMessage*
 IpcClientProxy::parseHello()
 {
     std::uint8_t type;
-    ProtocolUtil::readf(&m_stream, kIpcMsgHello + 4, &type);
+    ProtocolUtil::readf(stream_.get(), kIpcMsgHello + 4, &type);
 
     m_clientType = static_cast<EIpcClientType>(type);
 
@@ -173,7 +172,7 @@ IpcClientProxy::parseCommand()
 {
     std::string command;
     std::uint8_t elevate;
-    ProtocolUtil::readf(&m_stream, kIpcMsgCommand + 4, &command, &elevate);
+    ProtocolUtil::readf(stream_.get(), kIpcMsgCommand + 4, &command, &elevate);
 
     // must be deleted by event handler.
     return new IpcCommandMessage(command, elevate != 0);
@@ -184,6 +183,6 @@ IpcClientProxy::disconnect()
 {
     LOG((CLOG_DEBUG "ipc disconnect, closing stream"));
     m_disconnecting = true;
-    m_stream.close();
+    stream_->close();
     m_events->addEvent(Event(m_events->forIpcClientProxy().disconnected(), this));
 }

@@ -91,8 +91,8 @@ IpcServer::listen()
 void
 IpcServer::handleClientConnecting(const Event&, void*)
 {
-    inputleap::IStream* stream = socket_->accept();
-    if (stream == nullptr) {
+    auto stream = socket_->accept();
+    if (!stream) {
         return;
     }
 
@@ -101,7 +101,7 @@ IpcServer::handleClientConnecting(const Event&, void*)
     IpcClientProxy* proxy = nullptr;
     {
         std::lock_guard<std::mutex> lock(m_clientsMutex);
-        proxy = new IpcClientProxy(*stream, m_events);
+        proxy = new IpcClientProxy(std::move(stream), m_events);
         m_clients.push_back(proxy);
     }
 

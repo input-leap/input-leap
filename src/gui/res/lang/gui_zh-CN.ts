@@ -28,7 +28,7 @@
         <location filename="../../src/AboutDialogBase.ui" line="53"/>
         <source>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
-Copyright © 2018 The InputLeap Developers&lt;br /&gt;
+Copyright © 2018 Debauchee Open Source Group&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Input Leap is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
@@ -37,7 +37,7 @@ The Input Leap GUI is based on QSynergy by Volker Lanz.
 &lt;/p&gt;</source>
         <translation>&lt;p&gt;
 共享键盘和鼠标，跨平台并开源。&lt;br /&gt;&lt;br /&gt;
-Copyright © 2018 The InputLeap Developers&lt;br /&gt;
+Copyright © 2018 Debauchee Open Source Group&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Input Leap 适用 GNU 通用公共许可证（GPLv2）。&lt;br /&gt;&lt;br /&gt;

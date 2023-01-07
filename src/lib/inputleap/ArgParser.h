@@ -58,7 +58,7 @@ public:
     bool empty() { return m_argv.empty(); }
 
     // Returns the size of the argument list
-    int size() { return m_argv.size(); }
+    std::size_t size() { return m_argv.size(); }
 
     const std::string& exename() { return m_exename; };
 

@@ -1,6 +1,6 @@
 /*
  * InputLeap -- mouse and keyboard sharing utility
- * Copyright (C) 2008 The InputLeap Developers
+ * Copyright (C) 2008 Debauchee Open Source Group
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

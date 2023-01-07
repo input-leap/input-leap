@@ -60,7 +60,7 @@ void Hotkey::saveSettings(QSettings& settings) const
     settings.beginWriteArray("actions");
     for (std::size_t i = 0; i < m_Actions.size(); i++)
     {
-        settings.setArrayIndex(i);
+        settings.setArrayIndex(static_cast<int>(i));
         m_Actions[i].saveSettings(settings);
     }
     settings.endArray();

@@ -124,17 +124,17 @@ private:
 
     // convert nul terminated wchar_t string (in platform's native
     // encoding) to UTF8.
-    static std::string wideCharToUTF8(const wchar_t*, std::uint32_t size, bool* errors);
+    static std::string wideCharToUTF8(const wchar_t*, std::size_t size, bool* errors);
 
     // internal conversion to UTF8
-    static std::string doUCS2ToUTF8(const std::uint8_t* src, std::uint32_t n, bool* errors);
-    static std::string doUCS4ToUTF8(const std::uint8_t* src, std::uint32_t n, bool* errors);
-    static std::string doUTF16ToUTF8(const std::uint8_t* src, std::uint32_t n, bool* errors);
-    static std::string doUTF32ToUTF8(const std::uint8_t* src, std::uint32_t n, bool* errors);
+    static std::string doUCS2ToUTF8(const std::uint8_t* src, std::size_t n, bool* errors);
+    static std::string doUCS4ToUTF8(const std::uint8_t* src, std::size_t n, bool* errors);
+    static std::string doUTF16ToUTF8(const std::uint8_t* src, std::size_t n, bool* errors);
+    static std::string doUTF32ToUTF8(const std::uint8_t* src, std::size_t n, bool* errors);
 
     // convert characters to/from UTF8
-    static std::uint32_t fromUTF8(const std::uint8_t*& src, std::uint32_t& size);
-    static void toUTF8(std::string& dst, std::uint32_t c, bool* errors);
+    static std::uint32_t fromUTF8(const std::uint8_t*& src, std::size_t& size);
+    static void toUTF8(std::string& dst, std::size_t c, bool* errors);
 
 private:
     static std::uint32_t s_invalid;

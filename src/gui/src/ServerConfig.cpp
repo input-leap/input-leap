@@ -125,7 +125,7 @@ void ServerConfig::saveSettings()
     settings().beginWriteArray("screens");
     for (std::size_t i = 0; i < screens().size(); i++)
     {
-        settings().setArrayIndex(i);
+        settings().setArrayIndex(static_cast<int>(i));
         screens()[i].saveSettings(settings());
     }
     settings().endArray();
@@ -133,7 +133,7 @@ void ServerConfig::saveSettings()
     settings().beginWriteArray("hotkeys");
     for (std::size_t i = 0; i < hotkeys().size(); i++)
     {
-        settings().setArrayIndex(i);
+        settings().setArrayIndex(static_cast<int>(i));
         hotkeys()[i].saveSettings(settings());
     }
     settings().endArray();
@@ -172,7 +172,7 @@ void ServerConfig::loadSettings()
     Q_ASSERT(numScreens <= screens().size());
     for (std::size_t i = 0; i < numScreens; i++)
     {
-        settings().setArrayIndex(i);
+        settings().setArrayIndex(static_cast<int>(i));
         screens()[i].loadSettings(settings());
     }
     settings().endArray();
@@ -237,7 +237,8 @@ QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config)
 
             for (unsigned int j = 0; j < sizeof(neighbourDirs) / sizeof(neighbourDirs[0]); j++)
             {
-                int idx = config.adjacentScreenIndex(i, neighbourDirs[j].x, neighbourDirs[j].y);
+                int idx = config.adjacentScreenIndex(static_cast<int>(i),
+                                                     neighbourDirs[j].x, neighbourDirs[j].y);
                 if (idx != -1 && !config.screens()[idx].isNull())
                     outStream << "\t\t" << neighbourDirs[j].name << " = " << config.screens()[idx].name() << endl;
             }
@@ -366,7 +367,7 @@ bool ServerConfig::findScreenName(const QString& name, int& index)
     for (std::size_t i = 0; i < screens().size(); i++) {
         if (!screens()[i].isNull() &&
             screens()[i].name().compare(name) == 0) {
-            index = i;
+            index = static_cast<int>(i);
             found = true;
             break;
         }

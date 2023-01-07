@@ -115,7 +115,7 @@ bool Unicode::isUTF8(const std::string& src)
 {
     // convert and test each character
     const std::uint8_t* data = reinterpret_cast<const std::uint8_t*>(src.c_str());
-    for (std::uint32_t n = static_cast<std::uint32_t>(src.size()); n > 0; ) {
+    for (std::size_t n = src.size(); n > 0; ) {
         if (fromUTF8(data, n) == s_invalid) {
             return false;
         }
@@ -129,7 +129,7 @@ std::string Unicode::UTF8ToUCS2(const std::string& src, bool* errors)
     resetError(errors);
 
     // get size of input string and reserve some space in output
-    std::uint32_t n = static_cast<std::uint32_t>(src.size());
+    std::size_t n = src.size();
     std::string dst;
     dst.reserve(2 * n);
 
@@ -158,7 +158,7 @@ Unicode::UTF8ToUCS4(const std::string& src, bool* errors)
     resetError(errors);
 
     // get size of input string and reserve some space in output
-    std::uint32_t n = static_cast<std::uint32_t>(src.size());
+    std::size_t n = src.size();
     std::string dst;
     dst.reserve(4 * n);
 
@@ -182,7 +182,7 @@ Unicode::UTF8ToUTF16(const std::string& src, bool* errors)
     resetError(errors);
 
     // get size of input string and reserve some space in output
-    std::uint32_t n = static_cast<std::uint32_t>(src.size());
+    std::size_t n = src.size();
     std::string dst;
     dst.reserve(2 * n);
 
@@ -220,7 +220,7 @@ Unicode::UTF8ToUTF32(const std::string& src, bool* errors)
     resetError(errors);
 
     // get size of input string and reserve some space in output
-    std::uint32_t n = static_cast<std::uint32_t>(src.size());
+    std::size_t n = src.size();
     std::string dst;
     dst.reserve(4 * n);
 
@@ -336,7 +336,7 @@ Unicode::UTF32ToUTF8(const std::string& src, bool* errors)
     return doUTF32ToUTF8(reinterpret_cast<const std::uint8_t*>(src.data()), n, errors);
 }
 
-static std::wstring convert_current_mb_to_wide(const char* src, std::uint32_t n, bool& errors)
+static std::wstring convert_current_mb_to_wide(const char* src, std::size_t n, bool& errors)
 {
     std::mbstate_t state = { };
     std::wstring result;
@@ -431,7 +431,7 @@ wchar_t* Unicode::UTF8ToWideChar(const std::string& src, std::uint32_t& size, bo
 }
 
 std::string
-Unicode::wideCharToUTF8(const wchar_t* src, std::uint32_t size, bool* errors)
+Unicode::wideCharToUTF8(const wchar_t* src, std::size_t size, bool* errors)
 {
     // convert from platform's wide character encoding.
     // note -- this must include a wide nul character (independent of
@@ -455,7 +455,7 @@ Unicode::wideCharToUTF8(const wchar_t* src, std::uint32_t size, bool* errors)
     }
 }
 
-std::string Unicode::doUCS2ToUTF8(const std::uint8_t* data, std::uint32_t n, bool* errors)
+std::string Unicode::doUCS2ToUTF8(const std::uint8_t* data, std::size_t n, bool* errors)
 {
     // make some space
     std::string dst;
@@ -490,7 +490,7 @@ std::string Unicode::doUCS2ToUTF8(const std::uint8_t* data, std::uint32_t n, boo
     return dst;
 }
 
-std::string Unicode::doUCS4ToUTF8(const std::uint8_t* data, std::uint32_t n, bool* errors)
+std::string Unicode::doUCS4ToUTF8(const std::uint8_t* data, std::size_t n, bool* errors)
 {
     // make some space
     std::string dst;
@@ -525,7 +525,7 @@ std::string Unicode::doUCS4ToUTF8(const std::uint8_t* data, std::uint32_t n, boo
     return dst;
 }
 
-std::string Unicode::doUTF16ToUTF8(const std::uint8_t* data, std::uint32_t n, bool* errors)
+std::string Unicode::doUTF16ToUTF8(const std::uint8_t* data, std::size_t n, bool* errors)
 {
     // make some space
     std::string dst;
@@ -586,7 +586,7 @@ std::string Unicode::doUTF16ToUTF8(const std::uint8_t* data, std::uint32_t n, bo
     return dst;
 }
 
-std::string Unicode::doUTF32ToUTF8(const std::uint8_t* data, std::uint32_t n, bool* errors)
+std::string Unicode::doUTF32ToUTF8(const std::uint8_t* data, std::size_t n, bool* errors)
 {
     // make some space
     std::string dst;
@@ -625,7 +625,7 @@ std::string Unicode::doUTF32ToUTF8(const std::uint8_t* data, std::uint32_t n, bo
     return dst;
 }
 
-std::uint32_t Unicode::fromUTF8(const std::uint8_t*& data, std::uint32_t& n)
+std::uint32_t Unicode::fromUTF8(const std::uint8_t*& data, std::size_t& n)
 {
     assert(data != nullptr);
     assert(n    != 0);
@@ -801,7 +801,7 @@ std::uint32_t Unicode::fromUTF8(const std::uint8_t*& data, std::uint32_t& n)
     return c;
 }
 
-void Unicode::toUTF8(std::string& dst, std::uint32_t c, bool* errors)
+void Unicode::toUTF8(std::string& dst, std::size_t c, bool* errors)
 {
     std::uint8_t data[6];
 

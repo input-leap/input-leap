@@ -112,7 +112,7 @@ MSWindowsWatchdog::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES s
 
     if (!tokenRet) {
         LOG((CLOG_ERR "could not open token, process handle: %d", process));
-        throw XArch(new XArchEvalWindows());
+        throw std::runtime_error(error_code_to_string_windows(GetLastError()));
     }
 
     LOG((CLOG_DEBUG "got token %i, duplicating", sourceToken));
@@ -124,7 +124,7 @@ MSWindowsWatchdog::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES s
 
     if (!duplicateRet) {
         LOG((CLOG_ERR "could not duplicate token %i", sourceToken));
-        throw XArch(new XArchEvalWindows());
+        throw std::runtime_error(error_code_to_string_windows(GetLastError()));
     }
 
     LOG((CLOG_DEBUG "duplicated, new token: %i", newToken));
@@ -171,7 +171,7 @@ void MSWindowsWatchdog::main_loop()
     saAttr.lpSecurityDescriptor = nullptr;
 
     if (!CreatePipe(&m_stdOutRead, &m_stdOutWrite, &saAttr, 0)) {
-        throw XArch(new XArchEvalWindows());
+        throw std::runtime_error(error_code_to_string_windows(GetLastError()));
     }
 
     ZeroMemory(&m_processInfo, sizeof(PROCESS_INFORMATION));
@@ -304,7 +304,7 @@ MSWindowsWatchdog::startProcess()
         DWORD exitCode = 0;
         GetExitCodeProcess(m_processInfo.hProcess, &exitCode);
         LOG((CLOG_ERR "exit code: %d", exitCode));
-        throw XArch(new XArchEvalWindows);
+        throw std::runtime_error(error_code_to_string_windows(GetLastError()));
     }
     else {
         // wait for program to fail.
@@ -360,7 +360,7 @@ BOOL MSWindowsWatchdog::doStartProcessAsUser(std::string& command, HANDLE userTo
     BOOL blockRet = CreateEnvironmentBlock(&environment, userToken, FALSE);
     if (!blockRet) {
         LOG((CLOG_ERR "could not create environment block"));
-        throw XArch(new XArchEvalWindows);
+        throw std::runtime_error(error_code_to_string_windows(GetLastError()));
     }
 
     DWORD creationFlags =
@@ -488,7 +488,7 @@ MSWindowsWatchdog::shutdownExistingProcesses()
     HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
     if (snapshot == INVALID_HANDLE_VALUE) {
         LOG((CLOG_ERR "could not get process snapshot"));
-        throw XArch(new XArchEvalWindows);
+        throw std::runtime_error(error_code_to_string_windows(GetLastError()));
     }
 
     PROCESSENTRY32 entry;
@@ -499,7 +499,7 @@ MSWindowsWatchdog::shutdownExistingProcesses()
     BOOL gotEntry = Process32First(snapshot, &entry);
     if (!gotEntry) {
         LOG((CLOG_ERR "could not get first process entry"));
-        throw XArch(new XArchEvalWindows);
+        throw std::runtime_error(error_code_to_string_windows(GetLastError()));
     }
 
     // now just iterate until we can find winlogon.exe pid
@@ -526,7 +526,7 @@ MSWindowsWatchdog::shutdownExistingProcesses()
 
                 // only worry about error if it's not the end of the snapshot
                 LOG((CLOG_ERR "could not get subsiquent process entry"));
-                throw XArch(new XArchEvalWindows);
+                throw std::runtime_error(error_code_to_string_windows(GetLastError()));
             }
         }
     }

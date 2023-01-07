@@ -26,6 +26,8 @@
 #include <windows.h>
 #include <psapi.h>
 
+#include <stdexcept>
+
 static const char* s_settingsKeyNames[] = {
     _T("SOFTWARE"),
     _T("Barrier"),
@@ -103,7 +105,7 @@ ArchSystemWindows::setting(const std::string& valueName, const std::string& valu
 {
     HKEY key = ArchMiscWindows::addKey(HKEY_LOCAL_MACHINE, s_settingsKeyNames);
     if (key == nullptr)
-        throw XArch(std::string("could not access registry key: ") + valueName);
+        throw std::runtime_error(std::string("could not access registry key: ") + valueName);
     ArchMiscWindows::setValue(key, valueName.c_str(), valueString.c_str());
 }
 

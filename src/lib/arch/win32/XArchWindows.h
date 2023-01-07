@@ -18,32 +18,10 @@
 
 #pragma once
 
-#include "arch/XArch.h"
+#include <string>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-//! Lazy error message string evaluation for windows
-class XArchEvalWindows : public XArchEval {
-public:
-    XArchEvalWindows() : m_error(GetLastError()) { }
-    XArchEvalWindows(DWORD error) : m_error(error) { }
-    virtual ~XArchEvalWindows() { }
-
-    virtual std::string eval() const noexcept;
-
-private:
-    DWORD m_error;
-};
-
-//! Lazy error message string evaluation for winsock
-class XArchEvalWinsock : public XArchEval {
-public:
-    XArchEvalWinsock(int error) : m_error(error) { }
-    virtual ~XArchEvalWinsock() { }
-
-    virtual std::string eval() const noexcept;
-
-private:
-    int m_error;
-};
+std::string error_code_to_string_windows(DWORD err);
+std::string error_code_to_string_winsock(int err);

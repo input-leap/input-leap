@@ -143,7 +143,7 @@ DaemonApp::run(int argc, char** argv)
 
         return kExitSuccess;
     }
-    catch (XArch& e) {
+    catch (std::runtime_error& e) {
         std::string message = e.what();
         if (uninstall && (message.find("The service has not been started") != std::string::npos)) {
             // TODO: if we're keeping this use error code instead (what is it?!).
@@ -295,7 +295,7 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
                         ARCH->setting("LogLevel", logLevel);
                         CLOG->setFilter(logLevel.c_str());
                     }
-                    catch (XArch& e) {
+                    catch (std::runtime_error& e) {
                         LOG((CLOG_ERR "failed to save LogLevel setting, %s", e.what()));
                     }
                 }
@@ -328,7 +328,7 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
                 // TODO: it would be nice to store bools/ints...
                 ARCH->setting("Elevate", std::string(cm->elevate() ? "1" : "0"));
             }
-            catch (XArch& e) {
+            catch (std::runtime_error& e) {
                 LOG((CLOG_ERR "failed to save settings, %s", e.what()));
             }
 

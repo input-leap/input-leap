@@ -20,13 +20,8 @@
 
 #include <cstring>
 
-//
-// XArchEvalUnix
-//
-
-std::string
-XArchEvalUnix::eval() const
+std::string error_code_to_string_errno(int err)
 {
     // FIXME -- not thread safe
-    return strerror(m_error);
+    return std::strerror(err);
 }

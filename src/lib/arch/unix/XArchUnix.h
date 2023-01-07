@@ -18,16 +18,6 @@
 
 #pragma once
 
-#include "arch/XArch.h"
+#include <string>
 
-//! Lazy error message string evaluation for unix
-class XArchEvalUnix : public XArchEval {
-public:
-    XArchEvalUnix(int error) : m_error(error) { }
-    ~XArchEvalUnix() noexcept override { }
-
-    std::string eval() const override;
-
-private:
-    int m_error;
-};
+std::string error_code_to_string_errno(int err);

@@ -20,38 +20,27 @@
 #include "arch/win32/ArchNetworkWinsock.h"
 #include "base/String.h"
 
-//
-// XArchEvalWindows
-//
-
-std::string
-XArchEvalWindows::eval() const noexcept
+std::string error_code_to_string_windows(DWORD err)
 {
     char* cmsg;
     if (FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
                             FORMAT_MESSAGE_IGNORE_INSERTS |
                             FORMAT_MESSAGE_FROM_SYSTEM,
                             0,
-                            m_error,
+                            err,
                             MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
                             (LPTSTR)&cmsg,
                             0,
                             nullptr) == 0) {
         cmsg = nullptr;
-        return inputleap::string::sprintf("Unknown error, code %d", m_error);
+        return inputleap::string::sprintf("Unknown error, code %d", err);
     }
     std::string smsg(cmsg);
     LocalFree(cmsg);
     return smsg;
 }
 
-
-//
-// XArchEvalWinsock
-//
-
-std::string
-XArchEvalWinsock::eval() const noexcept
+std::string error_code_to_string_winsock(int err)
 {
     // built-in windows function for looking up error message strings
     // may not look up network error messages correctly.  we'll have
@@ -112,7 +101,7 @@ XArchEvalWinsock::eval() const noexcept
     };
 
     for (unsigned int i = 0; s_netErrorCodes[i].m_code != 0; ++i) {
-        if (s_netErrorCodes[i].m_code == m_error) {
+        if (s_netErrorCodes[i].m_code == err) {
             return s_netErrorCodes[i].m_msg;
         }
     }

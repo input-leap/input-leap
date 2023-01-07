@@ -20,6 +20,7 @@
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/XArchWindows.h"
 #include "arch/Arch.h"
+#include "arch/XArch.h"
 #include "base/Time.h"
 #include <sstream>
 #include <vector>
@@ -85,7 +86,7 @@ ArchDaemonWindows::installDaemon(const char* name,
     SC_HANDLE mgr = OpenSCManager(nullptr, nullptr, GENERIC_WRITE);
     if (mgr == nullptr) {
         // can't open service manager
-        throw XArchDaemonInstallFailed(new XArchEvalWindows);
+        throw XArchDaemonInstallFailed(error_code_to_string_windows(GetLastError()));
     }
 
     // create the service
@@ -108,7 +109,7 @@ ArchDaemonWindows::installDaemon(const char* name,
         DWORD err = GetLastError();
         if (err != ERROR_SERVICE_EXISTS) {
             CloseServiceHandle(mgr);
-            throw XArchDaemonInstallFailed(new XArchEvalWindows(err));
+            throw XArchDaemonInstallFailed(error_code_to_string_windows(err));
         }
     }
     else {
@@ -131,7 +132,7 @@ ArchDaemonWindows::installDaemon(const char* name,
         catch (...) {
             // ignore
         }
-        throw XArchDaemonInstallFailed(new XArchEvalWindows(err));
+        throw XArchDaemonInstallFailed(error_code_to_string_windows(err));
     }
 
     // set the description
@@ -149,7 +150,7 @@ ArchDaemonWindows::installDaemon(const char* name,
         catch (...) {
             // ignore
         }
-        throw XArchDaemonInstallFailed(new XArchEvalWindows(err));
+        throw XArchDaemonInstallFailed(error_code_to_string_windows(err));
     }
     ArchMiscWindows::setValue(key, _T("CommandLine"), commandLine);
 
@@ -172,7 +173,7 @@ ArchDaemonWindows::uninstallDaemon(const char* name)
     SC_HANDLE mgr = OpenSCManager(nullptr, nullptr, GENERIC_WRITE);
     if (mgr == nullptr) {
         // can't open service manager
-        throw XArchDaemonUninstallFailed(new XArchEvalWindows);
+        throw XArchDaemonUninstallFailed(error_code_to_string_windows(GetLastError()));
     }
 
     // open the service.  oddly, you must open a service to delete it.
@@ -181,9 +182,9 @@ ArchDaemonWindows::uninstallDaemon(const char* name)
         DWORD err = GetLastError();
         CloseServiceHandle(mgr);
         if (err != ERROR_SERVICE_DOES_NOT_EXIST) {
-            throw XArchDaemonUninstallFailed(new XArchEvalWindows(err));
+            throw XArchDaemonUninstallFailed(error_code_to_string_windows(err));
         }
-        throw XArchDaemonUninstallNotInstalled(new XArchEvalWindows(err));
+        throw XArchDaemonUninstallNotInstalled(error_code_to_string_windows(err));
     }
 
     // stop the service.  we don't care if we fail.
@@ -215,9 +216,9 @@ ArchDaemonWindows::uninstallDaemon(const char* name)
             return;
         }
         if (err != ERROR_SERVICE_MARKED_FOR_DELETE) {
-            throw XArchDaemonUninstallFailed(new XArchEvalWindows(err));
+            throw XArchDaemonUninstallFailed(error_code_to_string_windows(err));
         }
-        throw XArchDaemonUninstallNotInstalled(new XArchEvalWindows(err));
+        throw XArchDaemonUninstallNotInstalled(error_code_to_string_windows(err));
     }
 }
 
@@ -243,7 +244,7 @@ ArchDaemonWindows::daemonize(const char* name, DaemonFunc func)
     if (StartServiceCtrlDispatcher(entry) == 0) {
         // StartServiceCtrlDispatcher failed
         s_daemon = nullptr;
-        throw XArchDaemonFailed(new XArchEvalWindows);
+        throw XArchDaemonFailed(error_code_to_string_windows(GetLastError()));
     }
 
     s_daemon = nullptr;
@@ -606,7 +607,7 @@ ArchDaemonWindows::start(const char* name)
     // open service manager
     SC_HANDLE mgr = OpenSCManager(nullptr, nullptr, GENERIC_READ);
     if (mgr == nullptr) {
-        throw XArchDaemonFailed(new XArchEvalWindows());
+        throw XArchDaemonFailed(error_code_to_string_windows(GetLastError()));
     }
 
     // open the service
@@ -615,12 +616,12 @@ ArchDaemonWindows::start(const char* name)
 
     if (service == nullptr) {
         CloseServiceHandle(mgr);
-        throw XArchDaemonFailed(new XArchEvalWindows());
+        throw XArchDaemonFailed(error_code_to_string_windows(GetLastError()));
     }
 
     // start the service
     if (!StartService(service, 0, nullptr)) {
-        throw XArchDaemonFailed(new XArchEvalWindows());
+        throw XArchDaemonFailed(error_code_to_string_windows(GetLastError()));
     }
 }
 
@@ -630,7 +631,7 @@ ArchDaemonWindows::stop(const char* name)
     // open service manager
     SC_HANDLE mgr = OpenSCManager(nullptr, nullptr, GENERIC_READ);
     if (mgr == nullptr) {
-        throw XArchDaemonFailed(new XArchEvalWindows());
+        throw XArchDaemonFailed(error_code_to_string_windows(GetLastError()));
     }
 
     // open the service
@@ -640,7 +641,7 @@ ArchDaemonWindows::stop(const char* name)
 
     if (service == nullptr) {
         CloseServiceHandle(mgr);
-        throw XArchDaemonFailed(new XArchEvalWindows());
+        throw XArchDaemonFailed(error_code_to_string_windows(GetLastError()));
     }
 
     // ask the service to stop, asynchronously
@@ -648,7 +649,7 @@ ArchDaemonWindows::stop(const char* name)
     if (!ControlService(service, SERVICE_CONTROL_STOP, &ss)) {
         DWORD dwErrCode = GetLastError();
         if (dwErrCode != ERROR_SERVICE_NOT_ACTIVE) {
-            throw XArchDaemonFailed(new XArchEvalWindows());
+            throw XArchDaemonFailed(error_code_to_string_windows(GetLastError()));
         }
     }
 }

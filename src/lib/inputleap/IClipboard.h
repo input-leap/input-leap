@@ -21,6 +21,8 @@
 #include "base/EventTypes.h"
 #include <string>
 
+namespace inputleap {
+
 //! Clipboard interface
 /*!
 This interface defines the methods common to all clipboards.
@@ -167,3 +169,5 @@ private:
     static std::uint32_t readUInt32(const char*);
     static void writeUInt32(std::string*, std::uint32_t);
 };
+
+} // namespace inputleap

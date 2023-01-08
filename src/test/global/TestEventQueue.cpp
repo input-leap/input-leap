@@ -22,6 +22,8 @@
 #include "base/SimpleEventQueueBuffer.h"
 #include <stdexcept>
 
+namespace inputleap {
+
 void
 TestEventQueue::raiseQuitEvent()
 {
@@ -59,3 +61,5 @@ TestEventQueue::parent_requests_shutdown() const
 {
     return false;
 }
+
+} // namespace inputleap

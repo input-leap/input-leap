@@ -20,4 +20,8 @@
 
 #include <string>
 
+namespace inputleap {
+
 std::string error_code_to_string_errno(int err);
+
+} // namespace inputleap

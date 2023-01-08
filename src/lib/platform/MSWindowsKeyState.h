@@ -25,6 +25,8 @@
 
 #include <vector>
 
+namespace inputleap {
+
 class Event;
 class EventQueueTimer;
 class MSWindowsDesks;
@@ -229,3 +231,5 @@ private:
 
 	static const KeyID	s_virtualKey[];
 };
+
+} // namespace inputleap

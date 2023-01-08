@@ -29,6 +29,8 @@
 #include <set>
 #include <vector>
 
+namespace inputleap {
+
 class XWindowsClipboard;
 class XWindowsKeyState;
 class XWindowsScreenSaver;
@@ -262,3 +264,5 @@ private:
     // ioErrorHandler().
     static XWindowsScreen*    s_screen;
 };
+
+} // namespace inputleap

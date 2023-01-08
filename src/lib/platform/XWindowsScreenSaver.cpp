@@ -30,9 +30,7 @@
 #include <X11/Xmd.h>
 #include <X11/extensions/dpms.h>
 
-//
-// XWindowsScreenSaver
-//
+namespace inputleap {
 
 XWindowsScreenSaver::XWindowsScreenSaver(IXWindowsImpl* impl, Display* display,
                                          Window window, void* eventTarget,
@@ -570,3 +568,5 @@ XWindowsScreenSaver::isDPMSActivated() const
         return false;
     }
 }
+
+} // namespace inputleap

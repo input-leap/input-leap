@@ -28,6 +28,8 @@
 
 class IClipboard;
 
+namespace inputleap {
+
 //! Screen interface
 /*!
 This interface defines the methods common to all platform dependent
@@ -183,3 +185,5 @@ protected:
     */
     virtual void handleSystemEvent(const Event& event, void*) = 0;
 };
+
+} // namespace inputleap

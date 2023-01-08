@@ -21,9 +21,7 @@
 #include <stdio.h>
 #include "base/String.h"
 
-//
-// MSWindowsUtil
-//
+namespace inputleap {
 
 std::string MSWindowsUtil::getString(HINSTANCE instance, DWORD id)
 {
@@ -79,3 +77,5 @@ MSWindowsUtil::createDirectory(const std::string& path, bool stripLast)
         // create innermost directory
         CreateDirectory(path.c_str(), nullptr);
 }
+
+} // namespace inputleap

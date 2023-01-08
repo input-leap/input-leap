@@ -23,6 +23,8 @@
 #include "base/Event.h"
 #include <string>
 
+namespace inputleap {
+
 class IpcMessage : public EventData {
 public:
     virtual ~IpcMessage();
@@ -83,3 +85,5 @@ private:
     std::string m_command;
     bool m_elevate;
 };
+
+} // namespace inputleap

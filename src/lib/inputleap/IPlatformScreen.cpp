@@ -17,9 +17,13 @@
 
 #include "inputleap/IPlatformScreen.h"
 
+namespace inputleap {
+
 bool
 IPlatformScreen::fakeMediaKey(KeyID id)
 {
     (void) id;
     return false;
 }
+
+} // namespace inputleap

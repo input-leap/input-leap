@@ -27,12 +27,14 @@
 #include "net/NetworkAddress.h"
 #include "base/EventTypes.h"
 
+namespace inputleap {
+
 class EventQueueTimer;
-namespace inputleap { class Screen; }
+class Screen;
 class ServerProxy;
 class IDataSocket;
 class ISocketFactory;
-namespace inputleap { class IStream; }
+class IStream;
 class IEventQueue;
 class Thread;
 class TCPSocket;
@@ -222,3 +224,5 @@ private:
     ClientArgs m_args;
     bool m_enableClipboard;
 };
+
+} // namespace inputleap

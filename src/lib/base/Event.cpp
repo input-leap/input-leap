@@ -19,9 +19,7 @@
 #include "base/Event.h"
 #include "base/EventQueue.h"
 
-//
-// Event
-//
+namespace inputleap {
 
 Event::Event() :
     m_type(kUnknown),
@@ -98,3 +96,5 @@ Event::setDataObject(EventData* dataObject)
     assert(m_dataObject == nullptr);
     m_dataObject = dataObject;
 }
+
+} // namespace inputleap

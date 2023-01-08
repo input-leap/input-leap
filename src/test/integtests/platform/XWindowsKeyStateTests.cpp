@@ -35,6 +35,8 @@
 #include <gmock/gmock.h>
 #include <errno.h>
 
+namespace inputleap {
+
 class XWindowsKeyStateTests : public ::testing::Test
 {
 protected:
@@ -232,3 +234,4 @@ TEST_F(XWindowsKeyStateTests, pollActiveGroup_xkb_areEqual)
     }
 }
 
+} // namespace inputleap

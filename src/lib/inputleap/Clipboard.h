@@ -20,6 +20,8 @@
 
 #include "inputleap/IClipboard.h"
 
+namespace inputleap {
+
 //! Memory buffer clipboard
 /*!
 This class implements a clipboard that stores data in memory.
@@ -69,3 +71,5 @@ private:
     bool m_added[kNumFormats];
     std::string m_data[kNumFormats];
 };
+
+} // namespace inputleap

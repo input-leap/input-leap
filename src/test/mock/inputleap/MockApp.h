@@ -23,6 +23,8 @@
 
 #include <gmock/gmock.h>
 
+namespace inputleap {
+
 class MockApp : public App
 {
 public:
@@ -42,3 +44,5 @@ public:
     MOCK_METHOD2(foregroundStartup, int(int, char**));
     MOCK_METHOD0(createScreen, inputleap::Screen*());
 };
+
+} // namespace inputleap

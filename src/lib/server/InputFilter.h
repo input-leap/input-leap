@@ -26,6 +26,8 @@
 #include <map>
 #include <set>
 
+namespace inputleap {
+
 class PrimaryClient;
 class Event;
 class IEventQueue;
@@ -369,3 +371,5 @@ private:
     PrimaryClient* m_primaryClient;
     IEventQueue* m_events;
 };
+
+} // namespace inputleap

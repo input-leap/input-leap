@@ -20,6 +20,8 @@
 #include "base/Stopwatch.h"
 #include "arch/Arch.h"
 
+namespace inputleap {
+
 class EventQueueTimer { };
 
 //
@@ -93,3 +95,5 @@ SimpleEventQueueBuffer::deleteTimer(EventQueueTimer* timer) const
 {
     delete timer;
 }
+
+} // namespace inputleap

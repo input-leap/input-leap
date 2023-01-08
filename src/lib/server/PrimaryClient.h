@@ -21,7 +21,9 @@
 #include "server/BaseClientProxy.h"
 #include "inputleap/protocol_types.h"
 
-namespace inputleap { class Screen; }
+namespace inputleap {
+
+class Screen;
 
 //! Primary screen as pseudo-client
 /*!
@@ -151,3 +153,5 @@ private:
     bool m_clipboardDirty[kClipboardEnd];
     std::int32_t m_fakeInputCount;
 };
+
+} // namespace inputleap

@@ -27,6 +27,8 @@
 #include <string>
 #include <list>
 
+namespace inputleap {
+
 class Thread;
 class IpcLogOutputter;
 class IpcServer;
@@ -90,3 +92,5 @@ public:
     // XBase overrides
     virtual std::string getWhat() const noexcept { return what(); }
 };
+
+} // namespace inputleap

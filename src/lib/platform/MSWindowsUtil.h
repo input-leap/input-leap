@@ -23,6 +23,8 @@
 #define WINDOWS_LEAN_AND_MEAN
 #include <Windows.h>
 
+namespace inputleap {
+
 class MSWindowsUtil {
 public:
     //! Get message string
@@ -45,3 +47,5 @@ public:
     */
     static void createDirectory(const std::string& path, bool stripLast = false);
 };
+
+} // namespace inputleap

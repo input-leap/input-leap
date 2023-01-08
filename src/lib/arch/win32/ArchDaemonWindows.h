@@ -30,6 +30,8 @@
 
 #define ARCH_DAEMON ArchDaemonWindows
 
+namespace inputleap {
+
 //! Win32 implementation of IArchDaemon
 class ArchDaemonWindows : public IArchDaemon {
 public:
@@ -151,3 +153,5 @@ static const TCHAR* const g_daemonKeyPath[] = {
     _T("Service"),
     nullptr
 };
+
+} // namespace inputleap

@@ -20,9 +20,7 @@
 
 #include <algorithm>
 
-//
-// OSXClipboardAnyTextConverter
-//
+namespace inputleap {
 
 OSXClipboardAnyTextConverter::OSXClipboardAnyTextConverter()
 {
@@ -84,3 +82,5 @@ std::string OSXClipboardAnyTextConverter::convertLinefeedToUnix(const std::strin
 
     return copy;
 }
+
+} // namespace inputleap

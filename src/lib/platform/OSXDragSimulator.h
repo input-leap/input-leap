@@ -21,6 +21,8 @@
 
 #import <CoreFoundation/CoreFoundation.h>
 
+namespace inputleap {
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -32,3 +34,5 @@ CFStringRef getCocoaDropTarget();
 #if defined(__cplusplus)
 }
 #endif
+
+} // namespace inputleap

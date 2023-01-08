@@ -22,6 +22,8 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+namespace inputleap {
+
 class MSWindowsClipboardTests : public ::testing::Test
 {
 protected:
@@ -227,3 +229,5 @@ TEST_F(MSWindowsClipboardTests, isOwnedByBarrier_defaultState_noError)
 
     EXPECT_EQ(true, actual);
 }
+
+} // namespace inputleap

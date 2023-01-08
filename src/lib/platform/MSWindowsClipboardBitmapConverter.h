@@ -20,6 +20,8 @@
 
 #include "platform/MSWindowsClipboard.h"
 
+namespace inputleap {
+
 //! Convert to/from some text encoding
 class MSWindowsClipboardBitmapConverter :
                 public IMSWindowsClipboardConverter {
@@ -33,3 +35,5 @@ public:
     virtual HANDLE fromIClipboard(const std::string&) const;
     virtual std::string toIClipboard(HANDLE) const;
 };
+
+} // namespace inputleap

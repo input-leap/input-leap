@@ -33,6 +33,8 @@
 
 #include <map>
 
+namespace inputleap {
+
 class Event;
 class EventQueueTimer;
 class Thread;
@@ -296,3 +298,5 @@ private:
     // true if program should stop on desk switch.
     bool m_stopOnDeskSwitch;
 };
+
+} // namespace inputleap

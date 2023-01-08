@@ -20,9 +20,7 @@
 #include <cassert>
 #include <vector>
 
-//
-// IClipboard
-//
+namespace inputleap {
 
 void IClipboard::unmarshall(IClipboard* clipboard, const std::string& data, Time time)
 {
@@ -163,3 +161,5 @@ void IClipboard::writeUInt32(std::string* buf, std::uint32_t v)
     *buf += static_cast<std::uint8_t>((v >>  8) & 0xff);
     *buf += static_cast<std::uint8_t>( v & 0xff);
 }
+
+} // namespace inputleap

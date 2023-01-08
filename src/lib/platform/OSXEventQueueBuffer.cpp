@@ -21,15 +21,9 @@
 #include "base/Event.h"
 #include "base/IEventQueue.h"
 
-//
-// EventQueueTimer
-//
+namespace inputleap {
 
 class EventQueueTimer { };
-
-//
-// OSXEventQueueBuffer
-//
 
 OSXEventQueueBuffer::OSXEventQueueBuffer(IEventQueue* events) :
     m_event(nullptr),
@@ -139,3 +133,5 @@ OSXEventQueueBuffer::deleteTimer(EventQueueTimer* timer) const
 {
     delete timer;
 }
+
+} // namespace inputleap

@@ -21,6 +21,8 @@
 #include "inputleap/ServerTaskBarReceiver.h"
 #include "common/win32/winapi.h"
 
+namespace inputleap {
+
 class BufferedLogOutputter;
 class IEventQueue;
 
@@ -65,3 +67,5 @@ private:
 
     static const UINT    s_stateToIconID[];
 };
+
+} // namespace inputleap

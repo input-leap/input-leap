@@ -20,9 +20,7 @@
 
 #include <syslog.h>
 
-//
-// ArchLogUnix
-//
+namespace inputleap {
 
 ArchLogUnix::ArchLogUnix()
 {
@@ -82,3 +80,5 @@ ArchLogUnix::writeLog(ELevel level, const char* msg)
     // log it
     syslog(priority, "%s", msg);
 }
+
+} // namespace inputleap

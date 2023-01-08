@@ -25,6 +25,8 @@
 #include "inputleap/option_types.h"
 #include <string>
 
+namespace inputleap {
+
 //! Client interface
 /*!
 This interface defines the methods necessary for the server to
@@ -165,3 +167,5 @@ public:
 
     //@}
 };
+
+} // namespace inputleap

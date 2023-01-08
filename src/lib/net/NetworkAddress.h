@@ -21,6 +21,8 @@
 #include "base/EventTypes.h"
 #include "arch/IArchNetwork.h"
 
+namespace inputleap {
+
 //! Network address type
 /*!
 This class represents a network address.
@@ -120,3 +122,5 @@ private:
     std::string m_hostname;
     int m_port;
 };
+
+} // namespace inputleap

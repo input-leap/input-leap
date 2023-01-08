@@ -20,6 +20,8 @@
 
 #include <cstdint>
 
+namespace inputleap {
+
 class Event;
 class EventQueueTimer;
 
@@ -100,3 +102,5 @@ public:
 
     //@}
 };
+
+} // namespace inputleap

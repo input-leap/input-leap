@@ -24,9 +24,7 @@
 
 #include <cstdlib>
 
-//
-// NetworkAddress
-//
+namespace inputleap {
 
 static bool parse_address(const std::string& address, std::string& host, int& port)
 {
@@ -209,3 +207,5 @@ NetworkAddress::checkPort()
         throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);
     }
 }
+
+} // namespace inputleap

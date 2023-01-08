@@ -31,9 +31,7 @@
 #define VK_XBUTTON2				0x06
 #endif
 
-//
-// MSWindowsKeyState
-//
+namespace inputleap {
 
 // map virtual keys to barrier key enumeration
 const KeyID				MSWindowsKeyState::s_virtualKey[] =
@@ -1378,3 +1376,4 @@ MSWindowsKeyState::addKeyEntry(inputleap::KeyMap& keyMap, inputleap::KeyMap::Key
 	}
 }
 
+} // namespace inputleap

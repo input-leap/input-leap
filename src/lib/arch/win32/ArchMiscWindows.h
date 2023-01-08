@@ -27,6 +27,8 @@
 #include <set>
 #include <string>
 
+namespace inputleap {
+
 //! Miscellaneous win32 functions.
 class ArchMiscWindows {
 public:
@@ -200,3 +202,5 @@ private:
     static HICON        s_smallIcon;
     static HINSTANCE    s_instanceWin32;
 };
+
+} // namespace inputleap

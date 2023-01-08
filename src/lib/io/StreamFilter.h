@@ -21,19 +21,21 @@
 #include "io/IStream.h"
 #include "base/IEventQueue.h"
 
+namespace inputleap {
+
 //! A stream filter
 /*!
 This class wraps a stream.  Subclasses provide indirect access
 to the wrapped stream, typically performing some filtering.
 */
-class StreamFilter : public inputleap::IStream {
+class StreamFilter : public IStream {
 public:
     /*!
     Create a wrapper around \c stream.  Iff \c adoptStream is true then
     this object takes ownership of the stream and will delete it in the
     d'tor.
     */
-    StreamFilter(IEventQueue* events, inputleap::IStream* stream, bool adoptStream = true);
+    StreamFilter(IEventQueue* events, IStream* stream, bool adoptStream = true);
     ~StreamFilter() override;
 
     // IStream overrides
@@ -71,3 +73,5 @@ private:
     bool m_adopted;
     IEventQueue* m_events;
 };
+
+} // namespace inputleap

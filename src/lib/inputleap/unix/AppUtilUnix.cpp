@@ -19,6 +19,8 @@
 #include "inputleap/unix/AppUtilUnix.h"
 #include "inputleap/ArgsBase.h"
 
+namespace inputleap {
+
 AppUtilUnix::AppUtilUnix(IEventQueue* events)
 {
     (void) events;
@@ -45,3 +47,5 @@ AppUtilUnix::startNode()
 {
     app().startNode();
 }
+
+} // namespace inputleap

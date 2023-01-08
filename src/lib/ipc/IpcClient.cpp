@@ -23,9 +23,7 @@
 #include "base/TMethodEventJob.h"
 #include <cassert>
 
-//
-// IpcClient
-//
+namespace inputleap {
 
 IpcClient::IpcClient(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
     m_serverAddress(NetworkAddress(IPC_HOST, IPC_PORT)),
@@ -104,3 +102,5 @@ IpcClient::handleMessageReceived(const Event& e, void*)
     event.setDataObject(e.getDataObject());
     m_events->addEvent(event);
 }
+
+} // namespace inputleap

@@ -23,6 +23,8 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+namespace inputleap {
+
 using ::testing::_;
 using ::testing::NiceMock;
 using ::testing::Invoke;
@@ -491,3 +493,5 @@ const inputleap::KeyMap::KeyItem* stubMapKey(inputleap::KeyMap::Keystrokes& keys
     keys.push_back(s_stubKeystroke);
     return &s_stubKeyItem;
 }
+
+} // namespace inputleap

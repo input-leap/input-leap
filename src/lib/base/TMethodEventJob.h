@@ -20,6 +20,8 @@
 
 #include "IEventJob.h"
 
+namespace inputleap {
+
 //! Use a member function as an event job
 /*!
 An event job class that invokes a member function.
@@ -67,3 +69,5 @@ TMethodEventJob<T>::run(const Event& event)
         (m_object->*m_method)(event, m_arg);
     }
 }
+
+} // namespace inputleap

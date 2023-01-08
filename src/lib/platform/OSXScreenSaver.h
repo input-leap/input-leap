@@ -22,6 +22,8 @@
 
 #include <Carbon/Carbon.h>
 
+namespace inputleap {
+
 class IEventQueue;
 
 //! OSX screen saver implementation
@@ -57,3 +59,5 @@ private:
     ProcessSerialNumber m_screenSaverPSN;
     IEventQueue* m_events;
 };
+
+} // namespace inputleap

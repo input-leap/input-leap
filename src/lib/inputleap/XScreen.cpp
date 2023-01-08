@@ -18,9 +18,7 @@
 
 #include "inputleap/XScreen.h"
 
-//
-// XScreenOpenFailure
-//
+namespace inputleap {
 
 std::string XScreenOpenFailure::getWhat() const noexcept
 {
@@ -63,3 +61,5 @@ std::string XScreenUnavailable::getWhat() const noexcept
 {
     return format("XScreenUnavailable", "unable to open screen");
 }
+
+} // namespace inputleap

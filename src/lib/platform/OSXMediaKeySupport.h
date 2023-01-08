@@ -22,6 +22,8 @@
 
 #include "inputleap/key_types.h"
 
+namespace inputleap {
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -31,3 +33,5 @@ bool getMediaKeyEventInfo(CGEventRef event, KeyID* keyId, bool* down, bool* isRe
 #if defined(__cplusplus)
 }
 #endif
+
+} // namespace inputleap

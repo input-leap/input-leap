@@ -20,6 +20,8 @@
 
 #include <gtest/gtest.h>
 
+namespace inputleap {
+
 TEST(ClipboardChunkTests, start_formatStartChunk)
 {
     ClipboardID id = 0;
@@ -74,3 +76,5 @@ TEST(ClipboardChunkTests, end_formatDataChunk)
 
     delete chunk;
 }
+
+} // namespace inputleap

@@ -20,6 +20,8 @@
 
 #include <gtest/gtest.h>
 
+namespace inputleap {
+
 TEST(ArgParserTests, isArg_abbreviationsArg_returnTrue)
 {
     const int argc = 2;
@@ -221,3 +223,4 @@ TEST(ArgParserTests, assembleCommand_stringArrayWithSpace_returnCommand)
     EXPECT_EQ("\"stub1 space\" stub2 \"stub3 space\"", command);
 }
 
+} // namespace inputleap

@@ -25,9 +25,7 @@
 #include "base/TMethodEventJob.h"
 #include "base/Log.h"
 
-//
-// IpcServerProxy
-//
+namespace inputleap {
 
 IpcServerProxy::IpcServerProxy(inputleap::IStream& stream, IEventQueue* events) :
     m_stream(stream),
@@ -121,3 +119,5 @@ IpcServerProxy::disconnect()
     LOG((CLOG_DEBUG "ipc disconnect, closing stream"));
     m_stream.close();
 }
+
+} // namespace inputleap

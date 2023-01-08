@@ -35,9 +35,7 @@
 
 #include <memory>
 
-//
-// ServerProxy
-//
+namespace inputleap {
 
 ServerProxy::ServerProxy(Client* client, inputleap::IStream* stream, IEventQueue* events) :
     m_client(client),
@@ -918,3 +916,5 @@ void ServerProxy::sendDragInfo(std::uint32_t fileCount, const char* info, size_t
     std::string data(info, size);
     ProtocolUtil::writef(m_stream, kMsgDDragInfo, fileCount, &data);
 }
+
+} // namespace inputleap

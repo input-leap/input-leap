@@ -28,6 +28,8 @@
 #include <list>
 #include <vector>
 
+namespace inputleap {
+
 class IXWindowsClipboardConverter;
 
 //! X11 clipboard implementation
@@ -376,3 +378,5 @@ public:
 
     //@}
 };
+
+} // namespace inputleap

@@ -5,6 +5,8 @@
 
 #include "IXWindowsImpl.h"
 
+namespace inputleap {
+
 class XWindowsImpl : public IXWindowsImpl {
 public:
 
@@ -145,3 +147,5 @@ public:
     unsigned char do_XkbKeyGroupInfo(XkbDescPtr m_xkb, KeyCode keycode) override;
     int XNextEvent(Display* display, XEvent* event_return) override;
 };
+
+} // namespace inputleap

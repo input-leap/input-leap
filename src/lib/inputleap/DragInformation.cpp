@@ -24,6 +24,8 @@
 
 using namespace std;
 
+namespace inputleap {
+
 DragInformation::DragInformation() :
     m_filename(),
     m_filesize(0)
@@ -150,3 +152,5 @@ std::string DragInformation::getFileSize(std::string& filename)
 
     return ss.str();
 }
+
+} // namespace inputleap

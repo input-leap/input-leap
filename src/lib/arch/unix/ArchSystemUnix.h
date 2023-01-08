@@ -24,6 +24,8 @@
 
 #define ARCH_SYSTEM ArchSystemUnix
 
+namespace inputleap {
+
 //! Unix implementation of IArchSystem
 class ArchSystemUnix : public IArchSystem {
 public:
@@ -38,3 +40,5 @@ public:
     std::string getLibsUsed(void) const override;
 
 };
+
+} // namespace inputleap

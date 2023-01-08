@@ -22,6 +22,8 @@
 #include <Windows.h>
 #include <oleidl.h>
 
+namespace inputleap {
+
 class MSWindowsScreen;
 
 class MSWindowsDropTarget : public IDropTarget {
@@ -56,3 +58,5 @@ private:
     static MSWindowsDropTarget*
                         s_instance;
 };
+
+} // namespace inputleap

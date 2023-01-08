@@ -21,6 +21,8 @@
 
 #include <string>
 
+namespace inputleap {
+
 class IEventQueue;
 
 class StreamChunker {
@@ -34,3 +36,5 @@ private:
     static bool            s_isChunkingFile;
     static bool            s_interruptFile;
 };
+
+} // namespace inputleap

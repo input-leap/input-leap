@@ -18,6 +18,7 @@
 
 #pragma once
 
+namespace inputleap {
 
 class Event;
 
@@ -32,3 +33,5 @@ public:
     //! Run the job
     virtual void run(const Event&) = 0;
 };
+
+} // namespace inputleap

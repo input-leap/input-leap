@@ -28,6 +28,8 @@
 
 #include <map>
 
+namespace inputleap {
+
 class Event;
 class EventQueueTimer;
 
@@ -170,3 +172,5 @@ private:
 
     IEventQueue* m_events;
 };
+
+} // namespace inputleap

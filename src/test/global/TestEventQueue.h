@@ -19,6 +19,8 @@
 
 #include "base/EventQueue.h"
 
+namespace inputleap {
+
 class EventQueueTimer {};
 
 class TestEventQueue : public EventQueue {
@@ -37,3 +39,5 @@ private:
 private:
     EventQueueTimer* m_quitTimeoutTimer;
 };
+
+} // namespace inputleap

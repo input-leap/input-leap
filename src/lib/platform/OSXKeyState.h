@@ -26,6 +26,8 @@
 #include <set>
 #include <vector>
 
+namespace inputleap {
+
 typedef TISInputSourceRef KeyLayout;
 class IOSXKeyResource;
 
@@ -173,3 +175,5 @@ private:
     bool m_superPressed;
     bool m_capsPressed;
 };
+
+} // namespace inputleap

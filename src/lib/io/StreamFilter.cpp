@@ -20,11 +20,9 @@
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
 
-//
-// StreamFilter
-//
+namespace inputleap {
 
-StreamFilter::StreamFilter(IEventQueue* events, inputleap::IStream* stream, bool adoptStream) :
+StreamFilter::StreamFilter(IEventQueue* events, IStream* stream, bool adoptStream) :
     m_stream(stream),
     m_adopted(adoptStream),
     m_events(events)
@@ -113,3 +111,5 @@ StreamFilter::handleUpstreamEvent(const Event& event, void*)
 {
     filterEvent(event);
 }
+
+} // namespace inputleap

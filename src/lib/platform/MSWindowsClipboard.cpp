@@ -26,9 +26,7 @@
 #include "arch/win32/ArchMiscWindows.h"
 #include "base/Log.h"
 
-//
-// MSWindowsClipboard
-//
+namespace inputleap {
 
 UINT                    MSWindowsClipboard::s_ownershipFormat = 0;
 
@@ -229,3 +227,5 @@ MSWindowsClipboard::getOwnershipFormat()
     // return the format
     return s_ownershipFormat;
 }
+
+} // namespace inputleap

@@ -18,6 +18,8 @@
 
 #include "platform/XWindowsClipboardBMPConverter.h"
 
+namespace inputleap {
+
 // BMP file header structure
 struct CBMPHeader {
 public:
@@ -131,3 +133,5 @@ std::string XWindowsClipboardBMPConverter::toIClipboard(const std::string& bmp) 
         return bmp.substr(14, 40) + bmp.substr(offset, bmp.size() - offset);
     }
 }
+
+} // namespace inputleap

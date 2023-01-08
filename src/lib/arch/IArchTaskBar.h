@@ -18,6 +18,8 @@
 
 #pragma once
 
+namespace inputleap {
+
 class IArchTaskBarReceiver;
 
 //! Interface for architecture dependent task bar control
@@ -61,3 +63,5 @@ public:
 
     virtual void init() = 0;
 };
+
+} // namespace inputleap

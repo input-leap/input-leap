@@ -22,6 +22,8 @@
 
 #include <cstdint>
 
+namespace inputleap {
+
 // protocol version number
 // 1.0:  initial protocol
 // 1.1:  adds KeyCode to key press, release, and repeat
@@ -343,3 +345,5 @@ public:
     */
     std::int32_t m_mx, m_my;
 };
+
+} // namespace inputleap

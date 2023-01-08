@@ -23,6 +23,8 @@
 
 #include <gmock/gmock.h>
 
+namespace inputleap {
+
 class MockConfig : public Config
 {
 public:
@@ -30,3 +32,5 @@ public:
     MOCK_METHOD0(getInputFilter, InputFilter*());
     MOCK_CONST_METHOD1(isScreen, bool(const std::string&));
 };
+
+} // namespace inputleap

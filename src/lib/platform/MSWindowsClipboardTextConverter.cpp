@@ -20,9 +20,7 @@
 
 #include "base/Unicode.h"
 
-//
-// MSWindowsClipboardTextConverter
-//
+namespace inputleap {
 
 MSWindowsClipboardTextConverter::MSWindowsClipboardTextConverter()
 {
@@ -56,3 +54,5 @@ std::string MSWindowsClipboardTextConverter::doToIClipboard(const std::string& d
     }
     return dst;
 }
+
+} // namespace inputleap

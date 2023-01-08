@@ -20,6 +20,8 @@
 
 #include "platform/MSWindowsClipboardAnyTextConverter.h"
 
+namespace inputleap {
+
 //! Convert to/from HTML encoding
 class MSWindowsClipboardHTMLConverter :
                 public MSWindowsClipboardAnyTextConverter {
@@ -42,3 +44,5 @@ private:
 private:
     UINT m_format;
 };
+
+} // namespace inputleap

@@ -29,6 +29,8 @@
 #define CLOG (Log::getInstance())
 #define BYE "\nTry `%s --help' for more information."
 
+namespace inputleap {
+
 class ILogOutputter;
 class Thread;
 
@@ -209,3 +211,5 @@ otherwise it expands to a call that doesn't.
 #define CLOG_DEBUG3        CLOG_TRACE "%z\070"
 #define CLOG_DEBUG4        CLOG_TRACE "%z\071" // char is '9'
 #define CLOG_DEBUG5        CLOG_TRACE "%z\072" // char is ':'
+
+} // namespace inputleap

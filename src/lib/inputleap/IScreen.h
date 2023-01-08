@@ -22,6 +22,8 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 
+namespace inputleap {
+
 class IClipboard;
 
 //! Screen interface
@@ -70,3 +72,5 @@ public:
 
     //@}
 };
+
+} // namespace inputleap

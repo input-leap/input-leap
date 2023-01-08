@@ -27,9 +27,7 @@
 #include <cstring>
 #include <memory>
 
-//
-// ClientProxy1_4
-//
+namespace inputleap {
 
 ClientProxy1_4::ClientProxy1_4(const std::string& name, inputleap::IStream* stream, Server* server,
                                IEventQueue* events) :
@@ -65,3 +63,5 @@ ClientProxy1_4::keepAlive()
 {
     ClientProxy1_3::keepAlive();
 }
+
+} // namespace inputleap

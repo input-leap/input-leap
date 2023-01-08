@@ -22,6 +22,8 @@
 #include <cstdint>
 #include <map>
 
+namespace inputleap {
+
 class EventData {
 public:
     EventData() { }
@@ -124,3 +126,5 @@ private:
     Flags m_flags;
     EventData* m_dataObject;
 };
+
+} // namespace inputleap

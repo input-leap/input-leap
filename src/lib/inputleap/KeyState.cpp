@@ -24,6 +24,8 @@
 #include <iterator>
 #include <list>
 
+namespace inputleap {
+
 static const KeyButton kButtonMask = static_cast<KeyButton>(IKeyState::kNumButtons - 1);
 
 static const KeyID s_decomposeTable[] = {
@@ -926,3 +928,5 @@ KeyState::AddActiveModifierContext::AddActiveModifierContext(std::int32_t group,
 {
     // do nothing
 }
+
+} // namespace inputleap

@@ -21,9 +21,7 @@
 
 #include <string.h>
 
-//
-// ArchLogWindows
-//
+namespace inputleap {
 
 ArchLogWindows::ArchLogWindows() : m_eventLog(nullptr)
 {
@@ -93,3 +91,5 @@ ArchLogWindows::writeLog(ELevel level, const char* msg)
                     const_cast<char*>(msg)); // raw data
     }
 }
+
+} // namespace inputleap

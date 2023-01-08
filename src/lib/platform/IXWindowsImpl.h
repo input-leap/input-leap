@@ -15,6 +15,8 @@
 #include <X11/XKBlib.h>
 #include <X11/extensions/XInput2.h>
 
+namespace inputleap {
+
 class IXWindowsImpl {
 public:
 
@@ -211,3 +213,5 @@ public:
                                              KeyCode keycode) = 0;
     virtual int XNextEvent(Display* display, XEvent* event_return) = 0;
 };
+
+} // namespace inputleap

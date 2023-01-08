@@ -18,12 +18,14 @@
 
 #pragma once
 
+namespace inputleap {
+
 typedef int (*StartupFunc)(int, char**);
 
 class ILogOutputter;
 class ArgsBase;
 class IArchTaskBarReceiver;
-namespace inputleap { class Screen; }
+class Screen;
 class IEventQueue;
 
 class IApp {
@@ -44,3 +46,5 @@ public:
     virtual inputleap::Screen* createScreen() = 0;
     virtual IEventQueue* getEvents() const = 0;
 };
+
+} // namespace inputleap

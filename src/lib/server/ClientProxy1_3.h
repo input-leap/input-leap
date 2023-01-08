@@ -20,10 +20,12 @@
 
 #include "server/ClientProxy1_2.h"
 
+namespace inputleap {
+
 //! Proxy for client implementing protocol version 1.3
 class ClientProxy1_3 : public ClientProxy1_2 {
 public:
-    ClientProxy1_3(const std::string& name, inputleap::IStream* adoptedStream, IEventQueue* events);
+    ClientProxy1_3(const std::string& name, IStream* adoptedStream, IEventQueue* events);
     ~ClientProxy1_3() override;
 
     // IClient overrides
@@ -46,3 +48,5 @@ private:
     EventQueueTimer* m_keepAliveTimer;
     IEventQueue* m_events;
 };
+
+} // namespace inputleap

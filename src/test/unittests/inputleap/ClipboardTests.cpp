@@ -20,6 +20,8 @@
 
 #include <gtest/gtest.h>
 
+namespace inputleap {
+
 TEST(ClipboardTests, empty_openCalled_returnsTrue)
 {
     Clipboard clipboard;
@@ -402,3 +404,5 @@ TEST(ClipboardTests, copy_withSingleText_clipboardsAreEqual)
     std::string actual = clipboard2.get(Clipboard::kText);
     EXPECT_EQ("barrier rocks!", actual);
 }
+
+} // namespace inputleap

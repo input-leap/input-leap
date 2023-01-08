@@ -20,6 +20,8 @@
 #include "arch/win32/ArchNetworkWinsock.h"
 #include "base/String.h"
 
+namespace inputleap {
+
 std::string error_code_to_string_windows(DWORD err)
 {
     char* cmsg;
@@ -107,3 +109,5 @@ std::string error_code_to_string_winsock(int err)
     }
     return "Unknown error";
 }
+
+} // namespace inputleap

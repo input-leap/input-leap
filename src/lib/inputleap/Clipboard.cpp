@@ -19,9 +19,7 @@
 #include "inputleap/Clipboard.h"
 #include <cassert>
 
-//
-// Clipboard
-//
+namespace inputleap {
 
 Clipboard::Clipboard() :
     m_open(false),
@@ -115,3 +113,5 @@ std::string Clipboard::marshall() const
 {
     return IClipboard::marshall(this);
 }
+
+} // namespace inputleap

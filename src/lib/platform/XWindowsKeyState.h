@@ -30,6 +30,8 @@
 #include <map>
 #include <vector>
 
+namespace inputleap {
+
 class IEventQueue;
 
 //! X Windows key state
@@ -165,3 +167,5 @@ public:
     KeyModifierMaskList& modifierFromX() { return m_modifierFromX; }
 #endif
 };
+
+} // namespace inputleap

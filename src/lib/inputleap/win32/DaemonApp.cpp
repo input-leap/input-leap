@@ -50,6 +50,8 @@
 #include <iostream>
 #include <sstream>
 
+namespace inputleap {
+
 using namespace std;
 
 DaemonApp* DaemonApp::s_instance = nullptr;
@@ -361,3 +363,5 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
             break;
     }
 }
+
+} // namespace inputleap

@@ -3,6 +3,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+namespace inputleap {
+
 class WindowsHookResource
 {
 public:
@@ -18,3 +20,5 @@ public:
 private:
     HHOOK _hook;
 };
+
+} // namespace inputleap

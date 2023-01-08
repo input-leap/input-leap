@@ -20,7 +20,9 @@
 
 #include "inputleap/IClient.h"
 
-namespace inputleap { class IStream; }
+namespace inputleap {
+
+class IStream;
 
 //! Generic proxy for client or primary
 class BaseClientProxy : public IClient {
@@ -68,3 +70,5 @@ private:
     std::string m_name;
     std::int32_t m_x, m_y;
 };
+
+} // namespace inputleap

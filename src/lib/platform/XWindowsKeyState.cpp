@@ -32,6 +32,7 @@
 #include <cstddef>
 #include <map>
 
+namespace inputleap {
 
 static const size_t ModifiersFromXDefaultSize = 32;
 
@@ -854,3 +855,5 @@ std::uint32_t XWindowsKeyState::getGroupFromState(unsigned int state) const
     }
     return 0;
 }
+
+} // namespace inputleap

@@ -26,9 +26,7 @@
 #include <unistd.h>
 #include <poll.h>
 
-//
-// EventQueueTimer
-//
+namespace inputleap {
 
 class EventQueueTimer { };
 
@@ -241,3 +239,5 @@ XWindowsEventQueueBuffer::flush()
     m_impl->XFlush(m_display);
     m_postedEvents.clear();
 }
+
+} // namespace inputleap

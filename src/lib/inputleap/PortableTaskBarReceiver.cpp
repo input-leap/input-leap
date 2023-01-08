@@ -22,9 +22,7 @@
 #include "arch/Arch.h"
 #include "common/Version.h"
 
-//
-// PortableTaskBarReceiver
-//
+namespace inputleap {
 
 PortableTaskBarReceiver::PortableTaskBarReceiver(IEventQueue* events) :
     m_state(kNotRunning),
@@ -116,3 +114,5 @@ PortableTaskBarReceiver::getToolTip() const
         return "";
     }
 }
+
+} // namespace inputleap

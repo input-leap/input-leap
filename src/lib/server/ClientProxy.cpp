@@ -23,11 +23,9 @@
 #include "base/Log.h"
 #include "base/EventQueue.h"
 
-//
-// ClientProxy
-//
+namespace inputleap {
 
-ClientProxy::ClientProxy(const std::string& name, inputleap::IStream* stream) :
+ClientProxy::ClientProxy(const std::string& name, IStream* stream) :
     BaseClientProxy(name),
     m_stream(stream)
 {
@@ -59,3 +57,5 @@ ClientProxy::getEventTarget() const
 {
     return static_cast<IScreen*>(const_cast<ClientProxy*>(this));
 }
+
+} // namespace inputleap

@@ -20,6 +20,8 @@
 
 #include "base/ILogOutputter.h"
 
+namespace inputleap {
+
 //! Write log to debugger
 /*!
 This outputter writes output to the debugger. In Visual Studio, this
@@ -37,3 +39,5 @@ public:
     virtual bool write(ELevel level, const char* message);
     virtual void flush();
 };
+
+} // namespace inputleap

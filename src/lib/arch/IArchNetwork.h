@@ -20,6 +20,8 @@
 
 #include <string>
 
+namespace inputleap {
+
 class ArchThreadImpl;
 typedef ArchThreadImpl* ArchThread;
 
@@ -282,3 +284,5 @@ public:
 
     virtual void init() = 0;
 };
+
+} // namespace inputleap

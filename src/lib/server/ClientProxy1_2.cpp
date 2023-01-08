@@ -21,9 +21,7 @@
 #include "inputleap/ProtocolUtil.h"
 #include "base/Log.h"
 
-//
-// ClientProxy1_1
-//
+namespace inputleap {
 
 ClientProxy1_2::ClientProxy1_2(const std::string& name, inputleap::IStream* stream,
                                IEventQueue* events) :
@@ -42,3 +40,5 @@ void ClientProxy1_2::mouseRelativeMove(std::int32_t xRel, std::int32_t yRel)
     LOG((CLOG_DEBUG2 "send mouse relative move to \"%s\" %d,%d", getName().c_str(), xRel, yRel));
     ProtocolUtil::writef(getStream(), kMsgDMouseRelMove, xRel, yRel);
 }
+
+} // namespace inputleap

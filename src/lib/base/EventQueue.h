@@ -32,6 +32,8 @@
 #include <queue>
 #include <set>
 
+namespace inputleap {
+
 //! Event queue
 /*!
 An event queue that implements the platform independent parts and
@@ -191,3 +193,5 @@ EventQueue::for##type_() {                                                \
     }                                                                        \
     return *m_typesFor##type_;                                                \
 }
+
+} // namespace inputleap

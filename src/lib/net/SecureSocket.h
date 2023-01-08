@@ -23,6 +23,8 @@
 #include "io/filesystem.h"
 #include <mutex>
 
+namespace inputleap {
+
 class IEventQueue;
 class SocketMultiplexer;
 class ISocketMultiplexerJob;
@@ -110,3 +112,5 @@ private:
     std::unique_ptr<char[]> do_write_retry_buffer_;
     std::size_t do_write_retry_buffer_size_ = 0;
 };
+
+} // namespace inputleap

@@ -20,6 +20,8 @@
 
 #include "base/Unicode.h"
 
+namespace inputleap {
+
 OSXClipboardHTMLConverter::OSXClipboardHTMLConverter()
 {
     // do nothing
@@ -88,3 +90,5 @@ std::string OSXClipboardHTMLConverter::doToIClipboard(const std::string& data) c
     return convertString(data, CFStringGetSystemEncoding(),
                 kCFStringEncodingUTF8);
 }
+
+} // namespace inputleap

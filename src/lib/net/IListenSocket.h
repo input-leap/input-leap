@@ -22,6 +22,8 @@
 #include "base/EventTypes.h"
 #include <memory>
 
+namespace inputleap {
+
 class IDataSocket;
 
 //! Listen socket interface
@@ -39,3 +41,5 @@ public:
     */
     virtual std::unique_ptr<IDataSocket> accept() = 0;
 };
+
+} // namespace inputleap

@@ -25,6 +25,8 @@
 #include "MockEventQueue.h"
 #include "MockKeyMap.h"
 
+namespace inputleap {
+
 // NOTE: do not mock methods that are not pure virtual. this mock exists only
 // to provide an implementation of the KeyState abstract class.
 class MockKeyState : public KeyState
@@ -55,3 +57,5 @@ typedef std::uint32_t KeyID;
 
 typedef void (*ForeachKeyCallback)(KeyID, std::int32_t group, inputleap::KeyMap::KeyItem&,
                                    void* userData);
+
+} // namespace inputleap

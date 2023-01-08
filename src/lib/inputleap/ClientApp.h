@@ -21,7 +21,9 @@
 #include "inputleap/App.h"
 #include "ClientArgs.h"
 
-namespace inputleap { class Screen; }
+namespace inputleap {
+
+class Screen;
 class Event;
 class Client;
 class NetworkAddress;
@@ -81,3 +83,5 @@ private:
     inputleap::Screen* m_clientScreen;
     NetworkAddress* m_serverAddress;
 };
+
+} // namespace inputleap

@@ -26,11 +26,9 @@
 
 #include <cstdlib>
 
-using namespace inputleap::string;
+namespace inputleap {
 
-//
-// Config
-//
+using namespace inputleap::string;
 
 Config::Config(IEventQueue* events) :
 	m_inputFilter(events),
@@ -2281,3 +2279,5 @@ std::string XConfigRead::getWhat() const noexcept
 {
 	return format("XConfigRead", "read error: %{1}", m_error.c_str());
 }
+
+} // namespace inputleap

@@ -20,6 +20,8 @@
 
 #include "server/ClientProxy1_1.h"
 
+namespace inputleap {
+
 class IEventQueue;
 
 //! Proxy for client implementing protocol version 1.2
@@ -31,3 +33,5 @@ public:
     // IClient overrides
     void mouseRelativeMove(std::int32_t xRel, std::int32_t yRel) override;
 };
+
+} // namespace inputleap

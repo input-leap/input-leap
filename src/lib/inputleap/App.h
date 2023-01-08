@@ -32,11 +32,13 @@
 #include "inputleap/unix/AppUtilUnix.h"
 #endif
 
+namespace inputleap {
+
 class IArchTaskBarReceiver;
 class BufferedLogOutputter;
 class ILogOutputter;
 class FileLogOutputter;
-namespace inputleap { class Screen; }
+class Screen;
 class IEventQueue;
 class SocketMultiplexer;
 
@@ -200,3 +202,5 @@ private:
     "      --exit-pause         wait for key press on exit, can be useful for\n" \
     "                             reading error messages that occur on exit.\n"
 #endif
+
+} // namespace inputleap

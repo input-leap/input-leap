@@ -19,6 +19,8 @@
 
 #include "inputleap/ArgsBase.h"
 
+namespace inputleap {
+
 class NetworkAddress;
 
 class ClientArgs : public ArgsBase {
@@ -28,3 +30,5 @@ public:
 public:
     int m_yscroll;
 };
+
+} // namespace inputleap

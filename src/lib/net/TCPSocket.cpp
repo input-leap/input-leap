@@ -32,6 +32,8 @@
 #include <cstdlib>
 #include <memory>
 
+namespace inputleap {
+
 static const std::size_t MAX_INPUT_BUFFER_SIZE = 1024 * 1024;
 
 TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family) :
@@ -607,3 +609,5 @@ MultiplexerJobStatus TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
         return {true, {}};
     }
 }
+
+} // namespace inputleap

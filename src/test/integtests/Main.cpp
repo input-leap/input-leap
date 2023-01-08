@@ -40,13 +40,13 @@ main(int argc, char **argv)
 {
 #if SYSAPI_WIN32
     // record window instance for tray icon, etc
-    ArchMiscWindows::setInstanceWin32(GetModuleHandle(nullptr));
+    inputleap::ArchMiscWindows::setInstanceWin32(GetModuleHandle(nullptr));
 #endif
 
-    Arch arch;
+    inputleap::Arch arch;
     arch.init();
 
-    Log log;
+    inputleap::Log log;
     log.setFilter(kDEBUG2);
 
     string lockFile;

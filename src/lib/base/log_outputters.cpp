@@ -23,13 +23,11 @@
 #include <fstream>
 #include <iostream>
 
+namespace inputleap {
+
 enum EFileLogOutputter {
     kFileSizeLimit = 1024 // kb
 };
-
-//
-// StopLogOutputter
-//
 
 StopLogOutputter::StopLogOutputter()
 {
@@ -341,3 +339,5 @@ MesssageBoxLogOutputter::write(ELevel level, const char* msg)
 
     return true;
 }
+
+} // namespace inputleap

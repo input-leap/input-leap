@@ -20,9 +20,7 @@
 
 #include "base/Unicode.h"
 
-//
-// XWindowsClipboardUCS2Converter
-//
+namespace inputleap {
 
 XWindowsClipboardUCS2Converter::XWindowsClipboardUCS2Converter(
                 Display* display, const char* name) :
@@ -63,3 +61,5 @@ std::string XWindowsClipboardUCS2Converter::toIClipboard(const std::string& data
 {
     return Unicode::UCS2ToUTF8(data);
 }
+
+} // namespace inputleap

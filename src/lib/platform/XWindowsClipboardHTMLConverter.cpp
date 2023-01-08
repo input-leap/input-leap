@@ -20,9 +20,7 @@
 
 #include "base/Unicode.h"
 
-//
-// XWindowsClipboardHTMLConverter
-//
+namespace inputleap {
 
 XWindowsClipboardHTMLConverter::XWindowsClipboardHTMLConverter(
                 Display* display, const char* name) :
@@ -70,3 +68,5 @@ std::string XWindowsClipboardHTMLConverter::toIClipboard(const std::string& data
     }
     return data;
 }
+
+} // namespace inputleap

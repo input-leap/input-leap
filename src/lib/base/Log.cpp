@@ -27,6 +27,8 @@
 #include <iostream>
 #include <ctime>
 
+namespace inputleap {
+
 // names of priorities
 static const char*        g_priority[] = {
     "FATAL",
@@ -302,3 +304,5 @@ Log::output(ELevel priority, char* msg)
         }
     }
 }
+
+} // namespace inputleap

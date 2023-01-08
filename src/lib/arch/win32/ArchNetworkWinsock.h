@@ -39,6 +39,8 @@
 
 #define ARCH_NETWORK ArchNetworkWinsock
 
+namespace inputleap {
+
 class ArchSocketImpl {
 public:
     SOCKET m_socket;
@@ -111,3 +113,5 @@ private:
     std::mutex mutex_;
     EventList m_unblockEvents;
 };
+
+} // namespace inputleap

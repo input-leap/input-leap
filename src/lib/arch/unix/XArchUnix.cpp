@@ -20,8 +20,12 @@
 
 #include <cstring>
 
+namespace inputleap {
+
 std::string error_code_to_string_errno(int err)
 {
     // FIXME -- not thread safe
     return std::strerror(err);
 }
+
+} // namespace inputleap

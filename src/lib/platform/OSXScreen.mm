@@ -43,6 +43,8 @@
 #include <IOKit/hidsystem/event_status_driver.h>
 #include <AppKit/NSEvent.h>
 
+namespace inputleap {
+
 // This isn't in any Apple SDK that I know of as of yet.
 enum {
 	kBarrierEventMouseScroll = 11,
@@ -2100,3 +2102,5 @@ avoidHesitatingCursor()
 }
 
 #pragma GCC diagnostic error "-Wdeprecated-declarations"
+
+} // namespace inputleap

@@ -20,6 +20,8 @@
 #include "inputleap/App.h"
 #include "inputleap/ArgsBase.h"
 
+namespace inputleap {
+
 PlatformScreen::PlatformScreen(IEventQueue* events) :
     IPlatformScreen(events),
     m_draggingStarted(false),
@@ -119,3 +121,5 @@ PlatformScreen::isDraggingStarted()
     }
     return false;
 }
+
+} // namespace inputleap

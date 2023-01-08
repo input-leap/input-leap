@@ -38,6 +38,8 @@
 #include <cstdlib>
 #include <algorithm>
 
+namespace inputleap {
+
 static int xi_opcode;
 
 //
@@ -2035,3 +2037,5 @@ XWindowsScreen::selectXIRawMotion()
     m_impl->XISelectEvents(m_display, DefaultRootWindow(m_display), &mask, 1);
 	free(mask.mask);
 }
+
+} // namespace inputleap

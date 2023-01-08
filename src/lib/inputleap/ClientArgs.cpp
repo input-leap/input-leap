@@ -17,7 +17,11 @@
 
 #include "inputleap/ClientArgs.h"
 
+namespace inputleap {
+
 ClientArgs::ClientArgs() :
     m_yscroll(0)
 {
 }
+
+} // namespace inputleap

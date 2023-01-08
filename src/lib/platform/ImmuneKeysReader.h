@@ -23,8 +23,12 @@
 // let's not import all of Windows just to get this typedef
 typedef unsigned long DWORD;
 
+namespace inputleap {
+
 class ImmuneKeysReader
 {
 public:
     static bool get_list(const char * const path, std::vector<DWORD> &keys, std::string &badLine);
 };
+
+} // namespace inputleap

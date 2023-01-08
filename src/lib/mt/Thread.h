@@ -21,6 +21,8 @@
 #include "arch/IArchMultithread.h"
 #include <functional>
 
+namespace inputleap {
+
 //! Thread handle
 /*!
 Creating a Thread creates a new context of execution (i.e. thread) that
@@ -195,3 +197,5 @@ private:
 private:
     ArchThread m_thread;
 };
+
+} // namespace inputleap

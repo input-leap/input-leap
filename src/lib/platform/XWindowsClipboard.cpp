@@ -36,9 +36,7 @@
 #include <cstring>
 #include <vector>
 
-//
-// XWindowsClipboard
-//
+namespace inputleap {
 
 XWindowsClipboard::XWindowsClipboard(IXWindowsImpl* impl, Display* display,
                 Window window, ClipboardID id) :
@@ -1529,3 +1527,5 @@ XWindowsClipboard::Reply::Reply(Window requestor, Atom target, ::Time time,
 {
     // do nothing
 }
+
+} // namespace inputleap

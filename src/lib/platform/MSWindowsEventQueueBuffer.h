@@ -23,6 +23,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+namespace inputleap {
+
 class IEventQueue;
 
 //! Event queue buffer for Win32
@@ -48,3 +50,5 @@ private:
     IEventQueue* m_events;
     UINT m_os_supported_message_types;
 };
+
+} // namespace inputleap

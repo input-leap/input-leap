@@ -19,6 +19,8 @@
 
 #include "server/ClientProxy1_5.h"
 
+namespace inputleap {
+
 class Server;
 class IEventQueue;
 
@@ -38,3 +40,5 @@ private:
 private:
     IEventQueue* m_events;
 };
+
+} // namespace inputleap

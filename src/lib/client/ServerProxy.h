@@ -22,11 +22,13 @@
 #include "inputleap/key_types.h"
 #include "base/Event.h"
 
+namespace inputleap {
+
 class Client;
 class ClientInfo;
 class EventQueueTimer;
 class IClipboard;
-namespace inputleap { class IStream; }
+class IStream;
 class IEventQueue;
 
 //! Proxy for server
@@ -129,3 +131,5 @@ private:
     MessageParser m_parser;
     IEventQueue* m_events;
 };
+
+} // namespace inputleap

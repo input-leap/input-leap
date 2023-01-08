@@ -23,6 +23,8 @@
 
 #include <mutex>
 
+namespace inputleap {
+
 class IEventQueue;
 
 //! Packetizing stream filter
@@ -60,3 +62,5 @@ private:
     bool m_inputShutdown;
     IEventQueue* m_events;
 };
+
+} // namespace inputleap

@@ -35,9 +35,7 @@
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
 
-//
-// ClientProxyUnknown
-//
+namespace inputleap {
 
 ClientProxyUnknown::ClientProxyUnknown(inputleap::IStream* stream, double timeout, Server* server, IEventQueue* events) :
     m_stream(stream),
@@ -300,3 +298,5 @@ ClientProxyUnknown::handleReady(const Event&, void*)
 {
     sendSuccess();
 }
+
+} // namespace inputleap

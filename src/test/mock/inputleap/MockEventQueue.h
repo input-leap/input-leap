@@ -22,6 +22,8 @@
 
 #include <gmock/gmock.h>
 
+namespace inputleap {
+
 class MockEventQueue : public IEventQueue
 {
 public:
@@ -65,3 +67,5 @@ public:
     MOCK_METHOD0(forFile, FileEvents&());
     MOCK_CONST_METHOD0(waitForReady, void());
 };
+
+} // namespace inputleap

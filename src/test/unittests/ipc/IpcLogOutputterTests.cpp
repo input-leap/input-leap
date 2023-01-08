@@ -30,6 +30,8 @@
 // HACK: ipc logging only used on windows anyway
 #if WINAPI_MSWINDOWS
 
+namespace inputleap {
+
 using ::testing::_;
 using ::testing::Return;
 using ::testing::AtLeast;
@@ -154,5 +156,7 @@ TEST(IpcLogOutputterTests, write_underBufferRateLimit_allLinesAreSent)
     outputter.write(kNOTE, "mock 4");
     outputter.sendBuffer();
 }
+
+} // namespace inputleap
 
 #endif // WINAPI_MSWINDOWS

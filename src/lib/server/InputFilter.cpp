@@ -27,6 +27,8 @@
 #include <cstdlib>
 #include <cstring>
 
+namespace inputleap {
+
 // -----------------------------------------------------------------------------
 // Input Filter Condition Classes
 // -----------------------------------------------------------------------------
@@ -1091,3 +1093,5 @@ InputFilter::handleEvent(const Event& event, void*)
     // not handled so pass through
     m_events->addEvent(myEvent);
 }
+
+} // namespace inputleap

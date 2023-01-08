@@ -20,6 +20,8 @@
 
 #include "io/filesystem.h"
 
+namespace inputleap {
+
 class ArgsBase {
 public:
     ArgsBase();
@@ -50,3 +52,5 @@ public:
     inputleap::fs::path m_profileDirectory;
     inputleap::fs::path m_pluginDirectory;
 };
+
+} // namespace inputleap

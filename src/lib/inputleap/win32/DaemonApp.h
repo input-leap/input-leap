@@ -23,6 +23,8 @@
 
 #include <string>
 
+namespace inputleap {
+
 class Event;
 class IpcLogOutputter;
 class FileLogOutputter;
@@ -56,3 +58,5 @@ private:
 };
 
 #define LOG_FILENAME "barrierd.log"
+
+} // namespace inputleap

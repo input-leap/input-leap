@@ -26,12 +26,9 @@
 #include <cstring>
 #include <memory>
 
-//
-// ClientProxy1_3
-//
+namespace inputleap {
 
-ClientProxy1_3::ClientProxy1_3(const std::string& name, inputleap::IStream* stream,
-                               IEventQueue* events) :
+ClientProxy1_3::ClientProxy1_3(const std::string& name, IStream* stream, IEventQueue* events) :
     ClientProxy1_2(name, stream, events),
     m_keepAliveRate(kKeepAliveRate),
     m_keepAliveTimer(nullptr),
@@ -126,3 +123,5 @@ ClientProxy1_3::keepAlive()
 {
     ProtocolUtil::writef(getStream(), kMsgCKeepAlive);
 }
+
+} // namespace inputleap

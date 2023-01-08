@@ -29,6 +29,8 @@
 
 #include <map>
 
+namespace inputleap {
+
 enum EServerState {
     kUninitialized,
     kInitializing,
@@ -39,7 +41,7 @@ enum EServerState {
 };
 
 class Server;
-namespace inputleap { class Screen; }
+class Screen;
 class ClientListener;
 class EventQueueTimer;
 class ILogOutputter;
@@ -124,3 +126,5 @@ private:
 #define USR_CONFIG_NAME ".barrier.conf"
 #define SYS_CONFIG_NAME "barrier.conf"
 #endif
+
+} // namespace inputleap

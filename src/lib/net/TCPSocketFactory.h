@@ -21,6 +21,8 @@
 #include "net/ISocketFactory.h"
 #include "arch/IArchNetwork.h"
 
+namespace inputleap {
+
 class IEventQueue;
 class SocketMultiplexer;
 
@@ -41,3 +43,5 @@ private:
     IEventQueue* m_events;
     SocketMultiplexer* m_socketMultiplexer;
 };
+
+} // namespace inputleap

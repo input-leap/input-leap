@@ -19,9 +19,7 @@
 
 #include <Carbon/Carbon.h>
 
-//
-// OSXUchrKeyResource
-//
+namespace inputleap {
 
 OSXUchrKeyResource::OSXUchrKeyResource(const void* resource, std::uint32_t keyboardType) :
     m_m(nullptr),
@@ -285,3 +283,5 @@ OSXUchrKeyResource::addSequence(
 
     return true;
 }
+
+} // namespace inputleap

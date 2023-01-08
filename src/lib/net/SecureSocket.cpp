@@ -38,9 +38,7 @@
 #include <fstream>
 #include <memory>
 
-//
-// SecureSocket
-//
+namespace inputleap {
 
 #define MAX_ERROR_SIZE 65535
 
@@ -885,3 +883,5 @@ SecureSocket::handleTCPConnected(const Event& event, void*)
     }
     secureConnect();
 }
+
+} // namespace inputleap

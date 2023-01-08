@@ -21,6 +21,8 @@
 #include "inputleap/IKeyState.h"
 #include "inputleap/KeyMap.h"
 
+namespace inputleap {
+
 //! Core key state
 /*!
 This class provides key state services.  Subclasses must implement a few
@@ -221,3 +223,5 @@ private:
 
     IEventQueue* m_events;
 };
+
+} // namespace inputleap

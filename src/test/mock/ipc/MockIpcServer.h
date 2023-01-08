@@ -26,6 +26,8 @@
 #include <condition_variable>
 #include <mutex>
 
+namespace inputleap {
+
 using ::testing::_;
 using ::testing::Invoke;
 
@@ -60,3 +62,5 @@ private:
     std::condition_variable send_cv_;
     std::mutex send_mutex_;
 };
+
+} // namespace inputleap

@@ -25,6 +25,8 @@
 
 #include <malloc.h>
 
+namespace inputleap {
+
 static const int s_family[] = {
     PF_UNSPEC,
     PF_INET,
@@ -976,3 +978,5 @@ ArchNetworkWinsock::throwNameError(int err)
         throw XArchNetworkName(error_code_to_string_winsock(err));
     }
 }
+
+} // namespace inputleap

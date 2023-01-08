@@ -34,11 +34,13 @@
 #include <set>
 #include <vector>
 
+namespace inputleap {
+
 class BaseClientProxy;
 class EventQueueTimer;
 class PrimaryClient;
 class InputFilter;
-namespace inputleap { class Screen; }
+class Screen;
 class IEventQueue;
 class Thread;
 class ClientListener;
@@ -478,3 +480,5 @@ private:
     ClientListener* m_clientListener;
     ServerArgs m_args;
 };
+
+} // namespace inputleap

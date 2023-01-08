@@ -19,6 +19,8 @@
 #include "ipc/IpcMessage.h"
 #include "ipc/Ipc.h"
 
+namespace inputleap {
+
 IpcMessage::IpcMessage(std::uint8_t type) :
     m_type(type)
 {
@@ -67,3 +69,5 @@ IpcCommandMessage::IpcCommandMessage(const std::string& command, bool elevate) :
 IpcCommandMessage::~IpcCommandMessage()
 {
 }
+
+} // namespace inputleap

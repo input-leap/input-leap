@@ -21,6 +21,8 @@
 
 #include <gtest/gtest.h>
 
+namespace inputleap {
+
 using ::testing::_;
 using ::testing::Invoke;
 using ::testing::NiceMock;
@@ -64,3 +66,5 @@ TEST(ServerArgsParsingTests, parseServerArgs_configArg_setConfigFile)
 
     EXPECT_EQ("mock_configFile", serverArgs.m_configFile);
 }
+
+} // namespace inputleap

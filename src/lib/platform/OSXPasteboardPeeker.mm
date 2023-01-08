@@ -18,6 +18,8 @@
 #import <CoreData/CoreData.h>
 #import <Cocoa/Cocoa.h>
 
+namespace inputleap {
+
 CFStringRef
 getDraggedFileURL()
 {
@@ -35,3 +37,5 @@ getDraggedFileURL()
 	
 	return (CFStringRef)string;
 }
+
+} // namespace inputleap

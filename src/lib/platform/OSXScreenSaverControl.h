@@ -51,4 +51,3 @@
 - (double)screenSaverTimeRemaining;
 
 @end
-

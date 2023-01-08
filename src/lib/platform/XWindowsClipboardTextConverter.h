@@ -20,6 +20,8 @@
 
 #include "platform/XWindowsClipboard.h"
 
+namespace inputleap {
+
 //! Convert to/from locale text encoding
 class XWindowsClipboardTextConverter : public IXWindowsClipboardConverter {
 public:
@@ -39,3 +41,5 @@ public:
 private:
     Atom m_atom;
 };
+
+} // namespace inputleap

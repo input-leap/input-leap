@@ -24,6 +24,8 @@
 #include "base/EventTypes.h"
 #include <set>
 
+namespace inputleap {
+
 //! Key state interface
 /*!
 This interface provides access to set and query the keyboard state and
@@ -172,3 +174,5 @@ public:
 
     //@}
 };
+
+} // namespace inputleap

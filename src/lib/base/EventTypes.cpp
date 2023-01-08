@@ -21,6 +21,8 @@
 #include <assert.h>
 #include <stddef.h>
 
+namespace inputleap {
+
 EventTypes::EventTypes() :
     m_events(nullptr)
 {
@@ -203,3 +205,5 @@ REGISTER_EVENT(Clipboard, clipboardSending)
 REGISTER_EVENT(File, fileChunkSending)
 REGISTER_EVENT(File, fileReceiveCompleted)
 REGISTER_EVENT(File, keepAlive)
+
+} // namespace inputleap

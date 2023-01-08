@@ -24,6 +24,8 @@
 
 #include <mutex>
 
+namespace inputleap {
+
 class IEventQueue;
 class SocketMultiplexer;
 
@@ -56,3 +58,5 @@ protected:
     IEventQueue* m_events;
     SocketMultiplexer* m_socketMultiplexer;
 };
+
+} // namespace inputleap

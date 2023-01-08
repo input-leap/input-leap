@@ -18,9 +18,7 @@
 
 #include "server/BaseClientProxy.h"
 
-//
-// BaseClientProxy
-//
+namespace inputleap {
 
 BaseClientProxy::BaseClientProxy(const std::string& name) :
     m_name(name),
@@ -51,3 +49,5 @@ std::string BaseClientProxy::getName() const
 {
     return m_name;
 }
+
+} // namespace inputleap

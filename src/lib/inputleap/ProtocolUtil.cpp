@@ -26,9 +26,7 @@
 #include <cstring>
 #include <vector>
 
-//
-// ProtocolUtil
-//
+namespace inputleap {
 
 void
 ProtocolUtil::writef(inputleap::IStream* stream, const char* fmt, ...)
@@ -566,3 +564,5 @@ std::string XIOReadMismatch::getWhat() const noexcept
 {
     return format("XIOReadMismatch", "ProtocolUtil::readf() mismatch");
 }
+
+} // namespace inputleap

@@ -24,6 +24,8 @@
 #include "base/String.h"
 #include <cstring>
 
+namespace inputleap {
+
 size_t ClipboardChunk::s_expectedSize = 0;
 
 ClipboardChunk::ClipboardChunk(size_t size) :
@@ -145,3 +147,5 @@ ClipboardChunk::send(inputleap::IStream* stream, void* data)
 
     ProtocolUtil::writef(stream, kMsgDClipboard, id, sequence, mark, &dataChunk);
 }
+
+} // namespace inputleap

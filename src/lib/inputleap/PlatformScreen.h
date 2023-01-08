@@ -22,6 +22,8 @@
 #include "inputleap/DragInformation.h"
 #include <stdexcept>
 
+namespace inputleap {
+
 //! Base screen implementation
 /*!
 This screen implementation is the superclass of all other screen
@@ -84,3 +86,5 @@ protected:
     bool m_draggingStarted;
     bool m_fakeDraggingStarted;
 };
+
+} // namespace inputleap

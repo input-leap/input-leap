@@ -25,9 +25,7 @@
 #include <sstream>
 #include <vector>
 
-//
-// ArchDaemonWindows
-//
+namespace inputleap {
 
 ArchDaemonWindows*        ArchDaemonWindows::s_daemon = nullptr;
 
@@ -682,3 +680,5 @@ ArchDaemonWindows::uninstallDaemon()
         uninstallDaemon(DEFAULT_DAEMON_NAME);
     }
 }
+
+} // namespace inputleap

@@ -22,6 +22,8 @@
 
 #define ARCH_LOG ArchLogUnix
 
+namespace inputleap {
+
 //! Unix implementation of IArchLog
 class ArchLogUnix : public IArchLog {
 public:
@@ -34,3 +36,5 @@ public:
     void showLog(bool) override;
     void writeLog(ELevel, const char*) override;
 };
+
+} // namespace inputleap

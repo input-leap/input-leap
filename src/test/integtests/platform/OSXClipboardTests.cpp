@@ -21,6 +21,8 @@
 #include <gtest/gtest.h>
 #include <iostream>
 
+namespace inputleap {
+
 TEST(OSXClipboardTests, empty_openCalled_returnsTrue)
 {
     OSXClipboard clipboard;
@@ -162,3 +164,5 @@ TEST(OSXClipboardTests, get_withFormatAdded_returnsExpected)
 
     EXPECT_EQ("barrier rocks!", actual);
 }
+
+} // namespace inputleap

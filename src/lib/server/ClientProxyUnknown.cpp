@@ -46,7 +46,7 @@ ClientProxyUnknown::ClientProxyUnknown(inputleap::IStream* stream, double timeou
 {
     assert(m_server != nullptr);
 
-    m_events->adoptHandler(Event::kTimer, this,
+    m_events->adoptHandler(EventType::TIMER, this,
                             new TMethodEventJob<ClientProxyUnknown>(this,
                                 &ClientProxyUnknown::handleTimeout, nullptr));
     m_timer = m_events->newOneShotTimer(timeout, this);
@@ -85,7 +85,7 @@ ClientProxyUnknown::sendSuccess()
 {
     m_ready = true;
     removeTimer();
-    m_events->addEvent(Event(m_events->forClientProxyUnknown().success(), this));
+    m_events->addEvent(Event(EventType::CLIENT_PROXY_UNKNOWN_SUCCESS, this));
 }
 
 void
@@ -96,7 +96,7 @@ ClientProxyUnknown::sendFailure()
     m_ready = false;
     removeHandlers();
     removeTimer();
-    m_events->addEvent(Event(m_events->forClientProxyUnknown().failure(), this));
+    m_events->addEvent(Event(EventType::CLIENT_PROXY_UNKNOWN_FAILURE, this));
 }
 
 void
@@ -104,24 +104,19 @@ ClientProxyUnknown::addStreamHandlers()
 {
     assert(m_stream != nullptr);
 
-    m_events->adoptHandler(m_events->forIStream().inputReady(),
-                            m_stream->getEventTarget(),
+    m_events->adoptHandler(EventType::STREAM_INPUT_READY, m_stream->getEventTarget(),
                             new TMethodEventJob<ClientProxyUnknown>(this,
                                 &ClientProxyUnknown::handleData));
-    m_events->adoptHandler(m_events->forIStream().outputError(),
-                            m_stream->getEventTarget(),
+    m_events->adoptHandler(EventType::STREAM_OUTPUT_ERROR, m_stream->getEventTarget(),
                             new TMethodEventJob<ClientProxyUnknown>(this,
                                 &ClientProxyUnknown::handleWriteError));
-    m_events->adoptHandler(m_events->forIStream().inputShutdown(),
-                            m_stream->getEventTarget(),
+    m_events->adoptHandler(EventType::STREAM_INPUT_SHUTDOWN, m_stream->getEventTarget(),
                             new TMethodEventJob<ClientProxyUnknown>(this,
                                 &ClientProxyUnknown::handleDisconnect));
-    m_events->adoptHandler(m_events->forIStream().inputFormatError(),
-                           m_stream->getEventTarget(),
+    m_events->adoptHandler(EventType::STREAM_INPUT_FORMAT_ERROR, m_stream->getEventTarget(),
                            new TMethodEventJob<ClientProxyUnknown>(this,
                                 &ClientProxyUnknown::handleDisconnect));
-    m_events->adoptHandler(m_events->forIStream().outputShutdown(),
-                            m_stream->getEventTarget(),
+    m_events->adoptHandler(EventType::STREAM_OUTPUT_SHUTDOWN, m_stream->getEventTarget(),
                             new TMethodEventJob<ClientProxyUnknown>(this,
                                 &ClientProxyUnknown::handleWriteError));
 }
@@ -131,12 +126,10 @@ ClientProxyUnknown::addProxyHandlers()
 {
     assert(m_proxy != nullptr);
 
-    m_events->adoptHandler(m_events->forClientProxy().ready(),
-                            m_proxy,
+    m_events->adoptHandler(EventType::CLIENT_PROXY_READY, m_proxy,
                             new TMethodEventJob<ClientProxyUnknown>(this,
                                 &ClientProxyUnknown::handleReady));
-    m_events->adoptHandler(m_events->forClientProxy().disconnected(),
-                            m_proxy,
+    m_events->adoptHandler(EventType::CLIENT_PROXY_DISCONNECTED, m_proxy,
                             new TMethodEventJob<ClientProxyUnknown>(this,
                                 &ClientProxyUnknown::handleDisconnect));
 }
@@ -145,22 +138,15 @@ void
 ClientProxyUnknown::removeHandlers()
 {
     if (m_stream != nullptr) {
-        m_events->removeHandler(m_events->forIStream().inputReady(),
-                            m_stream->getEventTarget());
-        m_events->removeHandler(m_events->forIStream().outputError(),
-                            m_stream->getEventTarget());
-        m_events->removeHandler(m_events->forIStream().inputShutdown(),
-                            m_stream->getEventTarget());
-        m_events->removeHandler(m_events->forIStream().inputFormatError(),
-                                m_stream->getEventTarget());
-        m_events->removeHandler(m_events->forIStream().outputShutdown(),
-                            m_stream->getEventTarget());
+        m_events->removeHandler(EventType::STREAM_INPUT_READY, m_stream->getEventTarget());
+        m_events->removeHandler(EventType::STREAM_OUTPUT_ERROR, m_stream->getEventTarget());
+        m_events->removeHandler(EventType::STREAM_INPUT_SHUTDOWN, m_stream->getEventTarget());
+        m_events->removeHandler(EventType::STREAM_INPUT_FORMAT_ERROR, m_stream->getEventTarget());
+        m_events->removeHandler(EventType::STREAM_OUTPUT_SHUTDOWN, m_stream->getEventTarget());
     }
     if (m_proxy != nullptr) {
-        m_events->removeHandler(m_events->forClientProxy().ready(),
-                            m_proxy);
-        m_events->removeHandler(m_events->forClientProxy().disconnected(),
-                            m_proxy);
+        m_events->removeHandler(EventType::CLIENT_PROXY_READY, m_proxy);
+        m_events->removeHandler(EventType::CLIENT_PROXY_DISCONNECTED, m_proxy);
     }
 }
 
@@ -169,7 +155,7 @@ ClientProxyUnknown::removeTimer()
 {
     if (m_timer != nullptr) {
         m_events->deleteTimer(m_timer);
-        m_events->removeHandler(Event::kTimer, this);
+        m_events->removeHandler(EventType::TIMER, this);
         m_timer = nullptr;
     }
 }

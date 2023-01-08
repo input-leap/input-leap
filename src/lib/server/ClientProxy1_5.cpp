@@ -35,15 +35,14 @@ ClientProxy1_5::ClientProxy1_5(const std::string& name, inputleap::IStream* stre
     m_events(events)
 {
 
-    m_events->adoptHandler(m_events->forFile().keepAlive(),
-                            this,
+    m_events->adoptHandler(EventType::FILE_KEEPALIVE, this,
                             new TMethodEventJob<ClientProxy1_3>(this,
                                 &ClientProxy1_3::handleKeepAlive, nullptr));
 }
 
 ClientProxy1_5::~ClientProxy1_5()
 {
-    m_events->removeHandler(m_events->forFile().keepAlive(), this);
+    m_events->removeHandler(EventType::FILE_KEEPALIVE, this);
 }
 
 void ClientProxy1_5::sendDragInfo(std::uint32_t fileCount, const char* info, size_t size)
@@ -84,7 +83,7 @@ ClientProxy1_5::fileChunkReceived()
 
 
     if (result == kFinish) {
-        m_events->addEvent(Event(m_events->forFile().fileReceiveCompleted(), server));
+        m_events->addEvent(Event(EventType::FILE_RECEIVE_COMPLETED, server));
     }
     else if (result == kStart) {
         if (server->getFakeDragFileList().size() > 0) {

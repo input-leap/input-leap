@@ -34,37 +34,29 @@ IpcClientProxy::IpcClientProxy(std::unique_ptr<IStream>&& stream, IEventQueue* e
     m_disconnecting(false),
     m_events(events)
 {
-    m_events->adoptHandler(
-        m_events->forIStream().inputReady(), stream_->getEventTarget(),
+    m_events->adoptHandler(EventType::STREAM_INPUT_READY, stream_->getEventTarget(),
         new TMethodEventJob<IpcClientProxy>(
         this, &IpcClientProxy::handleData));
 
-    m_events->adoptHandler(
-        m_events->forIStream().outputError(), stream_->getEventTarget(),
+    m_events->adoptHandler(EventType::STREAM_OUTPUT_ERROR, stream_->getEventTarget(),
         new TMethodEventJob<IpcClientProxy>(
         this, &IpcClientProxy::handleWriteError));
 
-    m_events->adoptHandler(
-        m_events->forIStream().inputShutdown(), stream_->getEventTarget(),
+    m_events->adoptHandler(EventType::STREAM_INPUT_SHUTDOWN, stream_->getEventTarget(),
         new TMethodEventJob<IpcClientProxy>(
         this, &IpcClientProxy::handleDisconnect));
 
-    m_events->adoptHandler(
-        m_events->forIStream().outputShutdown(), stream_->getEventTarget(),
+    m_events->adoptHandler(EventType::STREAM_OUTPUT_SHUTDOWN, stream_->getEventTarget(),
         new TMethodEventJob<IpcClientProxy>(
         this, &IpcClientProxy::handleWriteError));
 }
 
 IpcClientProxy::~IpcClientProxy()
 {
-    m_events->removeHandler(
-        m_events->forIStream().inputReady(), stream_->getEventTarget());
-    m_events->removeHandler(
-        m_events->forIStream().outputError(), stream_->getEventTarget());
-    m_events->removeHandler(
-        m_events->forIStream().inputShutdown(), stream_->getEventTarget());
-    m_events->removeHandler(
-        m_events->forIStream().outputShutdown(), stream_->getEventTarget());
+    m_events->removeHandler(EventType::STREAM_INPUT_READY, stream_->getEventTarget());
+    m_events->removeHandler(EventType::STREAM_OUTPUT_ERROR, stream_->getEventTarget());
+    m_events->removeHandler(EventType::STREAM_INPUT_SHUTDOWN, stream_->getEventTarget());
+    m_events->removeHandler(EventType::STREAM_OUTPUT_SHUTDOWN, stream_->getEventTarget());
 
     // Ensure that client proxy is not deleted from below some active client feet
     {
@@ -115,7 +107,7 @@ IpcClientProxy::handleData(const Event&, void*)
         }
 
         // don't delete with this event; the data is passed to a new event.
-        Event e(m_events->forIpcClientProxy().messageReceived(), this, nullptr, Event::kDontFreeData);
+        Event e(EventType::IPC_CLIENT_PROXY_MESSAGE_RECEIVED, this, nullptr, Event::kDontFreeData);
         e.setDataObject(m);
         m_events->addEvent(e);
 
@@ -182,7 +174,7 @@ IpcClientProxy::disconnect()
     LOG((CLOG_DEBUG "ipc disconnect, closing stream"));
     m_disconnecting = true;
     stream_->close();
-    m_events->addEvent(Event(m_events->forIpcClientProxy().disconnected(), this));
+    m_events->addEvent(Event(EventType::IPC_CLIENT_PROXY_DISCONNECTED, this));
 }
 
 } // namespace inputleap

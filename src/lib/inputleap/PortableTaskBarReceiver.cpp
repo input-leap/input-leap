@@ -75,7 +75,7 @@ const std::string& PortableTaskBarReceiver::getErrorMessage() const
 void
 PortableTaskBarReceiver::quit()
 {
-    m_events->addEvent(Event(Event::kQuit));
+    m_events->addEvent(Event(EventType::QUIT));
 }
 
 void

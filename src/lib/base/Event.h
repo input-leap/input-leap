@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "EventTypes.h"
 #include <cstddef>
 #include <cstdint>
 #include <map>
@@ -36,15 +37,6 @@ A \c Event holds an event type and a pointer to event data.
 */
 class Event {
 public:
-    typedef std::uint32_t Type;
-    enum {
-        kUnknown,    //!< The event type is unknown
-        kQuit,       //!< The quit event
-        kSystem,     //!< The data points to a system event type
-        kTimer,      //!< The data points to timer info
-        kLast        //!< Must be last
-    };
-
     typedef std::uint32_t Flags;
     enum {
         kNone                = 0x00,    //!< No flags
@@ -63,7 +55,7 @@ public:
     \p target is the intended recipient of the event.
     \p flags is any combination of \c Flags.
     */
-    Event(Type type, void* target = nullptr, void* data = nullptr, Flags flags = kNone);
+    Event(EventType type, void* target = nullptr, void* data = nullptr, Flags flags = kNone);
 
     //! @name manipulators
     //@{
@@ -89,7 +81,7 @@ public:
     /*!
     Returns the event type.
     */
-    Type getType() const;
+    EventType getType() const;
 
     //! Get the event target
     /*!
@@ -120,7 +112,7 @@ public:
     //@}
 
 private:
-    Type m_type;
+    EventType type_;
     void* m_target;
     void* m_data;
     Flags m_flags;

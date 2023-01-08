@@ -192,18 +192,18 @@ MSWindowsServerTaskBarReceiver::runMenu(int x, int y)
         break;
 
     case IDC_RELOAD_CONFIG:
-        m_events->addEvent(Event(m_events->forServerApp().reloadConfig(),
-                            m_events->getSystemTarget()));
+        m_events->addEvent(Event(EventType::SERVER_APP_RELOAD_CONFIG,
+                                 m_events->getSystemTarget()));
         break;
 
     case IDC_FORCE_RECONNECT:
-        m_events->addEvent(Event(m_events->forServerApp().forceReconnect(),
-                            m_events->getSystemTarget()));
+        m_events->addEvent(Event(EventType::SERVER_APP_FORCE_RECONNECT,
+                                 m_events->getSystemTarget()));
         break;
 
     case ID_INPUTLEAP_RESETSERVER:
-        m_events->addEvent(Event(m_events->forServerApp().resetServer(),
-                            m_events->getSystemTarget()));
+        m_events->addEvent(Event(EventType::SERVER_APP_RESET_SERVER,
+                                 m_events->getSystemTarget()));
         break;
 
     case IDC_TASKBAR_LOG_LEVEL_ERROR:

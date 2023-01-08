@@ -111,11 +111,11 @@ IEventQueueBuffer::Type MSWindowsEventQueueBuffer::getEvent(Event& event, std::u
         return kNone;
     }
     else if (result == 0) {
-        event = Event(Event::kQuit);
+        event = Event(EventType::QUIT);
         return kSystem;
     }
     else if (m_daemonQuit != 0 && m_event.message == m_daemonQuit) {
-        event = Event(Event::kQuit);
+        event = Event(EventType::QUIT);
         return kSystem;
     }
     else if (m_event.message == m_userEvent) {
@@ -123,8 +123,7 @@ IEventQueueBuffer::Type MSWindowsEventQueueBuffer::getEvent(Event& event, std::u
         return kUser;
     }
     else {
-        event = Event(Event::kSystem,
-                            m_events->getSystemTarget(), &m_event);
+        event = Event(EventType::SYSTEM, m_events->getSystemTarget(), &m_event);
         return kSystem;
     }
 }

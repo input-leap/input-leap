@@ -109,11 +109,10 @@ InputFilter::KeystrokeCondition::match(const Event& event)
     EFilterStatus status;
 
     // check for hotkey events
-    Event::Type type = event.getType();
-    if (type == m_events->forIPrimaryScreen().hotKeyDown()) {
+    EventType type = event.getType();
+    if (type == EventType::PRIMARY_SCREEN_HOTKEY_DOWN) {
         status = kActivate;
-    }
-    else if (type == m_events->forIPrimaryScreen().hotKeyUp()) {
+    } else if (type == EventType::PRIMARY_SCREEN_HOTKEY_UP) {
         status = kDeactivate;
     }
     else {
@@ -203,11 +202,10 @@ InputFilter::MouseButtonCondition::match(const Event& event)
     EFilterStatus status;
 
     // check for hotkey events
-    Event::Type type = event.getType();
-    if (type == m_events->forIPrimaryScreen().buttonDown()) {
+    EventType type = event.getType();
+    if (type == EventType::PRIMARY_SCREEN_BUTTON_DOWN) {
         status = kActivate;
-    }
-    else if (type == m_events->forIPrimaryScreen().buttonUp()) {
+    } else if (type == EventType::PRIMARY_SCREEN_BUTTON_UP) {
         status = kDeactivate;
     }
     else {
@@ -253,7 +251,7 @@ std::string InputFilter::ScreenConnectedCondition::format() const
 InputFilter::EFilterStatus
 InputFilter::ScreenConnectedCondition::match(const Event& event)
 {
-    if (event.getType() == m_events->forServer().connected()) {
+    if (event.getType() == EventType::SERVER_CONNECTED) {
         Server::ScreenConnectedInfo* info =
             static_cast<Server::ScreenConnectedInfo*>(event.getData());
         if (m_screen == info->m_screen || m_screen.empty()) {
@@ -316,8 +314,7 @@ InputFilter::LockCursorToScreenAction::perform(const Event& event)
     // send event
     Server::LockCursorToScreenInfo* info =
         Server::LockCursorToScreenInfo::alloc(s_state[m_mode]);
-    m_events->addEvent(Event(m_events->forServer().lockCursorToScreen(),
-                                event.getTarget(), info,
+    m_events->addEvent(Event(EventType::SERVER_LOCK_CURSOR_TO_SCREEN, event.getTarget(), info,
                                 Event::kDeliverImmediately));
 }
 
@@ -351,7 +348,7 @@ InputFilter::SwitchToScreenAction::perform(const Event& event)
     // pick screen name.  if m_screen is empty then use the screen from
     // event if it has one.
     std::string screen = m_screen;
-    if (screen.empty() && event.getType() == m_events->forServer().connected()) {
+    if (screen.empty() && event.getType() == EventType::SERVER_CONNECTED) {
         Server::ScreenConnectedInfo* info =
             static_cast<Server::ScreenConnectedInfo*>(event.getData());
         screen = info->m_screen;
@@ -360,9 +357,8 @@ InputFilter::SwitchToScreenAction::perform(const Event& event)
     // send event
     Server::SwitchToScreenInfo* info =
         Server::SwitchToScreenInfo::alloc(screen);
-    m_events->addEvent(Event(m_events->forServer().switchToScreen(),
-                                event.getTarget(), info,
-                                Event::kDeliverImmediately));
+    m_events->addEvent(Event(EventType::SERVER_SWITCH_TO_SCREEN, event.getTarget(),
+                             info, Event::kDeliverImmediately));
 }
 
 InputFilter::ToggleScreenAction::ToggleScreenAction(IEventQueue* events) :
@@ -385,9 +381,8 @@ std::string InputFilter::ToggleScreenAction::format() const
 void
 InputFilter::ToggleScreenAction::perform(const Event& event)
 {
-    m_events->addEvent(Event(m_events->forServer().toggleScreen(),
-                             event.getTarget(), nullptr,
-                             Event::kDeliverImmediately));
+    m_events->addEvent(Event(EventType::SERVER_TOGGLE_SCREEN, event.getTarget(),
+                             nullptr, Event::kDeliverImmediately));
 }
 
 InputFilter::SwitchInDirectionAction::SwitchInDirectionAction(
@@ -428,9 +423,8 @@ InputFilter::SwitchInDirectionAction::perform(const Event& event)
 {
     Server::SwitchInDirectionInfo* info =
         Server::SwitchInDirectionInfo::alloc(m_direction);
-    m_events->addEvent(Event(m_events->forServer().switchInDirection(),
-                                event.getTarget(), info,
-                                Event::kDeliverImmediately));
+    m_events->addEvent(Event(EventType::SERVER_SWITCH_INDIRECTION, event.getTarget(),
+                             info, Event::kDeliverImmediately));
 }
 
 InputFilter::KeyboardBroadcastAction::KeyboardBroadcastAction(
@@ -496,7 +490,7 @@ InputFilter::KeyboardBroadcastAction::perform(const Event& event)
     // send event
     Server::KeyboardBroadcastInfo* info =
         Server::KeyboardBroadcastInfo::alloc(s_state[m_mode], m_screens);
-    m_events->addEvent(Event(m_events->forServer().keyboardBroadcast(),
+    m_events->addEvent(Event(EventType::SERVER_KEYBOARD_BROADCAST,
                                 event.getTarget(), info,
                                 Event::kDeliverImmediately));
 }
@@ -567,18 +561,14 @@ std::string InputFilter::KeystrokeAction::format() const
 void
 InputFilter::KeystrokeAction::perform(const Event& event)
 {
-    Event::Type type = m_press ?
-        m_events->forIKeyState().keyDown() :
-        m_events->forIKeyState().keyUp();
+    EventType type = m_press ? EventType::KEY_STATE_KEY_DOWN : EventType::KEY_STATE_KEY_UP;
 
-    m_events->addEvent(Event(m_events->forIPrimaryScreen().fakeInputBegin(),
-                             event.getTarget(), nullptr,
+    m_events->addEvent(Event(EventType::PRIMARY_SCREEN_FAKE_INPUT_BEGIN, event.getTarget(), nullptr,
                              Event::kDeliverImmediately));
     m_events->addEvent(Event(type, event.getTarget(), m_keyInfo,
                                 Event::kDeliverImmediately |
                                 Event::kDontFreeData));
-    m_events->addEvent(Event(m_events->forIPrimaryScreen().fakeInputEnd(),
-                             event.getTarget(), nullptr,
+    m_events->addEvent(Event(EventType::PRIMARY_SCREEN_FAKE_INPUT_END, event.getTarget(), nullptr,
                              Event::kDeliverImmediately));
 }
 
@@ -642,17 +632,16 @@ InputFilter::MouseButtonAction::perform(const Event& event)
         KeyID key = m_press ? kKeySetModifiers : kKeyClearModifiers;
         modifierInfo =
             IKeyState::KeyInfo::alloc(key, m_buttonInfo->m_mask, 0, 1);
-        m_events->addEvent(Event(m_events->forIKeyState().keyDown(),
+        m_events->addEvent(Event(EventType::KEY_STATE_KEY_DOWN,
                                 event.getTarget(), modifierInfo,
                                 Event::kDeliverImmediately));
     }
 
     // send button
-    Event::Type type = m_press ? m_events->forIPrimaryScreen().buttonDown() :
-                                m_events->forIPrimaryScreen().buttonUp();
+    EventType type = m_press ? EventType::PRIMARY_SCREEN_BUTTON_DOWN :
+                               EventType::PRIMARY_SCREEN_BUTTON_UP;
     m_events->addEvent(Event(type, event.getTarget(), m_buttonInfo,
-                                Event::kDeliverImmediately |
-                                Event::kDontFreeData));
+                             Event::kDeliverImmediately | Event::kDontFreeData));
 }
 
 const char*
@@ -965,57 +954,41 @@ InputFilter::setPrimaryClient(PrimaryClient* client)
             rule->disable(m_primaryClient);
         }
 
-        m_events->removeHandler(m_events->forIKeyState().keyDown(),
-                            m_primaryClient->getEventTarget());
-        m_events->removeHandler(m_events->forIKeyState().keyUp(),
-                            m_primaryClient->getEventTarget());
-        m_events->removeHandler(m_events->forIKeyState().keyRepeat(),
-                            m_primaryClient->getEventTarget());
-        m_events->removeHandler(m_events->forIPrimaryScreen().buttonDown(),
-                            m_primaryClient->getEventTarget());
-        m_events->removeHandler(m_events->forIPrimaryScreen().buttonUp(),
-                            m_primaryClient->getEventTarget());
-        m_events->removeHandler(m_events->forIPrimaryScreen().hotKeyDown(),
-                            m_primaryClient->getEventTarget());
-        m_events->removeHandler(m_events->forIPrimaryScreen().hotKeyUp(),
-                            m_primaryClient->getEventTarget());
-        m_events->removeHandler(m_events->forServer().connected(),
-                            m_primaryClient->getEventTarget());
+        m_events->removeHandler(EventType::KEY_STATE_KEY_DOWN, m_primaryClient->getEventTarget());
+        m_events->removeHandler(EventType::KEY_STATE_KEY_UP, m_primaryClient->getEventTarget());
+        m_events->removeHandler(EventType::KEY_STATE_KEY_REPEAT, m_primaryClient->getEventTarget());
+        m_events->removeHandler(EventType::PRIMARY_SCREEN_BUTTON_DOWN, m_primaryClient->getEventTarget());
+        m_events->removeHandler(EventType::PRIMARY_SCREEN_BUTTON_UP, m_primaryClient->getEventTarget());
+        m_events->removeHandler(EventType::PRIMARY_SCREEN_HOTKEY_DOWN, m_primaryClient->getEventTarget());
+        m_events->removeHandler(EventType::PRIMARY_SCREEN_HOTKEY_UP, m_primaryClient->getEventTarget());
+        m_events->removeHandler(EventType::SERVER_CONNECTED, m_primaryClient->getEventTarget());
     }
 
     m_primaryClient = client;
 
     if (m_primaryClient != nullptr) {
-        m_events->adoptHandler(m_events->forIKeyState().keyDown(),
-                            m_primaryClient->getEventTarget(),
+        m_events->adoptHandler(EventType::KEY_STATE_KEY_DOWN, m_primaryClient->getEventTarget(),
                             new TMethodEventJob<InputFilter>(this,
                                 &InputFilter::handleEvent));
-        m_events->adoptHandler(m_events->forIKeyState().keyUp(),
-                            m_primaryClient->getEventTarget(),
+        m_events->adoptHandler(EventType::KEY_STATE_KEY_UP, m_primaryClient->getEventTarget(),
                             new TMethodEventJob<InputFilter>(this,
                                 &InputFilter::handleEvent));
-        m_events->adoptHandler(m_events->forIKeyState().keyRepeat(),
-                            m_primaryClient->getEventTarget(),
+        m_events->adoptHandler(EventType::KEY_STATE_KEY_REPEAT, m_primaryClient->getEventTarget(),
                             new TMethodEventJob<InputFilter>(this,
                                 &InputFilter::handleEvent));
-        m_events->adoptHandler(m_events->forIPrimaryScreen().buttonDown(),
-                            m_primaryClient->getEventTarget(),
+        m_events->adoptHandler(EventType::PRIMARY_SCREEN_BUTTON_DOWN, m_primaryClient->getEventTarget(),
                             new TMethodEventJob<InputFilter>(this,
                                 &InputFilter::handleEvent));
-        m_events->adoptHandler(m_events->forIPrimaryScreen().buttonUp(),
-                            m_primaryClient->getEventTarget(),
+        m_events->adoptHandler(EventType::PRIMARY_SCREEN_BUTTON_UP, m_primaryClient->getEventTarget(),
                             new TMethodEventJob<InputFilter>(this,
                                 &InputFilter::handleEvent));
-        m_events->adoptHandler(m_events->forIPrimaryScreen().hotKeyDown(),
-                            m_primaryClient->getEventTarget(),
+        m_events->adoptHandler(EventType::PRIMARY_SCREEN_HOTKEY_DOWN, m_primaryClient->getEventTarget(),
                             new TMethodEventJob<InputFilter>(this,
                                 &InputFilter::handleEvent));
-        m_events->adoptHandler(m_events->forIPrimaryScreen().hotKeyUp(),
-                            m_primaryClient->getEventTarget(),
+        m_events->adoptHandler(EventType::PRIMARY_SCREEN_HOTKEY_UP, m_primaryClient->getEventTarget(),
                             new TMethodEventJob<InputFilter>(this,
                                 &InputFilter::handleEvent));
-        m_events->adoptHandler(m_events->forServer().connected(),
-                            m_primaryClient->getEventTarget(),
+        m_events->adoptHandler(EventType::SERVER_CONNECTED, m_primaryClient->getEventTarget(),
                             new TMethodEventJob<InputFilter>(this,
                                 &InputFilter::handleEvent));
 

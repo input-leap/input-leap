@@ -97,7 +97,7 @@ XWindowsScreenSaver::XWindowsScreenSaver(IXWindowsImpl* impl, Display* display,
     }
 
     // install disable timer event handler
-    m_events->adoptHandler(Event::kTimer, this,
+    m_events->adoptHandler(EventType::TIMER, this,
                             new TMethodEventJob<XWindowsScreenSaver>(this,
                                 &XWindowsScreenSaver::handleDisableTimer));
 }
@@ -108,7 +108,7 @@ XWindowsScreenSaver::~XWindowsScreenSaver()
     if (m_disableTimer != nullptr) {
         m_events->deleteTimer(m_disableTimer);
     }
-    m_events->removeHandler(Event::kTimer, this);
+    m_events->removeHandler(EventType::TIMER, this);
 
     if (m_display != nullptr) {
         enableDPMS(m_dpmsEnabled);
@@ -375,14 +375,9 @@ XWindowsScreenSaver::setXScreenSaverActive(bool activated)
         updateDisableTimer();
 
         if (activated) {
-            m_events->addEvent(Event(
-                            m_events->forIPrimaryScreen().screensaverActivated(),
-                            m_eventTarget));
-        }
-        else {
-            m_events->addEvent(Event(
-                            m_events->forIPrimaryScreen().screensaverDeactivated(),
-                            m_eventTarget));
+            m_events->addEvent(Event(EventType::PRIMARY_SCREEN_SAVER_ACTIVATED, m_eventTarget));
+        } else {
+            m_events->addEvent(Event(EventType::PRIMARY_SCREEN_SAVER_DEACTIVATED, m_eventTarget));
         }
     }
 }

@@ -163,7 +163,7 @@ public:
 
 private:
     void sendClipboard(ClipboardID);
-    void sendEvent(Event::Type, void*);
+    void sendEvent(EventType, void*);
     void sendConnectionFailedEvent(const char* msg);
     void sendFileChunk(const void* data);
     void send_file_thread(const char* filename);

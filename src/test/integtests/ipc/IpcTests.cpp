@@ -72,8 +72,7 @@ TEST_F(IpcTests, connectToServer)
     server.listen();
     m_connectToServer_server = &server;
 
-    m_events.adoptHandler(
-        m_events.forIpcServer().messageReceived(), &server,
+    m_events.adoptHandler(EventType::IPC_SERVER_MESSAGE_RECEIVED, &server,
         new TMethodEventJob<IpcTests>(
         this, &IpcTests::connectToServer_handleMessageReceived));
 
@@ -82,7 +81,7 @@ TEST_F(IpcTests, connectToServer)
 
     m_events.initQuitTimeout(5);
     m_events.loop();
-    m_events.removeHandler(m_events.forIpcServer().messageReceived(), &server);
+    m_events.removeHandler(EventType::IPC_SERVER_MESSAGE_RECEIVED, &server);
     m_events.cleanupQuitTimeout();
 
     EXPECT_EQ(true, m_connectToServer_helloMessageReceived);
@@ -96,8 +95,7 @@ TEST_F(IpcTests, sendMessageToServer)
     server.listen();
 
     // event handler sends "test" command to server.
-    m_events.adoptHandler(
-        m_events.forIpcServer().messageReceived(), &server,
+    m_events.adoptHandler(EventType::IPC_SERVER_MESSAGE_RECEIVED, &server,
         new TMethodEventJob<IpcTests>(
         this, &IpcTests::sendMessageToServer_serverHandleMessageReceived));
 
@@ -107,7 +105,7 @@ TEST_F(IpcTests, sendMessageToServer)
 
     m_events.initQuitTimeout(5);
     m_events.loop();
-    m_events.removeHandler(m_events.forIpcServer().messageReceived(), &server);
+    m_events.removeHandler(EventType::IPC_SERVER_MESSAGE_RECEIVED, &server);
     m_events.cleanupQuitTimeout();
 
     EXPECT_EQ("test", m_sendMessageToServer_receivedString);
@@ -121,23 +119,21 @@ TEST_F(IpcTests, sendMessageToClient)
     m_sendMessageToClient_server = &server;
 
     // event handler sends "test" log line to client.
-    m_events.adoptHandler(
-        m_events.forIpcServer().messageReceived(), &server,
+    m_events.adoptHandler(EventType::IPC_SERVER_MESSAGE_RECEIVED, &server,
         new TMethodEventJob<IpcTests>(
         this, &IpcTests::sendMessageToClient_serverHandleClientConnected));
 
     IpcClient client(&m_events, &socketMultiplexer, TEST_IPC_PORT);
     client.connect();
 
-    m_events.adoptHandler(
-        m_events.forIpcClient().messageReceived(), &client,
+    m_events.adoptHandler(EventType::IPC_CLIENT_MESSAGE_RECEIVED, &client,
         new TMethodEventJob<IpcTests>(
         this, &IpcTests::sendMessageToClient_clientHandleMessageReceived));
 
     m_events.initQuitTimeout(5);
     m_events.loop();
-    m_events.removeHandler(m_events.forIpcServer().messageReceived(), &server);
-    m_events.removeHandler(m_events.forIpcClient().messageReceived(), &client);
+    m_events.removeHandler(EventType::IPC_SERVER_MESSAGE_RECEIVED, &server);
+    m_events.removeHandler(EventType::IPC_CLIENT_MESSAGE_RECEIVED, &client);
     m_events.cleanupQuitTimeout();
 
     EXPECT_EQ("test", m_sendMessageToClient_receivedString);

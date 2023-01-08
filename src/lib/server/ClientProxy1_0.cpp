@@ -37,27 +37,22 @@ ClientProxy1_0::ClientProxy1_0(const std::string& name, inputleap::IStream* stre
     m_events(events)
 {
     // install event handlers
-    m_events->adoptHandler(m_events->forIStream().inputReady(),
-                            stream->getEventTarget(),
+    m_events->adoptHandler(EventType::STREAM_INPUT_READY, stream->getEventTarget(),
                             new TMethodEventJob<ClientProxy1_0>(this,
                                 &ClientProxy1_0::handleData, nullptr));
-    m_events->adoptHandler(m_events->forIStream().outputError(),
-                            stream->getEventTarget(),
+    m_events->adoptHandler(EventType::STREAM_OUTPUT_ERROR, stream->getEventTarget(),
                             new TMethodEventJob<ClientProxy1_0>(this,
                                 &ClientProxy1_0::handleWriteError, nullptr));
-    m_events->adoptHandler(m_events->forIStream().inputShutdown(),
-                            stream->getEventTarget(),
+    m_events->adoptHandler(EventType::STREAM_INPUT_SHUTDOWN, stream->getEventTarget(),
                             new TMethodEventJob<ClientProxy1_0>(this,
                                 &ClientProxy1_0::handleDisconnect, nullptr));
-    m_events->adoptHandler(m_events->forIStream().inputFormatError(),
-                           stream->getEventTarget(),
+    m_events->adoptHandler(EventType::STREAM_INPUT_FORMAT_ERROR, stream->getEventTarget(),
                            new TMethodEventJob<ClientProxy1_0>(this,
                                 &ClientProxy1_0::handleDisconnect, nullptr));
-    m_events->adoptHandler(m_events->forIStream().outputShutdown(),
-                            stream->getEventTarget(),
+    m_events->adoptHandler(EventType::STREAM_OUTPUT_SHUTDOWN, stream->getEventTarget(),
                             new TMethodEventJob<ClientProxy1_0>(this,
                                 &ClientProxy1_0::handleWriteError, nullptr));
-    m_events->adoptHandler(Event::kTimer, this,
+    m_events->adoptHandler(EventType::TIMER, this,
                             new TMethodEventJob<ClientProxy1_0>(this,
                                 &ClientProxy1_0::handleFlatline, nullptr));
 
@@ -77,24 +72,19 @@ ClientProxy1_0::disconnect()
 {
     removeHandlers();
     getStream()->close();
-    m_events->addEvent(Event(m_events->forClientProxy().disconnected(), getEventTarget()));
+    m_events->addEvent(Event(EventType::CLIENT_PROXY_DISCONNECTED, getEventTarget()));
 }
 
 void
 ClientProxy1_0::removeHandlers()
 {
     // uninstall event handlers
-    m_events->removeHandler(m_events->forIStream().inputReady(),
-                            getStream()->getEventTarget());
-    m_events->removeHandler(m_events->forIStream().outputError(),
-                            getStream()->getEventTarget());
-    m_events->removeHandler(m_events->forIStream().inputShutdown(),
-                            getStream()->getEventTarget());
-    m_events->removeHandler(m_events->forIStream().outputShutdown(),
-                            getStream()->getEventTarget());
-    m_events->removeHandler(m_events->forIStream().inputFormatError(),
-                            getStream()->getEventTarget());
-    m_events->removeHandler(Event::kTimer, this);
+    m_events->removeHandler(EventType::STREAM_INPUT_READY, getStream()->getEventTarget());
+    m_events->removeHandler(EventType::STREAM_OUTPUT_ERROR, getStream()->getEventTarget());
+    m_events->removeHandler(EventType::STREAM_INPUT_SHUTDOWN, getStream()->getEventTarget());
+    m_events->removeHandler(EventType::STREAM_OUTPUT_SHUTDOWN, getStream()->getEventTarget());
+    m_events->removeHandler(EventType::STREAM_INPUT_FORMAT_ERROR, getStream()->getEventTarget());
+    m_events->removeHandler(EventType::TIMER, this);
 
     // remove timer
     removeHeartbeatTimer();
@@ -189,7 +179,7 @@ bool ClientProxy1_0::parseHandshakeMessage(const std::uint8_t* code)
         // not ClientProxy1_0 implementation of it.
         m_parser = &ClientProxy1_0::parseMessage;
         if (recvInfo()) {
-            m_events->addEvent(Event(m_events->forClientProxy().ready(), getEventTarget()));
+            m_events->addEvent(Event(EventType::CLIENT_PROXY_READY, getEventTarget()));
             addHeartbeatTimer();
             return true;
         }
@@ -201,8 +191,7 @@ bool ClientProxy1_0::parseMessage(const std::uint8_t* code)
 {
     if (memcmp(code, kMsgDInfo, 4) == 0) {
         if (recvInfo()) {
-            m_events->addEvent(
-                            Event(m_events->forIScreen().shapeChanged(), getEventTarget()));
+            m_events->addEvent(Event(EventType::SCREEN_SHAPE_CHANGED, getEventTarget()));
             return true;
         }
         return false;
@@ -481,8 +470,7 @@ ClientProxy1_0::recvGrabClipboard()
     ClipboardInfo* info   = new ClipboardInfo;
     info->m_id             = id;
     info->m_sequenceNumber = seqNum;
-    m_events->addEvent(Event(m_events->forClipboard().clipboardGrabbed(),
-                            getEventTarget(), info));
+    m_events->addEvent(Event(EventType::CLIPBOARD_GRABBED, getEventTarget(), info));
 
     return true;
 }

@@ -61,13 +61,11 @@ ServerProxy::ServerProxy(Client* client, inputleap::IStream* stream, IEventQueue
         m_modifierTranslationTable[id] = id;
 
     // handle data on stream
-    m_events->adoptHandler(m_events->forIStream().inputReady(),
-                            m_stream->getEventTarget(),
+    m_events->adoptHandler(EventType::STREAM_INPUT_READY, m_stream->getEventTarget(),
                             new TMethodEventJob<ServerProxy>(this,
                                 &ServerProxy::handleData));
 
-    m_events->adoptHandler(m_events->forClipboard().clipboardSending(),
-                            this,
+    m_events->adoptHandler(EventType::CLIPBOARD_SENDING, this,
                             new TMethodEventJob<ServerProxy>(this,
                                 &ServerProxy::handleClipboardSendingEvent));
 
@@ -78,23 +76,22 @@ ServerProxy::ServerProxy(Client* client, inputleap::IStream* stream, IEventQueue
 ServerProxy::~ServerProxy()
 {
     setKeepAliveRate(-1.0);
-    m_events->removeHandler(m_events->forIStream().inputReady(),
-                            m_stream->getEventTarget());
-    m_events->removeHandler(m_events->forClipboard().clipboardSending(), this);
+    m_events->removeHandler(EventType::STREAM_INPUT_READY, m_stream->getEventTarget());
+    m_events->removeHandler(EventType::CLIPBOARD_SENDING, this);
 }
 
 void
 ServerProxy::resetKeepAliveAlarm()
 {
     if (m_keepAliveAlarmTimer != nullptr) {
-        m_events->removeHandler(Event::kTimer, m_keepAliveAlarmTimer);
+        m_events->removeHandler(EventType::TIMER, m_keepAliveAlarmTimer);
         m_events->deleteTimer(m_keepAliveAlarmTimer);
         m_keepAliveAlarmTimer = nullptr;
     }
     if (m_keepAliveAlarm > 0.0) {
         m_keepAliveAlarmTimer =
             m_events->newOneShotTimer(m_keepAliveAlarm, nullptr);
-        m_events->adoptHandler(Event::kTimer, m_keepAliveAlarmTimer,
+        m_events->adoptHandler(EventType::TIMER, m_keepAliveAlarmTimer,
                             new TMethodEventJob<ServerProxy>(this,
                                 &ServerProxy::handleKeepAliveAlarm));
     }
@@ -879,7 +876,7 @@ ServerProxy::fileChunkReceived()
                     m_client->getExpectedFileSize());
 
     if (result == kFinish) {
-        m_events->addEvent(Event(m_events->forFile().fileReceiveCompleted(), m_client));
+        m_events->addEvent(Event(EventType::FILE_RECEIVE_COMPLETED, m_client));
     }
     else if (result == kStart) {
         if (m_client->getDragFileList().size() > 0) {

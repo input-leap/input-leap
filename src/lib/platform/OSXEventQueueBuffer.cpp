@@ -67,7 +67,7 @@ IEventQueueBuffer::Type OSXEventQueueBuffer::getEvent(Event& event, std::uint32_
 
     // handle the event
     if (error == eventLoopQuitErr) {
-        event = Event(Event::kQuit);
+        event = Event(EventType::QUIT);
         return kSystem;
     }
     else if (error != noErr) {
@@ -81,8 +81,7 @@ IEventQueueBuffer::Type OSXEventQueueBuffer::getEvent(Event& event, std::uint32_
             return kUser;
 
         default:
-            event = Event(Event::kSystem,
-                        m_eventQueue->getSystemTarget(), &m_event);
+            event = Event(EventType::SYSTEM, m_eventQueue->getSystemTarget(), &m_event);
             return kSystem;
         }
     }

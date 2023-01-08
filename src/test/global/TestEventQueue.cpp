@@ -27,7 +27,7 @@ namespace inputleap {
 void
 TestEventQueue::raiseQuitEvent()
 {
-    addEvent(Event(Event::kQuit));
+    addEvent(Event(EventType::QUIT));
 }
 
 void
@@ -35,7 +35,7 @@ TestEventQueue::initQuitTimeout(double timeout)
 {
     assert(m_quitTimeoutTimer == nullptr);
     m_quitTimeoutTimer = newOneShotTimer(timeout, nullptr);
-    adoptHandler(Event::kTimer, m_quitTimeoutTimer,
+    adoptHandler(EventType::TIMER, m_quitTimeoutTimer,
         new TMethodEventJob<TestEventQueue>(
         this, &TestEventQueue::handleQuitTimeout));
 }
@@ -43,7 +43,7 @@ TestEventQueue::initQuitTimeout(double timeout)
 void
 TestEventQueue::cleanupQuitTimeout()
 {
-    removeHandler(Event::kTimer, m_quitTimeoutTimer);
+    removeHandler(EventType::TIMER, m_quitTimeoutTimer);
     delete m_quitTimeoutTimer;
     m_quitTimeoutTimer = nullptr;
 }

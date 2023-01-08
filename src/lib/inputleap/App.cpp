@@ -204,8 +204,7 @@ App::initIpcClient()
     m_ipcClient = new IpcClient(m_events, m_socketMultiplexer.get());
     m_ipcClient->connect();
 
-    m_events->adoptHandler(
-        m_events->forIpcClient().messageReceived(), m_ipcClient,
+    m_events->adoptHandler(EventType::IPC_CLIENT_MESSAGE_RECEIVED, m_ipcClient,
         new TMethodEventJob<App>(this, &App::handleIpcMessage));
 }
 
@@ -213,7 +212,7 @@ void
 App::cleanupIpcClient()
 {
     m_ipcClient->disconnect();
-    m_events->removeHandler(m_events->forIpcClient().messageReceived(), m_ipcClient);
+    m_events->removeHandler(EventType::IPC_CLIENT_MESSAGE_RECEIVED, m_ipcClient);
     delete m_ipcClient;
 }
 
@@ -223,7 +222,7 @@ App::handleIpcMessage(const Event& e, void*)
     IpcMessage* m = static_cast<IpcMessage*>(e.getDataObject());
     if (m->type() == kIpcShutdown) {
         LOG((CLOG_INFO "got ipc shutdown message"));
-        m_events->addEvent(Event(Event::kQuit));
+        m_events->addEvent(Event(EventType::QUIT));
     }
 }
 

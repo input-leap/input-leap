@@ -34,10 +34,10 @@ public:
     MOCK_METHOD0(flush, void());
     MOCK_METHOD0(shutdownInput, void());
     MOCK_METHOD0(shutdownOutput, void());
-    MOCK_METHOD0(getInputReadyEvent, Event::Type());
-    MOCK_METHOD0(getOutputErrorEvent, Event::Type());
-    MOCK_METHOD0(getInputShutdownEvent, Event::Type());
-    MOCK_METHOD0(getOutputShutdownEvent, Event::Type());
+    MOCK_METHOD0(getInputReadyEvent, EventType());
+    MOCK_METHOD0(getOutputErrorEvent, EventType());
+    MOCK_METHOD0(getInputShutdownEvent, EventType());
+    MOCK_METHOD0(getOutputShutdownEvent, EventType());
     MOCK_CONST_METHOD0(getEventTarget, void*());
     MOCK_CONST_METHOD0(isReady, bool());
     MOCK_CONST_METHOD0(getSize, std::uint32_t());

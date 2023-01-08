@@ -54,16 +54,14 @@ IpcClient::~IpcClient()
 void
 IpcClient::connect()
 {
-    m_events->adoptHandler(
-        m_events->forIDataSocket().connected(), m_socket.getEventTarget(),
+    m_events->adoptHandler(EventType::DATA_SOCKET_CONNECTED, m_socket.getEventTarget(),
         new TMethodEventJob<IpcClient>(
         this, &IpcClient::handleConnected));
 
     m_socket.connect(m_serverAddress);
     server_ = std::make_unique<IpcServerProxy>(m_socket, m_events);
 
-    m_events->adoptHandler(
-        m_events->forIpcServerProxy().messageReceived(), server_.get(),
+    m_events->adoptHandler(EventType::IPC_SERVER_PROXY_MESSAGE_RECEIVED, server_.get(),
         new TMethodEventJob<IpcClient>(
         this, &IpcClient::handleMessageReceived));
 }
@@ -71,8 +69,8 @@ IpcClient::connect()
 void
 IpcClient::disconnect()
 {
-    m_events->removeHandler(m_events->forIDataSocket().connected(), m_socket.getEventTarget());
-    m_events->removeHandler(m_events->forIpcServerProxy().messageReceived(), server_.get());
+    m_events->removeHandler(EventType::DATA_SOCKET_CONNECTED, m_socket.getEventTarget());
+    m_events->removeHandler(EventType::IPC_SERVER_PROXY_MESSAGE_RECEIVED, server_.get());
 
     server_->disconnect();
     server_.reset();
@@ -88,7 +86,7 @@ IpcClient::send(const IpcMessage& message)
 void
 IpcClient::handleConnected(const Event&, void*)
 {
-    m_events->addEvent(Event(m_events->forIpcClient().connected(), this,
+    m_events->addEvent(Event(EventType::IPC_CLIENT_CONNECTED, this,
                              server_.get(), Event::kDontFreeData));
 
     IpcHelloMessage message(kIpcClientNode);
@@ -98,7 +96,7 @@ IpcClient::handleConnected(const Event&, void*)
 void
 IpcClient::handleMessageReceived(const Event& e, void*)
 {
-    Event event(m_events->forIpcClient().messageReceived(), this);
+    Event event(EventType::IPC_CLIENT_MESSAGE_RECEIVED, this);
     event.setDataObject(e.getDataObject());
     m_events->addEvent(event);
 }

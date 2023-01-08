@@ -20,7 +20,7 @@
 
 #define MAINWINDOW__H
 
-#include "inputleap/BarrierType.h"
+#include "inputleap/AppRole.h"
 
 #include <QMainWindow>
 #include <QSystemTrayIcon>
@@ -94,7 +94,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 
     public:
         void setVisible(bool visible) override;
-        BarrierType barrier_type() const;
+        AppRole app_role() const;
         int barrierState() const { return m_BarrierState; }
         QString hostname() const { return m_pLineEditHostname->text(); }
         QString configFilename();

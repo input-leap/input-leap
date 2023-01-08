@@ -64,7 +64,7 @@ ZeroconfService::ZeroconfService(MainWindow* mainWindow) :
     m_ServiceRegistered(false)
 {
     silence_avahi_warning();
-    if (m_pMainWindow->barrier_type() == BarrierType::Server) {
+    if (m_pMainWindow->app_role() == AppRole::Server) {
         if (registerService(true)) {
             zeroconf_browser_ = std::make_unique<ZeroconfBrowser>(this);
             connect(zeroconf_browser_.get(), SIGNAL(

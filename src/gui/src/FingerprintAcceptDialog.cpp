@@ -20,7 +20,7 @@
 #include "net/SecureUtils.h"
 
 FingerprintAcceptDialog::FingerprintAcceptDialog(QWidget *parent,
-                                                 BarrierType type,
+                                                 AppRole type,
                                                  const inputleap::FingerprintData& fingerprint_sha1,
                                                  const inputleap::FingerprintData& fingerprint_sha256) :
     QDialog(parent),
@@ -28,7 +28,7 @@ FingerprintAcceptDialog::FingerprintAcceptDialog(QWidget *parent,
 {
     ui_->setupUi(this);
 
-    if (type == BarrierType::Server) {
+    if (type == AppRole::Server) {
         ui_->label_sha1->hide();
         ui_->label_sha1_fingerprint_full->hide();
     } else {
@@ -42,7 +42,7 @@ FingerprintAcceptDialog::FingerprintAcceptDialog(QWidget *parent,
             QString::fromStdString(inputleap::create_fingerprint_randomart(fingerprint_sha256.data)));
 
     QString explanation;
-    if (type == BarrierType::Server) {
+    if (type == AppRole::Server) {
         explanation = tr("This is a client fingerprint. You should compare this "
                          "fingerprint to the one on your client's screen. If the "
                          "two don't match exactly, then it's probably not the client "

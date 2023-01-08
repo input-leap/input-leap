@@ -15,12 +15,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTLEAP_LIB_BARRIER_BARRIER_TYPE_H
-#define INPUTLEAP_LIB_BARRIER_BARRIER_TYPE_H
+#ifndef INPUTLEAP_LIB_INPUTLEAP_APP_ROLE_H
+#define INPUTLEAP_LIB_INPUTLEAP_APP_ROLE_H
 
-enum class BarrierType {
+enum class AppRole {
     Server,
     Client
 };
 
-#endif // INPUTLEAP_LIB_BARRIER_BARRIER_TYPE_H
+#endif // INPUTLEAP_LIB_INPUTLEAP_APP_ROLE_H

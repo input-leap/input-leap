@@ -20,6 +20,8 @@
 
 #include "inputleap/IApp.h"
 
+namespace inputleap {
+
 class IAppUtil {
 public:
     virtual ~IAppUtil() { }
@@ -30,3 +32,5 @@ public:
     virtual void beforeAppExit() = 0;
     virtual void startNode() = 0;
 };
+
+} // namespace inputleap

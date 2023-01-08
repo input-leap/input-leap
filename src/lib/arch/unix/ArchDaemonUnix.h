@@ -23,6 +23,8 @@
 #undef ARCH_DAEMON
 #define ARCH_DAEMON ArchDaemonUnix
 
+namespace inputleap {
+
 //! Unix implementation of IArchDaemon
 class ArchDaemonUnix : public ArchDaemonNone {
 public:
@@ -32,5 +34,7 @@ public:
     // IArchDaemon overrides
     int daemonize(const char* name, DaemonFunc func) override;
 };
+
+} // namespace inputleap
 
 #define CONFIG_FILE "/etc/barrier/barrierd.conf"

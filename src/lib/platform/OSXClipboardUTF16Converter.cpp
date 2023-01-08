@@ -20,9 +20,7 @@
 
 #include "base/Unicode.h"
 
-//
-// OSXClipboardUTF16Converter
-//
+namespace inputleap {
 
 OSXClipboardUTF16Converter::OSXClipboardUTF16Converter()
 {
@@ -51,3 +49,5 @@ std::string OSXClipboardUTF16Converter::doToIClipboard(const std::string& data) 
     // convert and strip nul terminator
     return Unicode::UTF16ToUTF8(data);
 }
+
+} // namespace inputleap

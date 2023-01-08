@@ -39,6 +39,7 @@
 
 #include <poll.h>
 
+namespace inputleap {
 
 static const int s_family[] = {
     PF_UNSPEC,
@@ -840,3 +841,5 @@ ArchNetworkBSD::throwNameError(int err)
         throw XArchNetworkName(s_msg[4]);
     }
 }
+
+} // namespace inputleap

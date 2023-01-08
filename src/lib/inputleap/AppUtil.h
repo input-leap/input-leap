@@ -21,6 +21,8 @@
 #include "inputleap/IAppUtil.h"
 #include "inputleap/XBarrier.h"
 
+namespace inputleap {
+
 class AppUtil : public IAppUtil {
 public:
     AppUtil();
@@ -38,3 +40,5 @@ private:
     IApp* m_app;
     static AppUtil* s_instance;
 };
+
+} // namespace inputleap

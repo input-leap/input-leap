@@ -17,6 +17,8 @@
 
 #include "inputleap/ServerArgs.h"
 
+namespace inputleap {
+
 ServerArgs::ServerArgs() :
     m_configFile(),
     m_config(nullptr),
@@ -24,3 +26,4 @@ ServerArgs::ServerArgs() :
 {
 }
 
+} // namespace inputleap

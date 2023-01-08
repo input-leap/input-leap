@@ -21,6 +21,8 @@
 #include "base/Event.h"
 #include <string>
 
+namespace inputleap {
+
 class IEventJob;
 class IEventQueueBuffer;
 
@@ -242,3 +244,5 @@ public:
     virtual ClipboardEvents& forClipboard() = 0;
     virtual FileEvents& forFile() = 0;
 };
+
+} // namespace inputleap

@@ -1,5 +1,7 @@
 #include "MSWindowsHookResource.h"
 
+namespace inputleap {
+
 WindowsHookResource::WindowsHookResource() :
     _hook(nullptr)
 {
@@ -31,3 +33,5 @@ bool WindowsHookResource::unset()
 
 bool WindowsHookResource::is_set() const { return _hook != nullptr; }
 WindowsHookResource::operator HHOOK() const { return _hook; }
+
+} // namespace inputleap

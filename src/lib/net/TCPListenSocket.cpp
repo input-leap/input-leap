@@ -28,9 +28,7 @@
 #include "arch/XArch.h"
 #include "base/IEventQueue.h"
 
-//
-// TCPListenSocket
-//
+namespace inputleap {
 
 TCPListenSocket::TCPListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family) :
     m_events(events),
@@ -153,3 +151,5 @@ MultiplexerJobStatus TCPListenSocket::serviceListening(ISocketMultiplexerJob* jo
     }
     return {true, {}};
 }
+
+} // namespace inputleap

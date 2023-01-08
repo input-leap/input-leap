@@ -21,6 +21,8 @@
 #include "net/ISocketMultiplexerJob.h"
 #include "arch/Arch.h"
 
+namespace inputleap {
+
 //! Use a method as a socket multiplexer job
 /*!
 A socket multiplexer job class that invokes a member function.
@@ -64,4 +66,4 @@ private:
     bool m_writable;
 };
 
-
+} // namespace inputleap

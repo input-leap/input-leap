@@ -50,9 +50,8 @@
 #include <fstream>
 #include <ctime>
 #include <stdexcept>
-//
-// Server
-//
+
+namespace inputleap {
 
 Server::Server(
 		Config& config,
@@ -2407,3 +2406,5 @@ void Server::dragInfoReceived(std::uint32_t fileNum, std::string content)
 
 	m_screen->startDraggingFiles(m_fakeDragFileList);
 }
+
+} // namespace inputleap

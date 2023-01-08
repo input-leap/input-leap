@@ -18,6 +18,8 @@
 
 #include "inputleap/ArgsBase.h"
 
+namespace inputleap {
+
 ArgsBase::ArgsBase() :
 #if SYSAPI_WIN32
 m_daemon(false), // daemon mode not supported on windows (use --service)
@@ -48,3 +50,5 @@ m_pluginDirectory("")
 ArgsBase::~ArgsBase()
 {
 }
+
+} // namespace inputleap

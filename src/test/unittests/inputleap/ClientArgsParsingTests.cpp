@@ -21,6 +21,8 @@
 
 #include <gtest/gtest.h>
 
+namespace inputleap {
+
 using ::testing::_;
 using ::testing::Invoke;
 using ::testing::NiceMock;
@@ -93,3 +95,5 @@ TEST(ClientArgsParsingTests, parseClientArgs_unrecognizedArg_returnFalse)
 
     EXPECT_FALSE(result);
 }
+
+} // namespace inputleap

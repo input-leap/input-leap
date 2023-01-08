@@ -25,9 +25,7 @@
 #include "base/Log.h"
 #include <vector>
 
-//
-// SocketMultiplexer
-//
+namespace inputleap {
 
 class CursorMultiplexerJob : public ISocketMultiplexerJob {
 public:
@@ -335,3 +333,5 @@ SocketMultiplexer::unlockJobList()
         cv_jobs_ready_.notify_one();
     }
 }
+
+} // namespace inputleap

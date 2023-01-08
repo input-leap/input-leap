@@ -20,6 +20,8 @@
 
 #include "server/ClientProxy1_0.h"
 
+namespace inputleap {
+
 //! Proxy for client implementing protocol version 1.1
 class ClientProxy1_1 : public ClientProxy1_0 {
 public:
@@ -31,3 +33,5 @@ public:
     void keyRepeat(KeyID, KeyModifierMask, std::int32_t count, KeyButton) override;
     void keyUp(KeyID, KeyModifierMask, KeyButton) override;
 };
+
+} // namespace inputleap

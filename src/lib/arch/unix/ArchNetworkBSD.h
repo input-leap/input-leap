@@ -28,7 +28,6 @@
 #    include <sys/socket.h>
 #endif
 
-
 // old systems may use char* for [gs]etsockopt()'s optval argument.
 // this should be void on modern systems but char is forwards
 // compatible so we always use it.
@@ -36,6 +35,8 @@ typedef char optval_t;
 
 #define ARCH_NETWORK ArchNetworkBSD
 #define TYPED_ADDR(type_, addr_) (reinterpret_cast<type_*>(&addr_->m_addr))
+
+namespace inputleap {
 
 class ArchSocketImpl {
 public:
@@ -100,3 +101,5 @@ private:
 private:
     std::mutex mutex_;
 };
+
+} // namespace inputleap

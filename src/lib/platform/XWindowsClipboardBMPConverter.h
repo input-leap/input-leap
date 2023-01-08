@@ -20,6 +20,8 @@
 
 #include "platform/XWindowsClipboard.h"
 
+namespace inputleap {
+
 //! Convert to/from some text encoding
 class XWindowsClipboardBMPConverter :
                 public IXWindowsClipboardConverter {
@@ -37,3 +39,5 @@ public:
 private:
     Atom m_atom;
 };
+
+} // namespace inputleap

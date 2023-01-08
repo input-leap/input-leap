@@ -23,6 +23,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+namespace inputleap {
+
 class Thread;
 
 //! Microsoft windows screen saver implementation
@@ -86,3 +88,5 @@ private:
     // for deactivation (and is therefore active).
     bool m_active;
 };
+
+} // namespace inputleap

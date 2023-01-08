@@ -27,6 +27,8 @@
 #include <list>
 #include <mutex>
 
+namespace inputleap {
+
 class Event;
 class IpcClientProxy;
 class IpcMessage;
@@ -90,3 +92,5 @@ public:
         m_socketMultiplexer(nullptr) { }
 #endif
 };
+
+} // namespace inputleap

@@ -29,9 +29,11 @@
 #include <errno.h>
 #include <cstdlib>
 
-//
-// ArchDaemonUnix
-//
+#ifdef __APPLE__
+extern char** NXArgv;
+#endif
+
+namespace inputleap {
 
 ArchDaemonUnix::ArchDaemonUnix()
 {
@@ -52,7 +54,6 @@ ArchDaemonUnix::~ArchDaemonUnix()
 int
 execSelfNonDaemonized()
 {
-    extern char** NXArgv;
     char** selfArgv = NXArgv;
 
     setenv("_INPUTLEAP_DAEMONIZED", "", 1);
@@ -131,3 +132,5 @@ ArchDaemonUnix::daemonize(const char* name, DaemonFunc func)
     // invoke function
     return func(1, &name);
 }
+
+} // namespace inputleap

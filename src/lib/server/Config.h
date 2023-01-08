@@ -30,13 +30,11 @@
 #include <map>
 #include <set>
 
-class Config;
-class ConfigReadContext;
-class IEventQueue;
+namespace inputleap { class Config; }
 
 namespace std {
 template <>
-struct iterator_traits<Config> {
+struct iterator_traits<inputleap::Config> {
     typedef std::string value_type;
     typedef ptrdiff_t                    difference_type;
     typedef bidirectional_iterator_tag    iterator_category;
@@ -44,6 +42,12 @@ struct iterator_traits<Config> {
     typedef std::string& reference;
 };
 }
+
+namespace inputleap {
+
+class Config;
+class ConfigReadContext;
+class IEventQueue;
 
 //! Server configuration
 /*!
@@ -529,3 +533,5 @@ protected:
 private:
     std::string m_error;
 };
+
+} // namespace inputleap

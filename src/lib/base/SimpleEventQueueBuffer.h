@@ -23,6 +23,8 @@
 #include <condition_variable>
 #include <deque>
 
+namespace inputleap {
+
 //! In-memory event queue buffer
 /*!
 An event queue buffer provides a queue of events for an IEventQueue.
@@ -50,3 +52,4 @@ private:
     EventDeque m_queue;
 };
 
+} // namespace inputleap

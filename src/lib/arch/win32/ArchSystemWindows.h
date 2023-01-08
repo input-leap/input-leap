@@ -22,6 +22,8 @@
 
 #define ARCH_SYSTEM ArchSystemWindows
 
+namespace inputleap {
+
 //! Win32 implementation of IArchSystem
 class ArchSystemWindows : public IArchSystem {
 public:
@@ -37,3 +39,5 @@ public:
 
     bool isWOW64() const;
 };
+
+} // namespace inputleap

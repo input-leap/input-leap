@@ -56,6 +56,8 @@
 
 #include <mutex>
 
+namespace inputleap {
+
 /*!
 \def ARCH
 This macro evaluates to the singleton Arch object.
@@ -106,3 +108,5 @@ public:
 private:
     static Arch*        s_instance;
 };
+
+} // namespace inputleap

@@ -23,6 +23,8 @@
 
 #include <gmock/gmock.h>
 
+namespace inputleap {
+
 class MockPrimaryClient : public PrimaryClient
 {
 public:
@@ -38,3 +40,5 @@ public:
     MOCK_CONST_METHOD0(getToggleMask, KeyModifierMask());
     MOCK_METHOD1(unregisterHotKey, void(std::uint32_t));
 };
+
+} // namespace inputleap

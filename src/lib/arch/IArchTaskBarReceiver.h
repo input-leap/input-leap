@@ -20,6 +20,8 @@
 
 #include <string>
 
+namespace inputleap {
+
 class IScreen;
 class INode;
 
@@ -97,3 +99,5 @@ public:
 
     //@}
 };
+
+} // namespace inputleap

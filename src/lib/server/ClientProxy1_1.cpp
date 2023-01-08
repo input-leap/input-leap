@@ -23,9 +23,7 @@
 
 #include <cstring>
 
-//
-// ClientProxy1_1
-//
+namespace inputleap {
 
 ClientProxy1_1::ClientProxy1_1(const std::string& name, inputleap::IStream* stream,
                                IEventQueue* events) :
@@ -59,3 +57,5 @@ ClientProxy1_1::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
     LOG((CLOG_DEBUG1 "send key up to \"%s\" id=%d, mask=0x%04x, button=0x%04x", getName().c_str(), key, mask, button));
     ProtocolUtil::writef(getStream(), kMsgDKeyUp, key, mask, button);
 }
+
+} // namespace inputleap

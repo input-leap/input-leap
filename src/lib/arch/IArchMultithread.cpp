@@ -18,6 +18,8 @@
 
 #include "IArchMultithread.h"
 
+namespace inputleap {
+
 bool IArchMultithread::wait_cond_var(std::condition_variable& cv,
                                      std::unique_lock<std::mutex>& lock, double timeout)
 {
@@ -47,4 +49,4 @@ bool IArchMultithread::wait_cond_var(std::condition_variable& cv,
     return false;
 }
 
-
+} // namespace inputleap

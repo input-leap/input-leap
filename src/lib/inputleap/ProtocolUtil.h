@@ -23,7 +23,9 @@
 
 #include <stdarg.h>
 
-namespace inputleap { class IStream; }
+namespace inputleap {
+
+class IStream;
 
 //! Barrier protocol utilities
 /*!
@@ -90,3 +92,5 @@ public:
     // XBase overrides
     std::string getWhat() const noexcept override;
 };
+
+} // namespace inputleap

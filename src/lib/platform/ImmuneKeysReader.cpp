@@ -19,6 +19,8 @@
 
 #include <fstream>
 
+namespace inputleap {
+
 const std::size_t AllocatedLineSize = 1024;
 const char CommentChar = '#';
 
@@ -51,3 +53,5 @@ static void add_key(const char * const buffer, std::vector<DWORD> &keys)
     }
     return true;
 }
+
+} // namespace inputleap

@@ -19,6 +19,8 @@
 
 #include "inputleap/ArgsBase.h"
 
+namespace inputleap {
+
 class NetworkAddress;
 class Config;
 
@@ -32,3 +34,5 @@ public:
     std::string m_screenChangeScript;
     bool check_client_certificates = true;
 };
+
+} // namespace inputleap

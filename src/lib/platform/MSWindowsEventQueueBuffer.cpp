@@ -23,6 +23,8 @@
 #include "base/IEventQueue.h"
 #include <VersionHelpers.h>
 
+namespace inputleap {
+
 //
 // EventQueueTimer
 //
@@ -150,3 +152,5 @@ MSWindowsEventQueueBuffer::deleteTimer(EventQueueTimer* timer) const
 {
     delete timer;
 }
+
+} // namespace inputleap

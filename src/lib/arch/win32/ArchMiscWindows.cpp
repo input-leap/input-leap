@@ -40,9 +40,7 @@
 #endif
 typedef DWORD EXECUTION_STATE;
 
-//
-// ArchMiscWindows
-//
+namespace inputleap {
 
 ArchMiscWindows::Dialogs* ArchMiscWindows::s_dialogs = nullptr;
 DWORD ArchMiscWindows::s_busyState = 0;
@@ -525,3 +523,5 @@ ArchMiscWindows::setInstanceWin32(HINSTANCE instance)
     assert(instance != nullptr);
     s_instanceWin32 = instance;
 }
+
+} // namespace inputleap

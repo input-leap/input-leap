@@ -21,6 +21,8 @@
 #include "base/IEventJob.h"
 #include <cstddef>
 
+namespace inputleap {
+
 //! Use a function as an event job
 /*!
 An event job class that invokes a function.
@@ -38,3 +40,5 @@ private:
     void  (*m_func)(const Event&, void*);
     void* m_arg;
 };
+
+} // namespace inputleap

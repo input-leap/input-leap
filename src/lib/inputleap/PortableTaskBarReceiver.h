@@ -25,6 +25,8 @@
 #include "base/Event.h"
 #include <vector>
 
+namespace inputleap {
+
 class IEventQueue;
 
 //! Implementation of IArchTaskBarReceiver for the barrier server
@@ -89,3 +91,5 @@ private:
 };
 
 IArchTaskBarReceiver* createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events);
+
+} // namespace inputleap

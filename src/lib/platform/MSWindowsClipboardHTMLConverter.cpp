@@ -20,9 +20,7 @@
 
 #include "base/String.h"
 
-//
-// MSWindowsClipboardHTMLConverter
-//
+namespace inputleap {
 
 MSWindowsClipboardHTMLConverter::MSWindowsClipboardHTMLConverter()
 {
@@ -115,3 +113,5 @@ std::string MSWindowsClipboardHTMLConverter::findArg(const std::string& data,
     }
     return data.substr(i, j - i);
 }
+
+} // namespace inputleap

@@ -25,6 +25,8 @@
 #include <memory>
 #include <mutex>
 
+namespace inputleap {
+
 class Thread;
 class ISocket;
 class ISocketMultiplexerJob;
@@ -113,3 +115,5 @@ private:
     SocketJobs m_socketJobs;
     SocketJobMap m_socketJobMap;
 };
+
+} // namespace inputleap

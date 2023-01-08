@@ -60,6 +60,8 @@
 #define XK_Ydiaeresis          0x13be
 #endif
 
+namespace inputleap {
+
 /*
  * This table maps keysym values into the corresponding ISO 10646
  * (UCS, Unicode) values.
@@ -1822,3 +1824,5 @@ XWindowsUtil::ErrorLock::saveHandler(Display* display, XErrorEvent* e, void* fla
     LOG((CLOG_DEBUG1 "flagging X error: %d - %.1023s", e->error_code, errtxt));
     *static_cast<bool*>(flag) = true;
 }
+
+} // namespace inputleap

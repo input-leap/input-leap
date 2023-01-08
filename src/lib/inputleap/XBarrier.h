@@ -20,6 +20,8 @@
 
 #include "base/XBase.h"
 
+namespace inputleap {
+
 //! Generic barrier exception
 XBASE_SUBCLASS(XBarrier, XBase);
 
@@ -131,3 +133,5 @@ protected:
 private:
     int m_code;
 };
+
+} // namespace inputleap

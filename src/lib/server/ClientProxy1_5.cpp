@@ -27,9 +27,7 @@
 
 #include <sstream>
 
-//
-// ClientProxy1_5
-//
+namespace inputleap {
 
 ClientProxy1_5::ClientProxy1_5(const std::string& name, inputleap::IStream* stream, Server* server,
                                IEventQueue* events) :
@@ -106,3 +104,5 @@ ClientProxy1_5::dragInfoReceived()
 
     m_server->dragInfoReceived(fileNum, content);
 }
+
+} // namespace inputleap

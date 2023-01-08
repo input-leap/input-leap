@@ -26,8 +26,8 @@
 #define CLIPBOARD_CHUNK_META_SIZE 7
 
 namespace inputleap {
+
 class IStream;
-}
 
 class ClipboardChunk : public Chunk {
 public:
@@ -47,3 +47,5 @@ public:
 private:
     static size_t        s_expectedSize;
 };
+
+} // namespace inputleap

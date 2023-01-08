@@ -19,6 +19,8 @@
 #include "inputleap/AppUtil.h"
 #include <cassert>
 
+namespace inputleap {
+
 AppUtil* AppUtil::s_instance = nullptr;
 
 AppUtil::AppUtil() :
@@ -51,3 +53,5 @@ AppUtil::instance()
     assert(s_instance != nullptr);
     return *s_instance;
 }
+
+} // namespace inputleap

@@ -30,6 +30,8 @@
 #include <fstream>
 #include <stdexcept>
 
+namespace inputleap {
+
 using namespace std;
 
 static const size_t g_chunkSize = 32 * 1024; //32kb
@@ -159,3 +161,5 @@ StreamChunker::interruptFile()
         LOG((CLOG_INFO "previous dragged file has become invalid"));
     }
 }
+
+} // namespace inputleap

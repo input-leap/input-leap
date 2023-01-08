@@ -20,6 +20,8 @@
 
 #include "server/ClientProxy1_3.h"
 
+namespace inputleap {
+
 class Server;
 
 //! Proxy for client implementing protocol version 1.4
@@ -45,3 +47,5 @@ public:
 
     Server* m_server;
 };
+
+} // namespace inputleap

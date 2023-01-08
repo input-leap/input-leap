@@ -28,6 +28,8 @@
 
 #define ARCH_MULTITHREAD ArchMultithreadPosix
 
+namespace inputleap {
+
 //! Posix implementation of IArchMultithread
 class ArchMultithreadPosix : public IArchMultithread {
 public:
@@ -96,3 +98,5 @@ private:
     SignalFunc m_signalFunc[kNUM_SIGNALS];
     void* m_signalUserData[kNUM_SIGNALS];
 };
+
+} // namespace inputleap

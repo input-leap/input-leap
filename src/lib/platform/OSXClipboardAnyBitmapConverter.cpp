@@ -19,6 +19,8 @@
 #include "platform/OSXClipboardAnyBitmapConverter.h"
 #include <algorithm>
 
+namespace inputleap {
+
 OSXClipboardAnyBitmapConverter::OSXClipboardAnyBitmapConverter()
 {
     // do nothing
@@ -44,3 +46,5 @@ std::string OSXClipboardAnyBitmapConverter::toIClipboard(const std::string& data
 {
     return doToIClipboard(data);
 }
+
+} // namespace inputleap

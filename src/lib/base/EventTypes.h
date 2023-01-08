@@ -19,6 +19,8 @@
 
 #include "base/Event.h"
 
+namespace inputleap {
+
 class IEventQueue;
 
 class EventTypes {
@@ -767,3 +769,5 @@ private:
     Event::Type m_fileReceiveCompleted;
     Event::Type m_keepAlive;
 };
+
+} // namespace inputleap

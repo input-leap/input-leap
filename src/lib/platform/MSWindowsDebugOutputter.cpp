@@ -22,6 +22,8 @@
 #include <Windows.h>
 #include <string>
 
+namespace inputleap {
+
 MSWindowsDebugOutputter::MSWindowsDebugOutputter()
 {
 }
@@ -56,3 +58,5 @@ void
 MSWindowsDebugOutputter::flush()
 {
 }
+
+} // namespace inputleap

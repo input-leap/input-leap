@@ -26,6 +26,8 @@
 
 #include <vector>
 
+namespace inputleap {
+
 class IMSWindowsClipboardConverter;
 class IMSWindowsClipboardFacade;
 
@@ -113,3 +115,5 @@ public:
     // (i.e., the reverse of fromIClipboard()).
     virtual std::string toIClipboard(HANDLE data) const = 0;
 };
+
+} // namespace inputleap

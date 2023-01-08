@@ -30,6 +30,8 @@
 #include "base/Time.h"
 #include "base/TMethodEventJob.h"
 
+namespace inputleap {
+
 enum EIpcLogOutputter {
     kBufferMaxSize = 1000,
     kMaxSendLines = 100,
@@ -212,3 +214,5 @@ void IpcLogOutputter::bufferRateLimit(std::uint16_t writeLimit, double timeLimit
     m_bufferRateWriteLimit = writeLimit;
     m_bufferRateTimeLimit = timeLimit;
 }
+
+} // namespace inputleap

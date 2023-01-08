@@ -30,6 +30,8 @@
 
 #define ARCH_TASKBAR ArchTaskBarWindows
 
+namespace inputleap {
+
 //! Win32 implementation of IArchTaskBar
 class ArchTaskBarWindows : public IArchTaskBar {
 public:
@@ -113,3 +115,5 @@ private:
     Dialogs m_dialogs;
     Dialogs m_addedDialogs;
 };
+
+} // namespace inputleap

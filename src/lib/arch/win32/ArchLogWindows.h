@@ -25,6 +25,8 @@
 
 #define ARCH_LOG ArchLogWindows
 
+namespace inputleap {
+
 //! Win32 implementation of IArchLog
 class ArchLogWindows : public IArchLog {
 public:
@@ -40,3 +42,5 @@ public:
 private:
     HANDLE m_eventLog;
 };
+
+} // namespace inputleap

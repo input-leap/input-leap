@@ -20,6 +20,8 @@
 
 #include "platform/MSWindowsClipboard.h"
 
+namespace inputleap {
+
 //! Convert to/from some text encoding
 class MSWindowsClipboardAnyTextConverter :
                 public IMSWindowsClipboardConverter {
@@ -54,3 +56,5 @@ private:
     std::string convertLinefeedToWin32(const std::string&) const;
     std::string convertLinefeedToUnix(const std::string&) const;
 };
+
+} // namespace inputleap

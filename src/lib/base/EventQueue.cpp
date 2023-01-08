@@ -27,6 +27,8 @@
 #include "base/XBase.h"
 #include "../gui/src/ShutdownCh.h"
 
+namespace inputleap {
+
 EVENT_TYPE_ACCESSOR(Client)
 EVENT_TYPE_ACCESSOR(IStream)
 EVENT_TYPE_ACCESSOR(IpcClient)
@@ -631,3 +633,5 @@ EventQueue::Timer::operator<(const Timer& t) const
 {
     return m_time < t.m_time;
 }
+
+} // namespace inputleap

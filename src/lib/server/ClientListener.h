@@ -27,6 +27,8 @@
 #include <memory>
 #include <set>
 
+namespace inputleap {
+
 class ClientProxy;
 class ClientProxyUnknown;
 class NetworkAddress;
@@ -89,3 +91,5 @@ private:
     ConnectionSecurityLevel security_level_;
     UniquePtrContainer<IDataSocket> client_sockets_;
 };
+
+} // namespace inputleap

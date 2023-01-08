@@ -21,6 +21,8 @@
 #include <string>
 #include <vector>
 
+namespace inputleap {
+
 class ServerArgs;
 class ClientArgs;
 class ArgsBase;
@@ -102,3 +104,5 @@ private:
 
     static ArgsBase* m_argsBase;
 };
+
+} // namespace inputleap

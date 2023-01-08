@@ -21,6 +21,8 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 
+namespace inputleap {
+
 class NetworkAddress;
 
 //! Generic socket interface
@@ -59,3 +61,5 @@ public:
 
     //@}
 };
+
+} // namespace inputleap

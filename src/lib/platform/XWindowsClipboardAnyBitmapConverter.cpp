@@ -18,6 +18,8 @@
 
 #include "platform/XWindowsClipboardAnyBitmapConverter.h"
 
+namespace inputleap {
+
 // BMP info header structure
 struct CBMPInfoHeader {
 public:
@@ -175,3 +177,5 @@ std::string XWindowsClipboardAnyBitmapConverter::toIClipboard(const std::string&
     return std::string(reinterpret_cast<const char*>(infoHeader),
                        sizeof(infoHeader)) + rawBMP;
 }
+
+} // namespace inputleap

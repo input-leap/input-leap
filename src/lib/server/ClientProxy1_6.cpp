@@ -25,9 +25,7 @@
 #include "base/TMethodEventJob.h"
 #include "base/Log.h"
 
-//
-// ClientProxy1_6
-//
+namespace inputleap {
 
 ClientProxy1_6::ClientProxy1_6(const std::string& name, inputleap::IStream* stream, Server* server,
                                IEventQueue* events) :
@@ -99,3 +97,5 @@ ClientProxy1_6::recvClipboard()
 
     return true;
 }
+
+} // namespace inputleap

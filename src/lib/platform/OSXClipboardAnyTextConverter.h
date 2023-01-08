@@ -20,6 +20,8 @@
 
 #include "platform/OSXClipboard.h"
 
+namespace inputleap {
+
 //! Convert to/from some text encoding
 class OSXClipboardAnyTextConverter : public IOSXClipboardConverter {
 public:
@@ -50,3 +52,5 @@ private:
     static std::string convertLinefeedToMacOS(const std::string&);
     static std::string convertLinefeedToUnix(const std::string&);
 };
+
+} // namespace inputleap

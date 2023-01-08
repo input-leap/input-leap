@@ -18,9 +18,7 @@
 
 #include "arch/Arch.h"
 
-//
-// Arch
-//
+namespace inputleap {
 
 Arch* Arch::s_instance = nullptr;
 
@@ -58,3 +56,5 @@ Arch::getInstance()
     assert(s_instance != nullptr);
     return s_instance;
 }
+
+} // namespace inputleap

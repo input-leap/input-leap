@@ -22,9 +22,7 @@
 #include "arch/Arch.h"
 #include "common/Version.h"
 
-//
-// ServerTaskBarReceiver
-//
+namespace inputleap {
 
 ServerTaskBarReceiver::ServerTaskBarReceiver(IEventQueue* events) :
     m_state(kNotRunning),
@@ -132,3 +130,5 @@ ServerTaskBarReceiver::getToolTip() const
         return "";
     }
 }
+
+} // namespace inputleap

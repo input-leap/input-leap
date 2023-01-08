@@ -20,6 +20,8 @@
 
 #include "platform/MSWindowsClipboard.h"
 
+namespace inputleap {
+
 void MSWindowsClipboardFacade::write(HANDLE win32Data, UINT win32Format)
 {
     if (SetClipboardData(win32Format, win32Data) == nullptr) {
@@ -29,3 +31,5 @@ void MSWindowsClipboardFacade::write(HANDLE win32Data, UINT win32Format)
         GlobalFree(win32Data);
     }
 }
+
+} // namespace inputleap

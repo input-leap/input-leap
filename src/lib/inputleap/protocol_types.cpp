@@ -18,6 +18,8 @@
 
 #include "inputleap/protocol_types.h"
 
+namespace inputleap {
+
 const char*                kMsgHello            = "Barrier%2i%2i";
 const char*                kMsgHelloBack        = "Barrier%2i%2i%s";
 const char*                kMsgCNoop             = "CNOP";
@@ -51,3 +53,5 @@ const char*                kMsgEIncompatible    = "EICV%2i%2i";
 const char*                kMsgEBusy             = "EBSY";
 const char*                kMsgEUnknown        = "EUNK";
 const char*                kMsgEBad            = "EBAD";
+
+} // namespace inputleap

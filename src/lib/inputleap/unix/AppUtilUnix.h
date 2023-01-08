@@ -22,6 +22,8 @@
 
 #define ARCH_APP_UTIL AppUtilUnix
 
+namespace inputleap {
+
 class IEventQueue;
 
 class AppUtilUnix : public AppUtil {
@@ -32,3 +34,5 @@ public:
     int run(int argc, char** argv) override;
     void startNode() override;
 };
+
+} // namespace inputleap

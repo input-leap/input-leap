@@ -22,6 +22,8 @@
 
 #include <Carbon/Carbon.h>
 
+namespace inputleap {
+
 class IEventQueue;
 
 //! Event queue buffer for OS X
@@ -44,3 +46,5 @@ private:
     IEventQueue* m_eventQueue;
     EventQueueRef m_carbonEventQueue;
 };
+
+} // namespace inputleap

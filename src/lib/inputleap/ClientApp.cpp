@@ -60,6 +60,8 @@
 
 #define RETRY_TIME 1.0
 
+namespace inputleap {
+
 ClientApp::ClientApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver) :
     App(events, createTaskBarReceiver, new ClientArgs()),
     m_client(nullptr),
@@ -556,3 +558,5 @@ ClientApp::startNode()
         m_bye(kExitFailed);
     }
 }
+
+} // namespace inputleap

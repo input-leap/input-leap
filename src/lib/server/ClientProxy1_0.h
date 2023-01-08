@@ -22,6 +22,8 @@
 #include "inputleap/Clipboard.h"
 #include "inputleap/protocol_types.h"
 
+namespace inputleap {
+
 class Event;
 class EventQueueTimer;
 class IEventQueue;
@@ -103,3 +105,5 @@ private:
     MessageParser m_parser;
     IEventQueue* m_events;
 };
+
+} // namespace inputleap

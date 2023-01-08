@@ -25,12 +25,13 @@
 #include "MSWindowsClientTaskBarReceiver.h"
 #endif
 
+namespace inputleap {
+
 #if WINAPI_XWINDOWS || WINAPI_CARBON
 CreateTaskBarReceiverFunc createTaskBarReceiver = nullptr;
 #endif
 
-int
-main(int argc, char** argv)
+int client_main(int argc, char** argv)
 {
 #if SYSAPI_WIN32
     // record window instance for tray icon, etc
@@ -52,5 +53,11 @@ main(int argc, char** argv)
     }
 #endif
     return result;
+}
 
+} // namespace inputleap
+
+int main(int argc, char** argv)
+{
+    return inputleap::client_main(argc, argv);
 }

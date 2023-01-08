@@ -23,6 +23,8 @@
 #include "base/EventTypes.h"
 #include <memory>
 
+namespace inputleap {
+
 class IpcServerProxy;
 class IpcMessage;
 class IEventQueue;
@@ -63,3 +65,5 @@ private:
     std::unique_ptr<IpcServerProxy> server_;
     IEventQueue* m_events;
 };
+
+} // namespace inputleap

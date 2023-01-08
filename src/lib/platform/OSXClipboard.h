@@ -24,6 +24,8 @@
 #include <string>
 #include <vector>
 
+namespace inputleap {
+
 class IOSXClipboardConverter;
 
 //! OS X clipboard implementation
@@ -94,3 +96,5 @@ public:
 
     //@}
 };
+
+} // namespace inputleap

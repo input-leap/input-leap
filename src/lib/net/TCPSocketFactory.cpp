@@ -24,9 +24,7 @@
 #include "arch/Arch.h"
 #include "base/Log.h"
 
-//
-// TCPSocketFactory
-//
+namespace inputleap {
 
 TCPSocketFactory::TCPSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
     m_events(events),
@@ -67,3 +65,5 @@ IListenSocket* TCPSocketFactory::createListen(IArchNetwork::EAddressFamily famil
 
     return socket;
 }
+
+} // namespace inputleap

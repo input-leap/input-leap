@@ -22,6 +22,8 @@
 
 #define ARCH_TASKBAR ArchTaskBarXWindows
 
+namespace inputleap {
+
 //! X11 implementation of IArchTaskBar
 class ArchTaskBarXWindows : public IArchTaskBar {
 public:
@@ -33,3 +35,5 @@ public:
     void removeReceiver(IArchTaskBarReceiver*) override;
     void updateReceiver(IArchTaskBarReceiver*) override;
 };
+
+} // namespace inputleap

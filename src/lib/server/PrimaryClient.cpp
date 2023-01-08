@@ -22,9 +22,7 @@
 #include "inputleap/Clipboard.h"
 #include "base/Log.h"
 
-//
-// PrimaryClient
-//
+namespace inputleap {
 
 PrimaryClient::PrimaryClient(const std::string& name, inputleap::Screen* screen) :
     BaseClientProxy(name),
@@ -266,3 +264,5 @@ PrimaryClient::setOptions(const OptionsList& options)
 {
     m_screen->setOptions(options);
 }
+
+} // namespace inputleap

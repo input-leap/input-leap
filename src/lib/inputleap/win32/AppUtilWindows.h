@@ -25,6 +25,8 @@
 
 #define ARCH_APP_UTIL AppUtilWindows
 
+namespace inputleap {
+
 class IEventQueue;
 
 enum AppExitMode {
@@ -59,3 +61,5 @@ private:
 
     static BOOL WINAPI consoleHandler(DWORD Event);
 };
+
+} // namespace inputleap

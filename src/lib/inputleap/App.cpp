@@ -47,11 +47,9 @@
 #include "platform/OSXDragSimulator.h"
 #endif
 
-App* App::s_instance = nullptr;
+namespace inputleap {
 
-//
-// App
-//
+App* App::s_instance = nullptr;
 
 App::App(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver, ArgsBase* args) :
     m_bye(&exit),
@@ -331,3 +329,5 @@ MinimalApp::parseArgs(int argc, const char* const* argv)
     (void) argc;
     (void) argv;
 }
+
+} // namespace inputleap

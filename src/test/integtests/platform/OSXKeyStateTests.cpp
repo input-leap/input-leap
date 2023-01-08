@@ -31,6 +31,8 @@
 #define A_CHAR_ID 0x00000061
 #define A_CHAR_BUTTON 001
 
+namespace inputleap {
+
 class OSXKeyStateTests : public ::testing::Test {
 public:
     static bool isKeyPressed(const OSXKeyState& keyState, KeyButton button);
@@ -118,3 +120,4 @@ OSXKeyStateTests::isKeyPressed(const OSXKeyState& keyState, KeyButton button)
 
 #endif
 
+} // namespace inputleap

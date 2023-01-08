@@ -27,6 +27,8 @@
 #include <mutex>
 #include <vector>
 
+namespace inputleap {
+
 class IEventQueue;
 
 //! Event queue buffer for X11
@@ -64,3 +66,5 @@ private:
     int m_pipefd[2];
     IEventQueue* m_events;
 };
+
+} // namespace inputleap

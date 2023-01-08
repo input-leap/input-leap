@@ -21,6 +21,8 @@
 #include "arch/IArchNetwork.h"
 #include <memory>
 
+namespace inputleap {
+
 class ISocketMultiplexerJob;
 
 struct MultiplexerJobStatus
@@ -88,3 +90,5 @@ public:
     virtual bool isCursor() const { return false; }
     //@}
 };
+
+} // namespace inputleap

@@ -21,6 +21,8 @@
 #include <string>
 #include <vector>
 
+namespace inputleap {
+
 class DragInformation;
 typedef std::vector<DragInformation> DragFileList;
 
@@ -51,3 +53,5 @@ private:
     std::string m_filename;
     size_t m_filesize;
 };
+
+} // namespace inputleap

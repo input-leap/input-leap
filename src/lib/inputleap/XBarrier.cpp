@@ -19,9 +19,7 @@
 #include "inputleap/XBarrier.h"
 #include "base/String.h"
 
-//
-// XBadClient
-//
+namespace inputleap {
 
 std::string XBadClient::getWhat() const noexcept
 {
@@ -121,3 +119,5 @@ std::string XExitApp::getWhat() const noexcept
         "XExitApp", "exiting with code %{1}",
         inputleap::string::sprintf("%d", m_code).c_str());
 }
+
+} // namespace inputleap

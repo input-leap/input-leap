@@ -32,6 +32,8 @@
 #include <malloc.h>
 #include <VersionHelpers.h>
 
+namespace inputleap {
+
 // these are only defined when WINVER >= 0x0500
 #if !defined(SPI_GETMOUSESPEED)
 #define SPI_GETMOUSESPEED 112
@@ -907,3 +909,5 @@ MSWindowsDesks::getForegroundWindow() const
     }
     return GetForegroundWindow();
 }
+
+} // namespace inputleap

@@ -21,9 +21,11 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 
+namespace inputleap {
+
 class ClientProxy;
 class EventQueueTimer;
-namespace inputleap { class IStream; }
+class IStream;
 class Server;
 class IEventQueue;
 
@@ -69,3 +71,5 @@ private:
     Server* m_server;
     IEventQueue* m_events;
 };
+
+} // namespace inputleap

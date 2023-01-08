@@ -22,6 +22,8 @@
 
 #include <fstream>
 
+namespace inputleap {
+
 void
 DropHelper::writeToDir(const std::string& destination, DragFileList& fileList, std::string& data)
 {
@@ -36,7 +38,7 @@ DropHelper::writeToDir(const std::string& destination, DragFileList& fileList, s
         dropTarget.append("/");
 #endif
         dropTarget.append(fileList.at(0).getFilename());
-        inputleap::open_utf8_path(file, dropTarget, std::ios::out | std::ios::binary);
+        open_utf8_path(file, dropTarget, std::ios::out | std::ios::binary);
         if (!file.is_open()) {
             LOG((CLOG_ERR "drop file failed: can not open %s", dropTarget.c_str()));
         }
@@ -52,3 +54,5 @@ DropHelper::writeToDir(const std::string& destination, DragFileList& fileList, s
         LOG((CLOG_ERR "drop file failed: drop target is empty"));
     }
 }
+
+} // namespace inputleap

@@ -23,6 +23,8 @@
 
 #include <gmock/gmock.h>
 
+namespace inputleap {
+
 class MockArgParser : public ArgParser
 {
 public:
@@ -31,3 +33,5 @@ public:
     MOCK_METHOD3(parseGenericArgs, bool(int, const char* const*, int&));
     MOCK_METHOD0(checkUnexpectedArgs, bool());
 };
+
+} // namespace inputleap

@@ -45,6 +45,8 @@
 #include <iostream>
 #include <stdio.h>
 
+namespace inputleap {
+
 using namespace std;
 using ::testing::_;
 using ::testing::NiceMock;
@@ -521,5 +523,7 @@ void getCursorPos(std::int32_t& x, std::int32_t& y)
     x = 0;
     y = 0;
 }
+
+} // namespace inputleap
 
 #endif // WINAPI_CARBON

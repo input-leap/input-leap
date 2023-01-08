@@ -27,6 +27,8 @@
 #include <fstream>
 #include <string>
 
+namespace inputleap {
+
 //! Stop traversing log chain outputter
 /*!
 This outputter performs no output and returns false from \c write(),
@@ -170,3 +172,5 @@ public:
     void show(bool showIfEmpty) override;
     bool write(ELevel level, const char* message) override;
 };
+
+} // namespace inputleap

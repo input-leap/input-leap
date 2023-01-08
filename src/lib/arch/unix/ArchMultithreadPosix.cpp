@@ -40,9 +40,7 @@ setSignalSet(sigset_t* sigset)
     sigaddset(sigset, SIGUSR2);
 }
 
-//
-// ArchThreadImpl
-//
+namespace inputleap {
 
 class ArchThreadImpl {
 public:
@@ -599,3 +597,5 @@ ArchMultithreadPosix::threadSignalHandler(void*)
 
     return nullptr;
 }
+
+} // namespace inputleap

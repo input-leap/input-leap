@@ -29,9 +29,7 @@
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
 
-//
-// ClientListener
-//
+namespace inputleap {
 
 ClientListener::ClientListener(const NetworkAddress& address,
                 ISocketFactory* socketFactory,
@@ -245,3 +243,5 @@ ClientListener::cleanupClientSockets()
 {
     client_sockets_.clear();
 }
+
+} // namespace inputleap

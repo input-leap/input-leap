@@ -18,9 +18,7 @@
 
 #include "base/FunctionEventJob.h"
 
-//
-// FunctionEventJob
-//
+namespace inputleap {
 
 FunctionEventJob::FunctionEventJob(
                 void (*func)(const Event&, void*), void* arg) :
@@ -42,3 +40,5 @@ FunctionEventJob::run(const Event& event)
         m_func(event, m_arg);
     }
 }
+
+} // namespace inputleap

@@ -21,6 +21,8 @@
 #include "arch/IArchNetwork.h"
 #include "net/ConnectionSecurityLevel.h"
 
+namespace inputleap {
+
 class IDataSocket;
 class IListenSocket;
 
@@ -46,3 +48,5 @@ public:
 
     //@}
 };
+
+} // namespace inputleap

@@ -21,7 +21,9 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 
-namespace inputleap { class IStream; }
+namespace inputleap {
+
+class IStream;
 class IpcMessage;
 class IpcLogLineMessage;
 class IEventQueue;
@@ -44,3 +46,5 @@ private:
     inputleap::IStream& m_stream;
     IEventQueue* m_events;
 };
+
+} // namespace inputleap

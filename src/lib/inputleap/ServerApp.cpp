@@ -65,9 +65,7 @@
 #include <fstream>
 #include <sstream>
 
-//
-// ServerApp
-//
+namespace inputleap {
 
 ServerApp::ServerApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver) :
     App(events, createTaskBarReceiver, new ServerArgs()),
@@ -924,3 +922,5 @@ ServerApp::startNode()
         m_bye(kExitFailed);
     }
 }
+
+} // namespace inputleap

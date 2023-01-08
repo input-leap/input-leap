@@ -26,6 +26,8 @@
 #include <memory>
 #include <mutex>
 
+namespace inputleap {
+
 class Thread;
 class IEventQueue;
 class SocketMultiplexer;
@@ -110,3 +112,5 @@ private:
     bool is_flushed_ = true;
     SocketMultiplexer* m_socketMultiplexer;
 };
+
+} // namespace inputleap

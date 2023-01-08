@@ -38,6 +38,8 @@
 #include <conio.h>
 #include <VersionHelpers.h>
 
+namespace inputleap {
+
 AppUtilWindows::AppUtilWindows(IEventQueue* events) :
     m_events(events),
     m_exitMode(kExitModeNormal)
@@ -184,3 +186,5 @@ AppUtilWindows::startNode()
 {
     app().startNode();
 }
+
+} // namespace inputleap

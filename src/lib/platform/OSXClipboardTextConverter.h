@@ -20,6 +20,8 @@
 
 #include "platform/OSXClipboardAnyTextConverter.h"
 
+namespace inputleap {
+
 //! Convert to/from locale text encoding
 class OSXClipboardTextConverter : public OSXClipboardAnyTextConverter {
 public:
@@ -39,3 +41,5 @@ protected:
     static std::string convertString(const std::string& data, CFStringEncoding fromEncoding,
                                      CFStringEncoding toEncoding);
 };
+
+} // namespace inputleap

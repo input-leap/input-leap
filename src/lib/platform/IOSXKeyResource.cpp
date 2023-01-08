@@ -19,6 +19,8 @@
 
 #include <Carbon/Carbon.h>
 
+namespace inputleap {
+
 KeyID IOSXKeyResource::getKeyID(std::uint8_t c)
 {
     if (c == 0) {
@@ -186,3 +188,5 @@ IOSXKeyResource::unicharToKeyID(UniChar c)
         return static_cast<KeyID>(c);
     }
 }
+
+} // namespace inputleap

@@ -23,6 +23,8 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+namespace inputleap {
+
 TEST(OSXKeyStateTests, mapModifiersFromOSX_OSXMask_returnBarrierMask)
 {
     inputleap::KeyMap keyMap;
@@ -55,3 +57,5 @@ TEST(OSXKeyStateTests, mapModifiersFromOSX_OSXMask_returnBarrierMask)
     outMask = keyState.mapModifiersFromOSX(numMask);
     EXPECT_EQ(KeyModifierNumLock, outMask);
 }
+
+} // namespace inputleap

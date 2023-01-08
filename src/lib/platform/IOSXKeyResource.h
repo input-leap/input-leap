@@ -20,6 +20,8 @@
 #include "inputleap/KeyState.h"
 #include <CoreServices/CoreServices.h>
 
+namespace inputleap {
+
 class IOSXKeyResource {
 public:
     virtual ~IOSXKeyResource() { }
@@ -36,3 +38,5 @@ public:
     // Convert a unicode character to the equivalent KeyID.
     static KeyID unicharToKeyID(UniChar);
 };
+
+} // namespace inputleap

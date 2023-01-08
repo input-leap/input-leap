@@ -20,6 +20,8 @@
 
 #include "common/common.h"
 
+namespace inputleap {
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -38,3 +40,5 @@ int screenSaverUtilIsActive(void*);
 #if defined(__cplusplus)
 }
 #endif
+
+} // namespace inputleap

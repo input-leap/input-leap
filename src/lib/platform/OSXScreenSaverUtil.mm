@@ -18,6 +18,8 @@
 
 #import <Foundation/NSAutoreleasePool.h>
 
+namespace inputleap {
+
 //
 // screenSaverUtil functions
 //
@@ -81,3 +83,5 @@ screenSaverUtilIsActive(void* controller)
 {
 	return [(ScreenSaverController*)controller screenSaverIsRunning];
 }
+
+} // namespace inputleap

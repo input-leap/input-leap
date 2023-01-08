@@ -24,6 +24,8 @@
 #include "base/String.h"
 #include "base/Log.h"
 
+namespace inputleap {
+
 static const std::uint16_t kIntervalThreshold = 1;
 
 FileChunk::FileChunk(size_t size) :
@@ -155,3 +157,5 @@ void FileChunk::send(inputleap::IStream* stream, std::uint8_t mark, char* data, 
 
     ProtocolUtil::writef(stream, kMsgDFileTransfer, mark, &chunk);
 }
+
+} // namespace inputleap

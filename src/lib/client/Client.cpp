@@ -45,9 +45,7 @@
 #include <stdexcept>
 #include <fstream>
 
-//
-// Client
-//
+namespace inputleap {
 
 Client::Client(IEventQueue* events, const std::string& name, const NetworkAddress& address,
                ISocketFactory* socketFactory,
@@ -821,3 +819,5 @@ void Client::sendDragInfo(std::uint32_t fileCount, std::string& info, size_t siz
 {
     m_server->sendDragInfo(fileCount, info.c_str(), size);
 }
+
+} // namespace inputleap

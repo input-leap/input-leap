@@ -25,6 +25,8 @@
 #include "common/DataDirectories.h"
 #include "base/String.h"
 
+namespace inputleap {
+
 SecureListenSocket::SecureListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer,
                                        IArchNetwork::EAddressFamily family,
                                        ConnectionSecurityLevel security_level) :
@@ -65,3 +67,5 @@ std::unique_ptr<IDataSocket> SecureListenSocket::accept()
         throw ex;
     }
 }
+
+} // namespace inputleap

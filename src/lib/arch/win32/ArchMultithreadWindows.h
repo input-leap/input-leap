@@ -28,6 +28,8 @@
 
 #define ARCH_MULTITHREAD ArchMultithreadWindows
 
+namespace inputleap {
+
 //! Win32 implementation of IArchMultithread
 class ArchMultithreadWindows : public IArchMultithread {
 public:
@@ -92,3 +94,5 @@ private:
     SignalFunc m_signalFunc[kNUM_SIGNALS];
     void* m_signalUserData[kNUM_SIGNALS];
 };
+
+} // namespace inputleap

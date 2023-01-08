@@ -25,8 +25,8 @@
 #define FILE_CHUNK_META_SIZE 2
 
 namespace inputleap {
+
 class IStream;
-}
 
 class FileChunk : public Chunk {
 public:
@@ -38,3 +38,5 @@ public:
     static int assemble(inputleap::IStream* stream, std::string& dataCached, size_t& expectedSize);
     static void send(inputleap::IStream* stream, std::uint8_t mark, char* data, size_t dataSize);
 };
+
+} // namespace inputleap

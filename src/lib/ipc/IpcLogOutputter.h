@@ -27,6 +27,8 @@
 #include <condition_variable>
 #include <mutex>
 
+namespace inputleap {
+
 class IpcServer;
 class Event;
 class IpcClientProxy;
@@ -119,3 +121,5 @@ private:
     EIpcClientType m_clientType;
     std::mutex m_runningMutex;
 };
+
+} // namespace inputleap

@@ -26,6 +26,8 @@
 #include <CoreServices/CoreServices.h>
 #include <IOKit/hidsystem/IOHIDLib.h>
 
+namespace inputleap {
+
 // Note that some virtual keys codes appear more than once.  The
 // first instance of a virtual key code maps to the KeyID that we
 // want to generate for that code.  The others are for mapping
@@ -910,3 +912,5 @@ std::uint32_t OSXKeyState::mapKeyButtonToVirtualKey(KeyButton keyButton)
 {
     return static_cast<std::uint32_t>(keyButton - KeyButtonOffset);
 }
+
+} // namespace inputleap

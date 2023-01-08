@@ -81,9 +81,7 @@
 #define PBT_APMRESUMEAUTOMATIC    0x0012
 #endif
 
-//
-// MSWindowsScreen
-//
+namespace inputleap {
 
 HINSTANCE MSWindowsScreen::s_windowInstance = nullptr;
 MSWindowsScreen* MSWindowsScreen::s_screen  = nullptr;
@@ -1935,3 +1933,5 @@ MSWindowsScreen::isModifierRepeat(KeyModifierMask oldState, KeyModifierMask stat
 
     return result;
 }
+
+} // namespace inputleap

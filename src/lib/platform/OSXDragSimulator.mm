@@ -20,6 +20,8 @@
 #import <CoreData/CoreData.h>
 #import <Cocoa/Cocoa.h>
 
+namespace inputleap {
+
 #if defined(MAC_OS_X_VERSION_10_7)
 
 NSWindow* g_dragWindow = nullptr;
@@ -100,3 +102,5 @@ getCocoaDropTarget()
 }
 
 #endif
+
+} // namespace inputleap

@@ -32,6 +32,8 @@
 #define SPI_GETSCREENSAVERRUNNING 114
 #endif
 
+namespace inputleap {
+
 static const TCHAR* g_isSecureNT = "ScreenSaverIsSecure";
 static const TCHAR* g_isSecure9x = "ScreenSaveUsePassword";
 static const TCHAR* const g_pathScreenSaverIsSecure[] = {
@@ -353,3 +355,5 @@ MSWindowsScreenSaver::isSecure(bool* wasSecureFlagAnInt) const
     ArchMiscWindows::closeKey(hkey);
     return result;
 }
+
+} // namespace inputleap

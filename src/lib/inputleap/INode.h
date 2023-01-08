@@ -18,7 +18,11 @@
 
 #pragma once
 
+namespace inputleap {
+
 class INode {
 public:
     virtual ~INode() { }
 };
+
+} // namespace inputleap

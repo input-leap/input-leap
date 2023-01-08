@@ -25,11 +25,13 @@
 
 #include <mutex>
 
-namespace inputleap { class IStream; }
+namespace inputleap {
+
 class IpcMessage;
 class IpcCommandMessage;
 class IpcHelloMessage;
 class IEventQueue;
+class IStream;
 
 class IpcClientProxy {
     friend class IpcServer;
@@ -55,3 +57,5 @@ private:
     std::mutex m_writeMutex;
     IEventQueue* m_events;
 };
+
+} // namespace inputleap

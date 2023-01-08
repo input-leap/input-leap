@@ -22,6 +22,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+namespace inputleap {
+
 class IMSWindowsClipboardConverter;
 
 class IMSWindowsClipboardFacade {
@@ -29,5 +31,7 @@ public:
     virtual void write(HANDLE win32Data, UINT win32Format) = 0;
     virtual ~IMSWindowsClipboardFacade() { }
 };
+
+} // namespace inputleap
 
 #endif

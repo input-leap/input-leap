@@ -25,11 +25,11 @@
 #include "inputleap/mouse_types.h"
 #include "inputleap/option_types.h"
 
+namespace inputleap {
+
 class IClipboard;
 class IPlatformScreen;
 class IEventQueue;
-
-namespace inputleap {
 
 //! Platform independent screen
 /*!

@@ -32,9 +32,7 @@ static const UINT        kUpdateReceiver  = WM_USER + 12;
 static const UINT        kNotifyReceiver  = WM_USER + 13;
 static const UINT        kFirstReceiverID = WM_USER + 14;
 
-//
-// ArchTaskBarWindows
-//
+namespace inputleap {
 
 ArchTaskBarWindows* ArchTaskBarWindows::s_instance = nullptr;
 
@@ -484,3 +482,5 @@ HINSTANCE ArchTaskBarWindows::instanceWin32()
 {
     return ArchMiscWindows::instanceWin32();
 }
+
+} // namespace inputleap

@@ -22,9 +22,7 @@
 #include <cstring>
 #include <cstdlib>
 
-//
-// IKeyState
-//
+namespace inputleap {
 
 IKeyState::IKeyState(IEventQueue* events)
 {
@@ -154,3 +152,5 @@ void IKeyState::KeyInfo::split(const char* screens, std::set<std::string>& dst)
         i = j + 1;
     }
 }
+
+} // namespace inputleap

@@ -24,9 +24,7 @@
 #include <cstring>
 #include <memory>
 
-//
-// PacketStreamFilter
-//
+namespace inputleap {
 
 PacketStreamFilter::PacketStreamFilter(IEventQueue* events, inputleap::IStream* stream, bool adoptStream) :
     StreamFilter(events, stream, adoptStream),
@@ -202,3 +200,5 @@ PacketStreamFilter::filterEvent(const Event& event)
     // pass event
     StreamFilter::filterEvent(event);
 }
+
+} // namespace inputleap

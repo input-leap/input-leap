@@ -20,6 +20,8 @@
 
 #include "platform/OSXClipboardAnyTextConverter.h"
 
+namespace inputleap {
+
 //! Convert to/from UTF-16 encoding
 class OSXClipboardUTF16Converter : public OSXClipboardAnyTextConverter {
 public:
@@ -35,3 +37,5 @@ protected:
     virtual std::string doFromIClipboard(const std::string&) const;
     virtual std::string doToIClipboard(const std::string&) const;
 };
+
+} // namespace inputleap

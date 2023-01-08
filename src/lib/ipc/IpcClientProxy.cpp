@@ -26,11 +26,9 @@
 #include "base/TMethodEventJob.h"
 #include "base/Log.h"
 
-//
-// IpcClientProxy
-//
+namespace inputleap {
 
-IpcClientProxy::IpcClientProxy(std::unique_ptr<inputleap::IStream>&& stream, IEventQueue* events) :
+IpcClientProxy::IpcClientProxy(std::unique_ptr<IStream>&& stream, IEventQueue* events) :
     stream_(std::move(stream)),
     m_clientType(kIpcClientUnknown),
     m_disconnecting(false),
@@ -186,3 +184,5 @@ IpcClientProxy::disconnect()
     stream_->close();
     m_events->addEvent(Event(m_events->forIpcClientProxy().disconnected(), this));
 }
+
+} // namespace inputleap

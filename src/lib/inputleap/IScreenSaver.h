@@ -20,6 +20,8 @@
 
 #include "base/Event.h"
 
+namespace inputleap {
+
 //! Screen saver interface
 /*!
 This interface defines the methods common to all screen savers.
@@ -74,3 +76,5 @@ public:
 
     //@}
 };
+
+} // namespace inputleap

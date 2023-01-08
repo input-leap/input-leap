@@ -39,6 +39,8 @@
 
 #define TEST_IPC_PORT 24802
 
+namespace inputleap {
+
 class IpcTests : public ::testing::Test
 {
 public:
@@ -205,5 +207,7 @@ IpcTests::sendMessageToClient_clientHandleMessageReceived(const Event& e, void*)
         m_events.raiseQuitEvent();
     }
 }
+
+} // namespace inputleap
 
 #endif // WINAPI_CARBON

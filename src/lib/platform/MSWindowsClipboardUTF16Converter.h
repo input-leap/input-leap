@@ -20,6 +20,8 @@
 
 #include "platform/MSWindowsClipboardAnyTextConverter.h"
 
+namespace inputleap {
+
 //! Convert to/from UTF-16 encoding
 class MSWindowsClipboardUTF16Converter :
                 public MSWindowsClipboardAnyTextConverter {
@@ -35,3 +37,5 @@ protected:
     virtual std::string doFromIClipboard(const std::string&) const;
     virtual std::string doToIClipboard(const std::string&) const;
 };
+
+} // namespace inputleap

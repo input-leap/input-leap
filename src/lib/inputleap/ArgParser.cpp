@@ -30,6 +30,8 @@
 #include <VersionHelpers.h>
 #endif
 
+namespace inputleap {
+
 XArgvParserError::XArgvParserError(const char *fmt, ...) :
     message("Unknown reason")
 {
@@ -505,3 +507,5 @@ std::string ArgParser::parse_exename(const char* arg)
     // FIXME: we assume UTF-8 encoding, but on Windows this is not correct
     return inputleap::fs::u8path(arg).filename().u8string();
 }
+
+} // namespace inputleap

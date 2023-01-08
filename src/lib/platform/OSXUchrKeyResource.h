@@ -22,6 +22,8 @@
 
 #include <Carbon/Carbon.h>
 
+namespace inputleap {
+
 typedef TISInputSourceRef KeyLayout;
 
 class OSXUchrKeyResource : public IOSXKeyResource {
@@ -52,3 +54,5 @@ private:
     const UCKeyStateTerminators* m_st;
     std::uint16_t m_spaceOutput;
 };
+
+} // namespace inputleap

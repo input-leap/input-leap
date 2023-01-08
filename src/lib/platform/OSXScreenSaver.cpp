@@ -26,13 +26,12 @@
 #import <string.h>
 #import <sys/sysctl.h>
 
+
+namespace inputleap {
+
 // TODO: upgrade deprecated function usage in these functions.
 void getProcessSerialNumber(const char* name, ProcessSerialNumber& psn);
 bool testProcessName(const char* name, const ProcessSerialNumber& psn);
-
-//
-// OSXScreenSaver
-//
 
 OSXScreenSaver::OSXScreenSaver(IEventQueue* events, void* eventTarget) :
     m_eventTarget(eventTarget),
@@ -199,3 +198,5 @@ testProcessName(const char* name, const ProcessSerialNumber& psn)
 }
 
 #pragma GCC diagnostic error "-Wdeprecated-declarations"
+
+} // namespace inputleap

@@ -20,6 +20,8 @@
 
 #include "platform/OSXClipboard.h"
 
+namespace inputleap {
+
 //! Convert to/from some text encoding
 class OSXClipboardBMPConverter : public IOSXClipboardConverter {
 public:
@@ -41,3 +43,5 @@ public:
     static std::string convertString(const std::string& data, CFStringEncoding fromEncoding,
                                      CFStringEncoding toEncoding);
 };
+
+} // namespace inputleap

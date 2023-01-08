@@ -22,6 +22,8 @@
 #include <mutex>
 #include <condition_variable>
 
+namespace inputleap {
+
 /*!
 \class ArchThreadImpl
 \brief Internal thread data.
@@ -201,3 +203,5 @@ public:
 
     //@}
 };
+
+} // namespace inputleap

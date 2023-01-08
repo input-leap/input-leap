@@ -27,9 +27,7 @@
 
 #include <cstring>
 
-//
-// ClientProxy1_0
-//
+namespace inputleap {
 
 ClientProxy1_0::ClientProxy1_0(const std::string& name, inputleap::IStream* stream,
                                IEventQueue* events) :
@@ -500,3 +498,5 @@ ClientProxy1_0::ClientClipboard::ClientClipboard() :
 {
     // do nothing
 }
+
+} // namespace inputleap

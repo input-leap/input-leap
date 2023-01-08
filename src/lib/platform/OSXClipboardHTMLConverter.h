@@ -20,6 +20,8 @@
 
 #include "OSXClipboardAnyTextConverter.h"
 
+namespace inputleap {
+
 //! Convert to/from HTML encoding
 class OSXClipboardHTMLConverter : public OSXClipboardAnyTextConverter {
 public:
@@ -41,3 +43,5 @@ protected:
     static std::string convertString(const std::string& data, CFStringEncoding fromEncoding,
                                      CFStringEncoding toEncoding);
 };
+
+} // namespace inputleap

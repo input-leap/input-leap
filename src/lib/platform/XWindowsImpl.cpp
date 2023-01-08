@@ -1,6 +1,8 @@
 
 #include "XWindowsImpl.h"
 
+namespace inputleap {
+
 Status XWindowsImpl::XInitThreads()
 {
     return ::XInitThreads();
@@ -628,3 +630,5 @@ int XWindowsImpl::XNextEvent(Display* display, XEvent* event_return)
 {
     return ::XNextEvent(display, event_return);
 }
+
+} // namespace inputleap

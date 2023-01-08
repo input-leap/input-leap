@@ -36,6 +36,8 @@
 #include <mutex>
 #include <vector>
 
+namespace inputleap {
+
 extern "C" {
     typedef int CGSConnectionID;
     CGError CGSSetConnectionProperty(CGSConnectionID cid, CGSConnectionID targetCID, CFStringRef key, CFTypeRef value);
@@ -347,3 +349,5 @@ private:
 
     class OSXScreenImpl* m_impl;
 };
+
+} // namespace inputleap

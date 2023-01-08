@@ -37,6 +37,8 @@
  //
 #define NO_GRAB_KEYBOARD 0
 
+namespace inputleap {
+
 static const DWORD      g_threadID = GetCurrentThreadId();
 
 static WindowsHookResource  g_hkMessage;
@@ -636,3 +638,5 @@ MSWindowsHook::uninstallScreenSaver()
 {
     g_hkMessage.unset();
 }
+
+} // namespace inputleap

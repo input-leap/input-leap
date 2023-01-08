@@ -20,9 +20,7 @@
 
 #include <sys/utsname.h>
 
-//
-// ArchSystemUnix
-//
+namespace inputleap {
 
 ArchSystemUnix::ArchSystemUnix()
 {
@@ -78,3 +76,5 @@ ArchSystemUnix::getLibsUsed(void) const
 {
     return "not implemented.\nuse lsof on shell";
 }
+
+} // namespace inputleap

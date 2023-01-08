@@ -19,9 +19,7 @@
 #include "net/IDataSocket.h"
 #include "base/EventQueue.h"
 
-//
-// IDataSocket
-//
+namespace inputleap {
 
 void
 IDataSocket::close()
@@ -37,3 +35,5 @@ IDataSocket::getEventTarget() const
     assert(0 && "bad call");
     return nullptr;
 }
+
+} // namespace inputleap

@@ -23,6 +23,8 @@
 #include <stdio.h>
 #include <Shlobj.h>
 
+namespace inputleap {
+
 void getDropData(IDataObject *pDataObject);
 
 MSWindowsDropTarget* MSWindowsDropTarget::s_instance = nullptr;
@@ -176,3 +178,5 @@ MSWindowsDropTarget::Release(void)
         return count;
     }
 }
+
+} // namespace inputleap

@@ -21,6 +21,8 @@
 #include "base/Log.h"
 #include "base/ELevel.h"
 
+namespace inputleap {
+
 //! Outputter interface
 /*!
 Type of outputter interface.  The logger performs all output through
@@ -68,3 +70,5 @@ public:
 
     //@}
 };
+
+} // namespace inputleap

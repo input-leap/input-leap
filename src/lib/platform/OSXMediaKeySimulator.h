@@ -21,6 +21,8 @@
 
 #include "inputleap/key_types.h"
 
+namespace inputleap {
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -28,3 +30,5 @@ bool fakeNativeMediaKey(KeyID id);
 #if defined(__cplusplus)
 }
 #endif
+
+} // namespace inputleap

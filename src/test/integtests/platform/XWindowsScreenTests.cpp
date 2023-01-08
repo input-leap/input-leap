@@ -22,6 +22,8 @@
 #include <gtest/gtest.h>
 #include <cstdlib>
 
+namespace inputleap {
+
 using ::testing::_;
 
 TEST(CXWindowsScreenTests, fakeMouseMove_nonPrimary_getCursorPosValuesCorrect)
@@ -44,3 +46,5 @@ TEST(CXWindowsScreenTests, fakeMouseMove_nonPrimary_getCursorPosValuesCorrect)
     ASSERT_EQ(10, x);
     ASSERT_EQ(20, y);
 }
+
+} // namespace inputleap

@@ -34,9 +34,7 @@ static const char* s_settingsKeyNames[] = {
     nullptr
 };
 
-//
-// ArchSystemWindows
-//
+namespace inputleap {
 
 ArchSystemWindows::ArchSystemWindows()
 {
@@ -166,3 +164,5 @@ ArchSystemWindows::getLibsUsed(void) const
     CloseHandle(hProcess);
     return msg;
 }
+
+} // namespace inputleap

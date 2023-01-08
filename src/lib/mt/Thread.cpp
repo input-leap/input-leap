@@ -24,9 +24,7 @@
 #include "base/Log.h"
 #include "base/IJob.h"
 
-//
-// Thread
-//
+namespace inputleap {
 
 Thread::Thread(const std::function<void()>& fun)
 {
@@ -158,3 +156,5 @@ void Thread::threadFunc(const std::function<void()>& func)
         throw;
     }
 }
+
+} // namespace inputleap

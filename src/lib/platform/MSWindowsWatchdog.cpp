@@ -37,6 +37,8 @@
 #include <UserEnv.h>
 #include <Shellapi.h>
 
+namespace inputleap {
+
 #define MAXIMUM_WAIT_TIME 3
 enum {
     kOutputBufferSize = 4096
@@ -534,3 +536,5 @@ MSWindowsWatchdog::shutdownExistingProcesses()
     CloseHandle(snapshot);
     m_processRunning = false;
 }
+
+} // namespace inputleap

@@ -18,9 +18,7 @@
 
 #include "arch/unix/ArchTaskBarXWindows.h"
 
-//
-// ArchTaskBarXWindows
-//
+namespace inputleap {
 
 ArchTaskBarXWindows::ArchTaskBarXWindows()
 {
@@ -49,3 +47,5 @@ ArchTaskBarXWindows::updateReceiver(IArchTaskBarReceiver* /*receiver*/)
 {
     // do nothing
 }
+
+} // namespace inputleap

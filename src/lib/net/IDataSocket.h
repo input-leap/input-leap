@@ -23,6 +23,8 @@
 #include "base/EventTypes.h"
 #include <string>
 
+namespace inputleap {
+
 //! Data stream socket interface
 /*!
 This interface defines the methods common to all network sockets that
@@ -63,3 +65,5 @@ public:
     // IStream overrides
     virtual bool isFatal() const = 0;
 };
+
+} // namespace inputleap

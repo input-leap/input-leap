@@ -195,8 +195,7 @@ DaemonApp::mainLoop(bool daemonized)
         m_watchdog = new MSWindowsWatchdog(daemonized, false, *m_ipcServer, *m_ipcLogOutputter);
         m_watchdog->setFileLogOutputter(m_fileLogOutputter);
 
-        m_events->adoptHandler(
-            m_events->forIpcServer().messageReceived(), m_ipcServer,
+        m_events->adoptHandler(EventType::IPC_SERVER_MESSAGE_RECEIVED, m_ipcServer,
             new TMethodEventJob<DaemonApp>(this, &DaemonApp::handleIpcMessage));
 
         m_ipcServer->listen();
@@ -218,8 +217,7 @@ DaemonApp::mainLoop(bool daemonized)
         m_watchdog->stop();
         delete m_watchdog;
 
-        m_events->removeHandler(
-            m_events->forIpcServer().messageReceived(), m_ipcServer);
+        m_events->removeHandler(EventType::IPC_SERVER_MESSAGE_RECEIVED, m_ipcServer);
 
         CLOG->remove(m_ipcLogOutputter);
         delete m_ipcLogOutputter;

@@ -117,8 +117,7 @@ void SecureSocket::freeSSLResources()
 void
 SecureSocket::connect(const NetworkAddress& addr)
 {
-    m_events->adoptHandler(m_events->forIDataSocket().connected(),
-                getEventTarget(),
+    m_events->adoptHandler(EventType::DATA_SOCKET_CONNECTED, getEventTarget(),
                 new TMethodEventJob<SecureSocket>(this,
                         &SecureSocket::handleTCPConnected));
 
@@ -192,16 +191,16 @@ SecureSocket::doRead()
 
         // send input ready if input buffer was empty
         if (wasEmpty) {
-            sendEvent(m_events->forIStream().inputReady());
+            sendEvent(EventType::STREAM_INPUT_READY);
         }
     }
     else {
         // remote write end of stream hungup.  our input side
         // has therefore shutdown but don't flush our buffer
         // since there's still data to be read.
-        sendEvent(m_events->forIStream().inputShutdown());
+        sendEvent(EventType::STREAM_INPUT_SHUTDOWN);
         if (!m_writable && m_inputBuffer.getSize() == 0) {
-            sendEvent(m_events->forISocket().disconnected());
+            sendEvent(EventType::SOCKET_DISCONNECTED);
             m_connected = false;
         }
         m_readable = false;
@@ -661,9 +660,9 @@ std::string SecureSocket::getError()
 void
 SecureSocket::disconnect()
 {
-    sendEvent(getEvents()->forISocket().stopRetry());
-    sendEvent(getEvents()->forISocket().disconnected());
-    sendEvent(getEvents()->forIStream().inputShutdown());
+    sendEvent(EventType::SOCKET_STOP_RETRY);
+    sendEvent(EventType::SOCKET_DISCONNECTED);
+    sendEvent(EventType::STREAM_INPUT_SHUTDOWN);
 }
 
 bool SecureSocket::verify_peer_certificate(const inputleap::fs::path& fingerprint_db_path)
@@ -745,7 +744,7 @@ MultiplexerJobStatus SecureSocket::serviceConnect(ISocketMultiplexerJob* job,
 
     // If status > 0, success
     if (status > 0) {
-        sendEvent(m_events->forIDataSocket().secureConnected());
+        sendEvent(EventType::DATA_SOCKET_SECURE_CONNECTED);
         return newJobOrStopServicing();
     }
 
@@ -781,7 +780,7 @@ MultiplexerJobStatus SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
 
     // If status > 0, success
     if (status > 0) {
-        sendEvent(m_events->forClientListener().accepted());
+        sendEvent(EventType::CLIENT_LISTENER_ACCEPTED);
         return newJobOrStopServicing();
     }
 

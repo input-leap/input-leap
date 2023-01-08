@@ -141,7 +141,7 @@ MSWindowsDesks::enable()
     // we wouldn't need this if windows notified us of a desktop
     // change but as far as i can tell it doesn't.
     m_timer = m_events->newTimer(0.2, nullptr);
-    m_events->adoptHandler(Event::kTimer, m_timer,
+    m_events->adoptHandler(EventType::TIMER, m_timer,
                             new TMethodEventJob<MSWindowsDesks>(
                                 this, &MSWindowsDesks::handleCheckDesk));
 
@@ -153,7 +153,7 @@ MSWindowsDesks::disable()
 {
     // remove timer
     if (m_timer != nullptr) {
-        m_events->removeHandler(Event::kTimer, m_timer);
+        m_events->removeHandler(EventType::TIMER, m_timer);
         m_events->deleteTimer(m_timer);
         m_timer = nullptr;
     }
@@ -782,7 +782,7 @@ MSWindowsDesks::checkDesk()
     // first switch, then shut down.
     if (m_stopOnDeskSwitch && m_activeDesk != nullptr && name != m_activeDeskName) {
         LOG((CLOG_DEBUG "shutting down because of desk switch to \"%s\"", name.c_str()));
-        m_events->addEvent(Event(Event::kQuit));
+        m_events->addEvent(Event(EventType::QUIT));
         return;
     }
 

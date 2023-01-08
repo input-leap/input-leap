@@ -228,7 +228,7 @@ void
 ClientApp::handleScreenError(const Event&, void*)
 {
     LOG((CLOG_CRIT "error on screen"));
-    m_events->addEvent(Event(Event::kQuit));
+    m_events->addEvent(Event(EventType::QUIT));
 }
 
 
@@ -240,7 +240,7 @@ ClientApp::openClientScreen()
         screen->setDropTarget(argsBase().m_dropTarget);
     }
     screen->setEnableDragDrop(argsBase().m_enableDragDrop);
-    m_events->adoptHandler(m_events->forIScreen().error(),
+    m_events->adoptHandler(EventType::SCREEN_ERROR,
         screen->getEventTarget(),
         new TMethodEventJob<ClientApp>(
         this, &ClientApp::handleScreenError));
@@ -252,7 +252,7 @@ void
 ClientApp::closeClientScreen(inputleap::Screen* screen)
 {
     if (screen != nullptr) {
-        m_events->removeHandler(m_events->forIScreen().error(),
+        m_events->removeHandler(EventType::SCREEN_ERROR,
             screen->getEventTarget());
         delete screen;
     }
@@ -265,7 +265,7 @@ ClientApp::handleClientRestart(const Event&, void* vtimer)
     // discard old timer
     EventQueueTimer* timer = static_cast<EventQueueTimer*>(vtimer);
     m_events->deleteTimer(timer);
-    m_events->removeHandler(Event::kTimer, timer);
+    m_events->removeHandler(EventType::TIMER, timer);
 
     // reconnect
     startClient();
@@ -278,7 +278,7 @@ ClientApp::scheduleClientRestart(double retryTime)
     // install a timer and handler to retry later
     LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
     EventQueueTimer* timer = m_events->newOneShotTimer(retryTime, nullptr);
-    m_events->adoptHandler(Event::kTimer, timer,
+    m_events->adoptHandler(EventType::TIMER, timer,
         new TMethodEventJob<ClientApp>(this, &ClientApp::handleClientRestart, timer));
 }
 
@@ -303,7 +303,7 @@ ClientApp::handleClientFailed(const Event& e, void*)
     updateStatus(std::string("Failed to connect to server: ") + info->m_what);
     if (!args().m_restartable || !info->m_retry) {
         LOG((CLOG_ERR "failed to connect to server: %s", info->m_what.c_str()));
-        m_events->addEvent(Event(Event::kQuit));
+        m_events->addEvent(Event(EventType::QUIT));
     }
     else {
         LOG((CLOG_WARN "failed to connect to server: %s", info->m_what.c_str()));
@@ -320,7 +320,7 @@ ClientApp::handleClientDisconnected(const Event&, void*)
 {
     LOG((CLOG_NOTE "disconnected from server"));
     if (!args().m_restartable) {
-        m_events->addEvent(Event(Event::kQuit));
+        m_events->addEvent(Event(EventType::QUIT));
     }
     else if (!m_suspended) {
         scheduleClientRestart(nextRestartTimeout());
@@ -340,19 +340,13 @@ Client* ClientApp::openClient(const std::string& name, const NetworkAddress& add
         args());
 
     try {
-        m_events->adoptHandler(
-            m_events->forClient().connected(),
-            client->getEventTarget(),
+        m_events->adoptHandler(EventType::CLIENT_CONNECTED, client->getEventTarget(),
             new TMethodEventJob<ClientApp>(this, &ClientApp::handleClientConnected));
 
-        m_events->adoptHandler(
-            m_events->forClient().connectionFailed(),
-            client->getEventTarget(),
+        m_events->adoptHandler(EventType::CLIENT_CONNECTION_FAILED, client->getEventTarget(),
             new TMethodEventJob<ClientApp>(this, &ClientApp::handleClientFailed));
 
-        m_events->adoptHandler(
-            m_events->forClient().disconnected(),
-            client->getEventTarget(),
+        m_events->adoptHandler(EventType::CLIENT_DISCONNECTED, client->getEventTarget(),
             new TMethodEventJob<ClientApp>(this, &ClientApp::handleClientDisconnected));
 
     } catch (std::bad_alloc &ba) {
@@ -371,9 +365,9 @@ ClientApp::closeClient(Client* client)
         return;
     }
 
-    m_events->removeHandler(m_events->forClient().connected(), client);
-    m_events->removeHandler(m_events->forClient().connectionFailed(), client);
-    m_events->removeHandler(m_events->forClient().disconnected(), client);
+    m_events->removeHandler(EventType::CLIENT_CONNECTED, client);
+    m_events->removeHandler(EventType::CLIENT_CONNECTION_FAILED, client);
+    m_events->removeHandler(EventType::CLIENT_DISCONNECTED, client);
     delete client;
 }
 

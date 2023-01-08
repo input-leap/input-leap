@@ -22,7 +22,7 @@
 namespace inputleap {
 
 Event::Event() :
-    m_type(kUnknown),
+    type_(EventType::UNKNOWN),
     m_target(nullptr),
     m_data(nullptr),
     m_flags(0),
@@ -31,8 +31,8 @@ Event::Event() :
     // do nothing
 }
 
-Event::Event(Type type, void* target, void* data, Flags flags) :
-    m_type(type),
+Event::Event(EventType type, void* target, void* data, Flags flags) :
+    type_(type),
     m_target(target),
     m_data(data),
     m_flags(flags),
@@ -41,10 +41,9 @@ Event::Event(Type type, void* target, void* data, Flags flags) :
     // do nothing
 }
 
-Event::Type
-Event::getType() const
+EventType Event::getType() const
 {
-    return m_type;
+    return type_;
 }
 
 void*
@@ -75,10 +74,10 @@ void
 Event::deleteData(const Event& event)
 {
     switch (event.getType()) {
-    case kUnknown:
-    case kQuit:
-    case kSystem:
-    case kTimer:
+    case EventType::UNKNOWN:
+    case EventType::QUIT:
+    case EventType::SYSTEM:
+    case EventType::TIMER:
         break;
 
     default:

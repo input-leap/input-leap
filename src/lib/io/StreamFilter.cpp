@@ -29,14 +29,14 @@ StreamFilter::StreamFilter(IEventQueue* events, IStream* stream, bool adoptStrea
 {
     // replace handlers for m_stream
     m_events->removeHandlers(m_stream->getEventTarget());
-    m_events->adoptHandler(Event::kUnknown, m_stream->getEventTarget(),
+    m_events->adoptHandler(EventType::UNKNOWN, m_stream->getEventTarget(),
                             new TMethodEventJob<StreamFilter>(this,
                                 &StreamFilter::handleUpstreamEvent));
 }
 
 StreamFilter::~StreamFilter()
 {
-    m_events->removeHandler(Event::kUnknown, m_stream->getEventTarget());
+    m_events->removeHandler(EventType::UNKNOWN, m_stream->getEventTarget());
     if (m_adopted) {
         delete m_stream;
     }

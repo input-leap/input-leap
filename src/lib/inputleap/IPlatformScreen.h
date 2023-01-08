@@ -164,8 +164,7 @@ protected:
     A platform screen is expected to install a handler for system
     events in its c'tor like so:
     \code
-    m_events->adoptHandler(Event::kSystem,
-                          m_events->getSystemTarget(),
+    m_events->adoptHandler(EventType::SYSTEM, m_events->getSystemTarget(),
                           new TMethodEventJob<CXXXPlatformScreen>(this,
                               &CXXXPlatformScreen::handleSystemEvent));
     \endcode

@@ -32,8 +32,7 @@ ClientProxy1_6::ClientProxy1_6(const std::string& name, inputleap::IStream* stre
     ClientProxy1_5(name, stream, server, events),
     m_events(events)
 {
-    m_events->adoptHandler(m_events->forClipboard().clipboardSending(),
-                                this,
+    m_events->adoptHandler(EventType::CLIPBOARD_SENDING, this,
                                 new TMethodEventJob<ClientProxy1_6>(this,
                                     &ClientProxy1_6::handleClipboardSendingEvent));
 }
@@ -91,8 +90,7 @@ ClientProxy1_6::recvClipboard()
         ClipboardInfo* info = new ClipboardInfo;
         info->m_id = id;
         info->m_sequenceNumber = seq;
-        m_events->addEvent(Event(m_events->forClipboard().clipboardChanged(),
-                                 getEventTarget(), info));
+        m_events->addEvent(Event(EventType::CLIPBOARD_CHANGED, getEventTarget(), info));
     }
 
     return true;

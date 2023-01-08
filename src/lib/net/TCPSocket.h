@@ -82,7 +82,7 @@ protected:
     bool isReadable() { return m_readable; }
     bool isWritable() { return m_writable; }
 
-    void sendEvent(Event::Type);
+    void sendEvent(EventType type);
     void discardWrittenData(int bytesWrote);
 
 private:

@@ -79,8 +79,7 @@ std::uint32_t PacketStreamFilter::read(void* buffer, std::uint32_t n)
     readPacketSize();
 
     if (m_inputShutdown && m_size == 0) {
-        m_events->addEvent(Event(m_events->forIStream().inputShutdown(),
-                                 getEventTarget(), nullptr));
+        m_events->addEvent(Event(EventType::STREAM_INPUT_SHUTDOWN, getEventTarget(), nullptr));
     }
 
     return n;
@@ -142,7 +141,7 @@ bool PacketStreamFilter::readPacketSize()
                   static_cast<std::uint32_t>(buffer[3]);
 
         if (m_size > PROTOCOL_MAX_MESSAGE_LENGTH) {
-            m_events->addEvent(Event(m_events->forIStream().inputFormatError(), getEventTarget()));
+            m_events->addEvent(Event(EventType::STREAM_INPUT_FORMAT_ERROR, getEventTarget()));
             return false;
         }
     }
@@ -182,13 +181,13 @@ PacketStreamFilter::readMore()
 void
 PacketStreamFilter::filterEvent(const Event& event)
 {
-    if (event.getType() == m_events->forIStream().inputReady()) {
+    if (event.getType() == EventType::STREAM_INPUT_READY) {
         std::lock_guard<std::mutex> lock(mutex_);
         if (!readMore()) {
             return;
         }
     }
-    else if (event.getType() == m_events->forIStream().inputShutdown()) {
+    else if (event.getType() == EventType::STREAM_INPUT_SHUTDOWN) {
         // discard this if we have buffered data
         std::lock_guard<std::mutex> lock(mutex_);
         m_inputShutdown = true;

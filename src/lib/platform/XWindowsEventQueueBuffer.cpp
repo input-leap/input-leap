@@ -168,8 +168,7 @@ IEventQueueBuffer::Type XWindowsEventQueueBuffer::getEvent(Event& event, std::ui
         return kUser;
     }
     else {
-        event = Event(Event::kSystem,
-                            m_events->getSystemTarget(), &m_event);
+        event = Event(EventType::SYSTEM, m_events->getSystemTarget(), &m_event);
         return kSystem;
     }
 }

@@ -144,9 +144,9 @@ private:
 
     // convenience function to send events
 public: // HACK
-    void sendEvent(Event::Type type, void* = nullptr);
+    void sendEvent(EventType type, void* = nullptr);
 private: // HACK
-    void sendClipboardEvent(Event::Type type, ClipboardID id);
+    void sendClipboardEvent(EventType type, ClipboardID id);
 
     // handle message before it gets dispatched.  returns true iff
     // the message should not be dispatched.

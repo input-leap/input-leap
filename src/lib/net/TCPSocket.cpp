@@ -105,7 +105,7 @@ TCPSocket::close()
 
     // clear buffers and enter disconnected state
     if (m_connected) {
-        sendEvent(m_events->forISocket().disconnected());
+        sendEvent(EventType::SOCKET_DISCONNECTED);
     }
     onDisconnected();
 
@@ -144,7 +144,7 @@ std::uint32_t TCPSocket::read(void* buffer, std::uint32_t n)
 
     // if no more data and we cannot read or write then send disconnected
     if (n > 0 && m_inputBuffer.getSize() == 0 && !m_readable && !m_writable) {
-        sendEvent(m_events->forISocket().disconnected());
+        sendEvent(EventType::SOCKET_DISCONNECTED);
         m_connected = false;
     }
 
@@ -159,7 +159,7 @@ void TCPSocket::write(const void* buffer, std::uint32_t n)
 
         // must not have shutdown output
         if (!m_writable) {
-            sendEvent(m_events->forIStream().outputError());
+            sendEvent(EventType::STREAM_OUTPUT_ERROR);
             return;
         }
 
@@ -206,7 +206,7 @@ TCPSocket::shutdownInput()
 
         // shutdown buffer for reading
         if (m_readable) {
-            sendEvent(m_events->forIStream().inputShutdown());
+            sendEvent(EventType::STREAM_INPUT_SHUTDOWN);
             onInputShutdown();
             useNewJob = true;
         }
@@ -233,7 +233,7 @@ TCPSocket::shutdownOutput()
 
         // shutdown buffer for writing
         if (m_writable) {
-            sendEvent(m_events->forIStream().outputShutdown());
+            sendEvent(EventType::STREAM_OUTPUT_SHUTDOWN);
             onOutputShutdown();
             useNewJob = true;
         }
@@ -278,7 +278,7 @@ TCPSocket::connect(const NetworkAddress& addr)
 
         try {
             if (ARCH->connectSocket(m_socket, addr.getAddress())) {
-                sendEvent(m_events->forIDataSocket().connected());
+                sendEvent(EventType::DATA_SOCKET_CONNECTED);
                 onConnected();
             }
             else {
@@ -344,16 +344,16 @@ TCPSocket::doRead()
 
         // send input ready if input buffer was empty
         if (wasEmpty) {
-            sendEvent(m_events->forIStream().inputReady());
+            sendEvent(EventType::STREAM_INPUT_READY);
         }
     }
     else {
         // remote write end of stream hungup.  our input side
         // has therefore shutdown but don't flush our buffer
         // since there's still data to be read.
-        sendEvent(m_events->forIStream().inputShutdown());
+        sendEvent(EventType::STREAM_INPUT_SHUTDOWN);
         if (!m_writable && m_inputBuffer.getSize() == 0) {
-            sendEvent(m_events->forISocket().disconnected());
+            sendEvent(EventType::SOCKET_DISCONNECTED);
             m_connected = false;
         }
         m_readable = false;
@@ -439,12 +439,11 @@ void
 TCPSocket::sendConnectionFailedEvent(const char* msg)
 {
     ConnectionFailedInfo* info = new ConnectionFailedInfo(msg);
-    m_events->addEvent(Event(m_events->forIDataSocket().connectionFailed(),
-                            getEventTarget(), info, Event::kDontFreeData));
+    m_events->addEvent(Event(EventType::DATA_SOCKET_CONNECTION_FAILED, getEventTarget(),
+                             info, Event::kDontFreeData));
 }
 
-void
-TCPSocket::sendEvent(Event::Type type)
+void TCPSocket::sendEvent(EventType type)
 {
     m_events->addEvent(Event(type, getEventTarget(), nullptr));
 }
@@ -454,7 +453,7 @@ TCPSocket::discardWrittenData(int bytesWrote)
 {
     m_outputBuffer.pop(bytesWrote);
     if (m_outputBuffer.getSize() == 0) {
-        sendEvent(m_events->forIStream().outputFlushed());
+        sendEvent(EventType::STREAM_OUTPUT_FLUSHED);
         is_flushed_ = true;
         flushed_cv_.notify_all();
     }
@@ -531,7 +530,7 @@ MultiplexerJobStatus TCPSocket::serviceConnecting(ISocketMultiplexerJob* job, bo
     }
 
     if (write) {
-        sendEvent(m_events->forIDataSocket().connected());
+        sendEvent(EventType::DATA_SOCKET_CONNECTED);
         onConnected();
         return newJobOrStopServicing();
     }
@@ -547,7 +546,7 @@ MultiplexerJobStatus TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
     std::lock_guard<std::mutex> lock(tcp_mutex_);
 
     if (error) {
-        sendEvent(m_events->forISocket().disconnected());
+        sendEvent(EventType::SOCKET_DISCONNECTED);
         onDisconnected();
         return newJobOrStopServicing();
     }
@@ -562,9 +561,9 @@ MultiplexerJobStatus TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
             // remote read end of stream hungup.  our output side
             // has therefore shutdown.
             onOutputShutdown();
-            sendEvent(m_events->forIStream().outputShutdown());
+            sendEvent(EventType::STREAM_OUTPUT_SHUTDOWN);
             if (!m_readable && m_inputBuffer.getSize() == 0) {
-                sendEvent(m_events->forISocket().disconnected());
+                sendEvent(EventType::SOCKET_DISCONNECTED);
                 m_connected = false;
             }
             writeResult = kNew;
@@ -572,15 +571,15 @@ MultiplexerJobStatus TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
         catch (XArchNetworkDisconnected&) {
             // stream hungup
             onDisconnected();
-            sendEvent(m_events->forISocket().disconnected());
+            sendEvent(EventType::SOCKET_DISCONNECTED);
             writeResult = kNew;
         }
         catch (XArchNetwork& e) {
             // other write error
             LOG((CLOG_WARN "error writing socket: %s", e.what()));
             onDisconnected();
-            sendEvent(m_events->forIStream().outputError());
-            sendEvent(m_events->forISocket().disconnected());
+            sendEvent(EventType::STREAM_OUTPUT_ERROR);
+            sendEvent(EventType::SOCKET_DISCONNECTED);
             writeResult = kNew;
         }
     }
@@ -591,7 +590,7 @@ MultiplexerJobStatus TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
         }
         catch (XArchNetworkDisconnected&) {
             // stream hungup
-            sendEvent(m_events->forISocket().disconnected());
+            sendEvent(EventType::SOCKET_DISCONNECTED);
             onDisconnected();
             readResult = kNew;
         }

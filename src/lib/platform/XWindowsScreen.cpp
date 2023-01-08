@@ -151,7 +151,7 @@ XWindowsScreen::XWindowsScreen(
 	}
 
 	// install event handlers
-	m_events->adoptHandler(Event::kSystem, m_events->getSystemTarget(),
+    m_events->adoptHandler(EventType::SYSTEM, m_events->getSystemTarget(),
 							new TMethodEventJob<XWindowsScreen>(this,
 								&XWindowsScreen::handleSystemEvent));
 
@@ -166,7 +166,7 @@ XWindowsScreen::~XWindowsScreen()
     assert(m_display != nullptr);
 
     m_events->adoptBuffer(nullptr);
-	m_events->removeHandler(Event::kSystem, m_events->getSystemTarget());
+    m_events->removeHandler(EventType::SYSTEM, m_events->getSystemTarget());
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 		delete m_clipboard[id];
 	}
@@ -1074,14 +1074,12 @@ XWindowsScreen::openIM()
     m_impl->XSelectInput(m_display, m_window, attr.your_event_mask | mask);
 }
 
-void
-XWindowsScreen::sendEvent(Event::Type type, void* data)
+void XWindowsScreen::sendEvent(EventType type, void* data)
 {
 	m_events->addEvent(Event(type, getEventTarget(), data));
 }
 
-void
-XWindowsScreen::sendClipboardEvent(Event::Type type, ClipboardID id)
+void XWindowsScreen::sendClipboardEvent(EventType type, ClipboardID id)
 {
     ClipboardInfo* info = static_cast<ClipboardInfo*>(malloc(sizeof(ClipboardInfo)));
 	info->m_id             = id;
@@ -1251,7 +1249,7 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 			ClipboardID id = getClipboardID(xevent->xselectionclear.selection);
 			if (id != kClipboardEnd) {
 				m_clipboard[id]->lost(xevent->xselectionclear.time);
-				sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), id);
+                sendClipboardEvent(EventType::CLIPBOARD_GRABBED, id);
 				return;
 			}
 		}
@@ -1368,7 +1366,7 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
                     m_impl->XResizeWindow(m_display, m_window, m_w, m_h);
 				}
 
-				sendEvent(m_events->forIScreen().shapeChanged());
+                sendEvent(EventType::SCREEN_SHAPE_CHANGED);
 			}
 		}
 
@@ -1467,12 +1465,12 @@ XWindowsScreen::onHotKey(XKeyEvent& xkey, bool isRepeat)
 	}
 
 	// find what kind of event
-	Event::Type type;
+    EventType type;
 	if (xkey.type == KeyPress) {
-		type = m_events->forIPrimaryScreen().hotKeyDown();
+        type = EventType::PRIMARY_SCREEN_HOTKEY_DOWN;
 	}
 	else if (xkey.type == KeyRelease) {
-		type = m_events->forIPrimaryScreen().hotKeyUp();
+        type = EventType::PRIMARY_SCREEN_HOTKEY_UP;
 	}
 	else {
 		return false;
@@ -1480,8 +1478,7 @@ XWindowsScreen::onHotKey(XKeyEvent& xkey, bool isRepeat)
 
 	// generate event (ignore key repeats)
 	if (!isRepeat) {
-		m_events->addEvent(Event(type, getEventTarget(),
-								HotKeyInfo::alloc(i->second)));
+        m_events->addEvent(Event(type, getEventTarget(), HotKeyInfo::alloc(i->second)));
 	}
 	return true;
 }
@@ -1493,7 +1490,7 @@ XWindowsScreen::onMousePress(const XButtonEvent& xbutton)
 	ButtonID button      = mapButtonFromX(&xbutton);
 	KeyModifierMask mask = m_keyState->mapModifiersFromX(xbutton.state);
 	if (button != kButtonNone) {
-		sendEvent(m_events->forIPrimaryScreen().buttonDown(), ButtonInfo::alloc(button, mask));
+        sendEvent(EventType::PRIMARY_SCREEN_BUTTON_DOWN, ButtonInfo::alloc(button, mask));
 	}
 }
 
@@ -1504,23 +1501,23 @@ XWindowsScreen::onMouseRelease(const XButtonEvent& xbutton)
 	ButtonID button      = mapButtonFromX(&xbutton);
 	KeyModifierMask mask = m_keyState->mapModifiersFromX(xbutton.state);
 	if (button != kButtonNone) {
-		sendEvent(m_events->forIPrimaryScreen().buttonUp(), ButtonInfo::alloc(button, mask));
+        sendEvent(EventType::PRIMARY_SCREEN_BUTTON_UP, ButtonInfo::alloc(button, mask));
 	}
 	else if (xbutton.button == 4) {
 		// wheel forward (away from user)
-		sendEvent(m_events->forIPrimaryScreen().wheel(), WheelInfo::alloc(0, 120));
+        sendEvent(EventType::PRIMARY_SCREEN_WHEEL, WheelInfo::alloc(0, 120));
 	}
 	else if (xbutton.button == 5) {
 		// wheel backward (toward user)
-		sendEvent(m_events->forIPrimaryScreen().wheel(), WheelInfo::alloc(0, -120));
+        sendEvent(EventType::PRIMARY_SCREEN_WHEEL, WheelInfo::alloc(0, -120));
 	}
 	else if (xbutton.button == 6) {
 		// wheel left
-		sendEvent(m_events->forIPrimaryScreen().wheel(), WheelInfo::alloc(-120, 0));
+        sendEvent(EventType::PRIMARY_SCREEN_WHEEL, WheelInfo::alloc(-120, 0));
 	}
 	else if (xbutton.button == 7) {
 		// wheel right
-		sendEvent(m_events->forIPrimaryScreen().wheel(), WheelInfo::alloc(120, 0));
+        sendEvent(EventType::PRIMARY_SCREEN_WHEEL, WheelInfo::alloc(120, 0));
 	}
 }
 
@@ -1557,7 +1554,7 @@ XWindowsScreen::onMouseMove(const XMotionEvent& xmotion)
 	}
 	else if (m_isOnScreen) {
 		// motion on primary screen
-		sendEvent(m_events->forIPrimaryScreen().motionOnPrimary(),
+        sendEvent(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY,
 							MotionInfo::alloc(m_xCursor, m_yCursor));
 	}
 	else {
@@ -1588,7 +1585,7 @@ XWindowsScreen::onMouseMove(const XMotionEvent& xmotion)
 		// warping to the primary screen's enter position,
 		// effectively overriding it.
 		if (x != 0 || y != 0) {
-			sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), MotionInfo::alloc(x, y));
+            sendEvent(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY, MotionInfo::alloc(x, y));
 		}
 	}
 }
@@ -1694,7 +1691,7 @@ XWindowsScreen::onError()
     m_display = nullptr;
 
 	// notify of failure
-    sendEvent(m_events->forIScreen().error(), nullptr);
+    sendEvent(EventType::SCREEN_ERROR, nullptr);
 
 	// FIXME -- should ensure that we ignore operations that involve
 	// m_display from now on.  however, Xlib will simply exit the

@@ -88,7 +88,7 @@ ServerTaskBarReceiver::getClients() const
 void
 ServerTaskBarReceiver::quit()
 {
-    m_events->addEvent(Event(Event::kQuit));
+    m_events->addEvent(Event(EventType::QUIT));
 }
 
 void

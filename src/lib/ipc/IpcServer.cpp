@@ -55,8 +55,7 @@ IpcServer::init()
 
     m_address.resolve();
 
-    m_events->adoptHandler(
-        m_events->forIListenSocket().connecting(), socket_.get(),
+    m_events->adoptHandler(EventType::LISTEN_SOCKET_CONNECTING, socket_.get(),
         new TMethodEventJob<IpcServer>(
         this, &IpcServer::handleClientConnecting));
 }
@@ -67,7 +66,7 @@ IpcServer::~IpcServer()
         return;
     }
 
-    m_events->removeHandler(m_events->forIListenSocket().connecting(), socket_.get());
+    m_events->removeHandler(EventType::LISTEN_SOCKET_CONNECTING, socket_.get());
     socket_.reset();
 
     {
@@ -103,18 +102,16 @@ IpcServer::handleClientConnecting(const Event&, void*)
         m_clients.push_back(proxy);
     }
 
-    m_events->adoptHandler(
-        m_events->forIpcClientProxy().disconnected(), proxy,
+    m_events->adoptHandler(EventType::IPC_CLIENT_PROXY_DISCONNECTED, proxy,
         new TMethodEventJob<IpcServer>(
         this, &IpcServer::handleClientDisconnected));
 
-    m_events->adoptHandler(
-        m_events->forIpcClientProxy().messageReceived(), proxy,
+    m_events->adoptHandler(EventType::IPC_CLIENT_PROXY_MESSAGE_RECEIVED, proxy,
         new TMethodEventJob<IpcServer>(
         this, &IpcServer::handleMessageReceived));
 
-    m_events->addEvent(Event(
-        m_events->forIpcServer().clientConnected(), this, proxy, Event::kDontFreeData));
+    m_events->addEvent(Event(EventType::IPC_SERVER_CLIENT_CONNECTED, this,
+                             proxy, Event::kDontFreeData));
 }
 
 void
@@ -132,7 +129,7 @@ IpcServer::handleClientDisconnected(const Event& e, void*)
 void
 IpcServer::handleMessageReceived(const Event& e, void*)
 {
-    Event event(m_events->forIpcServer().messageReceived(), this);
+    Event event(EventType::IPC_SERVER_MESSAGE_RECEIVED, this);
     event.setDataObject(e.getDataObject());
     m_events->addEvent(event);
 }
@@ -140,8 +137,8 @@ IpcServer::handleMessageReceived(const Event& e, void*)
 void
 IpcServer::deleteClient(IpcClientProxy* proxy)
 {
-    m_events->removeHandler(m_events->forIpcClientProxy().messageReceived(), proxy);
-    m_events->removeHandler(m_events->forIpcClientProxy().disconnected(), proxy);
+    m_events->removeHandler(EventType::IPC_CLIENT_PROXY_MESSAGE_RECEIVED, proxy);
+    m_events->removeHandler(EventType::IPC_CLIENT_PROXY_DISCONNECTED, proxy);
     delete proxy;
 }
 

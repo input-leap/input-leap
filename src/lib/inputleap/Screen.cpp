@@ -486,7 +486,7 @@ Screen::enablePrimary()
     m_screen->openScreensaver(true);
 
     // claim screen changed size
-    m_events->addEvent(Event(m_events->forIScreen().shapeChanged(), getEventTarget()));
+    m_events->addEvent(Event(EventType::SCREEN_SHAPE_CHANGED, getEventTarget()));
 }
 
 void

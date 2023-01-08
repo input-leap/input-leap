@@ -19,7 +19,7 @@
 #define TRAY_RETRY_COUNT 5
 #define TRAY_RETRY_WAIT 2000
 
-#include "QBarrierApplication.h"
+#include "QInputLeapApplication.h"
 #include "MainWindow.h"
 #include "AppConfig.h"
 #include "SetupWizard.h"
@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
 	QCoreApplication::setOrganizationDomain("github.com");
 	QCoreApplication::setApplicationName("Barrier");
 
-	QBarrierApplication app(argc, argv);
+	QInputLeapApplication app(argc, argv);
 
 #if defined(Q_OS_MAC)
 	if (app.applicationDirPath().startsWith("/Volumes/")) {

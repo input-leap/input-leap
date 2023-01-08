@@ -17,7 +17,7 @@
 
 #include "SetupWizard.h"
 #include "MainWindow.h"
-#include "QBarrierApplication.h"
+#include "QInputLeapApplication.h"
 #include "QUtility.h"
 
 #include <QMessageBox>
@@ -131,7 +131,7 @@ void SetupWizard::accept()
 
 void SetupWizard::reject()
 {
-    QBarrierApplication::getInstance()->switchTranslator(m_MainWindow.appConfig().language());
+    QInputLeapApplication::getInstance()->switchTranslator(m_MainWindow.appConfig().language());
 
     if (m_StartMain)
     {
@@ -144,5 +144,5 @@ void SetupWizard::reject()
 void SetupWizard::on_m_pComboLanguage_currentIndexChanged(int index)
 {
     QString ietfCode = m_pComboLanguage->itemData(index).toString();
-    QBarrierApplication::getInstance()->switchTranslator(ietfCode);
+    QInputLeapApplication::getInstance()->switchTranslator(ietfCode);
 }

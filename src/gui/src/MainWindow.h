@@ -54,7 +54,7 @@ class QMessageBox;
 class QAbstractButton;
 
 class LogDialog;
-class QBarrierApplication;
+class QInputLeapApplication;
 class SetupWizard;
 class ZeroconfService;
 class DataDownloader;
@@ -65,7 +65,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 {
     Q_OBJECT
 
-    friend class QBarrierApplication;
+    friend class QInputLeapApplication;
     friend class SetupWizard;
     friend class SettingsDialog;
 

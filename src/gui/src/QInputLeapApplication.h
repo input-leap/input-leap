@@ -16,20 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(QBARRIERAPPLICATION__H)
+#if !defined(QInputLeapApplication__H)
 
-#define QBARRIERAPPLICATION__H
+#define QInputLeapApplication__H
 
 #include <QApplication>
 #include <memory>
 
 class QSessionManager;
 
-class QBarrierApplication : public QApplication
+class QInputLeapApplication : public QApplication
 {
     public:
-        QBarrierApplication(int& argc, char** argv);
-        ~QBarrierApplication();
+        QInputLeapApplication(int& argc, char** argv);
+        ~QInputLeapApplication();
 
     public:
         void commitData(QSessionManager& manager);
@@ -37,12 +37,12 @@ class QBarrierApplication : public QApplication
         // takes ownership
         void setTranslator(QTranslator* translator);
 
-        static QBarrierApplication* getInstance();
+        static QInputLeapApplication* getInstance();
 
     private:
         std::unique_ptr<QTranslator> translator_;
 
-        static QBarrierApplication* s_Instance;
+        static QInputLeapApplication* s_Instance;
 };
 
 #endif

@@ -39,7 +39,7 @@ set(GUI_SOURCE_FILES
     src/main.cpp
     src/MainWindow.cpp
     src/NewScreenWidget.cpp
-    src/QBarrierApplication.cpp
+    src/QInputLeapApplication.cpp
     src/QUtility.cpp
     src/Screen.cpp
     src/ScreenSettingsDialog.cpp
@@ -79,7 +79,7 @@ set(GUI_HEADER_FILES
     src/MainWindow.h
     src/NewScreenWidget.h
     src/ProcessorArch.h
-    src/QBarrierApplication.h
+    src/QInputLeapApplication.h
     src/QUtility.h
     src/Screen.h
     src/ScreenSettingsDialog.h

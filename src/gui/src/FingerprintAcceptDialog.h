@@ -19,7 +19,7 @@
 #define INPUTLEAP_GUI_FINGERPRINT_ACCEPT_DIALOG_H
 
 #include "net/FingerprintData.h"
-#include "inputleap/BarrierType.h"
+#include "inputleap/AppRole.h"
 #include <QDialog>
 #include <memory>
 
@@ -33,7 +33,7 @@ class FingerprintAcceptDialog : public QDialog
 
 public:
     explicit FingerprintAcceptDialog(QWidget* parent,
-                                     BarrierType type,
+                                     AppRole type,
                                      const inputleap::FingerprintData& fingerprint_sha1,
                                      const inputleap::FingerprintData& fingerprint_sha256);
     ~FingerprintAcceptDialog() override;

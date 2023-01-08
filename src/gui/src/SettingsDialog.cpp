@@ -19,7 +19,7 @@
 #include "SettingsDialog.h"
 
 #include "BarrierLocale.h"
-#include "QBarrierApplication.h"
+#include "QInputLeapApplication.h"
 #include "QUtility.h"
 #include "AppConfig.h"
 #include "SslCertificate.h"
@@ -84,7 +84,7 @@ void SettingsDialog::accept()
 void SettingsDialog::reject()
 {
     if (m_appConfig.language() != m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString()) {
-        QBarrierApplication::getInstance()->switchTranslator(m_appConfig.language());
+        QInputLeapApplication::getInstance()->switchTranslator(m_appConfig.language());
     }
     QDialog::reject();
 }
@@ -137,5 +137,5 @@ void SettingsDialog::on_m_pButtonBrowseLog_clicked()
 void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(int index)
 {
     QString ietfCode = m_pComboLanguage->itemData(index).toString();
-    QBarrierApplication::getInstance()->switchTranslator(ietfCode);
+    QInputLeapApplication::getInstance()->switchTranslator(ietfCode);
 }

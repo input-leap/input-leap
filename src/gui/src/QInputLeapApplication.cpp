@@ -16,23 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "QBarrierApplication.h"
+#include "QInputLeapApplication.h"
 #include "MainWindow.h"
 
 #include <QtCore>
 #include <QtGui>
 
-QBarrierApplication* QBarrierApplication::s_Instance = nullptr;
+QInputLeapApplication* QInputLeapApplication::s_Instance = nullptr;
 
-QBarrierApplication::QBarrierApplication(int& argc, char** argv) :
+QInputLeapApplication::QInputLeapApplication(int& argc, char** argv) :
     QApplication(argc, argv)
 {
     s_Instance = this;
 }
 
-QBarrierApplication::~QBarrierApplication() = default;
+QInputLeapApplication::~QInputLeapApplication() = default;
 
-void QBarrierApplication::commitData(QSessionManager&)
+void QInputLeapApplication::commitData(QSessionManager&)
 {
     for (QWidget* widget : topLevelWidgets()) {
         MainWindow* mainWindow = qobject_cast<MainWindow*>(widget);
@@ -41,12 +41,12 @@ void QBarrierApplication::commitData(QSessionManager&)
     }
 }
 
-QBarrierApplication* QBarrierApplication::getInstance()
+QInputLeapApplication* QInputLeapApplication::getInstance()
 {
     return s_Instance;
 }
 
-void QBarrierApplication::switchTranslator(QString lang)
+void QInputLeapApplication::switchTranslator(QString lang)
 {
     if (translator_) {
         removeTranslator(translator_.get());
@@ -59,7 +59,7 @@ void QBarrierApplication::switchTranslator(QString lang)
     installTranslator(translator_.get());
 }
 
-void QBarrierApplication::setTranslator(QTranslator* translator)
+void QInputLeapApplication::setTranslator(QTranslator* translator)
 {
     translator_.reset(translator);
     installTranslator(translator_.get());

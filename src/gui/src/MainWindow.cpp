@@ -445,7 +445,7 @@ void MainWindow::checkFingerprint(const QString& line)
         inputleap::string::from_hex(fingerprintRegex.cap(2).toStdString())
     };
 
-    bool is_client = barrier_type() == BarrierType::Client;
+    bool is_client = app_role() == AppRole::Client;
 
     auto db_path = is_client
             ? inputleap::DataDirectories::trusted_servers_ssl_fingerprints_path()
@@ -473,7 +473,7 @@ void MainWindow::checkFingerprint(const QString& line)
         }
 
         messageBoxAlreadyShown = true;
-        FingerprintAcceptDialog dialog{this, barrier_type(), fingerprint_sha1, fingerprint_sha256};
+        FingerprintAcceptDialog dialog{this, app_role(), fingerprint_sha1, fingerprint_sha256};
         if (dialog.exec() == QDialog::Accepted) {
             // restart core process after trusting fingerprint.
             db.add_trusted(fingerprint_sha256);
@@ -562,8 +562,8 @@ void MainWindow::startBarrier()
     args << "--profile-dir" << QString::fromStdString("\"" + inputleap::DataDirectories::profile().u8string() + "\"");
 #endif
 
-    if ((barrier_type() == BarrierType::Client && !clientArgs(args, app))
-        || (barrier_type() == BarrierType::Server && !serverArgs(args, app)))
+    if ((app_role() == AppRole::Client && !clientArgs(args, app))
+        || (app_role() == AppRole::Server && !serverArgs(args, app)))
     {
         stopBarrier();
         return;
@@ -578,7 +578,7 @@ void MainWindow::startBarrier()
 
     m_pLogWindow->startNewInstance();
 
-    appendLogInfo("starting " + QString(barrier_type() == BarrierType::Server ? "server" : "client"));
+    appendLogInfo("starting " + QString(app_role() == AppRole::Server ? "server" : "client"));
 
     qDebug() << args;
 
@@ -688,9 +688,9 @@ QString MainWindow::configFilename()
     return filename;
 }
 
-BarrierType MainWindow::barrier_type() const
+AppRole MainWindow::app_role() const
 {
-    return m_pGroupClient->isChecked() ? BarrierType::Client : BarrierType::Server;
+    return m_pGroupClient->isChecked() ? AppRole::Client : AppRole::Server;
 }
 
 QString MainWindow::address()
@@ -989,7 +989,7 @@ void MainWindow::updateZeroconfService()
                 m_pZeroconfService = nullptr;
             }
 
-            if (m_AppConfig->autoConfig() || barrier_type() == BarrierType::Server) {
+            if (m_AppConfig->autoConfig() || app_role() == AppRole::Server) {
                 m_pZeroconfService = new ZeroconfService(this);
             }
         }

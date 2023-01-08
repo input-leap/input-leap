@@ -1,17 +1,17 @@
-Source: barrier
+Source: input-leap
 Section: utils
 Priority: optional
 Standards-Version: 3.9.7
-Homepage: https://github.com/debauchee/barrier/
-Maintainer: Debauchee Open Source Group <todo@mail.com>
+Homepage: https://github.com/input-leap/input-leap
+Maintainer: Povilas Kanapickas <povilas@radix.lt>
 
-Package: barrier
+Package: input-leap
 Architecture: amd64
 Section: utils
 Priority: optional
 Depends: ${shlibs:Depends},
          ${misc:Depends}
 Description: Keyboard and mouse sharing solution
- Barrier allows you to share one mouse and keyboard between multiple computers.
+ InputLeap allows you to share one mouse and keyboard between multiple computers.
  Work seamlessly across Windows, macOS and Linux.
-Homepage: https://github.com/debauchee/barrier/
+Homepage: https://github.com/input-leap/input-leap

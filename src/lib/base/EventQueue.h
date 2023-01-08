@@ -59,7 +59,6 @@ public:
     Event::Type registerTypeOnce(Event::Type& type, const char* name) override;
     IEventJob* getHandler(Event::Type type, void* target) const override;
     const char* getTypeName(Event::Type type) override;
-    Event::Type getRegisteredType(const std::string& name) const override;
     void* getSystemTarget() override;
     void waitForReady() const override;
 
@@ -113,7 +112,6 @@ private:
     // registered events
     Event::Type m_nextType;
     TypeMap m_typeMap;
-    NameMap m_nameMap;
 
     // buffer of events
     std::unique_ptr<IEventQueueBuffer> buffer_;

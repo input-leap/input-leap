@@ -79,7 +79,7 @@ std::uint32_t PacketStreamFilter::read(void* buffer, std::uint32_t n)
     readPacketSize();
 
     if (m_inputShutdown && m_size == 0) {
-        m_events->addEvent(Event(EventType::STREAM_INPUT_SHUTDOWN, getEventTarget(), nullptr));
+        m_events->add_event(Event(EventType::STREAM_INPUT_SHUTDOWN, getEventTarget(), nullptr));
     }
 
     return n;
@@ -141,7 +141,7 @@ bool PacketStreamFilter::readPacketSize()
                   static_cast<std::uint32_t>(buffer[3]);
 
         if (m_size > PROTOCOL_MAX_MESSAGE_LENGTH) {
-            m_events->addEvent(Event(EventType::STREAM_INPUT_FORMAT_ERROR, getEventTarget()));
+            m_events->add_event(Event(EventType::STREAM_INPUT_FORMAT_ERROR, getEventTarget()));
             return false;
         }
     }

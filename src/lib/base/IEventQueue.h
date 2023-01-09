@@ -82,7 +82,7 @@ public:
     /*!
     Adds \p event to the end of the queue.
     */
-    virtual void addEvent(const Event& event) = 0;
+    virtual void add_event(Event&& event) = 0;
 
     //! Create a recurring timer
     /*!

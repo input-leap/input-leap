@@ -403,7 +403,7 @@ Client::sendClipboard(ClipboardID id)
 
 void Client::sendEvent(EventType type, void* data)
 {
-    m_events->addEvent(Event(type, getEventTarget(), data));
+    m_events->add_event(Event(type, getEventTarget(), data));
 }
 
 void
@@ -411,8 +411,8 @@ Client::sendConnectionFailedEvent(const char* msg)
 {
     FailInfo* info = new FailInfo(msg);
     info->m_retry = true;
-    Event event(EventType::CLIENT_CONNECTION_FAILED, getEventTarget(), info, Event::kDontFreeData);
-    m_events->addEvent(event);
+    m_events->add_event(Event(EventType::CLIENT_CONNECTION_FAILED, getEventTarget(), info,
+                              Event::kDontFreeData));
 }
 
 void
@@ -681,7 +681,7 @@ Client::handleHello(const Event&, void*)
     // receive another event for already pending messages so we fake
     // one.
     if (m_stream->isReady()) {
-        m_events->addEvent(Event(EventType::STREAM_INPUT_READY, m_stream->getEventTarget()));
+        m_events->add_event(Event(EventType::STREAM_INPUT_READY, m_stream->getEventTarget()));
     }
 }
 

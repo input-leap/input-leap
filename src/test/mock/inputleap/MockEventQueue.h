@@ -36,7 +36,7 @@ public:
     MOCK_METHOD1(registerType, EventType(const char*));
     MOCK_CONST_METHOD0(isEmpty, bool());
     MOCK_METHOD3(adoptHandler, void(EventType, void*, IEventJob*));
-    MOCK_METHOD1(addEvent, void(const Event&));
+    MOCK_METHOD1(add_event, void(Event&&));
     MOCK_METHOD2(removeHandler, void(EventType, void*));
     MOCK_METHOD1(dispatchEvent, bool(const Event&));
     MOCK_CONST_METHOD2(getHandler, IEventJob*(EventType, void*));

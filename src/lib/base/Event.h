@@ -33,10 +33,7 @@ public:
     virtual ~EventData() { }
 };
 
-//! Event
-/*!
-A \c Event holds an event type and a pointer to event data.
-*/
+/// Event holds an event type and a pointer to event data. It is movable, but not copyable
 class Event {
 public:
     typedef std::uint32_t Flags;
@@ -47,6 +44,11 @@ public:
     };
 
     Event() = default;
+
+    Event(const Event&) = delete;
+    Event(Event&& other) = default;
+    Event& operator=(const Event&) = delete;
+    Event& operator=(Event&&) = default;
 
     //! Create \c Event with data (POD)
     /*!

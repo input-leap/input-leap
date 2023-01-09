@@ -782,7 +782,7 @@ MSWindowsDesks::checkDesk()
     // first switch, then shut down.
     if (m_stopOnDeskSwitch && m_activeDesk != nullptr && name != m_activeDeskName) {
         LOG((CLOG_DEBUG "shutting down because of desk switch to \"%s\"", name.c_str()));
-        m_events->addEvent(Event(EventType::QUIT));
+        m_events->add_event(Event(EventType::QUIT));
         return;
     }
 

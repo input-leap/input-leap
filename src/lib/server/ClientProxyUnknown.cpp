@@ -85,7 +85,7 @@ ClientProxyUnknown::sendSuccess()
 {
     m_ready = true;
     removeTimer();
-    m_events->addEvent(Event(EventType::CLIENT_PROXY_UNKNOWN_SUCCESS, this));
+    m_events->add_event(Event(EventType::CLIENT_PROXY_UNKNOWN_SUCCESS, this));
 }
 
 void
@@ -96,7 +96,7 @@ ClientProxyUnknown::sendFailure()
     m_ready = false;
     removeHandlers();
     removeTimer();
-    m_events->addEvent(Event(EventType::CLIENT_PROXY_UNKNOWN_FAILURE, this));
+    m_events->add_event(Event(EventType::CLIENT_PROXY_UNKNOWN_FAILURE, this));
 }
 
 void

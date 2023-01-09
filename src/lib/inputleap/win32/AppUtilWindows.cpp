@@ -58,7 +58,7 @@ BOOL WINAPI AppUtilWindows::consoleHandler(DWORD)
 {
     LOG((CLOG_INFO "got shutdown signal"));
     IEventQueue* events = AppUtil::instance().app().getEvents();
-    events->addEvent(Event(EventType::QUIT));
+    events->add_event(Event(EventType::QUIT));
     return TRUE;
 }
 

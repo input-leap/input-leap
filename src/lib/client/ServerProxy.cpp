@@ -876,7 +876,7 @@ ServerProxy::fileChunkReceived()
                     m_client->getExpectedFileSize());
 
     if (result == kFinish) {
-        m_events->addEvent(Event(EventType::FILE_RECEIVE_COMPLETED, m_client));
+        m_events->add_event(Event(EventType::FILE_RECEIVE_COMPLETED, m_client));
     }
     else if (result == kStart) {
         if (m_client->getDragFileList().size() > 0) {

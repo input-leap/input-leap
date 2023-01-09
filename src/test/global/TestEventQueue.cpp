@@ -27,7 +27,7 @@ namespace inputleap {
 void
 TestEventQueue::raiseQuitEvent()
 {
-    addEvent(Event(EventType::QUIT));
+    add_event(Event(EventType::QUIT));
 }
 
 void

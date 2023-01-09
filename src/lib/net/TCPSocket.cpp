@@ -439,13 +439,13 @@ void
 TCPSocket::sendConnectionFailedEvent(const char* msg)
 {
     ConnectionFailedInfo* info = new ConnectionFailedInfo(msg);
-    m_events->addEvent(Event(EventType::DATA_SOCKET_CONNECTION_FAILED, getEventTarget(),
-                             info, Event::kDontFreeData));
+    m_events->add_event(Event(EventType::DATA_SOCKET_CONNECTION_FAILED, getEventTarget(),
+                              info, Event::kDontFreeData));
 }
 
 void TCPSocket::sendEvent(EventType type)
 {
-    m_events->addEvent(Event(type, getEventTarget(), nullptr));
+    m_events->add_event(Event(type, getEventTarget(), nullptr));
 }
 
 void

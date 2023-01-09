@@ -424,7 +424,7 @@ NetworkTests::sendMockData(void* eventTarget)
     std::string size = inputleap::string::sizeTypeToString(kMockDataSize);
     FileChunk* sizeMessage = FileChunk::start(size);
 
-    m_events.addEvent(Event(EventType::FILE_CHUNK_SENDING, eventTarget, sizeMessage));
+    m_events.add_event(Event(EventType::FILE_CHUNK_SENDING, eventTarget, sizeMessage));
 
     // send chunk messages with incrementing chunk size
     size_t lastSize = 0;
@@ -439,7 +439,7 @@ NetworkTests::sendMockData(void* eventTarget)
 
         // first byte is the chunk mark, last is \0
         FileChunk* chunk = FileChunk::data(m_mockData, dataSize);
-        m_events.addEvent(Event(EventType::FILE_CHUNK_SENDING, eventTarget, chunk));
+        m_events.add_event(Event(EventType::FILE_CHUNK_SENDING, eventTarget, chunk));
 
         sentLength += dataSize;
         lastSize = dataSize;
@@ -452,7 +452,7 @@ NetworkTests::sendMockData(void* eventTarget)
 
     // send last message
     FileChunk* transferFinished = FileChunk::end();
-    m_events.addEvent(Event(EventType::FILE_CHUNK_SENDING, eventTarget, transferFinished));
+    m_events.add_event(Event(EventType::FILE_CHUNK_SENDING, eventTarget, transferFinished));
 }
 
 std::uint8_t* newMockData(size_t size)

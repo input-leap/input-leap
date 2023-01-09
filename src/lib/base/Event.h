@@ -19,8 +19,10 @@
 #pragma once
 
 #include "EventTypes.h"
+#include <cassert>
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <map>
 
 namespace inputleap {
@@ -44,7 +46,7 @@ public:
         kDontFreeData        = 0x02    //!< Don't free data in deleteData
     };
 
-    Event();
+    Event() = default;
 
     //! Create \c Event with data (POD)
     /*!
@@ -55,45 +57,64 @@ public:
     \p target is the intended recipient of the event.
     \p flags is any combination of \c Flags.
     */
-    Event(EventType type, void* target = nullptr, void* data = nullptr, Flags flags = kNone);
-
-    //! @name manipulators
-    //@{
+    Event(EventType type, void* target = nullptr, void* data = nullptr, Flags flags = kNone) :
+        type_{type},
+        target_{target},
+        data_{data},
+        flags_{flags}
+    {}
 
     //! Release event data
     /*!
     Deletes event data for the given event (using free()).
     */
-    static void deleteData(const Event&);
+    static void deleteData(const Event& event)
+    {
+        switch (event.getType()) {
+        case EventType::UNKNOWN:
+        case EventType::QUIT:
+        case EventType::SYSTEM:
+        case EventType::TIMER:
+            break;
+
+        default:
+            if ((event.getFlags() & kDontFreeData) == 0) {
+                std::free(event.getData());
+                delete event.getDataObject();
+            }
+            break;
+        }
+    }
 
     //! Set data (non-POD)
     /*!
     Set non-POD (non plain old data), where delete is called when the event
     is deleted, and the destructor is called.
     */
-    void setDataObject(EventData* dataObject);
+    void setDataObject(EventData* dataObject)
+    {
+        assert(data_object_ == nullptr);
+        data_object_ = dataObject;
+    }
 
-    //@}
-    //! @name accessors
-    //@{
 
     //! Get event type
     /*!
     Returns the event type.
     */
-    EventType getType() const;
+    EventType getType() const { return type_; }
 
     //! Get the event target
     /*!
     Returns the event target.
     */
-    void* getTarget() const;
+    void* getTarget() const { return target_; }
 
     //! Get the event data (POD).
     /*!
     Returns the event data (POD).
     */
-    void* getData() const;
+    void* getData() const { return data_; }
 
     //! Get the event data (non-POD)
     /*!
@@ -101,22 +122,20 @@ public:
     \c getData() is that when delete is called on this data, so non-POD
     (non plain old data) dtor is called.
     */
-    EventData* getDataObject() const;
+    EventData* getDataObject() const { return data_object_; }
 
     //! Get event flags
     /*!
     Returns the event flags.
     */
-    Flags getFlags() const;
-
-    //@}
+    Flags getFlags() const { return flags_; }
 
 private:
-    EventType type_;
-    void* m_target;
-    void* m_data;
-    Flags m_flags;
-    EventData* m_dataObject;
+    EventType type_ = EventType::UNKNOWN;
+    void* target_ = nullptr;
+    void* data_ = nullptr;
+    Flags flags_ = 0;
+    EventData* data_object_ = nullptr;
 };
 
 } // namespace inputleap

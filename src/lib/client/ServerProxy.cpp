@@ -900,10 +900,10 @@ ServerProxy::dragInfoReceived()
 void
 ServerProxy::handleClipboardSendingEvent(const Event& event, void*)
 {
-    ClipboardChunk::send(m_stream, event.getData());
+    ClipboardChunk::send(m_stream, event.get_data_as<ClipboardChunk>());
 }
 
-void ServerProxy::fileChunkSending(std::uint8_t mark, char* data, size_t dataSize)
+void ServerProxy::fileChunkSending(std::uint8_t mark, const char* data, size_t dataSize)
 {
     FileChunk::send(m_stream, mark, data, dataSize);
 }

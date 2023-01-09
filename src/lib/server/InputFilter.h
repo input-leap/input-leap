@@ -60,7 +60,7 @@ public:
     // KeystrokeCondition
     class KeystrokeCondition : public Condition {
     public:
-        KeystrokeCondition(IEventQueue* events, IPlatformScreen::KeyInfo*);
+        KeystrokeCondition(IEventQueue* events, const IPlatformScreen::KeyInfo& info);
         KeystrokeCondition(IEventQueue* events, KeyID key, KeyModifierMask mask);
         ~KeystrokeCondition() override;
 
@@ -225,11 +225,11 @@ public:
     // KeystrokeAction
     class KeystrokeAction : public Action {
     public:
-        KeystrokeAction(IEventQueue* events, IPlatformScreen::KeyInfo* adoptedInfo, bool press);
+        KeystrokeAction(IEventQueue* events, const IPlatformScreen::KeyInfo& info, bool press);
         ~KeystrokeAction();
 
-        void adoptInfo(IPlatformScreen::KeyInfo*);
-        const IPlatformScreen::KeyInfo* getInfo() const;
+        void set_info(const IPlatformScreen::KeyInfo& info) { info_ = info; }
+        const IPlatformScreen::KeyInfo& get_info() const { return info_; }
         bool isOnPress() const;
 
         // Action overrides
@@ -241,7 +241,7 @@ public:
         virtual const char* formatName() const;
 
     private:
-        IPlatformScreen::KeyInfo* m_keyInfo;
+        IPlatformScreen::KeyInfo info_;
         bool m_press;
         IEventQueue* m_events;
     };

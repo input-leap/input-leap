@@ -30,6 +30,7 @@
 namespace inputleap {
 
 class EventQueueTimer;
+class FileChunk;
 class Screen;
 class ServerProxy;
 class IDataSocket;
@@ -165,7 +166,7 @@ private:
     void sendClipboard(ClipboardID);
     void send_event(EventType);
     void sendConnectionFailedEvent(const char* msg);
-    void sendFileChunk(const void* data);
+    void send_file_chunk(const FileChunk& data);
     void send_file_thread(const char* filename);
     void write_to_drop_dir_thread();
     void setupConnecting();

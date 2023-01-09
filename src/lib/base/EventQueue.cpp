@@ -419,7 +419,8 @@ EventQueue::hasTimerExpired(Event& event)
 
     // prepare event and reset the timer's clock
     timer.fillEvent(m_timerEvent);
-    event = Event(EventType::TIMER, timer.getTarget(), &m_timerEvent);
+    event = Event(EventType::TIMER, timer.getTarget(),
+                  create_event_data<TimerEvent*>(&m_timerEvent));
     timer.reset();
 
     // reinsert timer into queue if it's not a one-shot

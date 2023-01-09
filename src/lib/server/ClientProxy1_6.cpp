@@ -62,7 +62,7 @@ ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard* clipboard)
 void
 ClientProxy1_6::handleClipboardSendingEvent(const Event& event, void*)
 {
-    ClipboardChunk::send(getStream(), event.getData());
+    ClipboardChunk::send(getStream(), event.get_data_as<ClipboardChunk>());
 }
 
 bool
@@ -87,10 +87,11 @@ ClientProxy1_6::recvClipboard()
         m_clipboard[id].m_sequenceNumber = seq;
 
         // notify
-        ClipboardInfo* info = new ClipboardInfo;
-        info->m_id = id;
-        info->m_sequenceNumber = seq;
-        m_events->add_event(EventType::CLIPBOARD_CHANGED, getEventTarget(), info);
+        ClipboardInfo info;
+        info.m_id = id;
+        info.m_sequenceNumber = seq;
+        m_events->add_event(EventType::CLIPBOARD_CHANGED, getEventTarget(),
+                            create_event_data<ClipboardInfo>(info));
     }
 
     return true;

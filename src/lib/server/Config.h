@@ -497,9 +497,9 @@ public:
                            const std::string& delim, std::string::size_type& index,
                            std::string& name, ArgList& args) const;
 
-    IPlatformScreen::KeyInfo* parseKeystroke(const std::string& keystroke) const;
-    IPlatformScreen::KeyInfo* parseKeystroke(const std::string& keystroke,
-                                             const std::set<std::string>& screens) const;
+    IPlatformScreen::KeyInfo parseKeystroke(const std::string& keystroke) const;
+    IPlatformScreen::KeyInfo parseKeystroke(const std::string& keystroke,
+                                            const std::set<std::string>& screens) const;
     IPlatformScreen::ButtonInfo parseMouse(const std::string& mouse) const;
     KeyModifierMask parseModifier(const std::string& modifiers) const;
 

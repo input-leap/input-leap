@@ -38,6 +38,7 @@ namespace inputleap {
 
 class BaseClientProxy;
 class EventQueueTimer;
+class FileChunk;
 class PrimaryClient;
 class InputFilter;
 class Screen;
@@ -56,7 +57,7 @@ public:
     public:
         enum State { kOff, kOn, kToggle };
 
-        static LockCursorToScreenInfo* alloc(State state = kToggle);
+        LockCursorToScreenInfo(State state) : m_state{state} {}
 
     public:
         State m_state;
@@ -65,17 +66,18 @@ public:
     //! Switch to screen data
     class SwitchToScreenInfo {
     public:
-        static SwitchToScreenInfo* alloc(const std::string& screen);
+        SwitchToScreenInfo(const std::string& screen) :
+            m_screen{screen}
+        {}
 
     public:
-        // this is a C-string;  this type is a variable size structure
-        char m_screen[1];
+        std::string m_screen;
     };
 
     //! Switch in direction data
     class SwitchInDirectionInfo {
     public:
-        static SwitchInDirectionInfo* alloc(EDirection direction);
+        SwitchInDirectionInfo(EDirection direction) : m_direction{direction} {}
 
     public:
         EDirection m_direction;
@@ -95,13 +97,18 @@ public:
     public:
         enum State { kOff, kOn, kToggle };
 
-        static KeyboardBroadcastInfo* alloc(State state = kToggle);
-        static KeyboardBroadcastInfo* alloc(State state,
-                                            const std::string& screens);
+        KeyboardBroadcastInfo(State state) :
+            m_state{state}
+        {}
+
+        KeyboardBroadcastInfo(State state, const std::string& screens) :
+            m_state{state},
+            screens_{screens}
+        {}
 
     public:
         State m_state;
-        char m_screens[1];
+        std::string screens_;
     };
 
     /*!
@@ -329,7 +336,7 @@ private:
     bool onMouseMovePrimary(std::int32_t x, std::int32_t y);
     void onMouseMoveSecondary(std::int32_t dx, std::int32_t dy);
     void onMouseWheel(std::int32_t xDelta, std::int32_t yDelta);
-    void onFileChunkSending(const void* data);
+    void on_file_chunk_sending(const FileChunk& chunk);
     void onFileReceiveCompleted();
 
     // add client to list and attach event handlers for client

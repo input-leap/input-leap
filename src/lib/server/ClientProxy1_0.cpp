@@ -360,7 +360,7 @@ void ClientProxy1_0::sendDragInfo(std::uint32_t fileCount, const char* info, siz
     LOG((CLOG_DEBUG "draggingInfoSending not supported"));
 }
 
-void ClientProxy1_0::fileChunkSending(std::uint8_t mark, char* data, size_t dataSize)
+void ClientProxy1_0::fileChunkSending(std::uint8_t mark, const char* data, size_t dataSize)
 {
     (void) mark;
     (void) data;
@@ -467,10 +467,11 @@ ClientProxy1_0::recvGrabClipboard()
     }
 
     // notify
-    ClipboardInfo* info   = new ClipboardInfo;
-    info->m_id             = id;
-    info->m_sequenceNumber = seqNum;
-    m_events->add_event(EventType::CLIPBOARD_GRABBED, getEventTarget(), info);
+    ClipboardInfo info;
+    info.m_id = id;
+    info.m_sequenceNumber = seqNum;
+    m_events->add_event(EventType::CLIPBOARD_GRABBED, getEventTarget(),
+                        create_event_data<ClipboardInfo>(info));
 
     return true;
 }

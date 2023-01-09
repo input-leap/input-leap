@@ -29,50 +29,16 @@ IKeyState::IKeyState(IEventQueue* events)
     (void) events;
 }
 
-//
-// IKeyState::KeyInfo
-//
-
-IKeyState::KeyInfo* IKeyState::KeyInfo::alloc(KeyID id, KeyModifierMask mask, KeyButton button,
-                                              std::int32_t count)
-{
-    KeyInfo* info = static_cast<KeyInfo*>(malloc(sizeof(KeyInfo)));
-    info->m_key              = id;
-    info->m_mask             = mask;
-    info->m_button           = button;
-    info->m_count            = count;
-    info->m_screens = nullptr;
-    info->m_screensBuffer[0] = '\0';
-    return info;
-}
-
-IKeyState::KeyInfo* IKeyState::KeyInfo::alloc(KeyID id, KeyModifierMask mask, KeyButton button,
+IKeyState::KeyInfo IKeyState::KeyInfo::create(KeyID id, KeyModifierMask mask, KeyButton button,
                                               std::int32_t count,
                                               const std::set<std::string>& destinations)
 {
-    std::string screens = join(destinations);
-
-    // build structure
-    KeyInfo* info = static_cast<KeyInfo*>(malloc(sizeof(KeyInfo) + screens.size()));
-    info->m_key     = id;
-    info->m_mask    = mask;
-    info->m_button  = button;
-    info->m_count   = count;
-    info->m_screens = info->m_screensBuffer;
-    strcpy(info->m_screensBuffer, screens.c_str());
-    return info;
-}
-
-IKeyState::KeyInfo*
-IKeyState::KeyInfo::alloc(const KeyInfo& x)
-{
-    KeyInfo* info = static_cast<KeyInfo*>(malloc(sizeof(KeyInfo) + strlen(x.m_screensBuffer)));
-    info->m_key     = x.m_key;
-    info->m_mask    = x.m_mask;
-    info->m_button  = x.m_button;
-    info->m_count   = x.m_count;
-    info->m_screens = x.m_screens ? info->m_screensBuffer : nullptr;
-    strcpy(info->m_screensBuffer, x.m_screensBuffer);
+    KeyInfo info;
+    info.m_key = id;
+    info.m_mask = mask;
+    info.m_button = button;
+    info.m_count = count;
+    info.screens_ = join(destinations);
     return info;
 }
 
@@ -109,7 +75,7 @@ IKeyState::KeyInfo::equal(const KeyInfo* a, const KeyInfo* b)
             a->m_mask   == b->m_mask &&
             a->m_button == b->m_button &&
             a->m_count  == b->m_count &&
-            strcmp(a->m_screensBuffer, b->m_screensBuffer) == 0);
+            a->screens_ == b->screens_);
 }
 
 std::string IKeyState::KeyInfo::join(const std::set<std::string>& destinations)

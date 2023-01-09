@@ -36,7 +36,7 @@ public:
     static FileChunk* data(std::uint8_t* data, size_t dataSize);
     static FileChunk* end();
     static int assemble(inputleap::IStream* stream, std::string& dataCached, size_t& expectedSize);
-    static void send(inputleap::IStream* stream, std::uint8_t mark, char* data, size_t dataSize);
+    static void send(inputleap::IStream* stream, uint8_t mark, const char* data, size_t dataSize);
 };
 
 } // namespace inputleap

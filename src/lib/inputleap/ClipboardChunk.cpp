@@ -28,10 +28,10 @@ namespace inputleap {
 
 size_t ClipboardChunk::s_expectedSize = 0;
 
-ClipboardChunk::ClipboardChunk(size_t size) :
-    Chunk(size)
+ClipboardChunk::ClipboardChunk(size_t size)
 {
-        m_dataSize = size - CLIPBOARD_CHUNK_META_SIZE;
+    chunk_.resize(size, '\0');
+    m_dataSize = size - CLIPBOARD_CHUNK_META_SIZE;
 }
 
 ClipboardChunk* ClipboardChunk::start(ClipboardID id, std::uint32_t sequence,
@@ -39,7 +39,7 @@ ClipboardChunk* ClipboardChunk::start(ClipboardID id, std::uint32_t sequence,
 {
     size_t sizeLength = size.size();
     ClipboardChunk* start = new ClipboardChunk(sizeLength + CLIPBOARD_CHUNK_META_SIZE);
-    char* chunk = start->m_chunk;
+    std::string& chunk = start->chunk_;
 
     chunk[0] = id;
     std::memcpy (&chunk[1], &sequence, 4);
@@ -55,7 +55,7 @@ ClipboardChunk* ClipboardChunk::data(ClipboardID id, std::uint32_t sequence,
 {
     size_t dataSize = data.size();
     ClipboardChunk* chunk = new ClipboardChunk(dataSize + CLIPBOARD_CHUNK_META_SIZE);
-    char* chunkData = chunk->m_chunk;
+    std::string& chunkData = chunk->chunk_;
 
     chunkData[0] = id;
     std::memcpy (&chunkData[1], &sequence, 4);
@@ -69,7 +69,7 @@ ClipboardChunk* ClipboardChunk::data(ClipboardID id, std::uint32_t sequence,
 ClipboardChunk* ClipboardChunk::end(ClipboardID id, std::uint32_t sequence)
 {
     ClipboardChunk* end = new ClipboardChunk(CLIPBOARD_CHUNK_META_SIZE);
-    char* chunk = end->m_chunk;
+    std::string& chunk = end->chunk_;
 
     chunk[0] = id;
     std::memcpy (&chunk[1], &sequence, 4);
@@ -115,19 +115,16 @@ int ClipboardChunk::assemble(inputleap::IStream* stream, std::string& dataCached
     return kError;
 }
 
-void
-ClipboardChunk::send(inputleap::IStream* stream, void* data)
+void ClipboardChunk::send(inputleap::IStream* stream, const ClipboardChunk& clipboard_data)
 {
-    ClipboardChunk* clipboardData = static_cast<ClipboardChunk*>(data);
-
     LOG((CLOG_DEBUG1 "sending clipboard chunk"));
 
-    char* chunk = clipboardData->m_chunk;
+    const std::string& chunk = clipboard_data.chunk_;
     ClipboardID id = chunk[0];
     std::uint32_t sequence;
     std::memcpy (&sequence, &chunk[1], 4);
     std::uint8_t mark = chunk[5];
-    std::string dataChunk(&chunk[6], clipboardData->m_dataSize);
+    std::string dataChunk(&chunk[6], clipboard_data.m_dataSize);
 
     switch (mark) {
     case kDataStart:

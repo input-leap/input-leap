@@ -33,7 +33,7 @@ public:
     ~ClientProxy1_5() override;
 
     void sendDragInfo(std::uint32_t fileCount, const char* info, size_t size) override;
-    void fileChunkSending(std::uint8_t mark, char* data, size_t dataSize) override;
+    void fileChunkSending(std::uint8_t mark, const char* data, size_t dataSize) override;
     bool parseMessage(const std::uint8_t* code) override;
     void fileChunkReceived();
     void dragInfoReceived();

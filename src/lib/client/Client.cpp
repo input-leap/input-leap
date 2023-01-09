@@ -409,21 +409,19 @@ void Client::send_event(EventType type)
 void
 Client::sendConnectionFailedEvent(const char* msg)
 {
-    FailInfo* info = new FailInfo(msg);
-    info->m_retry = true;
-    m_events->add_event(EventType::CLIENT_CONNECTION_FAILED, getEventTarget(), info,
-                        Event::kDontFreeData);
+    FailInfo info{msg};
+    info.m_retry = true;
+    m_events->add_event(EventType::CLIENT_CONNECTION_FAILED, getEventTarget(),
+                        create_event_data<FailInfo>(info));
 }
 
-void
-Client::sendFileChunk(const void* data)
+void Client::send_file_chunk(const FileChunk& chunk)
 {
-    FileChunk* chunk = static_cast<FileChunk*>(const_cast<void*>(data));
     LOG((CLOG_DEBUG1 "send file chunk"));
     assert(m_server != nullptr);
 
     // relay
-    m_server->fileChunkSending(chunk->m_chunk[0], &chunk->m_chunk[1], chunk->m_dataSize);
+    m_server->fileChunkSending(chunk.chunk_[0], &chunk.chunk_[1], chunk.m_dataSize);
 }
 
 void
@@ -572,15 +570,13 @@ Client::handleConnected(const Event&, void*)
 void
 Client::handleConnectionFailed(const Event& event, void*)
 {
-    IDataSocket::ConnectionFailedInfo* info =
-        static_cast<IDataSocket::ConnectionFailedInfo*>(event.getData());
+    const auto& info = event.get_data_as<IDataSocket::ConnectionFailedInfo>();
 
     cleanupTimer();
     cleanupConnecting();
     cleanupStream();
     LOG((CLOG_DEBUG1 "connection failed"));
-    sendConnectionFailedEvent(info->m_what.c_str());
-    delete info;
+    sendConnectionFailedEvent(info.m_what.c_str());
 }
 
 void
@@ -628,21 +624,20 @@ Client::handleClipboardGrabbed(const Event& event, void*)
         return;
     }
 
-    const IScreen::ClipboardInfo* info =
-        static_cast<const IScreen::ClipboardInfo*>(event.getData());
+    const auto& info = event.get_data_as<IScreen::ClipboardInfo>();
 
     // grab ownership
-    m_server->onGrabClipboard(info->m_id);
+    m_server->onGrabClipboard(info.m_id);
 
     // we now own the clipboard and it has not been sent to the server
-    m_ownClipboard[info->m_id]  = true;
-    m_sentClipboard[info->m_id] = false;
-    m_timeClipboard[info->m_id] = 0;
+    m_ownClipboard[info.m_id]  = true;
+    m_sentClipboard[info.m_id] = false;
+    m_timeClipboard[info.m_id] = 0;
 
     // if we're not the active screen then send the clipboard now,
     // otherwise we'll wait until we leave.
     if (!m_active) {
-        sendClipboard(info->m_id);
+        sendClipboard(info.m_id);
     }
 }
 
@@ -709,7 +704,7 @@ Client::handleResume(const Event&, void*)
 void
 Client::handleFileChunkSending(const Event& event, void*)
 {
-    sendFileChunk(event.getData());
+    send_file_chunk(event.get_data_as<FileChunk>());
 }
 
 void

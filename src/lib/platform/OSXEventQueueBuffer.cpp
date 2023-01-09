@@ -81,7 +81,8 @@ IEventQueueBuffer::Type OSXEventQueueBuffer::getEvent(Event& event, std::uint32_
             return kUser;
 
         default:
-            event = Event(EventType::SYSTEM, m_eventQueue->getSystemTarget(), &m_event);
+            event = Event(EventType::SYSTEM, m_eventQueue->getSystemTarget(),
+                          create_event_data<EventRef*>(&m_event));
             return kSystem;
         }
     }

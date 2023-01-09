@@ -55,7 +55,7 @@ public:
     //@}
 
     // sending file chunk to server
-    void fileChunkSending(std::uint8_t mark, char* data, size_t dataSize);
+    void fileChunkSending(std::uint8_t mark, const char* data, size_t dataSize);
 
     // sending dragging information to server
     void sendDragInfo(std::uint32_t fileCount, const char* info, size_t size);

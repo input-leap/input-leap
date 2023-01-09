@@ -1074,17 +1074,17 @@ XWindowsScreen::openIM()
     m_impl->XSelectInput(m_display, m_window, attr.your_event_mask | mask);
 }
 
-void XWindowsScreen::sendEvent(EventType type, void* data)
+void XWindowsScreen::sendEvent(EventType type, EventDataBase* data)
 {
     m_events->add_event(type, getEventTarget(), data);
 }
 
 void XWindowsScreen::sendClipboardEvent(EventType type, ClipboardID id)
 {
-    ClipboardInfo* info = static_cast<ClipboardInfo*>(malloc(sizeof(ClipboardInfo)));
-	info->m_id             = id;
-	info->m_sequenceNumber = m_sequenceNumber;
-	sendEvent(type, info);
+    ClipboardInfo info;
+    info.m_id = id;
+    info.m_sequenceNumber = m_sequenceNumber;
+    sendEvent(type, create_event_data<ClipboardInfo>(info));
 }
 
 IKeyState*
@@ -1106,7 +1106,7 @@ XWindowsScreen::findKeyEvent(Display*, XEvent* xevent, XPointer arg)
 void
 XWindowsScreen::handleSystemEvent(const Event& event, void*)
 {
-	XEvent* xevent = static_cast<XEvent*>(event.getData());
+    XEvent* xevent = event.get_data_as<XEvent*>();
     assert(xevent != nullptr);
 
 	// update key state
@@ -1478,7 +1478,8 @@ XWindowsScreen::onHotKey(XKeyEvent& xkey, bool isRepeat)
 
 	// generate event (ignore key repeats)
 	if (!isRepeat) {
-        m_events->add_event(type, getEventTarget(), HotKeyInfo::alloc(i->second));
+        m_events->add_event(type, getEventTarget(),
+                            create_event_data<HotKeyInfo>(HotKeyInfo{i->second}));
 	}
 	return true;
 }
@@ -1490,7 +1491,8 @@ XWindowsScreen::onMousePress(const XButtonEvent& xbutton)
 	ButtonID button      = mapButtonFromX(&xbutton);
 	KeyModifierMask mask = m_keyState->mapModifiersFromX(xbutton.state);
 	if (button != kButtonNone) {
-        sendEvent(EventType::PRIMARY_SCREEN_BUTTON_DOWN, ButtonInfo::alloc(button, mask));
+        sendEvent(EventType::PRIMARY_SCREEN_BUTTON_DOWN,
+                  create_event_data<ButtonInfo>(ButtonInfo{button, mask}));
 	}
 }
 
@@ -1501,23 +1503,28 @@ XWindowsScreen::onMouseRelease(const XButtonEvent& xbutton)
 	ButtonID button      = mapButtonFromX(&xbutton);
 	KeyModifierMask mask = m_keyState->mapModifiersFromX(xbutton.state);
 	if (button != kButtonNone) {
-        sendEvent(EventType::PRIMARY_SCREEN_BUTTON_UP, ButtonInfo::alloc(button, mask));
+        sendEvent(EventType::PRIMARY_SCREEN_BUTTON_UP,
+                  create_event_data<ButtonInfo>(ButtonInfo{button, mask}));
 	}
 	else if (xbutton.button == 4) {
 		// wheel forward (away from user)
-        sendEvent(EventType::PRIMARY_SCREEN_WHEEL, WheelInfo::alloc(0, 120));
+        sendEvent(EventType::PRIMARY_SCREEN_WHEEL,
+                  create_event_data<WheelInfo>(WheelInfo{0, 120}));
 	}
 	else if (xbutton.button == 5) {
 		// wheel backward (toward user)
-        sendEvent(EventType::PRIMARY_SCREEN_WHEEL, WheelInfo::alloc(0, -120));
+        sendEvent(EventType::PRIMARY_SCREEN_WHEEL,
+                  create_event_data<WheelInfo>(WheelInfo{0, -120}));
 	}
 	else if (xbutton.button == 6) {
 		// wheel left
-        sendEvent(EventType::PRIMARY_SCREEN_WHEEL, WheelInfo::alloc(-120, 0));
+        sendEvent(EventType::PRIMARY_SCREEN_WHEEL,
+                  create_event_data<WheelInfo>(WheelInfo{-120, 0}));
 	}
 	else if (xbutton.button == 7) {
 		// wheel right
-        sendEvent(EventType::PRIMARY_SCREEN_WHEEL, WheelInfo::alloc(120, 0));
+        sendEvent(EventType::PRIMARY_SCREEN_WHEEL,
+                  create_event_data<WheelInfo>(WheelInfo{120, 0}));
 	}
 }
 
@@ -1555,7 +1562,7 @@ XWindowsScreen::onMouseMove(const XMotionEvent& xmotion)
 	else if (m_isOnScreen) {
 		// motion on primary screen
         sendEvent(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY,
-							MotionInfo::alloc(m_xCursor, m_yCursor));
+                  create_event_data<MotionInfo>(MotionInfo{m_xCursor, m_yCursor}));
 	}
 	else {
 		// motion on secondary screen.  warp mouse back to
@@ -1585,7 +1592,8 @@ XWindowsScreen::onMouseMove(const XMotionEvent& xmotion)
 		// warping to the primary screen's enter position,
 		// effectively overriding it.
 		if (x != 0 || y != 0) {
-            sendEvent(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY, MotionInfo::alloc(x, y));
+            sendEvent(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY,
+                      create_event_data<MotionInfo>(MotionInfo{x, y}));
 		}
 	}
 }

@@ -94,7 +94,7 @@ protected:
 
 private:
     // event sending
-    void sendEvent(EventType, void* = nullptr);
+    void sendEvent(EventType, EventDataBase* = nullptr);
     void sendClipboardEvent(EventType, ClipboardID);
 
     // create the transparent cursor

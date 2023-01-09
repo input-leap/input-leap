@@ -44,10 +44,17 @@ public:
     //! Key event data
     class KeyInfo {
     public:
-        static KeyInfo* alloc(KeyID, KeyModifierMask, KeyButton, std::int32_t count);
-        static KeyInfo* alloc(KeyID, KeyModifierMask, KeyButton, std::int32_t count,
+        KeyInfo() = default;
+
+        KeyInfo(KeyID key, KeyModifierMask mask, KeyButton button, std::int32_t count) :
+            m_key{key},
+            m_mask{mask},
+            m_button{button},
+            m_count{count}
+        {}
+
+        static KeyInfo create(KeyID, KeyModifierMask, KeyButton, std::int32_t count,
                               const std::set<std::string>& destinations);
-        static KeyInfo* alloc(const KeyInfo&);
 
         static bool isDefault(const char* screens);
         static bool contains(const char* screens, const std::string& name);
@@ -55,13 +62,17 @@ public:
         static std::string join(const std::set<std::string>& destinations);
         static void split(const char* screens, std::set<std::string>&);
 
+        const char* screens_or_nullptr() const
+        {
+            return screens_.empty() ? nullptr : screens_.c_str();
+        }
+
     public:
-        KeyID m_key;
-        KeyModifierMask m_mask;
-        KeyButton m_button;
-        std::int32_t m_count;
-        char* m_screens;
-        char m_screensBuffer[1];
+        KeyID m_key = 0;
+        KeyModifierMask m_mask = 0;
+        KeyButton m_button = 0;
+        std::int32_t m_count = 0;
+        std::string screens_;
     };
 
     typedef std::set<KeyButton> KeyButtonSet;

@@ -438,9 +438,9 @@ std::unique_ptr<ISocketMultiplexerJob> TCPSocket::newJob()
 void
 TCPSocket::sendConnectionFailedEvent(const char* msg)
 {
-    ConnectionFailedInfo* info = new ConnectionFailedInfo(msg);
+    ConnectionFailedInfo info{msg};
     m_events->add_event(EventType::DATA_SOCKET_CONNECTION_FAILED, getEventTarget(),
-                        info, Event::kDontFreeData);
+                        create_event_data<ConnectionFailedInfo>(info));
 }
 
 void TCPSocket::sendEvent(EventType type)

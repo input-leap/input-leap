@@ -143,7 +143,7 @@ public:
     void resetOptions() override;
     void setOptions(const OptionsList& options) override;
     void sendDragInfo(std::uint32_t fileCount, const char* info, size_t size) override;
-    void fileChunkSending(std::uint8_t mark, char* data, size_t dataSize) override;
+    void fileChunkSending(std::uint8_t mark, const char* data, size_t dataSize) override;
 
     virtual inputleap::IStream*
     getStream() const override { return nullptr; }

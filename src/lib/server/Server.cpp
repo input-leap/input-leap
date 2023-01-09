@@ -260,8 +260,7 @@ Server::setConfig(const Config& config)
 	// configured a LockCursorToScreenAction then we don't add
 	// ScrollLock as a hotkey.
 	if (!m_config->hasLockToScreenAction()) {
-		IPlatformScreen::KeyInfo* key =
-			IPlatformScreen::KeyInfo::alloc(kKeyScrollLock, 0, 0, 0);
+        IPlatformScreen::KeyInfo key{kKeyScrollLock, 0, 0, 0};
 		InputFilter::Rule rule(new InputFilter::KeystrokeCondition(m_events, key));
 		rule.adoptAction(new InputFilter::LockCursorToScreenAction(m_events), true);
 		m_inputFilter->addFilterRule(rule);
@@ -315,9 +314,9 @@ Server::adoptClient(BaseClientProxy* client)
 	}
 
 	// send notification
-	Server::ScreenConnectedInfo* info =
-		new Server::ScreenConnectedInfo(getName(client));
-    m_events->add_event(EventType::SERVER_CONNECTED, m_primaryClient->getEventTarget(), info);
+    Server::ScreenConnectedInfo info{getName(client)};
+    m_events->add_event(EventType::SERVER_CONNECTED, m_primaryClient->getEventTarget(),
+                        create_event_data<Server::ScreenConnectedInfo>(info));
 }
 
 void
@@ -478,9 +477,9 @@ void Server::switchScreen(BaseClientProxy* dst, std::int32_t x, std::int32_t y, 
 			}
 		}
 
-		Server::SwitchToScreenInfo* info =
-			Server::SwitchToScreenInfo::alloc(m_active->getName());
-        m_events->add_event(EventType::SERVER_SCREEN_SWITCHED, this, info);
+        Server::SwitchToScreenInfo info{m_active->getName()};
+        m_events->add_event(EventType::SERVER_SCREEN_SWITCHED, this,
+                            create_event_data<Server::SwitchToScreenInfo>(info));
 	}
 	else {
 		m_active->mouseMove(x, y);
@@ -1194,22 +1193,22 @@ Server::handleClipboardGrabbed(const Event& event, void* vclient)
 	if (grabber != m_active) {
 		return;
 	}
-	const IScreen::ClipboardInfo* info =
-		static_cast<const IScreen::ClipboardInfo*>(event.getData());
+    const auto& info = event.get_data_as<IScreen::ClipboardInfo>();
 
 	// ignore grab if sequence number is old.  always allow primary
 	// screen to grab.
-	ClipboardInfo& clipboard = m_clipboards[info->m_id];
-	if (grabber != m_primaryClient &&
-		info->m_sequenceNumber < clipboard.m_clipboardSeqNum) {
-		LOG((CLOG_INFO "ignored screen \"%s\" grab of clipboard %d", getName(grabber).c_str(), info->m_id));
+    ClipboardInfo& clipboard = m_clipboards[info.m_id];
+    if (grabber != m_primaryClient && info.m_sequenceNumber < clipboard.m_clipboardSeqNum) {
+        LOG((CLOG_INFO "ignored screen \"%s\" grab of clipboard %d", getName(grabber).c_str(),
+             info.m_id));
 		return;
 	}
 
 	// mark screen as owning clipboard
-	LOG((CLOG_INFO "screen \"%s\" grabbed clipboard %d from \"%s\"", getName(grabber).c_str(), info->m_id, clipboard.m_clipboardOwner.c_str()));
+    LOG((CLOG_INFO "screen \"%s\" grabbed clipboard %d from \"%s\"", getName(grabber).c_str(),
+         info.m_id, clipboard.m_clipboardOwner.c_str()));
 	clipboard.m_clipboardOwner  = getName(grabber);
-	clipboard.m_clipboardSeqNum = info->m_sequenceNumber;
+    clipboard.m_clipboardSeqNum = info.m_sequenceNumber;
 
 	// clear the clipboard data (since it's not known at this point)
 	if (clipboard.m_clipboard.open(0)) {
@@ -1224,10 +1223,10 @@ Server::handleClipboardGrabbed(const Event& event, void* vclient)
 								index != m_clients.end(); ++index) {
 		BaseClientProxy* client = index->second;
 		if (client == grabber) {
-			client->setClipboardDirty(info->m_id, false);
+            client->setClipboardDirty(info.m_id, false);
 		}
 		else {
-			client->grabClipboard(info->m_id);
+            client->grabClipboard(info.m_id);
 		}
 	}
 }
@@ -1240,73 +1239,64 @@ Server::handleClipboardChanged(const Event& event, void* vclient)
 	if (m_clientSet.count(sender) == 0) {
 		return;
 	}
-	const IScreen::ClipboardInfo* info =
-		static_cast<const IScreen::ClipboardInfo*>(event.getData());
-	onClipboardChanged(sender, info->m_id, info->m_sequenceNumber);
+    const auto& info = event.get_data_as<IScreen::ClipboardInfo>();
+    onClipboardChanged(sender, info.m_id, info.m_sequenceNumber);
 }
 
 void
 Server::handleKeyDownEvent(const Event& event, void*)
 {
-	IPlatformScreen::KeyInfo* info =
-		static_cast<IPlatformScreen::KeyInfo*>(event.getData());
-	onKeyDown(info->m_key, info->m_mask, info->m_button, info->m_screens);
+    const auto& info = event.get_data_as<IPlatformScreen::KeyInfo>();
+    onKeyDown(info.m_key, info.m_mask, info.m_button, info.screens_or_nullptr());
 }
 
 void
 Server::handleKeyUpEvent(const Event& event, void*)
 {
-	IPlatformScreen::KeyInfo* info =
-		 static_cast<IPlatformScreen::KeyInfo*>(event.getData());
-	onKeyUp(info->m_key, info->m_mask, info->m_button, info->m_screens);
+    const auto& info = event.get_data_as<IPlatformScreen::KeyInfo>();
+    onKeyUp(info.m_key, info.m_mask, info.m_button, info.screens_or_nullptr());
 }
 
 void
 Server::handleKeyRepeatEvent(const Event& event, void*)
 {
-	IPlatformScreen::KeyInfo* info =
-		static_cast<IPlatformScreen::KeyInfo*>(event.getData());
-	onKeyRepeat(info->m_key, info->m_mask, info->m_count, info->m_button);
+    const auto& info = event.get_data_as<IPlatformScreen::KeyInfo>();
+    onKeyRepeat(info.m_key, info.m_mask, info.m_count, info.m_button);
 }
 
 void
 Server::handleButtonDownEvent(const Event& event, void*)
 {
-	IPlatformScreen::ButtonInfo* info =
-		static_cast<IPlatformScreen::ButtonInfo*>(event.getData());
-	onMouseDown(info->m_button);
+    const auto& info = event.get_data_as<IPlatformScreen::ButtonInfo>();
+    onMouseDown(info.m_button);
 }
 
 void
 Server::handleButtonUpEvent(const Event& event, void*)
 {
-	IPlatformScreen::ButtonInfo* info =
-		static_cast<IPlatformScreen::ButtonInfo*>(event.getData());
-	onMouseUp(info->m_button);
+    const auto& info = event.get_data_as<IPlatformScreen::ButtonInfo>();
+    onMouseUp(info.m_button);
 }
 
 void
 Server::handleMotionPrimaryEvent(const Event& event, void*)
 {
-	IPlatformScreen::MotionInfo* info =
-		static_cast<IPlatformScreen::MotionInfo*>(event.getData());
-	onMouseMovePrimary(info->m_x, info->m_y);
+    const auto& info = event.get_data_as<IPlatformScreen::MotionInfo>();
+    onMouseMovePrimary(info.m_x, info.m_y);
 }
 
 void
 Server::handleMotionSecondaryEvent(const Event& event, void*)
 {
-	IPlatformScreen::MotionInfo* info =
-		static_cast<IPlatformScreen::MotionInfo*>(event.getData());
-	onMouseMoveSecondary(info->m_x, info->m_y);
+    const auto& info = event.get_data_as<IPlatformScreen::MotionInfo>();
+    onMouseMoveSecondary(info.m_x, info.m_y);
 }
 
 void
 Server::handleWheelEvent(const Event& event, void*)
 {
-	IPlatformScreen::WheelInfo* info =
-		static_cast<IPlatformScreen::WheelInfo*>(event.getData());
-	onMouseWheel(info->m_xDelta, info->m_yDelta);
+    const auto& info = event.get_data_as<IPlatformScreen::WheelInfo>();
+    onMouseWheel(info.m_xDelta, info.m_yDelta);
 }
 
 void
@@ -1361,15 +1351,14 @@ Server::handleClientCloseTimeout(const Event&, void* vclient)
 void
 Server::handleSwitchToScreenEvent(const Event& event, void*)
 {
-	SwitchToScreenInfo* info =
-		static_cast<SwitchToScreenInfo*>(event.getData());
+    const auto& info = event.get_data_as<SwitchToScreenInfo>();
 
-	ClientList::const_iterator index = m_clients.find(info->m_screen);
+    ClientList::const_iterator index = m_clients.find(info.m_screen);
 	if (index == m_clients.end()) {
-		LOG((CLOG_DEBUG1 "screen \"%s\" not active", info->m_screen));
+        LOG((CLOG_DEBUG1 "screen \"%s\" not active", info.m_screen.c_str()));
 	}
 	else {
-		jumpToScreen(index->second);
+        jumpToScreen(index->second);
 	}
 }
 
@@ -1396,15 +1385,13 @@ Server::handleToggleScreenEvent(const Event& event, void*)
 void
 Server::handleSwitchInDirectionEvent(const Event& event, void*)
 {
-	SwitchInDirectionInfo* info =
-		static_cast<SwitchInDirectionInfo*>(event.getData());
+    const auto& info = event.get_data_as<SwitchInDirectionInfo>();
 
 	// jump to screen in chosen direction from center of this screen
 	std::int32_t x = m_x, y = m_y;
-	BaseClientProxy* newScreen =
-		getNeighbor(m_active, info->m_direction, x, y);
+    BaseClientProxy* newScreen = getNeighbor(m_active, info.m_direction, x, y);
 	if (newScreen == nullptr) {
-		LOG((CLOG_DEBUG1 "no neighbor %s", Config::dirName(info->m_direction)));
+        LOG((CLOG_DEBUG1 "no neighbor %s", Config::dirName(info.m_direction)));
 	}
 	else {
 		jumpToScreen(newScreen);
@@ -1414,11 +1401,11 @@ Server::handleSwitchInDirectionEvent(const Event& event, void*)
 void
 Server::handleKeyboardBroadcastEvent(const Event& event, void*)
 {
-    KeyboardBroadcastInfo* info = static_cast<KeyboardBroadcastInfo*>(event.getData());
+    const auto& info = event.get_data_as<KeyboardBroadcastInfo>();
 
 	// choose new state
 	bool newState;
-	switch (info->m_state) {
+    switch (info.m_state) {
 	case KeyboardBroadcastInfo::kOff:
 		newState = false;
 		break;
@@ -1435,9 +1422,9 @@ Server::handleKeyboardBroadcastEvent(const Event& event, void*)
 
 	// enter new state
 	if (newState != m_keyboardBroadcasting ||
-		info->m_screens != m_keyboardBroadcastingScreens) {
+        info.screens_ != m_keyboardBroadcastingScreens) {
 		m_keyboardBroadcasting        = newState;
-		m_keyboardBroadcastingScreens = info->m_screens;
+        m_keyboardBroadcastingScreens = info.screens_;
 		LOG((CLOG_DEBUG "keyboard broadcasting %s: %s", m_keyboardBroadcasting ? "on" : "off", m_keyboardBroadcastingScreens.c_str()));
 	}
 }
@@ -1445,11 +1432,11 @@ Server::handleKeyboardBroadcastEvent(const Event& event, void*)
 void
 Server::handleLockCursorToScreenEvent(const Event& event, void*)
 {
-    LockCursorToScreenInfo* info = static_cast<LockCursorToScreenInfo*>(event.getData());
+    const auto& info = event.get_data_as<LockCursorToScreenInfo>();
 
 	// choose new state
 	bool newState;
-	switch (info->m_state) {
+    switch (info.m_state) {
 	case LockCursorToScreenInfo::kOff:
 		newState = false;
 		break;
@@ -1491,7 +1478,7 @@ Server::handleFakeInputEndEvent(const Event&, void*)
 void
 Server::handleFileChunkSendingEvent(const Event& event, void*)
 {
-	onFileChunkSending(event.getData());
+    on_file_chunk_sending(event.get_data_as<FileChunk>());
 }
 
 void
@@ -2027,16 +2014,13 @@ void Server::onMouseWheel(std::int32_t xDelta, std::int32_t yDelta)
 	m_active->mouseWheel(xDelta, yDelta);
 }
 
-void
-Server::onFileChunkSending(const void* data)
+void Server::on_file_chunk_sending(const FileChunk& chunk)
 {
-	FileChunk* chunk = static_cast<FileChunk*>(const_cast<void*>(data));
-
 	LOG((CLOG_DEBUG1 "sending file chunk"));
 	assert(m_active != nullptr);
 
 	// relay
-	m_active->fileChunkSending(chunk->m_chunk[0], &chunk->m_chunk[1], chunk->m_dataSize);
+    m_active->fileChunkSending(chunk.chunk_[0], &chunk.chunk_[1], chunk.m_dataSize);
 }
 
 void
@@ -2230,9 +2214,9 @@ Server::forceLeaveClient(BaseClientProxy* client)
 								m_primaryClient->getToggleMask(), false);
 		}
 
-		Server::SwitchToScreenInfo* info =
-			Server::SwitchToScreenInfo::alloc(m_active->getName());
-        m_events->add_event(EventType::SERVER_SCREEN_SWITCHED, this, info);
+        Server::SwitchToScreenInfo info{m_active->getName()};
+        m_events->add_event(EventType::SERVER_SCREEN_SWITCHED, this,
+                            create_event_data<Server::SwitchToScreenInfo>(info));
 	}
 
 	// if this screen had the cursor when the screen saver activated
@@ -2258,74 +2242,6 @@ Server::ClipboardInfo::ClipboardInfo() :
 	m_clipboardSeqNum(0)
 {
 	// do nothing
-}
-
-
-//
-// Server::LockCursorToScreenInfo
-//
-
-Server::LockCursorToScreenInfo*
-Server::LockCursorToScreenInfo::alloc(State state)
-{
-	LockCursorToScreenInfo* info =
-        static_cast<LockCursorToScreenInfo*>(malloc(sizeof(LockCursorToScreenInfo)));
-	info->m_state = state;
-	return info;
-}
-
-
-//
-// Server::SwitchToScreenInfo
-//
-
-Server::SwitchToScreenInfo*
-Server::SwitchToScreenInfo::alloc(const std::string& screen)
-{
-	SwitchToScreenInfo* info =
-        static_cast<SwitchToScreenInfo*>(malloc(sizeof(SwitchToScreenInfo) +
-                                screen.size()));
-	strcpy(info->m_screen, screen.c_str());
-	return info;
-}
-
-
-//
-// Server::SwitchInDirectionInfo
-//
-
-Server::SwitchInDirectionInfo*
-Server::SwitchInDirectionInfo::alloc(EDirection direction)
-{
-	SwitchInDirectionInfo* info =
-        static_cast<SwitchInDirectionInfo*>(malloc(sizeof(SwitchInDirectionInfo)));
-	info->m_direction = direction;
-	return info;
-}
-
-//
-// Server::KeyboardBroadcastInfo
-//
-
-Server::KeyboardBroadcastInfo*
-Server::KeyboardBroadcastInfo::alloc(State state)
-{
-	KeyboardBroadcastInfo* info =
-        static_cast<KeyboardBroadcastInfo*>(malloc(sizeof(KeyboardBroadcastInfo)));
-	info->m_state      = state;
-	info->m_screens[0] = '\0';
-	return info;
-}
-
-Server::KeyboardBroadcastInfo*
-Server::KeyboardBroadcastInfo::alloc(State state, const std::string& screens)
-{
-	KeyboardBroadcastInfo* info =
-        static_cast<KeyboardBroadcastInfo*>(malloc(sizeof(KeyboardBroadcastInfo) +
-                                screens.size()));
-	info->m_state = state;
-	strcpy(info->m_screens, screens.c_str());
-	return info;
 }
 
 bool

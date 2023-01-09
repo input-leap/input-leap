@@ -29,12 +29,12 @@ TEST(ClipboardChunkTests, start_formatStartChunk)
     std::string mockDataSize = "10";
     ClipboardChunk* chunk = ClipboardChunk::start(id, sequence, mockDataSize);
 
-    EXPECT_EQ(id, chunk->m_chunk[0]);
-    EXPECT_EQ(sequence, static_cast<std::uint32_t>(chunk->m_chunk[1]));
-    EXPECT_EQ(kDataStart, chunk->m_chunk[5]);
-    EXPECT_EQ('1', chunk->m_chunk[6]);
-    EXPECT_EQ('0', chunk->m_chunk[7]);
-    EXPECT_EQ('\0', chunk->m_chunk[8]);
+    EXPECT_EQ(id, chunk->chunk_[0]);
+    EXPECT_EQ(sequence, static_cast<std::uint32_t>(chunk->chunk_[1]));
+    EXPECT_EQ(kDataStart, chunk->chunk_[5]);
+    EXPECT_EQ('1', chunk->chunk_[6]);
+    EXPECT_EQ('0', chunk->chunk_[7]);
+    EXPECT_EQ('\0', chunk->chunk_[8]);
 
     delete chunk;
 }
@@ -46,19 +46,19 @@ TEST(ClipboardChunkTests, data_formatDataChunk)
     std::string mockData = "mock data";
     ClipboardChunk* chunk = ClipboardChunk::data(id, sequence, mockData);
 
-    EXPECT_EQ(id, chunk->m_chunk[0]);
-    EXPECT_EQ(sequence, static_cast<std::uint32_t>(chunk->m_chunk[1]));
-    EXPECT_EQ(kDataChunk, chunk->m_chunk[5]);
-    EXPECT_EQ('m', chunk->m_chunk[6]);
-    EXPECT_EQ('o', chunk->m_chunk[7]);
-    EXPECT_EQ('c', chunk->m_chunk[8]);
-    EXPECT_EQ('k', chunk->m_chunk[9]);
-    EXPECT_EQ(' ', chunk->m_chunk[10]);
-    EXPECT_EQ('d', chunk->m_chunk[11]);
-    EXPECT_EQ('a', chunk->m_chunk[12]);
-    EXPECT_EQ('t', chunk->m_chunk[13]);
-    EXPECT_EQ('a', chunk->m_chunk[14]);
-    EXPECT_EQ('\0', chunk->m_chunk[15]);
+    EXPECT_EQ(id, chunk->chunk_[0]);
+    EXPECT_EQ(sequence, static_cast<std::uint32_t>(chunk->chunk_[1]));
+    EXPECT_EQ(kDataChunk, chunk->chunk_[5]);
+    EXPECT_EQ('m', chunk->chunk_[6]);
+    EXPECT_EQ('o', chunk->chunk_[7]);
+    EXPECT_EQ('c', chunk->chunk_[8]);
+    EXPECT_EQ('k', chunk->chunk_[9]);
+    EXPECT_EQ(' ', chunk->chunk_[10]);
+    EXPECT_EQ('d', chunk->chunk_[11]);
+    EXPECT_EQ('a', chunk->chunk_[12]);
+    EXPECT_EQ('t', chunk->chunk_[13]);
+    EXPECT_EQ('a', chunk->chunk_[14]);
+    EXPECT_EQ('\0', chunk->chunk_[15]);
 
     delete chunk;
 }
@@ -69,10 +69,10 @@ TEST(ClipboardChunkTests, end_formatDataChunk)
     std::uint32_t sequence = 1;
     ClipboardChunk* chunk = ClipboardChunk::end(id, sequence);
 
-    EXPECT_EQ(id, chunk->m_chunk[0]);
-    EXPECT_EQ(sequence, static_cast<std::uint32_t>(chunk->m_chunk[1]));
-    EXPECT_EQ(kDataEnd, chunk->m_chunk[5]);
-    EXPECT_EQ('\0', chunk->m_chunk[6]);
+    EXPECT_EQ(id, chunk->chunk_[0]);
+    EXPECT_EQ(sequence, static_cast<std::uint32_t>(chunk->chunk_[1]));
+    EXPECT_EQ(kDataEnd, chunk->chunk_[5]);
+    EXPECT_EQ('\0', chunk->chunk_[6]);
 
     delete chunk;
 }

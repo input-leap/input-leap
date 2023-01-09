@@ -219,8 +219,8 @@ App::cleanupIpcClient()
 void
 App::handleIpcMessage(const Event& e, void*)
 {
-    IpcMessage* m = static_cast<IpcMessage*>(e.getDataObject());
-    if (m->type() == kIpcShutdown) {
+    const auto& m = e.get_data_as<IpcMessage>();
+    if (m.type() == kIpcShutdown) {
         LOG((CLOG_INFO "got ipc shutdown message"));
         m_events->add_event(EventType::QUIT);
     }

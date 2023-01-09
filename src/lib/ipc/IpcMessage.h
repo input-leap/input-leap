@@ -25,7 +25,7 @@
 
 namespace inputleap {
 
-class IpcMessage : public EventDataBase {
+class IpcMessage {
 public:
     virtual ~IpcMessage();
 
@@ -47,8 +47,6 @@ public:
     //! Gets the message type ID.
     EIpcClientType clientType() const { return m_clientType; }
 
-    EventDataBase* clone() const override;
-
 private:
     EIpcClientType m_clientType;
 };
@@ -57,7 +55,6 @@ class IpcShutdownMessage : public IpcMessage {
 public:
     IpcShutdownMessage();
     virtual ~IpcShutdownMessage();
-    EventDataBase* clone() const override;
 };
 
 
@@ -68,8 +65,6 @@ public:
 
     //! Gets the log line.
     std::string logLine() const { return m_logLine; }
-
-    EventDataBase* clone() const override;
 
 private:
     std::string m_logLine;
@@ -85,8 +80,6 @@ public:
 
     //! Gets whether or not the process should be elevated on MS Windows.
     bool elevate() const { return m_elevate; }
-
-    EventDataBase* clone() const override;
 
 private:
     std::string m_command;

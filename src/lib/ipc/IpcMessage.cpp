@@ -40,11 +40,6 @@ IpcHelloMessage::~IpcHelloMessage()
 {
 }
 
-EventDataBase* IpcHelloMessage::clone() const
-{
-    return new IpcHelloMessage(*this);
-}
-
 IpcShutdownMessage::IpcShutdownMessage() :
 IpcMessage(kIpcShutdown)
 {
@@ -52,11 +47,6 @@ IpcMessage(kIpcShutdown)
 
 IpcShutdownMessage::~IpcShutdownMessage()
 {
-}
-
-EventDataBase* IpcShutdownMessage::clone() const
-{
-    return new IpcShutdownMessage(*this);
 }
 
 IpcLogLineMessage::IpcLogLineMessage(const std::string& logLine) :
@@ -69,11 +59,6 @@ IpcLogLineMessage::~IpcLogLineMessage()
 {
 }
 
-EventDataBase* IpcLogLineMessage::clone() const
-{
-    return new IpcLogLineMessage(*this);
-}
-
 IpcCommandMessage::IpcCommandMessage(const std::string& command, bool elevate) :
     IpcMessage(kIpcCommand),
     m_command(command),
@@ -83,11 +68,6 @@ IpcCommandMessage::IpcCommandMessage(const std::string& command, bool elevate) :
 
 IpcCommandMessage::~IpcCommandMessage()
 {
-}
-
-EventDataBase* IpcCommandMessage::clone() const
-{
-    return new IpcCommandMessage(*this);
 }
 
 } // namespace inputleap

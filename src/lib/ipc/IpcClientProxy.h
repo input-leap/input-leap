@@ -45,8 +45,8 @@ private:
     void handleData(const Event&, void*);
     void handleDisconnect(const Event&, void*);
     void handleWriteError(const Event&, void*);
-    IpcHelloMessage* parseHello();
-    IpcCommandMessage* parseCommand();
+    IpcHelloMessage parseHello();
+    IpcCommandMessage parseCommand();
     void disconnect();
 
 private:

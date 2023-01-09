@@ -134,8 +134,7 @@ ClientListener::handleClientConnecting(const Event&, void*)
     // When using non SSL, server accepts clients immediately, while SSL
     // has to call secure accept which may require retry
     if (security_level_ == ConnectionSecurityLevel::PLAINTEXT) {
-        m_events->add_event(Event(EventType::CLIENT_LISTENER_ACCEPTED,
-                                  socket_ptr->getEventTarget()));
+        m_events->add_event(EventType::CLIENT_LISTENER_ACCEPTED, socket_ptr->getEventTarget());
     }
 }
 
@@ -178,7 +177,7 @@ ClientListener::handleUnknownClient(const Event&, void* vclient)
     if (client != nullptr) {
         // handshake was successful
         m_waitingClients.push_back(client);
-        m_events->add_event(Event(EventType::CLIENT_LISTENER_CONNECTED, this));
+        m_events->add_event(EventType::CLIENT_LISTENER_CONNECTED, this);
 
         // watch for client to disconnect while it's in our queue
         m_events->adoptHandler(EventType::CLIENT_PROXY_DISCONNECTED, client,

@@ -317,7 +317,7 @@ Server::adoptClient(BaseClientProxy* client)
 	// send notification
 	Server::ScreenConnectedInfo* info =
 		new Server::ScreenConnectedInfo(getName(client));
-    m_events->add_event(Event(EventType::SERVER_CONNECTED, m_primaryClient->getEventTarget(), info));
+    m_events->add_event(EventType::SERVER_CONNECTED, m_primaryClient->getEventTarget(), info);
 }
 
 void
@@ -329,7 +329,7 @@ Server::disconnect()
 		closeClients(emptyConfig);
 	}
 	else {
-        m_events->add_event(Event(EventType::SERVER_DISCONNECTED, this));
+        m_events->add_event(EventType::SERVER_DISCONNECTED, this);
 	}
 }
 
@@ -480,7 +480,7 @@ void Server::switchScreen(BaseClientProxy* dst, std::int32_t x, std::int32_t y, 
 
 		Server::SwitchToScreenInfo* info =
 			Server::SwitchToScreenInfo::alloc(m_active->getName());
-        m_events->add_event(Event(EventType::SERVER_SCREEN_SWITCHED, this, info));
+        m_events->add_event(EventType::SERVER_SCREEN_SWITCHED, this, info);
 	}
 	else {
 		m_active->mouseMove(x, y);
@@ -2182,7 +2182,7 @@ Server::removeActiveClient(BaseClientProxy* client)
 		forceLeaveClient(client);
         m_events->removeHandler(EventType::CLIENT_PROXY_DISCONNECTED, client);
 		if (m_clients.size() == 1 && m_oldClients.empty()) {
-            m_events->add_event(Event(EventType::SERVER_DISCONNECTED, this));
+            m_events->add_event(EventType::SERVER_DISCONNECTED, this);
 		}
 	}
 }
@@ -2197,7 +2197,7 @@ Server::removeOldClient(BaseClientProxy* client)
 		m_events->deleteTimer(i->second);
 		m_oldClients.erase(i);
 		if (m_clients.size() == 1 && m_oldClients.empty()) {
-            m_events->add_event(Event(EventType::SERVER_DISCONNECTED, this));
+            m_events->add_event(EventType::SERVER_DISCONNECTED, this);
 		}
 	}
 }
@@ -2232,7 +2232,7 @@ Server::forceLeaveClient(BaseClientProxy* client)
 
 		Server::SwitchToScreenInfo* info =
 			Server::SwitchToScreenInfo::alloc(m_active->getName());
-        m_events->add_event(Event(EventType::SERVER_SCREEN_SWITCHED, this, info));
+        m_events->add_event(EventType::SERVER_SCREEN_SWITCHED, this, info);
 	}
 
 	// if this screen had the cursor when the screen saver activated

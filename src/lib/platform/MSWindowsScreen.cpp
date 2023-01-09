@@ -876,7 +876,7 @@ MSWindowsScreen::destroyWindow(HWND hwnd) const
 
 void MSWindowsScreen::sendEvent(EventType type, void* data)
 {
-    m_events->add_event(Event(type, getEventTarget(), data));
+    m_events->add_event(type, getEventTarget(), data);
 }
 
 void MSWindowsScreen::sendClipboardEvent(EventType type, ClipboardID id)
@@ -1036,15 +1036,13 @@ MSWindowsScreen::onEvent(HWND, UINT msg,
         case PBT_APMRESUMEAUTOMATIC:
         case PBT_APMRESUMECRITICAL:
         case PBT_APMRESUMESUSPEND:
-            m_events->add_event(Event(EventType::SCREEN_RESUME,
-                                      getEventTarget(), nullptr,
-                                      Event::kDeliverImmediately));
+            m_events->add_event(EventType::SCREEN_RESUME, getEventTarget(), nullptr,
+                                Event::kDeliverImmediately);
             break;
 
         case PBT_APMSUSPEND:
-            m_events->add_event(Event(EventType::SCREEN_SUSPEND,
-                                      getEventTarget(), nullptr,
-                                      Event::kDeliverImmediately));
+            m_events->add_event(EventType::SCREEN_SUSPEND, getEventTarget(), nullptr,
+                                Event::kDeliverImmediately);
             break;
         }
         *result = TRUE;
@@ -1240,7 +1238,7 @@ MSWindowsScreen::onHotKey(WPARAM wParam, LPARAM lParam)
     }
 
     // generate event
-    m_events->add_event(Event(type, getEventTarget(), HotKeyInfo::alloc(i->second)));
+    m_events->add_event(type, getEventTarget(), HotKeyInfo::alloc(i->second));
 
     return true;
 }

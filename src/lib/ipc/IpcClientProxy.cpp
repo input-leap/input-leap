@@ -174,7 +174,7 @@ IpcClientProxy::disconnect()
     LOG((CLOG_DEBUG "ipc disconnect, closing stream"));
     m_disconnecting = true;
     stream_->close();
-    m_events->add_event(Event(EventType::IPC_CLIENT_PROXY_DISCONNECTED, this));
+    m_events->add_event(EventType::IPC_CLIENT_PROXY_DISCONNECTED, this);
 }
 
 } // namespace inputleap

@@ -87,7 +87,7 @@ const std::string& ClientTaskBarReceiver::getErrorMessage() const
 void
 ClientTaskBarReceiver::quit()
 {
-    m_events->add_event(Event(EventType::QUIT));
+    m_events->add_event(EventType::QUIT);
 }
 
 void

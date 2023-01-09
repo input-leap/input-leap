@@ -314,8 +314,8 @@ InputFilter::LockCursorToScreenAction::perform(const Event& event)
     // send event
     Server::LockCursorToScreenInfo* info =
         Server::LockCursorToScreenInfo::alloc(s_state[m_mode]);
-    m_events->add_event(Event(EventType::SERVER_LOCK_CURSOR_TO_SCREEN, event.getTarget(), info,
-                              Event::kDeliverImmediately));
+    m_events->add_event(EventType::SERVER_LOCK_CURSOR_TO_SCREEN, event.getTarget(), info,
+                        Event::kDeliverImmediately);
 }
 
 InputFilter::SwitchToScreenAction::SwitchToScreenAction(IEventQueue* events,
@@ -357,8 +357,8 @@ InputFilter::SwitchToScreenAction::perform(const Event& event)
     // send event
     Server::SwitchToScreenInfo* info =
         Server::SwitchToScreenInfo::alloc(screen);
-    m_events->add_event(Event(EventType::SERVER_SWITCH_TO_SCREEN, event.getTarget(), info,
-                              Event::kDeliverImmediately));
+    m_events->add_event(EventType::SERVER_SWITCH_TO_SCREEN, event.getTarget(), info,
+                        Event::kDeliverImmediately);
 }
 
 InputFilter::ToggleScreenAction::ToggleScreenAction(IEventQueue* events) :
@@ -381,8 +381,8 @@ std::string InputFilter::ToggleScreenAction::format() const
 void
 InputFilter::ToggleScreenAction::perform(const Event& event)
 {
-    m_events->add_event(Event(EventType::SERVER_TOGGLE_SCREEN, event.getTarget(), nullptr,
-                              Event::kDeliverImmediately));
+    m_events->add_event(EventType::SERVER_TOGGLE_SCREEN, event.getTarget(), nullptr,
+                        Event::kDeliverImmediately);
 }
 
 InputFilter::SwitchInDirectionAction::SwitchInDirectionAction(
@@ -423,8 +423,8 @@ InputFilter::SwitchInDirectionAction::perform(const Event& event)
 {
     Server::SwitchInDirectionInfo* info =
         Server::SwitchInDirectionInfo::alloc(m_direction);
-    m_events->add_event(Event(EventType::SERVER_SWITCH_INDIRECTION, event.getTarget(), info,
-                              Event::kDeliverImmediately));
+    m_events->add_event(EventType::SERVER_SWITCH_INDIRECTION, event.getTarget(), info,
+                        Event::kDeliverImmediately);
 }
 
 InputFilter::KeyboardBroadcastAction::KeyboardBroadcastAction(
@@ -490,8 +490,8 @@ InputFilter::KeyboardBroadcastAction::perform(const Event& event)
     // send event
     Server::KeyboardBroadcastInfo* info =
         Server::KeyboardBroadcastInfo::alloc(s_state[m_mode], m_screens);
-    m_events->add_event(Event(EventType::SERVER_KEYBOARD_BROADCAST, event.getTarget(), info,
-                              Event::kDeliverImmediately));
+    m_events->add_event(EventType::SERVER_KEYBOARD_BROADCAST, event.getTarget(), info,
+                        Event::kDeliverImmediately);
 }
 
 InputFilter::KeystrokeAction::KeystrokeAction(
@@ -562,12 +562,12 @@ InputFilter::KeystrokeAction::perform(const Event& event)
 {
     EventType type = m_press ? EventType::KEY_STATE_KEY_DOWN : EventType::KEY_STATE_KEY_UP;
 
-    m_events->add_event(Event(EventType::PRIMARY_SCREEN_FAKE_INPUT_BEGIN, event.getTarget(),
-                              nullptr, Event::kDeliverImmediately));
-    m_events->add_event(Event(type, event.getTarget(), m_keyInfo,
-                              Event::kDeliverImmediately | Event::kDontFreeData));
-    m_events->add_event(Event(EventType::PRIMARY_SCREEN_FAKE_INPUT_END, event.getTarget(), nullptr,
-                              Event::kDeliverImmediately));
+    m_events->add_event(EventType::PRIMARY_SCREEN_FAKE_INPUT_BEGIN, event.getTarget(), nullptr,
+                        Event::kDeliverImmediately);
+    m_events->add_event(type, event.getTarget(), m_keyInfo,
+                        Event::kDeliverImmediately | Event::kDontFreeData);
+    m_events->add_event(EventType::PRIMARY_SCREEN_FAKE_INPUT_END, event.getTarget(), nullptr,
+                        Event::kDeliverImmediately);
 }
 
 const char*
@@ -630,15 +630,15 @@ InputFilter::MouseButtonAction::perform(const Event& event)
         KeyID key = m_press ? kKeySetModifiers : kKeyClearModifiers;
         modifierInfo =
             IKeyState::KeyInfo::alloc(key, m_buttonInfo->m_mask, 0, 1);
-        m_events->add_event(Event(EventType::KEY_STATE_KEY_DOWN, event.getTarget(), modifierInfo,
-                                  Event::kDeliverImmediately));
+        m_events->add_event(EventType::KEY_STATE_KEY_DOWN, event.getTarget(), modifierInfo,
+                            Event::kDeliverImmediately);
     }
 
     // send button
     EventType type = m_press ? EventType::PRIMARY_SCREEN_BUTTON_DOWN :
                                EventType::PRIMARY_SCREEN_BUTTON_UP;
-    m_events->add_event(Event(type, event.getTarget(), m_buttonInfo,
-                              Event::kDeliverImmediately | Event::kDontFreeData));
+    m_events->add_event(type, event.getTarget(), m_buttonInfo,
+                        Event::kDeliverImmediately | Event::kDontFreeData);
 }
 
 const char*

@@ -86,7 +86,7 @@ IpcClient::send(const IpcMessage& message)
 void
 IpcClient::handleConnected(const Event&, void*)
 {
-    m_events->add_event(Event(EventType::IPC_CLIENT_CONNECTED, this));
+    m_events->add_event(EventType::IPC_CLIENT_CONNECTED, this);
 
     IpcHelloMessage message(kIpcClientNode);
     send(message);

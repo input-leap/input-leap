@@ -35,7 +35,7 @@ void
 interrupt(Arch::ESignal, void* data)
 {
     EventQueue* events = static_cast<EventQueue*>(data);
-    events->add_event(Event(EventType::QUIT));
+    events->add_event(EventType::QUIT);
 }
 
 EventQueue::EventQueue() :

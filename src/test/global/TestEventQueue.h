@@ -27,6 +27,8 @@ class TestEventQueue : public EventQueue {
 public:
     TestEventQueue() : m_quitTimeoutTimer(nullptr) { }
 
+    using IEventQueue::add_event;
+
     void handleQuitTimeout(const Event&, void* vclient);
     void raiseQuitEvent();
     void initQuitTimeout(double timeout);

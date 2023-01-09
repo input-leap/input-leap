@@ -1076,7 +1076,7 @@ XWindowsScreen::openIM()
 
 void XWindowsScreen::sendEvent(EventType type, void* data)
 {
-    m_events->add_event(Event(type, getEventTarget(), data));
+    m_events->add_event(type, getEventTarget(), data);
 }
 
 void XWindowsScreen::sendClipboardEvent(EventType type, ClipboardID id)
@@ -1478,7 +1478,7 @@ XWindowsScreen::onHotKey(XKeyEvent& xkey, bool isRepeat)
 
 	// generate event (ignore key repeats)
 	if (!isRepeat) {
-        m_events->add_event(Event(type, getEventTarget(), HotKeyInfo::alloc(i->second)));
+        m_events->add_event(type, getEventTarget(), HotKeyInfo::alloc(i->second));
 	}
 	return true;
 }

@@ -110,8 +110,7 @@ IpcServer::handleClientConnecting(const Event&, void*)
         new TMethodEventJob<IpcServer>(
         this, &IpcServer::handleMessageReceived));
 
-    m_events->add_event(Event(EventType::IPC_SERVER_CLIENT_CONNECTED, this,
-                              proxy, Event::kDontFreeData));
+    m_events->add_event(EventType::IPC_SERVER_CLIENT_CONNECTED, this, proxy, Event::kDontFreeData);
 }
 
 void

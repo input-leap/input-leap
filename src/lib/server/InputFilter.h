@@ -84,7 +84,7 @@ public:
     // MouseButtonCondition
     class MouseButtonCondition : public Condition {
     public:
-        MouseButtonCondition(IEventQueue* events, IPlatformScreen::ButtonInfo*);
+        MouseButtonCondition(IEventQueue* events, const IPlatformScreen::ButtonInfo& info);
         MouseButtonCondition(IEventQueue* events, ButtonID, KeyModifierMask mask);
         ~MouseButtonCondition() override;
 
@@ -249,12 +249,10 @@ public:
     // MouseButtonAction -- modifier combinations not implemented yet
     class MouseButtonAction : public Action {
     public:
-        MouseButtonAction(IEventQueue* events,
-                                    IPlatformScreen::ButtonInfo* adoptedInfo,
-                                    bool press);
+        MouseButtonAction(IEventQueue* events, const IPlatformScreen::ButtonInfo& info, bool press);
         ~MouseButtonAction();
 
-        const IPlatformScreen::ButtonInfo* getInfo() const;
+        const IPlatformScreen::ButtonInfo& getInfo() const { return button_info_; }
         bool isOnPress() const;
 
         // Action overrides
@@ -266,7 +264,7 @@ public:
         virtual const char* formatName() const;
 
     private:
-        IPlatformScreen::ButtonInfo* m_buttonInfo;
+        IPlatformScreen::ButtonInfo button_info_;
         bool m_press;
         IEventQueue* m_events;
     };

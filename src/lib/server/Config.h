@@ -500,7 +500,7 @@ public:
     IPlatformScreen::KeyInfo* parseKeystroke(const std::string& keystroke) const;
     IPlatformScreen::KeyInfo* parseKeystroke(const std::string& keystroke,
                                              const std::set<std::string>& screens) const;
-    IPlatformScreen::ButtonInfo* parseMouse(const std::string& mouse) const;
+    IPlatformScreen::ButtonInfo parseMouse(const std::string& mouse) const;
     KeyModifierMask parseModifier(const std::string& modifiers) const;
 
     std::istream& getStream() const { return m_stream; }

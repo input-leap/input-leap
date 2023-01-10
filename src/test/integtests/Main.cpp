@@ -30,10 +30,8 @@
 
 #define LOCK_TIMEOUT 30
 
-using namespace std;
-
-void lock(string lockFile);
-void unlock(string lockFile);
+void lock(std::string lockFile);
+void unlock(std::string lockFile);
 
 int
 main(int argc, char **argv)
@@ -49,9 +47,9 @@ main(int argc, char **argv)
     inputleap::Log log;
     log.setFilter(kDEBUG2);
 
-    string lockFile;
+    std::string lockFile;
     for (int i = 0; i < argc; i++) {
-        if (string(argv[i]).compare("--lock-file") == 0) {
+        if (std::string(argv[i]).compare("--lock-file") == 0) {
             lockFile = argv[i + 1];
         }
     }
@@ -77,15 +75,14 @@ main(int argc, char **argv)
   return (result == 1) ? 1 : 0;
 }
 
-void
-lock(string lockFile)
+void lock(std::string lockFile)
 {
     double start = inputleap::current_time_seconds();
 
     // keep checking until timeout is reached.
     while ((inputleap::current_time_seconds() - start) < LOCK_TIMEOUT) {
 
-        ifstream is(lockFile.c_str());
+        std::ifstream is(lockFile.c_str());
         bool noLock = !is;
         is.close();
 
@@ -98,12 +95,11 @@ lock(string lockFile)
     }
 
     // write empty lock file.
-    ofstream os(lockFile.c_str());
+    std::ofstream os(lockFile.c_str());
     os.close();
 }
 
-void
-unlock(string lockFile)
+void unlock(std::string lockFile)
 {
-    remove(lockFile.c_str());
+    std::remove(lockFile.c_str());
 }

@@ -32,8 +32,6 @@
 
 namespace inputleap {
 
-using namespace std;
-
 static const size_t g_chunkSize = 32 * 1024; //32kb
 
 bool StreamChunker::s_isChunkingFile = false;
@@ -49,7 +47,7 @@ StreamChunker::sendFile(const char* filename,
     std::fstream file(filename, std::ios::in | std::ios::binary);
 
     if (!file.is_open()) {
-        throw runtime_error("failed to open file");
+        throw std::runtime_error("failed to open file");
     }
 
     // check file size

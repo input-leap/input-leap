@@ -47,7 +47,6 @@
 
 namespace inputleap {
 
-using namespace std;
 using ::testing::_;
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -64,7 +63,7 @@ const size_t kMockFileSize = 1024 * 1024 * 10; // 10MB
 void getScreenShape(std::int32_t& x, std::int32_t& y, std::int32_t& w, std::int32_t& h);
 void getCursorPos(std::int32_t& x, std::int32_t& y);
 std::uint8_t* newMockData(size_t size);
-void createFile(fstream& file, const char* filename, size_t size);
+void createFile(std::fstream& file, const char* filename, size_t size);
 
 class NetworkTests : public ::testing::Test
 {
@@ -102,7 +101,7 @@ public:
     TestEventQueue        m_events;
     std::uint8_t* m_mockData;
     size_t                m_mockDataSize;
-    fstream                m_mockFile;
+    std::fstream m_mockFile;
     size_t                m_mockFileSize;
 };
 
@@ -339,7 +338,7 @@ NetworkTests::sendToClient_mockData_handleClientConnected(const Event&, void* vl
 
     ClientProxy* client = listener->getNextClient();
     if (client == nullptr) {
-        throw runtime_error("client is null");
+        throw std::runtime_error("client is null");
     }
 
     BaseClientProxy* bcp = client;
@@ -366,7 +365,7 @@ NetworkTests::sendToClient_mockFile_handleClientConnected(const Event&, void* vl
 
     ClientProxy* client = listener->getNextClient();
     if (client == nullptr) {
-        throw runtime_error("client is null");
+        throw std::runtime_error("client is null");
     }
 
     BaseClientProxy* bcp = client;
@@ -492,14 +491,13 @@ std::uint8_t* newMockData(size_t size)
     return buffer;
 }
 
-void
-createFile(fstream& file, const char* filename, size_t size)
+void createFile(std::fstream& file, const char* filename, size_t size)
 {
     std::uint8_t* buffer = newMockData(size);
 
-    file.open(filename, ios::out | ios::binary);
+    file.open(filename, std::ios::out | std::ios::binary);
     if (!file.is_open()) {
-        throw runtime_error("file not open");
+        throw std::runtime_error("file not open");
     }
 
     file.write(reinterpret_cast<char*>(buffer), size);

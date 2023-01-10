@@ -68,13 +68,13 @@ public:
     // TODO: Document these functions.
     static void reloadSignalHandler(Arch::ESignal, void*);
 
-    void reloadConfig(const Event&, void*);
+    void reload_config();
     void loadConfig() override;
     bool loadConfig(const std::string& pathname) override;
-    void forceReconnect(const Event&, void*);
-    void resetServer(const Event&, void*);
-    void handleClientConnected(const Event&, void* vlistener);
-    void handleClientsDisconnected(const Event&, void*);
+    void force_reconnect();
+    void reset_server();
+    void handle_client_connected(const Event& event, ClientListener* listener);
+    void handle_clients_disconnected(const Event&);
     void closeServer(Server* server);
     void stopRetryTimer();
     void updateStatus();
@@ -85,16 +85,16 @@ public:
     void closeServerScreen(inputleap::Screen* screen);
     void cleanupServer();
     bool initServer();
-    void retryHandler(const Event&, void*);
+    void handle_retry();
     inputleap::Screen* openServerScreen();
     inputleap::Screen* createScreen() override;
     PrimaryClient* openPrimaryClient(const std::string& name, inputleap::Screen* screen);
-    void handleScreenError(const Event&, void*);
-    void handleSuspend(const Event&, void*);
-    void handleResume(const Event&, void*);
+    void handle_screen_error();
+    void handle_suspend();
+    void handle_resume();
     ClientListener* openClientListener(const NetworkAddress& address);
     Server* openServer(Config& config, PrimaryClient* primaryClient);
-    void handleNoClients(const Event&, void*);
+    void handle_no_clients();
     bool startServer();
     int mainLoop() override;
     int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup) override;
@@ -115,7 +115,7 @@ public:
     NetworkAddress* m_barrierAddress;
 
 private:
-    void handleScreenSwitched(const Event&, void*  data);
+    void handle_screen_switched(const Event& event);
 };
 
 // configuration file name

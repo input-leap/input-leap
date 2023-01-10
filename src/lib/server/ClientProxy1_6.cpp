@@ -22,7 +22,6 @@
 #include "inputleap/StreamChunker.h"
 #include "inputleap/ClipboardChunk.h"
 #include "io/IStream.h"
-#include "base/TMethodEventJob.h"
 #include "base/Log.h"
 
 namespace inputleap {
@@ -32,9 +31,8 @@ ClientProxy1_6::ClientProxy1_6(const std::string& name, inputleap::IStream* stre
     ClientProxy1_5(name, stream, server, events),
     m_events(events)
 {
-    m_events->adoptHandler(EventType::CLIPBOARD_SENDING, this,
-                                new TMethodEventJob<ClientProxy1_6>(this,
-                                    &ClientProxy1_6::handleClipboardSendingEvent));
+    m_events->add_handler(EventType::CLIPBOARD_SENDING, this,
+                          [this](const auto& e){ handle_clipboard_sending_event(e); });
 }
 
 ClientProxy1_6::~ClientProxy1_6()
@@ -59,8 +57,7 @@ ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard* clipboard)
     }
 }
 
-void
-ClientProxy1_6::handleClipboardSendingEvent(const Event& event, void*)
+void ClientProxy1_6::handle_clipboard_sending_event(const Event& event)
 {
     ClipboardChunk::send(getStream(), event.get_data_as<ClipboardChunk>());
 }

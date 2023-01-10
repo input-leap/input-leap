@@ -20,11 +20,11 @@
 
 #include "base/Event.h"
 #include "base/EventTypes.h"
+#include <functional>
 #include <string>
 
 namespace inputleap {
 
-class IEventJob;
 class IEventQueueBuffer;
 
 // Opaque type for timer info.  This is defined by subclasses of
@@ -40,7 +40,10 @@ timers which generate events periodically.
 */
 class IEventQueue {
 public:
+    using EventHandler = std::function<void(const Event&)>;
+
     virtual ~IEventQueue() { }
+
     class TimerEvent {
     public:
         EventQueueTimer* m_timer; //!< The timer
@@ -75,6 +78,9 @@ public:
     /*!
     Looks up the dispatcher for the event's target and invokes it.
     Returns true iff a dispatcher exists for the target.
+
+    The caller must ensure that the target of the event is not removed by removeHandler() or
+    removeHandlers().
     */
     virtual bool dispatchEvent(const Event& event) = 0;
 
@@ -140,7 +146,7 @@ public:
     of type \p type.  If no such handler exists it will use the handler
     for \p target and type \p kUnknown if it exists.
     */
-    virtual void adoptHandler(EventType type, void* target, IEventJob* handler) = 0;
+    virtual void add_handler(EventType type, void* target, const EventHandler& handler) = 0;
 
     //! Unregister an event handler for an event type
     /*!
@@ -165,13 +171,6 @@ public:
     //@}
     //! @name accessors
     //@{
-
-    //! Get an event handler
-    /*!
-    Finds and returns the event handler for the \p type, \p target pair
-    if it exists, otherwise it returns nullptr.
-    */
-    virtual IEventJob* getHandler(EventType type, void* target) const = 0;
 
     //! Get the system event type target
     /*!

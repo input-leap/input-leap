@@ -19,7 +19,6 @@
 #include "inputleap/PacketStreamFilter.h"
 #include "inputleap/protocol_types.h"
 #include "base/IEventQueue.h"
-#include "base/TMethodEventJob.h"
 
 #include <cstring>
 #include <memory>

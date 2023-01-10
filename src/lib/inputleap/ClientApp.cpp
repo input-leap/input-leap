@@ -34,7 +34,6 @@
 #include "base/String.h"
 #include "base/Event.h"
 #include "base/IEventQueue.h"
-#include "base/TMethodEventJob.h"
 #include "base/log_outputters.h"
 #include "base/EventQueue.h"
 #include "base/Log.h"
@@ -224,8 +223,7 @@ ClientApp::nextRestartTimeout()
 }
 
 
-void
-ClientApp::handleScreenError(const Event&, void*)
+void ClientApp::handle_screen_error()
 {
     LOG((CLOG_CRIT "error on screen"));
     m_events->add_event(EventType::QUIT);
@@ -240,10 +238,8 @@ ClientApp::openClientScreen()
         screen->setDropTarget(argsBase().m_dropTarget);
     }
     screen->setEnableDragDrop(argsBase().m_enableDragDrop);
-    m_events->adoptHandler(EventType::SCREEN_ERROR,
-        screen->getEventTarget(),
-        new TMethodEventJob<ClientApp>(
-        this, &ClientApp::handleScreenError));
+    m_events->add_handler(EventType::SCREEN_ERROR, screen->getEventTarget(),
+                          [this](const auto& e){ handle_screen_error(); });
     return screen;
 }
 
@@ -260,10 +256,9 @@ ClientApp::closeClientScreen(inputleap::Screen* screen)
 
 
 void
-ClientApp::handleClientRestart(const Event&, void* vtimer)
+ClientApp::handle_client_restart(const Event&, EventQueueTimer* timer)
 {
     // discard old timer
-    EventQueueTimer* timer = static_cast<EventQueueTimer*>(vtimer);
     m_events->deleteTimer(timer);
     m_events->removeHandler(EventType::TIMER, timer);
 
@@ -278,13 +273,12 @@ ClientApp::scheduleClientRestart(double retryTime)
     // install a timer and handler to retry later
     LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
     EventQueueTimer* timer = m_events->newOneShotTimer(retryTime, nullptr);
-    m_events->adoptHandler(EventType::TIMER, timer,
-        new TMethodEventJob<ClientApp>(this, &ClientApp::handleClientRestart, timer));
+    m_events->add_handler(EventType::TIMER, timer,
+                          [this, timer](const Event& event) { handle_client_restart(event, timer); });
 }
 
 
-void
-ClientApp::handleClientConnected(const Event&, void*)
+void ClientApp::handle_client_connected()
 {
     // using CLOG_PRINT here allows the GUI to see that the client is connected
     // regardless of which log level is set
@@ -294,8 +288,7 @@ ClientApp::handleClientConnected(const Event&, void*)
 }
 
 
-void
-ClientApp::handleClientFailed(const Event& e, void*)
+void ClientApp::handle_client_failed(const Event& e)
 {
     const auto& info = e.get_data_as<Client::FailInfo>();
 
@@ -313,8 +306,7 @@ ClientApp::handleClientFailed(const Event& e, void*)
 }
 
 
-void
-ClientApp::handleClientDisconnected(const Event&, void*)
+void ClientApp::handle_client_disconnected()
 {
     LOG((CLOG_NOTE "disconnected from server"));
     if (!args().m_restartable) {
@@ -338,14 +330,12 @@ Client* ClientApp::openClient(const std::string& name, const NetworkAddress& add
         args());
 
     try {
-        m_events->adoptHandler(EventType::CLIENT_CONNECTED, client->getEventTarget(),
-            new TMethodEventJob<ClientApp>(this, &ClientApp::handleClientConnected));
-
-        m_events->adoptHandler(EventType::CLIENT_CONNECTION_FAILED, client->getEventTarget(),
-            new TMethodEventJob<ClientApp>(this, &ClientApp::handleClientFailed));
-
-        m_events->adoptHandler(EventType::CLIENT_DISCONNECTED, client->getEventTarget(),
-            new TMethodEventJob<ClientApp>(this, &ClientApp::handleClientDisconnected));
+        m_events->add_handler(EventType::CLIENT_CONNECTED, client->getEventTarget(),
+                              [this](const auto& e) { handle_client_connected(); });
+        m_events->add_handler(EventType::CLIENT_CONNECTION_FAILED, client->getEventTarget(),
+                              [this](const auto& e) { handle_client_failed(e); });
+        m_events->add_handler(EventType::CLIENT_DISCONNECTED, client->getEventTarget(),
+                              [this](const auto& e) { handle_client_disconnected(); });
 
     } catch (std::bad_alloc &ba) {
         delete client;

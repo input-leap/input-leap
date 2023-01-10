@@ -22,7 +22,6 @@
 #include "inputleap/StreamChunker.h"
 #include "inputleap/ProtocolUtil.h"
 #include "io/IStream.h"
-#include "base/TMethodEventJob.h"
 #include "base/Log.h"
 
 #include <sstream>
@@ -34,10 +33,8 @@ ClientProxy1_5::ClientProxy1_5(const std::string& name, inputleap::IStream* stre
     ClientProxy1_4(name, stream, server, events),
     m_events(events)
 {
-
-    m_events->adoptHandler(EventType::FILE_KEEPALIVE, this,
-                            new TMethodEventJob<ClientProxy1_3>(this,
-                                &ClientProxy1_3::handleKeepAlive, nullptr));
+    m_events->add_handler(EventType::FILE_KEEPALIVE, this,
+                          [this](const auto& e){ handle_keep_alive(); });
 }
 
 ClientProxy1_5::~ClientProxy1_5()

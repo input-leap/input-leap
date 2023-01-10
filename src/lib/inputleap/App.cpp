@@ -26,7 +26,6 @@
 #include "inputleap/XBarrier.h"
 #include "inputleap/ArgsBase.h"
 #include "ipc/IpcServerProxy.h"
-#include "base/TMethodEventJob.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/Ipc.h"
 #include "base/EventQueue.h"
@@ -204,8 +203,8 @@ App::initIpcClient()
     m_ipcClient = new IpcClient(m_events, m_socketMultiplexer.get());
     m_ipcClient->connect();
 
-    m_events->adoptHandler(EventType::IPC_CLIENT_MESSAGE_RECEIVED, m_ipcClient,
-        new TMethodEventJob<App>(this, &App::handleIpcMessage));
+    m_events->add_handler(EventType::IPC_CLIENT_MESSAGE_RECEIVED, m_ipcClient,
+                          [this](const auto& event) { handle_ipc_message(event); });
 }
 
 void
@@ -216,8 +215,7 @@ App::cleanupIpcClient()
     delete m_ipcClient;
 }
 
-void
-App::handleIpcMessage(const Event& e, void*)
+void App::handle_ipc_message(const Event& e)
 {
     const auto& m = e.get_data_as<IpcMessage>();
     if (m.type() == kIpcShutdown) {

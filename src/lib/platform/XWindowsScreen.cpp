@@ -31,7 +31,6 @@
 #include "base/Log.h"
 #include "base/Stopwatch.h"
 #include "base/IEventQueue.h"
-#include "base/TMethodEventJob.h"
 #include "base/Time.h"
 
 #include <cstring>
@@ -151,9 +150,8 @@ XWindowsScreen::XWindowsScreen(
 	}
 
 	// install event handlers
-    m_events->adoptHandler(EventType::SYSTEM, m_events->getSystemTarget(),
-							new TMethodEventJob<XWindowsScreen>(this,
-								&XWindowsScreen::handleSystemEvent));
+	m_events->add_handler(EventType::SYSTEM, m_events->getSystemTarget(),
+                          [this](const auto& e){ handle_system_event(e); });
 
 	// install the platform event queue
     m_events->adoptBuffer(new XWindowsEventQueueBuffer(m_impl,
@@ -1104,7 +1102,7 @@ XWindowsScreen::findKeyEvent(Display*, XEvent* xevent, XPointer arg)
 }
 
 void
-XWindowsScreen::handleSystemEvent(const Event& event, void*)
+XWindowsScreen::handle_system_event(const Event& event)
 {
     XEvent* xevent = event.get_data_as<XEvent*>();
     assert(xevent != nullptr);

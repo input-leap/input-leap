@@ -34,7 +34,7 @@ TEST(CXWindowsScreenTests, fakeMouseMove_nonPrimary_getCursorPosValuesCorrect)
         GTEST_SKIP() << "DISPLAY environment variable not set, skipping test";
 
     MockEventQueue eventQueue;
-    EXPECT_CALL(eventQueue, adoptHandler(_, _, _)).Times(2);
+    EXPECT_CALL(eventQueue, add_handler(_, _, _)).Times(2);
     EXPECT_CALL(eventQueue, adoptBuffer(_)).Times(2);
     EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(2);
     XWindowsScreen screen(new XWindowsImpl(), displayName, false, 0, &eventQueue);

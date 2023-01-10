@@ -125,7 +125,7 @@ public:
 
 protected:
     // IPlatformScreen overrides
-    virtual void handleSystemEvent(const Event&, void*);
+    virtual void handle_system_event(const Event& event);
     virtual void updateButtons();
     virtual IKeyState* getKeyState() const;
 
@@ -185,7 +185,7 @@ private: // HACK
     void updateScreenShape();
 
     // fix timer callback
-    void handleFixes(const Event&, void*);
+    void handle_fixes();
 
     // fix the clipboard viewer chain
     void fixClipboardViewer();

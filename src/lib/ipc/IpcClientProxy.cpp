@@ -23,7 +23,6 @@
 #include "inputleap/ProtocolUtil.h"
 #include "io/IStream.h"
 #include "arch/Arch.h"
-#include "base/TMethodEventJob.h"
 #include "base/Log.h"
 
 namespace inputleap {
@@ -34,21 +33,14 @@ IpcClientProxy::IpcClientProxy(std::unique_ptr<IStream>&& stream, IEventQueue* e
     m_disconnecting(false),
     m_events(events)
 {
-    m_events->adoptHandler(EventType::STREAM_INPUT_READY, stream_->getEventTarget(),
-        new TMethodEventJob<IpcClientProxy>(
-        this, &IpcClientProxy::handleData));
-
-    m_events->adoptHandler(EventType::STREAM_OUTPUT_ERROR, stream_->getEventTarget(),
-        new TMethodEventJob<IpcClientProxy>(
-        this, &IpcClientProxy::handleWriteError));
-
-    m_events->adoptHandler(EventType::STREAM_INPUT_SHUTDOWN, stream_->getEventTarget(),
-        new TMethodEventJob<IpcClientProxy>(
-        this, &IpcClientProxy::handleDisconnect));
-
-    m_events->adoptHandler(EventType::STREAM_OUTPUT_SHUTDOWN, stream_->getEventTarget(),
-        new TMethodEventJob<IpcClientProxy>(
-        this, &IpcClientProxy::handleWriteError));
+    m_events->add_handler(EventType::STREAM_INPUT_READY, stream_->getEventTarget(),
+                          [this](const auto& e){ handle_data(); });
+    m_events->add_handler(EventType::STREAM_OUTPUT_ERROR, stream_->getEventTarget(),
+                          [this](const auto& e){ handle_write_error(); });
+    m_events->add_handler(EventType::STREAM_INPUT_SHUTDOWN, stream_->getEventTarget(),
+                          [this](const auto& e){ handle_disconnect(); });
+    m_events->add_handler(EventType::STREAM_OUTPUT_SHUTDOWN, stream_->getEventTarget(),
+                          [this](const auto& e){ handle_write_error(); });
 }
 
 IpcClientProxy::~IpcClientProxy()
@@ -65,22 +57,19 @@ IpcClientProxy::~IpcClientProxy()
     }
 }
 
-void
-IpcClientProxy::handleDisconnect(const Event&, void*)
+void IpcClientProxy::handle_disconnect()
 {
     disconnect();
     LOG((CLOG_DEBUG "ipc client disconnected"));
 }
 
-void
-IpcClientProxy::handleWriteError(const Event&, void*)
+void IpcClientProxy::handle_write_error()
 {
     disconnect();
     LOG((CLOG_DEBUG "ipc client write error"));
 }
 
-void
-IpcClientProxy::handleData(const Event&, void*)
+void IpcClientProxy::handle_data()
 {
     // don't allow the dtor to destroy the stream while we're using it.
     std::lock_guard<std::mutex> lock(m_readMutex);

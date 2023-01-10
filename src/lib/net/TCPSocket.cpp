@@ -26,7 +26,6 @@
 #include "arch/XArch.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
-#include "base/IEventJob.h"
 
 #include <cstring>
 #include <cstdlib>

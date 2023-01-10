@@ -23,7 +23,6 @@
 #include "arch/win32/ArchMiscWindows.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
-#include "base/TMethodEventJob.h"
 
 // extended mouse buttons
 #if !defined(VK_XBUTTON1)

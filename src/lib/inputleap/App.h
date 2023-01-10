@@ -104,7 +104,7 @@ public:
     void setEvents(EventQueue& events) { m_events = &events; }
 
 private:
-    void handleIpcMessage(const Event&, void*);
+    void handle_ipc_message(const Event& event);
 
 protected:
     void initIpcClient();

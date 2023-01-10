@@ -22,7 +22,6 @@
 #include "ipc/Ipc.h"
 #include "inputleap/ProtocolUtil.h"
 #include "io/IStream.h"
-#include "base/TMethodEventJob.h"
 #include "base/Log.h"
 
 namespace inputleap {
@@ -31,9 +30,8 @@ IpcServerProxy::IpcServerProxy(inputleap::IStream& stream, IEventQueue* events) 
     m_stream(stream),
     m_events(events)
 {
-    m_events->adoptHandler(EventType::STREAM_INPUT_READY, stream.getEventTarget(),
-        new TMethodEventJob<IpcServerProxy>(
-        this, &IpcServerProxy::handleData));
+    m_events->add_handler(EventType::STREAM_INPUT_READY, stream.getEventTarget(),
+                          [this](const auto& e){ handle_data(); });
 }
 
 IpcServerProxy::~IpcServerProxy()
@@ -41,8 +39,7 @@ IpcServerProxy::~IpcServerProxy()
     m_events->removeHandler(EventType::STREAM_INPUT_READY, m_stream.getEventTarget());
 }
 
-void
-IpcServerProxy::handleData(const Event&, void*)
+void IpcServerProxy::handle_data()
 {
     LOG((CLOG_DEBUG "start ipc handle data"));
 

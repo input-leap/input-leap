@@ -66,7 +66,7 @@ protected:
     virtual void filterEvent(const Event&);
 
 private:
-    void handleUpstreamEvent(const Event&, void*);
+    void handle_upstream_event(const Event&);
 
 private:
     inputleap::IStream* m_stream;

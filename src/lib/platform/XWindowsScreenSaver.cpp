@@ -23,7 +23,6 @@
 #include "base/Log.h"
 #include "base/Event.h"
 #include "base/IEventQueue.h"
-#include "base/TMethodEventJob.h"
 
 #include <X11/Xatom.h>
 #include <X11/extensions/XTest.h>
@@ -97,9 +96,8 @@ XWindowsScreenSaver::XWindowsScreenSaver(IXWindowsImpl* impl, Display* display,
     }
 
     // install disable timer event handler
-    m_events->adoptHandler(EventType::TIMER, this,
-                            new TMethodEventJob<XWindowsScreenSaver>(this,
-                                &XWindowsScreenSaver::handleDisableTimer));
+    m_events->add_handler(EventType::TIMER, this,
+                          [this](const auto& e){ handle_disable_timer(); });
 }
 
 XWindowsScreenSaver::~XWindowsScreenSaver()
@@ -485,8 +483,7 @@ XWindowsScreenSaver::updateDisableTimer()
     }
 }
 
-void
-XWindowsScreenSaver::handleDisableTimer(const Event&, void*)
+void XWindowsScreenSaver::handle_disable_timer()
 {
     // send fake mouse motion directly to xscreensaver
     if (m_xscreensaver != None) {

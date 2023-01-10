@@ -22,7 +22,6 @@
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "server/ClientProxy.h"
-#include "base/TMethodEventJob.h"
 
 namespace inputleap {
 

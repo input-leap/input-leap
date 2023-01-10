@@ -68,9 +68,9 @@ public:
 
 private:
     void init();
-    void handleClientConnecting(const Event&, void*);
-    void handleClientDisconnected(const Event&, void*);
-    void handleMessageReceived(const Event&, void*);
+    void handle_client_connecting();
+    void handle_client_disconnected(const Event& e);
+    void handle_message_received(const Event& e);
     void deleteClient(IpcClientProxy* proxy);
 
 private:

@@ -23,7 +23,6 @@
 #include "io/IStream.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
-#include "base/TMethodEventJob.h"
 
 #include <cstring>
 
@@ -37,24 +36,18 @@ ClientProxy1_0::ClientProxy1_0(const std::string& name, inputleap::IStream* stre
     m_events(events)
 {
     // install event handlers
-    m_events->adoptHandler(EventType::STREAM_INPUT_READY, stream->getEventTarget(),
-                            new TMethodEventJob<ClientProxy1_0>(this,
-                                &ClientProxy1_0::handleData, nullptr));
-    m_events->adoptHandler(EventType::STREAM_OUTPUT_ERROR, stream->getEventTarget(),
-                            new TMethodEventJob<ClientProxy1_0>(this,
-                                &ClientProxy1_0::handleWriteError, nullptr));
-    m_events->adoptHandler(EventType::STREAM_INPUT_SHUTDOWN, stream->getEventTarget(),
-                            new TMethodEventJob<ClientProxy1_0>(this,
-                                &ClientProxy1_0::handleDisconnect, nullptr));
-    m_events->adoptHandler(EventType::STREAM_INPUT_FORMAT_ERROR, stream->getEventTarget(),
-                           new TMethodEventJob<ClientProxy1_0>(this,
-                                &ClientProxy1_0::handleDisconnect, nullptr));
-    m_events->adoptHandler(EventType::STREAM_OUTPUT_SHUTDOWN, stream->getEventTarget(),
-                            new TMethodEventJob<ClientProxy1_0>(this,
-                                &ClientProxy1_0::handleWriteError, nullptr));
-    m_events->adoptHandler(EventType::TIMER, this,
-                            new TMethodEventJob<ClientProxy1_0>(this,
-                                &ClientProxy1_0::handleFlatline, nullptr));
+    m_events->add_handler(EventType::STREAM_INPUT_READY, stream->getEventTarget(),
+                          [this](const auto& e){ handle_data(); });
+    m_events->add_handler(EventType::STREAM_OUTPUT_ERROR, stream->getEventTarget(),
+                          [this](const auto& e){ handle_write_error(); });
+    m_events->add_handler(EventType::STREAM_INPUT_SHUTDOWN, stream->getEventTarget(),
+                          [this](const auto& e){ handle_disconnect(); });
+    m_events->add_handler(EventType::STREAM_INPUT_FORMAT_ERROR, stream->getEventTarget(),
+                          [this](const auto& e){ handle_disconnect(); });
+    m_events->add_handler(EventType::STREAM_OUTPUT_SHUTDOWN, stream->getEventTarget(),
+                          [this](const auto& e){ handle_write_error(); });
+    m_events->add_handler(EventType::TIMER, this,
+                          [this](const auto& e){ handle_flatline(); });
 
     setHeartbeatRate(kHeartRate, kHeartRate * kHeartBeatsUntilDeath);
 
@@ -128,7 +121,7 @@ ClientProxy1_0::setHeartbeatRate(double, double alarm)
 }
 
 void
-ClientProxy1_0::handleData(const Event&, void*)
+ClientProxy1_0::handle_data()
 {
     // handle messages until there are no more.  first read message code.
     std::uint8_t code[4];
@@ -210,22 +203,19 @@ bool ClientProxy1_0::parseMessage(const std::uint8_t* code)
     return false;
 }
 
-void
-ClientProxy1_0::handleDisconnect(const Event&, void*)
+void ClientProxy1_0::handle_disconnect()
 {
     LOG((CLOG_NOTE "client \"%s\" has disconnected", getName().c_str()));
     disconnect();
 }
 
-void
-ClientProxy1_0::handleWriteError(const Event&, void*)
+void ClientProxy1_0::handle_write_error()
 {
     LOG((CLOG_WARN "error writing to client \"%s\"", getName().c_str()));
     disconnect();
 }
 
-void
-ClientProxy1_0::handleFlatline(const Event&, void*)
+void ClientProxy1_0::handle_flatline()
 {
     // didn't get a heartbeat fast enough.  assume client is dead.
     LOG((CLOG_NOTE "client \"%s\" is dead", getName().c_str()));

@@ -57,11 +57,11 @@ private:
     void addProxyHandlers();
     void removeHandlers();
     void removeTimer();
-    void handleData(const Event&, void*);
-    void handleWriteError(const Event&, void*);
-    void handleTimeout(const Event&, void*);
-    void handleDisconnect(const Event&, void*);
-    void handleReady(const Event&, void*);
+    void handle_data();
+    void handle_write_error();
+    void handle_timeout();
+    void handle_disconnect();
+    void handle_ready();
 
 private:
     inputleap::IStream* m_stream;

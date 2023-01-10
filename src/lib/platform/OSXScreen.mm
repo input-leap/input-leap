@@ -34,7 +34,6 @@
 #include "arch/XArch.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
-#include "base/TMethodEventJob.h"
 #include "base/Time.h"
 
 #include <math.h>
@@ -142,9 +141,8 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 		constructMouseButtonEventMap();
 
 		// watch for requests to sleep
-        m_events->adoptHandler(EventType::OSX_SCREEN_CONFIRM_SLEEP, getEventTarget(),
-								new TMethodEventJob<OSXScreen>(this,
-									&OSXScreen::handleConfirmSleep));
+        m_events->add_handler(EventType::OSX_SCREEN_CONFIRM_SLEEP, getEventTarget(),
+                              [this](const auto& e){ handle_confirm_sleep(e); });
 
 		// create thread for monitoring system power state.
         is_pm_thread_ready_ = false;
@@ -165,9 +163,8 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 	}
 
 	// install event handlers
-    m_events->adoptHandler(EventType::SYSTEM, m_events->getSystemTarget(),
-							new TMethodEventJob<OSXScreen>(this,
-								&OSXScreen::handleSystemEvent));
+	m_events->add_handler(EventType::SYSTEM, m_events->getSystemTarget(),
+                          [this](const auto& e){ handle_system_event(e); });
 
 	// install the platform event queue
 	m_events->adoptBuffer(new OSXEventQueueBuffer(m_events));
@@ -715,9 +712,8 @@ OSXScreen::enable()
 {
 	// watch the clipboard
     m_clipboardTimer = m_events->newTimer(1.0, nullptr);
-    m_events->adoptHandler(EventType::TIMER, m_clipboardTimer,
-							new TMethodEventJob<OSXScreen>(this,
-								&OSXScreen::handleClipboardCheck));
+	m_events->add_handler(EventType::TIMER, m_clipboardTimer,
+                          [this](const auto& e){ handle_clipboard_check(); });
 
 	if (m_isPrimary) {
 		// FIXME -- start watching jump zones
@@ -952,8 +948,7 @@ void OSXScreen::sendClipboardEvent(EventType type, ClipboardID id) const
     sendEvent(type, create_event_data<ClipboardInfo>(info));
 }
 
-void
-OSXScreen::handleSystemEvent(const Event& event, void*)
+void OSXScreen::handle_system_event(const Event& event)
 {
     EventRef* carbonEvent = event.get_data_as<EventRef*>();
     assert(carbonEvent != nullptr);
@@ -1159,8 +1154,7 @@ bool OSXScreen::onMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const
 	return true;
 }
 
-void
-OSXScreen::handleClipboardCheck(const Event&, void*)
+void OSXScreen::handle_clipboard_check()
 {
 	checkClipboards();
 }
@@ -1423,9 +1417,8 @@ OSXScreen::enableDragTimer(bool enable)
 {
     if (enable && m_dragTimer == nullptr) {
         m_dragTimer = m_events->newTimer(0.01, nullptr);
-        m_events->adoptHandler(EventType::TIMER, m_dragTimer,
-							new TMethodEventJob<OSXScreen>(this,
-								&OSXScreen::handleDrag));
+        m_events->add_handler(EventType::TIMER, m_dragTimer,
+                              [this](const auto& e){ handle_drag(); });
         CGEventRef event = CGEventCreate(nullptr);
 		CGPoint mouse = CGEventGetLocation(event);
 		m_dragLastPoint.h = (short)mouse.x;
@@ -1439,8 +1432,7 @@ OSXScreen::enableDragTimer(bool enable)
 	}
 }
 
-void
-OSXScreen::handleDrag(const Event&, void*)
+void OSXScreen::handle_drag()
 {
     CGEventRef event = CGEventCreate(nullptr);
 	CGPoint p = CGEventGetLocation(event);
@@ -1675,8 +1667,7 @@ OSXScreen::handlePowerChangeRequest(natural_t messageType, void* messageArg)
 	}
 }
 
-void
-OSXScreen::handleConfirmSleep(const Event& event, void*)
+void OSXScreen::handle_confirm_sleep(const Event& event)
 {
     long messageArg = event.get_data_as<long>();
 	if (messageArg != 0) {

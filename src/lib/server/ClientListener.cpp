@@ -27,7 +27,6 @@
 #include "net/XSocket.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
-#include "base/TMethodEventJob.h"
 
 namespace inputleap {
 
@@ -47,9 +46,8 @@ ClientListener::ClientListener(const NetworkAddress& address,
                                                  security_level);
 
         // setup event handler
-        m_events->adoptHandler(EventType::LISTEN_SOCKET_CONNECTING, m_listen,
-                    new TMethodEventJob<ClientListener>(this,
-                            &ClientListener::handleClientConnecting));
+        m_events->add_handler(EventType::LISTEN_SOCKET_CONNECTING, m_listen,
+                              [this](const auto& e){ handle_client_connecting(); });
 
         // bind listen address
         LOG((CLOG_DEBUG1 "binding listen socket"));
@@ -114,8 +112,7 @@ ClientListener::getNextClient()
     return client;
 }
 
-void
-ClientListener::handleClientConnecting(const Event&, void*)
+void ClientListener::handle_client_connecting()
 {
     // accept client connection
     auto socket = m_listen->accept();
@@ -127,9 +124,11 @@ ClientListener::handleClientConnecting(const Event&, void*)
     auto socket_ptr = socket.get();
     client_sockets_.insert(std::move(socket));
 
-    m_events->adoptHandler(EventType::CLIENT_LISTENER_ACCEPTED, socket_ptr->getEventTarget(),
-                new TMethodEventJob<ClientListener>(this,
-                        &ClientListener::handleClientAccepted, socket_ptr));
+    m_events->add_handler(EventType::CLIENT_LISTENER_ACCEPTED, socket_ptr->getEventTarget(),
+                          [this, socket_ptr](const auto& e)
+    {
+        handle_client_accepted(socket_ptr);
+    });
 
     // When using non SSL, server accepts clients immediately, while SSL
     // has to call secure accept which may require retry
@@ -139,11 +138,9 @@ ClientListener::handleClientConnecting(const Event&, void*)
 }
 
 void
-ClientListener::handleClientAccepted(const Event&, void* vsocket)
+ClientListener::handle_client_accepted(IDataSocket* socket)
 {
     LOG((CLOG_NOTE "accepted client connection"));
-
-    IDataSocket* socket = static_cast<IDataSocket*>(vsocket);
 
     // filter socket messages, including a packetizing filter
     inputleap::IStream* stream = new PacketStreamFilter(m_events, socket, false);
@@ -155,20 +152,14 @@ ClientListener::handleClientAccepted(const Event&, void* vsocket)
     m_newClients.insert(client);
 
     // watch for events from unknown client
-    m_events->adoptHandler(EventType::CLIENT_PROXY_UNKNOWN_SUCCESS, client,
-                new TMethodEventJob<ClientListener>(this,
-                        &ClientListener::handleUnknownClient, client));
-    m_events->adoptHandler(EventType::CLIENT_PROXY_UNKNOWN_FAILURE, client,
-                new TMethodEventJob<ClientListener>(this,
-                        &ClientListener::handleUnknownClient, client));
+    m_events->add_handler(EventType::CLIENT_PROXY_UNKNOWN_SUCCESS, client,
+                          [this, client](const auto& e){ handle_unknown_client(client); });
+    m_events->add_handler(EventType::CLIENT_PROXY_UNKNOWN_FAILURE, client,
+                          [this, client](const auto& e){ handle_unknown_client(client); });
 }
 
-void
-ClientListener::handleUnknownClient(const Event&, void* vclient)
+void ClientListener::handle_unknown_client(ClientProxyUnknown* unknownClient)
 {
-    ClientProxyUnknown* unknownClient =
-        static_cast<ClientProxyUnknown*>(vclient);
-
     // we should have the client in our new client list
     assert(m_newClients.count(unknownClient) == 1);
 
@@ -180,10 +171,8 @@ ClientListener::handleUnknownClient(const Event&, void* vclient)
         m_events->add_event(EventType::CLIENT_LISTENER_CONNECTED, this);
 
         // watch for client to disconnect while it's in our queue
-        m_events->adoptHandler(EventType::CLIENT_PROXY_DISCONNECTED, client,
-                            new TMethodEventJob<ClientListener>(this,
-                                &ClientListener::handleClientDisconnected,
-                                client));
+        m_events->add_handler(EventType::CLIENT_PROXY_DISCONNECTED, client,
+                              [this, client](const auto& e) { handle_client_disconnected(client); });
     } else {
         auto* stream = unknownClient->getStream();
         if (stream) {
@@ -199,11 +188,8 @@ ClientListener::handleUnknownClient(const Event&, void* vclient)
     delete unknownClient;
 }
 
-void
-ClientListener::handleClientDisconnected(const Event&, void* vclient)
+void ClientListener::handle_client_disconnected(ClientProxy* client)
 {
-    ClientProxy* client = static_cast<ClientProxy*>(vclient);
-
     // find client in waiting clients queue
     for (WaitingClients::iterator i = m_waitingClients.begin(),
                             n = m_waitingClients.end(); i != n; ++i) {

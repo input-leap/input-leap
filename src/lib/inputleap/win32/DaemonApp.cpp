@@ -28,7 +28,6 @@
 #include "net/SocketMultiplexer.h"
 #include "arch/XArch.h"
 #include "base/Log.h"
-#include "base/TMethodEventJob.h"
 #include "base/EventQueue.h"
 #include "base/log_outputters.h"
 #include "base/Log.h"
@@ -193,9 +192,8 @@ DaemonApp::mainLoop(bool daemonized)
         m_watchdog = new MSWindowsWatchdog(daemonized, false, *m_ipcServer, *m_ipcLogOutputter);
         m_watchdog->setFileLogOutputter(m_fileLogOutputter);
 
-        m_events->adoptHandler(EventType::IPC_SERVER_MESSAGE_RECEIVED, m_ipcServer,
-            new TMethodEventJob<DaemonApp>(this, &DaemonApp::handleIpcMessage));
-
+        m_events->add_handler(EventType::IPC_SERVER_MESSAGE_RECEIVED, m_ipcServer,
+                              [this](const auto& event) { handle_ipc_message(event); });
         m_ipcServer->listen();
 
         // install the platform event queue to handle service stop events.
@@ -247,8 +245,7 @@ DaemonApp::logFilename()
     return logFilename;
 }
 
-void
-DaemonApp::handleIpcMessage(const Event& e, void*)
+void DaemonApp::handle_ipc_message(const Event& e)
 {
     const IpcMessage& m = e.get_data_as<IpcMessage>();
     switch (m.type()) {

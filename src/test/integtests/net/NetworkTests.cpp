@@ -35,7 +35,6 @@
 #include "net/NetworkAddress.h"
 #include "net/TCPSocketFactory.h"
 #include "mt/Thread.h"
-#include "base/TMethodEventJob.h"
 #include "base/Log.h"
 #include <stdexcept>
 
@@ -85,17 +84,17 @@ public:
 
     void                sendMockData(void* eventTarget);
 
-    void                sendToClient_mockData_handleClientConnected(const Event&, void* vlistener);
-    void                sendToClient_mockData_fileReceiveCompleted(const Event&, void*);
+    void sendToClient_mockData_handle_client_connected(const Event&, ClientListener* listener);
+    void sendToClient_mockData_file_receive_completed(const Event&);
 
-    void                sendToClient_mockFile_handleClientConnected(const Event&, void* vlistener);
-    void                sendToClient_mockFile_fileReceiveCompleted(const Event& event, void*);
+    void sendToClient_mockFile_handle_client_connected(const Event&, ClientListener* listener);
+    void sendToClient_mockFile_file_receive_completed(const Event& event);
 
-    void                sendToServer_mockData_handleClientConnected(const Event&, void* vlistener);
-    void                sendToServer_mockData_fileReceiveCompleted(const Event& event, void*);
+    void sendToServer_mockData_handle_client_connected(const Event&, Client* client);
+    void sendToServer_mockData_file_receive_completed(const Event& event);
 
-    void                sendToServer_mockFile_handleClientConnected(const Event&, void* vlistener);
-    void                sendToServer_mockFile_fileReceiveCompleted(const Event& event, void*);
+    void sendToServer_mockFile_handle_client_connected(const Event&, Client* client);
+    void sendToServer_mockFile_file_recieve_completed(const Event& event);
 
 public:
     TestEventQueue        m_events;
@@ -122,9 +121,11 @@ TEST_F(NetworkTests, sendToClient_mockData)
     NiceMock<MockConfig> serverConfig;
     NiceMock<MockInputFilter> serverInputFilter;
 
-    m_events.adoptHandler(EventType::CLIENT_LISTENER_CONNECTED, &listener,
-        new TMethodEventJob<NetworkTests>(
-            this, &NetworkTests::sendToClient_mockData_handleClientConnected, &listener));
+    m_events.add_handler(EventType::CLIENT_LISTENER_CONNECTED, &listener,
+                         [this, &listener](const auto& e)
+    {
+        sendToClient_mockData_handle_client_connected(e, &listener);
+    });
 
     ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
     ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
@@ -149,9 +150,11 @@ TEST_F(NetworkTests, sendToClient_mockData)
     clientArgs.m_enableCrypto = false;
     Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
 
-    m_events.adoptHandler(EventType::FILE_RECEIVE_COMPLETED, &client,
-        new TMethodEventJob<NetworkTests>(
-            this, &NetworkTests::sendToClient_mockData_fileReceiveCompleted));
+    m_events.add_handler(EventType::FILE_RECEIVE_COMPLETED, &client,
+                         [this](const auto& e)
+    {
+        sendToClient_mockData_file_receive_completed(e);
+    });
 
     client.connect();
 
@@ -179,9 +182,11 @@ TEST_F(NetworkTests, sendToClient_mockFile)
     NiceMock<MockConfig> serverConfig;
     NiceMock<MockInputFilter> serverInputFilter;
 
-    m_events.adoptHandler(EventType::CLIENT_LISTENER_CONNECTED, &listener,
-        new TMethodEventJob<NetworkTests>(
-            this, &NetworkTests::sendToClient_mockFile_handleClientConnected, &listener));
+    m_events.add_handler(EventType::CLIENT_LISTENER_CONNECTED, &listener,
+                         [this, &listener](const auto& e)
+    {
+        sendToClient_mockFile_handle_client_connected(e, &listener);
+    });
 
     ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
     ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
@@ -206,9 +211,11 @@ TEST_F(NetworkTests, sendToClient_mockFile)
     clientArgs.m_enableCrypto = false;
     Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
 
-    m_events.adoptHandler(EventType::FILE_RECEIVE_COMPLETED, &client,
-        new TMethodEventJob<NetworkTests>(
-            this, &NetworkTests::sendToClient_mockFile_fileReceiveCompleted));
+    m_events.add_handler(EventType::FILE_RECEIVE_COMPLETED, &client,
+                         [this](const auto& e)
+    {
+        sendToClient_mockFile_file_receive_completed(e);
+    });
 
     client.connect();
 
@@ -257,13 +264,17 @@ TEST_F(NetworkTests, sendToServer_mockData)
     clientArgs.m_enableCrypto = false;
     Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
 
-    m_events.adoptHandler(EventType::CLIENT_LISTENER_CONNECTED, &listener,
-        new TMethodEventJob<NetworkTests>(
-            this, &NetworkTests::sendToServer_mockData_handleClientConnected, &client));
+    m_events.add_handler(EventType::CLIENT_LISTENER_CONNECTED, &listener,
+                         [this, &client](const auto& e)
+    {
+        sendToServer_mockData_handle_client_connected(e, &client);
+    });
 
-    m_events.adoptHandler(EventType::FILE_RECEIVE_COMPLETED, &server,
-        new TMethodEventJob<NetworkTests>(
-            this, &NetworkTests::sendToServer_mockData_fileReceiveCompleted));
+    m_events.add_handler(EventType::FILE_RECEIVE_COMPLETED, &server,
+                         [this](const auto& e)
+    {
+        sendToServer_mockData_file_receive_completed(e);
+    });
 
     client.connect();
 
@@ -313,13 +324,17 @@ TEST_F(NetworkTests, sendToServer_mockFile)
     clientArgs.m_enableCrypto = false;
     Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
 
-    m_events.adoptHandler(EventType::CLIENT_LISTENER_CONNECTED, &listener,
-        new TMethodEventJob<NetworkTests>(
-            this, &NetworkTests::sendToServer_mockFile_handleClientConnected, &client));
+    m_events.add_handler(EventType::CLIENT_LISTENER_CONNECTED, &listener,
+                         [this, &client](const auto& e)
+    {
+        sendToServer_mockFile_handle_client_connected(e, &client);
+    });
 
-    m_events.adoptHandler(EventType::FILE_RECEIVE_COMPLETED, &server,
-        new TMethodEventJob<NetworkTests>(
-            this, &NetworkTests::sendToServer_mockFile_fileReceiveCompleted));
+    m_events.add_handler(EventType::FILE_RECEIVE_COMPLETED, &server,
+                         [this](const auto& e)
+    {
+        sendToServer_mockFile_file_recieve_completed(e);
+    });
 
     client.connect();
 
@@ -330,10 +345,9 @@ TEST_F(NetworkTests, sendToServer_mockFile)
     m_events.cleanupQuitTimeout();
 }
 
-void
-NetworkTests::sendToClient_mockData_handleClientConnected(const Event&, void* vlistener)
+void NetworkTests::sendToClient_mockData_handle_client_connected(const Event&,
+                                                                 ClientListener* listener)
 {
-    ClientListener* listener = static_cast<ClientListener*>(vlistener);
     Server* server = listener->getServer();
 
     ClientProxy* client = listener->getNextClient();
@@ -348,8 +362,7 @@ NetworkTests::sendToClient_mockData_handleClientConnected(const Event&, void* vl
     sendMockData(server);
 }
 
-void
-NetworkTests::sendToClient_mockData_fileReceiveCompleted(const Event& event, void*)
+void NetworkTests::sendToClient_mockData_file_receive_completed(const Event& event)
 {
     Client* client = static_cast<Client*>(event.getTarget());
     EXPECT_TRUE(client->isReceivedFileSizeValid());
@@ -357,10 +370,9 @@ NetworkTests::sendToClient_mockData_fileReceiveCompleted(const Event& event, voi
     m_events.raiseQuitEvent();
 }
 
-void
-NetworkTests::sendToClient_mockFile_handleClientConnected(const Event&, void* vlistener)
+void NetworkTests::sendToClient_mockFile_handle_client_connected(const Event&,
+                                                                 ClientListener* listener)
 {
-    ClientListener* listener = static_cast<ClientListener*>(vlistener);
     Server* server = listener->getServer();
 
     ClientProxy* client = listener->getNextClient();
@@ -375,8 +387,7 @@ NetworkTests::sendToClient_mockFile_handleClientConnected(const Event&, void* vl
     server->sendFileToClient(kMockFilename);
 }
 
-void
-NetworkTests::sendToClient_mockFile_fileReceiveCompleted(const Event& event, void*)
+void NetworkTests::sendToClient_mockFile_file_receive_completed(const Event& event)
 {
     Client* client = static_cast<Client*>(event.getTarget());
     EXPECT_TRUE(client->isReceivedFileSizeValid());
@@ -384,15 +395,12 @@ NetworkTests::sendToClient_mockFile_fileReceiveCompleted(const Event& event, voi
     m_events.raiseQuitEvent();
 }
 
-void
-NetworkTests::sendToServer_mockData_handleClientConnected(const Event&, void* vclient)
+void NetworkTests::sendToServer_mockData_handle_client_connected(const Event&, Client* client)
 {
-    Client* client = static_cast<Client*>(vclient);
     sendMockData(client);
 }
 
-void
-NetworkTests::sendToServer_mockData_fileReceiveCompleted(const Event& event, void*)
+void NetworkTests::sendToServer_mockData_file_receive_completed(const Event& event)
 {
     Server* server = static_cast<Server*>(event.getTarget());
     EXPECT_TRUE(server->isReceivedFileSizeValid());
@@ -400,15 +408,12 @@ NetworkTests::sendToServer_mockData_fileReceiveCompleted(const Event& event, voi
     m_events.raiseQuitEvent();
 }
 
-void
-NetworkTests::sendToServer_mockFile_handleClientConnected(const Event&, void* vclient)
+void NetworkTests::sendToServer_mockFile_handle_client_connected(const Event&, Client* client)
 {
-    Client* client = static_cast<Client*>(vclient);
     client->sendFileToServer(kMockFilename);
 }
 
-void
-NetworkTests::sendToServer_mockFile_fileReceiveCompleted(const Event& event, void*)
+void NetworkTests::sendToServer_mockFile_file_recieve_completed(const Event& event)
 {
     Server* server = static_cast<Server*>(event.getTarget());
     EXPECT_TRUE(server->isReceivedFileSizeValid());

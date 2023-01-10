@@ -21,7 +21,6 @@
 #include "inputleap/ProtocolUtil.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
-#include "base/TMethodEventJob.h"
 
 #include <cstring>
 #include <memory>
@@ -89,9 +88,8 @@ ClientProxy1_3::addHeartbeatTimer()
     // create and install a timer to periodically send keep alives
     if (m_keepAliveRate > 0.0) {
         m_keepAliveTimer = m_events->newTimer(m_keepAliveRate, nullptr);
-        m_events->adoptHandler(EventType::TIMER, m_keepAliveTimer,
-                            new TMethodEventJob<ClientProxy1_3>(this,
-                                &ClientProxy1_3::handleKeepAlive, nullptr));
+        m_events->add_handler(EventType::TIMER, m_keepAliveTimer,
+                              [this](const auto& e){ handle_keep_alive(); });
     }
 
     // superclass does the alarm
@@ -112,8 +110,7 @@ ClientProxy1_3::removeHeartbeatTimer()
     ClientProxy1_2::removeHeartbeatTimer();
 }
 
-void
-ClientProxy1_3::handleKeepAlive(const Event&, void*)
+void ClientProxy1_3::handle_keep_alive()
 {
     keepAlive();
 }

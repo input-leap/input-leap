@@ -68,7 +68,7 @@ IpcServerProxy::handleData(const Event&, void*)
         // don't delete with this event; the data is passed to a new event.
         Event e(EventType::IPC_SERVER_PROXY_MESSAGE_RECEIVED, this, nullptr, Event::kDontFreeData);
         e.setDataObject(m);
-        m_events->addEvent(e);
+        m_events->add_event(std::move(e));
 
         n = m_stream.read(code, 4);
     }

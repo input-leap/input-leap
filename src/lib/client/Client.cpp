@@ -179,7 +179,7 @@ Client::disconnect(const char* msg)
         sendConnectionFailedEvent(msg);
     }
     else {
-        sendEvent(EventType::CLIENT_DISCONNECTED, nullptr);
+        send_event(EventType::CLIENT_DISCONNECTED);
     }
 }
 
@@ -188,7 +188,7 @@ Client::handshakeComplete()
 {
     m_ready = true;
     m_screen->enable();
-    sendEvent(EventType::CLIENT_CONNECTED, nullptr);
+    send_event(EventType::CLIENT_CONNECTED);
 }
 
 bool
@@ -401,9 +401,9 @@ Client::sendClipboard(ClipboardID id)
     }
 }
 
-void Client::sendEvent(EventType type, void* data)
+void Client::send_event(EventType type)
 {
-    m_events->addEvent(Event(type, getEventTarget(), data));
+    m_events->add_event(type, getEventTarget());
 }
 
 void
@@ -411,8 +411,8 @@ Client::sendConnectionFailedEvent(const char* msg)
 {
     FailInfo* info = new FailInfo(msg);
     info->m_retry = true;
-    Event event(EventType::CLIENT_CONNECTION_FAILED, getEventTarget(), info, Event::kDontFreeData);
-    m_events->addEvent(event);
+    m_events->add_event(EventType::CLIENT_CONNECTION_FAILED, getEventTarget(), info,
+                        Event::kDontFreeData);
 }
 
 void
@@ -601,7 +601,7 @@ Client::handleOutputError(const Event&, void*)
     cleanupScreen();
     cleanupConnection();
     LOG((CLOG_WARN "error sending to server"));
-    sendEvent(EventType::CLIENT_DISCONNECTED, nullptr);
+    send_event(EventType::CLIENT_DISCONNECTED);
 }
 
 void
@@ -611,7 +611,7 @@ Client::handleDisconnected(const Event&, void*)
     cleanupScreen();
     cleanupConnection();
     LOG((CLOG_DEBUG1 "disconnected"));
-    sendEvent(EventType::CLIENT_DISCONNECTED, nullptr);
+    send_event(EventType::CLIENT_DISCONNECTED);
 }
 
 void
@@ -681,7 +681,7 @@ Client::handleHello(const Event&, void*)
     // receive another event for already pending messages so we fake
     // one.
     if (m_stream->isReady()) {
-        m_events->addEvent(Event(EventType::STREAM_INPUT_READY, m_stream->getEventTarget()));
+        m_events->add_event(EventType::STREAM_INPUT_READY, m_stream->getEventTarget());
     }
 }
 

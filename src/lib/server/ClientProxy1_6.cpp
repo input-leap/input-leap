@@ -90,7 +90,7 @@ ClientProxy1_6::recvClipboard()
         ClipboardInfo* info = new ClipboardInfo;
         info->m_id = id;
         info->m_sequenceNumber = seq;
-        m_events->addEvent(Event(EventType::CLIPBOARD_CHANGED, getEventTarget(), info));
+        m_events->add_event(EventType::CLIPBOARD_CHANGED, getEventTarget(), info);
     }
 
     return true;

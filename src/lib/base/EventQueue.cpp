@@ -35,7 +35,7 @@ void
 interrupt(Arch::ESignal, void* data)
 {
     EventQueue* events = static_cast<EventQueue*>(data);
-    events->addEvent(Event(EventType::QUIT));
+    events->add_event(EventType::QUIT);
 }
 
 EventQueue::EventQueue() :
@@ -66,7 +66,7 @@ EventQueue::loop()
     while (!m_pending.empty()) {
         LOG((CLOG_DEBUG "add pending events to buffer"));
         Event& event = m_pending.front();
-        addEventToBuffer(event);
+        add_event_to_buffer(std::move(event));
         m_pending.pop();
     }
 
@@ -193,8 +193,7 @@ EventQueue::dispatchEvent(const Event& event)
     return false;
 }
 
-void
-EventQueue::addEvent(const Event& event)
+void EventQueue::add_event(Event&& event)
 {
     // discard bogus event types
     switch (event.getType()) {
@@ -212,26 +211,24 @@ EventQueue::addEvent(const Event& event)
         Event::deleteData(event);
     }
     else if (!is_ready_) {
-        m_pending.push(event);
-    }
-    else {
-        addEventToBuffer(event);
+        m_pending.push(std::move(event));
+    } else {
+        add_event_to_buffer(std::move(event));
     }
 }
 
-void
-EventQueue::addEventToBuffer(const Event& event)
+void EventQueue::add_event_to_buffer(Event&& event)
 {
     std::lock_guard<std::mutex> lock(mutex_);
 
     // store the event's data locally
-    std::uint32_t eventID = saveEvent(event);
+    std::uint32_t eventID = save_event(std::move(event));
 
     // add it
     if (!buffer_->addEvent(eventID)) {
         // failed to send event
-        removeEvent(eventID);
-        Event::deleteData(event);
+        auto removed_event = removeEvent(eventID);
+        Event::deleteData(removed_event);
     }
 }
 
@@ -354,7 +351,7 @@ IEventJob* EventQueue::getHandler(EventType type, void* target) const
     return nullptr;
 }
 
-std::uint32_t EventQueue::saveEvent(const Event& event)
+std::uint32_t EventQueue::save_event(Event&& event)
 {
     // choose id
     std::uint32_t id;
@@ -369,7 +366,7 @@ std::uint32_t EventQueue::saveEvent(const Event& event)
     }
 
     // save data
-    m_events[id] = event;
+    m_events[id] = std::move(event);
     return id;
 }
 
@@ -382,7 +379,7 @@ Event EventQueue::removeEvent(std::uint32_t eventID)
     }
 
     // get data
-    Event event = index->second;
+    Event event = std::move(index->second);
     m_events.erase(index);
 
     // save old id for reuse

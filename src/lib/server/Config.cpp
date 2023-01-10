@@ -1039,9 +1039,7 @@ InputFilter::Condition* Config::parseCondition(ConfigReadContext& s, const std::
 			throw XConfigRead(s, "syntax for condition: mousebutton(modifiers+button)");
 		}
 
-		IPlatformScreen::ButtonInfo* mouseInfo = s.parseMouse(args[0]);
-
-		return new InputFilter::MouseButtonCondition(m_events, mouseInfo);
+        return new InputFilter::MouseButtonCondition(m_events, s.parseMouse(args[0]));
 	}
 
 	if (name == "connect") {
@@ -1106,12 +1104,10 @@ void Config::parseAction(ConfigReadContext& s, const std::string& name,
 			throw XConfigRead(s, "syntax for action: mousebutton(modifiers+button)");
 		}
 
-		IPlatformScreen::ButtonInfo* mouseInfo = s.parseMouse(args[0]);
+        auto mouseInfo = s.parseMouse(args[0]);
 
 		if (name == "mousebutton") {
-			IPlatformScreen::ButtonInfo* mouseInfo2 =
-				IPlatformScreen::ButtonInfo::alloc(*mouseInfo);
-			action = new InputFilter::MouseButtonAction(m_events, mouseInfo2, true);
+            action = new InputFilter::MouseButtonAction(m_events, mouseInfo, true);
 			rule.adoptAction(action, true);
 			action   = new InputFilter::MouseButtonAction(m_events, mouseInfo, false);
 			activate = false;
@@ -2199,8 +2195,7 @@ IPlatformScreen::KeyInfo* ConfigReadContext::parseKeystroke(const std::string& k
 	return IPlatformScreen::KeyInfo::alloc(key, mask, 0, 0, screens);
 }
 
-IPlatformScreen::ButtonInfo*
-ConfigReadContext::parseMouse(const std::string& mouse) const
+IPlatformScreen::ButtonInfo ConfigReadContext::parseMouse(const std::string& mouse) const
 {
     std::string s = mouse;
 
@@ -2218,7 +2213,7 @@ ConfigReadContext::parseMouse(const std::string& mouse) const
 		throw XConfigRead(*this, "invalid button");
 	}
 
-	return IPlatformScreen::ButtonInfo::alloc(button, mask);
+    return IPlatformScreen::ButtonInfo{button, mask};
 }
 
 KeyModifierMask ConfigReadContext::parseModifier(const std::string& modifiers) const

@@ -145,7 +145,7 @@ MultiplexerJobStatus TCPListenSocket::serviceListening(ISocketMultiplexerJob* jo
         return {false, {}};
     }
     if (read) {
-        m_events->addEvent(Event(EventType::LISTEN_SOCKET_CONNECTING, this, nullptr));
+        m_events->add_event(EventType::LISTEN_SOCKET_CONNECTING, this);
         // stop polling on this socket until the client accepts
         return {false, {}};
     }

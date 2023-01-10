@@ -941,7 +941,7 @@ OSXScreen::isPrimary() const
 
 void OSXScreen::sendEvent(EventType type, void* data) const
 {
-	m_events->addEvent(Event(type, getEventTarget(), data));
+    m_events->add_event(type, getEventTarget(), data);
 }
 
 void OSXScreen::sendClipboardEvent(EventType type, ClipboardID id) const
@@ -1206,8 +1206,8 @@ OSXScreen::onKey(CGEventRef event)
 			if (m_modifierHotKeys.count(newMask) > 0) {
 				m_activeModifierHotKey     = m_modifierHotKeys[newMask];
 				m_activeModifierHotKeyMask = newMask;
-                m_events->addEvent(Event(EventType::PRIMARY_SCREEN_HOTKEY_DOWN, getEventTarget(),
-								HotKeyInfo::alloc(m_activeModifierHotKey)));
+                m_events->add_event(EventType::PRIMARY_SCREEN_HOTKEY_DOWN, getEventTarget(),
+                                    HotKeyInfo::alloc(m_activeModifierHotKey));
 			}
 		}
 
@@ -1216,8 +1216,8 @@ OSXScreen::onKey(CGEventRef event)
 		else if (m_activeModifierHotKey != 0) {
 			KeyModifierMask mask = (newMask & m_activeModifierHotKeyMask);
 			if (mask != m_activeModifierHotKeyMask) {
-                m_events->addEvent(Event(EventType::PRIMARY_SCREEN_HOTKEY_UP, getEventTarget(),
-								HotKeyInfo::alloc(m_activeModifierHotKey)));
+                m_events->add_event(EventType::PRIMARY_SCREEN_HOTKEY_UP, getEventTarget(),
+                                    HotKeyInfo::alloc(m_activeModifierHotKey));
 				m_activeModifierHotKey     = 0;
 				m_activeModifierHotKeyMask = 0;
 			}
@@ -1241,7 +1241,7 @@ OSXScreen::onKey(CGEventRef event)
 		else {
 			return false;
 		}
-		m_events->addEvent(Event(type, getEventTarget(), HotKeyInfo::alloc(id)));
+        m_events->add_event(type, getEventTarget(), HotKeyInfo::alloc(id));
 		return true;
 	}
 
@@ -1332,8 +1332,7 @@ OSXScreen::onHotKey(EventRef event) const
 		return false;
 	}
 
-	m_events->addEvent(Event(type, getEventTarget(),
-								HotKeyInfo::alloc(id)));
+    m_events->add_event(type, getEventTarget(), HotKeyInfo::alloc(id));
 
 	return true;
 }
@@ -1544,13 +1543,11 @@ OSXScreen::userSwitchCallback(EventHandlerCallRef nextHandler,
 
 	if (kind == kEventSystemUserSessionDeactivated) {
 		LOG((CLOG_DEBUG "user session deactivated"));
-        events->addEvent(Event(EventType::SCREEN_SUSPEND,
-									screen->getEventTarget()));
+        events->add_event(EventType::SCREEN_SUSPEND, screen->getEventTarget());
 	}
 	else if (kind == kEventSystemUserSessionActivated) {
 		LOG((CLOG_DEBUG "user session activated"));
-        events->addEvent(Event(EventType::SCREEN_RESUME,
-									screen->getEventTarget()));
+        events->add_event(EventType::SCREEN_RESUME, screen->getEventTarget());
 	}
 	return (CallNextEventHandler(nextHandler, theEvent));
 }
@@ -1655,14 +1652,13 @@ OSXScreen::handlePowerChangeRequest(natural_t messageType, void* messageArg)
 		// OSXScreen has to handle this in the main thread so we have to
 		// queue a confirm sleep event here.  we actually don't allow the
 		// system to sleep until the event is handled.
-        m_events->addEvent(Event(EventType::OSX_SCREEN_CONFIRM_SLEEP,
-								getEventTarget(), messageArg,
-								Event::kDontFreeData));
+        m_events->add_event(EventType::OSX_SCREEN_CONFIRM_SLEEP,
+                            getEventTarget(), messageArg, Event::kDontFreeData);
 		return;
 
 	case kIOMessageSystemHasPoweredOn:
 		LOG((CLOG_DEBUG "system wakeup"));
-        m_events->addEvent(Event(EventType::SCREEN_RESUME, getEventTarget()));
+        m_events->add_event(EventType::SCREEN_RESUME, getEventTarget());
 		break;
 
 	default:
@@ -1683,8 +1679,8 @@ OSXScreen::handleConfirmSleep(const Event& event, void*)
         std::lock_guard<std::mutex> lock(pm_mutex_);
 		if (m_pmRootPort != 0) {
 			// deliver suspend event immediately.
-            m_events->addEvent(Event(EventType::SCREEN_SUSPEND, getEventTarget(),
-                                     nullptr, Event::kDeliverImmediately));
+            m_events->add_event(EventType::SCREEN_SUSPEND, getEventTarget(),
+                                nullptr, Event::kDeliverImmediately);
 
 			LOG((CLOG_DEBUG "system will sleep"));
 			IOAllowPowerChange(m_pmRootPort, messageArg);

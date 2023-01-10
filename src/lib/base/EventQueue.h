@@ -49,7 +49,7 @@ public:
     void adoptBuffer(IEventQueueBuffer*) override;
     bool getEvent(Event& event, double timeout = -1.0) override;
     bool dispatchEvent(const Event& event) override;
-    void addEvent(const Event& event) override;
+    void add_event(Event&& event) override;
     EventQueueTimer* newTimer(double duration, void* target) override;
     EventQueueTimer* newOneShotTimer(double duration, void* target) override;
     void deleteTimer(EventQueueTimer*) override;
@@ -61,11 +61,11 @@ public:
     void waitForReady() const override;
 
 private:
-    std::uint32_t saveEvent(const Event& event);
+    std::uint32_t save_event(Event&& event);
     Event removeEvent(std::uint32_t eventID);
     bool hasTimerExpired(Event& event);
     double getNextTimerTimeout() const;
-    void addEventToBuffer(const Event& event);
+    void add_event_to_buffer(Event&& event);
     virtual bool parent_requests_shutdown() const;
 
 private:

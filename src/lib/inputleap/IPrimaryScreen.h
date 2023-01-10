@@ -35,6 +35,11 @@ public:
     //! Button event data
     class ButtonInfo {
     public:
+        ButtonInfo(ButtonID button, KeyModifierMask mask) :
+            m_button{button},
+            m_mask{mask}
+        {}
+
         static ButtonInfo* alloc(ButtonID, KeyModifierMask);
         static ButtonInfo* alloc(const ButtonInfo&);
 

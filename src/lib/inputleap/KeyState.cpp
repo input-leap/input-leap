@@ -452,24 +452,24 @@ void KeyState::sendKeyEvent(void* target, bool press, bool isAutoRepeat, KeyID k
             // ignore auto-repeat on half-duplex keys
         }
         else {
-            m_events->addEvent(Event(EventType::KEY_STATE_KEY_DOWN, target,
-                            KeyInfo::alloc(key, mask, button, 1)));
-            m_events->addEvent(Event(EventType::KEY_STATE_KEY_UP, target,
-                            KeyInfo::alloc(key, mask, button, 1)));
+            m_events->add_event(EventType::KEY_STATE_KEY_DOWN, target,
+                                KeyInfo::alloc(key, mask, button, 1));
+            m_events->add_event(EventType::KEY_STATE_KEY_UP, target,
+                                KeyInfo::alloc(key, mask, button, 1));
         }
     }
     else {
         if (isAutoRepeat) {
-            m_events->addEvent(Event(EventType::KEY_STATE_KEY_REPEAT, target,
-                             KeyInfo::alloc(key, mask, button, count)));
+            m_events->add_event(EventType::KEY_STATE_KEY_REPEAT, target,
+                                KeyInfo::alloc(key, mask, button, count));
         }
         else if (press) {
-            m_events->addEvent(Event(EventType::KEY_STATE_KEY_DOWN, target,
-                            KeyInfo::alloc(key, mask, button, 1)));
+            m_events->add_event(EventType::KEY_STATE_KEY_DOWN, target,
+                                KeyInfo::alloc(key, mask, button, 1));
         }
         else {
-            m_events->addEvent(Event(EventType::KEY_STATE_KEY_UP, target,
-                            KeyInfo::alloc(key, mask, button, 1)));
+            m_events->add_event(EventType::KEY_STATE_KEY_UP, target,
+                                KeyInfo::alloc(key, mask, button, 1));
         }
     }
 }

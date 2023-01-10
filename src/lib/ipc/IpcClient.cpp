@@ -86,8 +86,7 @@ IpcClient::send(const IpcMessage& message)
 void
 IpcClient::handleConnected(const Event&, void*)
 {
-    m_events->addEvent(Event(EventType::IPC_CLIENT_CONNECTED, this,
-                             server_.get(), Event::kDontFreeData));
+    m_events->add_event(EventType::IPC_CLIENT_CONNECTED, this);
 
     IpcHelloMessage message(kIpcClientNode);
     send(message);
@@ -98,7 +97,7 @@ IpcClient::handleMessageReceived(const Event& e, void*)
 {
     Event event(EventType::IPC_CLIENT_MESSAGE_RECEIVED, this);
     event.setDataObject(e.getDataObject());
-    m_events->addEvent(event);
+    m_events->add_event(std::move(event));
 }
 
 } // namespace inputleap

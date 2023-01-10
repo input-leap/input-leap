@@ -375,9 +375,9 @@ XWindowsScreenSaver::setXScreenSaverActive(bool activated)
         updateDisableTimer();
 
         if (activated) {
-            m_events->addEvent(Event(EventType::PRIMARY_SCREEN_SAVER_ACTIVATED, m_eventTarget));
+            m_events->add_event(EventType::PRIMARY_SCREEN_SAVER_ACTIVATED, m_eventTarget);
         } else {
-            m_events->addEvent(Event(EventType::PRIMARY_SCREEN_SAVER_DEACTIVATED, m_eventTarget));
+            m_events->add_event(EventType::PRIMARY_SCREEN_SAVER_DEACTIVATED, m_eventTarget);
         }
     }
 }

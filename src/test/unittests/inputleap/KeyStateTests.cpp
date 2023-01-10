@@ -88,7 +88,7 @@ TEST(KeyStateTests, sendKeyEvent_halfDuplexAndRepeat_addEventNotCalled)
 
     ON_CALL(keyMap, isHalfDuplex(_, _)).WillByDefault(Return(true));
 
-    EXPECT_CALL(eventQueue, addEvent(_)).Times(0);
+    EXPECT_CALL(eventQueue, add_event(_)).Times(0);
 
     keyState.sendKeyEvent(nullptr, false, true, kKeyCapsLock, 0, 0, 0);
 }

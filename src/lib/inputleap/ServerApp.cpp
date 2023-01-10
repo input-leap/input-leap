@@ -171,7 +171,7 @@ void
 ServerApp::reloadSignalHandler(Arch::ESignal, void*)
 {
     IEventQueue* events = App::instance().getEvents();
-    events->addEvent(Event(EventType::SERVER_APP_RELOAD_CONFIG, events->getSystemTarget()));
+    events->add_event(EventType::SERVER_APP_RELOAD_CONFIG, events->getSystemTarget());
 }
 
 void
@@ -276,7 +276,7 @@ ServerApp::handleClientConnected(const Event&, void* vlistener)
 void
 ServerApp::handleClientsDisconnected(const Event&, void*)
 {
-    m_events->addEvent(Event(EventType::QUIT));
+    m_events->add_event(EventType::QUIT);
 }
 
 void
@@ -414,7 +414,7 @@ ServerApp::retryHandler(const Event&, void*)
         LOG((CLOG_DEBUG1 "retry server initialization"));
         m_serverState = kUninitialized;
         if (!initServer()) {
-            m_events->addEvent(Event(EventType::QUIT));
+            m_events->add_event(EventType::QUIT);
         }
         break;
 
@@ -422,12 +422,12 @@ ServerApp::retryHandler(const Event&, void*)
         LOG((CLOG_DEBUG1 "retry server initialization"));
         m_serverState = kUninitialized;
         if (!initServer()) {
-            m_events->addEvent(Event(EventType::QUIT));
+            m_events->add_event(EventType::QUIT);
         }
         else if (m_serverState == kInitialized) {
             LOG((CLOG_DEBUG1 "starting server"));
             if (!startServer()) {
-                m_events->addEvent(Event(EventType::QUIT));
+                m_events->add_event(EventType::QUIT);
             }
         }
         break;
@@ -436,7 +436,7 @@ ServerApp::retryHandler(const Event&, void*)
         LOG((CLOG_DEBUG1 "retry starting server"));
         m_serverState = kInitialized;
         if (!startServer()) {
-            m_events->addEvent(Event(EventType::QUIT));
+            m_events->add_event(EventType::QUIT);
         }
         break;
     default:
@@ -627,7 +627,7 @@ void
 ServerApp::handleScreenError(const Event&, void*)
 {
     LOG((CLOG_CRIT "error on screen"));
-    m_events->addEvent(Event(EventType::QUIT));
+    m_events->add_event(EventType::QUIT);
 }
 
 void

@@ -228,7 +228,7 @@ void
 ClientApp::handleScreenError(const Event&, void*)
 {
     LOG((CLOG_CRIT "error on screen"));
-    m_events->addEvent(Event(EventType::QUIT));
+    m_events->add_event(EventType::QUIT);
 }
 
 
@@ -303,7 +303,7 @@ ClientApp::handleClientFailed(const Event& e, void*)
     updateStatus(std::string("Failed to connect to server: ") + info->m_what);
     if (!args().m_restartable || !info->m_retry) {
         LOG((CLOG_ERR "failed to connect to server: %s", info->m_what.c_str()));
-        m_events->addEvent(Event(EventType::QUIT));
+        m_events->add_event(EventType::QUIT);
     }
     else {
         LOG((CLOG_WARN "failed to connect to server: %s", info->m_what.c_str()));
@@ -320,7 +320,7 @@ ClientApp::handleClientDisconnected(const Event&, void*)
 {
     LOG((CLOG_NOTE "disconnected from server"));
     if (!args().m_restartable) {
-        m_events->addEvent(Event(EventType::QUIT));
+        m_events->add_event(EventType::QUIT);
     }
     else if (!m_suspended) {
         scheduleClientRestart(nextRestartTimeout());

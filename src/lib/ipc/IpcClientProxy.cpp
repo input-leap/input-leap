@@ -109,7 +109,7 @@ IpcClientProxy::handleData(const Event&, void*)
         // don't delete with this event; the data is passed to a new event.
         Event e(EventType::IPC_CLIENT_PROXY_MESSAGE_RECEIVED, this, nullptr, Event::kDontFreeData);
         e.setDataObject(m);
-        m_events->addEvent(e);
+        m_events->add_event(std::move(e));
 
         n = stream_->read(code, 4);
     }
@@ -174,7 +174,7 @@ IpcClientProxy::disconnect()
     LOG((CLOG_DEBUG "ipc disconnect, closing stream"));
     m_disconnecting = true;
     stream_->close();
-    m_events->addEvent(Event(EventType::IPC_CLIENT_PROXY_DISCONNECTED, this));
+    m_events->add_event(EventType::IPC_CLIENT_PROXY_DISCONNECTED, this);
 }
 
 } // namespace inputleap

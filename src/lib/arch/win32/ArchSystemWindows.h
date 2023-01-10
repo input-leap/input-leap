@@ -31,13 +31,8 @@ public:
     virtual ~ArchSystemWindows();
 
     // IArchSystem overrides
-    virtual std::string getOSName() const;
-    virtual std::string getPlatformName() const;
     virtual std::string setting(const std::string& valueName) const;
     virtual void setting(const std::string& valueName, const std::string& valueString) const;
-    virtual std::string getLibsUsed(void) const;
-
-    bool isWOW64() const;
 };
 
 } // namespace inputleap

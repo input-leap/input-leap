@@ -89,9 +89,15 @@ public:
     {}
 
     /// Moves event data from another event
-    void move_data_from(Event& other)
+    void clone_data_from(const Event& other)
     {
-        std::swap(data_, other.data_);
+        if (data_ != nullptr) {
+            throw std::invalid_argument("data must be null to clone it from other event");
+        }
+        if (other.data_ == nullptr) {
+            return;
+        }
+        data_ = other.data_->clone();
     }
 
     //! Release event data

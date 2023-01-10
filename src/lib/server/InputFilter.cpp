@@ -1010,7 +1010,7 @@ InputFilter::handleEvent(const Event& event, void*)
 {
     // copy event and adjust target
     Event myEvent(event.getType(), this, nullptr, event.getFlags() | Event::kDeliverImmediately);
-    myEvent.move_data_from(const_cast<Event&>(event));
+    myEvent.clone_data_from(event);
 
     // let each rule try to match the event until one does
     for (RuleList::iterator rule  = m_ruleList.begin();

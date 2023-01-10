@@ -85,9 +85,9 @@ private:
 /*!
 An error occurred in the process watchdog.
 */
-class XMSWindowsWatchdogError : public XBarrier {
+class XMSWindowsWatchdogError : public XBase {
 public:
-    XMSWindowsWatchdogError(const std::string& msg) : XBarrier(msg) { }
+    XMSWindowsWatchdogError(const std::string& msg) : XBase(msg) { }
 
     // XBase overrides
     virtual std::string getWhat() const noexcept { return what(); }

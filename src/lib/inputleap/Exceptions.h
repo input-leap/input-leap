@@ -22,26 +22,23 @@
 
 namespace inputleap {
 
-//! Generic barrier exception
-XBASE_SUBCLASS(XBarrier, XBase);
-
 //! Subscription error
 /*!
 Thrown when there is a problem with the subscription.
 */
-XBASE_SUBCLASS(XSubscription, XBarrier);
+XBASE_SUBCLASS(XSubscription, XBase);
 
 //! Client error exception
 /*!
 Thrown when the client fails to follow the protocol.
 */
-XBASE_SUBCLASS_WHAT(XBadClient, XBarrier);
+XBASE_SUBCLASS_WHAT(XBadClient, XBase);
 
 //! Incompatible client exception
 /*!
 Thrown when a client attempting to connect has an incompatible version.
 */
-class XIncompatibleClient : public XBarrier {
+class XIncompatibleClient : public XBase {
 public:
     XIncompatibleClient(int major, int minor);
 
@@ -68,7 +65,7 @@ private:
 Thrown when a client attempting to connect is using the same name as
 a client that is already connected.
 */
-class XDuplicateClient : public XBarrier {
+class XDuplicateClient : public XBase {
 public:
     XDuplicateClient(const std::string& name);
     virtual ~XDuplicateClient() noexcept { }
@@ -93,7 +90,7 @@ private:
 Thrown when a client attempting to connect is using a name that is
 unknown to the server.
 */
-class XUnknownClient : public XBarrier {
+class XUnknownClient : public XBase {
 public:
     XUnknownClient(const std::string& name);
     virtual ~XUnknownClient() noexcept { }
@@ -119,7 +116,7 @@ Thrown when we want to abort, with the opportunity to clean up. This is a
 little bit of a hack, but it's a better way of exiting, than just calling
 exit(int).
 */
-class XExitApp : public XBarrier {
+class XExitApp : public XBase {
 public:
     XExitApp(int code);
     virtual ~XExitApp() noexcept { }

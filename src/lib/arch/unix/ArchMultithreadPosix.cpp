@@ -26,6 +26,8 @@
 #include <sys/time.h>
 #include <time.h>
 #include <cerrno>
+#include <csignal>
+#include <fstream>
 
 #define SIGWAKEUP SIGUSR1
 
@@ -41,6 +43,36 @@ setSignalSet(sigset_t* sigset)
 }
 
 namespace inputleap {
+
+namespace {
+
+#ifdef __linux__
+
+bool is_under_debugger()
+{
+    std::ifstream file("/proc/self/status");
+    if (!file.is_open()) {
+        return false;
+    }
+
+    std::string heading;
+    std::string tmp;
+    while (file >> heading) {
+        if (heading == "TracerPid:") {
+            unsigned pid = 0;
+            file >> pid;
+            return pid != 0;
+        }
+        // skip the remainder of the line
+        std::getline(file, tmp);
+    }
+
+    return false;
+}
+
+#endif
+
+} // namespace
 
 class ArchThreadImpl {
 public:
@@ -574,6 +606,20 @@ ArchMultithreadPosix::threadSignalHandler(void*)
         // if we get here then the signal was raised
         switch (signal) {
         case SIGINT:
+#ifdef __linux__
+            if (is_under_debugger()) {
+                // On Linux GDB is not able to catch signals if they are received via sigwait
+                // and friends as they are considered "not delivered" to the application by
+                // Linux ptrace interface which is used by gdb
+                // (see e.g. https://bugzilla.kernel.org/show_bug.cgi?id=9039).
+                // Most signals are not a problem, but SIGINT is used by many tools to tell gdb
+                // to interrupt the debugged command. Therefore when receiving SIGINT it is ignored
+                // and sigtrap is raised instead.
+
+                std::raise(SIGTRAP); // It is normal that debugger stops on this line, read above
+                break;
+            }
+#endif
             ARCH->raiseSignal(kINTERRUPT);
             break;
 

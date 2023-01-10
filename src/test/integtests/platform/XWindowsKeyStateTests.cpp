@@ -169,13 +169,13 @@ TEST_F(XWindowsKeyStateTests, pollActiveModifiers_shiftKeyDownThenUp_masksAreCor
 
     KeyCode key = XKeysymToKeycode(m_display, XK_Shift_L);
 
-    // fake shift key down (without using barrier)
+    // fake shift key down (without using InputLeap)
     XTestFakeKeyEvent(m_display, key, true, CurrentTime);
 
     // function under test (1st call)
     KeyModifierMask modDown = keyState.pollActiveModifiers();
 
-    // fake shift key up (without using barrier)
+    // fake shift key up (without using InputLeap)
     XTestFakeKeyEvent(m_display, key, false, CurrentTime);
 
     // function under test (2nd call)

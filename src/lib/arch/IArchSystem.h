@@ -31,16 +31,10 @@ public:
     //! @name accessors
     //@{
 
-    //! Get a Barrier setting
-    /*!
-    Reads a Barrier setting from the system.
-    */
+    /// Reads a InputLeap setting from the system.
     virtual std::string setting(const std::string& valueName) const = 0;
     //@}
 
-    //! Set a Barrier setting
-    /*!
-    Writes a Barrier setting from the system.
-    */
+    /// Writes a InputLeap setting from the system.
     virtual void setting(const std::string& valueName, const std::string& valueString) const = 0;
 };

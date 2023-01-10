@@ -757,7 +757,7 @@ ServerApp::mainLoop()
                           [this](const auto& e){ force_reconnect(); });
 
     // to work around the sticky meta keys problem, we'll give users
-    // the option to reset the state of barriers
+    // the option to reset the state of InputLeap server.
     m_events->add_handler(EventType::SERVER_APP_RESET_SERVER, m_events->getSystemTarget(),
                           [this](const auto& e){ reset_server(); });
 

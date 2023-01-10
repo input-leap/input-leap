@@ -329,10 +329,12 @@ ArgParser::parseGenericArgs(Argv& argv)
         argsBase().m_enableIpc = true;
     }
     else if (argv.shift("--server")) {
-        // HACK: stop error happening when using portable (barrierp)
+        // HACK: stop error happening when using portable app.
+        // FIXME: there is no portable InputLeap
     }
     else if (argv.shift("--client")) {
-        // HACK: stop error happening when using portable (barrierp)
+        // HACK: stop error happening when using portable app.
+        // FIXME: there is no portable InputLeap.
     }
     else if (argv.shift("--enable-drag-drop")) {
         bool useDragDrop = true;

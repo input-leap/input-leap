@@ -32,7 +32,7 @@
 
 namespace inputleap {
 
-// map virtual keys to barrier key enumeration
+// map virtual keys to InputLeap key enumeration
 const KeyID				MSWindowsKeyState::s_virtualKey[] =
 {
 	/* 0x000 */ { kKeyNone },		// reserved

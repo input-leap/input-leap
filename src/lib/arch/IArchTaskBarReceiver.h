@@ -25,11 +25,8 @@ namespace inputleap {
 class IScreen;
 class INode;
 
-//! Interface for architecture dependent task bar event handling
-/*!
-This interface defines the task bar icon event handlers required
-by barrier.  Each architecture must implement this interface
-though each operation can be a no-op.
+/** This interface defines the task bar icon event handlers required by InputLeap.
+    Each architecture must implement this interface though each operation can be a no-op.
 */
 class IArchTaskBarReceiver {
 public:

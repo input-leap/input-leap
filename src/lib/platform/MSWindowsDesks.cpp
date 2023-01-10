@@ -472,7 +472,7 @@ void MSWindowsDesks::deskMouseRelativeMove(std::int32_t dx, std::int32_t dy) con
     // restore acceleration.  there's a slight chance we'll end up in
     // the wrong place if the user moves the cursor using this system's
     // mouse while simultaneously moving the mouse on the server
-    // system.  that defeats the purpose of barrier so we'll assume
+    // system.  that defeats the purpose of InputLeap so we'll assume
     // that won't happen.  even if it does, the next mouse move will
     // correct the position.
 

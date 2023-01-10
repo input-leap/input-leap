@@ -49,7 +49,7 @@ ArchDaemonUnix::~ArchDaemonUnix()
 #ifdef __APPLE__
 
 // In Mac OS X, fork()'d child processes can't use most APIs (the frameworks
-// that Barrier uses in fact prevent it and make the process just up and die),
+// that InputLeap uses in fact prevent it and make the process just up and die),
 // so need to exec a copy of the program that doesn't fork so isn't limited.
 int
 execSelfNonDaemonized()

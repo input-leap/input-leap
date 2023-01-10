@@ -132,7 +132,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     m_pLogWindow(new LogWindow(nullptr))
 {
     // explicitly unset DeleteOnClose so the window can be show and hidden
-    // repeatedly until Barrier is finished
+    // repeatedly until InputLeap is finished
     setAttribute(Qt::WA_DeleteOnClose, false);
     // mark the windows as sort of "dialog" window so that tiling window
     // managers will float it by default (X11)
@@ -229,8 +229,8 @@ void MainWindow::open()
     }
 
     // only start if user has previously started. this stops the gui from
-    // auto hiding before the user has configured barrier (which of course
-    // confuses first time users, who think barrier has crashed).
+    // auto hiding before the user has configured InputLeap (which of course
+    // confuses first time users, who think InputLeap has crashed).
     if (appConfig().startedBefore() && appConfig().getAutoStart()) {
         m_SuppressEmptyServerWarning = true;
         startBarrier();
@@ -469,8 +469,8 @@ void MainWindow::checkFingerprint(const QString& line)
     }
 
     // We compare only SHA256 fingerprints, but show both SHA1 and SHA256 so that the users can
-    // still verify fingerprints on old Barrier servers. This way the only time when we are exposed
-    // to SHA1 vulnerabilities is when the user is reconnecting again.
+    // still verify fingerprints on old InputLeap servers. This way the only time when we are
+    // exposed to SHA1 vulnerabilities is when the user is reconnecting again.
     inputleap::FingerprintDatabase db;
     db.read(db_path);
     if (db.is_trusted(fingerprint_sha256)) {
@@ -543,9 +543,9 @@ void MainWindow::startBarrier()
         // is switched; this is because we may need to elevate or not
         // based on which desk the user is in (login always needs
         // elevation, where as default desk does not).
-        // Note that this is only enabled when barrier is set to elevate
+        // Note that this is only enabled when InputLeap is set to elevate
         // 'as needed' (e.g. on a UAC dialog popup) in order to prevent
-        // unnecessary restarts when barrier was started elevated or
+        // unnecessary restarts when InputLeap was started elevated or
         // when it is not allowed to elevate. In these cases restarting
         // the server is fruitless.
         if (appConfig().elevateMode() == ElevateAsNeeded) {
@@ -1012,7 +1012,7 @@ void MainWindow::updateZeroconfService()
 void MainWindow::serverDetected(const QString name)
 {
     if (m_pComboServerList->findText(name) == -1) {
-        // Note: the first added item triggers startBarrier
+        // Note: the first added item triggers startInputLeap
         m_pComboServerList->addItem(name);
     }
 

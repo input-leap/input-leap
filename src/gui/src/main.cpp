@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
         // Unfortunately, there's no user-friendly way to allow assistive access
         // to applications that are not in default paths (/Applications),
         // especially if an identically named application already exists in
-        // /Applications). Thus we require Barrier to reside in the /Applications
+        // /Applications). Thus we require InputLeap to reside in the /Applications
         // folder
 		QMessageBox::information(nullptr, "Barrier",
                                  "Please drag Barrier to the Applications folder, "
@@ -161,7 +161,7 @@ bool checkMacAssistiveDevices()
 	// new in mavericks, applications are trusted individually
 	// with use of the accessibility api. this call will show a
 	// prompt which can show the security/privacy/accessibility
-	// tab, with a list of allowed applications. barrier should
+    // tab, with a list of allowed applications. InputLeap should
 	// show up there automatically, but will be unchecked.
 
 	if (AXIsProcessTrusted()) {

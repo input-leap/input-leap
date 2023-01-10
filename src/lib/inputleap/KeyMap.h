@@ -479,7 +479,7 @@ private:
     bool m_composeAcrossGroups;
 
     // half-duplex info
-    KeyButtonSet m_halfDuplex; // half-duplex set by barrier
+    KeyButtonSet m_halfDuplex; // half-duplex set by InputLeap
     KeySet m_halfDuplexMods; // half-duplex set by user
 
     // dummy KeyItem for changing modifiers

@@ -1283,7 +1283,7 @@ MSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
 }
 
 // here's how mouse movements are sent across the network to a client:
-//   1. barrier checks the mouse position on server screen
+//   1. InputLeap checks the mouse position on server screen
 //   2. records the delta (current x,y minus last x,y)
 //   3. records the current x,y as "last" (so we can calc delta next time)
 //   4. on the server, puts the cursor back to the center of the screen

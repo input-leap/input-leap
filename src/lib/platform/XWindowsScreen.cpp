@@ -933,7 +933,7 @@ XWindowsScreen::saveShape()
 	// 0,0 to Wm,Hm where Wm (Hm) is the minimum width (height) over
 	// all physical screens.  this warp only seems to happen if the
 	// pointer wasn't in that region before the XWarpPointer().  the
-	// second (unexpected) warp causes barrier to think the pointer
+    // second (unexpected) warp causes InputLeap to think the pointer
 	// has been moved when it hasn't.  to work around the problem,
 	// we warp the pointer to the center of the first physical
 	// screen instead of the logical screen.
@@ -1019,7 +1019,7 @@ XWindowsScreen::openIM()
 		return;
 	}
 
-	// find the appropriate style.  barrier supports XIMPreeditNothing
+    // find the appropriate style.  InputLeap supports XIMPreeditNothing
 	// only at the moment.
 	XIMStyles* styles;
     if (m_impl->XGetIMValues(im, XNQueryInputStyle, &styles) != nullptr ||

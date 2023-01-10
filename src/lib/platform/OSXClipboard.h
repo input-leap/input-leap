@@ -34,7 +34,7 @@ public:
     OSXClipboard();
     virtual ~OSXClipboard();
 
-    //! Test if clipboard is owned by barrier
+    //! Test if clipboard is owned by InputLeap
     static bool isOwnedByBarrier();
 
     // IClipboard overrides

@@ -117,7 +117,7 @@ bool SslCertificate::is_certificate_valid(const inputleap::fs::path& path)
 
     auto bits = EVP_PKEY_bits(pubkey);
     if (bits < 2048) {
-        // We could have small keys in old barrier installations
+        // We could have small keys in old InputLeap installations
         emit info(tr("Public key in default certificate key file is too small."));
         return false;
     }

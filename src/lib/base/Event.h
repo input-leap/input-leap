@@ -29,6 +29,7 @@ namespace inputleap {
 
 class EventDataBase {
 public:
+    virtual EventDataBase* clone() const = 0;
     virtual ~EventDataBase() { }
 };
 
@@ -38,6 +39,8 @@ public:
     EventData(const T& data) : data_{data} {}
     EventData(T&& data) : data_{std::move(data)} {}
     ~EventData() = default;
+
+    EventData<T>* clone() const override { return new EventData<T>(*this); }
 
     T& data() { return data_; }
     const T& data() const { return data_; }

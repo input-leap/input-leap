@@ -25,7 +25,7 @@
 
 namespace inputleap {
 
-class IpcMessage : public EventDataBase {
+class IpcMessage {
 public:
     virtual ~IpcMessage();
 

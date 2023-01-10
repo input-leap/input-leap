@@ -252,11 +252,11 @@ DaemonApp::logFilename()
 void
 DaemonApp::handleIpcMessage(const Event& e, void*)
 {
-    IpcMessage* m = static_cast<IpcMessage*>(e.getDataObject());
-    switch (m->type()) {
+    const IpcMessage& m = e.get_data_as<IpcMessage>();
+    switch (m.type()) {
         case kIpcCommand: {
-            IpcCommandMessage* cm = static_cast<IpcCommandMessage*>(m);
-            std::string command = cm->command();
+            const IpcCommandMessage& cm = static_cast<const IpcCommandMessage&>(m);
+            std::string command = cm.command();
 
             // if empty quotes, clear.
             if (command == "\"\"") {
@@ -264,7 +264,7 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
             }
 
             if (!command.empty()) {
-                LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
+                LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm.elevate(), command.c_str()));
 
                 std::vector<std::string> argsArray;
                 ArgParser::splitCommandString(command, argsArray);
@@ -309,7 +309,7 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
                         m_watchdog->setFileLogOutputter(m_fileLogOutputter);
                         command = ArgParser::assembleCommand(argsArray, "--log", 1);
                         LOG((CLOG_DEBUG "removed log file argument and filename %s from command ", logFilename.c_str()));
-                        LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
+                        LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm.elevate(), command.c_str()));
                     } else {
                         m_watchdog->setFileLogOutputter(nullptr);
                     }
@@ -317,7 +317,7 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
                 }
             }
             else {
-                LOG((CLOG_DEBUG "empty command, elevate=%d", cm->elevate()));
+                LOG((CLOG_DEBUG "empty command, elevate=%d", cm.elevate()));
             }
 
             try {
@@ -326,7 +326,7 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
                 ARCH->setting("Command", command);
 
                 // TODO: it would be nice to store bools/ints...
-                ARCH->setting("Elevate", std::string(cm->elevate() ? "1" : "0"));
+                ARCH->setting("Elevate", std::string(cm.elevate() ? "1" : "0"));
             }
             catch (std::runtime_error& e) {
                 LOG((CLOG_ERR "failed to save settings, %s", e.what()));
@@ -335,15 +335,15 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
             // tell the relauncher about the new command. this causes the
             // relauncher to stop the existing command and start the new
             // command.
-            m_watchdog->setCommand(command, cm->elevate());
+            m_watchdog->setCommand(command, cm.elevate());
 
             break;
         }
 
         case kIpcHello:
-            IpcHelloMessage* hm = static_cast<IpcHelloMessage*>(m);
+            const auto& hm = static_cast<const IpcHelloMessage&>(m);
             std::string type;
-            switch (hm->clientType()) {
+            switch (hm.clientType()) {
                 case kIpcClientGui: type = "gui"; break;
                 case kIpcClientNode: type = "node"; break;
                 default: type = "unknown"; break;

@@ -130,7 +130,7 @@ void
 IpcServer::handleMessageReceived(const Event& e, void*)
 {
     Event event(EventType::IPC_SERVER_MESSAGE_RECEIVED, this);
-    event.setDataObject(e.getDataObject());
+    event.clone_data_from(e);
     m_events->add_event(std::move(event));
 }
 

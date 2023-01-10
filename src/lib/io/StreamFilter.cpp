@@ -103,7 +103,7 @@ void
 StreamFilter::filterEvent(const Event& event)
 {
     Event copy{event.getType(), getEventTarget(), nullptr};
-    copy.move_data_from(const_cast<Event&>(event));
+    copy.clone_data_from(event);
     m_events->dispatchEvent(copy);
 }
 

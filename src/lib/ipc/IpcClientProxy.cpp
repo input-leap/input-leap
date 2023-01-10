@@ -94,22 +94,19 @@ IpcClientProxy::handleData(const Event&, void*)
         LOG((CLOG_DEBUG "ipc read: %c%c%c%c",
             code[0], code[1], code[2], code[3]));
 
-        IpcMessage* m = nullptr;
+        EventDataBase* event_data = nullptr;
         if (memcmp(code, kIpcMsgHello, 4) == 0) {
-            m = parseHello();
+            event_data = create_event_data<IpcHelloMessage>(parseHello());
         }
         else if (memcmp(code, kIpcMsgCommand, 4) == 0) {
-            m = parseCommand();
+            event_data = create_event_data<IpcCommandMessage>(parseCommand());
         }
         else {
             LOG((CLOG_ERR "invalid ipc message"));
             disconnect();
         }
 
-        // don't delete with this event; the data is passed to a new event.
-        Event e(EventType::IPC_CLIENT_PROXY_MESSAGE_RECEIVED, this, nullptr, Event::kDontFreeData);
-        e.setDataObject(m);
-        m_events->add_event(std::move(e));
+        m_events->add_event(EventType::IPC_CLIENT_PROXY_MESSAGE_RECEIVED, this, event_data);
 
         n = stream_->read(code, 4);
     }
@@ -145,8 +142,7 @@ IpcClientProxy::send(const IpcMessage& message)
     }
 }
 
-IpcHelloMessage*
-IpcClientProxy::parseHello()
+IpcHelloMessage IpcClientProxy::parseHello()
 {
     std::uint8_t type;
     ProtocolUtil::readf(stream_.get(), kIpcMsgHello + 4, &type);
@@ -154,18 +150,17 @@ IpcClientProxy::parseHello()
     m_clientType = static_cast<EIpcClientType>(type);
 
     // must be deleted by event handler.
-    return new IpcHelloMessage(m_clientType);
+    return IpcHelloMessage(m_clientType);
 }
 
-IpcCommandMessage*
-IpcClientProxy::parseCommand()
+IpcCommandMessage IpcClientProxy::parseCommand()
 {
     std::string command;
     std::uint8_t elevate;
     ProtocolUtil::readf(stream_.get(), kIpcMsgCommand + 4, &command, &elevate);
 
     // must be deleted by event handler.
-    return new IpcCommandMessage(command, elevate != 0);
+    return IpcCommandMessage(command, elevate != 0);
 }
 
 void

@@ -53,22 +53,19 @@ IpcServerProxy::handleData(const Event&, void*)
         LOG((CLOG_DEBUG "ipc read: %c%c%c%c",
             code[0], code[1], code[2], code[3]));
 
-        IpcMessage* m = nullptr;
+        EventDataBase* event_data = nullptr;
         if (memcmp(code, kIpcMsgLogLine, 4) == 0) {
-            m = parseLogLine();
+            event_data = create_event_data<IpcLogLineMessage>(parseLogLine());
         }
         else if (memcmp(code, kIpcMsgShutdown, 4) == 0) {
-            m = new IpcShutdownMessage();
+            event_data = create_event_data<IpcShutdownMessage>(IpcShutdownMessage{});
         }
         else {
             LOG((CLOG_ERR "invalid ipc message"));
             disconnect();
         }
 
-        // don't delete with this event; the data is passed to a new event.
-        Event e(EventType::IPC_SERVER_PROXY_MESSAGE_RECEIVED, this, nullptr, Event::kDontFreeData);
-        e.setDataObject(m);
-        m_events->add_event(std::move(e));
+        m_events->add_event(EventType::IPC_SERVER_PROXY_MESSAGE_RECEIVED, this, event_data);
 
         n = m_stream.read(code, 4);
     }
@@ -101,14 +98,13 @@ IpcServerProxy::send(const IpcMessage& message)
     }
 }
 
-IpcLogLineMessage*
-IpcServerProxy::parseLogLine()
+IpcLogLineMessage IpcServerProxy::parseLogLine()
 {
     std::string logLine;
     ProtocolUtil::readf(&m_stream, kIpcMsgLogLine + 4, &logLine);
 
     // must be deleted by event handler.
-    return new IpcLogLineMessage(logLine);
+    return IpcLogLineMessage(logLine);
 }
 
 void

@@ -29,6 +29,7 @@ namespace inputleap {
 
 class EventDataBase {
 public:
+    virtual EventDataBase* clone() const = 0;
     virtual ~EventDataBase() { }
 };
 
@@ -38,6 +39,8 @@ public:
     EventData(const T& data) : data_{data} {}
     EventData(T&& data) : data_{std::move(data)} {}
     ~EventData() = default;
+
+    EventData<T>* clone() const override { return new EventData<T>(*this); }
 
     T& data() { return data_; }
     const T& data() const { return data_; }
@@ -58,7 +61,6 @@ public:
     enum {
         kNone                = 0x00,    //!< No flags
         kDeliverImmediately  = 0x01,    //!< Dispatch and free event immediately
-        kDontFreeData        = 0x02    //!< Don't free data in deleteData
     };
 
     Event() = default;
@@ -68,14 +70,9 @@ public:
     Event& operator=(const Event&) = delete;
     Event& operator=(Event&&) = default;
 
-    //! Create \c Event with data (POD)
-    /*!
-    The \p data must be POD (plain old data) allocated by malloc(),
-    which means it cannot have a constructor, destructor or be
-    composed of any types that do. For non-POD (normal C++ objects
-    use \c setDataObject().
-    \p target is the intended recipient of the event.
-    \p flags is any combination of \c Flags.
+    /** Create event with data
+        @param target is the intended recipient of the event.
+        @param flags is any combination of \c Flags.
     */
     Event(EventType type, void* target = nullptr, EventDataBase* data = nullptr,
           Flags flags = kNone) :
@@ -86,9 +83,15 @@ public:
     {}
 
     /// Moves event data from another event
-    void move_data_from(Event& other)
+    void clone_data_from(const Event& other)
     {
-        std::swap(data_, other.data_);
+        if (data_ != nullptr) {
+            throw std::invalid_argument("data must be null to clone it from other event");
+        }
+        if (other.data_ == nullptr) {
+            return;
+        }
+        data_ = other.data_->clone();
     }
 
     //! Release event data
@@ -97,23 +100,8 @@ public:
     */
     static void deleteData(const Event& event)
     {
-        if ((event.getFlags() & kDontFreeData) == 0) {
-            delete event.data_;
-            delete event.getDataObject();
-        }
+        delete event.data_;
     }
-
-    //! Set data (non-POD)
-    /*!
-    Set non-POD (non plain old data), where delete is called when the event
-    is deleted, and the destructor is called.
-    */
-    void setDataObject(EventDataBase* dataObject)
-    {
-        assert(data_object_ == nullptr);
-        data_object_ = dataObject;
-    }
-
 
     //! Get event type
     /*!
@@ -145,14 +133,6 @@ public:
         }
         return static_cast<EventData<T>*>(data_)->data();
     }
-
-    //! Get the event data (non-POD)
-    /*!
-    Returns the event data (non-POD). The difference between this and
-    \c getData() is that when delete is called on this data, so non-POD
-    (non plain old data) dtor is called.
-    */
-    EventDataBase* getDataObject() const { return data_object_; }
 
     //! Get event flags
     /*!

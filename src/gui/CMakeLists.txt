@@ -89,7 +89,6 @@ set(GUI_HEADER_FILES
     src/ServerConfig.h
     src/SettingsDialog.h
     src/SetupWizard.h
-    src/ShutdownCh.h
     src/SslCertificate.h
     src/TrashScreenWidget.h
     src/VersionChecker.h

@@ -23,7 +23,6 @@
 #include "base/Event.h"
 #include "base/PriorityQueue.h"
 #include "base/Stopwatch.h"
-#include "base/NonBlockingStream.h"
 
 #include <condition_variable>
 #include <map>
@@ -65,7 +64,6 @@ private:
     bool hasTimerExpired(Event& event);
     double getNextTimerTimeout() const;
     void add_event_to_buffer(Event&& event);
-    virtual bool parent_requests_shutdown() const;
 
 private:
     class Timer {
@@ -128,7 +126,6 @@ private:
     mutable std::condition_variable ready_cv_;
     bool                        is_ready_ = false;
     std::queue<Event> m_pending;
-    NonBlockingStream m_parentStream;
 };
 
 } // namespace inputleap

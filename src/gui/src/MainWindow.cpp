@@ -30,7 +30,6 @@
 #include "QUtility.h"
 #include "ProcessorArch.h"
 #include "SslCertificate.h"
-#include "ShutdownCh.h"
 #include "base/String.h"
 #include "common/DataDirectories.h"
 #include "net/FingerprintDatabase.h"
@@ -787,9 +786,10 @@ void MainWindow::stopDesktop()
     appendLogInfo("stopping barrier desktop process");
 
     if (barrierProcess()->isOpen()) {
-        // try to shutdown child gracefully
-        barrierProcess()->write(&ShutdownCh, 1);
+#if SYSAPI_UNIX
+        kill(barrierProcess()->processId(), SIGTERM);
         barrierProcess()->waitForFinished(5000);
+#endif
         barrierProcess()->close();
     }
 

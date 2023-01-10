@@ -725,10 +725,10 @@ ServerApp::mainLoop()
     // otherwise, if the config doesn't have an address, use
     // the default.
     if (m_barrierAddress->isValid()) {
-        args().m_config->setBarrierAddress(*m_barrierAddress);
+        args().m_config->set_listen_address(*m_barrierAddress);
     }
     else if (!args().m_config->getBarrierAddress().isValid()) {
-        args().m_config->setBarrierAddress(NetworkAddress(kDefaultPort));
+        args().m_config->set_listen_address(NetworkAddress(kDefaultPort));
     }
 
     // canonicalize the primary screen name

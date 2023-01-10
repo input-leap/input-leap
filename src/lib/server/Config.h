@@ -279,10 +279,10 @@ public:
 
     //! Set server address
     /*!
-    Set the barrier listen addresses.  There is no default address so
+    Set the server listen addresses.  There is no default address so
     this must be called to run a server using this configuration.
     */
-    void setBarrierAddress(const NetworkAddress&);
+    void set_listen_address(const NetworkAddress& addr);
 
     //! Add a screen option
     /*!

@@ -39,7 +39,7 @@ server_stubCheckUnexpectedArgs()
     return false;
 }
 
-TEST(ServerArgsParsingTests, parseServerArgs_addressArg_setBarrierAddress)
+TEST(ServerArgsParsingTests, parseServerArgs_addressArg_set_address)
 {
     NiceMock<MockArgParser> argParser;
     ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(server_stubParseGenericArgs));

@@ -53,7 +53,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_yScrollArg_setYScroll)
     EXPECT_EQ(1, clientArgs.m_yscroll);
 }
 
-TEST(ClientArgsParsingTests, parseClientArgs_addressArg_setBarrierAddress)
+TEST(ClientArgsParsingTests, parseClientArgs_addressArg_set_listen_address)
 {
     NiceMock<MockArgParser> argParser;
     ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(client_stubParseGenericArgs));

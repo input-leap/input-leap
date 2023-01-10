@@ -33,11 +33,8 @@ public:
     ~ArchSystemUnix() override;
 
     // IArchSystem overrides
-    std::string getOSName() const override;
-    std::string getPlatformName() const override;
     std::string setting(const std::string&) const override;
     void setting(const std::string&, const std::string&) const override;
-    std::string getLibsUsed(void) const override;
 
 };
 

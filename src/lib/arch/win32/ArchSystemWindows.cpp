@@ -47,48 +47,6 @@ ArchSystemWindows::~ArchSystemWindows()
 }
 
 std::string
-ArchSystemWindows::getOSName() const
-{
-    std::string osName ("Microsoft Windows <unknown>");
-    static const TCHAR* const windowsVersionKeyNames[] = {
-        _T("SOFTWARE"),
-        _T("Microsoft"),
-        _T("Windows NT"),
-        _T("CurrentVersion"),
-        nullptr
-    };
-
-    HKEY key = ArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, windowsVersionKeyNames);
-    if (key == nullptr) {
-        return osName;
-    }
-
-    std::string productName = ArchMiscWindows::readValueString(key, "ProductName");
-    if (osName.empty()) {
-        return osName;
-    }
-
-    return "Microsoft " + productName;
-}
-
-std::string
-ArchSystemWindows::getPlatformName() const
-{
-#ifdef _X86_
-    if (isWOW64())
-        return "x86 (WOW64)";
-    else
-        return "x86";
-#else
-#ifdef _AMD64_
-    return "x64";
-#else
-    return "Unknown";
-#endif
-#endif
-}
-
-std::string
 ArchSystemWindows::setting(const std::string& valueName) const
 {
     HKEY key = ArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, s_settingsKeyNames);
@@ -105,64 +63,6 @@ ArchSystemWindows::setting(const std::string& valueName, const std::string& valu
     if (key == nullptr)
         throw std::runtime_error(std::string("could not access registry key: ") + valueName);
     ArchMiscWindows::setValue(key, valueName.c_str(), valueString.c_str());
-}
-
-bool
-ArchSystemWindows::isWOW64() const
-{
-#if WINVER >= _WIN32_WINNT_WINXP
-    typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
-    HMODULE hModule = GetModuleHandle(TEXT("kernel32"));
-    if (!hModule) return FALSE;
-
-    LPFN_ISWOW64PROCESS fnIsWow64Process =
-        (LPFN_ISWOW64PROCESS) GetProcAddress(hModule, "IsWow64Process");
-
-    BOOL bIsWow64 = FALSE;
-    if (nullptr != fnIsWow64Process &&
-        fnIsWow64Process(GetCurrentProcess(), &bIsWow64) &&
-        bIsWow64)
-    {
-        return true;
-    }
-#endif
-    return false;
-}
-#pragma comment(lib, "psapi")
-
-std::string
-ArchSystemWindows::getLibsUsed(void) const
-{
-    HMODULE hMods[1024];
-    HANDLE hProcess;
-    DWORD cbNeeded;
-    unsigned int i;
-    char hex[16];
-
-    DWORD pid = GetCurrentProcessId();
-
-    std::string msg = "pid:" + std::to_string((unsigned long long)pid) + "\n";
-
-    hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid);
-
-    if (nullptr == hProcess) {
-        return msg;
-    }
-
-    if (EnumProcessModules(hProcess, hMods, sizeof(hMods), &cbNeeded)) {
-        for (i = 0; i < (cbNeeded / sizeof(HMODULE)); i++) {
-            TCHAR szModName[MAX_PATH];
-            if (GetModuleFileNameEx(hProcess, hMods[i], szModName, sizeof(szModName) / sizeof(TCHAR))) {
-                sprintf(hex, "(0x%08llX)", reinterpret_cast<long long>(hMods[i]));
-                msg += szModName;
-                msg.append(hex);
-                msg.append("\n");
-            }
-        }
-    }
-
-    CloseHandle(hProcess);
-    return msg;
 }
 
 } // namespace inputleap

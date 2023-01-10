@@ -1503,7 +1503,11 @@ void Server::onClipboardChanged(BaseClientProxy* sender, ClipboardID id, std::ui
 	assert(sender == m_clients.find(clipboard.m_clipboardOwner)->second);
 
 	// get data
-	sender->getClipboard(id, &clipboard.m_clipboard);
+	if (!sender->getClipboard(id, &clipboard.m_clipboard)) {
+		LOG((CLOG_DEBUG "ignored screen \"%s\" update of clipboard %d (failed to get clipboard)",
+				clipboard.m_clipboardOwner.c_str(), id));
+		return;
+	}
 
 	// ignore if data hasn't changed
     std::string data = clipboard.m_clipboard.marshall();

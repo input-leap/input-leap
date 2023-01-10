@@ -22,8 +22,6 @@
 #include <sstream>
 #include <stdexcept>
 
-using namespace std;
-
 namespace inputleap {
 
 DragInformation::DragInformation() :
@@ -40,7 +38,7 @@ void DragInformation::parseDragInfo(DragFileList& dragFileList, std::uint32_t fi
     size_t findResult2 = 0;
     dragFileList.clear();
     std::string slash("\\");
-    if (data.find("/", startPos) != string::npos) {
+    if (data.find("/", startPos) != std::string::npos) {
         slash = "/";
     }
 
@@ -87,9 +85,9 @@ void DragInformation::parseDragInfo(DragFileList& dragFileList, std::uint32_t fi
 
 std::string DragInformation::getDragFileExtension(std::string filename)
 {
-    size_t findResult = string::npos;
+    size_t findResult = std::string::npos;
     findResult = filename.find_last_of(".", filename.size());
-    if (findResult != string::npos) {
+    if (findResult != std::string::npos) {
         return filename.substr(findResult + 1, filename.size() - findResult - 1);
     }
     else {
@@ -114,7 +112,7 @@ DragInformation::setupDragInfo(DragFileList& fileList, std::string& output)
 bool DragInformation::isFileValid(std::string filename)
 {
     bool result = false;
-    std::fstream file(filename.c_str(), ios::in|ios::binary);
+    std::fstream file(filename.c_str(), std::ios::in|std::ios::binary);
 
     if (file.is_open()) {
         result = true;
@@ -127,7 +125,7 @@ bool DragInformation::isFileValid(std::string filename)
 
 size_t DragInformation::stringToNum(std::string& str)
 {
-    istringstream iss(str.c_str());
+    std::istringstream iss(str.c_str());
     size_t size;
     iss >> size;
     return size;
@@ -135,7 +133,7 @@ size_t DragInformation::stringToNum(std::string& str)
 
 std::string DragInformation::getFileSize(std::string& filename)
 {
-    std::fstream file(filename.c_str(), ios::in|ios::binary);
+    std::fstream file(filename.c_str(), std::ios::in|std::ios::binary);
 
     if (!file.is_open()) {
       throw std::runtime_error("failed to get file size");
@@ -145,7 +143,7 @@ std::string DragInformation::getFileSize(std::string& filename)
     file.seekg (0, std::ios::end);
     size_t size = static_cast<size_t>(file.tellg());
 
-    stringstream ss;
+    std::stringstream ss;
     ss << size;
 
     file. close();

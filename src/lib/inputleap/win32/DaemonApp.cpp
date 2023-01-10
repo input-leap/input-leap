@@ -52,8 +52,6 @@
 
 namespace inputleap {
 
-using namespace std;
-
 DaemonApp* DaemonApp::s_instance = nullptr;
 
 int
@@ -103,14 +101,14 @@ DaemonApp::run(int argc, char** argv)
         log.insert(new MSWindowsDebugOutputter());
 
         // default log level to system setting.
-        string logLevel = arch.setting("LogLevel");
+        std::string logLevel = arch.setting("LogLevel");
         if (logLevel != "")
             log.setFilter(logLevel.c_str());
 
         bool foreground = false;
 
         for (int i = 1; i < argc; ++i) {
-            string arg(argv[i]);
+            std::string arg(argv[i]);
 
             if (arg == "/f" || arg == "-f") {
                 foreground = true;
@@ -125,7 +123,7 @@ DaemonApp::run(int argc, char** argv)
                 return kExitSuccess;
             }
             else {
-                stringstream ss;
+                std::stringstream ss;
                 ss << "Unrecognized argument: " << arg;
                 foregroundError(ss.str().c_str());
                 return kExitArgs;
@@ -242,7 +240,7 @@ DaemonApp::foregroundError(const char* message)
 std::string
 DaemonApp::logFilename()
 {
-    string logFilename = ARCH->setting("LogFilename");
+    std::string logFilename = ARCH->setting("LogFilename");
     if (logFilename.empty())
         logFilename = (inputleap::DataDirectories::global() / LOG_FILENAME).u8string();
     MSWindowsUtil::createDirectory(logFilename, true);

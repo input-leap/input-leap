@@ -297,21 +297,19 @@ ClientApp::handleClientConnected(const Event&, void*)
 void
 ClientApp::handleClientFailed(const Event& e, void*)
 {
-    Client::FailInfo* info =
-        static_cast<Client::FailInfo*>(e.getData());
+    const auto& info = e.get_data_as<Client::FailInfo>();
 
-    updateStatus(std::string("Failed to connect to server: ") + info->m_what);
-    if (!args().m_restartable || !info->m_retry) {
-        LOG((CLOG_ERR "failed to connect to server: %s", info->m_what.c_str()));
+    updateStatus(std::string("Failed to connect to server: ") + info.m_what);
+    if (!args().m_restartable || !info.m_retry) {
+        LOG((CLOG_ERR "failed to connect to server: %s", info.m_what.c_str()));
         m_events->add_event(EventType::QUIT);
     }
     else {
-        LOG((CLOG_WARN "failed to connect to server: %s", info->m_what.c_str()));
+        LOG((CLOG_WARN "failed to connect to server: %s", info.m_what.c_str()));
         if (!m_suspended) {
             scheduleClientRestart(nextRestartTimeout());
         }
     }
-    delete info;
 }
 
 

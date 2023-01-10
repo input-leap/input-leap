@@ -939,23 +939,23 @@ OSXScreen::isPrimary() const
 	return m_isPrimary;
 }
 
-void OSXScreen::sendEvent(EventType type, void* data) const
+void OSXScreen::sendEvent(EventType type, EventDataBase* data) const
 {
     m_events->add_event(type, getEventTarget(), data);
 }
 
 void OSXScreen::sendClipboardEvent(EventType type, ClipboardID id) const
 {
-	ClipboardInfo* info   = (ClipboardInfo*)malloc(sizeof(ClipboardInfo));
-	info->m_id             = id;
-	info->m_sequenceNumber = m_sequenceNumber;
-	sendEvent(type, info);
+    ClipboardInfo info;
+    info.m_id = id;
+    info.m_sequenceNumber = m_sequenceNumber;
+    sendEvent(type, create_event_data<ClipboardInfo>(info));
 }
 
 void
 OSXScreen::handleSystemEvent(const Event& event, void*)
 {
-	EventRef* carbonEvent = static_cast<EventRef*>(event.getData());
+    EventRef* carbonEvent = event.get_data_as<EventRef*>();
     assert(carbonEvent != nullptr);
 
 	std::uint32_t eventClass = GetEventClass(*carbonEvent);
@@ -1048,7 +1048,7 @@ OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 	if (m_isOnScreen) {
 		// motion on primary screen
         sendEvent(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY,
-							MotionInfo::alloc(m_xCursor, m_yCursor));
+                  create_event_data<MotionInfo>(MotionInfo{m_xCursor, m_yCursor}));
 		if (m_buttonState.test(0)) {
 			m_draggingStarted = true;
 		}
@@ -1086,7 +1086,8 @@ OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 			// And keep only the fractional part
 			m_xFractionalMove -= intX;
 			m_yFractionalMove -= intY;
-            sendEvent(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY, MotionInfo::alloc(intX, intY));
+            sendEvent(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY,
+                      create_event_data<MotionInfo>(MotionInfo{intX, intY}));
 		}
 	}
 
@@ -1102,14 +1103,16 @@ bool OSXScreen::onMouseButton(bool pressed, std::uint16_t macButton)
 		LOG((CLOG_DEBUG1 "event: button press button=%d", button));
 		if (button != kButtonNone) {
 			KeyModifierMask mask = m_keyState->getActiveModifiers();
-            sendEvent(EventType::PRIMARY_SCREEN_BUTTON_DOWN, ButtonInfo::alloc(button, mask));
+            sendEvent(EventType::PRIMARY_SCREEN_BUTTON_DOWN,
+                      create_event_data<ButtonInfo>(ButtonInfo{button, mask}));
 		}
 	}
 	else {
 		LOG((CLOG_DEBUG1 "event: button release button=%d", button));
 		if (button != kButtonNone) {
 			KeyModifierMask mask = m_keyState->getActiveModifiers();
-            sendEvent(EventType::PRIMARY_SCREEN_BUTTON_UP, ButtonInfo::alloc(button, mask));
+            sendEvent(EventType::PRIMARY_SCREEN_BUTTON_UP,
+                      create_event_data<ButtonInfo>(ButtonInfo{button, mask}));
 		}
 	}
 
@@ -1151,7 +1154,8 @@ bool OSXScreen::onMouseButton(bool pressed, std::uint16_t macButton)
 bool OSXScreen::onMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const
 {
 	LOG((CLOG_DEBUG1 "event: button wheel delta=%+d,%+d", xDelta, yDelta));
-    sendEvent(EventType::PRIMARY_SCREEN_WHEEL, WheelInfo::alloc(xDelta, yDelta));
+    sendEvent(EventType::PRIMARY_SCREEN_WHEEL,
+              create_event_data<WheelInfo>(WheelInfo{xDelta, yDelta}));
 	return true;
 }
 
@@ -1207,7 +1211,7 @@ OSXScreen::onKey(CGEventRef event)
 				m_activeModifierHotKey     = m_modifierHotKeys[newMask];
 				m_activeModifierHotKeyMask = newMask;
                 m_events->add_event(EventType::PRIMARY_SCREEN_HOTKEY_DOWN, getEventTarget(),
-                                    HotKeyInfo::alloc(m_activeModifierHotKey));
+                                    create_event_data<HotKeyInfo>(HotKeyInfo{m_activeModifierHotKey}));
 			}
 		}
 
@@ -1217,8 +1221,8 @@ OSXScreen::onKey(CGEventRef event)
 			KeyModifierMask mask = (newMask & m_activeModifierHotKeyMask);
 			if (mask != m_activeModifierHotKeyMask) {
                 m_events->add_event(EventType::PRIMARY_SCREEN_HOTKEY_UP, getEventTarget(),
-                                    HotKeyInfo::alloc(m_activeModifierHotKey));
-				m_activeModifierHotKey     = 0;
+                                    create_event_data<HotKeyInfo>(HotKeyInfo{m_activeModifierHotKey}));
+                m_activeModifierHotKey     = 0;
 				m_activeModifierHotKeyMask = 0;
 			}
 		}
@@ -1241,7 +1245,7 @@ OSXScreen::onKey(CGEventRef event)
 		else {
 			return false;
 		}
-        m_events->add_event(type, getEventTarget(), HotKeyInfo::alloc(id));
+        m_events->add_event(type, getEventTarget(), create_event_data<HotKeyInfo>(HotKeyInfo{id}));
 		return true;
 	}
 
@@ -1332,7 +1336,7 @@ OSXScreen::onHotKey(EventRef event) const
 		return false;
 	}
 
-    m_events->add_event(type, getEventTarget(), HotKeyInfo::alloc(id));
+    m_events->add_event(type, getEventTarget(), create_event_data<HotKeyInfo>(HotKeyInfo{id}));
 
 	return true;
 }
@@ -1652,8 +1656,8 @@ OSXScreen::handlePowerChangeRequest(natural_t messageType, void* messageArg)
 		// OSXScreen has to handle this in the main thread so we have to
 		// queue a confirm sleep event here.  we actually don't allow the
 		// system to sleep until the event is handled.
-        m_events->add_event(EventType::OSX_SCREEN_CONFIRM_SLEEP,
-                            getEventTarget(), messageArg, Event::kDontFreeData);
+        m_events->add_event(EventType::OSX_SCREEN_CONFIRM_SLEEP, getEventTarget(),
+                            create_event_data<long>(reinterpret_cast<long>(messageArg)));
 		return;
 
 	case kIOMessageSystemHasPoweredOn:
@@ -1674,7 +1678,7 @@ OSXScreen::handlePowerChangeRequest(natural_t messageType, void* messageArg)
 void
 OSXScreen::handleConfirmSleep(const Event& event, void*)
 {
-	long messageArg = (long)event.getData();
+    long messageArg = event.get_data_as<long>();
 	if (messageArg != 0) {
         std::lock_guard<std::mutex> lock(pm_mutex_);
 		if (m_pmRootPort != 0) {

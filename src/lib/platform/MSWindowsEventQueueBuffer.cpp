@@ -123,7 +123,8 @@ IEventQueueBuffer::Type MSWindowsEventQueueBuffer::getEvent(Event& event, std::u
         return kUser;
     }
     else {
-        event = Event(EventType::SYSTEM, m_events->getSystemTarget(), &m_event);
+        event = Event(EventType::SYSTEM, m_events->getSystemTarget(),
+                      create_event_data<MSG*>(&m_event));
         return kSystem;
     }
 }

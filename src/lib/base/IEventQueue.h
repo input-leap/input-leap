@@ -85,7 +85,7 @@ public:
     virtual void add_event(Event&& event) = 0;
 
     /// A helper wrapper for cases when an event is created immediately
-    void add_event(EventType type, void* target = nullptr, void* data = nullptr,
+    void add_event(EventType type, void* target = nullptr, EventDataBase* data = nullptr,
                    Event::Flags flags = Event::kNone)
     {
         add_event(Event(type, target, data, flags));

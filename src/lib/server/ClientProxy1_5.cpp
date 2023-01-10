@@ -52,7 +52,7 @@ void ClientProxy1_5::sendDragInfo(std::uint32_t fileCount, const char* info, siz
     ProtocolUtil::writef(getStream(), kMsgDDragInfo, fileCount, &data);
 }
 
-void ClientProxy1_5::fileChunkSending(std::uint8_t mark, char* data, size_t dataSize)
+void ClientProxy1_5::fileChunkSending(std::uint8_t mark, const char* data, size_t dataSize)
 {
     FileChunk::send(getStream(), mark, data, dataSize);
 }

@@ -21,69 +21,8 @@
 
 #include <cstdlib>
 
-//
-// IPrimaryScreen::ButtonInfo
-//
-
-IPrimaryScreen::ButtonInfo*
-IPrimaryScreen::ButtonInfo::alloc(ButtonID id, KeyModifierMask mask)
-{
-    ButtonInfo* info = static_cast<ButtonInfo*>(malloc(sizeof(ButtonInfo)));
-    info->m_button = id;
-    info->m_mask   = mask;
-    return info;
-}
-
-IPrimaryScreen::ButtonInfo*
-IPrimaryScreen::ButtonInfo::alloc(const ButtonInfo& x)
-{
-    ButtonInfo* info = static_cast<ButtonInfo*>(malloc(sizeof(ButtonInfo)));
-    info->m_button = x.m_button;
-    info->m_mask   = x.m_mask;
-    return info;
-}
-
 bool
 IPrimaryScreen::ButtonInfo::equal(const ButtonInfo* a, const ButtonInfo* b)
 {
     return (a->m_button == b->m_button && a->m_mask == b->m_mask);
-}
-
-
-//
-// IPrimaryScreen::MotionInfo
-//
-
-IPrimaryScreen::MotionInfo* IPrimaryScreen::MotionInfo::alloc(std::int32_t x, std::int32_t y)
-{
-    MotionInfo* info = static_cast<MotionInfo*>(malloc(sizeof(MotionInfo)));
-    info->m_x = x;
-    info->m_y = y;
-    return info;
-}
-
-
-//
-// IPrimaryScreen::WheelInfo
-//
-
-IPrimaryScreen::WheelInfo* IPrimaryScreen::WheelInfo::alloc(std::int32_t xDelta,
-                                                            std::int32_t yDelta)
-{
-    WheelInfo* info = static_cast<WheelInfo*>(malloc(sizeof(WheelInfo)));
-    info->m_xDelta = xDelta;
-    info->m_yDelta = yDelta;
-    return info;
-}
-
-
-//
-// IPrimaryScreen::HotKeyInfo
-//
-
-IPrimaryScreen::HotKeyInfo* IPrimaryScreen::HotKeyInfo::alloc(std::uint32_t id)
-{
-    HotKeyInfo* info = static_cast<HotKeyInfo*>(malloc(sizeof(HotKeyInfo)));
-    info->m_id = id;
-    return info;
 }

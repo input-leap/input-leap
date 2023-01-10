@@ -54,14 +54,13 @@ InputFilter::Condition::disablePrimary(PrimaryClient*)
     // do nothing
 }
 
-InputFilter::KeystrokeCondition::KeystrokeCondition(
-        IEventQueue* events, IPlatformScreen::KeyInfo* info) :
+InputFilter::KeystrokeCondition::KeystrokeCondition(IEventQueue* events,
+                                                    const IPlatformScreen::KeyInfo& info) :
     m_id(0),
-    m_key(info->m_key),
-    m_mask(info->m_mask),
+    m_key(info.m_key),
+    m_mask(info.m_mask),
     m_events(events)
 {
-    free(info);
 }
 
 InputFilter::KeystrokeCondition::KeystrokeCondition(
@@ -120,9 +119,8 @@ InputFilter::KeystrokeCondition::match(const Event& event)
     }
 
     // check if it's our hotkey
-    IPrimaryScreen::HotKeyInfo* kinfo =
-        static_cast<IPlatformScreen::HotKeyInfo*>(event.getData());
-    if (kinfo->m_id != m_id) {
+    const auto& kinfo = event.get_data_as<IPlatformScreen::HotKeyInfo>();
+    if (kinfo.m_id != m_id) {
         return kNoMatch;
     }
 
@@ -213,10 +211,8 @@ InputFilter::MouseButtonCondition::match(const Event& event)
 
     // check if it's the right button and modifiers.  ignore modifiers
     // that cannot be combined with a mouse button.
-    IPlatformScreen::ButtonInfo* minfo =
-        static_cast<IPlatformScreen::ButtonInfo*>(event.getData());
-    if (minfo->m_button != m_button ||
-        (minfo->m_mask & ~s_ignoreMask) != m_mask) {
+    const auto& minfo = event.get_data_as<IPlatformScreen::ButtonInfo>();
+    if (minfo.m_button != m_button || (minfo.m_mask & ~s_ignoreMask) != m_mask) {
         return kNoMatch;
     }
 
@@ -251,9 +247,8 @@ InputFilter::EFilterStatus
 InputFilter::ScreenConnectedCondition::match(const Event& event)
 {
     if (event.getType() == EventType::SERVER_CONNECTED) {
-        Server::ScreenConnectedInfo* info =
-            static_cast<Server::ScreenConnectedInfo*>(event.getData());
-        if (m_screen == info->m_screen || m_screen.empty()) {
+        const auto& info = event.get_data_as<Server::ScreenConnectedInfo>();
+        if (m_screen == info.m_screen || m_screen.empty()) {
             return kActivate;
         }
     }
@@ -311,9 +306,9 @@ InputFilter::LockCursorToScreenAction::perform(const Event& event)
     };
 
     // send event
-    Server::LockCursorToScreenInfo* info =
-        Server::LockCursorToScreenInfo::alloc(s_state[m_mode]);
-    m_events->add_event(EventType::SERVER_LOCK_CURSOR_TO_SCREEN, event.getTarget(), info,
+    Server::LockCursorToScreenInfo info(s_state[m_mode]);
+    m_events->add_event(EventType::SERVER_LOCK_CURSOR_TO_SCREEN, event.getTarget(),
+                        create_event_data<Server::LockCursorToScreenInfo>(info),
                         Event::kDeliverImmediately);
 }
 
@@ -348,15 +343,14 @@ InputFilter::SwitchToScreenAction::perform(const Event& event)
     // event if it has one.
     std::string screen = m_screen;
     if (screen.empty() && event.getType() == EventType::SERVER_CONNECTED) {
-        Server::ScreenConnectedInfo* info =
-            static_cast<Server::ScreenConnectedInfo*>(event.getData());
-        screen = info->m_screen;
+        const auto& info = event.get_data_as<Server::ScreenConnectedInfo>();
+        screen = info.m_screen;
     }
 
     // send event
-    Server::SwitchToScreenInfo* info =
-        Server::SwitchToScreenInfo::alloc(screen);
-    m_events->add_event(EventType::SERVER_SWITCH_TO_SCREEN, event.getTarget(), info,
+    Server::SwitchToScreenInfo info{screen};
+    m_events->add_event(EventType::SERVER_SWITCH_TO_SCREEN, event.getTarget(),
+                        create_event_data<Server::SwitchToScreenInfo>(info),
                         Event::kDeliverImmediately);
 }
 
@@ -420,9 +414,9 @@ std::string InputFilter::SwitchInDirectionAction::format() const
 void
 InputFilter::SwitchInDirectionAction::perform(const Event& event)
 {
-    Server::SwitchInDirectionInfo* info =
-        Server::SwitchInDirectionInfo::alloc(m_direction);
-    m_events->add_event(EventType::SERVER_SWITCH_INDIRECTION, event.getTarget(), info,
+    Server::SwitchInDirectionInfo info{m_direction};
+    m_events->add_event(EventType::SERVER_SWITCH_INDIRECTION, event.getTarget(),
+                        create_event_data<Server::SwitchInDirectionInfo>(info),
                         Event::kDeliverImmediately);
 }
 
@@ -487,38 +481,21 @@ InputFilter::KeyboardBroadcastAction::perform(const Event& event)
     };
 
     // send event
-    Server::KeyboardBroadcastInfo* info =
-        Server::KeyboardBroadcastInfo::alloc(s_state[m_mode], m_screens);
-    m_events->add_event(EventType::SERVER_KEYBOARD_BROADCAST, event.getTarget(), info,
+    Server::KeyboardBroadcastInfo info{s_state[m_mode], m_screens};
+    m_events->add_event(EventType::SERVER_KEYBOARD_BROADCAST, event.getTarget(),
+                        create_event_data<Server::KeyboardBroadcastInfo>(info),
                         Event::kDeliverImmediately);
 }
 
-InputFilter::KeystrokeAction::KeystrokeAction(
-        IEventQueue* events, IPlatformScreen::KeyInfo* info, bool press) :
-    m_keyInfo(info),
+InputFilter::KeystrokeAction::KeystrokeAction(IEventQueue* events, const IKeyState::KeyInfo& info, bool press) :
+    info_(info),
     m_press(press),
     m_events(events)
 {
     // do nothing
 }
 
-InputFilter::KeystrokeAction::~KeystrokeAction()
-{
-    free(m_keyInfo);
-}
-
-void
-InputFilter::KeystrokeAction::adoptInfo(IPlatformScreen::KeyInfo* info)
-{
-    free(m_keyInfo);
-    m_keyInfo = info;
-}
-
-const IPlatformScreen::KeyInfo*
-InputFilter::KeystrokeAction::getInfo() const
-{
-    return m_keyInfo;
-}
+InputFilter::KeystrokeAction::~KeystrokeAction() = default;
 
 bool
 InputFilter::KeystrokeAction::isOnPress() const
@@ -529,30 +506,25 @@ InputFilter::KeystrokeAction::isOnPress() const
 InputFilter::Action*
 InputFilter::KeystrokeAction::clone() const
 {
-    IKeyState::KeyInfo* info = IKeyState::KeyInfo::alloc(*m_keyInfo);
-    return new KeystrokeAction(m_events, info, m_press);
+    return new KeystrokeAction(m_events, info_, m_press);
 }
 
 std::string InputFilter::KeystrokeAction::format() const
 {
     const char* type = formatName();
 
-    if (m_keyInfo->m_screens[0] == '\0') {
+    if (info_.screens_.empty()) {
         return inputleap::string::sprintf("%s(%s)", type,
-                            inputleap::KeyMap::formatKey(m_keyInfo->m_key,
-                                m_keyInfo->m_mask).c_str());
+                            inputleap::KeyMap::formatKey(info_.m_key, info_.m_mask).c_str());
     }
-    else if (m_keyInfo->m_screens[0] == '*') {
+    else if (info_.screens_ == "*") {
         return inputleap::string::sprintf("%s(%s,*)", type,
-                            inputleap::KeyMap::formatKey(m_keyInfo->m_key,
-                                m_keyInfo->m_mask).c_str());
+                            inputleap::KeyMap::formatKey(info_.m_key, info_.m_mask).c_str());
     }
     else {
-        return inputleap::string::sprintf("%s(%s,%.*s)", type,
-                            inputleap::KeyMap::formatKey(m_keyInfo->m_key,
-                                m_keyInfo->m_mask).c_str(),
-                            strlen(m_keyInfo->m_screens + 1) - 1,
-                            m_keyInfo->m_screens + 1);
+        return inputleap::string::sprintf("%s(%s,%s)", type,
+                            inputleap::KeyMap::formatKey(info_.m_key, info_.m_mask).c_str(),
+                            info_.screens_.c_str());
     }
 }
 
@@ -563,8 +535,9 @@ InputFilter::KeystrokeAction::perform(const Event& event)
 
     m_events->add_event(EventType::PRIMARY_SCREEN_FAKE_INPUT_BEGIN, event.getTarget(), nullptr,
                         Event::kDeliverImmediately);
-    m_events->add_event(type, event.getTarget(), m_keyInfo,
-                        Event::kDeliverImmediately | Event::kDontFreeData);
+    m_events->add_event(type, event.getTarget(),
+                        create_event_data<IPlatformScreen::KeyInfo>(info_),
+                        Event::kDeliverImmediately);
     m_events->add_event(EventType::PRIMARY_SCREEN_FAKE_INPUT_END, event.getTarget(), nullptr,
                         Event::kDeliverImmediately);
 }
@@ -614,20 +587,20 @@ InputFilter::MouseButtonAction::perform(const Event& event)
 
 {
     // send modifiers
-    IPlatformScreen::KeyInfo* modifierInfo = nullptr;
     if (button_info_.m_mask != 0) {
         KeyID key = m_press ? kKeySetModifiers : kKeyClearModifiers;
-        modifierInfo =
-            IKeyState::KeyInfo::alloc(key, button_info_.m_mask, 0, 1);
-        m_events->add_event(EventType::KEY_STATE_KEY_DOWN, event.getTarget(), modifierInfo,
+        m_events->add_event(EventType::KEY_STATE_KEY_DOWN, event.getTarget(),
+                            create_event_data<IPlatformScreen::KeyInfo>(
+                                IPlatformScreen::KeyInfo{key, button_info_.m_mask, 0, 1}),
                             Event::kDeliverImmediately);
     }
 
     // send button
     EventType type = m_press ? EventType::PRIMARY_SCREEN_BUTTON_DOWN :
                                EventType::PRIMARY_SCREEN_BUTTON_UP;
-    m_events->add_event(type, event.getTarget(), &button_info_,
-                        Event::kDeliverImmediately | Event::kDontFreeData);
+    m_events->add_event(type, event.getTarget(),
+                        create_event_data<IPlatformScreen::ButtonInfo>(button_info_),
+                        Event::kDeliverImmediately);
 }
 
 const char*
@@ -1036,9 +1009,8 @@ void
 InputFilter::handleEvent(const Event& event, void*)
 {
     // copy event and adjust target
-    Event myEvent(event.getType(), this, event.getData(),
-                                event.getFlags() | Event::kDontFreeData |
-                                Event::kDeliverImmediately);
+    Event myEvent(event.getType(), this, nullptr, event.getFlags() | Event::kDeliverImmediately);
+    myEvent.move_data_from(const_cast<Event&>(event));
 
     // let each rule try to match the event until one does
     for (RuleList::iterator rule  = m_ruleList.begin();

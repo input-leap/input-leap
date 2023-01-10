@@ -30,7 +30,7 @@ enum class EventType : std::uint32_t {
     /// Exit has been requested.
     QUIT,
 
-    /// This event is sent when system event occurs. The data is a pointer to system event type
+    /// This event is sent when system event occurs. The data an instance of system event type
     SYSTEM,
 
     /// This event is sent when a timer event occurs. The data is pointer to TimerInfo.
@@ -40,7 +40,7 @@ enum class EventType : std::uint32_t {
     CLIENT_CONNECTED,
 
     /** This event is sent when the server fails for some reason.
-         The event data is a pointer to FailInfo.
+         The event data an instance of FailInfo.
     */
     CLIENT_CONNECTION_FAILED,
 
@@ -87,7 +87,9 @@ enum class EventType : std::uint32_t {
     /// This event is sent when the client disconnects from the server.
     IPC_CLIENT_PROXY_DISCONNECTED,
 
-    /// This event is sent when we have created the client proxy.
+    /** This event is sent when we have created the client proxy.
+        Event data is a pointer to IpcClientProxy.
+    */
     IPC_SERVER_CLIENT_CONNECTED,
 
     /// This event is sent when a message is received through a client proxy.
@@ -103,7 +105,7 @@ enum class EventType : std::uint32_t {
     DATA_SOCKET_SECURE_CONNECTED,
 
     /** A socket sends this event when an attempt to connect to a remote port has failed.
-        The data is a pointer to a ConnectionFailedInfo.
+        The data an instance of a ConnectionFailedInfo.
     */
     DATA_SOCKET_CONNECTION_FAILED,
 
@@ -150,7 +152,7 @@ enum class EventType : std::uint32_t {
     SERVER_ERROR,
 
     /** This event is sent when a client screen has connected.
-        The event data is a pointer to ScreenConnectedInfo that indicates the connected screen.
+        The event data an instance of ScreenConnectedInfo that indicates the connected screen.
     */
     SERVER_CONNECTED,
 
@@ -158,7 +160,7 @@ enum class EventType : std::uint32_t {
     SERVER_DISCONNECTED,
 
     /** This event is sent to inform the server to switch screens.
-        The event data is a pointer to SwitchToScreenInfo that indicates the target screen.
+        The event data an instance of SwitchToScreenInfo that indicates the target screen.
     */
     SERVER_SWITCH_TO_SCREEN,
 
@@ -166,17 +168,17 @@ enum class EventType : std::uint32_t {
     SERVER_TOGGLE_SCREEN,
 
     /** This event is sent to inform the server to switch screens.
-        The event data is a pointer to SwitchInDirectionInfo that indicates the target direction.
+        The event data an instance of SwitchInDirectionInfo that indicates the target direction.
     */
     SERVER_SWITCH_INDIRECTION,
 
     /** This event is sent to inform the server to turn keyboard broadcasting on or off.
-        The event data is a pointer to KeyboardBroadcastInfo.
+        The event data an instance of KeyboardBroadcastInfo.
     */
     SERVER_KEYBOARD_BROADCAST,
 
     /** This event is sent to inform the server to lock the cursor to the active screen or to
-        unlock it. The event data is a pointer to LockCursorToScreenInfo.
+        unlock it. The event data an instance of LockCursorToScreenInfo.
     */
     SERVER_LOCK_CURSOR_TO_SCREEN,
 
@@ -187,30 +189,30 @@ enum class EventType : std::uint32_t {
     SERVER_APP_FORCE_RECONNECT,
     SERVER_APP_RESET_SERVER,
 
-    /// This event is sent when key is down. Event data is a pointer to KeyInfo (count == 1)
+    /// This event is sent when key is down. Event data is an instance of KeyInfo (count == 1)
     KEY_STATE_KEY_DOWN,
-    /// This event is sent when key is up. Event data is a pointer to KeyInfo (count == 1)
+    /// This event is sent when key is up. Event data is an instance of KeyInfo (count == 1)
     KEY_STATE_KEY_UP,
-    /// This event is sent when key is repeated. Event data is a pointer to KeyInfo.
+    /// This event is sent when key is repeated. Event data is an instance of KeyInfo.
     KEY_STATE_KEY_REPEAT,
 
-    /// This event is sent when button is down. Event data is a pointer to ButtonInfo
+    /// This event is sent when button is down. Event data is an instance of ButtonInfo
     PRIMARY_SCREEN_BUTTON_DOWN,
 
-    /// This event is sent when button is up. Event data is a pointer to ButtonInfo
+    /// This event is sent when button is up. Event data is an instance of ButtonInfo
     PRIMARY_SCREEN_BUTTON_UP,
 
     /** This event is sent when mouse moves on primary screen.
-        Event data is a pointer to MotionInfo, the values are absolute position.
+        Event data an instance of MotionInfo, the values are absolute position.
     */
     PRIMARY_SCREEN_MOTION_ON_PRIMARY,
 
     /** This event is sent when mouse moves on secondary screen.
-        Event data is a pointer to MotionInfo, the values are relative motion deltas.
+        Event data an instance of MotionInfo, the values are relative motion deltas.
     */
     PRIMARY_SCREEN_MOTION_ON_SECONDARY,
 
-    /// This event is sent when mouse wheel is rotated. Event data is a pointer to WheelInfo.
+    /// This event is sent when mouse wheel is rotated. Event data an instance of WheelInfo.
     PRIMARY_SCREEN_WHEEL,
 
     /// This event is sent when screensaver is activated.
@@ -219,10 +221,10 @@ enum class EventType : std::uint32_t {
     /// This event is sent when screensaver is deactivated.
     PRIMARY_SCREEN_SAVER_DEACTIVATED,
 
-    /// This event is sent when hotkey is down. Event data is a pointer to HotKeyInfo.
+    /// This event is sent when hotkey is down. Event data an instance of HotKeyInfo.
     PRIMARY_SCREEN_HOTKEY_DOWN,
 
-    /// This event is sent when hotkey is up. Event data is a pointer to HotKeyInfo.
+    /// This event is sent when hotkey is up. Event data an instance of HotKeyInfo.
     PRIMARY_SCREEN_HOTKEY_UP,
 
     /// This event is sent when fake input begins.
@@ -250,12 +252,12 @@ enum class EventType : std::uint32_t {
     SCREEN_RESUME,
 
     /** This event is sent whenever the clipboard is grabbed by some other application so we
-        don't own it anymore. The data is a pointer to a ClipboardInfo.
+        don't own it anymore. The data an instance of a ClipboardInfo.
     */
     CLIPBOARD_GRABBED,
 
     /** This event is sent whenever the contents of the clipboard has changed.
-        The data is a pointer to a ClipboardInfo.
+        The data an instance of a ClipboardInfo.
     */
     CLIPBOARD_CHANGED,
 

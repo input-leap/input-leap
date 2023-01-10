@@ -18,13 +18,14 @@
 #pragma once
 
 #include <cstddef>
+#include <string>
 
 class Chunk {
 public:
-    Chunk(size_t size);
-    ~Chunk();
+    Chunk() = default;
+    ~Chunk() = default;
 
 public:
-    size_t m_dataSize;
-    char* m_chunk;
+    size_t m_dataSize = 0;
+    std::string chunk_;
 };

@@ -1029,7 +1029,7 @@ InputFilter::Condition* Config::parseCondition(ConfigReadContext& s, const std::
 			throw XConfigRead(s, "syntax for condition: keystroke(modifiers+key)");
 		}
 
-		IPlatformScreen::KeyInfo* keyInfo = s.parseKeystroke(args[0]);
+        IPlatformScreen::KeyInfo keyInfo = s.parseKeystroke(args[0]);
 
 		return new InputFilter::KeystrokeCondition(m_events, keyInfo);
 	}
@@ -1072,7 +1072,7 @@ void Config::parseAction(ConfigReadContext& s, const std::string& name,
 			throw XConfigRead(s, "syntax for action: keystroke(modifiers+key[,screens])");
 		}
 
-		IPlatformScreen::KeyInfo* keyInfo;
+        IPlatformScreen::KeyInfo keyInfo;
 		if (args.size() == 1) {
 			keyInfo = s.parseKeystroke(args[0]);
 		}
@@ -1083,9 +1083,7 @@ void Config::parseAction(ConfigReadContext& s, const std::string& name,
 		}
 
 		if (name == "keystroke") {
-			IPlatformScreen::KeyInfo* keyInfo2 =
-				IKeyState::KeyInfo::alloc(*keyInfo);
-			action = new InputFilter::KeystrokeAction(m_events, keyInfo2, true);
+            action = new InputFilter::KeystrokeAction(m_events, keyInfo, true);
 			rule.adoptAction(action, true);
 			action   = new InputFilter::KeystrokeAction(m_events, keyInfo, false);
 			activate = false;
@@ -2168,13 +2166,13 @@ void ConfigReadContext::parseNameWithArgs(const std::string& type, const std::st
 	return;
 }
 
-IPlatformScreen::KeyInfo* ConfigReadContext::parseKeystroke(const std::string& keystroke) const
+IPlatformScreen::KeyInfo ConfigReadContext::parseKeystroke(const std::string& keystroke) const
 {
         return parseKeystroke(keystroke, std::set<std::string>());
 }
 
-IPlatformScreen::KeyInfo* ConfigReadContext::parseKeystroke(const std::string& keystroke,
-                                                            const std::set<std::string>& screens) const
+IPlatformScreen::KeyInfo ConfigReadContext::parseKeystroke(const std::string& keystroke,
+                                                           const std::set<std::string>& screens) const
 {
     std::string s = keystroke;
 
@@ -2192,7 +2190,7 @@ IPlatformScreen::KeyInfo* ConfigReadContext::parseKeystroke(const std::string& k
 		throw XConfigRead(*this, "missing key and/or modifiers in keystroke");
 	}
 
-	return IPlatformScreen::KeyInfo::alloc(key, mask, 0, 0, screens);
+    return IPlatformScreen::KeyInfo::create(key, mask, 0, 0, screens);
 }
 
 IPlatformScreen::ButtonInfo ConfigReadContext::parseMouse(const std::string& mouse) const

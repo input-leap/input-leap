@@ -28,17 +28,17 @@ namespace inputleap {
 
 static const std::uint16_t kIntervalThreshold = 1;
 
-FileChunk::FileChunk(size_t size) :
-    Chunk(size)
+FileChunk::FileChunk(size_t size)
 {
-        m_dataSize = size - FILE_CHUNK_META_SIZE;
+    chunk_.resize(size, '\0');
+    m_dataSize = size - FILE_CHUNK_META_SIZE;
 }
 
 FileChunk* FileChunk::start(const std::string& size)
 {
     size_t sizeLength = size.size();
     FileChunk* start = new FileChunk(sizeLength + FILE_CHUNK_META_SIZE);
-    char* chunk = start->m_chunk;
+    std::string& chunk = start->chunk_;
     chunk[0] = kDataStart;
     memcpy(&chunk[1], size.c_str(), sizeLength);
     chunk[sizeLength + 1] = '\0';
@@ -49,7 +49,7 @@ FileChunk* FileChunk::start(const std::string& size)
 FileChunk* FileChunk::data(std::uint8_t* data, size_t dataSize)
 {
     FileChunk* chunk = new FileChunk(dataSize + FILE_CHUNK_META_SIZE);
-    char* chunkData = chunk->m_chunk;
+    std::string& chunkData = chunk->chunk_;
     chunkData[0] = kDataChunk;
     memcpy(&chunkData[1], data, dataSize);
     chunkData[dataSize + 1] = '\0';
@@ -61,7 +61,7 @@ FileChunk*
 FileChunk::end()
 {
     FileChunk* end = new FileChunk(FILE_CHUNK_META_SIZE);
-    char* chunk = end->m_chunk;
+    std::string& chunk = end->chunk_;
     chunk[0] = kDataEnd;
     chunk[1] = '\0';
 
@@ -135,7 +135,8 @@ int FileChunk::assemble(inputleap::IStream* stream, std::string& dataReceived, s
     return kError;
 }
 
-void FileChunk::send(inputleap::IStream* stream, std::uint8_t mark, char* data, size_t dataSize)
+void FileChunk::send(inputleap::IStream* stream, std::uint8_t mark, const char* data,
+                     size_t dataSize)
 {
     std::string chunk(data, dataSize);
 

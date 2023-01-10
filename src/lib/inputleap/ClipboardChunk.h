@@ -40,7 +40,7 @@ public:
     static int assemble(inputleap::IStream* stream, std::string& dataCached, ClipboardID& id,
                         std::uint32_t& sequence);
 
-    static void send(inputleap::IStream* stream, void* data);
+    static void send(inputleap::IStream* stream, const ClipboardChunk& clipboard_data);
 
     static size_t getExpectedSize() { return s_expectedSize; }
 

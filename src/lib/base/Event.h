@@ -23,15 +23,33 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
-#include <map>
+#include <stdexcept>
 
 namespace inputleap {
 
-class EventData {
+class EventDataBase {
 public:
-    EventData() { }
-    virtual ~EventData() { }
+    virtual ~EventDataBase() { }
 };
+
+template<class T>
+class EventData : public EventDataBase {
+public:
+    EventData(const T& data) : data_{data} {}
+    EventData(T&& data) : data_{std::move(data)} {}
+    ~EventData() = default;
+
+    T& data() { return data_; }
+    const T& data() const { return data_; }
+private:
+    T data_;
+};
+
+template<class T, class U>
+EventData<T>* create_event_data(U&& data)
+{
+    return new EventData<T>(std::forward<U>(data));
+}
 
 /// Event holds an event type and a pointer to event data. It is movable, but not copyable
 class Event {
@@ -59,12 +77,19 @@ public:
     \p target is the intended recipient of the event.
     \p flags is any combination of \c Flags.
     */
-    Event(EventType type, void* target = nullptr, void* data = nullptr, Flags flags = kNone) :
+    Event(EventType type, void* target = nullptr, EventDataBase* data = nullptr,
+          Flags flags = kNone) :
         type_{type},
         target_{target},
         data_{data},
         flags_{flags}
     {}
+
+    /// Moves event data from another event
+    void move_data_from(Event& other)
+    {
+        std::swap(data_, other.data_);
+    }
 
     //! Release event data
     /*!
@@ -72,19 +97,9 @@ public:
     */
     static void deleteData(const Event& event)
     {
-        switch (event.getType()) {
-        case EventType::UNKNOWN:
-        case EventType::QUIT:
-        case EventType::SYSTEM:
-        case EventType::TIMER:
-            break;
-
-        default:
-            if ((event.getFlags() & kDontFreeData) == 0) {
-                std::free(event.getData());
-                delete event.getDataObject();
-            }
-            break;
+        if ((event.getFlags() & kDontFreeData) == 0) {
+            delete event.data_;
+            delete event.getDataObject();
         }
     }
 
@@ -93,7 +108,7 @@ public:
     Set non-POD (non plain old data), where delete is called when the event
     is deleted, and the destructor is called.
     */
-    void setDataObject(EventData* dataObject)
+    void setDataObject(EventDataBase* dataObject)
     {
         assert(data_object_ == nullptr);
         data_object_ = dataObject;
@@ -112,11 +127,24 @@ public:
     */
     void* getTarget() const { return target_; }
 
-    //! Get the event data (POD).
-    /*!
-    Returns the event data (POD).
-    */
-    void* getData() const { return data_; }
+    /// Returns stored event data as specified type
+    template<class T>
+    const T& get_data_as() const
+    {
+        if (data_ == nullptr) {
+            throw std::runtime_error("Data does not exist");
+        }
+        return static_cast<const EventData<T>*>(data_)->data();
+    }
+
+    template<class T>
+    T& get_data_as()
+    {
+        if (data_ == nullptr) {
+            throw std::runtime_error("Data does not exist");
+        }
+        return static_cast<EventData<T>*>(data_)->data();
+    }
 
     //! Get the event data (non-POD)
     /*!
@@ -124,7 +152,7 @@ public:
     \c getData() is that when delete is called on this data, so non-POD
     (non plain old data) dtor is called.
     */
-    EventData* getDataObject() const { return data_object_; }
+    EventDataBase* getDataObject() const { return data_object_; }
 
     //! Get event flags
     /*!
@@ -135,9 +163,9 @@ public:
 private:
     EventType type_ = EventType::UNKNOWN;
     void* target_ = nullptr;
-    void* data_ = nullptr;
+    EventDataBase* data_ = nullptr;
     Flags flags_ = 0;
-    EventData* data_object_ = nullptr;
+    EventDataBase* data_object_ = nullptr;
 };
 
 } // namespace inputleap

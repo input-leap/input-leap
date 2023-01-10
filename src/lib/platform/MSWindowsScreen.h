@@ -23,6 +23,7 @@
 #include "inputleap/PlatformScreen.h"
 #include "inputleap/DragInformation.h"
 #include "platform/synwinhk.h"
+#include <map>
 #include <string>
 
 #define WIN32_LEAN_AND_MEAN
@@ -144,7 +145,7 @@ private:
 
     // convenience function to send events
 public: // HACK
-    void sendEvent(EventType type, void* = nullptr);
+    void sendEvent(EventType type, EventDataBase* = nullptr);
 private: // HACK
     void sendClipboardEvent(EventType type, ClipboardID id);
 

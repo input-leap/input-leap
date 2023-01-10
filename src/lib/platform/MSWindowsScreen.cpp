@@ -874,27 +874,23 @@ MSWindowsScreen::destroyWindow(HWND hwnd) const
     }
 }
 
-void MSWindowsScreen::sendEvent(EventType type, void* data)
+void MSWindowsScreen::sendEvent(EventType type, EventDataBase* data)
 {
     m_events->add_event(type, getEventTarget(), data);
 }
 
 void MSWindowsScreen::sendClipboardEvent(EventType type, ClipboardID id)
 {
-    ClipboardInfo* info   = (ClipboardInfo*)malloc(sizeof(ClipboardInfo));
-    if (info == nullptr) {
-        LOG((CLOG_ERR "malloc failed on %s:%s", __FILE__, __LINE__ ));
-        return;
-    }
-    info->m_id             = id;
-    info->m_sequenceNumber = m_sequenceNumber;
-    sendEvent(type, info);
+    ClipboardInfo info;
+    info.m_id = id;
+    info.m_sequenceNumber = m_sequenceNumber;
+    sendEvent(type, create_event_data<ClipboardInfo>(info));
 }
 
 void
 MSWindowsScreen::handleSystemEvent(const Event& event, void*)
 {
-    MSG* msg = static_cast<MSG*>(event.getData());
+    MSG* msg = event.get_data_as<MSG*>();
     assert(msg != nullptr);
 
     if (ArchMiscWindows::processDialog(msg)) {
@@ -1238,7 +1234,8 @@ MSWindowsScreen::onHotKey(WPARAM wParam, LPARAM lParam)
     }
 
     // generate event
-    m_events->add_event(type, getEventTarget(), HotKeyInfo::alloc(i->second));
+    m_events->add_event(type, getEventTarget(),
+                        create_event_data<HotKeyInfo>(HotKeyInfo{i->second}));
 
     return true;
 }
@@ -1273,13 +1270,15 @@ MSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
         if (pressed) {
             LOG((CLOG_DEBUG1 "event: button press button=%d", button));
             if (button != kButtonNone) {
-                sendEvent(EventType::PRIMARY_SCREEN_BUTTON_DOWN, ButtonInfo::alloc(button, mask));
+                sendEvent(EventType::PRIMARY_SCREEN_BUTTON_DOWN,
+                          create_event_data<ButtonInfo>(ButtonInfo{button, mask}));
             }
         }
         else {
             LOG((CLOG_DEBUG1 "event: button release button=%d", button));
             if (button != kButtonNone) {
-                sendEvent(EventType::PRIMARY_SCREEN_BUTTON_UP, ButtonInfo::alloc(button, mask));
+                sendEvent(EventType::PRIMARY_SCREEN_BUTTON_UP,
+                          create_event_data<ButtonInfo>(ButtonInfo{button, mask}));
             }
         }
     }
@@ -1319,7 +1318,7 @@ bool MSWindowsScreen::onMouseMove(std::int32_t mx, std::int32_t my)
 
         // motion on primary screen
         sendEvent(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY,
-                  MotionInfo::alloc(m_xCursor, m_yCursor));
+                  create_event_data<MotionInfo>(MotionInfo{m_xCursor, m_yCursor}));
 
         if (m_buttons[kButtonLeft] == true && m_draggingStarted == false) {
             m_draggingStarted = true;
@@ -1349,7 +1348,8 @@ bool MSWindowsScreen::onMouseMove(std::int32_t mx, std::int32_t my)
         }
         else {
             // send motion
-            sendEvent(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY, MotionInfo::alloc(x, y));
+            sendEvent(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY,
+                      create_event_data<MotionInfo>(MotionInfo{x, y}));
         }
     }
 
@@ -1361,7 +1361,8 @@ bool MSWindowsScreen::onMouseWheel(std::int32_t xDelta, std::int32_t yDelta)
     // ignore message if posted prior to last mark change
     if (!ignore()) {
         LOG((CLOG_DEBUG1 "event: button wheel delta=%+d,%+d", xDelta, yDelta));
-        sendEvent(EventType::PRIMARY_SCREEN_WHEEL, WheelInfo::alloc(xDelta, yDelta));
+        sendEvent(EventType::PRIMARY_SCREEN_WHEEL,
+                  create_event_data<WheelInfo>(WheelInfo{xDelta, yDelta}));
     }
     return true;
 }

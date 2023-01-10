@@ -244,7 +244,7 @@ void PrimaryClient::sendDragInfo(std::uint32_t fileCount, const char* info, size
     // ignore
 }
 
-void PrimaryClient::fileChunkSending(std::uint8_t mark, char* data, size_t dataSize)
+void PrimaryClient::fileChunkSending(std::uint8_t mark, const char* data, size_t dataSize)
 {
     (void) mark;
     (void) data;

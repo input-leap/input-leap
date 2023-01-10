@@ -40,9 +40,6 @@ public:
             m_mask{mask}
         {}
 
-        static ButtonInfo* alloc(ButtonID, KeyModifierMask);
-        static ButtonInfo* alloc(const ButtonInfo&);
-
         static bool equal(const ButtonInfo*, const ButtonInfo*);
 
     public:
@@ -52,7 +49,10 @@ public:
     //! Motion event data
     class MotionInfo {
     public:
-        static MotionInfo* alloc(std::int32_t x, std::int32_t y);
+        MotionInfo(std::int32_t x, std::int32_t y) :
+            m_x{x},
+            m_y{y}
+        {}
 
     public:
         std::int32_t m_x;
@@ -61,7 +61,10 @@ public:
     //! Wheel motion event data
     class WheelInfo {
     public:
-        static WheelInfo* alloc(std::int32_t xDelta, std::int32_t yDelta);
+        WheelInfo(std::int32_t x_delta, std::int32_t y_delta) :
+            m_xDelta{x_delta},
+            m_yDelta{y_delta}
+        {}
 
     public:
         std::int32_t m_xDelta;
@@ -70,7 +73,7 @@ public:
     //! Hot key event data
     class HotKeyInfo {
     public:
-        static HotKeyInfo* alloc(std::uint32_t id);
+        HotKeyInfo(std::uint32_t id) : m_id{id} {}
 
     public:
         std::uint32_t m_id;

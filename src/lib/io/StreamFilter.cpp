@@ -102,8 +102,9 @@ StreamFilter::getStream() const
 void
 StreamFilter::filterEvent(const Event& event)
 {
-    m_events->dispatchEvent(Event(event.getType(),
-                        getEventTarget(), event.getData()));
+    Event copy{event.getType(), getEventTarget(), nullptr};
+    copy.move_data_from(const_cast<Event&>(event));
+    m_events->dispatchEvent(copy);
 }
 
 void

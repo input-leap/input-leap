@@ -24,7 +24,6 @@
 #include "base/EventTypes.h"
 #include "base/Log.h"
 #include "base/XBase.h"
-#include "../gui/src/ShutdownCh.h"
 
 namespace inputleap {
 
@@ -38,8 +37,7 @@ interrupt(Arch::ESignal, void* data)
 }
 
 EventQueue::EventQueue() :
-    m_systemTarget(0),
-    m_parentStream{0} // STDIN_FILENO
+    m_systemTarget(0)
 {
     ARCH->setSignalHandler(Arch::kINTERRUPT, &interrupt, this);
     ARCH->setSignalHandler(Arch::kTERMINATE, &interrupt, this);
@@ -107,22 +105,10 @@ EventQueue::adoptBuffer(IEventQueueBuffer* buffer)
 }
 
 bool
-EventQueue::parent_requests_shutdown() const
-{
-    char ch;
-    return m_parentStream.try_read_char(ch) && ch == ShutdownCh;
-}
-
-bool
 EventQueue::getEvent(Event& event, double timeout)
 {
     Stopwatch timer(true);
 retry:
-    // before handling any events make sure we don't need to shutdown
-    if (parent_requests_shutdown()) {
-        event = Event(EventType::QUIT);
-        return false;
-    }
     // if no events are waiting then handle timers and then wait
     while (buffer_->isEmpty()) {
         // handle timers first

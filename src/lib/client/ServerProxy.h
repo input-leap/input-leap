@@ -83,8 +83,8 @@ private:
     KeyModifierMask translateModifierMask(KeyModifierMask) const;
 
     // event handlers
-    void handleData(const Event&, void*);
-    void handleKeepAliveAlarm(const Event&, void*);
+    void handle_data();
+    void handle_keep_alive_alarm();
 
     // message handlers
     void enter();
@@ -106,7 +106,7 @@ private:
     void infoAcknowledgment();
     void fileChunkReceived();
     void dragInfoReceived();
-    void handleClipboardSendingEvent(const Event&, void*);
+    void handle_clipboard_sending_event(const Event&);
 
 private:
     typedef EResult (ServerProxy::*MessageParser)(const std::uint8_t*);

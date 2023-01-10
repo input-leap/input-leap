@@ -37,7 +37,6 @@
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
-#include "base/TMethodEventJob.h"
 #include "base/Time.h"
 
 #include <string.h>
@@ -158,9 +157,8 @@ MSWindowsScreen::MSWindowsScreen(
     }
 
     // install event handlers
-    m_events->adoptHandler(EventType::SYSTEM, m_events->getSystemTarget(),
-                            new TMethodEventJob<MSWindowsScreen>(this,
-                                &MSWindowsScreen::handleSystemEvent));
+    m_events->add_handler(EventType::SYSTEM, m_events->getSystemTarget(),
+                          [this](const auto& e){ handle_system_event(e); });
 
     // install the platform event queue
     m_events->adoptBuffer(new MSWindowsEventQueueBuffer(m_events));
@@ -209,9 +207,8 @@ MSWindowsScreen::enable()
 
     // we need to poll some things to fix them
     m_fixTimer = m_events->newTimer(1.0, nullptr);
-    m_events->adoptHandler(EventType::TIMER, m_fixTimer,
-                            new TMethodEventJob<MSWindowsScreen>(this,
-                                &MSWindowsScreen::handleFixes));
+    m_events->add_handler(EventType::TIMER, m_fixTimer,
+                          [this](const auto& e){ handle_fixes(); });
 
     // install our clipboard snooper
     m_nextClipboardWindow = SetClipboardViewer(m_window);
@@ -887,8 +884,7 @@ void MSWindowsScreen::sendClipboardEvent(EventType type, ClipboardID id)
     sendEvent(type, create_event_data<ClipboardInfo>(info));
 }
 
-void
-MSWindowsScreen::handleSystemEvent(const Event& event, void*)
+void MSWindowsScreen::handle_system_event(const Event& event)
 {
     MSG* msg = event.get_data_as<MSG*>();
     assert(msg != nullptr);
@@ -1551,8 +1547,7 @@ MSWindowsScreen::updateScreenShape()
     m_desks->setShape(m_x, m_y, m_w, m_h, m_xCenter, m_yCenter, m_multimon);
 }
 
-void
-MSWindowsScreen::handleFixes(const Event&, void*)
+void MSWindowsScreen::handle_fixes()
 {
     // fix clipboard chain
     fixClipboardViewer();

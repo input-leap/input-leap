@@ -164,12 +164,11 @@ protected:
     A platform screen is expected to install a handler for system
     events in its c'tor like so:
     \code
-    m_events->adoptHandler(EventType::SYSTEM, m_events->getSystemTarget(),
-                          new TMethodEventJob<CXXXPlatformScreen>(this,
-                              &CXXXPlatformScreen::handleSystemEvent));
+    m_events->add_handler(EventType::SYSTEM, m_events->getSystemTarget(),
+                          [this](const auto& e){ handle_system_event(e); });
     \endcode
     It should remove the handler in its d'tor.  Override the
-    \c handleSystemEvent() method to process system events.
+    \c handle_system_event() method to process system events.
     It should post the events \c IScreen as appropriate.
 
     A primary screen has further responsibilities.  It should post
@@ -182,7 +181,7 @@ protected:
     The target of all events should be the value returned by
     \c getEventTarget().
     */
-    virtual void handleSystemEvent(const Event& event, void*) = 0;
+    virtual void handle_system_event(const Event& event) = 0;
 };
 
 } // namespace inputleap

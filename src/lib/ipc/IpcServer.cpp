@@ -24,7 +24,6 @@
 #include "net/IDataSocket.h"
 #include "io/IStream.h"
 #include "base/IEventQueue.h"
-#include "base/TMethodEventJob.h"
 #include "base/Event.h"
 #include "base/Log.h"
 
@@ -55,9 +54,8 @@ IpcServer::init()
 
     m_address.resolve();
 
-    m_events->adoptHandler(EventType::LISTEN_SOCKET_CONNECTING, socket_.get(),
-        new TMethodEventJob<IpcServer>(
-        this, &IpcServer::handleClientConnecting));
+    m_events->add_handler(EventType::LISTEN_SOCKET_CONNECTING, socket_.get(),
+                          [this](const auto& e){ handle_client_connecting(); });
 }
 
 IpcServer::~IpcServer()
@@ -85,8 +83,7 @@ IpcServer::listen()
     socket_->bind(m_address);
 }
 
-void
-IpcServer::handleClientConnecting(const Event&, void*)
+void IpcServer::handle_client_connecting()
 {
     auto stream = socket_->accept();
     if (!stream) {
@@ -102,20 +99,16 @@ IpcServer::handleClientConnecting(const Event&, void*)
         m_clients.push_back(proxy);
     }
 
-    m_events->adoptHandler(EventType::IPC_CLIENT_PROXY_DISCONNECTED, proxy,
-        new TMethodEventJob<IpcServer>(
-        this, &IpcServer::handleClientDisconnected));
-
-    m_events->adoptHandler(EventType::IPC_CLIENT_PROXY_MESSAGE_RECEIVED, proxy,
-        new TMethodEventJob<IpcServer>(
-        this, &IpcServer::handleMessageReceived));
+    m_events->add_handler(EventType::IPC_CLIENT_PROXY_DISCONNECTED, proxy,
+                          [this](const auto& e){ handle_client_disconnected(e); });
+    m_events->add_handler(EventType::IPC_CLIENT_PROXY_MESSAGE_RECEIVED, proxy,
+                          [this](const auto& e){ handle_message_received(e); });
 
     m_events->add_event(EventType::IPC_SERVER_CLIENT_CONNECTED, this,
                         create_event_data<IpcClientProxy*>(proxy));
 }
 
-void
-IpcServer::handleClientDisconnected(const Event& e, void*)
+void IpcServer::handle_client_disconnected(const Event& e)
 {
     IpcClientProxy* proxy = static_cast<IpcClientProxy*>(e.getTarget());
 
@@ -126,8 +119,7 @@ IpcServer::handleClientDisconnected(const Event& e, void*)
     LOG((CLOG_DEBUG "ipc client proxy removed, connected=%d", m_clients.size()));
 }
 
-void
-IpcServer::handleMessageReceived(const Event& e, void*)
+void IpcServer::handle_message_received(const Event& e)
 {
     Event event(EventType::IPC_SERVER_MESSAGE_RECEIVED, this);
     event.clone_data_from(e);

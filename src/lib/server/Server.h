@@ -297,31 +297,31 @@ private:
     void processOptions();
 
     // event handlers
-    void handleShapeChanged(const Event&, void*);
-    void handleClipboardGrabbed(const Event&, void*);
-    void handleClipboardChanged(const Event&, void*);
-    void handleKeyDownEvent(const Event&, void*);
-    void handleKeyUpEvent(const Event&, void*);
-    void handleKeyRepeatEvent(const Event&, void*);
-    void handleButtonDownEvent(const Event&, void*);
-    void handleButtonUpEvent(const Event&, void*);
-    void handleMotionPrimaryEvent(const Event&, void*);
-    void handleMotionSecondaryEvent(const Event&, void*);
-    void handleWheelEvent(const Event&, void*);
-    void handleScreensaverActivatedEvent(const Event&, void*);
-    void handleScreensaverDeactivatedEvent(const Event&, void*);
-    void handleSwitchWaitTimeout(const Event&, void*);
-    void handleClientDisconnected(const Event&, void*);
-    void handleClientCloseTimeout(const Event&, void*);
-    void handleSwitchToScreenEvent(const Event&, void*);
-    void handleToggleScreenEvent(const Event&, void*);
-    void handleSwitchInDirectionEvent(const Event&, void*);
-    void handleKeyboardBroadcastEvent(const Event&,void*);
-    void handleLockCursorToScreenEvent(const Event&, void*);
-    void handleFakeInputBeginEvent(const Event&, void*);
-    void handleFakeInputEndEvent(const Event&, void*);
-    void handleFileChunkSendingEvent(const Event&, void*);
-    void handleFileReceiveCompletedEvent(const Event&, void*);
+    void handle_shape_changed(BaseClientProxy* client);
+    void handle_clipboard_grabbed(const Event& event, BaseClientProxy* client);
+    void handle_clipboard_changed(const Event& event, BaseClientProxy* client);
+    void handle_key_down_event(const Event& event);
+    void handle_key_up_event(const Event& event);
+    void handle_key_repeat_event(const Event& event);
+    void handle_button_down_event(const Event& event);
+    void handle_button_up_event(const Event& event);
+    void handle_motion_primary_event(const Event& event);
+    void handle_motion_secondary_event(const Event& event);
+    void handle_wheel_event(const Event& event);
+    void handle_screensaver_activated_event();
+    void handle_screensaver_deactivated_event();
+    void handle_switch_wait_event();
+    void handle_client_disconnected(BaseClientProxy* client);
+    void handle_client_close_timeout(BaseClientProxy* client);
+    void handle_switch_to_screen_event(const Event& event);
+    void handle_toggle_screen_event(const Event& event);
+    void handle_switch_in_direction_event(const Event& event);
+    void handle_keyboard_broadcast_event(const Event& event);
+    void handle_lock_cursor_to_screen_event(const Event& event);
+    void handle_fake_input_begin_event();
+    void handle_fake_input_end_event();
+    void handle_file_chunk_sending_event(const Event& event);
+    void handle_file_receive_completed_event(const Event& event);
 
     // event processing
     void onClipboardChanged(BaseClientProxy* sender, ClipboardID id, std::uint32_t seqNum);

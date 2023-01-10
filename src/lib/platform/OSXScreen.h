@@ -104,7 +104,7 @@ public:
 
 protected:
     // IPlatformScreen overrides
-    virtual void handleSystemEvent(const Event&, void*);
+    virtual void handle_system_event(const Event& event);
     virtual void updateButtons();
     virtual IKeyState* getKeyState() const;
 
@@ -159,10 +159,10 @@ private:
     void enableDragTimer(bool enable);
 
     // drag timer handler
-    void handleDrag(const Event&, void*);
+    void handle_drag();
 
     // clipboard check timer handler
-    void handleClipboardCheck(const Event&, void*);
+    void handle_clipboard_check();
 
     // Resolution switch callback
     static void displayReconfigurationCallback(CGDirectDisplayID,
@@ -181,7 +181,7 @@ private:
     void handlePowerChangeRequest(natural_t messageType,
                              void* messageArgument);
 
-    void handleConfirmSleep(const Event& event, void*);
+    void handle_confirm_sleep(const Event& event);
 
     // global hotkey operating mode
     static bool isGlobalHotKeyOperatingModeAvailable();

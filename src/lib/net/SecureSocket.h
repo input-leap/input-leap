@@ -85,7 +85,7 @@ private:
     void showSecureLibInfo();
     void showSecureCipherInfo(); // may only be called with ssl_mutex_ acquired
 
-    void handleTCPConnected(const Event& event, void*);
+    void handle_tcp_connected(const Event& event);
 
     void freeSSLResources();
 

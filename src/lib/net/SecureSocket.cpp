@@ -19,7 +19,6 @@
 #include "SecureUtils.h"
 
 #include "net/TSocketMultiplexerMethodJob.h"
-#include "base/TMethodEventJob.h"
 #include "net/TCPSocket.h"
 #include "arch/XArch.h"
 #include "base/Log.h"
@@ -117,9 +116,8 @@ void SecureSocket::freeSSLResources()
 void
 SecureSocket::connect(const NetworkAddress& addr)
 {
-    m_events->adoptHandler(EventType::DATA_SOCKET_CONNECTED, getEventTarget(),
-                new TMethodEventJob<SecureSocket>(this,
-                        &SecureSocket::handleTCPConnected));
+    m_events->add_handler(EventType::DATA_SOCKET_CONNECTED, getEventTarget(),
+                          [this](const auto& e){ handle_tcp_connected(e); });
 
     TCPSocket::connect(addr);
 }
@@ -871,8 +869,7 @@ SecureSocket::showSecureConnectInfo()
     return;
 }
 
-void
-SecureSocket::handleTCPConnected(const Event& event, void*)
+void SecureSocket::handle_tcp_connected(const Event& event)
 {
     (void) event;
 

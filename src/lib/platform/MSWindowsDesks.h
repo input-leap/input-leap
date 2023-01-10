@@ -228,7 +228,7 @@ private:
     void removeDesks();
     void checkDesk();
     bool isDeskAccessible(const Desk* desk) const;
-    void handleCheckDesk(const Event& event, void*);
+    void handle_check_desk();
 
     // communication with desk threads
     void waitForDesk() const;

@@ -31,7 +31,7 @@ public:
     // IClient overrides
     void mouseWheel(std::int32_t xDelta, std::int32_t yDelta) override;
 
-    void handleKeepAlive(const Event&, void*);
+    void handle_keep_alive();
 
 protected:
     // ClientProxy overrides

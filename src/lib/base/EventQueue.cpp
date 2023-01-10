@@ -21,7 +21,6 @@
 #include "arch/Arch.h"
 #include "base/SimpleEventQueueBuffer.h"
 #include "base/Stopwatch.h"
-#include "base/IEventJob.h"
 #include "base/EventTypes.h"
 #include "base/Log.h"
 #include "base/XBase.h"
@@ -182,12 +181,16 @@ bool
 EventQueue::dispatchEvent(const Event& event)
 {
     void* target   = event.getTarget();
-    IEventJob* job = getHandler(event.getType(), target);
-    if (job == nullptr) {
-        job = getHandler(EventType::UNKNOWN, target);
+
+    const auto* type_handler = get_handler(event.getType(), target);
+    if (type_handler) {
+        (*type_handler)(event);
+        return true;
     }
-    if (job != nullptr) {
-        job->run(event);
+
+    const auto* any_handler = get_handler(EventType::UNKNOWN, target);
+    if (any_handler) {
+        (*any_handler)(event);
         return true;
     }
     return false;
@@ -288,56 +291,37 @@ EventQueue::deleteTimer(EventQueueTimer* timer)
     buffer_->deleteTimer(timer);
 }
 
-void
-EventQueue::adoptHandler(EventType type, void* target, IEventJob* handler)
+void EventQueue::add_handler(EventType type, void* target, const EventHandler& handler)
 {
     std::lock_guard<std::mutex> lock(mutex_);
-    m_handlers[target][type].reset(handler);
+    m_handlers[target][type] = handler;
 }
 
 void
 EventQueue::removeHandler(EventType type, void* target)
 {
-    std::unique_ptr<IEventJob> handler;
-    {
-        std::lock_guard<std::mutex> lock(mutex_);
-        HandlerTable::iterator index = m_handlers.find(target);
-        if (index != m_handlers.end()) {
-            TypeHandlerTable& typeHandlers = index->second;
-            TypeHandlerTable::iterator index2 = typeHandlers.find(type);
-            if (index2 != typeHandlers.end()) {
-                handler = std::move(index2->second);
-                typeHandlers.erase(index2);
-            }
+    std::lock_guard<std::mutex> lock(mutex_);
+    HandlerTable::iterator index = m_handlers.find(target);
+    if (index != m_handlers.end()) {
+        TypeHandlerTable& typeHandlers = index->second;
+        TypeHandlerTable::iterator index2 = typeHandlers.find(type);
+        if (index2 != typeHandlers.end()) {
+            typeHandlers.erase(index2);
         }
     }
-    // handler is erased here. It is done outside of lock in order to avoid potential deadlock.
-    // TODO: check if it is the case
 }
 
 void
 EventQueue::removeHandlers(void* target)
 {
-    std::vector<std::unique_ptr<IEventJob>> handlers;
-    {
-        std::lock_guard<std::mutex> lock(mutex_);
-        HandlerTable::iterator index = m_handlers.find(target);
-        if (index != m_handlers.end()) {
-            // copy to handlers array and clear table for target
-            TypeHandlerTable& typeHandlers = index->second;
-            for (TypeHandlerTable::iterator index2 = typeHandlers.begin();
-                            index2 != typeHandlers.end(); ++index2) {
-                handlers.push_back(std::move(index2->second));
-            }
-            typeHandlers.clear();
-        }
+    std::lock_guard<std::mutex> lock(mutex_);
+    HandlerTable::iterator index = m_handlers.find(target);
+    if (index != m_handlers.end()) {
+        index->second.clear();
     }
-
-    // handlers are erased here. It is done outside of lock in order to avoid potential deadlock.
-    // TODO: check if it is the case
 }
 
-IEventJob* EventQueue::getHandler(EventType type, void* target) const
+const EventQueue::EventHandler* EventQueue::get_handler(EventType type, void* target) const
 {
     std::lock_guard<std::mutex> lock(mutex_);
     HandlerTable::const_iterator index = m_handlers.find(target);
@@ -345,7 +329,7 @@ IEventJob* EventQueue::getHandler(EventType type, void* target) const
         const TypeHandlerTable& typeHandlers = index->second;
         TypeHandlerTable::const_iterator index2 = typeHandlers.find(type);
         if (index2 != typeHandlers.end()) {
-            return index2->second.get();
+            return &index2->second;
         }
     }
     return nullptr;

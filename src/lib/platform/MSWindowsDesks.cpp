@@ -26,7 +26,6 @@
 #include "arch/win32/ArchMiscWindows.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
-#include "base/TMethodEventJob.h"
 #include "base/IEventQueue.h"
 
 #include <malloc.h>
@@ -141,9 +140,8 @@ MSWindowsDesks::enable()
     // we wouldn't need this if windows notified us of a desktop
     // change but as far as i can tell it doesn't.
     m_timer = m_events->newTimer(0.2, nullptr);
-    m_events->adoptHandler(EventType::TIMER, m_timer,
-                            new TMethodEventJob<MSWindowsDesks>(
-                                this, &MSWindowsDesks::handleCheckDesk));
+    m_events->add_handler(EventType::TIMER, m_timer,
+                          [this](const auto& e){ handle_check_desk(); });
 
     updateKeys();
 }
@@ -852,8 +850,7 @@ MSWindowsDesks::waitForDesk() const
     self->is_desks_ready_ = false;
 }
 
-void
-MSWindowsDesks::handleCheckDesk(const Event&, void*)
+void MSWindowsDesks::handle_check_desk()
 {
     checkDesk();
 

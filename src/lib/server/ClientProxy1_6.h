@@ -35,7 +35,7 @@ public:
     bool recvClipboard() override;
 
 private:
-    void handleClipboardSendingEvent(const Event&, void*);
+    void handle_clipboard_sending_event(const Event& event);
 
 private:
     IEventQueue* m_events;

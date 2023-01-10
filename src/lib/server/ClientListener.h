@@ -70,10 +70,10 @@ public:
 
 private:
     // client connection event handlers
-    void handleClientConnecting(const Event&, void*);
-    void handleClientAccepted(const Event&, void*);
-    void handleUnknownClient(const Event&, void*);
-    void handleClientDisconnected(const Event&, void*);
+    void handle_client_connecting();
+    void handle_client_accepted(IDataSocket* socket);
+    void handle_unknown_client(ClientProxyUnknown* client);
+    void handle_client_disconnected(ClientProxy* client);
 
     void cleanupListenSocket();
     void cleanupClientSockets();

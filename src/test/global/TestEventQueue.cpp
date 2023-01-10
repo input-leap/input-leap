@@ -18,7 +18,6 @@
 #include "test/global/TestEventQueue.h"
 
 #include "base/Log.h"
-#include "base/TMethodEventJob.h"
 #include "base/SimpleEventQueueBuffer.h"
 #include <stdexcept>
 
@@ -35,9 +34,8 @@ TestEventQueue::initQuitTimeout(double timeout)
 {
     assert(m_quitTimeoutTimer == nullptr);
     m_quitTimeoutTimer = newOneShotTimer(timeout, nullptr);
-    adoptHandler(EventType::TIMER, m_quitTimeoutTimer,
-        new TMethodEventJob<TestEventQueue>(
-        this, &TestEventQueue::handleQuitTimeout));
+    add_handler(EventType::TIMER, m_quitTimeoutTimer,
+                [](const auto& e){ throw std::runtime_error("test event queue timeout"); });
 }
 
 void
@@ -46,20 +44,6 @@ TestEventQueue::cleanupQuitTimeout()
     removeHandler(EventType::TIMER, m_quitTimeoutTimer);
     delete m_quitTimeoutTimer;
     m_quitTimeoutTimer = nullptr;
-}
-
-void
-TestEventQueue::handleQuitTimeout(const Event&, void* vclient)
-{
-    (void) vclient;
-
-    throw std::runtime_error("test event queue timeout");
-}
-
-bool
-TestEventQueue::parent_requests_shutdown() const
-{
-    return false;
 }
 
 } // namespace inputleap

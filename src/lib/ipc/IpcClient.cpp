@@ -20,7 +20,6 @@
 #include "ipc/Ipc.h"
 #include "ipc/IpcServerProxy.h"
 #include "ipc/IpcMessage.h"
-#include "base/TMethodEventJob.h"
 #include <cassert>
 
 namespace inputleap {
@@ -54,16 +53,14 @@ IpcClient::~IpcClient()
 void
 IpcClient::connect()
 {
-    m_events->adoptHandler(EventType::DATA_SOCKET_CONNECTED, m_socket.getEventTarget(),
-        new TMethodEventJob<IpcClient>(
-        this, &IpcClient::handleConnected));
+    m_events->add_handler(EventType::DATA_SOCKET_CONNECTED, m_socket.getEventTarget(),
+                          [this](const auto& e){ handle_connected(); });
 
     m_socket.connect(m_serverAddress);
     server_ = std::make_unique<IpcServerProxy>(m_socket, m_events);
 
-    m_events->adoptHandler(EventType::IPC_SERVER_PROXY_MESSAGE_RECEIVED, server_.get(),
-        new TMethodEventJob<IpcClient>(
-        this, &IpcClient::handleMessageReceived));
+    m_events->add_handler(EventType::IPC_SERVER_PROXY_MESSAGE_RECEIVED, server_.get(),
+                          [this](const auto& e){ handle_message_received(e); });
 }
 
 void
@@ -83,8 +80,7 @@ IpcClient::send(const IpcMessage& message)
     server_->send(message);
 }
 
-void
-IpcClient::handleConnected(const Event&, void*)
+void IpcClient::handle_connected()
 {
     m_events->add_event(EventType::IPC_CLIENT_CONNECTED, this);
 
@@ -92,8 +88,7 @@ IpcClient::handleConnected(const Event&, void*)
     send(message);
 }
 
-void
-IpcClient::handleMessageReceived(const Event& e, void*)
+void IpcClient::handle_message_received(const Event& e)
 {
     Event event(EventType::IPC_CLIENT_MESSAGE_RECEIVED, this);
     event.clone_data_from(e);

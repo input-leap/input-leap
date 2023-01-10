@@ -98,7 +98,7 @@ private:
     void updateDisableTimer();
 
     // called periodically to prevent the screen saver from starting
-    void handleDisableTimer(const Event&, void*);
+    void handle_disable_timer();
 
     // force DPMS to activate or deactivate
     void activateDPMS(bool activate);

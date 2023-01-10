@@ -362,7 +362,7 @@ public:
 
 private:
     // event handling
-    void handleEvent(const Event&, void*);
+    void handle_event(const Event&);
 
 private:
     RuleList m_ruleList;

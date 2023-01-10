@@ -38,7 +38,7 @@ public:
 private:
     void send(const IpcMessage& message);
 
-    void handleData(const Event&, void*);
+    void handle_data();
     IpcLogLineMessage parseLogLine();
     void disconnect();
 

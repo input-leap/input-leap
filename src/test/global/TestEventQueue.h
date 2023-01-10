@@ -29,11 +29,9 @@ public:
 
     using IEventQueue::add_event;
 
-    void handleQuitTimeout(const Event&, void* vclient);
     void raiseQuitEvent();
     void initQuitTimeout(double timeout);
     void cleanupQuitTimeout();
-    bool parent_requests_shutdown() const override;
 
 private:
     void timeoutThread(void*);

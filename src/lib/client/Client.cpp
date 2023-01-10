@@ -37,7 +37,6 @@
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/Time.h"
-#include "base/TMethodEventJob.h"
 
 #include <cstring>
 #include <cstdlib>
@@ -75,20 +74,16 @@ Client::Client(IEventQueue* events, const std::string& name, const NetworkAddres
     assert(m_screen != nullptr);
 
     // register suspend/resume event handlers
-    m_events->adoptHandler(EventType::SCREEN_SUSPEND, getEventTarget(),
-                            new TMethodEventJob<Client>(this,
-                                &Client::handleSuspend));
-    m_events->adoptHandler(EventType::SCREEN_RESUME, getEventTarget(),
-                            new TMethodEventJob<Client>(this,
-                                &Client::handleResume));
+    m_events->add_handler(EventType::SCREEN_SUSPEND, getEventTarget(),
+                          [this](const auto& e){ handle_suspend(); });
+    m_events->add_handler(EventType::SCREEN_RESUME, getEventTarget(),
+                          [this](const auto& e){ handle_resume(); });
 
     if (m_args.m_enableDragDrop) {
-        m_events->adoptHandler(EventType::FILE_CHUNK_SENDING, this,
-                                new TMethodEventJob<Client>(this,
-                                    &Client::handleFileChunkSending));
-        m_events->adoptHandler(EventType::FILE_RECEIVE_COMPLETED, this,
-                                new TMethodEventJob<Client>(this,
-                                    &Client::handleFileReceiveCompleted));
+        m_events->add_handler(EventType::FILE_CHUNK_SENDING, this,
+                              [this](const auto& e){ handle_file_chunk_sending(e); });
+        m_events->add_handler(EventType::FILE_RECEIVE_COMPLETED, this,
+                              [this](const auto& e){ handle_file_receive_completed(e); });
     }
 }
 
@@ -430,19 +425,15 @@ Client::setupConnecting()
     assert(m_stream != nullptr);
 
     if (m_args.m_enableCrypto) {
-        m_events->adoptHandler(EventType::DATA_SOCKET_SECURE_CONNECTED, m_stream->getEventTarget(),
-                        new TMethodEventJob<Client>(this,
-                                &Client::handleConnected));
+        m_events->add_handler(EventType::DATA_SOCKET_SECURE_CONNECTED, m_stream->getEventTarget(),
+                              [this](const auto& e){ handle_connected(); });
     }
     else {
-        m_events->adoptHandler(EventType::DATA_SOCKET_CONNECTED, m_stream->getEventTarget(),
-                        new TMethodEventJob<Client>(this,
-                                &Client::handleConnected));
+        m_events->add_handler(EventType::DATA_SOCKET_CONNECTED, m_stream->getEventTarget(),
+                              [this](const auto& e){ handle_connected(); });
     }
-
-    m_events->adoptHandler(EventType::DATA_SOCKET_CONNECTION_FAILED, m_stream->getEventTarget(),
-                            new TMethodEventJob<Client>(this,
-                                &Client::handleConnectionFailed));
+    m_events->add_handler(EventType::DATA_SOCKET_CONNECTION_FAILED, m_stream->getEventTarget(),
+                          [this](const auto& e){ handle_connection_failed(e); });
 }
 
 void
@@ -450,24 +441,18 @@ Client::setupConnection()
 {
     assert(m_stream != nullptr);
 
-    m_events->adoptHandler(EventType::SOCKET_DISCONNECTED, m_stream->getEventTarget(),
-                            new TMethodEventJob<Client>(this,
-                                &Client::handleDisconnected));
-    m_events->adoptHandler(EventType::STREAM_INPUT_READY, m_stream->getEventTarget(),
-                            new TMethodEventJob<Client>(this,
-                                &Client::handleHello));
-    m_events->adoptHandler(EventType::STREAM_OUTPUT_ERROR, m_stream->getEventTarget(),
-                            new TMethodEventJob<Client>(this,
-                                &Client::handleOutputError));
-    m_events->adoptHandler(EventType::STREAM_INPUT_SHUTDOWN, m_stream->getEventTarget(),
-                            new TMethodEventJob<Client>(this,
-                                &Client::handleDisconnected));
-    m_events->adoptHandler(EventType::STREAM_OUTPUT_SHUTDOWN, m_stream->getEventTarget(),
-                            new TMethodEventJob<Client>(this,
-                                &Client::handleDisconnected));
-
-    m_events->adoptHandler(EventType::SOCKET_STOP_RETRY, m_stream->getEventTarget(),
-                           new TMethodEventJob<Client>(this, &Client::handleStopRetry));
+    m_events->add_handler(EventType::SOCKET_DISCONNECTED, m_stream->getEventTarget(),
+                          [this](const auto& e){ handle_disconnected(); });
+    m_events->add_handler(EventType::STREAM_INPUT_READY, m_stream->getEventTarget(),
+                          [this](const auto& e){ handle_hello(); });
+    m_events->add_handler(EventType::STREAM_OUTPUT_ERROR, m_stream->getEventTarget(),
+                          [this](const auto& e){ handle_output_error(); });
+    m_events->add_handler(EventType::STREAM_INPUT_SHUTDOWN, m_stream->getEventTarget(),
+                          [this](const auto& e){ handle_disconnected(); });
+    m_events->add_handler(EventType::STREAM_OUTPUT_SHUTDOWN, m_stream->getEventTarget(),
+                          [this](const auto& e){ handle_disconnected(); });
+    m_events->add_handler(EventType::SOCKET_STOP_RETRY, m_stream->getEventTarget(),
+                          [this](const auto& e){ handle_stop_retry(); });
 }
 
 void
@@ -477,12 +462,10 @@ Client::setupScreen()
 
     m_ready  = false;
     m_server = new ServerProxy(this, m_stream, m_events);
-    m_events->adoptHandler(EventType::SCREEN_SHAPE_CHANGED, getEventTarget(),
-                            new TMethodEventJob<Client>(this,
-                                &Client::handleShapeChanged));
-    m_events->adoptHandler(EventType::CLIPBOARD_GRABBED, getEventTarget(),
-                            new TMethodEventJob<Client>(this,
-                                &Client::handleClipboardGrabbed));
+    m_events->add_handler(EventType::SCREEN_SHAPE_CHANGED, getEventTarget(),
+                          [this](const auto& e){ handle_shape_changed(); });
+    m_events->add_handler(EventType::CLIPBOARD_GRABBED, getEventTarget(),
+                          [this](const auto& e){ handle_clipboard_grabbed(e); });
 }
 
 void
@@ -491,9 +474,8 @@ Client::setupTimer()
     assert(m_timer == nullptr);
 
     m_timer = m_events->newOneShotTimer(15.0, nullptr);
-    m_events->adoptHandler(EventType::TIMER, m_timer,
-                            new TMethodEventJob<Client>(this,
-                                &Client::handleConnectTimeout));
+    m_events->add_handler(EventType::TIMER, m_timer,
+                          [this](const auto& e){ handle_connect_timeout(); });
 }
 
 void
@@ -553,7 +535,7 @@ Client::cleanupStream()
 }
 
 void
-Client::handleConnected(const Event&, void*)
+Client::handle_connected()
 {
     LOG((CLOG_DEBUG1 "connected;  wait for hello"));
     cleanupConnecting();
@@ -567,8 +549,7 @@ Client::handleConnected(const Event&, void*)
     }
 }
 
-void
-Client::handleConnectionFailed(const Event& event, void*)
+void Client::handle_connection_failed(const Event& event)
 {
     const auto& info = event.get_data_as<IDataSocket::ConnectionFailedInfo>();
 
@@ -579,8 +560,7 @@ Client::handleConnectionFailed(const Event& event, void*)
     sendConnectionFailedEvent(info.m_what.c_str());
 }
 
-void
-Client::handleConnectTimeout(const Event&, void*)
+void Client::handle_connect_timeout()
 {
     cleanupTimer();
     cleanupConnecting();
@@ -590,8 +570,7 @@ Client::handleConnectTimeout(const Event&, void*)
     sendConnectionFailedEvent("Timed out");
 }
 
-void
-Client::handleOutputError(const Event&, void*)
+void Client::handle_output_error()
 {
     cleanupTimer();
     cleanupScreen();
@@ -600,8 +579,7 @@ Client::handleOutputError(const Event&, void*)
     send_event(EventType::CLIENT_DISCONNECTED);
 }
 
-void
-Client::handleDisconnected(const Event&, void*)
+void Client::handle_disconnected()
 {
     cleanupTimer();
     cleanupScreen();
@@ -610,15 +588,13 @@ Client::handleDisconnected(const Event&, void*)
     send_event(EventType::CLIENT_DISCONNECTED);
 }
 
-void
-Client::handleShapeChanged(const Event&, void*)
+void Client::handle_shape_changed()
 {
     LOG((CLOG_DEBUG "resolution changed"));
     m_server->onInfoChanged();
 }
 
-void
-Client::handleClipboardGrabbed(const Event& event, void*)
+void Client::handle_clipboard_grabbed(const Event& event)
 {
     if (!m_enableClipboard) {
         return;
@@ -641,8 +617,7 @@ Client::handleClipboardGrabbed(const Event& event, void*)
     }
 }
 
-void
-Client::handleHello(const Event&, void*)
+void Client::handle_hello()
 {
     std::int16_t major, minor;
     if (!ProtocolUtil::readf(m_stream, kMsgHello, &major, &minor)) {
@@ -680,8 +655,7 @@ Client::handleHello(const Event&, void*)
     }
 }
 
-void
-Client::handleSuspend(const Event&, void*)
+void Client::handle_suspend()
 {
     LOG((CLOG_INFO "suspend"));
     m_suspended       = true;
@@ -690,8 +664,7 @@ Client::handleSuspend(const Event&, void*)
     m_connectOnResume = wasConnected;
 }
 
-void
-Client::handleResume(const Event&, void*)
+void Client::handle_resume()
 {
     LOG((CLOG_INFO "resume"));
     m_suspended = false;
@@ -701,14 +674,12 @@ Client::handleResume(const Event&, void*)
     }
 }
 
-void
-Client::handleFileChunkSending(const Event& event, void*)
+void Client::handle_file_chunk_sending(const Event& event)
 {
     send_file_chunk(event.get_data_as<FileChunk>());
 }
 
-void
-Client::handleFileReceiveCompleted(const Event& event, void*)
+void Client::handle_file_receive_completed(const Event& event)
 {
     (void) event;
 
@@ -723,8 +694,7 @@ Client::onFileReceiveCompleted()
     }
 }
 
-void
-Client::handleStopRetry(const Event&, void*)
+void Client::handle_stop_retry()
 {
     m_args.m_restartable = false;
 }

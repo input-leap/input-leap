@@ -33,7 +33,6 @@
 #include "io/XIO.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
-#include "base/TMethodEventJob.h"
 
 namespace inputleap {
 
@@ -45,10 +44,8 @@ ClientProxyUnknown::ClientProxyUnknown(inputleap::IStream* stream, double timeou
     m_events(events)
 {
     assert(m_server != nullptr);
-
-    m_events->adoptHandler(EventType::TIMER, this,
-                            new TMethodEventJob<ClientProxyUnknown>(this,
-                                &ClientProxyUnknown::handleTimeout, nullptr));
+    m_events->add_handler(EventType::TIMER, this,
+                          [this](const auto& e){ handle_timeout(); });
     m_timer = m_events->newOneShotTimer(timeout, this);
     addStreamHandlers();
 
@@ -103,35 +100,26 @@ void
 ClientProxyUnknown::addStreamHandlers()
 {
     assert(m_stream != nullptr);
-
-    m_events->adoptHandler(EventType::STREAM_INPUT_READY, m_stream->getEventTarget(),
-                            new TMethodEventJob<ClientProxyUnknown>(this,
-                                &ClientProxyUnknown::handleData));
-    m_events->adoptHandler(EventType::STREAM_OUTPUT_ERROR, m_stream->getEventTarget(),
-                            new TMethodEventJob<ClientProxyUnknown>(this,
-                                &ClientProxyUnknown::handleWriteError));
-    m_events->adoptHandler(EventType::STREAM_INPUT_SHUTDOWN, m_stream->getEventTarget(),
-                            new TMethodEventJob<ClientProxyUnknown>(this,
-                                &ClientProxyUnknown::handleDisconnect));
-    m_events->adoptHandler(EventType::STREAM_INPUT_FORMAT_ERROR, m_stream->getEventTarget(),
-                           new TMethodEventJob<ClientProxyUnknown>(this,
-                                &ClientProxyUnknown::handleDisconnect));
-    m_events->adoptHandler(EventType::STREAM_OUTPUT_SHUTDOWN, m_stream->getEventTarget(),
-                            new TMethodEventJob<ClientProxyUnknown>(this,
-                                &ClientProxyUnknown::handleWriteError));
+    m_events->add_handler(EventType::STREAM_INPUT_READY, m_stream->getEventTarget(),
+                          [this](const auto& e){ handle_data(); });
+    m_events->add_handler(EventType::STREAM_OUTPUT_ERROR, m_stream->getEventTarget(),
+                          [this](const auto& e){ handle_write_error(); });
+    m_events->add_handler(EventType::STREAM_INPUT_SHUTDOWN, m_stream->getEventTarget(),
+                          [this](const auto& e){ handle_disconnect(); });
+    m_events->add_handler(EventType::STREAM_INPUT_FORMAT_ERROR, m_stream->getEventTarget(),
+                          [this](const auto& e){ handle_disconnect(); });
+    m_events->add_handler(EventType::STREAM_OUTPUT_SHUTDOWN, m_stream->getEventTarget(),
+                          [this](const auto& e){ handle_write_error(); });
 }
 
 void
 ClientProxyUnknown::addProxyHandlers()
 {
     assert(m_proxy != nullptr);
-
-    m_events->adoptHandler(EventType::CLIENT_PROXY_READY, m_proxy,
-                            new TMethodEventJob<ClientProxyUnknown>(this,
-                                &ClientProxyUnknown::handleReady));
-    m_events->adoptHandler(EventType::CLIENT_PROXY_DISCONNECTED, m_proxy,
-                            new TMethodEventJob<ClientProxyUnknown>(this,
-                                &ClientProxyUnknown::handleDisconnect));
+    m_events->add_handler(EventType::CLIENT_PROXY_READY, m_proxy,
+                          [this](const auto& e){ handle_ready(); });
+    m_events->add_handler(EventType::CLIENT_PROXY_DISCONNECTED, m_proxy,
+                          [this](const auto& e){ handle_disconnect(); });
 }
 
 void
@@ -160,8 +148,7 @@ ClientProxyUnknown::removeTimer()
     }
 }
 
-void
-ClientProxyUnknown::handleData(const Event&, void*)
+void ClientProxyUnknown::handle_data()
 {
     LOG((CLOG_DEBUG1 "parsing hello reply"));
 
@@ -258,29 +245,25 @@ ClientProxyUnknown::handleData(const Event&, void*)
     sendFailure();
 }
 
-void
-ClientProxyUnknown::handleWriteError(const Event&, void*)
+void ClientProxyUnknown::handle_write_error()
 {
     LOG((CLOG_NOTE "error communicating with new client"));
     sendFailure();
 }
 
-void
-ClientProxyUnknown::handleTimeout(const Event&, void*)
+void ClientProxyUnknown::handle_timeout()
 {
     LOG((CLOG_NOTE "new client is unresponsive"));
     sendFailure();
 }
 
-void
-ClientProxyUnknown::handleDisconnect(const Event&, void*)
+void ClientProxyUnknown::handle_disconnect()
 {
     LOG((CLOG_NOTE "new client disconnected"));
     sendFailure();
 }
 
-void
-ClientProxyUnknown::handleReady(const Event&, void*)
+void ClientProxyUnknown::handle_ready()
 {
     sendSuccess();
 }

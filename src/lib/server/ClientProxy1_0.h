@@ -75,10 +75,10 @@ private:
     void disconnect();
     void removeHandlers();
 
-    void handleData(const Event&, void*);
-    void handleDisconnect(const Event&, void*);
-    void handleWriteError(const Event&, void*);
-    void handleFlatline(const Event&, void*);
+    void handle_data();
+    void handle_disconnect();
+    void handle_write_error();
+    void handle_flatline();
 
     bool recvInfo();
     bool recvGrabClipboard();

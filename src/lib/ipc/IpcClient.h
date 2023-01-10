@@ -56,8 +56,8 @@ public:
 
 private:
     void init();
-    void handleConnected(const Event&, void*);
-    void handleMessageReceived(const Event&, void*);
+    void handle_connected();
+    void handle_message_received(const Event& event);
 
 private:
     NetworkAddress m_serverAddress;

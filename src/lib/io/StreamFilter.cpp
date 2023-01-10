@@ -18,7 +18,6 @@
 
 #include "io/StreamFilter.h"
 #include "base/IEventQueue.h"
-#include "base/TMethodEventJob.h"
 
 namespace inputleap {
 
@@ -29,9 +28,8 @@ StreamFilter::StreamFilter(IEventQueue* events, IStream* stream, bool adoptStrea
 {
     // replace handlers for m_stream
     m_events->removeHandlers(m_stream->getEventTarget());
-    m_events->adoptHandler(EventType::UNKNOWN, m_stream->getEventTarget(),
-                            new TMethodEventJob<StreamFilter>(this,
-                                &StreamFilter::handleUpstreamEvent));
+    m_events->add_handler(EventType::UNKNOWN, m_stream->getEventTarget(),
+                          [this](const auto& e){ handle_upstream_event(e); });
 }
 
 StreamFilter::~StreamFilter()
@@ -107,8 +105,7 @@ StreamFilter::filterEvent(const Event& event)
     m_events->dispatchEvent(copy);
 }
 
-void
-StreamFilter::handleUpstreamEvent(const Event& event, void*)
+void StreamFilter::handle_upstream_event(const Event& event)
 {
     filterEvent(event);
 }

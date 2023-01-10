@@ -42,7 +42,6 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/Time.h"
-#include "base/TMethodEventJob.h"
 
 #include <cstring>
 #include <cstdlib>
@@ -113,69 +112,54 @@ Server::Server(
 		clipboard.m_clipboardData   = clipboard.m_clipboard.marshall();
 	}
 
-	// install event handlers
-    m_events->adoptHandler(EventType::TIMER, this,
-							new TMethodEventJob<Server>(this,
-								&Server::handleSwitchWaitTimeout));
-    m_events->adoptHandler(EventType::KEY_STATE_KEY_DOWN, m_inputFilter,
-							new TMethodEventJob<Server>(this,
-								&Server::handleKeyDownEvent));
-    m_events->adoptHandler(EventType::KEY_STATE_KEY_UP, m_inputFilter,
-							new TMethodEventJob<Server>(this,
-								&Server::handleKeyUpEvent));
-    m_events->adoptHandler(EventType::KEY_STATE_KEY_REPEAT, m_inputFilter,
-							new TMethodEventJob<Server>(this,
-								&Server::handleKeyRepeatEvent));
-    m_events->adoptHandler(EventType::PRIMARY_SCREEN_BUTTON_DOWN, m_inputFilter,
-							new TMethodEventJob<Server>(this,
-								&Server::handleButtonDownEvent));
-    m_events->adoptHandler(EventType::PRIMARY_SCREEN_BUTTON_UP, m_inputFilter,
-							new TMethodEventJob<Server>(this,
-								&Server::handleButtonUpEvent));
-    m_events->adoptHandler(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY, m_primaryClient->getEventTarget(),
-							new TMethodEventJob<Server>(this,
-								&Server::handleMotionPrimaryEvent));
-    m_events->adoptHandler(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY, m_primaryClient->getEventTarget(),
-							new TMethodEventJob<Server>(this,
-								&Server::handleMotionSecondaryEvent));
-    m_events->adoptHandler(EventType::PRIMARY_SCREEN_WHEEL, m_primaryClient->getEventTarget(),
-							new TMethodEventJob<Server>(this,
-								&Server::handleWheelEvent));
-    m_events->adoptHandler(EventType::PRIMARY_SCREEN_SAVER_ACTIVATED, m_primaryClient->getEventTarget(),
-							new TMethodEventJob<Server>(this,
-								&Server::handleScreensaverActivatedEvent));
-    m_events->adoptHandler(EventType::PRIMARY_SCREEN_SAVER_DEACTIVATED, m_primaryClient->getEventTarget(),
-							new TMethodEventJob<Server>(this,
-								&Server::handleScreensaverDeactivatedEvent));
-    m_events->adoptHandler(EventType::SERVER_SWITCH_TO_SCREEN, m_inputFilter,
-							new TMethodEventJob<Server>(this,
-								&Server::handleSwitchToScreenEvent));
-    m_events->adoptHandler(EventType::SERVER_TOGGLE_SCREEN, m_inputFilter,
-                           new TMethodEventJob<Server>(this,
-                               &Server::handleToggleScreenEvent));
-    m_events->adoptHandler(EventType::SERVER_SWITCH_INDIRECTION, m_inputFilter,
-							new TMethodEventJob<Server>(this,
-								&Server::handleSwitchInDirectionEvent));
-    m_events->adoptHandler(EventType::SERVER_KEYBOARD_BROADCAST, m_inputFilter,
-							new TMethodEventJob<Server>(this,
-								&Server::handleKeyboardBroadcastEvent));
-    m_events->adoptHandler(EventType::SERVER_LOCK_CURSOR_TO_SCREEN, m_inputFilter,
-							new TMethodEventJob<Server>(this,
-								&Server::handleLockCursorToScreenEvent));
-    m_events->adoptHandler(EventType::PRIMARY_SCREEN_FAKE_INPUT_BEGIN, m_inputFilter,
-							new TMethodEventJob<Server>(this,
-								&Server::handleFakeInputBeginEvent));
-    m_events->adoptHandler(EventType::PRIMARY_SCREEN_FAKE_INPUT_END, m_inputFilter,
-							new TMethodEventJob<Server>(this,
-								&Server::handleFakeInputEndEvent));
+    // install event handlers
+    m_events->add_handler(EventType::TIMER, this,
+                          [this](const auto& e){ handle_switch_wait_event(); });
+    m_events->add_handler(EventType::KEY_STATE_KEY_DOWN, m_inputFilter,
+                          [this](const auto& e){ handle_key_down_event(e); });
+    m_events->add_handler(EventType::KEY_STATE_KEY_UP, m_inputFilter,
+                          [this](const auto& e){ handle_key_up_event(e); });
+    m_events->add_handler(EventType::KEY_STATE_KEY_REPEAT, m_inputFilter,
+                          [this](const auto& e){ handle_key_repeat_event(e); });
+    m_events->add_handler(EventType::PRIMARY_SCREEN_BUTTON_DOWN, m_inputFilter,
+                          [this](const auto& e){ handle_button_down_event(e); });
+    m_events->add_handler(EventType::PRIMARY_SCREEN_BUTTON_UP, m_inputFilter,
+                          [this](const auto& e){ handle_button_up_event(e); });
+    m_events->add_handler(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY,
+                          m_primaryClient->getEventTarget(),
+                          [this](const auto& e){ handle_motion_primary_event(e); });
+    m_events->add_handler(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY,
+                          m_primaryClient->getEventTarget(),
+                          [this](const auto& e){ handle_motion_secondary_event(e); });
+    m_events->add_handler(EventType::PRIMARY_SCREEN_WHEEL,
+                          m_primaryClient->getEventTarget(),
+                          [this](const auto& e){ handle_wheel_event(e); });
+    m_events->add_handler(EventType::PRIMARY_SCREEN_SAVER_ACTIVATED,
+                          m_primaryClient->getEventTarget(),
+                          [this](const auto& e){ handle_screensaver_activated_event(); });
+    m_events->add_handler(EventType::PRIMARY_SCREEN_SAVER_DEACTIVATED,
+                          m_primaryClient->getEventTarget(),
+                          [this](const auto& e){ handle_screensaver_deactivated_event(); });
+    m_events->add_handler(EventType::SERVER_SWITCH_TO_SCREEN, m_inputFilter,
+                          [this](const auto& e){ handle_switch_to_screen_event(e); });
+    m_events->add_handler(EventType::SERVER_TOGGLE_SCREEN, m_inputFilter,
+                          [this](const auto& e){ handle_toggle_screen_event(e); });
+    m_events->add_handler(EventType::SERVER_SWITCH_INDIRECTION, m_inputFilter,
+                          [this](const auto& e){ handle_switch_in_direction_event(e); });
+    m_events->add_handler(EventType::SERVER_KEYBOARD_BROADCAST, m_inputFilter,
+                          [this](const auto& e){ handle_keyboard_broadcast_event(e); });
+    m_events->add_handler(EventType::SERVER_LOCK_CURSOR_TO_SCREEN, m_inputFilter,
+                          [this](const auto& e){ handle_lock_cursor_to_screen_event(e); });
+    m_events->add_handler(EventType::PRIMARY_SCREEN_FAKE_INPUT_BEGIN, m_inputFilter,
+                          [this](const auto& e){ handle_fake_input_begin_event(); });
+    m_events->add_handler(EventType::PRIMARY_SCREEN_FAKE_INPUT_END, m_inputFilter,
+                          [this](const auto& e){ handle_fake_input_end_event(); });
 
-	if (m_args.m_enableDragDrop) {
-        m_events->adoptHandler(EventType::FILE_CHUNK_SENDING, this,
-								new TMethodEventJob<Server>(this,
-									&Server::handleFileChunkSendingEvent));
-        m_events->adoptHandler(EventType::FILE_RECEIVE_COMPLETED, this,
-								new TMethodEventJob<Server>(this,
-									&Server::handleFileReceiveCompletedEvent));
+    if (m_args.m_enableDragDrop) {
+        m_events->add_handler(EventType::FILE_CHUNK_SENDING, this,
+                              [this](const auto& e){ handle_file_chunk_sending_event(e); });
+        m_events->add_handler(EventType::FILE_RECEIVE_COMPLETED, this,
+                              [this](const auto& e){ handle_file_receive_completed_event(e); });
 	}
 
 	// add connection
@@ -285,12 +269,11 @@ Server::adoptClient(BaseClientProxy* client)
 	assert(client != nullptr);
 
 	// watch for client disconnection
-    m_events->adoptHandler(EventType::CLIENT_PROXY_DISCONNECTED, client,
-							new TMethodEventJob<Server>(this,
-								&Server::handleClientDisconnected, client));
+    m_events->add_handler(EventType::CLIENT_PROXY_DISCONNECTED, client,
+                          [this, client](const auto& e){ handle_client_disconnected(client); });
 
 	// name must be in our configuration
-	if (!m_config->isScreen(client->getName())) {
+    if (!m_config->isScreen(client->getName())) {
 		LOG((CLOG_WARN "unrecognised client name \"%s\", check server config", client->getName().c_str()));
 		closeClient(client, kMsgEUnknown);
 		return;
@@ -1144,11 +1127,9 @@ Server::processOptions()
 	m_relativeMoves = newRelativeMoves;
 }
 
-void
-Server::handleShapeChanged(const Event&, void* vclient)
+void Server::handle_shape_changed(BaseClientProxy* client)
 {
 	// ignore events from unknown clients
-	BaseClientProxy* client = static_cast<BaseClientProxy*>(vclient);
 	if (m_clientSet.count(client) == 0) {
 		return;
 	}
@@ -1177,15 +1158,13 @@ Server::handleShapeChanged(const Event&, void* vclient)
 	}
 }
 
-void
-Server::handleClipboardGrabbed(const Event& event, void* vclient)
+void Server::handle_clipboard_grabbed(const Event& event, BaseClientProxy* grabber)
 {
 	if (!m_enableClipboard) {
 		return;
 	}
 
 	// ignore events from unknown clients
-	BaseClientProxy* grabber = static_cast<BaseClientProxy*>(vclient);
 	if (m_clientSet.count(grabber) == 0) {
 		return;
 	}
@@ -1231,88 +1210,75 @@ Server::handleClipboardGrabbed(const Event& event, void* vclient)
 	}
 }
 
-void
-Server::handleClipboardChanged(const Event& event, void* vclient)
+void Server::handle_clipboard_changed(const Event& event, BaseClientProxy* client)
 {
 	// ignore events from unknown clients
-	BaseClientProxy* sender = static_cast<BaseClientProxy*>(vclient);
-	if (m_clientSet.count(sender) == 0) {
+    if (m_clientSet.count(client) == 0) {
 		return;
 	}
     const auto& info = event.get_data_as<IScreen::ClipboardInfo>();
-    onClipboardChanged(sender, info.m_id, info.m_sequenceNumber);
+    onClipboardChanged(client, info.m_id, info.m_sequenceNumber);
 }
 
-void
-Server::handleKeyDownEvent(const Event& event, void*)
+void Server::handle_key_down_event(const Event& event)
 {
     const auto& info = event.get_data_as<IPlatformScreen::KeyInfo>();
     onKeyDown(info.m_key, info.m_mask, info.m_button, info.screens_or_nullptr());
 }
 
-void
-Server::handleKeyUpEvent(const Event& event, void*)
+void Server::handle_key_up_event(const Event& event)
 {
     const auto& info = event.get_data_as<IPlatformScreen::KeyInfo>();
     onKeyUp(info.m_key, info.m_mask, info.m_button, info.screens_or_nullptr());
 }
 
-void
-Server::handleKeyRepeatEvent(const Event& event, void*)
+void Server::handle_key_repeat_event(const Event& event)
 {
     const auto& info = event.get_data_as<IPlatformScreen::KeyInfo>();
     onKeyRepeat(info.m_key, info.m_mask, info.m_count, info.m_button);
 }
 
-void
-Server::handleButtonDownEvent(const Event& event, void*)
+void Server::handle_button_down_event(const Event& event)
 {
     const auto& info = event.get_data_as<IPlatformScreen::ButtonInfo>();
     onMouseDown(info.m_button);
 }
 
-void
-Server::handleButtonUpEvent(const Event& event, void*)
+void Server::handle_button_up_event(const Event& event)
 {
     const auto& info = event.get_data_as<IPlatformScreen::ButtonInfo>();
     onMouseUp(info.m_button);
 }
 
-void
-Server::handleMotionPrimaryEvent(const Event& event, void*)
+void Server::handle_motion_primary_event(const Event& event)
 {
     const auto& info = event.get_data_as<IPlatformScreen::MotionInfo>();
     onMouseMovePrimary(info.m_x, info.m_y);
 }
 
-void
-Server::handleMotionSecondaryEvent(const Event& event, void*)
+void Server::handle_motion_secondary_event(const Event& event)
 {
     const auto& info = event.get_data_as<IPlatformScreen::MotionInfo>();
     onMouseMoveSecondary(info.m_x, info.m_y);
 }
 
-void
-Server::handleWheelEvent(const Event& event, void*)
+void Server::handle_wheel_event(const Event& event)
 {
     const auto& info = event.get_data_as<IPlatformScreen::WheelInfo>();
     onMouseWheel(info.m_xDelta, info.m_yDelta);
 }
 
-void
-Server::handleScreensaverActivatedEvent(const Event&, void*)
+void Server::handle_screensaver_activated_event()
 {
 	onScreensaver(true);
 }
 
-void
-Server::handleScreensaverDeactivatedEvent(const Event&, void*)
+void Server::handle_screensaver_deactivated_event()
 {
 	onScreensaver(false);
 }
 
-void
-Server::handleSwitchWaitTimeout(const Event&, void*)
+void Server::handle_switch_wait_event()
 {
 	// ignore if mouse is locked to screen
 	if (isLockedToScreen()) {
@@ -1325,31 +1291,26 @@ Server::handleSwitchWaitTimeout(const Event&, void*)
 	switchScreen(m_switchScreen, m_switchWaitX, m_switchWaitY, false);
 }
 
-void
-Server::handleClientDisconnected(const Event&, void* vclient)
+void Server::handle_client_disconnected(BaseClientProxy* client)
 {
 	// client has disconnected.  it might be an old client or an
 	// active client.  we don't care so just handle it both ways.
-	BaseClientProxy* client = static_cast<BaseClientProxy*>(vclient);
 	removeActiveClient(client);
 	removeOldClient(client);
 
 	delete client;
 }
 
-void
-Server::handleClientCloseTimeout(const Event&, void* vclient)
+void Server::handle_client_close_timeout(BaseClientProxy* client)
 {
 	// client took too long to disconnect.  just dump it.
-	BaseClientProxy* client = static_cast<BaseClientProxy*>(vclient);
 	LOG((CLOG_NOTE "forced disconnection of client \"%s\"", getName(client).c_str()));
 	removeOldClient(client);
 
 	delete client;
 }
 
-void
-Server::handleSwitchToScreenEvent(const Event& event, void*)
+void Server::handle_switch_to_screen_event(const Event& event)
 {
     const auto& info = event.get_data_as<SwitchToScreenInfo>();
 
@@ -1363,7 +1324,7 @@ Server::handleSwitchToScreenEvent(const Event& event, void*)
 }
 
 void
-Server::handleToggleScreenEvent(const Event& event, void*)
+Server::handle_toggle_screen_event(const Event& event)
 {
     (void) event;
 
@@ -1382,8 +1343,7 @@ Server::handleToggleScreenEvent(const Event& event, void*)
 }
 
 
-void
-Server::handleSwitchInDirectionEvent(const Event& event, void*)
+void Server::handle_switch_in_direction_event(const Event& event)
 {
     const auto& info = event.get_data_as<SwitchInDirectionInfo>();
 
@@ -1398,8 +1358,7 @@ Server::handleSwitchInDirectionEvent(const Event& event, void*)
 	}
 }
 
-void
-Server::handleKeyboardBroadcastEvent(const Event& event, void*)
+void Server::handle_keyboard_broadcast_event(const Event& event)
 {
     const auto& info = event.get_data_as<KeyboardBroadcastInfo>();
 
@@ -1429,8 +1388,7 @@ Server::handleKeyboardBroadcastEvent(const Event& event, void*)
 	}
 }
 
-void
-Server::handleLockCursorToScreenEvent(const Event& event, void*)
+void Server::handle_lock_cursor_to_screen_event(const Event& event)
 {
     const auto& info = event.get_data_as<LockCursorToScreenInfo>();
 
@@ -1463,26 +1421,22 @@ Server::handleLockCursorToScreenEvent(const Event& event, void*)
 	}
 }
 
-void
-Server::handleFakeInputBeginEvent(const Event&, void*)
+void Server::handle_fake_input_begin_event()
 {
 	m_primaryClient->fakeInputBegin();
 }
 
-void
-Server::handleFakeInputEndEvent(const Event&, void*)
+void Server::handle_fake_input_end_event()
 {
 	m_primaryClient->fakeInputEnd();
 }
 
-void
-Server::handleFileChunkSendingEvent(const Event& event, void*)
+void Server::handle_file_chunk_sending_event(const Event& event)
 {
     on_file_chunk_sending(event.get_data_as<FileChunk>());
 }
 
-void
-Server::handleFileReceiveCompletedEvent(const Event& event, void*)
+void Server::handle_file_receive_completed_event(const Event& event)
 {
     (void) event;
 
@@ -2052,15 +2006,12 @@ Server::addClient(BaseClientProxy* client)
 	}
 
 	// add event handlers
-    m_events->adoptHandler(EventType::SCREEN_SHAPE_CHANGED, client->getEventTarget(),
-							new TMethodEventJob<Server>(this,
-								&Server::handleShapeChanged, client));
-    m_events->adoptHandler(EventType::CLIPBOARD_GRABBED, client->getEventTarget(),
-							new TMethodEventJob<Server>(this,
-								&Server::handleClipboardGrabbed, client));
-    m_events->adoptHandler(EventType::CLIPBOARD_CHANGED, client->getEventTarget(),
-							new TMethodEventJob<Server>(this,
-								&Server::handleClipboardChanged, client));
+    m_events->add_handler(EventType::SCREEN_SHAPE_CHANGED, client->getEventTarget(),
+                          [this, client](const auto& e){ handle_shape_changed(client); });
+    m_events->add_handler(EventType::CLIPBOARD_GRABBED, client->getEventTarget(),
+                          [this, client](const auto& e){ handle_clipboard_grabbed(e, client); });
+    m_events->add_handler(EventType::CLIPBOARD_CHANGED, client->getEventTarget(),
+                          [this, client](const auto& e){ handle_clipboard_changed(e, client); });
 
 	// add to list
 	m_clientSet.insert(client);
@@ -2120,10 +2071,12 @@ Server::closeClient(BaseClientProxy* client, const char* msg)
 
 	// install timer.  wait timeout seconds for client to close.
 	double timeout = 5.0;
-	EventQueueTimer* timer = m_events->newOneShotTimer(timeout, nullptr);
-    m_events->adoptHandler(EventType::TIMER, timer,
-							new TMethodEventJob<Server>(this,
-								&Server::handleClientCloseTimeout, client));
+    EventQueueTimer* timer = m_events->newOneShotTimer(timeout, nullptr);
+    m_events->add_handler(EventType::TIMER, timer,
+                          [this, client](const auto& e)
+    {
+        handle_client_close_timeout(client);
+    });
 
 	// move client to closing list
 	removeClient(client);

@@ -35,11 +35,10 @@ public:
     MOCK_METHOD1(removeHandlers, void(void*));
     MOCK_METHOD1(registerType, EventType(const char*));
     MOCK_CONST_METHOD0(isEmpty, bool());
-    MOCK_METHOD3(adoptHandler, void(EventType, void*, IEventJob*));
+    MOCK_METHOD3(add_handler, void(EventType, void*, const EventHandler&));
     MOCK_METHOD1(add_event, void(Event&&));
     MOCK_METHOD2(removeHandler, void(EventType, void*));
     MOCK_METHOD1(dispatchEvent, bool(const Event&));
-    MOCK_CONST_METHOD2(getHandler, IEventJob*(EventType, void*));
     MOCK_METHOD1(deleteTimer, void(EventQueueTimer*));
     MOCK_METHOD0(getSystemTarget, void*());
     MOCK_CONST_METHOD0(waitForReady, void());

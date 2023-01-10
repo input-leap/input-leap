@@ -58,14 +58,14 @@ public:
     void updateStatus(const std::string& msg);
     void resetRestartTimeout();
     double nextRestartTimeout();
-    void handleScreenError(const Event&, void*);
+    void handle_screen_error();
     inputleap::Screen* openClientScreen();
     void closeClientScreen(inputleap::Screen* screen);
-    void handleClientRestart(const Event&, void* vtimer);
+    void handle_client_restart(const Event& event, EventQueueTimer* timer);
     void scheduleClientRestart(double retryTime);
-    void handleClientConnected(const Event&, void*);
-    void handleClientFailed(const Event& e, void*);
-    void handleClientDisconnected(const Event&, void*);
+    void handle_client_connected();
+    void handle_client_failed(const Event& e);
+    void handle_client_disconnected();
     Client* openClient(const std::string& name, const NetworkAddress& address,
                 inputleap::Screen* screen);
     void closeClient(Client* client);

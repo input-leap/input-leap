@@ -30,7 +30,6 @@
 #include "io/IStream.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
-#include "base/TMethodEventJob.h"
 #include "base/XBase.h"
 
 #include <memory>
@@ -61,13 +60,10 @@ ServerProxy::ServerProxy(Client* client, inputleap::IStream* stream, IEventQueue
         m_modifierTranslationTable[id] = id;
 
     // handle data on stream
-    m_events->adoptHandler(EventType::STREAM_INPUT_READY, m_stream->getEventTarget(),
-                            new TMethodEventJob<ServerProxy>(this,
-                                &ServerProxy::handleData));
-
-    m_events->adoptHandler(EventType::CLIPBOARD_SENDING, this,
-                            new TMethodEventJob<ServerProxy>(this,
-                                &ServerProxy::handleClipboardSendingEvent));
+    m_events->add_handler(EventType::STREAM_INPUT_READY, m_stream->getEventTarget(),
+                          [this](const auto& e){ handle_data(); });
+    m_events->add_handler(EventType::CLIPBOARD_SENDING, this,
+                          [this](const auto& e){ handle_clipboard_sending_event(e); });
 
     // send heartbeat
     setKeepAliveRate(kKeepAliveRate);
@@ -91,9 +87,8 @@ ServerProxy::resetKeepAliveAlarm()
     if (m_keepAliveAlarm > 0.0) {
         m_keepAliveAlarmTimer =
             m_events->newOneShotTimer(m_keepAliveAlarm, nullptr);
-        m_events->adoptHandler(EventType::TIMER, m_keepAliveAlarmTimer,
-                            new TMethodEventJob<ServerProxy>(this,
-                                &ServerProxy::handleKeepAliveAlarm));
+        m_events->add_handler(EventType::TIMER, m_keepAliveAlarmTimer,
+                              [this](const auto& e){ handle_keep_alive_alarm(); });
     }
 }
 
@@ -104,8 +99,7 @@ ServerProxy::setKeepAliveRate(double rate)
     resetKeepAliveAlarm();
 }
 
-void
-ServerProxy::handleData(const Event&, void*)
+void ServerProxy::handle_data()
 {
     // handle messages until there are no more.  first read message code.
     std::uint8_t code[4];
@@ -338,8 +332,7 @@ ServerProxy::EResult ServerProxy::parseMessage(const std::uint8_t* code)
     return kOkay;
 }
 
-void
-ServerProxy::handleKeepAliveAlarm(const Event&, void*)
+void ServerProxy::handle_keep_alive_alarm()
 {
     LOG((CLOG_NOTE "server is dead"));
     m_client->disconnect("server is not responding");
@@ -897,8 +890,7 @@ ServerProxy::dragInfoReceived()
     m_client->dragInfoReceived(fileNum, content);
 }
 
-void
-ServerProxy::handleClipboardSendingEvent(const Event& event, void*)
+void ServerProxy::handle_clipboard_sending_event(const Event& event)
 {
     ClipboardChunk::send(m_stream, event.get_data_as<ClipboardChunk>());
 }

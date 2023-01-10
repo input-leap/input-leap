@@ -42,9 +42,9 @@ public:
 
 private:
     void send(const IpcMessage& message);
-    void handleData(const Event&, void*);
-    void handleDisconnect(const Event&, void*);
-    void handleWriteError(const Event&, void*);
+    void handle_data();
+    void handle_disconnect();
+    void handle_write_error();
     IpcHelloMessage parseHello();
     IpcCommandMessage parseCommand();
     void disconnect();

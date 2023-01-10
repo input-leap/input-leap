@@ -22,7 +22,6 @@
 #include "inputleap/KeyMap.h"
 #include "base/EventQueue.h"
 #include "base/Log.h"
-#include "base/TMethodEventJob.h"
 
 #include <cstdlib>
 #include <cstring>
@@ -926,30 +925,23 @@ InputFilter::setPrimaryClient(PrimaryClient* client)
     m_primaryClient = client;
 
     if (m_primaryClient != nullptr) {
-        m_events->adoptHandler(EventType::KEY_STATE_KEY_DOWN, m_primaryClient->getEventTarget(),
-                            new TMethodEventJob<InputFilter>(this,
-                                &InputFilter::handleEvent));
-        m_events->adoptHandler(EventType::KEY_STATE_KEY_UP, m_primaryClient->getEventTarget(),
-                            new TMethodEventJob<InputFilter>(this,
-                                &InputFilter::handleEvent));
-        m_events->adoptHandler(EventType::KEY_STATE_KEY_REPEAT, m_primaryClient->getEventTarget(),
-                            new TMethodEventJob<InputFilter>(this,
-                                &InputFilter::handleEvent));
-        m_events->adoptHandler(EventType::PRIMARY_SCREEN_BUTTON_DOWN, m_primaryClient->getEventTarget(),
-                            new TMethodEventJob<InputFilter>(this,
-                                &InputFilter::handleEvent));
-        m_events->adoptHandler(EventType::PRIMARY_SCREEN_BUTTON_UP, m_primaryClient->getEventTarget(),
-                            new TMethodEventJob<InputFilter>(this,
-                                &InputFilter::handleEvent));
-        m_events->adoptHandler(EventType::PRIMARY_SCREEN_HOTKEY_DOWN, m_primaryClient->getEventTarget(),
-                            new TMethodEventJob<InputFilter>(this,
-                                &InputFilter::handleEvent));
-        m_events->adoptHandler(EventType::PRIMARY_SCREEN_HOTKEY_UP, m_primaryClient->getEventTarget(),
-                            new TMethodEventJob<InputFilter>(this,
-                                &InputFilter::handleEvent));
-        m_events->adoptHandler(EventType::SERVER_CONNECTED, m_primaryClient->getEventTarget(),
-                            new TMethodEventJob<InputFilter>(this,
-                                &InputFilter::handleEvent));
+        auto event_target = m_primaryClient->getEventTarget();
+        m_events->add_handler(EventType::KEY_STATE_KEY_DOWN, event_target,
+                              [this](const auto& e){ handle_event(e); });
+        m_events->add_handler(EventType::KEY_STATE_KEY_UP, event_target,
+                              [this](const auto& e){ handle_event(e); });
+        m_events->add_handler(EventType::KEY_STATE_KEY_REPEAT, event_target,
+                              [this](const auto& e){ handle_event(e); });
+        m_events->add_handler(EventType::PRIMARY_SCREEN_BUTTON_DOWN, event_target,
+                              [this](const auto& e){ handle_event(e); });
+        m_events->add_handler(EventType::PRIMARY_SCREEN_BUTTON_UP, event_target,
+                              [this](const auto& e){ handle_event(e); });
+        m_events->add_handler(EventType::PRIMARY_SCREEN_HOTKEY_DOWN, event_target,
+                              [this](const auto& e){ handle_event(e); });
+        m_events->add_handler(EventType::PRIMARY_SCREEN_HOTKEY_UP, event_target,
+                              [this](const auto& e){ handle_event(e); });
+        m_events->add_handler(EventType::SERVER_CONNECTED, event_target,
+                              [this](const auto& e){ handle_event(e); });
 
         for (RuleList::iterator rule  = m_ruleList.begin();
                                  rule != m_ruleList.end(); ++rule) {
@@ -1005,8 +997,7 @@ InputFilter::operator!=(const InputFilter& x) const
     return !operator==(x);
 }
 
-void
-InputFilter::handleEvent(const Event& event, void*)
+void InputFilter::handle_event(const Event& event)
 {
     // copy event and adjust target
     Event myEvent(event.getType(), this, nullptr, event.getFlags() | Event::kDeliverImmediately);

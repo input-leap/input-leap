@@ -18,7 +18,7 @@
 
 #include "SettingsDialog.h"
 
-#include "BarrierLocale.h"
+#include "AppLocale.h"
 #include "QInputLeapApplication.h"
 #include "QUtility.h"
 #include "AppConfig.h"

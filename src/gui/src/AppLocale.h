@@ -21,7 +21,7 @@
 #include <QVector>
 #include <QComboBox>
 
-class BarrierLocale
+class AppLocale
 {
     class Language
     {
@@ -36,7 +36,7 @@ class BarrierLocale
     };
 
 public:
-    BarrierLocale();
+    AppLocale();
     void fillLanguageComboBox(QComboBox* comboBox);
 
 private:

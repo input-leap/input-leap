@@ -15,18 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#include "BarrierLocale.h"
+#include "AppLocale.h"
 
 #include <QResource>
 #include <QXmlStreamReader>
 #include <QDebug>
 
-BarrierLocale::BarrierLocale()
+AppLocale::AppLocale()
 {
     loadLanguages();
 }
 
-void BarrierLocale::loadLanguages()
+void AppLocale::loadLanguages()
 {
     QResource resource(":/res/lang/Languages.xml");
     QByteArray bytes(reinterpret_cast<const char*>(resource.data()), resource.size());
@@ -51,15 +51,15 @@ void BarrierLocale::loadLanguages()
     }
 }
 
-void BarrierLocale::addLanguage(const QString& ietfCode, const QString& name)
+void AppLocale::addLanguage(const QString& ietfCode, const QString& name)
 {
-    m_Languages.push_back(BarrierLocale::Language(ietfCode, name));
+    m_Languages.push_back(AppLocale::Language(ietfCode, name));
 }
 
-void BarrierLocale::fillLanguageComboBox(QComboBox* comboBox)
+void AppLocale::fillLanguageComboBox(QComboBox* comboBox)
 {
     comboBox->blockSignals(true);
-    QVector<BarrierLocale::Language>::iterator it;
+    QVector<AppLocale::Language>::iterator it;
     for (it = m_Languages.begin(); it != m_Languages.end(); ++it)
     {
         comboBox->addItem((*it).m_Name, (*it).m_IetfCode);

@@ -50,7 +50,7 @@ TEST(ServerArgsParsingTests, parseServerArgs_addressArg_set_address)
 
     argParser.parseServerArgs(serverArgs, argc, kAddressCmd);
 
-    EXPECT_EQ("mock_address", serverArgs.m_barrierAddress);
+    EXPECT_EQ("mock_address", serverArgs.network_address);
 }
 
 TEST(ServerArgsParsingTests, parseServerArgs_configArg_setConfigFile)

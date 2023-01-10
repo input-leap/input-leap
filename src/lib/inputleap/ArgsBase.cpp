@@ -40,7 +40,7 @@ m_enableIpc(false),
 m_enableDragDrop(false),
 m_dropTarget(""),
 m_shouldExit(false),
-m_barrierAddress(),
+network_address(),
 m_enableCrypto(true),
 m_profileDirectory(),
 m_pluginDirectory("")

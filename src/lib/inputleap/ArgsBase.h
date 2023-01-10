@@ -47,7 +47,7 @@ public:
     bool m_stopOnDeskSwitch;
 #endif
     bool m_shouldExit;
-    std::string m_barrierAddress;
+    std::string network_address;
     bool m_enableCrypto;
     inputleap::fs::path m_profileDirectory;
     inputleap::fs::path m_pluginDirectory;

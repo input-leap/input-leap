@@ -91,10 +91,9 @@ ServerApp::parseArgs(int argc, const char* const* argv)
         m_bye(kExitArgs);
     }
     else {
-        if (!args().m_barrierAddress.empty()) {
+        if (!args().network_address.empty()) {
             try {
-                *m_barrierAddress = NetworkAddress(args().m_barrierAddress,
-                    kDefaultPort);
+                *m_barrierAddress = NetworkAddress(args().network_address, kDefaultPort);
                 m_barrierAddress->resolve();
             }
             catch (XSocketAddress& e) {

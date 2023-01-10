@@ -123,7 +123,7 @@ ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
             }
             else if (a.shift("-a", "--address", &optarg)) {
                 // save listen address
-                args.m_barrierAddress = optarg;
+                args.network_address = optarg;
             }
             else if (a.shift("-c", "--config", &optarg)) {
                 // save configuration file path
@@ -173,14 +173,14 @@ ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
                 args.m_yscroll = atoi(optarg);
             }
             else if (a.size() == 1) {
-                args.m_barrierAddress = a.shift();
+                args.network_address = a.shift();
                 return true;
             } else {
                 throw XArgvParserError("unrecognized option `%s'", a.peek());
             }
         }
 
-        if (args.m_barrierAddress.empty())
+        if (args.network_address.empty())
             throw XArgvParserError("a server address or name is required");
 
     } catch (XArgvParserError e) {

@@ -21,6 +21,7 @@
 #define MAINWINDOW__H
 
 #include "inputleap/AppRole.h"
+#include "AppConnectionState.h"
 
 #include <QMainWindow>
 #include <QSystemTrayIcon>
@@ -70,14 +71,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
     friend class SettingsDialog;
 
     public:
-        enum qBarrierState
-        {
-            barrierDisconnected,
-            barrierConnecting,
-            barrierConnected,
-            barrierTransfering
-        };
-
         enum qLevel {
             Error,
             Info
@@ -95,7 +88,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
     public:
         void setVisible(bool visible) override;
         AppRole app_role() const;
-        int barrierState() const { return m_BarrierState; }
+        AppConnectionState connection_state() const { return connection_state_; }
         QString hostname() const { return m_pLineEditHostname->text(); }
         QString configFilename();
         QString address();
@@ -143,8 +136,8 @@ public slots:
         void createTrayIcon();
         void loadSettings();
         void saveSettings();
-        void setIcon(qBarrierState state);
-        void setBarrierState(qBarrierState state);
+        void set_icon(AppConnectionState state);
+        void set_connection_state(AppConnectionState state);
         bool clientArgs(QStringList& args, QString& app);
         bool serverArgs(QStringList& args, QString& app);
         void setStatus(const QString& status);
@@ -174,7 +167,7 @@ public slots:
         QSettings& m_Settings;
         AppConfig* m_AppConfig;
         QProcess* m_pBarrier;
-        int m_BarrierState;
+        AppConnectionState connection_state_ = AppConnectionState::DISCONNECTED;
         ServerConfig m_ServerConfig;
         QTemporaryFile* m_pTempConfigFile;
         QSystemTrayIcon* m_pTrayIcon;

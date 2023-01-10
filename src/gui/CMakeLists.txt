@@ -64,6 +64,7 @@ set(GUI_HEADER_FILES
     src/ActionDialog.h
     src/AddClientDialog.h
     src/AppConfig.h
+    src/AppConnectionState.h
     src/BarrierLocale.h
     src/BaseConfig.h
     src/CommandProcess.h

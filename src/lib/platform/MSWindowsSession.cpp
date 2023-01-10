@@ -18,7 +18,7 @@
 #include "platform/MSWindowsSession.h"
 
 #include "arch/win32/XArchWindows.h"
-#include "inputleap/XBarrier.h"
+#include "inputleap/Exceptions.h"
 #include "base/Log.h"
 
 #include <Wtsapi32.h>

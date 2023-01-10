@@ -19,7 +19,7 @@
 #pragma once
 
 #include "inputleap/IAppUtil.h"
-#include "inputleap/XBarrier.h"
+#include "inputleap/Exceptions.h"
 
 namespace inputleap {
 

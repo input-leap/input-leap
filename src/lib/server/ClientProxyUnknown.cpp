@@ -28,7 +28,7 @@
 #include "server/ClientProxy1_6.h"
 #include "inputleap/protocol_types.h"
 #include "inputleap/ProtocolUtil.h"
-#include "inputleap/XBarrier.h"
+#include "inputleap/Exceptions.h"
 #include "io/IStream.h"
 #include "io/XIO.h"
 #include "base/Log.h"

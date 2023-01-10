@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "inputleap/XBarrier.h"
+#include "inputleap/Exceptions.h"
 #include "base/String.h"
 
 namespace inputleap {

@@ -23,7 +23,7 @@
 #include "inputleap/protocol_types.h"
 #include "base/XBase.h"
 #include "base/log_outputters.h"
-#include "inputleap/XBarrier.h"
+#include "inputleap/Exceptions.h"
 #include "inputleap/ArgsBase.h"
 #include "ipc/IpcServerProxy.h"
 #include "ipc/IpcMessage.h"

@@ -28,7 +28,7 @@
 #include "inputleap/option_types.h"
 #include "inputleap/protocol_types.h"
 #include "inputleap/XScreen.h"
-#include "inputleap/XBarrier.h"
+#include "inputleap/Exceptions.h"
 #include "inputleap/StreamChunker.h"
 #include "inputleap/KeyState.h"
 #include "inputleap/Screen.h"

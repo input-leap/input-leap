@@ -26,7 +26,7 @@
 #include "inputleap/ProtocolUtil.h"
 #include "inputleap/option_types.h"
 #include "inputleap/protocol_types.h"
-#include "inputleap/XBarrier.h"
+#include "inputleap/Exceptions.h"
 #include "io/IStream.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"

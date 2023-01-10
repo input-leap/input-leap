@@ -19,7 +19,7 @@
 #include "server/ClientProxy1_0.h"
 
 #include "inputleap/ProtocolUtil.h"
-#include "inputleap/XBarrier.h"
+#include "inputleap/Exceptions.h"
 #include "io/IStream.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"

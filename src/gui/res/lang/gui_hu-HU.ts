@@ -5,7 +5,7 @@
     <name>AboutDialogBase</name>
     <message>
         <location filename="res/AboutDialogBase.ui" line="38"/>
-        <source>About Input Leap</source>
+        <source>About InputLeap</source>
         <translation>Névjegy</translation>
     </message>
     <message>
@@ -15,26 +15,26 @@ Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&
 Copyright © 2018 Debauchee Open Source Group&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Input Leap is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
-Input Leap is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Input Leap GUI is based on QSynergy by Volker Lanz.
+InputLeap is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
+InputLeap is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
+The InputLeap GUI is based on QSynergy by Volker Lanz.
 &lt;/p&gt;</source>
         <oldsource>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
 Copyright © 2018 Debauchee Open Source Group&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Input Leap is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
-Input Leap is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Input Leap GUI is based on QSynergy by Volker Lanz.
+InputLeap is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
+InputLeap is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
+The InputLeap GUI is based on QSynergy by Volker Lanz.
 &lt;/p&gt;</oldsource>
         <translation>&lt;p&gt;
 Alkalmazás egér és billentyűzet megosztásához. Rendszerfüggetlen és nyílt forráskódú.&lt;br /&gt;&lt;br /&gt;
 Szerzői jog © 2018 Debauchee Open Source Group&lt;br /&gt;
 Szerzői jog © 2012-2016 Symless Ltd.&lt;br /&gt;
 Szerzői jog © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-A Input Leap a GNU Általános Nyilvános Licenc (GPLv2) oltalma alatt áll.&lt;br /&gt;&lt;br /&gt;
-A Input Leap a CosmoSynergy alapjaira épül Richard Lee és Adam Feder jóvoltából.&lt;br /&gt;
+A InputLeap a GNU Általános Nyilvános Licenc (GPLv2) oltalma alatt áll.&lt;br /&gt;&lt;br /&gt;
+A InputLeap a CosmoSynergy alapjaira épül Richard Lee és Adam Feder jóvoltából.&lt;br /&gt;
 A grafikus felületet Volker Lanz QSynergy alkalmazása alapján készült.
 &lt;/p&gt;</translation>
     </message>
@@ -212,9 +212,9 @@ A grafikus felületet Volker Lanz QSynergy alkalmazása alapján készült.
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="364"/>
-        <source>&lt;p&gt;Your version of Input Leap is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Your version of InputLeap is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</source>
         <oldsource>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</oldsource>
-        <translation>&lt;p&gt;A Input Leap elavult. A legújabb &lt;b&gt;%1&lt;/b&gt; verzió &lt;a href=&quot;%2&quot;&gt;innét&lt;/a&gt; tölthető le.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;A InputLeap elavult. A legújabb &lt;b&gt;%1&lt;/b&gt; verzió &lt;a href=&quot;%2&quot;&gt;innét&lt;/a&gt; tölthető le.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="577"/>
@@ -228,13 +228,13 @@ A grafikus felületet Volker Lanz QSynergy alkalmazása alapján készült.
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="596"/>
-        <source>Input Leap client not found</source>
-        <translation>Input Leap ügyfél nem található</translation>
+        <source>InputLeap client not found</source>
+        <translation>InputLeap ügyfél nem található</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="597"/>
-        <source>The executable for the Input Leap client does not exist.</source>
-        <translation>A Input Leap ügyfél futtatható állománya nem található.</translation>
+        <source>The executable for the InputLeap client does not exist.</source>
+        <translation>A InputLeap ügyfél futtatható állománya nem található.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="625"/>
@@ -243,8 +243,8 @@ A grafikus felületet Volker Lanz QSynergy alkalmazása alapján készült.
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="626"/>
-        <source>Please fill in a hostname for the Input Leap client to connect to.</source>
-        <translation>Kérem, adja meg az elérni kívánt Input Leap kiszolgáló nevét!</translation>
+        <source>Please fill in a hostname for the InputLeap client to connect to.</source>
+        <translation>Kérem, adja meg az elérni kívánt InputLeap kiszolgáló nevét!</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="646"/>
@@ -253,8 +253,8 @@ A grafikus felületet Volker Lanz QSynergy alkalmazása alapján készült.
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="646"/>
-        <source>The temporary configuration file required to start Input Leap can not be written.</source>
-        <translation>Az ideiglenes konfigurációs fájl, amely szükséges a Input Leap indításához, nem jött létre.</translation>
+        <source>The temporary configuration file required to start InputLeap can not be written.</source>
+        <translation>Az ideiglenes konfigurációs fájl, amely szükséges a InputLeap indításához, nem jött létre.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="659"/>
@@ -263,28 +263,28 @@ A grafikus felületet Volker Lanz QSynergy alkalmazása alapján készült.
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="660"/>
-        <source>You have not filled in a valid configuration file for the Input Leap server. Do you want to browse for the configuration file now?</source>
-        <translation>Nem adott meg érvényes konfigurációs fájlt a Input Leap számára. Szeretne megnyitni egy meglévő konfigurációs fájlt?</translation>
+        <source>You have not filled in a valid configuration file for the InputLeap server. Do you want to browse for the configuration file now?</source>
+        <translation>Nem adott meg érvényes konfigurációs fájlt a InputLeap számára. Szeretne megnyitni egy meglévő konfigurációs fájlt?</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="688"/>
-        <source>Input Leap server not found</source>
-        <translation>Input Leap kiszolgáló nem található</translation>
+        <source>InputLeap server not found</source>
+        <translation>InputLeap kiszolgáló nem található</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="689"/>
-        <source>The executable for the Input Leap server does not exist.</source>
-        <translation>A Input Leap kiszolgáló futtatható állománya nem található.</translation>
+        <source>The executable for the InputLeap server does not exist.</source>
+        <translation>A InputLeap kiszolgáló futtatható állománya nem található.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="764"/>
-        <source>Input Leap terminated with an error</source>
-        <translation>A Input Leap hibát jelzett, ezért leállt</translation>
+        <source>InputLeap terminated with an error</source>
+        <translation>A InputLeap hibát jelzett, ezért leállt</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="764"/>
-        <source>Input Leap terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
-        <translation>A Input Leap a következő hibakóddal leállt: %1.&lt;br&gt;&lt;br&gt;Részletekért tekintse meg a naplót!</translation>
+        <source>InputLeap terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
+        <translation>A InputLeap a következő hibakóddal leállt: %1.&lt;br&gt;&lt;br&gt;Részletekért tekintse meg a naplót!</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="783"/>
@@ -336,18 +336,18 @@ Biztos benne, hogy telepíti a Bonjour-t?</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="815"/>
-        <source>Input Leap is starting.</source>
-        <translation>Input Leap indítása folyamatban.</translation>
+        <source>InputLeap is starting.</source>
+        <translation>InputLeap indítása folyamatban.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="809"/>
-        <source>Input Leap is running.</source>
-        <translation>A Input Leap fut.</translation>
+        <source>InputLeap is running.</source>
+        <translation>A InputLeap fut.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="819"/>
-        <source>Input Leap is not running.</source>
-        <translation>A Input Leap nem fut.</translation>
+        <source>InputLeap is not running.</source>
+        <translation>A InputLeap nem fut.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="870"/>
@@ -358,18 +358,18 @@ Biztos benne, hogy telepíti a Bonjour-t?</translation>
         <location filename="src/MainWindow.cpp" line="1146"/>
         <location filename="src/MainWindow.cpp" line="1225"/>
         <location filename="src/MainWindow.cpp" line="1269"/>
-        <source>Input Leap</source>
-        <translation>Input Leap</translation>
+        <source>InputLeap</source>
+        <translation>InputLeap</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="987"/>
-        <source>Browse for a barriers config file</source>
-        <translation>Input Leap konfigurációs fájl tallózása</translation>
+        <source>Browse for a InputLeap config file</source>
+        <translation>InputLeap konfigurációs fájl tallózása</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="408"/>
-        <source>Input Leap is now connected, You can close the config window. Input Leap will remain connected in the background.</source>
-        <translation>A kapcsolat létrejött. Most már bezárhatja az ablakot. A Input Leap továbbiakban a háttérben fog futni.</translation>
+        <source>InputLeap is now connected, You can close the config window. InputLeap will remain connected in the background.</source>
+        <translation>A kapcsolat létrejött. Most már bezárhatja az ablakot. A InputLeap továbbiakban a háttérben fog futni.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="434"/>
@@ -389,7 +389,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
 
 %1
 
-Ez egy Input Leap kiszolgáló ujjlenyomata. Biztonsági okok miatt javasolt lehet összehasonlítani a kiszolgáló gépen látható ujjlenyomattal. Ha a két ujjlenyomat nem egyezik, akkor valószínűleg nem a megfelelő kiszolgálóhoz próbál csatlakozni.
+Ez egy InputLeap kiszolgáló ujjlenyomata. Biztonsági okok miatt javasolt lehet összehasonlítani a kiszolgáló gépen látható ujjlenyomattal. Ha a két ujjlenyomat nem egyezik, akkor valószínűleg nem a megfelelő kiszolgálóhoz próbál csatlakozni.
 
 A jövőbeni kapcsolódási kísérletek automatikus jóváhagyáshoz kattintson az „Igen” gombra! Ha ezt nem szeretné, kattintson a „Nem” gombra!</translation>
     </message>
@@ -413,8 +413,8 @@ A jövőbeni kapcsolódási kísérletek automatikus jóváhagyáshoz kattintson
     <name>MainWindowBase</name>
     <message>
         <location filename="res/MainWindowBase.ui" line="26"/>
-        <source>Input Leap</source>
-        <translation>Input Leap</translation>
+        <source>InputLeap</source>
+        <translation>InputLeap</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="90"/>
@@ -499,7 +499,7 @@ A jövőbeni kapcsolódási kísérletek automatikus jóváhagyáshoz kattintson
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="390"/>
-        <source>&amp;About Input Leap...</source>
+        <source>&amp;About InputLeap...</source>
         <translation>&amp;Névjegy...</translation>
     </message>
     <message>
@@ -545,7 +545,7 @@ A jövőbeni kapcsolódási kísérletek automatikus jóváhagyáshoz kattintson
     <message>
         <location filename="res/MainWindowBase.ui" line="453"/>
         <source>&amp;Show</source>
-        <translation>Input Leap &amp;megnyitása</translation>
+        <translation>InputLeap &amp;megnyitása</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="456"/>
@@ -620,8 +620,8 @@ A jövőbeni kapcsolódási kísérletek automatikus jóváhagyáshoz kattintson
     <name>PluginWizardPage</name>
     <message>
         <location filename="res/PluginWizardPageBase.ui" line="14"/>
-        <source>Setup Input Leap</source>
-        <translation>Input Leap beállítása</translation>
+        <source>Setup InputLeap</source>
+        <translation>InputLeap beállítása</translation>
     </message>
     <message>
         <location filename="res/PluginWizardPageBase.ui" line="101"/>
@@ -674,13 +674,13 @@ A jövőbeni kapcsolódási kísérletek automatikus jóváhagyáshoz kattintson
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="60"/>
-        <source>Input Leap Configurations (*.sgc)</source>
-        <translation>Input Leap konfiguráció (*.sgc)</translation>
+        <source>InputLeap Configurations (*.sgc)</source>
+        <translation>InputLeap konfiguráció (*.sgc)</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="67"/>
-        <source>Input Leap Configurations (*.conf)</source>
-        <translation>Input Leap konfiguráció (*.conf)</translation>
+        <source>InputLeap Configurations (*.conf)</source>
+        <translation>InputLeap konfiguráció (*.conf)</translation>
     </message>
     <message>
         <location filename="src/main.cpp" line="119"/>
@@ -913,8 +913,8 @@ A jövőbeni kapcsolódási kísérletek automatikus jóváhagyáshoz kattintson
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="60"/>
-        <source>Configure the layout of your Input Leap server configuration.</source>
-        <translation>Itt konfigurálhatja a Input Leap kiszolgálóhoz kapcsolódó gépeit.</translation>
+        <source>Configure the layout of your InputLeap server configuration.</source>
+        <translation>Itt konfigurálhatja a InputLeap kiszolgálóhoz kapcsolódó gépeit.</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="73"/>
@@ -1072,17 +1072,17 @@ Konfiguráláshoz kattintson kétszer az adott gép kijelzőjére!</translation>
     </message>
     <message>
         <location filename="src/SettingsDialog.cpp" line="151"/>
-        <source>Elevate Input Leap</source>
-        <translation>Input Leap futtatása rendszergazdaként</translation>
+        <source>Elevate InputLeap</source>
+        <translation>InputLeap futtatása rendszergazdaként</translation>
     </message>
     <message>
         <location filename="src/SettingsDialog.cpp" line="152"/>
-        <source>Are you sure you want to elevate Input Leap?
+        <source>Are you sure you want to Elevate InputLeap?
 
-This allows Input Leap to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate Input Leap only if you really need to.</source>
-        <translation>Biztos benne, hogy rendszergazdaként futtatja a Input Leap-t?
+This allows InputLeap to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate InputLeap only if you really need to.</source>
+        <translation>Biztos benne, hogy rendszergazdaként futtatja a InputLeap-t?
 
-Ez a beállítás lehetővé teszi a Input Leap számára más rendszergazdaként futó folyamatokhoz való hozzáférést, ugyanakkor ütközhet egyes felhasználói programokkal. Használja felelősen!</translation>
+Ez a beállítás lehetővé teszi a InputLeap számára más rendszergazdaként futó folyamatokhoz való hozzáférést, ugyanakkor ütközhet egyes felhasználói programokkal. Használja felelősen!</translation>
     </message>
 </context>
 <context>
@@ -1197,8 +1197,8 @@ Ez a beállítás lehetővé teszi a Input Leap számára más rendszergazdakén
     <name>SetupWizard</name>
     <message>
         <location filename="src/SetupWizard.cpp" line="72"/>
-        <source>Setup Input Leap</source>
-        <translation>Input Leap beállítása</translation>
+        <source>Setup InputLeap</source>
+        <translation>InputLeap beállítása</translation>
     </message>
     <message>
         <location filename="src/SetupWizard.cpp" line="113"/>
@@ -1215,8 +1215,8 @@ Ez a beállítás lehetővé teszi a Input Leap számára más rendszergazdakén
     <name>SetupWizardBase</name>
     <message>
         <location filename="res/SetupWizardBase.ui" line="26"/>
-        <source>Setup Input Leap</source>
-        <translation>Input Leap beállítás</translation>
+        <source>Setup InputLeap</source>
+        <translation>InputLeap beállítás</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="30"/>
@@ -1225,13 +1225,13 @@ Ez a beállítás lehetővé teszi a Input Leap számára más rendszergazdakén
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="39"/>
-        <source>Thanks for installing Input Leap!</source>
-        <translation>Köszönjük, hogy a Input Leap-t választotta!</translation>
+        <source>Thanks for installing InputLeap!</source>
+        <translation>Köszönjük, hogy a InputLeap-t választotta!</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="114"/>
-        <source>Input Leap lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Input Leap is cross-platform (works on Windows, Mac OS X and Linux).</source>
-        <translation>A Input Leap lehetővé teszi az egér és billentyűzet megosztását több számítógép között és mindemellett ingyenes és nyílt forráskódú. Csak mozgassa a kurzort a kijelző szélére, hogy átkerüljön a másik gép kijelzőjére. A gépek között a vágólap is megosztásra kerül. Ehhez csupán hálózati kapcsolatra van szükség gépei között. A Input Leap rendszerfüggetlen (tehát egyaránt elérhető Windows, Mac OS X és Linux rendszerekre).</translation>
+        <source>InputLeap lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. InputLeap is cross-platform (works on Windows, Mac OS X and Linux).</source>
+        <translation>A InputLeap lehetővé teszi az egér és billentyűzet megosztását több számítógép között és mindemellett ingyenes és nyílt forráskódú. Csak mozgassa a kurzort a kijelző szélére, hogy átkerüljön a másik gép kijelzőjére. A gépek között a vágólap is megosztásra kerül. Ehhez csupán hálózati kapcsolatra van szükség gépei között. A InputLeap rendszerfüggetlen (tehát egyaránt elérhető Windows, Mac OS X és Linux rendszerekre).</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="125"/>
@@ -1441,8 +1441,8 @@ A kiszolgáló válasza:
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="140"/>
-        <source>Input Leap</source>
-        <translation>Input Leap</translation>
+        <source>InputLeap</source>
+        <translation>InputLeap</translation>
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="141"/>

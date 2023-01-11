@@ -3,8 +3,8 @@
     <name>AboutDialogBase</name>
     <message>
         <location filename="res/AboutDialogBase.ui" line="38"/>
-        <source>About Input Leap</source>
-        <translation type="finished">O Input Leap</translation>
+        <source>About InputLeap</source>
+        <translation type="finished">O InputLeap</translation>
     </message>
     <message utf8="true">
         <location filename="res/AboutDialogBase.ui" line="53"/>
@@ -12,18 +12,18 @@
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Input Leap is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
-Input Leap is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Input Leap GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+InputLeap is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
+InputLeap is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
+The InputLeap GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (symless.com).
 &lt;/p&gt;</source>
         <oldsource>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Input Leap is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
-Input Leap is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Input Leap GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+InputLeap is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
+InputLeap is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
+The InputLeap GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (symless.com).
 &lt;/p&gt;</oldsource>
         <translation type="unfinished"></translation>
@@ -202,7 +202,7 @@ Visit our website for help and info (symless.com).
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="364"/>
-        <source>&lt;p&gt;Your version of Input Leap is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Your version of InputLeap is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</source>
         <oldsource>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</oldsource>
         <translation type="finished">&lt;p&gt;Dostępna jest wersja %1, &lt;a href=&quot;%2&quot;&gt;odwiedź stronę internetową&lt;/a&gt;.&lt;/p&gt;</translation>
     </message>
@@ -218,13 +218,13 @@ Visit our website for help and info (symless.com).
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="596"/>
-        <source>Input Leap client not found</source>
-        <translation type="finished">Klient Input Leap nie został odnaleziony</translation>
+        <source>InputLeap client not found</source>
+        <translation type="finished">Klient InputLeap nie został odnaleziony</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="597"/>
-        <source>The executable for the Input Leap client does not exist.</source>
-        <translation type="finished">Plik wykonywalny klienta Input Leap nie istnieje</translation>
+        <source>The executable for the InputLeap client does not exist.</source>
+        <translation type="finished">Plik wykonywalny klienta InputLeap nie istnieje</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="625"/>
@@ -233,8 +233,8 @@ Visit our website for help and info (symless.com).
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="626"/>
-        <source>Please fill in a hostname for the Input Leap client to connect to.</source>
-        <translation type="finished">Wypełnij nazwę hosta do której ma się podłączyć klient barrier.</translation>
+        <source>Please fill in a hostname for the InputLeap client to connect to.</source>
+        <translation type="finished">Wypełnij nazwę hosta do której ma się podłączyć klient InputLeap.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="646"/>
@@ -243,8 +243,8 @@ Visit our website for help and info (symless.com).
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="646"/>
-        <source>The temporary configuration file required to start Input Leap can not be written.</source>
-        <translation type="finished">Nie można zapisać tymczasowego pliku konfiguracyjnego wymaganego do uruchomienia barrier.</translation>
+        <source>The temporary configuration file required to start InputLeap can not be written.</source>
+        <translation type="finished">Nie można zapisać tymczasowego pliku konfiguracyjnego wymaganego do uruchomienia InputLeap.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="659"/>
@@ -253,28 +253,28 @@ Visit our website for help and info (symless.com).
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="660"/>
-        <source>You have not filled in a valid configuration file for the Input Leap server. Do you want to browse for the configuration file now?</source>
-        <translation type="finished">Nie podałeś poprawnego pliku konfiguracji potrzebnego do uruchomienia serwera barrier. Czy chcesz wskazać ten plik teraz?</translation>
+        <source>You have not filled in a valid configuration file for the InputLeap server. Do you want to browse for the configuration file now?</source>
+        <translation type="finished">Nie podałeś poprawnego pliku konfiguracji potrzebnego do uruchomienia serwera InputLeap. Czy chcesz wskazać ten plik teraz?</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="688"/>
-        <source>Input Leap server not found</source>
-        <translation type="finished">Nie znaleziono serwera Input Leap</translation>
+        <source>InputLeap server not found</source>
+        <translation type="finished">Nie znaleziono serwera InputLeap</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="689"/>
-        <source>The executable for the Input Leap server does not exist.</source>
-        <translation type="finished">Plik wykonywalny serwera Input Leap nie istnieje</translation>
+        <source>The executable for the InputLeap server does not exist.</source>
+        <translation type="finished">Plik wykonywalny serwera InputLeap nie istnieje</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="764"/>
-        <source>Input Leap terminated with an error</source>
-        <translation type="finished">Input Leap zostało zatrzymane z błędem</translation>
+        <source>InputLeap terminated with an error</source>
+        <translation type="finished">InputLeap zostało zatrzymane z błędem</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="764"/>
-        <source>Input Leap terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
-        <translation type="finished">Input Leap zakończył działanie w sposób nieoczekiwany, kod wyjścia %1 (exit code). &lt;br&gt;&lt;br&gt;Więcej szczegółów w pliku logów wyjściowych.</translation>
+        <source>InputLeap terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
+        <translation type="finished">InputLeap zakończył działanie w sposób nieoczekiwany, kod wyjścia %1 (exit code). &lt;br&gt;&lt;br&gt;Więcej szczegółów w pliku logów wyjściowych.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="783"/>
@@ -322,18 +322,18 @@ Do you want to install Bonjour?</source>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="815"/>
-        <source>Input Leap is starting.</source>
-        <translation type="finished">Input Leap jest uruchamiane.</translation>
+        <source>InputLeap is starting.</source>
+        <translation type="finished">InputLeap jest uruchamiane.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="809"/>
-        <source>Input Leap is running.</source>
-        <translation type="finished">Input Leap uruchomione.</translation>
+        <source>InputLeap is running.</source>
+        <translation type="finished">InputLeap uruchomione.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="819"/>
-        <source>Input Leap is not running.</source>
-        <translation type="finished">Input Leap nie uruchomione.</translation>
+        <source>InputLeap is not running.</source>
+        <translation type="finished">InputLeap nie uruchomione.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="870"/>
@@ -344,17 +344,17 @@ Do you want to install Bonjour?</source>
         <location filename="src/MainWindow.cpp" line="1146"/>
         <location filename="src/MainWindow.cpp" line="1225"/>
         <location filename="src/MainWindow.cpp" line="1269"/>
-        <source>Input Leap</source>
-        <translation type="finished">Input Leap</translation>
+        <source>InputLeap</source>
+        <translation type="finished">InputLeap</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="987"/>
-        <source>Browse for a barriers config file</source>
-        <translation type="finished">Wskaż plik konfiguracyjny barrier</translation>
+        <source>Browse for a InputLeap config file</source>
+        <translation type="finished">Wskaż plik konfiguracyjny InputLeap</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="408"/>
-        <source>Input Leap is now connected, You can close the config window. Input Leap will remain connected in the background.</source>
+        <source>InputLeap is now connected, You can close the config window. InputLeap will remain connected in the background.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -393,8 +393,8 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <name>MainWindowBase</name>
     <message>
         <location filename="res/MainWindowBase.ui" line="26"/>
-        <source>Input Leap</source>
-        <translation type="finished">Input Leap</translation>
+        <source>InputLeap</source>
+        <translation type="finished">InputLeap</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="90"/>
@@ -479,8 +479,8 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="390"/>
-        <source>&amp;About Input Leap...</source>
-        <translation type="finished">O Input Leap...</translation>
+        <source>&amp;About InputLeap...</source>
+        <translation type="finished">O InputLeap...</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="398"/>
@@ -599,8 +599,8 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <name>PluginWizardPage</name>
     <message>
         <location filename="res/PluginWizardPageBase.ui" line="14"/>
-        <source>Setup Input Leap</source>
-        <translation type="finished">Konfiguracja Input Leap</translation>
+        <source>Setup InputLeap</source>
+        <translation type="finished">Konfiguracja InputLeap</translation>
     </message>
     <message>
         <location filename="res/PluginWizardPageBase.ui" line="101"/>
@@ -653,13 +653,13 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="60"/>
-        <source>Input Leap Configurations (*.sgc)</source>
-        <translation type="finished">Konfiguracje Input Leap (*.sgc)</translation>
+        <source>InputLeap Configurations (*.sgc)</source>
+        <translation type="finished">Konfiguracje InputLeap (*.sgc)</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="67"/>
-        <source>Input Leap Configurations (*.conf)</source>
-        <translation type="finished">Konfiguracje Input Leap (*.conf)</translation>
+        <source>InputLeap Configurations (*.conf)</source>
+        <translation type="finished">Konfiguracje InputLeap (*.conf)</translation>
     </message>
     <message>
         <location filename="src/main.cpp" line="119"/>
@@ -883,17 +883,17 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="24"/>
         <source>Screens and links</source>
-        <translation type="finished">Ekrany i połączenia</translation>
+        <translation type="finished">Ekrany i połączenia</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="35"/>
         <source>Drag a screen from the grid to the trashcan to remove it.</source>
-        <translation type="finished">Przeciągnij ekran z siatki do kosza, aby go usunąć.</translation>
+        <translation type="finished">Przeciągnij ekran z siatki do kosza, aby go usunąć.</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="60"/>
-        <source>Configure the layout of your Input Leap server configuration.</source>
-        <translation type="finished">Konfiguracja układu serwera barrier.</translation>
+        <source>Configure the layout of your InputLeap server configuration.</source>
+        <translation type="finished">Konfiguracja układu serwera InputLeap.</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="73"/>
@@ -907,7 +907,7 @@ Drag a screen to the trashcan to delete it.
 Double click on a screen to edit its settings.</source>
         <translation type="finished">Przeciągnij nowe ekrany na siatkę lub przenoś istniejące.
 Przeciągnij ekran do kosza, aby go usunąć.
-Kliknij dwukrotnie w ekran, aby edytować jego ustawienia.</translation>
+Kliknij dwukrotnie w ekran, aby edytować jego ustawienia.</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="157"/>
@@ -1051,16 +1051,16 @@ Kliknij dwukrotnie w ekran, aby edytować jego ustawienia.</translation>
     </message>
     <message>
         <location filename="src/SettingsDialog.cpp" line="151"/>
-        <source>Elevate Input Leap</source>
-        <translation type="finished">Zwiększ uprawnienia Input Leap</translation>
+        <source>Elevate InputLeap</source>
+        <translation type="finished">Zwiększ uprawnienia InputLeap</translation>
     </message>
     <message>
         <location filename="src/SettingsDialog.cpp" line="152"/>
-        <source>Are you sure you want to elevate Input Leap?
+        <source>Are you sure you want to Elevate InputLeap?
 
-This allows Input Leap to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate Input Leap only if you really need to.</source>
-        <translation type="finished">Czy jesteś pewien, żeby podnieść uprawnienia Input Leap?
-Pozwoli to Input Leap współpracować z innymi aplikacjami o podniesionych uprawnieniach oraz systemem UAC, ale może stwarzać problemy z aplikacjami bez podniesionych uprawnień. Podnoś uprawnienia tylko w sytuacji, gdy naprawdę tego potrzebujesz.</translation>
+This allows InputLeap to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate InputLeap only if you really need to.</source>
+        <translation type="finished">Czy jesteś pewien, żeby podnieść uprawnienia InputLeap?
+Pozwoli to InputLeap współpracować z innymi aplikacjami o podniesionych uprawnieniach oraz systemem UAC, ale może stwarzać problemy z aplikacjami bez podniesionych uprawnień. Podnoś uprawnienia tylko w sytuacji, gdy naprawdę tego potrzebujesz.</translation>
     </message>
 </context>
 <context>
@@ -1175,8 +1175,8 @@ Pozwoli to Input Leap współpracować z innymi aplikacjami o podniesionych upra
     <name>SetupWizard</name>
     <message>
         <location filename="src/SetupWizard.cpp" line="72"/>
-        <source>Setup Input Leap</source>
-        <translation type="finished">Konfiguracja Input Leap</translation>
+        <source>Setup InputLeap</source>
+        <translation type="finished">Konfiguracja InputLeap</translation>
     </message>
     <message>
         <location filename="src/SetupWizard.cpp" line="113"/>
@@ -1193,8 +1193,8 @@ Pozwoli to Input Leap współpracować z innymi aplikacjami o podniesionych upra
     <name>SetupWizardBase</name>
     <message>
         <location filename="res/SetupWizardBase.ui" line="26"/>
-        <source>Setup Input Leap</source>
-        <translation type="finished">Konfiguracja Input Leap</translation>
+        <source>Setup InputLeap</source>
+        <translation type="finished">Konfiguracja InputLeap</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="30"/>
@@ -1203,13 +1203,13 @@ Pozwoli to Input Leap współpracować z innymi aplikacjami o podniesionych upra
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="39"/>
-        <source>Thanks for installing Input Leap!</source>
-        <translation type="finished">Dziękujemy za zainstalowanie Input Leap!</translation>
+        <source>Thanks for installing InputLeap!</source>
+        <translation type="finished">Dziękujemy za zainstalowanie InputLeap!</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="114"/>
-        <source>Input Leap lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Input Leap is cross-platform (works on Windows, Mac OS X and Linux).</source>
-        <translation type="finished">Input Leap pozwala w łatwy sposób dzielić się myszką i klawiaturą pomiędzy wieloma komputerami na Twoim biurku, jest darmowe i Open Source. Wystarczy przesunąć kursor myszy poza krawędź jednego monitora aby przejść na monitor innego komputera.  Możesz nawet dzielić wszystkie swoje schowki. Potrzebujesz do tego tylko połączenia z siecią. Input Leap jest wieloplatformowe (działa na Windows, Mac OS X i Linux).</translation>
+        <source>InputLeap lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. InputLeap is cross-platform (works on Windows, Mac OS X and Linux).</source>
+        <translation type="finished">InputLeap pozwala w łatwy sposób dzielić się myszką i klawiaturą pomiędzy wieloma komputerami na Twoim biurku, jest darmowe i Open Source. Wystarczy przesunąć kursor myszy poza krawędź jednego monitora aby przejść na monitor innego komputera.  Możesz nawet dzielić wszystkie swoje schowki. Potrzebujesz do tego tylko połączenia z siecią. InputLeap jest wieloplatformowe (działa na Windows, Mac OS X i Linux).</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="125"/>
@@ -1398,8 +1398,8 @@ Server response:
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="140"/>
-        <source>Input Leap</source>
-        <translation type="finished">Input Leap</translation>
+        <source>InputLeap</source>
+        <translation type="finished">InputLeap</translation>
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="141"/>

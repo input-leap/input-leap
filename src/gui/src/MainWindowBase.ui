@@ -366,7 +366,7 @@
   </widget>
   <action name="m_pActionAbout">
    <property name="text">
-    <string>&amp;About Barrier...</string>
+    <string>&amp;About InputLeap...</string>
    </property>
    <property name="shortcut">
     <string notr="true"/>

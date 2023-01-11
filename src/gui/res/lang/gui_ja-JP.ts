@@ -5,8 +5,8 @@
     <name>AboutDialogBase</name>
     <message>
         <location filename="res/AboutDialogBase.ui" line="38"/>
-        <source>About Input Leap</source>
-        <translation>Input Leap について</translation>
+        <source>About InputLeap</source>
+        <translation>InputLeap について</translation>
     </message>
     <message utf8="true">
         <location filename="res/AboutDialogBase.ui" line="53"/>
@@ -15,18 +15,18 @@ Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&
 Copyright © 2018 Debauchee Open Source Group&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Input Leap is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
-Input Leap is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Input Leap GUI is based on QSynergy by Volker Lanz.
+InputLeap is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
+InputLeap is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
+The InputLeap GUI is based on QSynergy by Volker Lanz.
 &lt;/p&gt;</source>
         <translation>&lt;p&gt;
 キーボードとマウスの共有ソフトウェアです。クロスプラットフォームでオープンソースです。&lt;br /&gt;&lt;br /&gt;
 Copyright © 2018 Debauchee Open Source Group&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Input Leap は GNU General Public (GPLv2) のライセンスで公開されています。&lt;br /&gt;&lt;br /&gt;
-Input Leap のベースは CosmoSynergyで、これは Richard Lee と Adam Feder の開発です。&lt;br /&gt;
-Input Leap の GUI のベースは QSynergy で、これは Volker Lanz 開発です。
+InputLeap は GNU General Public (GPLv2) のライセンスで公開されています。&lt;br /&gt;&lt;br /&gt;
+InputLeap のベースは CosmoSynergyで、これは Richard Lee と Adam Feder の開発です。&lt;br /&gt;
+InputLeap の GUI のベースは QSynergy で、これは Volker Lanz 開発です。
 &lt;/p&gt;</translation>
     </message>
     <message>
@@ -213,9 +213,9 @@ Input Leap の GUI のベースは QSynergy で、これは Volker Lanz 開発�
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="364"/>
-        <source>&lt;p&gt;Your version of Input Leap is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Your version of InputLeap is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</source>
         <oldsource>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</oldsource>
-        <translation type="unfinished">&lt;p&gt;お使いの Input Leap は最新版ではありません。 新しいバージョン &lt;b&gt;%1&lt;/b&gt; が&lt;a href=&quot;%2&quot;&gt;ダウンロード&lt;/a&gt;できます。&lt;/p&gt;</translation>
+        <translation type="unfinished">&lt;p&gt;お使いの InputLeap は最新版ではありません。 新しいバージョン &lt;b&gt;%1&lt;/b&gt; が&lt;a href=&quot;%2&quot;&gt;ダウンロード&lt;/a&gt;できます。&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="577"/>
@@ -229,13 +229,13 @@ Input Leap の GUI のベースは QSynergy で、これは Volker Lanz 開発�
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="596"/>
-        <source>Input Leap client not found</source>
-        <translation>Input Leap のクライアントが見つかりません</translation>
+        <source>InputLeap client not found</source>
+        <translation>InputLeap のクライアントが見つかりません</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="597"/>
-        <source>The executable for the Input Leap client does not exist.</source>
-        <translation>Input Leap のクライアントの実行ファイルが存在しません。</translation>
+        <source>The executable for the InputLeap client does not exist.</source>
+        <translation>InputLeap のクライアントの実行ファイルが存在しません。</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="625"/>
@@ -244,8 +244,8 @@ Input Leap の GUI のベースは QSynergy で、これは Volker Lanz 開発�
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="626"/>
-        <source>Please fill in a hostname for the Input Leap client to connect to.</source>
-        <translation>Input Leap のクライアントが接続するホスト名を入力してください。</translation>
+        <source>Please fill in a hostname for the InputLeap client to connect to.</source>
+        <translation>InputLeap のクライアントが接続するホスト名を入力してください。</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="646"/>
@@ -254,8 +254,8 @@ Input Leap の GUI のベースは QSynergy で、これは Volker Lanz 開発�
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="646"/>
-        <source>The temporary configuration file required to start Input Leap can not be written.</source>
-        <translation>Input Leap の開始に必要な一時的な構成ファイルに書き込めません。</translation>
+        <source>The temporary configuration file required to start InputLeap can not be written.</source>
+        <translation>InputLeap の開始に必要な一時的な構成ファイルに書き込めません。</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="659"/>
@@ -264,28 +264,28 @@ Input Leap の GUI のベースは QSynergy で、これは Volker Lanz 開発�
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="660"/>
-        <source>You have not filled in a valid configuration file for the Input Leap server. Do you want to browse for the configuration file now?</source>
-        <translation>Input Leap のサーバー用の正しい構成ファイルではありません。構成ファイルを開きますか?</translation>
+        <source>You have not filled in a valid configuration file for the InputLeap server. Do you want to browse for the configuration file now?</source>
+        <translation>InputLeap のサーバー用の正しい構成ファイルではありません。構成ファイルを開きますか?</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="688"/>
-        <source>Input Leap server not found</source>
-        <translation>Input Leap のサーバーが見つかりません</translation>
+        <source>InputLeap server not found</source>
+        <translation>InputLeap のサーバーが見つかりません</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="689"/>
-        <source>The executable for the Input Leap server does not exist.</source>
-        <translation>Input Leap のサーバーの実行ファイルが存在しません。</translation>
+        <source>The executable for the InputLeap server does not exist.</source>
+        <translation>InputLeap のサーバーの実行ファイルが存在しません。</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="764"/>
-        <source>Input Leap terminated with an error</source>
-        <translation>Input Leap はエラーで終了しました</translation>
+        <source>InputLeap terminated with an error</source>
+        <translation>InputLeap はエラーで終了しました</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="764"/>
-        <source>Input Leap terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
-        <translation>Input Leap は予期しない終了コード %1 で終了しました。&lt;br&gt;&lt;br&gt;詳細はログの出力を参照してください。</translation>
+        <source>InputLeap terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
+        <translation>InputLeap は予期しない終了コード %1 で終了しました。&lt;br&gt;&lt;br&gt;詳細はログの出力を参照してください。</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="783"/>
@@ -337,18 +337,18 @@ Bonjour をインストールしますか?</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="815"/>
-        <source>Input Leap is starting.</source>
-        <translation>Input Leap 開始中...</translation>
+        <source>InputLeap is starting.</source>
+        <translation>InputLeap 開始中...</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="809"/>
-        <source>Input Leap is running.</source>
-        <translation>Input Leap 動作中</translation>
+        <source>InputLeap is running.</source>
+        <translation>InputLeap 動作中</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="819"/>
-        <source>Input Leap is not running.</source>
-        <translation>Input Leap は動作していません。</translation>
+        <source>InputLeap is not running.</source>
+        <translation>InputLeap は動作していません。</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="870"/>
@@ -359,18 +359,18 @@ Bonjour をインストールしますか?</translation>
         <location filename="src/MainWindow.cpp" line="1146"/>
         <location filename="src/MainWindow.cpp" line="1225"/>
         <location filename="src/MainWindow.cpp" line="1269"/>
-        <source>Input Leap</source>
-        <translation>Input Leap</translation>
+        <source>InputLeap</source>
+        <translation>InputLeap</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="987"/>
-        <source>Browse for a barriers config file</source>
-        <translation type="unfinished">Input Leap の構成ファイルを参照</translation>
+        <source>Browse for a InputLeap config file</source>
+        <translation type="unfinished">InputLeap の構成ファイルを参照</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="408"/>
-        <source>Input Leap is now connected. You can close the config window and Input Leap will remain connected in the background.</source>
-        <translation>ただいま Input Leap は接続されました。設定ウインドウを閉じることができます。それでもバックグラウンドで接続を維持します。</translation>
+        <source>InputLeap is now connected. You can close the config window and InputLeap will remain connected in the background.</source>
+        <translation>ただいま InputLeap は接続されました。設定ウインドウを閉じることができます。それでもバックグラウンドで接続を維持します。</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="434"/>
@@ -414,8 +414,8 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <name>MainWindowBase</name>
     <message>
         <location filename="res/MainWindowBase.ui" line="26"/>
-        <source>Input Leap</source>
-        <translation>Input Leap</translation>
+        <source>InputLeap</source>
+        <translation>InputLeap</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="90"/>
@@ -505,8 +505,8 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="390"/>
-        <source>&amp;About Input Leap...</source>
-        <translation>Input Leap について(&amp;A)...</translation>
+        <source>&amp;About InputLeap...</source>
+        <translation>InputLeap について(&amp;A)...</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="398"/>
@@ -646,8 +646,8 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <name>PluginWizardPage</name>
     <message>
         <location filename="res/PluginWizardPageBase.ui" line="14"/>
-        <source>Setup Input Leap</source>
-        <translation>Input Leap のセットアップ</translation>
+        <source>Setup InputLeap</source>
+        <translation>InputLeap のセットアップ</translation>
     </message>
     <message>
         <location filename="res/PluginWizardPageBase.ui" line="101"/>
@@ -695,13 +695,13 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <name>QObject</name>
     <message>
         <location filename="src/MainWindow.cpp" line="60"/>
-        <source>Input Leap Configurations (*.sgc);;All files (*.*)</source>
-        <translation>Input Leap 構成設定 (*.sgc);;すべてのファイル(*.*)</translation>
+        <source>InputLeap Configurations (*.sgc);;All files (*.*)</source>
+        <translation>InputLeap 構成設定 (*.sgc);;すべてのファイル(*.*)</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="67"/>
-        <source>Input Leap Configurations (*.conf);;All files (*.*)</source>
-        <translation>Input Leap 構成設定 (*.conf);;すべてのファイル(*.*)</translation>
+        <source>InputLeap Configurations (*.conf);;All files (*.*)</source>
+        <translation>InputLeap 構成設定 (*.conf);;すべてのファイル(*.*)</translation>
     </message>
     <message>
         <location filename="src/main.cpp" line="119"/>
@@ -939,8 +939,8 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="60"/>
-        <source>Configure the layout of your Input Leap server configuration.</source>
-        <translation type="unfinished">Input Leap のサーバー構成の配置を設定します。</translation>
+        <source>Configure the layout of your InputLeap server configuration.</source>
+        <translation type="unfinished">InputLeap のサーバー構成の配置を設定します。</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="73"/>
@@ -1113,16 +1113,16 @@ Double click on a screen to edit its settings.</source>
     </message>
     <message>
         <location filename="src/SettingsDialog.cpp" line="151"/>
-        <source>Elevate Input Leap</source>
-        <translation>Input Leap の権限昇格</translation>
+        <source>Elevate InputLeap</source>
+        <translation>InputLeap の権限昇格</translation>
     </message>
     <message>
         <location filename="src/SettingsDialog.cpp" line="152"/>
-        <source>Are you sure you want to elevate Input Leap?
+        <source>Are you sure you want to Elevate InputLeap?
 
-This allows Input Leap to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate Input Leap only if you really need to.</source>
-        <translation type="unfinished">Input Leap の権限を昇格しますか？
-この許可により Input Leap は権限を持つプロセスや UAC ダイアログとやりとりできます。一方で、昇格されていないプロセスとのやり取りに問題が起こることもあります。確かに必要である場合にのみ Input Leap を昇格させてください。</translation>
+This allows InputLeap to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate InputLeap only if you really need to.</source>
+        <translation type="unfinished">InputLeap の権限を昇格しますか？
+この許可により InputLeap は権限を持つプロセスや UAC ダイアログとやりとりできます。一方で、昇格されていないプロセスとのやり取りに問題が起こることもあります。確かに必要である場合にのみ InputLeap を昇格させてください。</translation>
     </message>
 </context>
 <context>
@@ -1244,8 +1244,8 @@ This allows Input Leap to interact with elevated processes and the UAC dialog, b
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="93"/>
-        <source>Specify when the Input Leap service should run at an elevated privilege level</source>
-        <translation>Input Leap のサービスを昇格した権限で実行するタイミングの指定</translation>
+        <source>Specify when the InputLeap service should run at an elevated privilege level</source>
+        <translation>InputLeap のサービスを昇格した権限で実行するタイミングの指定</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="100"/>
@@ -1284,8 +1284,8 @@ This allows Input Leap to interact with elevated processes and the UAC dialog, b
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="132"/>
-        <source>Start &amp;Input Leap on startup</source>
-        <translation>起動時に Input Leap を開始(&amp;B)</translation>
+        <source>Start &amp;InputLeap on startup</source>
+        <translation>起動時に InputLeap を開始(&amp;B)</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="201"/>
@@ -1297,8 +1297,8 @@ This allows Input Leap to interact with elevated processes and the UAC dialog, b
     <name>LogWindowBase</name>
     <message>
         <location filename="res/LogWindowBase.ui" line="26"/>
-        <source>Log - Input Leap</source>
-        <translation>ログ - Input Leap</translation>
+        <source>Log - InputLeap</source>
+        <translation>ログ - InputLeap</translation>
     </message>
     <message>
         <location filename="res/LogWindowBase.ui" line="71"/>
@@ -1315,8 +1315,8 @@ This allows Input Leap to interact with elevated processes and the UAC dialog, b
     <name>SetupWizard</name>
     <message>
         <location filename="src/SetupWizard.cpp" line="72"/>
-        <source>Setup Input Leap</source>
-        <translation>Input Leap のセットアップ</translation>
+        <source>Setup InputLeap</source>
+        <translation>InputLeap のセットアップ</translation>
     </message>
     <message>
         <location filename="src/SetupWizard.cpp" line="113"/>
@@ -1333,8 +1333,8 @@ This allows Input Leap to interact with elevated processes and the UAC dialog, b
     <name>SetupWizardBase</name>
     <message>
         <location filename="res/SetupWizardBase.ui" line="26"/>
-        <source>Setup Input Leap</source>
-        <translation>Input Leap のセットアップ</translation>
+        <source>Setup InputLeap</source>
+        <translation>InputLeap のセットアップ</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="30"/>
@@ -1343,13 +1343,13 @@ This allows Input Leap to interact with elevated processes and the UAC dialog, b
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="39"/>
-        <source>Thanks for installing Input Leap!</source>
-        <translation>Input Leap をインストールしていただき、ありがとうございます！</translation>
+        <source>Thanks for installing InputLeap!</source>
+        <translation>InputLeap をインストールしていただき、ありがとうございます！</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="114"/>
-        <source>Input Leap lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Input Leap is cross-platform (works on Windows, Mac OS X and Linux).</source>
-        <translation>Input Leap によって、複数のデスクトップパソコン間でマウスとキーボードを簡単に共有することができます。そしてこれは無料でオープンソースのソフトウェアです。あるコンピュータの画面の端にマウスを移動するだけで、別のコンピュータの画面に移ることができます。クリップボードを共有することもできます。必要なのはネットワーク接続だけです。 Input Leap はクロスプラットフォームで Windows、Mac OS X、Linux で動作します。</translation>
+        <source>InputLeap lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. InputLeap is cross-platform (works on Windows, Mac OS X and Linux).</source>
+        <translation>InputLeap によって、複数のデスクトップパソコン間でマウスとキーボードを簡単に共有することができます。そしてこれは無料でオープンソースのソフトウェアです。あるコンピュータの画面の端にマウスを移動するだけで、別のコンピュータの画面に移ることができます。クリップボードを共有することもできます。必要なのはネットワーク接続だけです。 InputLeap はクロスプラットフォームで Windows、Mac OS X、Linux で動作します。</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="125"/>
@@ -1556,8 +1556,8 @@ Server response:
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="140"/>
-        <source>Input Leap</source>
-        <translation>Input Leap</translation>
+        <source>InputLeap</source>
+        <translation>InputLeap</translation>
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="141"/>

@@ -57,7 +57,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>Configure the layout of your barrier server configuration.</string>
+            <string>Configure the layout of your InputLeap server configuration.</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>

@@ -130,7 +130,7 @@ jobs:
         name: Archive Completed Build Directory
       - uses: actions/upload-artifact@v3
         with:
-          name: Windows ${{ env.CI_ENV_BUILD_TYPE }}
+          name: ${{ runner.os }}-${{ env.CI_ENV_BUILD_TYPE }}
           path: ${{ env.CI_ENV_BUILD_TYPE }}.zip
           if-no-files-found: warn
 
@@ -160,7 +160,7 @@ jobs:
         name: Archive Completed Build Directory
       - uses: actions/upload-artifact@v3
         with:
-          name: Windows ${{ env.CI_ENV_BUILD_TYPE }}
+          name: ${{ runner.os }}-${{ env.CI_ENV_BUILD_TYPE }}
           path: ${{ env.CI_ENV_BUILD_TYPE }}.zip
       - name: Build the Installer
         run: .\build_installer.bat

@@ -23,6 +23,7 @@
 #include <cstdlib>     // getenv
 #include <sys/types.h> // getpwuid(_r)
 #include <pwd.h>       // getpwuid(_r)
+#include <iostream>
 
 namespace inputleap {
 
@@ -78,8 +79,11 @@ static fs::path profile_basedir()
 
 const fs::path& DataDirectories::profile()
 {
-    if (_profile.empty())
-        _profile = profile_basedir() / "input-leap";
+    if (_profile.empty()) {
+        _profile = profile_basedir() / "InputLeap";
+        maybe_copy_old_profile(profile_basedir() / "barrier", _profile);
+    }
+    std::cout << "PROFILE: " << _profile << std::endl;
     return _profile;
 }
 const fs::path& DataDirectories::profile(const fs::path& path)

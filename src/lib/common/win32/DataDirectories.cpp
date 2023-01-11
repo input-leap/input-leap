@@ -36,8 +36,11 @@ fs::path known_folder_path(const KNOWNFOLDERID& id)
 
 const fs::path& DataDirectories::profile()
 {
-    if (_profile.empty())
-        _profile = known_folder_path(FOLDERID_LocalAppData) / "InputLeap";
+    if (_profile.empty()) {
+        auto basedir = known_folder_path(FOLDERID_LocalAppData);
+        _profile = basedir / "InputLeap";
+        maybe_copy_old_profile(basedir / "barrier", _profile);
+    }
     return _profile;
 }
 const fs::path& DataDirectories::profile(const fs::path& path)

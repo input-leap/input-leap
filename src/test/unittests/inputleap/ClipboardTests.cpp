@@ -197,15 +197,15 @@ TEST(ClipboardTests, marshall_withTextAdded_lastSizeCharIs14)
 // TODO: there's some integer -> char encoding going on here. i find it
 // hard to believe that the clipboard is the only thing doing this. maybe
 // we should refactor this stuff out of the clipboard.
-TEST(ClipboardTests, marshall_withTextSize285_sizeCharsValid)
+TEST(ClipboardTests, marshall_withTextSize289_sizeCharsValid)
 {
-    // 285 chars
+    // 289 chars
     std::string data;
-    data.append("Barrier is Free and Open Source Software that lets you ");
+    data.append("InputLeap is Free and Open Source Software that lets you ");
     data.append("easily share your mouse and keyboard between multiple ");
     data.append("computers, where each computer has it's own display. No ");
     data.append("special hardware is required, all you need is a local area ");
-    data.append("network. Barrier is supported on Windows, Mac OS X and Linux.");
+    data.append("network. InputLeap is supported on Windows, Mac OS X and Linux.");
 
     Clipboard clipboard;
     clipboard.open(0);
@@ -214,17 +214,10 @@ TEST(ClipboardTests, marshall_withTextSize285_sizeCharsValid)
 
     std::string actual = clipboard.marshall();
 
-    // 4 asserts here, but that's ok because we're really just asserting 1
-    // thing. the 32-bit size value is split into 4 chars. if the size is 285
-    // (29 more than the 8-bit max size), the last char "rolls over" to 29
-    // (this is caused by a bit-wise & on 0xff and 8-bit truncation). each
-    // char before the last stores a bit-shifted version of the number, each
-    // 1 more power than the last, which is done by bit-shifting [0] by 24,
-    // [1] by 16, [2] by 8 ([3] is not bit-shifted).
-    EXPECT_EQ(0, actual[8]); // 285 >> 24 = 285 / (256^3) = 0
-    EXPECT_EQ(0, actual[9]); // 285 >> 16 = 285 / (256^2) = 0
-    EXPECT_EQ(1, actual[10]); // 285 >> 8 = 285 / (256^1) = 1(.11328125)
-    EXPECT_EQ(29, actual[11]); // 285 - 256 = 29
+    EXPECT_EQ(0, actual[8]); // 289 >> 24
+    EXPECT_EQ(0, actual[9]); // 289 >> 16
+    EXPECT_EQ(1, actual[10]); // 289 >> 8
+    EXPECT_EQ(33, actual[11]); // 289 & 0xff
 }
 
 TEST(ClipboardTests, marshall_withHtmlAdded_typeCharIsHtml)
@@ -244,7 +237,7 @@ TEST(ClipboardTests, marshall_withHtmlAndText_has2Formats)
 {
     Clipboard clipboard;
     clipboard.open(0);
-    clipboard.add(IClipboard::kText, "barrier rocks");
+    clipboard.add(IClipboard::kText, "test string");
     clipboard.add(IClipboard::kHTML, "other test string!");
     clipboard.close();
 

@@ -474,19 +474,19 @@ std::uint8_t* newMockData(size_t size)
     size_t headSize = sizeof(head) - 1;
     const std::uint8_t tail[] = "... mock tail";
     size_t tailSize = sizeof(tail) - 1;
-    const std::uint8_t barrierRocks[] = "barrier\0 rocks! ";
-    size_t barrierRocksSize = sizeof(barrierRocks) - 1;
+    const std::uint8_t test_data[] = "test\0 data! ";
+    size_t test_data_size = sizeof(test_data) - 1;
 
     memcpy(data, head, headSize);
     data += headSize;
 
-    size_t times = (size - headSize - tailSize) / barrierRocksSize;
+    size_t times = (size - headSize - tailSize) / test_data_size;
     for (size_t i = 0; i < times; ++i) {
-        memcpy(data, barrierRocks, barrierRocksSize);
-        data += barrierRocksSize;
+        memcpy(data, test_data, test_data_size);
+        data += test_data_size;
     }
 
-    size_t remainder = (size - headSize - tailSize) % barrierRocksSize;
+    size_t remainder = (size - headSize - tailSize) % test_data_size;
     if (remainder != 0) {
         memset(data, '.', remainder);
         data += remainder;

@@ -73,7 +73,7 @@ ServerApp::ServerApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBa
     m_primaryClient(nullptr),
     m_listener(nullptr),
     m_timer(nullptr),
-    m_barrierAddress(nullptr)
+    listen_address_(nullptr)
 {
 }
 
@@ -93,8 +93,8 @@ ServerApp::parseArgs(int argc, const char* const* argv)
     else {
         if (!args().network_address.empty()) {
             try {
-                *m_barrierAddress = NetworkAddress(args().network_address, kDefaultPort);
-                m_barrierAddress->resolve();
+                *listen_address_ = NetworkAddress(args().network_address, kDefaultPort);
+                listen_address_->resolve();
             }
             catch (XSocketAddress& e) {
                 LOG((CLOG_PRINT "%s: %s" BYE,
@@ -543,7 +543,7 @@ ServerApp::startServer()
     double retryTime;
     ClientListener* listener = nullptr;
     try {
-        auto listenAddress = args().m_config->getBarrierAddress();
+        auto listenAddress = args().m_config->get_listen_address();
         auto family = family_string(ARCH->getAddrFamily(listenAddress.getAddress()));
         listener   = openClientListener(listenAddress);
         m_server   = openServer(*args().m_config, m_primaryClient);
@@ -723,10 +723,10 @@ ServerApp::mainLoop()
     // set the contact address, if provided, in the config.
     // otherwise, if the config doesn't have an address, use
     // the default.
-    if (m_barrierAddress->isValid()) {
-        args().m_config->set_listen_address(*m_barrierAddress);
+    if (listen_address_->isValid()) {
+        args().m_config->set_listen_address(*listen_address_);
     }
-    else if (!args().m_config->getBarrierAddress().isValid()) {
+    else if (!args().m_config->get_listen_address().isValid()) {
         args().m_config->set_listen_address(NetworkAddress(kDefaultPort));
     }
 
@@ -809,7 +809,7 @@ int
 ServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 {
     // general initialization
-    m_barrierAddress = new NetworkAddress;
+    listen_address_ = new NetworkAddress;
     args().m_config         = new Config(m_events);
     args().m_exename = ArgParser::parse_exename(argv[0]);
 
@@ -828,7 +828,7 @@ ServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc
     }
 
     delete args().m_config;
-    delete m_barrierAddress;
+    delete listen_address_;
     return result;
 }
 

@@ -267,7 +267,7 @@ bool Config::disconnect(const std::string& srcName, EDirection srcSide, float po
 void
 Config::set_listen_address(const NetworkAddress& addr)
 {
-	m_barrierAddress = addr;
+    listen_address_ = addr;
 }
 
 bool Config::addOption(const std::string& name, OptionID option, OptionValue value)
@@ -503,10 +503,9 @@ Config::link_const_iterator Config::endNeighbor(const std::string& srcName) cons
 	return index->second.end();
 }
 
-const NetworkAddress&
-Config::getBarrierAddress() const
+const NetworkAddress& Config::get_listen_address() const
 {
-	return m_barrierAddress;
+    return listen_address_;
 }
 
 const Config::ScreenOptions* Config::getOptions(const std::string& name) const
@@ -536,7 +535,7 @@ Config::hasLockToScreenAction() const
 bool
 Config::operator==(const Config& x) const
 {
-	if (m_barrierAddress != x.m_barrierAddress) {
+    if (listen_address_ != x.listen_address_) {
 		return false;
 	}
 	if (m_map.size() != x.m_map.size()) {
@@ -697,8 +696,8 @@ Config::readSectionOptions(ConfigReadContext& s)
 		bool handled = true;
 		if (name == "address") {
 			try {
-				m_barrierAddress = NetworkAddress(value, kDefaultPort);
-				m_barrierAddress.resolve();
+                listen_address_ = NetworkAddress(value, kDefaultPort);
+                listen_address_.resolve();
 			}
 			catch (XSocketAddress& e) {
                 throw XConfigRead(s, std::string("invalid address argument ") + e.what());
@@ -1818,9 +1817,9 @@ operator<<(std::ostream& s, const Config& config)
 			}
 		}
 	}
-	if (config.m_barrierAddress.isValid()) {
+    if (config.listen_address_.isValid()) {
 		s << "\taddress = " <<
-            config.m_barrierAddress.getHostname().c_str() << "\n";
+            config.listen_address_.getHostname().c_str() << "\n";
 	}
 	s << config.m_inputFilter.format("\t");
     s << "end\n";

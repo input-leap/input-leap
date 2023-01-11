@@ -405,7 +405,7 @@ MSWindowsScreen::checkClipboards()
     // next reboot we do this double check.  clipboard ownership
     // won't be reflected on other screens until we leave but at
     // least the clipboard itself will work.
-    if (m_ownClipboard && !MSWindowsClipboard::isOwnedByBarrier()) {
+    if (m_ownClipboard && !MSWindowsClipboard::is_owned_by_us()) {
         LOG((CLOG_DEBUG "clipboard changed: lost ownership and no notification received"));
         m_ownClipboard = false;
         sendClipboardEvent(EventType::CLIPBOARD_GRABBED, kClipboardClipboard);
@@ -1442,7 +1442,7 @@ MSWindowsScreen::onClipboardChange()
 {
     // now notify client that somebody changed the clipboard (unless
     // we're the owner).
-    if (!MSWindowsClipboard::isOwnedByBarrier()) {
+    if (!MSWindowsClipboard::is_owned_by_us()) {
         if (m_ownClipboard) {
             LOG((CLOG_DEBUG "clipboard changed: lost ownership"));
             m_ownClipboard = false;

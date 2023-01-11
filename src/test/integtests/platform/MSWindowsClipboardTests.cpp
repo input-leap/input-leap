@@ -220,12 +220,12 @@ TEST_F(MSWindowsClipboardTests, get_withFormatAdded_returnsExpected)
     EXPECT_EQ("test string!", actual);
 }
 
-TEST_F(MSWindowsClipboardTests, isOwnedByBarrier_defaultState_noError)
+TEST_F(MSWindowsClipboardTests, is_owned_by_us_defaultState_noError)
 {
     MSWindowsClipboard clipboard(nullptr);
     clipboard.open(0);
 
-    bool actual = clipboard.isOwnedByBarrier();
+    bool actual = clipboard.is_owned_by_us();
 
     EXPECT_EQ(true, actual);
 }

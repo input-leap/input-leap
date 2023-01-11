@@ -25,7 +25,7 @@
 
 namespace inputleap {
 
-TEST(OSXKeyStateTests, mapModifiersFromOSX_OSXMask_returnBarrierMask)
+TEST(OSXKeyStateTests, mapModifiersFromOSX_OSXMask)
 {
     inputleap::KeyMap keyMap;
     MockEventQueue eventQueue;

@@ -1761,8 +1761,8 @@ void Server::send_drag_info_thread(BaseClientProxy* newScreen)
 
 #if defined(__APPLE__)
 	// on mac it seems that after faking a LMB up, system would signal back
-	// to barrier a mouse up event, which doesn't happen on windows. as a
-	// result, barrier would send dragging file to client twice. This variable
+    // to InputLeap a mouse up event, which doesn't happen on windows. as a
+    // result, InputLeap would send dragging file to client twice. This variable
 	// is used to ignore the first file sending.
 	m_ignoreFileTransfer = true;
 #endif

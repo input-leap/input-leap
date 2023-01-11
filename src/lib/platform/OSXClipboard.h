@@ -34,9 +34,6 @@ public:
     OSXClipboard();
     virtual ~OSXClipboard();
 
-    //! Test if clipboard is owned by InputLeap
-    static bool isOwnedByBarrier();
-
     // IClipboard overrides
     virtual bool empty();
     virtual void add(EFormat, const std::string& data);

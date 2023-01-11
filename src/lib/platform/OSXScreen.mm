@@ -45,11 +45,9 @@
 namespace inputleap {
 
 // This isn't in any Apple SDK that I know of as of yet.
-enum {
-	kBarrierEventMouseScroll = 11,
-	kBarrierMouseScrollAxisX = 'saxx',
-	kBarrierMouseScrollAxisY = 'saxy'
-};
+constexpr int INPUT_LEAP_EVENT_MOUSE_SCROLL = 11;
+constexpr int INPUT_LEAP_MOUSE_SCROLL_AXIS_X = 'saxx';
+constexpr int INPUT_LEAP_MOUSE_SCROLL_AXIS_Y = 'saxy';
 
 enum {
 	kCarbonLoopWaitTimeout = 10
@@ -291,7 +289,7 @@ std::uint32_t OSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 {
     // get mac virtual key and modifier mask matching InputLeap key and mask
 	std::uint32_t macKey, macMask;
-	if (!m_keyState->mapBarrierHotKeyToMac(key, mask, macKey, macMask)) {
+    if (!m_keyState->map_hot_key_to_mac(key, mask, macKey, macMask)) {
 		LOG((CLOG_DEBUG "could not map hotkey id=%04x mask=%04x", key, mask));
 		return 0;
 	}
@@ -480,7 +478,7 @@ void
 OSXScreen::fakeMouseButton(ButtonID id, bool press)
 {
 	// Buttons are indexed from one, but the button down array is indexed from zero
-	std::uint32_t index = mapBarrierButtonToMac(id) - kButtonLeft;
+    std::uint32_t index = map_button_to_osx(id) - kButtonLeft;
 	if (index >= NumButtonIDs) {
 		return;
 	}
@@ -641,8 +639,8 @@ void OSXScreen::fakeMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const
 		// is the right choice here over kCGScrollEventUnitPixel
 		CGEventRef scrollEvent = CGEventCreateScrollWheelEvent(
             nullptr, kCGScrollEventUnitLine, 2,
-			mapScrollWheelFromBarrier(yDelta),
-			-mapScrollWheelFromBarrier(xDelta));
+            map_scroll_wheel_to_osx(yDelta),
+            -map_scroll_wheel_to_osx(xDelta));
 
         // Fix for sticky keys
         CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
@@ -958,27 +956,27 @@ void OSXScreen::handle_system_event(const Event& event)
 	switch (eventClass) {
 	case kEventClassMouse:
 		switch (GetEventKind(*carbonEvent)) {
-		case kBarrierEventMouseScroll:
+        case INPUT_LEAP_EVENT_MOUSE_SCROLL:
 		{
 			OSStatus r;
 			long xScroll;
 			long yScroll;
 
 			// get scroll amount
-            r = GetEventParameter(*carbonEvent, kBarrierMouseScrollAxisX,
+            r = GetEventParameter(*carbonEvent, INPUT_LEAP_MOUSE_SCROLL_AXIS_X,
                                   typeSInt32, nullptr, sizeof(xScroll), nullptr, &xScroll);
 			if (r != noErr) {
 				xScroll = 0;
 			}
-            r = GetEventParameter(*carbonEvent, kBarrierMouseScrollAxisY,
+            r = GetEventParameter(*carbonEvent, INPUT_LEAP_MOUSE_SCROLL_AXIS_Y,
                                   typeSInt32, nullptr, sizeof(yScroll), nullptr, &yScroll);
 			if (r != noErr) {
 				yScroll = 0;
 			}
 
 			if (xScroll != 0 || yScroll != 0) {
-				onMouseWheel(-mapScrollWheelToBarrier(xScroll),
-								mapScrollWheelToBarrier(yScroll));
+                onMouseWheel(-map_scroll_wheel_from_osx(xScroll),
+                             map_scroll_wheel_from_osx(yScroll));
 			}
 		}
 		}
@@ -1092,7 +1090,7 @@ OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 bool OSXScreen::onMouseButton(bool pressed, std::uint16_t macButton)
 {
 	// Buttons 2 and 3 are inverted on the mac
-	ButtonID button = mapMacButtonToBarrier(macButton);
+    ButtonID button = map_button_from_osx(macButton);
 
 	if (pressed) {
 		LOG((CLOG_DEBUG1 "event: button press button=%d", button));
@@ -1335,7 +1333,7 @@ OSXScreen::onHotKey(EventRef event) const
 	return true;
 }
 
-ButtonID OSXScreen::mapBarrierButtonToMac(std::uint16_t button) const
+ButtonID OSXScreen::map_button_to_osx(std::uint16_t button) const
 {
     switch (button) {
     case 1:
@@ -1349,7 +1347,7 @@ ButtonID OSXScreen::mapBarrierButtonToMac(std::uint16_t button) const
     return static_cast<ButtonID>(button);
 }
 
-ButtonID OSXScreen::mapMacButtonToBarrier(std::uint16_t macButton) const
+ButtonID OSXScreen::map_button_from_osx(std::uint16_t macButton) const
 {
 	switch (macButton) {
 	case 1:
@@ -1365,7 +1363,7 @@ ButtonID OSXScreen::mapMacButtonToBarrier(std::uint16_t macButton) const
 	return static_cast<ButtonID>(macButton);
 }
 
-std::int32_t OSXScreen::mapScrollWheelToBarrier(float x) const
+std::int32_t OSXScreen::map_scroll_wheel_from_osx(float x) const
 {
 	// return accelerated scrolling but not exponentially scaled as it is
 	// on the mac.
@@ -1373,7 +1371,7 @@ std::int32_t OSXScreen::mapScrollWheelToBarrier(float x) const
     return static_cast<std::int32_t>(120.0 * d);
 }
 
-std::int32_t OSXScreen::mapScrollWheelFromBarrier(float x) const
+std::int32_t OSXScreen::map_scroll_wheel_to_osx(float x) const
 {
 	// use server's acceleration with a little boost since other platforms
 	// take one wheel step as a larger step than the mac does.
@@ -1880,9 +1878,9 @@ OSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 			return event;
 			break;
 		case kCGEventScrollWheel:
-			screen->onMouseWheel(screen->mapScrollWheelToBarrier(
+            screen->onMouseWheel(screen->map_scroll_wheel_from_osx(
 								 CGEventGetIntegerValueField(event, kCGScrollWheelEventFixedPtDeltaAxis2) / 65536.0f),
-								 screen->mapScrollWheelToBarrier(
+                                 screen->map_scroll_wheel_from_osx(
 								 CGEventGetIntegerValueField(event, kCGScrollWheelEventFixedPtDeltaAxis1) / 65536.0f));
 			break;
 		case kCGEventKeyDown:

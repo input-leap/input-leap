@@ -206,8 +206,7 @@ MSWindowsClipboard::clearConverters()
     m_converters.clear();
 }
 
-bool
-MSWindowsClipboard::isOwnedByBarrier()
+bool MSWindowsClipboard::is_owned_by_us()
 {
     // create ownership format if we haven't yet
     if (s_ownershipFormat == 0) {

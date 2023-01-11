@@ -112,7 +112,7 @@ public:
     PrimaryClient* m_primaryClient;
     ClientListener* m_listener;
     EventQueueTimer* m_timer;
-    NetworkAddress* m_barrierAddress;
+    NetworkAddress* listen_address_;
 
 private:
     void handle_screen_switched(const Event& event);

@@ -44,7 +44,7 @@ public:
     This must be called between a successful open() and close().
     Return false if the clipboard ownership could not be taken;
     the clipboard should not be emptied in this case.  Unlike
-    empty(), isOwnedByBarrier() will return false when emptied
+    empty(), is_owned_by_us() will return false when emptied
     this way.  This is useful when InputLeap wants to put data on
     clipboard but pretend (to itself) that some other app did it.
     When using empty(), InputLeap assumes the data came from the
@@ -54,7 +54,7 @@ public:
     bool emptyUnowned();
 
     //! Test if clipboard is owned by InputLeap
-    static bool isOwnedByBarrier();
+    static bool is_owned_by_us();
 
     // IClipboard overrides
     virtual bool empty();

@@ -80,10 +80,10 @@ class AppConfig: public QObject
         bool autoConfigPrompted();
         void setAutoConfigPrompted(bool prompted);
 
-        QString barriersName() const;
-        QString barriercName() const;
-        QString barrierProgramDir() const;
-        QString barrierLogDir() const;
+        QString server_name() const;
+        QString client_name() const;
+        QString program_dir() const;
+        QString log_dir() const;
 
         void persistLogDir();
         ElevateMode elevateMode();
@@ -140,9 +140,9 @@ protected:
         bool m_AutoStart;
         bool m_MinimizeToTray;
 
-        static const char m_BarriersName[];
-        static const char m_BarriercName[];
-        static const char m_BarrierLogDir[];
+        static const char server_name_[];
+        static const char client_name_[];
+        static const char log_dir_[];
 };
 
 #endif

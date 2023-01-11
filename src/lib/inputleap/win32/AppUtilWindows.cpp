@@ -138,7 +138,7 @@ int
 AppUtilWindows::run(int argc, char** argv)
 {
     if (!IsWindowsXPSP3OrGreater()) {
-        throw std::runtime_error("Barrier only supports Windows XP SP3 and above.");
+        throw std::runtime_error("InputLeap only supports Windows XP SP3 and above.");
     }
 
     // record window instance for tray icon, etc

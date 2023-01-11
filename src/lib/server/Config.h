@@ -384,7 +384,7 @@ public:
     link_const_iterator endNeighbor(const std::string&) const;
 
     //! Get the server address
-    const NetworkAddress& getBarrierAddress() const;
+    const NetworkAddress& get_listen_address() const;
 
     //! Get the screen options
     /*!
@@ -462,7 +462,7 @@ private:
 private:
     CellMap m_map;
     NameMap m_nameToCanonicalName;
-    NetworkAddress m_barrierAddress;
+    NetworkAddress listen_address_;
     ScreenOptions m_globalOptions;
     InputFilter m_inputFilter;
     bool m_hasLockToScreenAction;

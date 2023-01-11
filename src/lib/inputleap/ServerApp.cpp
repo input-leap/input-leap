@@ -543,7 +543,7 @@ ServerApp::startServer()
     double retryTime;
     ClientListener* listener = nullptr;
     try {
-        auto listenAddress = args().m_config->getBarrierAddress();
+        auto listenAddress = args().m_config->get_listen_address();
         auto family = family_string(ARCH->getAddrFamily(listenAddress.getAddress()));
         listener   = openClientListener(listenAddress);
         m_server   = openServer(*args().m_config, m_primaryClient);
@@ -726,7 +726,7 @@ ServerApp::mainLoop()
     if (m_barrierAddress->isValid()) {
         args().m_config->set_listen_address(*m_barrierAddress);
     }
-    else if (!args().m_config->getBarrierAddress().isValid()) {
+    else if (!args().m_config->get_listen_address().isValid()) {
         args().m_config->set_listen_address(NetworkAddress(kDefaultPort));
     }
 

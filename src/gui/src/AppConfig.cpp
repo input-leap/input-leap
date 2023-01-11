@@ -23,14 +23,14 @@
 #include <QtNetwork>
 
 #if defined(Q_OS_WIN)
-const char AppConfig::m_BarriersName[] = "barriers.exe";
-const char AppConfig::m_BarriercName[] = "barrierc.exe";
-const char AppConfig::m_BarrierLogDir[] = "log/";
+const char AppConfig::server_name_[] = "barriers.exe";
+const char AppConfig::client_name_[] = "barrierc.exe";
+const char AppConfig::log_dir_[] = "log/";
 #define DEFAULT_PROCESS_MODE Service
 #else
-const char AppConfig::m_BarriersName[] = "barriers";
-const char AppConfig::m_BarriercName[] = "barrierc";
-const char AppConfig::m_BarrierLogDir[] = "/var/log/";
+const char AppConfig::server_name_[] = "barriers";
+const char AppConfig::client_name_[] = "barrierc";
+const char AppConfig::log_dir_[] = "/var/log/";
 #define DEFAULT_PROCESS_MODE Desktop
 #endif
 
@@ -85,18 +85,18 @@ bool AppConfig::logToFile() const { return m_LogToFile; }
 
 const QString &AppConfig::logFilename() const { return m_LogFilename; }
 
-QString AppConfig::barrierLogDir() const
+QString AppConfig::log_dir() const
 {
 #if defined(Q_OS_WIN)
     // on windows, we want to log to program files
-    return barrierProgramDir() + "log/";
+    return program_dir() + "log/";
 #else
     // on unix, we'll log to the standard log dir
     return "/var/log/";
 #endif
 }
 
-QString AppConfig::barrierProgramDir() const
+QString AppConfig::program_dir() const
 {
     // InputLeap binaries should be in the same dir.
     return QCoreApplication::applicationDirPath() + "/";
@@ -104,7 +104,7 @@ QString AppConfig::barrierProgramDir() const
 
 void AppConfig::persistLogDir()
 {
-    QDir dir = barrierLogDir();
+    QDir dir = log_dir();
 
     // persist the log directory
     if (!dir.exists())
@@ -145,7 +145,7 @@ void AppConfig::loadSettings()
     m_Interface = settings().value("interface").toString();
     m_LogLevel = settings().value("logLevel", 3).toInt(); // level 3: INFO
     m_LogToFile = settings().value("logToFile", false).toBool();
-    m_LogFilename = settings().value("logFilename", barrierLogDir() + "barrier.log").toString();
+    m_LogFilename = settings().value("logFilename", log_dir() + "barrier.log").toString();
     m_WizardLastRun = settings().value("wizardLastRun", 0).toInt();
     m_Language = settings().value("language", QLocale::system().name()).toString();
     m_StartedBefore = settings().value("startedBefore", false).toBool();
@@ -218,9 +218,9 @@ bool AppConfig::autoConfigPrompted() { return m_AutoConfigPrompted; }
 
 void AppConfig::setAutoConfigPrompted(bool prompted) { m_AutoConfigPrompted = prompted; }
 
-QString AppConfig::barriersName() const { return m_BarriersName; }
+QString AppConfig::server_name() const { return server_name_; }
 
-QString AppConfig::barriercName() const { return m_BarriercName; }
+QString AppConfig::client_name() const { return client_name_; }
 
 ElevateMode AppConfig::elevateMode() { return m_ElevateMode; }
 

@@ -623,7 +623,7 @@ void MainWindow::start_cmd_app()
 
 bool MainWindow::clientArgs(QStringList& args, QString& app)
 {
-    app = appPath(appConfig().barriercName());
+    app = appPath(appConfig().client_name());
 
     if (!QFile::exists(app))
     {
@@ -717,12 +717,12 @@ QString MainWindow::address()
 
 QString MainWindow::appPath(const QString& name)
 {
-    return appConfig().barrierProgramDir() + name;
+    return appConfig().program_dir() + name;
 }
 
 bool MainWindow::serverArgs(QStringList& args, QString& app)
 {
-    app = appPath(appConfig().barriersName());
+    app = appPath(appConfig().server_name());
 
     if (!QFile::exists(app))
     {
@@ -1120,7 +1120,7 @@ bool MainWindow::on_m_pActionSave_triggered()
 
 void MainWindow::on_m_pActionAbout_triggered()
 {
-    AboutDialog(this, appPath(appConfig().barriercName())).exec();
+    AboutDialog(this, appPath(appConfig().client_name())).exec();
 }
 
 void MainWindow::on_m_pActionSettings_triggered()

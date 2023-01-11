@@ -46,7 +46,7 @@ Action::Action() :
 
 QString Action::text() const
 {
-    /* This function is used to save to config file which is for barriers to
+    /* This function is used to save to config file which is for InputLeap server to
      * read. However the server config parse does not support functions with ()
      * in the end but now argument inside. If you need a function with no
      * argument, it can not have () in the end.

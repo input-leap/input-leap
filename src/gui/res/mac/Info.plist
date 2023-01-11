@@ -5,18 +5,18 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>English</string>
     <key>CFBundleDisplayName</key>
-    <string>Barrier</string>
+    <string>InputLeap</string>
     <key>CFBundleExecutable</key>
-    <string>Barrier</string>
+    <string>InputLeap</string>
     <key>CFBundleIconFile</key>
-    <string>Barrier.icns</string>
+    <string>InputLeap.icns</string>
     <key>CFBundleIdentifier</key>
-    <string>barrier</string>
+    <string>inputleap</string>
     <!-- TODO: Fix this in v2.0 //-->
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>Barrier</string>
+    <string>InputLeap</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>

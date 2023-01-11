@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
-// Used by barrierc.rc
+// Used by input-leapc.rc
 //
 #define IDS_FAILED                      1
 #define IDS_INIT_FAILED                 2

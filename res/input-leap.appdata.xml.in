@@ -9,19 +9,19 @@
 
   <description>
     <p>
-      Barrier allows you to share one mouse and keyboard between multiple computers.
+      InputLeap allows you to share one mouse and keyboard between multiple computers.
       Work seamlessly across Windows, macOS and Linux.
     </p>
   </description>
 
-  <launchable type="desktop-id">barrier.desktop</launchable>
+  <launchable type="desktop-id">input-leap.desktop</launchable>
 
   <url type="homepage">https://github.com/input-leap/input-leap</url>
 
   <provides>
-    <binary>barrier</binary>
-    <binary>barrierc</binary>
-    <binary>barriers</binary>
+    <binary>input-leap</binary>
+    <binary>input-leapc</binary>
+    <binary>input-leaps</binary>
   </provides>
 
   <releases>

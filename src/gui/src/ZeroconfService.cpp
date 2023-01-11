@@ -40,8 +40,8 @@ static const QStringList preferedIPAddress(
                 "10." <<
                 "172.");
 
-const char* ZeroconfService:: m_ServerServiceName = "_barrierServerZeroconf._tcp";
-const char* ZeroconfService:: m_ClientServiceName = "_barrierClientZeroconf._tcp";
+const char* ZeroconfService:: m_ServerServiceName = "_inputLeapServerZeroconf._tcp";
+const char* ZeroconfService:: m_ClientServiceName = "_inputLeapClientZeroconf._tcp";
 
 static void silence_avahi_warning()
 {

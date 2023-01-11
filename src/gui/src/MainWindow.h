@@ -174,7 +174,7 @@ public slots:
         VersionChecker m_VersionChecker;
         IpcClient m_IpcClient;
         QMenuBar* m_pMenuBar;
-        QMenu* m_pMenuBarrier;
+        QMenu* main_menu_;
         QMenu* m_pMenuHelp;
         ZeroconfService* m_pZeroconfService;
         DataDownloader* m_pDataDownloader;

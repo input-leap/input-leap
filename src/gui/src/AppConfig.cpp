@@ -23,13 +23,13 @@
 #include <QtNetwork>
 
 #if defined(Q_OS_WIN)
-const char AppConfig::server_name_[] = "barriers.exe";
-const char AppConfig::client_name_[] = "barrierc.exe";
+const char AppConfig::server_name_[] = "input-leaps.exe";
+const char AppConfig::client_name_[] = "input-leapc.exe";
 const char AppConfig::log_dir_[] = "log/";
 #define DEFAULT_PROCESS_MODE Service
 #else
-const char AppConfig::server_name_[] = "barriers";
-const char AppConfig::client_name_[] = "barrierc";
+const char AppConfig::server_name_[] = "input-leaps";
+const char AppConfig::client_name_[] = "input-leapc";
 const char AppConfig::log_dir_[] = "/var/log/";
 #define DEFAULT_PROCESS_MODE Desktop
 #endif
@@ -145,7 +145,7 @@ void AppConfig::loadSettings()
     m_Interface = settings().value("interface").toString();
     m_LogLevel = settings().value("logLevel", 3).toInt(); // level 3: INFO
     m_LogToFile = settings().value("logToFile", false).toBool();
-    m_LogFilename = settings().value("logFilename", log_dir() + "barrier.log").toString();
+    m_LogFilename = settings().value("logFilename", log_dir() + "input-leap.log").toString();
     m_WizardLastRun = settings().value("wizardLastRun", 0).toInt();
     m_Language = settings().value("language", QLocale::system().name()).toString();
     m_StartedBefore = settings().value("startedBefore", false).toBool();

@@ -25,9 +25,9 @@
 #include <Windows.h>
 
 #if defined(synwinhk_EXPORTS)
-#define CBARRIERHOOK_API __declspec(dllexport)
+#define CINPUTLEAP_HOOK_API __declspec(dllexport)
 #else
-#define CBARRIERHOOK_API __declspec(dllimport)
+#define CINPUTLEAP_HOOK_API __declspec(dllimport)
 #endif
 
 #define INPUTLEAP_MSG_MARK            WM_APP + 0x0011    // mark id; <unused>
@@ -59,7 +59,7 @@ enum EHookMode {
 typedef void            (*SetImmuneKeysFunc)(const DWORD*, std::size_t);
 
 // do not call setImmuneKeys() while the hooks are active!
-CBARRIERHOOK_API void setImmuneKeys(const DWORD *list, std::size_t size);
+CINPUTLEAP_HOOK_API void setImmuneKeys(const DWORD *list, std::size_t size);
 
 */
 

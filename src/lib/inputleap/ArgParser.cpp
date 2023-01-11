@@ -199,7 +199,7 @@ bool
 ArgParser::parseMSWindowsArg(ArgsBase& argsBase, Argv& argv)
 {
     if (argv.shift("--service")) {
-        LOG((CLOG_WARN "obsolete argument --service, use barrierd instead."));
+        LOG((CLOG_WARN "obsolete argument --service, use input-leapd instead."));
         argsBase.m_shouldExit = true;
     }
     else if (argv.shift("--exit-pause")) {

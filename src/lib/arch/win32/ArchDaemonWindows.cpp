@@ -32,7 +32,7 @@ ArchDaemonWindows*        ArchDaemonWindows::s_daemon = nullptr;
 ArchDaemonWindows::ArchDaemonWindows() :
 m_daemonThreadID(0)
 {
-    m_quitMessage = RegisterWindowMessage("BarrierDaemonExit");
+    m_quitMessage = RegisterWindowMessage("InputLeapDaemonExit");
 }
 
 ArchDaemonWindows::~ArchDaemonWindows()

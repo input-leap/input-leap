@@ -71,11 +71,11 @@ BEGIN
             VALUE "CompanyWeb", "https://github.com/input-leap/input-leap"
             VALUE "FileVersion", INPUTLEAP_VERSION
             VALUE "LegalCopyright", "Copyright (C) 2021-2023 InputLeap contributors\nCopyright (C) 2018 Debauchee Open Source Group\nCopyright (C) 2012-2016 Symless Ltd.\nCopyright (C) 2008-2014 Nick Bolton\nCopyright (C) 2002-2014 Chris Schoeneman"
-            VALUE "ProductName", "Barrier"
+            VALUE "ProductName", "InputLeap"
             VALUE "ProductVersion", INPUTLEAP_VERSION
-            VALUE "OriginalFilename", "barriers.exe"
+            VALUE "OriginalFilename", "input-leaps.exe"
             VALUE "FileDescription", "Open source KVM software server"
-            VALUE "InternalName", "barriers"
+            VALUE "InternalName", "input-leaps"
         END
     END
     BLOCK "VarFileInfo"
@@ -92,7 +92,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_INPUTLEAP               ICON                    "barriers.ico"
+IDI_INPUTLEAP               ICON                    "input-leaps.ico"
 IDI_TASKBAR_NOT_RUNNING   ICON                    "tb_idle.ico"
 IDI_TASKBAR_NOT_WORKING   ICON                    "tb_error.ico"
 IDI_TASKBAR_NOT_CONNECTED ICON                    "tb_wait.ico"
@@ -106,7 +106,7 @@ IDI_TASKBAR_CONNECTED     ICON                    "tb_run.ico"
 
 IDR_TASKBAR MENU
 BEGIN
-    POPUP "Barrier"
+    POPUP "InputLeap"
     BEGIN
         MENUITEM "Show Status",                 IDC_TASKBAR_STATUS
         MENUITEM "Show Log",                    IDC_TASKBAR_SHOW_LOG
@@ -151,8 +151,8 @@ END
 
 STRINGTABLE
 BEGIN
-    IDS_FAILED              "Barrier is about to quit with errors or warnings.  Please check the log then click OK."
-    IDS_INIT_FAILED         "Barrier failed to initialize: %{1}"
+    IDS_FAILED              "InputLeap is about to quit with errors or warnings.  Please check the log then click OK."
+    IDS_INIT_FAILED         "InputLeap failed to initialize: %{1}"
     IDS_UNCAUGHT_EXCEPTION  "Uncaught exception: %{1}"
 END
 

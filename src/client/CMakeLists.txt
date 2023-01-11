@@ -15,14 +15,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set(sources
-    barrierc.cpp
+    input-leapc.cpp
 )
 
 if (BUILD_MSWINDOWS)
     file(GLOB mswin_headers "MSWindows*.h")
     file(GLOB mswin_sources "MSWindows*.cpp")
-    list(APPEND sources barrierc.rc)
-    set_property(SOURCE barrierc.rc PROPERTY COMPILE_FLAGS /nologo)
+    list(APPEND sources input-leapc.rc)
+    set_property(SOURCE input-leapc.rc PROPERTY COMPILE_FLAGS /nologo)
 endif()
 if (BUILD_CARBON)
     file(GLOB carbon_headers "OSX*.h")
@@ -40,12 +40,12 @@ if(INPUTLEAP_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 
-add_executable(barrierc ${sources})
-target_link_libraries(barrierc
+add_executable(input-leapc ${sources})
+target_link_libraries(input-leapc
     arch base client common io mt net ipc platform server synlib ${libs} ${OPENSSL_LIBS})
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    install(TARGETS barrierc DESTINATION ${INPUTLEAP_BUNDLE_BINARY_DIR})
+    install(TARGETS input-leapc DESTINATION ${INPUTLEAP_BUNDLE_BINARY_DIR})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    install (TARGETS barrierc DESTINATION bin)
+    install (TARGETS input-leapc DESTINATION bin)
 endif()

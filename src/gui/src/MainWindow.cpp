@@ -59,14 +59,14 @@ namespace {
 
 static const QString allFilesFilter(QObject::tr("All files (*.*)"));
 #if defined(Q_OS_WIN)
-static const char APP_CONFIG_NAME[] = "barrier.sgc";
+static const char APP_CONFIG_NAME[] = "input-leap.sgc";
 static const QString APP_CONFIG_FILTER(QObject::tr("InputLeap Configurations (*.sgc)"));
 static QString bonjourBaseUrl = "http://binaries.symless.com/bonjour/";
 static const char bonjourFilename32[] = "Bonjour.msi";
 static const char bonjourFilename64[] = "Bonjour64.msi";
 static const char bonjourTargetFilename[] = "Bonjour.msi";
 #else
-static const char APP_CONFIG_NAME[] = "barrier.conf";
+static const char APP_CONFIG_NAME[] = "input-leap.conf";
 static const QString APP_CONFIG_FILTER(QObject::tr("InputLeap Configurations (*.conf)"));
 #endif
 static const QString APP_CONFIG_OPEN_FILTER(APP_CONFIG_FILTER + ";;" + allFilesFilter);
@@ -77,18 +77,18 @@ const char* icon_file_for_connection_state(AppConnectionState state)
 #if defined(Q_OS_MAC)
     switch (state) {
         default:
-        case AppConnectionState::DISCONNECTED: return ":/res/icons/32x32/barrier-disconnected-mask.png";
-        case AppConnectionState::CONNECTING:   return ":/res/icons/32x32/barrier-disconnected-mask.png";
-        case AppConnectionState::CONNECTED:    return ":/res/icons/32x32/barrier-connected-mask.png";
-        case AppConnectionState::TRANSFERRING: return ":/res/icons/32x32/barrier-transfering-mask.png";
+        case AppConnectionState::DISCONNECTED: return ":/res/icons/32x32/input-leap-disconnected-mask.png";
+        case AppConnectionState::CONNECTING:   return ":/res/icons/32x32/input-leap-disconnected-mask.png";
+        case AppConnectionState::CONNECTED:    return ":/res/icons/32x32/input-leap-connected-mask.png";
+        case AppConnectionState::TRANSFERRING: return ":/res/icons/32x32/input-leap-transfering-mask.png";
     }
 #else
     switch (state) {
         default:
-        case AppConnectionState::DISCONNECTED: return ":/res/icons/16x16/barrier-disconnected.png";
-        case AppConnectionState::CONNECTING:   return ":/res/icons/16x16/barrier-disconnected.png";
-        case AppConnectionState::CONNECTED:    return ":/res/icons/16x16/barrier-connected.png";
-        case AppConnectionState::TRANSFERRING: return ":/res/icons/16x16/barrier-transfering.png";
+        case AppConnectionState::DISCONNECTED: return ":/res/icons/16x16/input-leap-disconnected.png";
+        case AppConnectionState::CONNECTING:   return ":/res/icons/16x16/input-leap-disconnected.png";
+        case AppConnectionState::CONNECTED:    return ":/res/icons/16x16/input-leap-connected.png";
+        case AppConnectionState::TRANSFERRING: return ":/res/icons/16x16/input-leap-transfering.png";
     }
 #endif
 }
@@ -97,14 +97,14 @@ const char* icon_name_for_connection_state(AppConnectionState state)
 {
     switch (state) {
         default:
-        case AppConnectionState::DISCONNECTED: return "barrier-disconnected";
-        case AppConnectionState::CONNECTING: return "barrier-disconnected";
-        case AppConnectionState::CONNECTED: return "barrier-connected";
-        case AppConnectionState::TRANSFERRING: return "barrier-transfering";
+        case AppConnectionState::DISCONNECTED: return "input-leap-disconnected";
+        case AppConnectionState::CONNECTING: return "input-leap-disconnected";
+        case AppConnectionState::CONNECTED: return "input-leap-connected";
+        case AppConnectionState::TRANSFERRING: return "input-leap-transfering";
     }
 }
 
-static const char* barrierLargeIcon = ":/res/icons/256x256/barrier.ico";
+static const char* APP_LARGE_ICON = ":/res/icons/256x256/input-leap.ico";
 
 } // namespace
 
@@ -118,7 +118,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     m_pTrayIconMenu(nullptr),
     m_AlreadyHidden(false),
     m_pMenuBar(nullptr),
-    m_pMenuBarrier(nullptr),
+    main_menu_(nullptr),
     m_pMenuHelp(nullptr),
     m_pZeroconfService(nullptr),
     m_pDataDownloader(nullptr),
@@ -139,7 +139,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     setAttribute(Qt::WA_X11NetWmWindowTypeDialog, true);
 
     setupUi(this);
-    setWindowIcon(QIcon(barrierLargeIcon));
+    setWindowIcon(QIcon(APP_LARGE_ICON));
     createMenuBar();
     loadSettings();
     initConnections();
@@ -247,8 +247,8 @@ void MainWindow::createTrayIcon()
 {
     m_pTrayIconMenu = new QMenu(this);
 
-    m_pTrayIconMenu->addAction(m_pActionStartBarrier);
-    m_pTrayIconMenu->addAction(m_pActionStopBarrier);
+    m_pTrayIconMenu->addAction(m_pActionStartCmdApp);
+    m_pTrayIconMenu->addAction(m_pActionStopCmdApp);
     m_pTrayIconMenu->addAction(m_pActionShowLog);
     m_pTrayIconMenu->addSeparator();
 
@@ -259,7 +259,7 @@ void MainWindow::createTrayIcon()
 
     m_pTrayIcon = new QSystemTrayIcon(this);
     m_pTrayIcon->setContextMenu(m_pTrayIconMenu);
-    m_pTrayIcon->setToolTip("Barrier");
+    m_pTrayIcon->setToolTip("InputLeap");
 
     connect(m_pTrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
@@ -271,27 +271,27 @@ void MainWindow::createTrayIcon()
 
 void MainWindow::retranslateMenuBar()
 {
-    m_pMenuBarrier->setTitle(tr("&Barrier"));
+    main_menu_->setTitle(tr("&InputLeap"));
     m_pMenuHelp->setTitle(tr("&Help"));
 }
 
 void MainWindow::createMenuBar()
 {
     m_pMenuBar = new QMenuBar(this);
-    m_pMenuBarrier = new QMenu("", m_pMenuBar);
+    main_menu_ = new QMenu("", m_pMenuBar);
     m_pMenuHelp = new QMenu("", m_pMenuBar);
     retranslateMenuBar();
 
-    m_pMenuBar->addAction(m_pMenuBarrier->menuAction());
+    m_pMenuBar->addAction(main_menu_->menuAction());
     m_pMenuBar->addAction(m_pMenuHelp->menuAction());
 
-    m_pMenuBarrier->addAction(m_pActionShowLog);
-    m_pMenuBarrier->addAction(m_pActionSettings);
-    m_pMenuBarrier->addAction(m_pActionMinimize);
-    m_pMenuBarrier->addSeparator();
-    m_pMenuBarrier->addAction(m_pActionSave);
-    m_pMenuBarrier->addSeparator();
-    m_pMenuBarrier->addAction(m_pActionQuit);
+    main_menu_->addAction(m_pActionShowLog);
+    main_menu_->addAction(m_pActionSettings);
+    main_menu_->addAction(m_pActionMinimize);
+    main_menu_->addSeparator();
+    main_menu_->addAction(m_pActionSave);
+    main_menu_->addSeparator();
+    main_menu_->addAction(m_pActionQuit);
     m_pMenuHelp->addAction(m_pActionAbout);
 
     setMenuBar(m_pMenuBar);
@@ -315,8 +315,8 @@ void MainWindow::initConnections()
 {
     connect(m_pActionMinimize, SIGNAL(triggered()), this, SLOT(hide()));
     connect(m_pActionRestore, SIGNAL(triggered()), this, SLOT(showNormal()));
-    connect(m_pActionStartBarrier, SIGNAL(triggered()), this, SLOT(start_cmd_app()));
-    connect(m_pActionStopBarrier, SIGNAL(triggered()), this, SLOT(stop_cmd_app()));
+    connect(m_pActionStartCmdApp, SIGNAL(triggered()), this, SLOT(start_cmd_app()));
+    connect(m_pActionStopCmdApp, SIGNAL(triggered()), this, SLOT(stop_cmd_app()));
     connect(m_pActionShowLog, SIGNAL(triggered()), this, SLOT(showLogWindow()));
     connect(m_pActionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
 }
@@ -430,7 +430,7 @@ void MainWindow::checkConnected(const QString& line)
 
         if (!appConfig().startedBefore() && isVisible()) {
                 QMessageBox::information(
-                    this, "Barrier",
+                    this, "InputLeap",
                     tr("InputLeap is now connected. You can close the "
                     "config window and InputLeap will remain connected in "
                     "the background."));
@@ -798,7 +798,7 @@ void MainWindow::stopDesktop()
         return;
     }
 
-    appendLogInfo("stopping barrier desktop process");
+    appendLogInfo("stopping InputLeap desktop process");
 
     if (cmd_app_process_->isOpen()) {
 #if SYSAPI_UNIX
@@ -837,15 +837,15 @@ void MainWindow::set_connection_state(AppConnectionState state)
 
     if (state == AppConnectionState::CONNECTED || state == AppConnectionState::CONNECTING)
     {
-        disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartBarrier, SLOT(trigger()));
-        connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopBarrier, SLOT(trigger()));
+        disconnect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartCmdApp, SLOT(trigger()));
+        connect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopCmdApp, SLOT(trigger()));
         m_pButtonToggleStart->setText(tr("&Stop"));
         m_pButtonReload->setEnabled(true);
     }
     else if (state == AppConnectionState::DISCONNECTED)
     {
-        disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopBarrier, SLOT(trigger()));
-        connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartBarrier, SLOT(trigger()));
+        disconnect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopCmdApp, SLOT(trigger()));
+        connect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartCmdApp, SLOT(trigger()));
         m_pButtonToggleStart->setText(tr("&Start"));
         m_pButtonReload->setEnabled(false);
     }
@@ -855,8 +855,8 @@ void MainWindow::set_connection_state(AppConnectionState state)
         connected = true;
     }
 
-    m_pActionStartBarrier->setEnabled(!connected);
-    m_pActionStopBarrier->setEnabled(connected);
+    m_pActionStartCmdApp->setEnabled(!connected);
+    m_pActionStopCmdApp->setEnabled(connected);
 
     switch (state)
     {
@@ -1251,7 +1251,7 @@ void MainWindow::downloadBonjour()
 
     if (m_DownloadMessageBox == nullptr) {
         m_DownloadMessageBox = new QMessageBox(this);
-        m_DownloadMessageBox->setWindowTitle("Barrier");
+        m_DownloadMessageBox->setWindowTitle("InputLeap");
         m_DownloadMessageBox->setIcon(QMessageBox::Information);
         m_DownloadMessageBox->setText("Installing Bonjour, please wait...");
         m_DownloadMessageBox->setStandardButtons(0);
@@ -1283,7 +1283,7 @@ void MainWindow::installBonjour()
         m_DownloadMessageBox->hide();
 
         QMessageBox::warning(
-            this, "Barrier",
+            this, "InputLeap",
             tr("Failed to download Bonjour installer to location: %1")
             .arg(tempLocation));
         return;

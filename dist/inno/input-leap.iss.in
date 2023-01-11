@@ -1,17 +1,17 @@
-#define MyAppName "Barrier"
+#define MyAppName "InputLeap"
 #define MyAppVersion "@INPUTLEAP_VERSION_MAJOR@.@INPUTLEAP_VERSION_MINOR@.@INPUTLEAP_VERSION_PATCH@.@INPUTLEAP_BUILD_NUMBER@"
 #define MyAppTextVersion "@INPUTLEAP_VERSION@"
-#define MyAppPublisher "Debauchee Open Source Group"
-#define MyAppURL "https://github.com/debauchee/barrier/wiki"
-#define MyAppCopyright "Copyright (C) 2018 Debauchee Open Source Group"
-#define MyAppExeName "barrier.exe"
-#define MyAppServiceName "Barrier"
-#define MyAppServiceExe "barrierd.exe"
-#define MyAppServiceDesc "Manages the Barrier background processes."
-#define MyAppListenerDesc "Barrier Listener"
+#define MyAppPublisher "InputLeap contributors"
+#define MyAppURL "https://github.com/input-leap/input-leap/wiki"
+#define MyAppCopyright "Copyright (C) InputLeap contributors"
+#define MyAppExeName "input-leap.exe"
+#define MyAppServiceName "InputLeap"
+#define MyAppServiceExe "input-leapd.exe"
+#define MyAppServiceDesc "Manages the InputLeap background processes."
+#define MyAppListenerDesc "InputLeap Listener"
 
 [Setup]
-AppId={{41036EA6-3F7A-4803-8AE0-469E5E91EFCC}
+AppId={{41036EA6-3F7A-4803-8AE0-46912391EFCC}
 AppName={#MyAppName}
 AppVersion={#MyAppTextVersion}
 AppVerName={#MyAppName} {#MyAppTextVersion}
@@ -23,8 +23,8 @@ DefaultDirName={pf}\{#MyAppName}
 DisableProgramGroupPage=yes
 LicenseFile=@CMAKE_CURRENT_SOURCE_DIR@/res/License.rtf
 OutputDir=@CMAKE_RUNTIME_OUTPUT_DIRECTORY@/../installer-inno/bin
-OutputBaseFilename=BarrierSetup-{#MyAppTextVersion}
-SetupIconFile=@CMAKE_CURRENT_SOURCE_DIR@/res/barrier.ico
+OutputBaseFilename=InputLeapSetup-{#MyAppTextVersion}
+SetupIconFile=@CMAKE_CURRENT_SOURCE_DIR@/res/input-leap.ico
 VersionInfoProductTextVersion={#MyAppTextVersion}
 VersionInfoProductVersion={#MyAppVersion}
 VersionInfoTextVersion={#MyAppTextVersion}
@@ -60,7 +60,7 @@ Filename: {sys}\sc.exe; Parameters: "start {#MyAppServiceName}"; Flags: runhidde
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
 [UninstallDelete]
-Type: filesandordirs; Name: "{commonappdata}\Barrier"
+Type: filesandordirs; Name: "{commonappdata}\InputLeap"
 
 [UninstallRun]
 Filename: {sys}\taskkill; Parameters: "/im {#MyAppExeName} /f /t"; Flags: runhidden

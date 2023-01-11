@@ -22,7 +22,7 @@
 #include <QtCore>
 #include <QtGui>
 
-const QString ScreenSetupModel::m_MimeType = "application/x-qbarrier-screen";
+const QString ScreenSetupModel::m_MimeType = "application/x-input-leap-screen";
 
 ScreenSetupModel::ScreenSetupModel(std::vector<Screen>& screens, int numColumns, int numRows) :
     QAbstractTableModel(nullptr),

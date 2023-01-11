@@ -170,48 +170,48 @@ set_source_files_properties(${TS_FILES} PROPERTIES OUTPUT_LOCATION "${CMAKE_CURR
 qt5_add_translation(QM_FILES ${TS_FILES} OPTIONS -silent)
 
 if (WIN32)
-    set (GUI_RC_FILES res/win/Barrier.rc)
-    set_property(SOURCE res/win/Barrier.rc PROPERTY COMPILE_FLAGS /nologo)
+    set (GUI_RC_FILES res/win/InputLeap.rc)
+    set_property(SOURCE res/win/InputLeap.rc PROPERTY COMPILE_FLAGS /nologo)
 endif()
 
-add_executable (barrier WIN32
+add_executable (input-leap WIN32
     ${GUI_COMMON_SOURCE_FILES}
     ${GUI_COMMON_HEADER_FILES}
     ${GUI_SOURCE_FILES}
     ${GUI_HEADER_FILES}
     ${GUI_UI_FILES}
     ${GUI_RC_FILES}
-    res/Barrier.qrc
+    res/InputLeap.qrc
 )
 
 include_directories (./src)
 
-target_link_libraries(barrier net base io Qt5::Core Qt5::Widgets Qt5::Network ${OPENSSL_LIBS})
-target_compile_definitions (barrier PRIVATE -DINPUTLEAP_VERSION_STAGE="${INPUTLEAP_VERSION_STAGE}")
-target_compile_definitions (barrier PRIVATE -DINPUTLEAP_REVISION="${INPUTLEAP_REVISION}")
+target_link_libraries(input-leap net base io Qt5::Core Qt5::Widgets Qt5::Network ${OPENSSL_LIBS})
+target_compile_definitions (input-leap PRIVATE -DINPUTLEAP_VERSION_STAGE="${INPUTLEAP_VERSION_STAGE}")
+target_compile_definitions (input-leap PRIVATE -DINPUTLEAP_REVISION="${INPUTLEAP_REVISION}")
 
 if (BUILD_MSWINDOWS)
     include_directories ($ENV{BONJOUR_SDK_HOME}/Include)
     find_library (DNSSD_LIB dnssd.lib
                   HINTS ENV BONJOUR_SDK_HOME
                   PATH_SUFFIXES "Lib/x64")
-    set_target_properties (barrier PROPERTIES LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
-    target_link_libraries (barrier ${DNSSD_LIB})
+    set_target_properties (input-leap PROPERTIES LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
+    target_link_libraries (input-leap ${DNSSD_LIB})
 endif()
 if (BUILD_CARBON)
     find_library(APPSERVICES_LIB ApplicationServices)
-    target_link_libraries(barrier ${APPSERVICES_LIB})
+    target_link_libraries(input-leap ${APPSERVICES_LIB})
 endif()
 if (BUILD_XWINDOWS)
-    target_link_libraries (barrier dns_sd X11)
+    target_link_libraries (input-leap dns_sd X11)
 endif()
 
-target_link_libraries (barrier common)
+target_link_libraries (input-leap common)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    install(TARGETS barrier DESTINATION ${INPUTLEAP_BUNDLE_BINARY_DIR})
+    install(TARGETS input-leap DESTINATION ${INPUTLEAP_BUNDLE_BINARY_DIR})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "BSD")
-    install (TARGETS barrier DESTINATION bin)
+    install (TARGETS input-leap DESTINATION bin)
 endif()
 
 if(INPUTLEAP_BUILD_TESTS)

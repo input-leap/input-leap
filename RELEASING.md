@@ -36,8 +36,8 @@ Edit the following files and update the version numbers:
 
  - `Build.properties`
  - `cmake/Version.cmake`
- - `doc/barrierc.1`
- - `doc/barriers.1`
+ - `doc/input-leapc.1`
+ - `doc/input-leaps.1`
  - `.github/ISSUE_TEMPLATE/bug_report.yml`
 
 Commit to the release branch with the following message `InputLeap x.y.z`.

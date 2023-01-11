@@ -17,15 +17,15 @@
 file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 if (WIN32)
-    list(APPEND sources barrierd.rc)
-    set_property(SOURCE barrierd.rc PROPERTY COMPILE_FLAGS /nologo)
+    list(APPEND sources input-leapd.rc)
+    set_property(SOURCE input-leapd.rc PROPERTY COMPILE_FLAGS /nologo)
 endif()
 
 if (WIN32)
-  add_executable (barrierd WIN32 ${sources})
+  add_executable (input-leapd WIN32 ${sources})
 else()
-  add_executable (barrierd ${sources})
+  add_executable (input-leapd ${sources})
 endif()
 
-target_link_libraries (barrierd
+target_link_libraries (input-leapd
     arch base common io ipc mt net platform synlib ${libs} ${OPENSSL_LIBS})

@@ -1,21 +1,21 @@
-name: barrier
+name: input-leap
 base: core18
 version: master
 version-script: git describe --tags | sed "s/^v//"
 adopt-info: appstream-flathub
 grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict # use 'strict' once you have the right plugs and slots
-icon: res/barrier.svg
+icon: res/input-leap.svg
 license: GPL-2.0
 
 apps:
-  barrier:
-    command: desktop-launch barrier #first run might take longer
+  input-leap:
+    command: desktop-launch input-leap #first run might take longer
     environment:
       # Fallback to XWayland if running in a Wayland session.
       DISABLE_WAYLAND: 1
-    desktop: usr/share/applications/barrier.desktop
-    common-id: com.github.debauchee.barrier
+    desktop: usr/share/applications/input-leap.desktop
+    common-id: com.github.input-leap.input-leap
     plugs: &plugs
       - desktop
       - desktop-legacy
@@ -28,11 +28,11 @@ apps:
       - unity7
       - wayland
       - x11
-  barrierc:
-    command: desktop-launch barrierc
+  input-leapc:
+    command: desktop-launch input-leapc
     plugs: *plugs
-  barriers:
-    command: desktop-launch barriers
+  input-leaps:
+    command: desktop-launch input-leaps
     plugs: *plugs
 
 parts:
@@ -41,7 +41,7 @@ parts:
     source-subdir: qt
     plugin: make
 
-  barrier:
+  input-leap:
     source: .
     source-type: git
     plugin: cmake
@@ -80,10 +80,10 @@ parts:
   fix-icon:
     plugin: nil
     override-build:
-      sed -i 's|Icon=barrier|Icon=/usr/share/icons/hicolor/scalable/apps/barrier.svg|' $SNAPCRAFT_STAGE/usr/share/applications/barrier.desktop
-    after: [barrier]
+      sed -i 's|Icon=input-leap|Icon=/usr/share/icons/hicolor/scalable/apps/input-leap.svg|' $SNAPCRAFT_STAGE/usr/share/applications/input-leap.desktop
+    after: [input-leap]
 
   appstream-flathub:
     plugin: dump
-    source: https://github.com/flathub/com.github.debauchee.barrier.git
-    parse-info: [com.github.debauchee.barrier.appdata.xml]
+    source: https://github.com/flathub/com.github.input-leap.input-leap.git
+    parse-info: [com.github.input-leap.input-leap.appdata.xml]

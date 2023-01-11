@@ -53,13 +53,21 @@ int waitForTray();
 bool checkMacAssistiveDevices();
 #endif
 
+void copy_qsettings(const QSettings &src, QSettings &dst)
+{
+    auto keys = src.allKeys();
+    for (const auto& key : keys) {
+        dst.setValue(key, src.value(key));
+    }
+}
+
 int main(int argc, char* argv[])
 {
 #ifdef WINAPI_XWINDOWS
     // QApplication's constructor will call a fscking abort() if
     // DISPLAY is bad. Let's check it first and handle it gracefully
     if (!display_is_valid()) {
-        fprintf(stderr, "The Barrier GUI requires the DISPLAY environment variable to be set. Quitting...\n");
+        fprintf(stderr, "The InputLeap GUI requires the DISPLAY environment variable to be set. Quitting...\n");
         return 1;
     }
 #endif
@@ -67,9 +75,9 @@ int main(int argc, char* argv[])
     /* Workaround for QTBUG-40332 - "High ping when QNetworkAccessManager is instantiated" */
     ::setenv ("QT_BEARER_POLL_TIMEOUT", "-1", 1);
 #endif
-	QCoreApplication::setOrganizationName("Debauchee");
+    QCoreApplication::setOrganizationName("InputLeap");
 	QCoreApplication::setOrganizationDomain("github.com");
-	QCoreApplication::setApplicationName("Barrier");
+    QCoreApplication::setApplicationName("InputLeap");
 
 	QInputLeapApplication app(argc, argv);
 
@@ -81,8 +89,8 @@ int main(int argc, char* argv[])
         // especially if an identically named application already exists in
         // /Applications). Thus we require InputLeap to reside in the /Applications
         // folder
-		QMessageBox::information(nullptr, "Barrier",
-                                 "Please drag Barrier to the Applications folder, "
+        QMessageBox::information(nullptr, "InputLeap",
+                                 "Please drag InputLeap to the Applications folder, "
                                  "and open it from there.");
 		return 1;
 	}
@@ -99,11 +107,17 @@ int main(int argc, char* argv[])
 
     if (QGuiApplication::platformName() == "wayland") {
         QMessageBox::warning(
-        nullptr, "Barrier",
-        "You are using wayland session, which is currently not fully supported by Barrier.");
+        nullptr, "InputLeap",
+        "You are using wayland session, which is currently not fully supported by InputLeap.");
     }
 
 	QSettings settings;
+    if (settings.allKeys().empty()) {
+        // if there are no settings, attempt to copy from old Barrier settings location
+        QSettings fallback_settings{"Debauchee", "Barrier"};
+        copy_qsettings(fallback_settings, settings);
+    }
+
 	AppConfig appConfig (&settings);
 
 	if (appConfig.getAutoHide() && !trayAvailable)
@@ -182,10 +196,10 @@ bool checkMacAssistiveDevices()
 	bool result = AXAPIEnabled();
 	if (!result) {
 		QMessageBox::information(
-			nullptr, "Barrier",
+            nullptr, "InputLeap",
 			"Please enable access to assistive devices "
 			"System Preferences -> Security & Privacy -> "
-			"Privacy -> Accessibility, then re-open Barrier.");
+            "Privacy -> Accessibility, then re-open InputLeap.");
 	}
 	return result;
 

@@ -92,7 +92,6 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Setup the image
         run: |
-          brew update
           brew install qt5
           brew install ninja
       - name: Run the build

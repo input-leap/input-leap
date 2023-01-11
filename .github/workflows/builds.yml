@@ -56,7 +56,8 @@ jobs:
                   libxrandr-dev \
                   libxtst-dev \
                   ninja-build \
-                  qtdeclarative5-dev
+                  qtdeclarative5-dev \
+                  qttools5-dev
 
       - uses: actions/checkout@v3
         with:

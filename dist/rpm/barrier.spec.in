@@ -26,6 +26,7 @@ BuildRequires: libICE-devel libSM-devel
 BuildRequires: libcurl-devel
 BuildRequires: openssl-devel
 BuildRequires: qt5-qtbase-devel
+BuildRequires: qt5-linguist
 BuildRequires: make
 
 %description

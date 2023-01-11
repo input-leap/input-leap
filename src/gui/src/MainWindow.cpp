@@ -59,18 +59,18 @@ namespace {
 
 static const QString allFilesFilter(QObject::tr("All files (*.*)"));
 #if defined(Q_OS_WIN)
-static const char barrierConfigName[] = "barrier.sgc";
-static const QString barrierConfigFilter(QObject::tr("InputLeap Configurations (*.sgc)"));
+static const char APP_CONFIG_NAME[] = "barrier.sgc";
+static const QString APP_CONFIG_FILTER(QObject::tr("InputLeap Configurations (*.sgc)"));
 static QString bonjourBaseUrl = "http://binaries.symless.com/bonjour/";
 static const char bonjourFilename32[] = "Bonjour.msi";
 static const char bonjourFilename64[] = "Bonjour64.msi";
 static const char bonjourTargetFilename[] = "Bonjour.msi";
 #else
-static const char barrierConfigName[] = "barrier.conf";
-static const QString barrierConfigFilter(QObject::tr("InputLeap Configurations (*.conf)"));
+static const char APP_CONFIG_NAME[] = "barrier.conf";
+static const QString APP_CONFIG_FILTER(QObject::tr("InputLeap Configurations (*.conf)"));
 #endif
-static const QString barrierConfigOpenFilter(barrierConfigFilter + ";;" + allFilesFilter);
-static const QString barrierConfigSaveFilter(barrierConfigFilter);
+static const QString APP_CONFIG_OPEN_FILTER(APP_CONFIG_FILTER + ";;" + allFilesFilter);
+static const QString APP_CONFIG_SAVE_FILTER(APP_CONFIG_FILTER);
 
 const char* icon_file_for_connection_state(AppConnectionState state)
 {
@@ -111,7 +111,7 @@ static const char* barrierLargeIcon = ":/res/icons/256x256/barrier.ico";
 MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     m_Settings(settings),
     m_AppConfig(&appConfig),
-    m_pBarrier(nullptr),
+    cmd_app_process_(nullptr),
     m_ServerConfig(&m_Settings, 5, 3, m_AppConfig->screenName(), this),
     m_pTempConfigFile(nullptr),
     m_pTrayIcon(nullptr),
@@ -233,7 +233,7 @@ void MainWindow::open()
     // confuses first time users, who think InputLeap has crashed).
     if (appConfig().startedBefore() && appConfig().getAutoStart()) {
         m_SuppressEmptyServerWarning = true;
-        startBarrier();
+        start_cmd_app();
         m_SuppressEmptyServerWarning = false;
     }
 }
@@ -305,7 +305,8 @@ void MainWindow::loadSettings()
     m_pRadioInternalConfig->setChecked(settings().value("useInternalConfig", true).toBool());
 
     m_pGroupServer->setChecked(settings().value("groupServerChecked", false).toBool());
-    m_pLineEditConfigFile->setText(settings().value("configFile", QDir::homePath() + "/" + barrierConfigName).toString());
+    m_pLineEditConfigFile->setText(settings().value("configFile",
+                                                    QDir::homePath() + "/" + APP_CONFIG_NAME).toString());
     m_pGroupClient->setChecked(settings().value("groupClientChecked", true).toBool());
     m_pLineEditHostname->setText(settings().value("serverHostname").toString());
 }
@@ -314,8 +315,8 @@ void MainWindow::initConnections()
 {
     connect(m_pActionMinimize, SIGNAL(triggered()), this, SLOT(hide()));
     connect(m_pActionRestore, SIGNAL(triggered()), this, SLOT(showNormal()));
-    connect(m_pActionStartBarrier, SIGNAL(triggered()), this, SLOT(startBarrier()));
-    connect(m_pActionStopBarrier, SIGNAL(triggered()), this, SLOT(stopBarrier()));
+    connect(m_pActionStartBarrier, SIGNAL(triggered()), this, SLOT(start_cmd_app()));
+    connect(m_pActionStopBarrier, SIGNAL(triggered()), this, SLOT(stop_cmd_app()));
     connect(m_pActionShowLog, SIGNAL(triggered()), this, SLOT(showLogWindow()));
     connect(m_pActionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
 }
@@ -363,9 +364,9 @@ void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason)
 
 void MainWindow::logOutput()
 {
-    if (m_pBarrier)
+    if (cmd_app_process_)
     {
-        QString text(m_pBarrier->readAllStandardOutput());
+        QString text(cmd_app_process_->readAllStandardOutput());
         for (QString line : text.split(QRegExp("\r|\n|\r\n"))) {
             if (!line.isEmpty())
             {
@@ -377,9 +378,9 @@ void MainWindow::logOutput()
 
 void MainWindow::logError()
 {
-    if (m_pBarrier)
+    if (cmd_app_process_)
     {
-        appendLogRaw(m_pBarrier->readAllStandardError());
+        appendLogRaw(cmd_app_process_->readAllStandardError());
     }
 }
 
@@ -481,7 +482,7 @@ void MainWindow::checkFingerprint(const QString& line)
 
     if (!messageBoxAlreadyShown) {
         if (is_client) {
-            stopBarrier();
+            stop_cmd_app();
         }
 
         messageBoxAlreadyShown = true;
@@ -491,7 +492,7 @@ void MainWindow::checkFingerprint(const QString& line)
             db.add_trusted(fingerprint_sha256);
             db.write(db_path);
             if (is_client) {
-                startBarrier();
+                start_cmd_app();
             }
         }
 
@@ -499,10 +500,10 @@ void MainWindow::checkFingerprint(const QString& line)
     }
 }
 
-void MainWindow::restartBarrier()
+void MainWindow::restart_cmd_app()
 {
-    stopBarrier();
-    startBarrier();
+    stop_cmd_app();
+    start_cmd_app();
 }
 
 void MainWindow::proofreadInfo()
@@ -512,7 +513,7 @@ void MainWindow::proofreadInfo()
     set_connection_state(old);
 }
 
-void MainWindow::startBarrier()
+void MainWindow::start_cmd_app()
 {
     bool desktopMode = appConfig().processMode() == Desktop;
     bool serviceMode = appConfig().processMode() == Service;
@@ -531,7 +532,7 @@ void MainWindow::startBarrier()
 
     if (desktopMode)
     {
-        setBarrierProcess(new QProcess(this));
+        cmd_app_process_ = new QProcess(this);
     }
     else
     {
@@ -577,15 +578,15 @@ void MainWindow::startBarrier()
     if ((app_role() == AppRole::Client && !clientArgs(args, app))
         || (app_role() == AppRole::Server && !serverArgs(args, app)))
     {
-        stopBarrier();
+        stop_cmd_app();
         return;
     }
 
     if (desktopMode)
     {
-        connect(barrierProcess(), SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(barrierFinished(int, QProcess::ExitStatus)));
-        connect(barrierProcess(), SIGNAL(readyReadStandardOutput()), this, SLOT(logOutput()));
-        connect(barrierProcess(), SIGNAL(readyReadStandardError()), this, SLOT(logError()));
+        connect(cmd_app_process_, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(cmd_app_finished(int, QProcess::ExitStatus)));
+        connect(cmd_app_process_, SIGNAL(readyReadStandardOutput()), this, SLOT(logOutput()));
+        connect(cmd_app_process_, SIGNAL(readyReadStandardError()), this, SLOT(logError()));
     }
 
     m_pLogWindow->startNewInstance();
@@ -604,8 +605,8 @@ void MainWindow::startBarrier()
 
     if (desktopMode)
     {
-        barrierProcess()->start(app, args);
-        if (!barrierProcess()->waitForStarted())
+        cmd_app_process_->start(app, args);
+        if (!cmd_app_process_->waitForStarted())
         {
             show();
             QMessageBox::warning(this, tr("Program can not be started"), QString(tr("The executable<br><br>%1<br><br>could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.").arg(app)));
@@ -756,7 +757,7 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
     return true;
 }
 
-void MainWindow::stopBarrier()
+void MainWindow::stop_cmd_app()
 {
     appendLogDebug("stopping process");
 
@@ -793,25 +794,25 @@ void MainWindow::stopService()
 void MainWindow::stopDesktop()
 {
     QMutexLocker locker(&m_StopDesktopMutex);
-    if (!barrierProcess()) {
+    if (!cmd_app_process_) {
         return;
     }
 
     appendLogInfo("stopping barrier desktop process");
 
-    if (barrierProcess()->isOpen()) {
+    if (cmd_app_process_->isOpen()) {
 #if SYSAPI_UNIX
-        kill(barrierProcess()->processId(), SIGTERM);
-        barrierProcess()->waitForFinished(5000);
+        kill(cmd_app_process_->processId(), SIGTERM);
+        cmd_app_process_->waitForFinished(5000);
 #endif
-        barrierProcess()->close();
+        cmd_app_process_->close();
     }
 
-    delete barrierProcess();
-    setBarrierProcess(nullptr);
+    delete cmd_app_process_;
+    cmd_app_process_ = nullptr;
 }
 
-void MainWindow::barrierFinished(int exitCode, QProcess::ExitStatus)
+void MainWindow::cmd_app_finished(int exitCode, QProcess::ExitStatus)
 {
     if (exitCode == 0) {
         appendLogInfo(QString("process exited normally"));
@@ -821,7 +822,7 @@ void MainWindow::barrierFinished(int exitCode, QProcess::ExitStatus)
     }
 
     if (m_ExpectedRunningState == kStarted) {
-        QTimer::singleShot(1000, this, SLOT(startBarrier()));
+        QTimer::singleShot(1000, this, SLOT(start_cmd_app()));
         appendLogInfo(QString("detected process not running, auto restarting"));
     }
     else {
@@ -1093,7 +1094,7 @@ void MainWindow::on_m_pGroupServer_toggled(bool on)
 
 bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Browse for a InputLeap config file"), QString(), barrierConfigOpenFilter);
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Browse for a InputLeap config file"), QString(), APP_CONFIG_OPEN_FILTER);
 
     if (!fileName.isEmpty())
     {
@@ -1106,7 +1107,7 @@ bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
 
 bool MainWindow::on_m_pActionSave_triggered()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save configuration as..."), QString(), barrierConfigSaveFilter);
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save configuration as..."), QString(), APP_CONFIG_SAVE_FILTER);
 
     if (!fileName.isEmpty() && !serverConfig().save(fileName))
     {
@@ -1151,7 +1152,7 @@ void MainWindow::autoAddScreen(const QString name)
             }
         }
         else {
-            restartBarrier();
+            restart_cmd_app();
         }
     }
 }
@@ -1170,7 +1171,7 @@ void MainWindow::on_m_pButtonConfigureServer_clicked()
 
 void MainWindow::on_m_pButtonReload_clicked()
 {
-    restartBarrier();
+    restart_cmd_app();
 }
 
 #if defined(Q_OS_WIN)
@@ -1340,7 +1341,7 @@ void MainWindow::promptAutoConfig()
 void MainWindow::on_m_pComboServerList_currentIndexChanged(QString )
 {
     if (m_pComboServerList->count() != 0) {
-        restartBarrier();
+        restart_cmd_app();
     }
 }
 

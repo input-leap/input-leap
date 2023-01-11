@@ -108,7 +108,7 @@ public slots:
         void appendLogInfo(const QString& text);
         void appendLogDebug(const QString& text);
         void appendLogError(const QString& text);
-        void startBarrier();
+        void start_cmd_app();
 
     protected slots:
         void on_m_pGroupClient_toggled(bool on);
@@ -118,9 +118,9 @@ public slots:
         bool on_m_pActionSave_triggered();
         void on_m_pActionAbout_triggered();
         void on_m_pActionSettings_triggered();
-        void barrierFinished(int exitCode, QProcess::ExitStatus);
+        void cmd_app_finished(int exitCode, QProcess::ExitStatus);
         void trayActivated(QSystemTrayIcon::ActivationReason reason);
-        void stopBarrier();
+        void stop_cmd_app();
         void logOutput();
         void logError();
         void bonjourInstallFinished();
@@ -129,8 +129,6 @@ public slots:
     protected:
         QSettings& settings() { return m_Settings; }
         AppConfig& appConfig() { return *m_AppConfig; }
-        QProcess* barrierProcess() { return m_pBarrier; }
-        void setBarrierProcess(QProcess* p) { m_pBarrier = p; }
         void initConnections();
         void createMenuBar();
         void createTrayIcon();
@@ -158,7 +156,7 @@ public slots:
         void promptAutoConfig();
         void checkConnected(const QString& line);
         void checkFingerprint(const QString& line);
-        void restartBarrier();
+        void restart_cmd_app();
         void proofreadInfo();
         void windowStateChanged();
         void updateSSLFingerprint();
@@ -166,7 +164,7 @@ public slots:
     private:
         QSettings& m_Settings;
         AppConfig* m_AppConfig;
-        QProcess* m_pBarrier;
+        QProcess* cmd_app_process_;
         AppConnectionState connection_state_ = AppConnectionState::DISCONNECTED;
         ServerConfig m_ServerConfig;
         QTemporaryFile* m_pTempConfigFile;

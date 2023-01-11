@@ -53,6 +53,14 @@ int waitForTray();
 bool checkMacAssistiveDevices();
 #endif
 
+void copy_qsettings(const QSettings &src, QSettings &dst)
+{
+    auto keys = src.allKeys();
+    for (const auto& key : keys) {
+        dst.setValue(key, src.value(key));
+    }
+}
+
 int main(int argc, char* argv[])
 {
 #ifdef WINAPI_XWINDOWS
@@ -104,6 +112,12 @@ int main(int argc, char* argv[])
     }
 
 	QSettings settings;
+    if (settings.allKeys().empty()) {
+        // if there are no settings, attempt to copy from old Barrier settings location
+        QSettings fallback_settings{"Debauchee", "Barrier"};
+        copy_qsettings(fallback_settings, settings);
+    }
+
 	AppConfig appConfig (&settings);
 
 	if (appConfig.getAutoHide() && !trayAvailable)

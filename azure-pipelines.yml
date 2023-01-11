@@ -76,7 +76,7 @@ jobs:
     vmImage: $(imageName)
   steps:
     - script: sudo apt-get update -y
-    - script: sudo apt-get install -y libxtst-dev libxinerama-dev libxrandr-dev libice-dev libsm-dev qtdeclarative5-dev libavahi-compat-libdnssd-dev libcurl4-openssl-dev
+    - script: sudo apt-get install -y libxtst-dev libxinerama-dev libxrandr-dev libice-dev libsm-dev qtdeclarative5-dev qttools5-dev libavahi-compat-libdnssd-dev libcurl4-openssl-dev
       displayName: Install Dependencies
     - script: sh -x ./clean_build.sh
       displayName: Clean Build

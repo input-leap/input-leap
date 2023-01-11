@@ -60,7 +60,7 @@ SetupWizard::~SetupWizard()
 bool SetupWizard::validateCurrentPage()
 {
     QMessageBox message;
-    message.setWindowTitle(tr("Setup Barrier"));
+    message.setWindowTitle(tr("Setup InputLeap"));
     message.setIcon(QMessageBox::Information);
 
     if (currentPage() == m_pNodePage)

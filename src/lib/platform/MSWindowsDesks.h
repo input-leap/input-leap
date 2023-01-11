@@ -50,9 +50,9 @@ desk at a time, you can't switch desks if the thread has any hooks
 installed or owns any windows, windows cannot exist on multiple
 desks at once, etc.  Basically, they're useless except for running
 the login window or the screensaver, which is what they're used
-for.  Barrier must deal with them mainly because of the login
+for.  InputLeap must deal with them mainly because of the login
 window and screensaver but users can create their own desks and
-barrier should work on those too.
+InputLeap should work on those too.
 
 This class encapsulates all the desk nastiness.  Clients of this
 object don't have to know anything about desks.

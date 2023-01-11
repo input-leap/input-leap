@@ -85,6 +85,10 @@ jobs:
   displayName: macOS builds
   strategy:
     matrix:
+      monterey-Release:
+          imageName: "macOS-12"
+          B_BUILD_TYPE: Release
+          INPUTLEAP_VERSION_STAGE: Release
       big-sur-Release:
           imageName: "macOS-11"
           B_BUILD_TYPE: Release

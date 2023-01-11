@@ -759,9 +759,9 @@ bool OSXKeyState::getKeyMap(inputleap::KeyMap& keyMap, std::int32_t group,
     return true;
 }
 
-bool OSXKeyState::mapBarrierHotKeyToMac(KeyID key, KeyModifierMask mask,
-                                        std::uint32_t &macVirtualKey,
-                                        std::uint32_t &macModifierMask) const
+bool OSXKeyState::map_hot_key_to_mac(KeyID key, KeyModifierMask mask,
+                                     std::uint32_t &macVirtualKey,
+                                     std::uint32_t &macModifierMask) const
 {
     // look up button for key
     KeyButton button = getButton(key, pollActiveGroup());

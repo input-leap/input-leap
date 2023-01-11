@@ -60,7 +60,7 @@ public:
 
     //! Convert OS X modifier mask to InputLeap mask
     /*!
-    Returns the barrier modifier mask corresponding to the OS X modifier
+    Returns the InputLeap modifier mask corresponding to the OS X modifier
     mask in \p mask.
     */
     KeyModifierMask mapModifiersFromOSX(std::uint32_t mask) const;
@@ -87,8 +87,8 @@ public:
     Calculates mac virtual key and mask for a key \p key and modifiers
     \p mask.  Returns \c true if the key can be mapped, \c false otherwise.
     */
-    bool mapBarrierHotKeyToMac(KeyID key, KeyModifierMask mask, std::uint32_t& macVirtualKey,
-                               std::uint32_t& macModifierMask) const;
+    bool map_hot_key_to_mac(KeyID key, KeyModifierMask mask, std::uint32_t& macVirtualKey,
+                            std::uint32_t& macModifierMask) const;
 
     //@}
 

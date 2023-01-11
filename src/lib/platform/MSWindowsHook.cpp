@@ -272,7 +272,7 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
     // if mapping failed and ctrl and alt are pressed then try again
     // with both not pressed.  this handles the case where ctrl and
     // alt are being used as individual modifiers rather than AltGr.
-    // we note that's the case in the message sent back to barrier
+    // we note that's the case in the message sent back to InputLeap
     // because there's no simple way to deduce it after the fact.
     // we have to put the dead key back first, if there was one.
     bool noAltGr = false;

@@ -39,7 +39,7 @@ server_stubCheckUnexpectedArgs()
     return false;
 }
 
-TEST(ServerArgsParsingTests, parseServerArgs_addressArg_setBarrierAddress)
+TEST(ServerArgsParsingTests, parseServerArgs_addressArg_set_address)
 {
     NiceMock<MockArgParser> argParser;
     ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(server_stubParseGenericArgs));
@@ -50,7 +50,7 @@ TEST(ServerArgsParsingTests, parseServerArgs_addressArg_setBarrierAddress)
 
     argParser.parseServerArgs(serverArgs, argc, kAddressCmd);
 
-    EXPECT_EQ("mock_address", serverArgs.m_barrierAddress);
+    EXPECT_EQ("mock_address", serverArgs.network_address);
 }
 
 TEST(ServerArgsParsingTests, parseServerArgs_configArg_setConfigFile)

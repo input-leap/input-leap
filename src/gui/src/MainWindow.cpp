@@ -55,6 +55,8 @@
 #include <Windows.h>
 #endif
 
+namespace {
+
 static const QString allFilesFilter(QObject::tr("All files (*.*)"));
 #if defined(Q_OS_WIN)
 static const char barrierConfigName[] = "barrier.sgc";
@@ -70,36 +72,46 @@ static const QString barrierConfigFilter(QObject::tr("Barrier Configurations (*.
 static const QString barrierConfigOpenFilter(barrierConfigFilter + ";;" + allFilesFilter);
 static const QString barrierConfigSaveFilter(barrierConfigFilter);
 
-static const char* barrierIconFiles[] =
+const char* icon_file_for_connection_state(AppConnectionState state)
 {
 #if defined(Q_OS_MAC)
-    ":/res/icons/32x32/barrier-disconnected-mask.png",
-    ":/res/icons/32x32/barrier-disconnected-mask.png",
-    ":/res/icons/32x32/barrier-connected-mask.png",
-    ":/res/icons/32x32/barrier-transfering-mask.png"
+    switch (state) {
+        default:
+        case AppConnectionState::DISCONNECTED: return ":/res/icons/32x32/barrier-disconnected-mask.png";
+        case AppConnectionState::CONNECTING:   return ":/res/icons/32x32/barrier-disconnected-mask.png";
+        case AppConnectionState::CONNECTED:    return ":/res/icons/32x32/barrier-connected-mask.png";
+        case AppConnectionState::TRANSFERRING: return ":/res/icons/32x32/barrier-transfering-mask.png";
+    }
 #else
-    ":/res/icons/16x16/barrier-disconnected.png",
-    ":/res/icons/16x16/barrier-disconnected.png",
-    ":/res/icons/16x16/barrier-connected.png",
-    ":/res/icons/16x16/barrier-transfering.png"
+    switch (state) {
+        default:
+        case AppConnectionState::DISCONNECTED: return ":/res/icons/16x16/barrier-disconnected.png";
+        case AppConnectionState::CONNECTING:   return ":/res/icons/16x16/barrier-disconnected.png";
+        case AppConnectionState::CONNECTED:    return ":/res/icons/16x16/barrier-connected.png";
+        case AppConnectionState::TRANSFERRING: return ":/res/icons/16x16/barrier-transfering.png";
+    }
 #endif
-};
+}
 
-static const char* barrierIconNames[] =
+const char* icon_name_for_connection_state(AppConnectionState state)
 {
-    "barrier-disconnected",
-    "barrier-disconnected",
-    "barrier-connected",
-    "barrier-transfering"
-};
+    switch (state) {
+        default:
+        case AppConnectionState::DISCONNECTED: return "barrier-disconnected";
+        case AppConnectionState::CONNECTING: return "barrier-disconnected";
+        case AppConnectionState::CONNECTED: return "barrier-connected";
+        case AppConnectionState::TRANSFERRING: return "barrier-transfering";
+    }
+}
 
 static const char* barrierLargeIcon = ":/res/icons/256x256/barrier.ico";
+
+} // namespace
 
 MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     m_Settings(settings),
     m_AppConfig(&appConfig),
     m_pBarrier(nullptr),
-    m_BarrierState(barrierDisconnected),
     m_ServerConfig(&m_Settings, 5, 3, m_AppConfig->screenName(), this),
     m_pTempConfigFile(nullptr),
     m_pTrayIcon(nullptr),
@@ -120,7 +132,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     m_pLogWindow(new LogWindow(nullptr))
 {
     // explicitly unset DeleteOnClose so the window can be show and hidden
-    // repeatedly until Barrier is finished
+    // repeatedly until InputLeap is finished
     setAttribute(Qt::WA_DeleteOnClose, false);
     // mark the windows as sort of "dialog" window so that tiling window
     // managers will float it by default (X11)
@@ -217,8 +229,8 @@ void MainWindow::open()
     }
 
     // only start if user has previously started. this stops the gui from
-    // auto hiding before the user has configured barrier (which of course
-    // confuses first time users, who think barrier has crashed).
+    // auto hiding before the user has configured InputLeap (which of course
+    // confuses first time users, who think InputLeap has crashed).
     if (appConfig().startedBefore() && appConfig().getAutoStart()) {
         m_SuppressEmptyServerWarning = true;
         startBarrier();
@@ -252,7 +264,7 @@ void MainWindow::createTrayIcon()
     connect(m_pTrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
 
-    setIcon(barrierDisconnected);
+    set_icon(AppConnectionState::DISCONNECTED);
 
     m_pTrayIcon->show();
 }
@@ -321,10 +333,11 @@ void MainWindow::saveSettings()
     settings().sync();
 }
 
-void MainWindow::setIcon(qBarrierState state)
+void MainWindow::set_icon(AppConnectionState state)
 {
     if (m_pTrayIcon) {
-        QIcon icon = QIcon::fromTheme(barrierIconNames[state], QIcon(barrierIconFiles[state]));
+        QIcon icon = QIcon::fromTheme(icon_name_for_connection_state(state),
+                                      QIcon(icon_file_for_connection_state(state)));
 #if defined(Q_OS_MAC)
         icon.setIsMask(true);
 #endif
@@ -412,7 +425,7 @@ void MainWindow::checkConnected(const QString& line)
         line.contains("connected to server") ||
         line.contains("server status: active"))
     {
-        setBarrierState(barrierConnected);
+        set_connection_state(AppConnectionState::CONNECTED);
 
         if (!appConfig().startedBefore() && isVisible()) {
                 QMessageBox::information(
@@ -456,8 +469,8 @@ void MainWindow::checkFingerprint(const QString& line)
     }
 
     // We compare only SHA256 fingerprints, but show both SHA1 and SHA256 so that the users can
-    // still verify fingerprints on old Barrier servers. This way the only time when we are exposed
-    // to SHA1 vulnerabilities is when the user is reconnecting again.
+    // still verify fingerprints on old InputLeap servers. This way the only time when we are
+    // exposed to SHA1 vulnerabilities is when the user is reconnecting again.
     inputleap::FingerprintDatabase db;
     db.read(db_path);
     if (db.is_trusted(fingerprint_sha256)) {
@@ -494,9 +507,9 @@ void MainWindow::restartBarrier()
 
 void MainWindow::proofreadInfo()
 {
-    int oldState = m_BarrierState;
-    m_BarrierState = barrierDisconnected;
-    setBarrierState(static_cast<qBarrierState>(oldState));
+    AppConnectionState old = connection_state_;
+    connection_state_ = AppConnectionState::DISCONNECTED;
+    set_connection_state(old);
 }
 
 void MainWindow::startBarrier()
@@ -506,7 +519,7 @@ void MainWindow::startBarrier()
 
     appendLogDebug("starting process");
     m_ExpectedRunningState = kStarted;
-    setBarrierState(barrierConnecting);
+    set_connection_state(AppConnectionState::CONNECTING);
 
     QString app;
     QStringList args;
@@ -530,9 +543,9 @@ void MainWindow::startBarrier()
         // is switched; this is because we may need to elevate or not
         // based on which desk the user is in (login always needs
         // elevation, where as default desk does not).
-        // Note that this is only enabled when barrier is set to elevate
+        // Note that this is only enabled when InputLeap is set to elevate
         // 'as needed' (e.g. on a UAC dialog popup) in order to prevent
-        // unnecessary restarts when barrier was started elevated or
+        // unnecessary restarts when InputLeap was started elevated or
         // when it is not allowed to elevate. In these cases restarting
         // the server is fruitless.
         if (appConfig().elevateMode() == ElevateAsNeeded) {
@@ -757,7 +770,7 @@ void MainWindow::stopBarrier()
         stopDesktop();
     }
 
-    setBarrierState(barrierDisconnected);
+    set_connection_state(AppConnectionState::DISCONNECTED);
 
     // HACK: deleting the object deletes the physical file, which is
     // bad, since it could be in use by the Windows service!
@@ -811,23 +824,23 @@ void MainWindow::barrierFinished(int exitCode, QProcess::ExitStatus)
         appendLogInfo(QString("detected process not running, auto restarting"));
     }
     else {
-        setBarrierState(barrierDisconnected);
+        set_connection_state(AppConnectionState::DISCONNECTED);
     }
 }
 
-void MainWindow::setBarrierState(qBarrierState state)
+void MainWindow::set_connection_state(AppConnectionState state)
 {
-    if (barrierState() == state)
+    if (connection_state() == state)
         return;
 
-    if (state == barrierConnected || state == barrierConnecting)
+    if (state == AppConnectionState::CONNECTED || state == AppConnectionState::CONNECTING)
     {
         disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartBarrier, SLOT(trigger()));
         connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopBarrier, SLOT(trigger()));
         m_pButtonToggleStart->setText(tr("&Stop"));
         m_pButtonReload->setEnabled(true);
     }
-    else if (state == barrierDisconnected)
+    else if (state == AppConnectionState::DISCONNECTED)
     {
         disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopBarrier, SLOT(trigger()));
         connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartBarrier, SLOT(trigger()));
@@ -836,7 +849,7 @@ void MainWindow::setBarrierState(qBarrierState state)
     }
 
     bool connected = false;
-    if (state == barrierConnected || state == barrierTransfering) {
+    if (state == AppConnectionState::CONNECTED || state == AppConnectionState::TRANSFERRING) {
         connected = true;
     }
 
@@ -845,7 +858,7 @@ void MainWindow::setBarrierState(qBarrierState state)
 
     switch (state)
     {
-    case barrierConnected: {
+    case AppConnectionState::CONNECTED: {
         if (m_AppConfig->getCryptoEnabled()) {
             m_pLabelPadlock->show();
         }
@@ -857,23 +870,23 @@ void MainWindow::setBarrierState(qBarrierState state)
 
         break;
     }
-    case barrierConnecting:
+    case AppConnectionState::CONNECTING:
         m_pLabelPadlock->hide();
         setStatus(tr("Barrier is starting."));
         break;
-    case barrierDisconnected:
+    case AppConnectionState::DISCONNECTED:
         m_pLabelPadlock->hide();
         setStatus(tr("Barrier is not running."));
         break;
-    case barrierTransfering:
+    case AppConnectionState::TRANSFERRING:
         break;
     default:
         break;
     }
 
-    setIcon(state);
+    set_icon(state);
 
-    m_BarrierState = state;
+    connection_state_ = state;
 }
 
 void MainWindow::setVisible(bool visible)
@@ -999,7 +1012,7 @@ void MainWindow::updateZeroconfService()
 void MainWindow::serverDetected(const QString name)
 {
     if (m_pComboServerList->findText(name) == -1) {
-        // Note: the first added item triggers startBarrier
+        // Note: the first added item triggers startInputLeap
         m_pComboServerList->addItem(name);
     }
 

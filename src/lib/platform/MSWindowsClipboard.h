@@ -45,15 +45,15 @@ public:
     Return false if the clipboard ownership could not be taken;
     the clipboard should not be emptied in this case.  Unlike
     empty(), isOwnedByBarrier() will return false when emptied
-    this way.  This is useful when barrier wants to put data on
+    this way.  This is useful when InputLeap wants to put data on
     clipboard but pretend (to itself) that some other app did it.
-    When using empty(), barrier assumes the data came from the
+    When using empty(), InputLeap assumes the data came from the
     server and doesn't need to be sent back.  emptyUnowned()
-    makes barrier send the data to the server.
+    makes InputLeap send the data to the server.
     */
     bool emptyUnowned();
 
-    //! Test if clipboard is owned by barrier
+    //! Test if clipboard is owned by InputLeap
     static bool isOwnedByBarrier();
 
     // IClipboard overrides

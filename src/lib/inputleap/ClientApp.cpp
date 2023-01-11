@@ -84,9 +84,9 @@ ClientApp::parseArgs(int argc, const char* const* argv)
     }
     else {
         // save server address
-        if (!args().m_barrierAddress.empty()) {
+        if (!args().network_address.empty()) {
             try {
-                *m_serverAddress = NetworkAddress(args().m_barrierAddress, kDefaultPort);
+                *m_serverAddress = NetworkAddress(args().network_address, kDefaultPort);
                 m_serverAddress->resolve();
             }
             catch (XSocketAddress& e) {

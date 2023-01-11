@@ -40,10 +40,7 @@ class IEventQueue;
 class Thread;
 class TCPSocket;
 
-//! Barrier client
-/*!
-This class implements the top-level client algorithms for barrier.
-*/
+/// This class implements the top-level client algorithms for InputLeap.
 class Client : public IClient, public INode {
 public:
     class FailInfo {

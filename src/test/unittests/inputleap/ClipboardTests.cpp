@@ -36,7 +36,7 @@ TEST(ClipboardTests, empty_singleFormat_hasReturnsFalse)
 {
     Clipboard clipboard;
     clipboard.open(0);
-    clipboard.add(Clipboard::kText, "barrier rocks!");
+    clipboard.add(Clipboard::kText, "test string!");
 
     clipboard.empty();
 
@@ -49,10 +49,10 @@ TEST(ClipboardTests, add_newValue_valueWasStored)
     Clipboard clipboard;
     clipboard.open(0);
 
-    clipboard.add(IClipboard::kText, "barrier rocks!");
+    clipboard.add(IClipboard::kText, "test string!");
 
     std::string actual = clipboard.get(IClipboard::kText);
-    EXPECT_EQ("barrier rocks!", actual);
+    EXPECT_EQ("test string!", actual);
 }
 
 TEST(ClipboardTests, add_replaceValue_valueWasReplaced)
@@ -60,11 +60,11 @@ TEST(ClipboardTests, add_replaceValue_valueWasReplaced)
     Clipboard clipboard;
     clipboard.open(0);
 
-    clipboard.add(IClipboard::kText, "barrier rocks!");
-    clipboard.add(IClipboard::kText, "maxivista sucks"); // haha, just kidding.
+    clipboard.add(IClipboard::kText, "test string!");
+    clipboard.add(IClipboard::kText, "other string");
 
     std::string actual = clipboard.get(IClipboard::kText);
-    EXPECT_EQ("maxivista sucks", actual);
+    EXPECT_EQ("other string", actual);
 }
 
 TEST(ClipboardTests, open_timeIsZero_returnsTrue)
@@ -120,7 +120,7 @@ TEST(ClipboardTests, has_withFormatAdded_returnsTrue)
 {
     Clipboard clipboard;
     clipboard.open(0);
-    clipboard.add(IClipboard::kText, "barrier rocks!");
+    clipboard.add(IClipboard::kText, "test string!");
 
     bool actual = clipboard.has(IClipboard::kText);
 
@@ -151,11 +151,11 @@ TEST(ClipboardTests, get_withFormatAdded_returnsExpected)
 {
     Clipboard clipboard;
     clipboard.open(0);
-    clipboard.add(IClipboard::kText, "barrier rocks!");
+    clipboard.add(IClipboard::kText, "test string!");
 
     std::string actual = clipboard.get(IClipboard::kText);
 
-    EXPECT_EQ("barrier rocks!", actual);
+    EXPECT_EQ("test string!", actual);
 }
 
 TEST(ClipboardTests, marshall_addNotCalled_firstCharIsZero)
@@ -173,7 +173,7 @@ TEST(ClipboardTests, marshall_withTextAdded_typeCharIsText)
 {
     Clipboard clipboard;
     clipboard.open(0);
-    clipboard.add(IClipboard::kText, "barrier rocks!");
+    clipboard.add(IClipboard::kText, "test string!");
     clipboard.close();
 
     std::string actual = clipboard.marshall();
@@ -186,12 +186,12 @@ TEST(ClipboardTests, marshall_withTextAdded_lastSizeCharIs14)
 {
     Clipboard clipboard;
     clipboard.open(0);
-    clipboard.add(IClipboard::kText, "barrier rocks!"); // 14 chars
+    clipboard.add(IClipboard::kText, "test string!"); // 12 chars
     clipboard.close();
 
     std::string actual = clipboard.marshall();
 
-    EXPECT_EQ(14, static_cast<int>(actual[11]));
+    EXPECT_EQ(12, static_cast<int>(actual[11]));
 }
 
 // TODO: there's some integer -> char encoding going on here. i find it
@@ -231,7 +231,7 @@ TEST(ClipboardTests, marshall_withHtmlAdded_typeCharIsHtml)
 {
     Clipboard clipboard;
     clipboard.open(0);
-    clipboard.add(IClipboard::kHTML, "html sucks");
+    clipboard.add(IClipboard::kHTML, "other test string!");
     clipboard.close();
 
     std::string actual = clipboard.marshall();
@@ -245,7 +245,7 @@ TEST(ClipboardTests, marshall_withHtmlAndText_has2Formats)
     Clipboard clipboard;
     clipboard.open(0);
     clipboard.add(IClipboard::kText, "barrier rocks");
-    clipboard.add(IClipboard::kHTML, "html sucks");
+    clipboard.add(IClipboard::kHTML, "other test string!");
     clipboard.close();
 
     std::string actual = clipboard.marshall();
@@ -262,13 +262,13 @@ TEST(ClipboardTests, marshall_withTextAdded_endsWithAdded)
 {
     Clipboard clipboard;
     clipboard.open(0);
-    clipboard.add(IClipboard::kText, "barrier rocks!");
+    clipboard.add(IClipboard::kText, "test string!");
     clipboard.close();
 
     std::string actual = clipboard.marshall();
 
     // string contains other data, but should end in the string we added.
-    EXPECT_EQ("barrier rocks!", actual.substr(12));
+    EXPECT_EQ("test string!", actual.substr(12));
 }
 
 TEST(ClipboardTests, unmarshall_emptyData_hasTextIsFalse)
@@ -288,17 +288,17 @@ TEST(ClipboardTests, unmarshall_emptyData_hasTextIsFalse)
     EXPECT_FALSE(actual);
 }
 
-TEST(ClipboardTests, unmarshall_withTextSize285_getTextIsValid)
+TEST(ClipboardTests, unmarshall_withTextSize289_getTextIsValid)
 {
     Clipboard clipboard;
 
-    // 285 chars
+    // 289 chars
     std::string text;
-    text.append("Barrier is Free and Open Source Software that lets you ");
+    text.append("InputLeap is Free and Open Source Software that lets you ");
     text.append("easily share your mouse and keyboard between multiple ");
     text.append("computers, where each computer has it's own display. No ");
     text.append("special hardware is required, all you need is a local area ");
-    text.append("network. Barrier is supported on Windows, Mac OS X and Linux.");
+    text.append("network. InputLeap is supported on Windows, Mac OS X and Linux.");
 
     std::string data;
     data += static_cast<char>(0);
@@ -309,10 +309,10 @@ TEST(ClipboardTests, unmarshall_withTextSize285_getTextIsValid)
     data += static_cast<char>(0);
     data += static_cast<char>(0);
     data += static_cast<char>(IClipboard::kText);
-    data += static_cast<char>(0); // 285 >> 24 = 285 / (256^3) = 0
-    data += static_cast<char>(0); // 285 >> 16 = 285 / (256^2) = 0
-    data += static_cast<char>(1); // 285 >> 8 = 285 / (256^1) = 1(.11328125)
-    data += static_cast<char>(29); // 285 - 256 = 29
+    data += static_cast<char>(0); // 289 >> 24
+    data += static_cast<char>(0); // 289 >> 16
+    data += static_cast<char>(1); // 289 >> 8
+    data += static_cast<char>(33); // 289 & 0xff = 33
     data += text;
 
     clipboard.unmarshall(data, 0);
@@ -337,8 +337,8 @@ TEST(ClipboardTests, unmarshall_withTextAndHtml_getTextIsValid)
     data += static_cast<char>(0);
     data += static_cast<char>(0);
     data += static_cast<char>(0);
-    data += static_cast<char>(14);
-    data += "barrier rocks!";
+    data += static_cast<char>(12);
+    data += "test string!";
     data += static_cast<char>(0);
     data += static_cast<char>(0);
     data += static_cast<char>(0);
@@ -346,14 +346,14 @@ TEST(ClipboardTests, unmarshall_withTextAndHtml_getTextIsValid)
     data += static_cast<char>(0);
     data += static_cast<char>(0);
     data += static_cast<char>(0);
-    data += static_cast<char>(10);
-    data += "html sucks";
+    data += static_cast<char>(18);
+    data += "other test string!";
 
     clipboard.unmarshall(data, 0);
 
     clipboard.open(0);
     std::string actual = clipboard.get(IClipboard::kText);
-    EXPECT_EQ("barrier rocks!", actual);
+    EXPECT_EQ("test string!", actual);
 }
 
 TEST(ClipboardTests, unmarshall_withTextAndHtml_getHtmlIsValid)
@@ -371,8 +371,8 @@ TEST(ClipboardTests, unmarshall_withTextAndHtml_getHtmlIsValid)
     data += static_cast<char>(0);
     data += static_cast<char>(0);
     data += static_cast<char>(0);
-    data += static_cast<char>(14);
-    data += "barrier rocks!";
+    data += static_cast<char>(12);
+    data += "test string!";
     data += static_cast<char>(0);
     data += static_cast<char>(0);
     data += static_cast<char>(0);
@@ -380,21 +380,21 @@ TEST(ClipboardTests, unmarshall_withTextAndHtml_getHtmlIsValid)
     data += static_cast<char>(0);
     data += static_cast<char>(0);
     data += static_cast<char>(0);
-    data += static_cast<char>(10);
-    data += "html sucks";
+    data += static_cast<char>(18);
+    data += "other test string!";
 
     clipboard.unmarshall(data, 0);
 
     clipboard.open(0);
     std::string actual = clipboard.get(IClipboard::kHTML);
-    EXPECT_EQ("html sucks", actual);
+    EXPECT_EQ("other test string!", actual);
 }
 
 TEST(ClipboardTests, copy_withSingleText_clipboardsAreEqual)
 {
     Clipboard clipboard1;
     clipboard1.open(0);
-    clipboard1.add(Clipboard::kText, "barrier rocks!");
+    clipboard1.add(Clipboard::kText, "test string!");
     clipboard1.close();
 
     Clipboard clipboard2;
@@ -402,7 +402,7 @@ TEST(ClipboardTests, copy_withSingleText_clipboardsAreEqual)
 
     clipboard2.open(0);
     std::string actual = clipboard2.get(Clipboard::kText);
-    EXPECT_EQ("barrier rocks!", actual);
+    EXPECT_EQ("test string!", actual);
 }
 
 } // namespace inputleap

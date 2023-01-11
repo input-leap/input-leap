@@ -18,7 +18,7 @@
 #pragma once
 
 #include "ui_SetupWizardBase.h"
-#include "BarrierLocale.h"
+#include "AppLocale.h"
 
 #include <QWizard>
 #include <QNetworkAccessManager>
@@ -46,7 +46,7 @@ protected:
 private:
     MainWindow& m_MainWindow;
     bool m_StartMain;
-    BarrierLocale m_Locale;
+    AppLocale m_Locale;
 
 private slots:
     void on_m_pComboLanguage_currentIndexChanged(int index);

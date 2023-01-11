@@ -225,7 +225,7 @@ Log::insert(ILogOutputter* outputter, bool alwaysAtHead)
     // don't show log unless user requests it, as some users find this
     // feature irritating (i.e. when they lose network connectivity).
     // in windows the log window can be displayed by selecting "show log"
-    // from the barrier system tray icon.
+    // from the InputLeap system tray icon.
     // if this causes problems for other architectures, then a different
     // work around should be attempted.
     //outputter->show(false);

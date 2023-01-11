@@ -27,10 +27,8 @@ namespace inputleap {
 
 class IStream;
 
-//! Barrier protocol utilities
-/*!
-This class provides various functions for implementing the barrier
-protocol.
+/**
+This class provides various functions for implementing the inputleap protocol.
 */
 class ProtocolUtil {
 public:

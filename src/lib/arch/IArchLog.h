@@ -20,10 +20,8 @@
 
 #include "base/ELevel.h"
 
-//! Interface for architecture dependent logging
-/*!
-This interface defines the logging operations required by
-barrier.  Each architecture must implement this interface.
+/** This interface defines the logging operations required by InputLeap.
+    Each architecture must implement this interface.
 */
 class IArchLog {
 public:

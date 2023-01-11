@@ -235,6 +235,6 @@ QString KeySequence::keyToString(int key)
     if (key < 0x10000)
         return QString("\\u%1").arg(QChar(key).toLower().unicode(), 4, 16, QChar('0'));
 
-    // give up, barrier probably won't handle this
+    // give up, InputLeap probably won't handle this
     return "";
 }

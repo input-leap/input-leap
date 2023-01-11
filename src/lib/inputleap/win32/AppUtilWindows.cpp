@@ -20,7 +20,7 @@
 #include "inputleap/Screen.h"
 #include "inputleap/ArgsBase.h"
 #include "inputleap/App.h"
-#include "inputleap/XBarrier.h"
+#include "inputleap/Exceptions.h"
 #include "platform/MSWindowsScreen.h"
 #include "arch/win32/XArchWindows.h"
 #include "arch/win32/ArchMiscWindows.h"

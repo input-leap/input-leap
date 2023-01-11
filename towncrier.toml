@@ -3,7 +3,7 @@
     directory = "doc/newsfragments"
     filename = "doc/release_notes/index.md"
     template = "doc/release_notes/index.template.jinja"
-    title_format = "\nBarrier `{version}` ( `{project_date}` )\n================================\n"
+    title_format = "\nInputLeap `{version}` ( `{project_date}` )\n================================\n"
     start_string = "[comment]: <> (towncrier release notes start)"
     [[tool.towncrier.section]]
         path = ""

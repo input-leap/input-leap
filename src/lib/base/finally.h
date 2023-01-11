@@ -58,4 +58,4 @@ inline final_action<Callable> finally(Callable&& callable) noexcept
 
 } // namespace inputleap
 
-#endif // INPUTLEAP_LIB_BARRIER_BARRIER_TYPE_H
+#endif // INPUTLEAP_LIB_BASE_FINALLY_H

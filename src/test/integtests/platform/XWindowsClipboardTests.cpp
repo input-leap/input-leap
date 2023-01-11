@@ -77,7 +77,7 @@ TEST_F(CXWindowsClipboardTests, empty_openCalled_returnsTrue)
 TEST_F(CXWindowsClipboardTests, empty_singleFormat_hasReturnsFalse)
 {
     CXWindowsClipboard clipboard = createClipboard();
-    clipboard.add(CXWindowsClipboard::kText, "barrier rocks!");
+    clipboard.add(CXWindowsClipboard::kText, "test string!");
 
     clipboard.empty();
 
@@ -89,21 +89,21 @@ TEST_F(CXWindowsClipboardTests, add_newValue_valueWasStored)
 {
     CXWindowsClipboard clipboard = createClipboard();
 
-    clipboard.add(IClipboard::kText, "barrier rocks!");
+    clipboard.add(IClipboard::kText, "test string!");
 
     std::string actual = clipboard.get(IClipboard::kText);
-    EXPECT_EQ("barrier rocks!", actual);
+    EXPECT_EQ("test string!", actual);
 }
 
 TEST_F(CXWindowsClipboardTests, add_replaceValue_valueWasReplaced)
 {
     CXWindowsClipboard clipboard = createClipboard();
 
-    clipboard.add(IClipboard::kText, "barrier rocks!");
-    clipboard.add(IClipboard::kText, "maxivista sucks"); // haha, just kidding.
+    clipboard.add(IClipboard::kText, "test string!");
+    clipboard.add(IClipboard::kText, "other string");
 
     std::string actual = clipboard.get(IClipboard::kText);
-    EXPECT_EQ("maxivista sucks", actual);
+    EXPECT_EQ("other string", actual);
 }
 
 TEST_F(CXWindowsClipboardTests, close_isOpen_noErrors)
@@ -119,7 +119,7 @@ TEST_F(CXWindowsClipboardTests, close_isOpen_noErrors)
 TEST_F(CXWindowsClipboardTests, has_withFormatAdded_returnsTrue)
 {
     CXWindowsClipboard clipboard = createClipboard();
-    clipboard.add(IClipboard::kText, "barrier rocks!");
+    clipboard.add(IClipboard::kText, "test string!");
 
     bool actual = clipboard.has(IClipboard::kText);
 
@@ -147,11 +147,11 @@ TEST_F(CXWindowsClipboardTests, get_withNoFormats_returnsEmpty)
 TEST_F(CXWindowsClipboardTests, get_withFormatAdded_returnsExpected)
 {
     CXWindowsClipboard clipboard = createClipboard();
-    clipboard.add(IClipboard::kText, "barrier rocks!");
+    clipboard.add(IClipboard::kText, "test string!");
 
     std::string actual = clipboard.get(IClipboard::kText);
 
-    EXPECT_EQ("barrier rocks!", actual);
+    EXPECT_EQ("test string!", actual);
 }
 
 #endif

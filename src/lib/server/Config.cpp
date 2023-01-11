@@ -265,7 +265,7 @@ bool Config::disconnect(const std::string& srcName, EDirection srcSide, float po
 }
 
 void
-Config::setBarrierAddress(const NetworkAddress& addr)
+Config::set_listen_address(const NetworkAddress& addr)
 {
 	m_barrierAddress = addr;
 }

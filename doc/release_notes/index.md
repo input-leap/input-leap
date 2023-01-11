@@ -33,23 +33,23 @@ Bug fixes
 
 - Fixed build failure on mips*el and riscv64 architecture.
 - Fixed reading of configuration on Windows when the paths contain non-ASCII characters
-(https://github.com/debauchee/barrier/issues/976, https://github.com/debauchee/barrier/issues/974,
- https://github.com/debauchee/barrier/issues/444).
+(https://github.com/input-leap/input-leap/issues/976, https://github.com/input-leap/input-leap/issues/974,
+ https://github.com/input-leap/input-leap/issues/444).
 - Barrier no longer uses openssl CLI tool for any operations and hooks into the openssl library directly.
-- More X11 clipboard MIME types have been mapped to corresponding converters (https://github.com/debauchee/barrier/issues/344).
+- More X11 clipboard MIME types have been mapped to corresponding converters (https://github.com/input-leap/input-leap/issues/344).
 - Fixed setup of multiple actions associated with a hotkey.
 - Fixed setup of hotkeys with special characters such as comma and semicolon
-  (https://github.com/debauchee/barrier/issues/778).
+  (https://github.com/input-leap/input-leap/issues/778).
 - Fixed transfer of non-ASCII characters coming from a Windows server in certain cases
- (https://github.com/debauchee/barrier/issues/527).
+ (https://github.com/input-leap/input-leap/issues/527).
 - Barrier will now regenerate server certificate if it's invalid instead of failing to launch
- (https://github.com/debauchee/barrier/issues/802)
+ (https://github.com/input-leap/input-leap/issues/802)
 - Added support for additional keys on Sun Microsystems USB keyboards
- (https://github.com/debauchee/barrier/issues/784).
+ (https://github.com/input-leap/input-leap/issues/784).
 - Updated Chinese translation.
 - Updated Slovak translation.
 - Theme icons are now preferred to icons distributed together with Barrier
- (https://github.com/debauchee/barrier/issues/471).
+ (https://github.com/input-leap/input-leap/issues/471).
 - Fixed incorrect setup of Barrier service path on Windows.
 
 Features

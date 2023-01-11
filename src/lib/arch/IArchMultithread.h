@@ -43,10 +43,8 @@ inline std::chrono::nanoseconds seconds_to_chrono(double seconds)
     return std::chrono::nanoseconds(std::uint64_t(seconds * 1000000000.0));
 }
 
-//! Interface for architecture dependent multithreading
-/*!
-This interface defines the multithreading operations required by
-barrier.  Each architecture must implement this interface.
+/** This interface defines the multithreading operations required by InputLeap.
+    Each architecture must implement this interface.
 */
 class IArchMultithread {
 public:

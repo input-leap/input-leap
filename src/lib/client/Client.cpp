@@ -25,7 +25,7 @@
 #include "inputleap/PacketStreamFilter.h"
 #include "inputleap/ProtocolUtil.h"
 #include "inputleap/protocol_types.h"
-#include "inputleap/XBarrier.h"
+#include "inputleap/Exceptions.h"
 #include "inputleap/StreamChunker.h"
 #include "inputleap/IPlatformScreen.h"
 #include "mt/Thread.h"

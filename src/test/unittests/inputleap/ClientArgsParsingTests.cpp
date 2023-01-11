@@ -53,7 +53,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_yScrollArg_setYScroll)
     EXPECT_EQ(1, clientArgs.m_yscroll);
 }
 
-TEST(ClientArgsParsingTests, parseClientArgs_addressArg_setBarrierAddress)
+TEST(ClientArgsParsingTests, parseClientArgs_addressArg_set_listen_address)
 {
     NiceMock<MockArgParser> argParser;
     ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(client_stubParseGenericArgs));
@@ -64,7 +64,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_addressArg_setBarrierAddress)
 
     bool result = argParser.parseClientArgs(clientArgs, argc, kAddressCmd);
 
-    EXPECT_EQ("mock_address", clientArgs.m_barrierAddress);
+    EXPECT_EQ("mock_address", clientArgs.network_address);
     EXPECT_EQ(true, result);
 }
 

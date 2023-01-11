@@ -91,10 +91,9 @@ ServerApp::parseArgs(int argc, const char* const* argv)
         m_bye(kExitArgs);
     }
     else {
-        if (!args().m_barrierAddress.empty()) {
+        if (!args().network_address.empty()) {
             try {
-                *m_barrierAddress = NetworkAddress(args().m_barrierAddress,
-                    kDefaultPort);
+                *m_barrierAddress = NetworkAddress(args().network_address, kDefaultPort);
                 m_barrierAddress->resolve();
             }
             catch (XSocketAddress& e) {
@@ -725,10 +724,10 @@ ServerApp::mainLoop()
     // otherwise, if the config doesn't have an address, use
     // the default.
     if (m_barrierAddress->isValid()) {
-        args().m_config->setBarrierAddress(*m_barrierAddress);
+        args().m_config->set_listen_address(*m_barrierAddress);
     }
     else if (!args().m_config->getBarrierAddress().isValid()) {
-        args().m_config->setBarrierAddress(NetworkAddress(kDefaultPort));
+        args().m_config->set_listen_address(NetworkAddress(kDefaultPort));
     }
 
     // canonicalize the primary screen name
@@ -758,7 +757,7 @@ ServerApp::mainLoop()
                           [this](const auto& e){ force_reconnect(); });
 
     // to work around the sticky meta keys problem, we'll give users
-    // the option to reset the state of barriers
+    // the option to reset the state of InputLeap server.
     m_events->add_handler(EventType::SERVER_APP_RESET_SERVER, m_events->getSystemTarget(),
                           [this](const auto& e){ reset_server(); });
 

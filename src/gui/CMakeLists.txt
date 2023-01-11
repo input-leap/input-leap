@@ -25,7 +25,7 @@ set(GUI_SOURCE_FILES
     src/ActionDialog.cpp
     src/AddClientDialog.cpp
     src/AppConfig.cpp
-    src/BarrierLocale.cpp
+    src/AppLocale.cpp
     src/BaseConfig.cpp
     src/CommandProcess.cpp
     src/DataDownloader.cpp
@@ -65,7 +65,8 @@ set(GUI_HEADER_FILES
     src/ActionDialog.h
     src/AddClientDialog.h
     src/AppConfig.h
-    src/BarrierLocale.h
+    src/AppConnectionState.h
+    src/AppLocale.h
     src/BaseConfig.h
     src/CommandProcess.h
     src/DataDownloader.h

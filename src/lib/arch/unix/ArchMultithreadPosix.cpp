@@ -471,7 +471,7 @@ ArchMultithreadPosix::insert(ArchThreadImpl* thread)
 
     // set thread id.  note that we don't worry about m_nextID
     // wrapping back to 0 and duplicating thread ID's since the
-    // likelihood of barrier running that long is vanishingly
+    // likelihood of InputLeap running that long is vanishingly
     // small.
     thread->m_id = ++m_nextID;
 

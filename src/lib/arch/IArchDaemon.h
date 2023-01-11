@@ -22,7 +22,7 @@
 
 //! Interface for architecture dependent daemonizing
 /*!
-This interface defines the operations required by barrier for installing
+This interface defines the operations required by InputLeap for installing
 uninstalling daeamons and daemonizing a process.  Each architecture must
 implement this interface.
 */

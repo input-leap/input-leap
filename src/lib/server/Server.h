@@ -46,10 +46,7 @@ class IEventQueue;
 class Thread;
 class ClientListener;
 
-//! Barrier server
-/*!
-This class implements the top-level server algorithms for barrier.
-*/
+/// This class implements the top-level server algorithms for InputLeap.
 class Server : public INode {
 public:
     //! Lock cursor to screen data

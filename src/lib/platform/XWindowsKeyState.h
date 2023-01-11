@@ -75,24 +75,24 @@ public:
     //! @name accessors
     //@{
 
-    //! Convert X modifier mask to barrier mask
+    //! Convert X modifier mask to InputLeap mask
     /*!
-    Returns the barrier modifier mask corresponding to the X modifier
+    Returns the InputLeap modifier mask corresponding to the X modifier
     mask in \p state.
     */
     KeyModifierMask mapModifiersFromX(unsigned int state) const;
 
-    //! Convert barrier modifier mask to X mask
+    //! Convert InputLeap modifier mask to X mask
     /*!
-    Converts the barrier modifier mask to the corresponding X modifier
+    Converts the InputLeap modifier mask to the corresponding X modifier
     mask.  Returns \c true if successful and \c false if any modifier
     could not be converted.
     */
     bool mapModifiersToX(KeyModifierMask, unsigned int&) const;
 
-    //! Convert barrier key to all corresponding X keycodes
+    //! Convert InputLeap key to all corresponding X keycodes
     /*!
-    Converts the barrier key \p key to all of the keycodes that map to
+    Converts the InputLeap key \p key to all of the keycodes that map to
     that key.
     */
     void mapKeyToKeycodes(KeyID key,
@@ -148,10 +148,10 @@ private:
     XKBModifierMap m_lastGoodXKBModifiers;
     NonXKBModifierMap m_lastGoodNonXKBModifiers;
 
-    // X modifier (bit number) to barrier modifier (mask) mapping
+    // X modifier (bit number) to InputLeap modifier (mask) mapping
     KeyModifierMaskList m_modifierFromX;
 
-    // barrier modifier (mask) to X modifier (mask)
+    // InputLeap modifier (mask) to X modifier (mask)
     KeyModifierToXMask m_modifierToX;
 
     // map KeyID to all keycodes that can synthesize that KeyID

@@ -29,7 +29,7 @@ LogWindow::LogWindow(QWidget *parent) :
     QDialog(parent)
 {
     // explicitly unset DeleteOnClose so the log window can be show and hidden
-    // repeatedly until Barrier is finished
+    // repeatedly until InputLeap is finished
     setAttribute(Qt::WA_DeleteOnClose, false);
     setupUi(this);
 }

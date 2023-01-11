@@ -137,16 +137,16 @@ private:
     void showCursor();
     void hideCursor();
 
-    // map barrier mouse button to mac buttons
+    // map InputLeap mouse button to mac buttons
     ButtonID mapBarrierButtonToMac(std::uint16_t) const;
 
-    // map mac mouse button to barrier buttons
+    // map mac mouse button to InputLeap buttons
     ButtonID mapMacButtonToBarrier(std::uint16_t) const;
 
-    // map mac scroll wheel value to a barrier scroll wheel value
+    // map mac scroll wheel value to a InputLeap scroll wheel value
     std::int32_t mapScrollWheelToBarrier(float) const;
 
-    // map barrier scroll wheel value to a mac scroll wheel value
+    // map InputLeap scroll wheel value to a mac scroll wheel value
     std::int32_t mapScrollWheelFromBarrier(float) const;
 
     // get the current scroll wheel speed

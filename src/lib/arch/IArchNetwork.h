@@ -54,10 +54,8 @@ An opaque type representing a network address.
 */
 typedef ArchNetAddressImpl* ArchNetAddress;
 
-//! Interface for architecture dependent networking
-/*!
-This interface defines the networking operations required by
-barrier.  Each architecture must implement this interface.
+/** This interface defines the networking operations required by InputLeap.
+    Each architecture must implement this interface.
 */
 class IArchNetwork {
 public:

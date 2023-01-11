@@ -289,7 +289,7 @@ void OSXScreen::getCursorCenter(std::int32_t& x, std::int32_t& y) const
 
 std::uint32_t OSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 {
-	// get mac virtual key and modifier mask matching barrier key and mask
+    // get mac virtual key and modifier mask matching InputLeap key and mask
 	std::uint32_t macKey, macMask;
 	if (!m_keyState->mapBarrierHotKeyToMac(key, mask, macKey, macMask)) {
 		LOG((CLOG_DEBUG "could not map hotkey id=%04x mask=%04x", key, mask));
@@ -1818,7 +1818,7 @@ OSXScreen::HotKeyItem::operator<(const HotKeyItem& x) const
 }
 
 // Quartz event tap support for the secondary display. This makes sure that we
-// will show the cursor if a local event comes in while barrier has the cursor
+// will show the cursor if a local event comes in while InputLeap has the cursor
 // off the screen.
 CGEventRef
 OSXScreen::handleCGInputEventSecondary(

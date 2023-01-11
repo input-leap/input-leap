@@ -37,7 +37,7 @@ TEST(OSXClipboardTests, empty_singleFormat_hasReturnsFalse)
 {
     OSXClipboard clipboard;
     clipboard.open(0);
-    clipboard.add(OSXClipboard::kText, "barrier rocks!");
+    clipboard.add(OSXClipboard::kText, "test string!");
 
     clipboard.empty();
 
@@ -50,10 +50,10 @@ TEST(OSXClipboardTests, add_newValue_valueWasStored)
     OSXClipboard clipboard;
     clipboard.open(0);
 
-    clipboard.add(IClipboard::kText, "barrier rocks!");
+    clipboard.add(IClipboard::kText, "test string!");
 
     std::string actual = clipboard.get(IClipboard::kText);
-    EXPECT_EQ("barrier rocks!", actual);
+    EXPECT_EQ("test string!", actual);
 }
 
 TEST(OSXClipboardTests, add_replaceValue_valueWasReplaced)
@@ -61,11 +61,11 @@ TEST(OSXClipboardTests, add_replaceValue_valueWasReplaced)
     OSXClipboard clipboard;
     clipboard.open(0);
 
-    clipboard.add(IClipboard::kText, "barrier rocks!");
-    clipboard.add(IClipboard::kText, "maxivista sucks"); // haha, just kidding.
+    clipboard.add(IClipboard::kText, "test string!");
+    clipboard.add(IClipboard::kText, "other string");
 
     std::string actual = clipboard.get(IClipboard::kText);
-    EXPECT_EQ("maxivista sucks", actual);
+    EXPECT_EQ("other string", actual);
 }
 
 TEST(OSXClipboardTests, open_timeIsZero_returnsTrue)
@@ -124,7 +124,7 @@ TEST(OSXClipboardTests, has_withFormatAdded_returnsTrue)
     OSXClipboard clipboard;
     clipboard.open(0);
     clipboard.empty();
-    clipboard.add(IClipboard::kText, "barrier rocks!");
+    clipboard.add(IClipboard::kText, "test string!");
 
     bool actual = clipboard.has(IClipboard::kText);
 
@@ -158,11 +158,11 @@ TEST(OSXClipboardTests, get_withFormatAdded_returnsExpected)
     OSXClipboard clipboard;
     clipboard.open(0);
     clipboard.empty();
-    clipboard.add(IClipboard::kText, "barrier rocks!");
+    clipboard.add(IClipboard::kText, "test string!");
 
     std::string actual = clipboard.get(IClipboard::kText);
 
-    EXPECT_EQ("barrier rocks!", actual);
+    EXPECT_EQ("test string!", actual);
 }
 
 } // namespace inputleap

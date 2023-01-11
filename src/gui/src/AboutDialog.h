@@ -33,7 +33,7 @@ class AboutDialog : public QDialog, public Ui::AboutDialogBase
     Q_OBJECT
 
     public:
-        AboutDialog(QWidget* parent, const QString& barrierApp = QString());
+        AboutDialog(QWidget* parent, const QString& app_name);
 
     private:
         VersionChecker m_versionChecker;

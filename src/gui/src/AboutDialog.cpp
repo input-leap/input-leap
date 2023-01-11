@@ -21,13 +21,13 @@
 #include <QtCore>
 #include <QtGui>
 
-AboutDialog::AboutDialog(QWidget* parent, const QString& barrierApp) :
+AboutDialog::AboutDialog(QWidget* parent, const QString& app_name) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	Ui::AboutDialogBase()
 {
 	setupUi(this);
 
-	m_versionChecker.setApp(barrierApp);
+    m_versionChecker.setApp(app_name);
 	QString version = m_versionChecker.getVersion();
 	version = version + '-' + INPUTLEAP_VERSION_STAGE;
 #ifdef INPUTLEAP_REVISION

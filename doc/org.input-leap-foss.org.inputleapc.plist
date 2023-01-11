@@ -2,16 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN"
     "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<!-- Mac OSX only: Copy this plist file into [~]/Library/LaunchAgents to start barrier client automatically. Make sure you change the IP below. -->
+<!-- Mac OSX only: Copy this plist file into [~]/Library/LaunchAgents to start InputLeap client automatically. Make sure you change the IP below. -->
 <dict>
     <key>Label</key>
-    <string>org.debauchee.com.barrierc.plist</string>
+    <string>org.input-leap-foss.org.input-leapc.plist</string>
     <key>OnDemand</key>
     <false/>
     <key>ProgramArguments</key>
     <array>
-        <string>/usr/bin/barrierc</string>
-        <!-- Replace this IP with the IP of your barriers server -->
+        <string>/usr/bin/input-leapc</string>
+        <!-- Replace this IP with the IP of your InputLeap server -->
         <string>192.168.0.2</string>
     </array>
     <key>RunAtLoad</key>

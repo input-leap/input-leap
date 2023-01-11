@@ -136,7 +136,7 @@ MSWindowsScreen::MSWindowsScreen(
 
         updateScreenShape();
         m_class       = createWindowClass();
-        m_window      = createWindow(m_class, "Barrier");
+        m_window      = createWindow(m_class, "InputLeap");
         forceShowCursor();
         LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : ""));
         LOG((CLOG_DEBUG "window is 0x%08x", m_window));
@@ -810,7 +810,7 @@ MSWindowsScreen::createWindowClass() const
     classInfo.hCursor = nullptr;
     classInfo.hbrBackground = nullptr;
     classInfo.lpszMenuName = nullptr;
-    classInfo.lpszClassName = "Barrier";
+    classInfo.lpszClassName = "InputLeap";
     classInfo.hIconSm = nullptr;
     return RegisterClassEx(&classInfo);
 }
@@ -1451,7 +1451,7 @@ MSWindowsScreen::onClipboardChange()
         }
     }
     else if (!m_ownClipboard) {
-        LOG((CLOG_DEBUG "clipboard changed: barrier owned"));
+        LOG((CLOG_DEBUG "clipboard changed: got ownership"));
         m_ownClipboard = true;
     }
 

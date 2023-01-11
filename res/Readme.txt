@@ -1,9 +1,9 @@
-Thank you for choosing Barrier!
-https://github.com/debauchee/barrier/
+Thank you for choosing InputLeap!
+https://github.com/input-leap/input-leap/
 
-Barrier allows you to share your keyboard and mouse between computers over a network.
+InputLeap allows you to share your keyboard and mouse between computers over a network.
 
 Have fun!
 
 Thanks,
-The Barrier Team
+The InputLeap Team

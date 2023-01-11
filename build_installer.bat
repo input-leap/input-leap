@@ -10,7 +10,7 @@ echo Building 64-bit Windows installer...
 
 cd build\installer-inno
 if ERRORLEVEL 1 goto buildproject
-"%INNO_ROOT%\ISCC.exe" /Qp barrier.iss
+"%INNO_ROOT%\ISCC.exe" /Qp input-leap.iss
 if ERRORLEVEL 1 goto failed
 
 echo Build completed successfully
@@ -20,7 +20,7 @@ goto done
 echo To build a 64-bit Windows installer:
 echo  - set B_BUILD_TYPE=Release in build_env.bat
 echo  - also set other environmental overrides necessary for your build environment
-echo  - run clean_build.bat to build Barrier and verify that it succeeds
+echo  - run clean_build.bat to build InputLeap and verify that it succeeds
 echo  - re-run this script to create the installation package
 goto done
 

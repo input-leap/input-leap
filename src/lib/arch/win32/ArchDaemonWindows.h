@@ -143,13 +143,13 @@ private:
     std::string m_commandLine;
 };
 
-#define DEFAULT_DAEMON_NAME _T("Barrier")
-#define DEFAULT_DAEMON_INFO _T("Manages the Barrier foreground processes.")
+#define DEFAULT_DAEMON_NAME _T("InputLeap")
+#define DEFAULT_DAEMON_INFO _T("Manages the InputLeap foreground processes.")
 
 static const TCHAR* const g_daemonKeyPath[] = {
     _T("SOFTWARE"),
-    _T("The Barrier Project"),
-    _T("Barrier"),
+    _T("The InputLeap Project"),
+    _T("InputLeap"),
     _T("Service"),
     nullptr
 };

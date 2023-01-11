@@ -120,11 +120,11 @@ private:
 
 // configuration file name
 #if SYSAPI_WIN32
-#define USR_CONFIG_NAME "barrier.sgc"
-#define SYS_CONFIG_NAME "barrier.sgc"
+#define USR_CONFIG_NAME "input-leap.sgc"
+#define SYS_CONFIG_NAME "input-leap.sgc"
 #elif SYSAPI_UNIX
-#define USR_CONFIG_NAME ".barrier.conf"
-#define SYS_CONFIG_NAME "barrier.conf"
+#define USR_CONFIG_NAME ".input-leap.conf"
+#define SYS_CONFIG_NAME "input-leap.conf"
 #endif
 
 } // namespace inputleap

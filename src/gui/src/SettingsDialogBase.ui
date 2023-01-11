@@ -90,7 +90,7 @@
       <item row="2" column="1">
        <widget class="QComboBox" name="m_pComboElevate">
         <property name="toolTip">
-         <string>Specify when the Barrier service should run at an elevated privilege level</string>
+         <string>Specify when the InputLeap service should run at an elevated privilege level</string>
         </property>
         <property name="currentIndex">
          <number>0</number>
@@ -129,7 +129,7 @@
       <item row="5" column="0">
        <widget class="QCheckBox" name="m_pCheckBoxAutoStart">
         <property name="text">
-         <string>Start &amp;Barrier on startup</string>
+         <string>Start &amp;InputLeap on startup</string>
         </property>
        </widget>
       </item>

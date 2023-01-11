@@ -108,7 +108,7 @@ void
 ClientApp::help()
 {
     std::ostringstream buffer;
-    buffer << "Start the barrier client and connect to a remote server component.\n"
+    buffer << "Start the InputLeap client and connect to a remote server component.\n"
            << "\n"
            << "Usage: " << args().m_exename << " [--yscroll <delta>]"
 #ifdef WINAPI_XWINDOWS
@@ -141,9 +141,9 @@ const char*
 ClientApp::daemonName() const
 {
 #if SYSAPI_WIN32
-    return "Barrier Client";
+    return "InputLeap Client";
 #elif SYSAPI_UNIX
-    return "barrierc";
+    return "input-leapc";
 #endif
 }
 

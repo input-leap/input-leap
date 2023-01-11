@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by barriers.rc
+// Used by input-leaps.rc
 //
 #define IDS_FAILED                      1
 #define IDS_INIT_FAILED                 2

@@ -37,7 +37,7 @@ fs::path known_folder_path(const KNOWNFOLDERID& id)
 const fs::path& DataDirectories::profile()
 {
     if (_profile.empty())
-        _profile = known_folder_path(FOLDERID_LocalAppData) / "Barrier";
+        _profile = known_folder_path(FOLDERID_LocalAppData) / "InputLeap";
     return _profile;
 }
 const fs::path& DataDirectories::profile(const fs::path& path)
@@ -49,7 +49,7 @@ const fs::path& DataDirectories::profile(const fs::path& path)
 const fs::path& DataDirectories::global()
 {
     if (_global.empty())
-        _global = known_folder_path(FOLDERID_ProgramData) / "Barrier";
+        _global = known_folder_path(FOLDERID_ProgramData) / "InputLeap";
     return _global;
 }
 const fs::path& DataDirectories::global(const fs::path& path)

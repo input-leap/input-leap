@@ -34,7 +34,7 @@ AboutDialog::AboutDialog(QWidget* parent, const QString& app_name) :
     version +=  '-';
     version += INPUTLEAP_REVISION;
 #endif
-	m_pLabelBarrierVersion->setText(version);
+    m_pLabelAppVersion->setText(version);
 
 	// change default size based on os
 #if defined(Q_OS_MAC)

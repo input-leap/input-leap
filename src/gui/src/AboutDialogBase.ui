@@ -87,7 +87,7 @@ The InputLeap GUI is based on QSynergy by Volker Lanz.
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="../res/Barrier.qrc">:/res/image/about.png</pixmap>
+      <pixmap resource="../res/InputLeap.qrc">:/res/image/about.png</pixmap>
      </property>
      <property name="margin">
       <number>0</number>
@@ -129,7 +129,7 @@ The InputLeap GUI is based on QSynergy by Volker Lanz.
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="m_pLabelBarrierVersion">
+      <widget class="QLabel" name="m_pLabelAppVersion">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
          <horstretch>0</horstretch>
@@ -186,7 +186,7 @@ The InputLeap GUI is based on QSynergy by Volker Lanz.
   </layout>
  </widget>
  <resources>
-  <include location="../res/Barrier.qrc"/>
+  <include location="../res/InputLeap.qrc"/>
  </resources>
  <connections>
   <connection>

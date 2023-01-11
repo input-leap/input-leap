@@ -37,4 +37,4 @@ public:
 
 } // namespace inputleap
 
-#define CONFIG_FILE "/etc/barrier/barrierd.conf"
+#define CONFIG_FILE "/etc/input-leap/input-leapd.conf"

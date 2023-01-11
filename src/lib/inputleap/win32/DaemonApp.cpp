@@ -137,7 +137,7 @@ DaemonApp::run(int argc, char** argv)
             mainLoop(false);
         }
         else {
-            arch.daemonize("Barrier", mainLoopStatic);
+            arch.daemonize("InputLeap", mainLoopStatic);
         }
 
         return kExitSuccess;
@@ -232,7 +232,7 @@ DaemonApp::mainLoop(bool daemonized)
 void
 DaemonApp::foregroundError(const char* message)
 {
-    MessageBox(nullptr, message, "Barrier Service", MB_OK | MB_ICONERROR);
+    MessageBox(nullptr, message, "InputLeap Service", MB_OK | MB_ICONERROR);
 }
 
 std::string
@@ -268,7 +268,7 @@ void DaemonApp::handle_ipc_message(const Event& e)
                 ServerArgs serverArgs;
                 ClientArgs clientArgs;
                 int argc = static_cast<int>(argsArray.size());
-                bool server = argsArray[0].find("barriers") != std::string::npos ? true : false;
+                bool server = argsArray[0].find("input-leaps") != std::string::npos ? true : false;
                 ArgsBase* argBase = nullptr;
 
                 if (server) {

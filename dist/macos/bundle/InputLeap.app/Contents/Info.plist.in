@@ -4,18 +4,18 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>English</string>
     <key>CFBundleDisplayName</key>
-    <string>Barrier</string>
+    <string>InputLeap</string>
     <key>CFBundleExecutable</key>
-    <string>barrier</string>
+    <string>input-leap</string>
     <key>CFBundleIconFile</key>
-    <string>Barrier.icns</string>
+    <string>InputLeap.icns</string>
     <key>CFBundleIdentifier</key>
-    <string>barrier</string>
+    <string>input-leap</string>
     <!-- TODO: Fix this in v2.0 //-->
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>Barrier</string>
+    <string>InputLeap</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleSignature</key>
@@ -29,7 +29,7 @@
     <key>NSHighResolutionCapable</key>
     <string>True</string>
     <key>NSHumanReadableCopyright</key>
-    <string>© 2018 Debauchee Open Source Group</string>
+    <string>© InputLeap contributors</string>
     <key>LSMinimumSystemVersion</key>
     <string>10.12.0</string>
   </dict>

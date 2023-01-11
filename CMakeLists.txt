@@ -316,14 +316,14 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set (CMAKE_INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks")
     set(INPUTLEAP_BUNDLE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dist/macos/bundle)
     set(INPUTLEAP_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
-    set(INPUTLEAP_BUNDLE_APP_DIR ${INPUTLEAP_BUNDLE_DIR}/Barrier.app)
+    set(INPUTLEAP_BUNDLE_APP_DIR ${INPUTLEAP_BUNDLE_DIR}/InputLeap.app)
     set(INPUTLEAP_BUNDLE_BINARY_DIR ${INPUTLEAP_BUNDLE_APP_DIR}/Contents/MacOS)
 
     configure_files(${INPUTLEAP_BUNDLE_SOURCE_DIR} ${INPUTLEAP_BUNDLE_DIR})
 
-    add_custom_target(Barrier_MacOS ALL
+    add_custom_target(InputLeap_MacOS ALL
                       bash build_dist.sh
-                      DEPENDS barrier barriers barrierc
+                      DEPENDS input-leap input-leaps input-leapc
                       WORKING_DIRECTORY ${INPUTLEAP_BUNDLE_DIR})
 endif()
 
@@ -342,17 +342,18 @@ endif()
 # Linux installation
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    install(FILES doc/barrierc.1 doc/barriers.1 DESTINATION share/man/man1)
+    install(FILES doc/input-leapc.1 doc/input-leaps.1 DESTINATION share/man/man1)
 
-    configure_file(res/barrier.appdata.xml.in ${CMAKE_CURRENT_BINARY_DIR}/res/barrier.appdata.xml)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/res/barrier.appdata.xml DESTINATION share/metainfo)
+    configure_file(res/input-leap.appdata.xml.in
+                   ${CMAKE_CURRENT_BINARY_DIR}/res/input-leap.appdata.xml)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/res/input-leap.appdata.xml DESTINATION share/metainfo)
 
     configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/rpm ${CMAKE_BINARY_DIR}/rpm)
-    install(FILES res/barrier.svg DESTINATION share/icons/hicolor/scalable/apps)
+    install(FILES res/input-leap.svg DESTINATION share/icons/hicolor/scalable/apps)
     if("${VERSION_MAJOR}" STREQUAL "2")
-        install(FILES res/barrier2.desktop DESTINATION share/applications)
+        install(FILES res/input-leap2.desktop DESTINATION share/applications)
     else()
-        install(FILES res/barrier.desktop DESTINATION share/applications)
+        install(FILES res/input-leap.desktop DESTINATION share/applications)
     endif()
 endif()
 

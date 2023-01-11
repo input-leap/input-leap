@@ -1,10 +1,10 @@
-To recreate the generated part of barrierc manpage use a command like:
-  help2man -N --output=barrierc.1 --name='Barrier Keyboard/Mouse Client' /path/to/barrierc
+To recreate the generated part of input-leapc manpage use a command like:
+  help2man -N --output=input-leapc.1 --name='InputLeap Keyboard/Mouse Client' /path/to/input-leapc
 
-And for barriers:
-  help2man -N --output=barriers.1 --name='Barrier Keyboard/Mouse Server' /path/to/barriers
+And for input-leaps:
+  help2man -N --output=input-leaps.1 --name='InputLeap Keyboard/Mouse Server' /path/to/input-leaps
 
 After that manually fixup:
- * replace your home directory with $HOME in barriers.1
+ * replace your home directory with $HOME in input-leaps.1
  * revert formatting of FILES and COPYRIGHT sections to match formatting of existing version.
  * add note referencing this file for instructions to the first line.

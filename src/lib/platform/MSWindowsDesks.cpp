@@ -379,7 +379,7 @@ MSWindowsDesks::createDeskWindowClass(bool isPrimary) const
     classInfo.hCursor       = m_cursor;
     classInfo.hbrBackground = nullptr;
     classInfo.lpszMenuName = nullptr;
-    classInfo.lpszClassName = "BarrierDesk";
+    classInfo.lpszClassName = "InputLeapDesk";
     classInfo.hIconSm = nullptr;
     return RegisterClassEx(&classInfo);
 }
@@ -602,7 +602,7 @@ void MSWindowsDesks::desk_thread(Desk* desk)
 
         // create a window.  we use this window to hide the cursor.
         try {
-            desk->m_window = createWindow(m_deskClass, "BarrierDesk");
+            desk->m_window = createWindow(m_deskClass, "InputLeapDesk");
             LOG((CLOG_DEBUG "desk %s window is 0x%08x", desk->m_name.c_str(), desk->m_window));
         }
         catch (...) {

@@ -18,12 +18,13 @@
 
 #include "common/Version.h"
 
-const char* kApplication = "Barrier";
-const char* kCopyright   = "Copyright (C) 2018 Debauchee Open Source Group\n"
+const char* kApplication = "InputLeap";
+const char* kCopyright   = "Copyright (C) 2021-2023 InputLeap contributors\n"
+                           "Copyright (C) 2018 Debauchee Open Source Group\n"
                            "Copyright (C) 2012-2016 Symless Ltd.\n"
                            "Copyright (C) 2008-2014 Nick Bolton\n"
                            "Copyright (C) 2002-2014 Chris Schoeneman";
 const char* kContact     = "Email: todo@mail.com";
-const char* kWebsite     = "https://github.com/debauchee/barrier/";
+const char* kWebsite     = "https://github.com/input-leap/input-leap";
 const char* kVersion = INPUTLEAP_VERSION;
-const char* kAppVersion = "Barrier " INPUTLEAP_VERSION;
+const char* kAppVersion = "InputLeap " INPUTLEAP_VERSION;

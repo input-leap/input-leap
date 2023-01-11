@@ -27,7 +27,7 @@ B_LIBS=$(otool -XL "$B_TARGET" | awk '{ print $1 }' | grep -Ev '^(/usr/lib|/Syst
 [ $? -ne 0 ] && exit 1
 for B_LIB in $B_LIBS; do
     B_LIB_NAME=$(basename "$B_LIB")
-    # otool reports barrier as "barrier:" which fails self-reference test below
+    # otool reports input-leap as "input-leap:" which fails self-reference test below
     B_LIB_NAME=${B_LIB_NAME//:}
 
     # ignore self-references

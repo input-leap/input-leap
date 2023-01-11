@@ -57,6 +57,6 @@ private:
     FileLogOutputter* m_fileLogOutputter;
 };
 
-#define LOG_FILENAME "barrierd.log"
+#define LOG_FILENAME "input-leapd.log"
 
 } // namespace inputleap

@@ -14,7 +14,7 @@ check_dir_exists() {
 if [ -z "$INPUTLEAP_BUILD_ENV" ]; then
     check_dir_exists '/Applications/Xcode.app' 'Xcode'
 
-    printf "Modifying environment for Barrier build...\n"
+    printf "Modifying environment for InputLeap build...\n"
 
     if command -v port; then
         printf "Detected Macports\n"

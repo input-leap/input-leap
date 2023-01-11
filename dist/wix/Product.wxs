@@ -18,17 +18,17 @@
 		<DirectoryRef Id="TARGETDIR">
 			<Component Guid="7CF3564D-1F8E-4D3D-9781-E1EE22D5BD67" Id="RegistryEntries">
 				<RegistryKey ForceCreateOnInstall="yes" ForceDeleteOnUninstall="yes" Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers" Root="HKLM">
-					<RegistryValue Name="[INSTALLFOLDER]barriers.exe" Type="string" Value="~ HIGHDPIAWARE WIN7RTM"/>
+                    <RegistryValue Name="[INSTALLFOLDER]input-leaps.exe" Type="string" Value="~ HIGHDPIAWARE WIN7RTM"/>
 				</RegistryKey>
 				<!-- Windows 8 and later only -->
 				<Condition><![CDATA[Installed OR (VersionNT >= 602)]]></Condition>
 			</Component>
 		</DirectoryRef>
-		<Icon Id="barrier.ico" SourceFile="$(var.ResPath)/barrier.ico"/>
+        <Icon Id="input-leap.ico" SourceFile="$(var.ResPath)/input-leap.ico"/>
 		<WixVariable Id="WixUILicenseRtf" Value="$(var.ResPath)\License.rtf"/>
 		<WixVariable Id="WixUIBannerBmp" Value="$(var.ResPath)\banner.bmp"/>
 		<WixVariable Id="WixUIDialogBmp" Value="$(var.ResPath)\dialog.bmp"/>
-		<Property Id="ARPPRODUCTICON" Value="barrier.ico"/>
+        <Property Id="ARPPRODUCTICON" Value="input-leap.ico"/>
 		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER"/>
 		<Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable"/>
 		<CustomAction ExeCommand="" FileKey="GuiProgram" Id="StartGui" Return="asyncNoWait"/>
@@ -50,23 +50,23 @@
 	<Fragment>
 		<ComponentGroup Directory="INSTALLFOLDER" Id="ProductComponents">
 			<Component Guid="EC9AD3B0-277C-4157-B5C8-5FD5B6A5F4AD" Id="Core">
-				<File KeyPath="yes" Source="$(var.BinPath)/barrierd.exe"/>
-				<ServiceInstall Description="Controls the $(var.Name) foreground processes." DisplayName="$(var.Name)" ErrorControl="normal" Id="ServiceInstall" Name="Barrier" Start="auto" Type="ownProcess">
+                <File KeyPath="yes" Source="$(var.BinPath)/input-leapd.exe"/>
+                <ServiceInstall Description="Controls the $(var.Name) foreground processes." DisplayName="$(var.Name)" ErrorControl="normal" Id="ServiceInstall" Name="InputLeap" Start="auto" Type="ownProcess">
 					<util:ServiceConfig FirstFailureActionType="restart" ResetPeriodInDays="1" RestartServiceDelayInSeconds="1" SecondFailureActionType="restart" ThirdFailureActionType="restart"/>
 				</ServiceInstall>
-				<ServiceControl Id="ServiceControl" Name="Barrier" Remove="uninstall" Start="install" Stop="both"/>
-				<File Source="$(var.BinPath)/barriers.exe">
+                <ServiceControl Id="ServiceControl" Name="InputLeap" Remove="uninstall" Start="install" Stop="both"/>
+                <File Source="$(var.BinPath)/input-leaps.exe">
 					<fire:FirewallException Id="ServerFirewallException" IgnoreFailure="yes" Name="$(var.Name)" Scope="any"/>
 				</File>
-				<File Source="$(var.BinPath)/barrierc.exe"/>
+                <File Source="$(var.BinPath)/input-leapc.exe"/>
 				<File Source="$(var.OpenSSLBinPath)/libeay32.dll"/>
 				<File Source="$(var.OpenSSLBinPath)/ssleay32.dll"/>
 				<File Source="$(var.OpenSSLBinPath)/openssl.exe"/>
-				<File Source="$(var.ResPath)/openssl/barrier.conf"/>
+                <File Source="$(var.ResPath)/openssl/input-leap.conf"/>
 			</Component>
 			<Component Guid="BAC8149B-6287-45BF-9C27-43D71ED40214" Id="Gui">
-				<File Id="GuiProgram" KeyPath="yes" Source="$(var.BinPath)/barrier.exe">
-					<Shortcut Advertise="yes" Directory="ProgramMenuFolder" Icon="barrier.ico" Id="GuiShortcut" Name="$(var.Name)"/>
+                <File Id="GuiProgram" KeyPath="yes" Source="$(var.BinPath)/input-leap.exe">
+                    <Shortcut Advertise="yes" Directory="ProgramMenuFolder" Icon="input-leap.ico" Id="GuiShortcut" Name="$(var.Name)"/>
 					<fire:FirewallException Id="GuiFirewallException" IgnoreFailure="yes" Name="$(var.Name)" Scope="any"/>
 				</File>
 				<?if $(var.Configuration) = "Debug" ?>

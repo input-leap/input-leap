@@ -24,7 +24,7 @@ jobs:
           run: git config --global --add safe.directory $GITHUB_WORKSPACE
         - name: Install dependencies
           run: |
-              grep -oP "^BuildRequires: \K.*" dist/rpm/barrier.spec.in | xargs dnf install -y
+              grep -oP "^BuildRequires: \K.*" dist/rpm/input-leap.spec.in | xargs dnf install -y
         - name: prep tree
           run: |
               mkdir _build

@@ -9,7 +9,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Barrier</string>
+   <string>InputLeap</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -319,7 +319,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="../res/Barrier.qrc">:/res/icons/16x16/padlock.png</pixmap>
+         <pixmap resource="../res/InputLeap.qrc">:/res/icons/16x16/padlock.png</pixmap>
         </property>
        </widget>
       </item>
@@ -383,7 +383,7 @@
     <string notr="true">Ctrl+Q</string>
    </property>
   </action>
-  <action name="m_pActionStartBarrier">
+  <action name="m_pActionStartCmdApp">
    <property name="text">
     <string>&amp;Start</string>
    </property>
@@ -394,7 +394,7 @@
     <string notr="true">Ctrl+S</string>
    </property>
   </action>
-  <action name="m_pActionStopBarrier">
+  <action name="m_pActionStopCmdApp">
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -465,7 +465,7 @@
   </action>
  </widget>
  <resources>
-  <include location="../res/Barrier.qrc"/>
+  <include location="../res/InputLeap.qrc"/>
  </resources>
  <connections>
   <connection>
@@ -519,7 +519,7 @@
   <connection>
    <sender>m_pButtonToggleStart</sender>
    <signal>clicked()</signal>
-   <receiver>m_pActionStartBarrier</receiver>
+   <receiver>m_pActionStartCmdApp</receiver>
    <slot>trigger()</slot>
    <hints>
     <hint type="sourcelabel">

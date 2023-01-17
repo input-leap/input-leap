@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-cmake_minimum_required (VERSION 3.4)
+cmake_minimum_required(VERSION 3.12)
 project(InputLeap C CXX)
 
 option(INPUTLEAP_BUILD_GUI "Build the GUI" ON)

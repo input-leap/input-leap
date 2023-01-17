@@ -88,6 +88,7 @@ private:
     void handle_disconnect();
     void handle_write_error();
     void handle_flatline();
+    void handle_clipboard_sending_event(const Event& event);
 
     bool recvInfo();
     bool recvGrabClipboard();

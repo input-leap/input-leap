@@ -19,8 +19,10 @@
 #include "server/ClientProxy1_0.h"
 
 #include "inputleap/ProtocolUtil.h"
+#include "inputleap/ClipboardChunk.h"
 #include "inputleap/Exceptions.h"
 #include "inputleap/FileChunk.h"
+#include "inputleap/StreamChunker.h"
 #include "server/Server.h"
 #include "io/IStream.h"
 #include "base/Log.h"
@@ -53,6 +55,8 @@ ClientProxy1_0::ClientProxy1_0(const std::string& name, inputleap::IStream* stre
                           [this](const auto& e){ handle_write_error(); });
     m_events->add_handler(EventType::FILE_KEEPALIVE, this,
                           [this](const auto& e){ keepAlive(); });
+    m_events->add_handler(EventType::CLIPBOARD_SENDING, this,
+                          [this](const auto& e){ handle_clipboard_sending_event(e); });
     m_events->add_handler(EventType::TIMER, this,
                           [this](const auto& e){ handle_flatline(); });
 
@@ -260,6 +264,11 @@ void ClientProxy1_0::handle_flatline()
     disconnect();
 }
 
+void ClientProxy1_0::handle_clipboard_sending_event(const Event& event)
+{
+    ClipboardChunk::send(getStream(), event.get_data_as<ClipboardChunk>());
+}
+
 bool
 ClientProxy1_0::getClipboard(ClipboardID id, IClipboard* clipboard) const
 {
@@ -304,10 +313,19 @@ ClientProxy1_0::leave()
 void
 ClientProxy1_0::setClipboard(ClipboardID id, const IClipboard* clipboard)
 {
-    (void) id;
-    (void) clipboard;
+    // ignore if this clipboard is already clean
+    if (m_clipboard[id].m_dirty) {
+        // this clipboard is now clean
+        m_clipboard[id].m_dirty = false;
+        Clipboard::copy(&m_clipboard[id].m_clipboard, clipboard);
 
-    // ignore -- deprecated in protocol 1.0
+        std::string data = m_clipboard[id].m_clipboard.marshall();
+
+        size_t size = data.size();
+        LOG((CLOG_DEBUG "sending clipboard %d to \"%s\"", id, getName().c_str()));
+
+        StreamChunker::sendClipboard(data, size, id, 0, m_events, this);
+    }
 }
 
 void
@@ -467,8 +485,32 @@ ClientProxy1_0::recvInfo()
 bool
 ClientProxy1_0::recvClipboard()
 {
-    // deprecated in protocol 1.0
-    return false;
+    // parse message
+    static std::string dataCached;
+    ClipboardID id;
+    std::uint32_t seq;
+
+    int r = ClipboardChunk::assemble(getStream(), dataCached, id, seq);
+
+    if (r == kStart) {
+        size_t size = ClipboardChunk::getExpectedSize();
+        LOG((CLOG_DEBUG "receiving clipboard %d size=%d", id, size));
+    } else if (r == kFinish) {
+        LOG((CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%d",
+                getName().c_str(), id, seq, dataCached.size()));
+        // save clipboard
+        m_clipboard[id].m_clipboard.unmarshall(dataCached, 0);
+        m_clipboard[id].m_sequenceNumber = seq;
+
+        // notify
+        ClipboardInfo info;
+        info.m_id = id;
+        info.m_sequenceNumber = seq;
+        m_events->add_event(EventType::CLIPBOARD_CHANGED, getEventTarget(),
+                            create_event_data<ClipboardInfo>(info));
+    }
+
+    return true;
 }
 
 bool

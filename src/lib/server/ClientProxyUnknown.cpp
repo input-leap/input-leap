@@ -20,7 +20,6 @@
 
 #include "server/Server.h"
 #include "server/ClientProxy1_0.h"
-#include "server/ClientProxy1_4.h"
 #include "server/ClientProxy1_5.h"
 #include "server/ClientProxy1_6.h"
 #include "inputleap/protocol_types.h"

@@ -27,12 +27,16 @@ namespace inputleap {
 class Event;
 class EventQueueTimer;
 class IEventQueue;
+class Server;
 
 //! Proxy for client implementing protocol version 1.0
 class ClientProxy1_0 : public ClientProxy {
 public:
-    ClientProxy1_0(const std::string& name, inputleap::IStream* adoptedStream, IEventQueue* events);
+    ClientProxy1_0(const std::string& name, inputleap::IStream* stream, Server* server,
+                   IEventQueue* events);
     ~ClientProxy1_0() override;
+
+    Server* getServer() { return m_server; }
 
     // IScreen
     bool getClipboard(ClipboardID id, IClipboard*) const override;
@@ -98,7 +102,7 @@ protected:
 
     ClientClipboard m_clipboard[kClipboardEnd];
 
-private:
+protected:
     typedef bool (ClientProxy1_0::*MessageParser)(const std::uint8_t*);
 
     ClientInfo m_info;
@@ -109,6 +113,7 @@ private:
 
     double m_keepAliveRate;
     EventQueueTimer* m_keepAliveTimer;
+    Server* m_server;
 };
 
 } // namespace inputleap

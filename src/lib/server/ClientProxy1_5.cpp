@@ -30,7 +30,7 @@ namespace inputleap {
 
 ClientProxy1_5::ClientProxy1_5(const std::string& name, inputleap::IStream* stream, Server* server,
                                IEventQueue* events) :
-    ClientProxy1_4(name, stream, server, events),
+    ClientProxy1_0(name, stream, server, events),
     m_events(events)
 {
     m_events->add_handler(EventType::FILE_KEEPALIVE, this,
@@ -63,7 +63,7 @@ bool ClientProxy1_5::parseMessage(const std::uint8_t* code)
         dragInfoReceived();
     }
     else {
-        return ClientProxy1_4::parseMessage(code);
+        return ClientProxy1_0::parseMessage(code);
     }
 
     return true;

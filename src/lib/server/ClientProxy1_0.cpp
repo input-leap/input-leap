@@ -20,6 +20,7 @@
 
 #include "inputleap/ProtocolUtil.h"
 #include "inputleap/Exceptions.h"
+#include "server/Server.h"
 #include "io/IStream.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
@@ -28,14 +29,15 @@
 
 namespace inputleap {
 
-ClientProxy1_0::ClientProxy1_0(const std::string& name, inputleap::IStream* stream,
+ClientProxy1_0::ClientProxy1_0(const std::string& name, inputleap::IStream* stream, Server* server,
                                IEventQueue* events) :
     ClientProxy(name, stream),
     m_heartbeatTimer(nullptr),
     m_parser(&ClientProxy1_0::parseHandshakeMessage),
     m_events(events),
     m_keepAliveRate(kKeepAliveRate),
-    m_keepAliveTimer(nullptr)
+    m_keepAliveTimer(nullptr),
+    m_server{server}
 {
     // install event handlers
     m_events->add_handler(EventType::STREAM_INPUT_READY, stream->getEventTarget(),
@@ -191,7 +193,7 @@ bool ClientProxy1_0::parseHandshakeMessage(const std::uint8_t* code)
     else if (memcmp(code, kMsgDInfo, 4) == 0) {
         // future messages get parsed by parseMessage
         // NOTE: we're taking address of virtual function here,
-        // not ClientProxy1_0 implementation of it.
+        // not ClientProxy1_3 implementation of it.
         m_parser = &ClientProxy1_0::parseMessage;
         if (recvInfo()) {
             m_events->add_event(EventType::CLIENT_PROXY_READY, getEventTarget());

@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "base/EventQueueTimer.h"
 #include "platform/MSWindowsEventQueueBuffer.h"
 
 #include "arch/win32/ArchMiscWindows.h"
@@ -24,17 +25,6 @@
 #include <VersionHelpers.h>
 
 namespace inputleap {
-
-//
-// EventQueueTimer
-//
-
-class EventQueueTimer { };
-
-
-//
-// MSWindowsEventQueueBuffer
-//
 
 MSWindowsEventQueueBuffer::MSWindowsEventQueueBuffer(IEventQueue* events) :
     m_events(events)

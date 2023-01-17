@@ -21,8 +21,6 @@
 
 namespace inputleap {
 
-class EventQueueTimer {};
-
 class TestEventQueue : public EventQueue {
 public:
     TestEventQueue() : m_quitTimeoutTimer(nullptr) { }

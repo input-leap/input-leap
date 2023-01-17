@@ -26,9 +26,6 @@
 namespace inputleap {
 
 class IEventQueueBuffer;
-
-// Opaque type for timer info.  This is defined by subclasses of
-// IEventQueueBuffer.
 class EventQueueTimer;
 
 //! Event queue interface

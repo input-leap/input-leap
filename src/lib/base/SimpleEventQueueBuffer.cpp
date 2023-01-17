@@ -16,17 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "EventQueueTimer.h"
 #include "base/SimpleEventQueueBuffer.h"
 #include "base/Stopwatch.h"
 #include "arch/Arch.h"
 
 namespace inputleap {
-
-class EventQueueTimer { };
-
-//
-// SimpleEventQueueBuffer
-//
 
 SimpleEventQueueBuffer::SimpleEventQueueBuffer()
 {

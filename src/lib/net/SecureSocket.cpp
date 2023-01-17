@@ -49,15 +49,14 @@ enum {
 };
 
 struct Ssl {
-    SSL_CTX*    m_context;
-    SSL*        m_ssl;
+    SSL_CTX* m_context = nullptr;
+    SSL* m_ssl = nullptr;
 };
 
 SecureSocket::SecureSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer,
                            IArchNetwork::EAddressFamily family,
                            ConnectionSecurityLevel security_level) :
     TCPSocket(events, socketMultiplexer, family),
-    m_ssl(nullptr),
     m_secureReady(false),
     m_fatal(false),
     security_level_{security_level}
@@ -67,7 +66,6 @@ SecureSocket::SecureSocket(IEventQueue* events, SocketMultiplexer* socketMultipl
 SecureSocket::SecureSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer,
                            ArchSocket socket, ConnectionSecurityLevel security_level) :
     TCPSocket(events, socketMultiplexer, socket),
-    m_ssl(nullptr),
     m_secureReady(false),
     m_fatal(false),
     security_level_{security_level}
@@ -82,11 +80,6 @@ SecureSocket::~SecureSocket()
     // will do this, too, but the double-call is harmless
     removeJob();
     freeSSLResources();
-
-    // removing sleep() because I have no idea why you would want to do it
-    // ... smells of trying to cover up a bug you don't understand
-    //inputleap::this_thread_sleep(1);
-    delete m_ssl;
 }
 
 void
@@ -319,10 +312,7 @@ SecureSocket::initSsl(bool server)
 {
     std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
 
-    m_ssl = new Ssl();
-    m_ssl->m_context = nullptr;
-    m_ssl->m_ssl = nullptr;
-
+    m_ssl = std::make_unique<Ssl>();
     initContext(server);
 }
 

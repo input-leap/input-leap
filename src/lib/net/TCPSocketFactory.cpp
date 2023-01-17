@@ -38,32 +38,30 @@ TCPSocketFactory::~TCPSocketFactory()
     // do nothing
 }
 
-IDataSocket* TCPSocketFactory::create(IArchNetwork::EAddressFamily family,
-                                      ConnectionSecurityLevel security_level) const
+std::unique_ptr<IDataSocket>
+    TCPSocketFactory::create(IArchNetwork::EAddressFamily family,
+                             ConnectionSecurityLevel security_level) const
 {
     if (security_level != ConnectionSecurityLevel::PLAINTEXT) {
-        SecureSocket* secureSocket = new SecureSocket(m_events, m_socketMultiplexer, family,
-                                                      security_level);
-        secureSocket->initSsl (false);
-        return secureSocket;
-    }
-    else {
-        return new TCPSocket(m_events, m_socketMultiplexer, family);
+        auto secure_socket = std::make_unique<SecureSocket>(m_events, m_socketMultiplexer, family,
+                                                            security_level);
+        secure_socket->initSsl(false);
+        return std::move(secure_socket);
+    } else {
+        return std::make_unique<TCPSocket>(m_events, m_socketMultiplexer, family);
     }
 }
 
-IListenSocket* TCPSocketFactory::createListen(IArchNetwork::EAddressFamily family,
-                                              ConnectionSecurityLevel security_level) const
+std::unique_ptr<IListenSocket>
+    TCPSocketFactory::create_listen(IArchNetwork::EAddressFamily family,
+                                    ConnectionSecurityLevel security_level) const
 {
-    IListenSocket* socket = nullptr;
     if (security_level != ConnectionSecurityLevel::PLAINTEXT) {
-        socket = new SecureListenSocket(m_events, m_socketMultiplexer, family, security_level);
+        return std::make_unique<SecureListenSocket>(m_events, m_socketMultiplexer, family,
+                                                    security_level);
+    } else {
+        return std::make_unique<TCPListenSocket>(m_events, m_socketMultiplexer, family);
     }
-    else {
-        socket = new TCPListenSocket(m_events, m_socketMultiplexer, family);
-    }
-
-    return socket;
 }
 
 } // namespace inputleap

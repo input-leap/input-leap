@@ -41,7 +41,8 @@ class IDataSocket;
 class ClientListener {
 public:
     // The factories are adopted.
-    ClientListener(const NetworkAddress&, ISocketFactory*, IEventQueue* events,
+    ClientListener(const NetworkAddress&,
+                   std::unique_ptr<ISocketFactory> socket_factory, IEventQueue* events,
                    ConnectionSecurityLevel security_level);
     ~ClientListener();
 
@@ -71,7 +72,7 @@ public:
 private:
     // client connection event handlers
     void handle_client_connecting();
-    void handle_client_accepted(IDataSocket* socket);
+    void handle_client_accepted(IDataSocket* socket_ptr);
     void handle_unknown_client(ClientProxyUnknown* client);
     void handle_client_disconnected(ClientProxy* client);
 
@@ -82,8 +83,8 @@ private:
     typedef std::set<ClientProxyUnknown*> NewClients;
     typedef std::deque<ClientProxy*> WaitingClients;
 
-    IListenSocket* m_listen;
-    ISocketFactory* m_socketFactory;
+    std::unique_ptr<IListenSocket> listen_;
+    std::unique_ptr<ISocketFactory> socket_factory_;
     NewClients m_newClients;
     WaitingClients m_waitingClients;
     Server* m_server;

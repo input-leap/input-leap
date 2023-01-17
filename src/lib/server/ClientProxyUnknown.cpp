@@ -30,8 +30,9 @@
 
 namespace inputleap {
 
-ClientProxyUnknown::ClientProxyUnknown(inputleap::IStream* stream, double timeout, Server* server, IEventQueue* events) :
-    m_stream(stream),
+ClientProxyUnknown::ClientProxyUnknown(std::unique_ptr<inputleap::IStream> stream,
+                                       double timeout, Server* server, IEventQueue* events) :
+    stream_(std::move(stream)),
     m_proxy(nullptr),
     m_ready(false),
     m_server(server),
@@ -44,16 +45,13 @@ ClientProxyUnknown::ClientProxyUnknown(inputleap::IStream* stream, double timeou
     addStreamHandlers();
 
     LOG((CLOG_DEBUG1 "saying hello"));
-    ProtocolUtil::writef(m_stream, kMsgHello,
-                            kProtocolMajorVersion,
-                            kProtocolMinorVersion);
+    ProtocolUtil::writef(stream_.get(), kMsgHello, kProtocolMajorVersion, kProtocolMinorVersion);
 }
 
 ClientProxyUnknown::~ClientProxyUnknown()
 {
     removeHandlers();
     removeTimer();
-    delete m_stream;
     delete m_proxy;
 }
 
@@ -93,16 +91,16 @@ ClientProxyUnknown::sendFailure()
 void
 ClientProxyUnknown::addStreamHandlers()
 {
-    assert(m_stream != nullptr);
-    m_events->add_handler(EventType::STREAM_INPUT_READY, m_stream->getEventTarget(),
+    assert(stream_.get() != nullptr);
+    m_events->add_handler(EventType::STREAM_INPUT_READY, stream_->getEventTarget(),
                           [this](const auto& e){ handle_data(); });
-    m_events->add_handler(EventType::STREAM_OUTPUT_ERROR, m_stream->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_OUTPUT_ERROR, stream_->getEventTarget(),
                           [this](const auto& e){ handle_write_error(); });
-    m_events->add_handler(EventType::STREAM_INPUT_SHUTDOWN, m_stream->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_INPUT_SHUTDOWN, stream_->getEventTarget(),
                           [this](const auto& e){ handle_disconnect(); });
-    m_events->add_handler(EventType::STREAM_INPUT_FORMAT_ERROR, m_stream->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_INPUT_FORMAT_ERROR, stream_->getEventTarget(),
                           [this](const auto& e){ handle_disconnect(); });
-    m_events->add_handler(EventType::STREAM_OUTPUT_SHUTDOWN, m_stream->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_OUTPUT_SHUTDOWN, stream_->getEventTarget(),
                           [this](const auto& e){ handle_write_error(); });
 }
 
@@ -119,12 +117,12 @@ ClientProxyUnknown::addProxyHandlers()
 void
 ClientProxyUnknown::removeHandlers()
 {
-    if (m_stream != nullptr) {
-        m_events->removeHandler(EventType::STREAM_INPUT_READY, m_stream->getEventTarget());
-        m_events->removeHandler(EventType::STREAM_OUTPUT_ERROR, m_stream->getEventTarget());
-        m_events->removeHandler(EventType::STREAM_INPUT_SHUTDOWN, m_stream->getEventTarget());
-        m_events->removeHandler(EventType::STREAM_INPUT_FORMAT_ERROR, m_stream->getEventTarget());
-        m_events->removeHandler(EventType::STREAM_OUTPUT_SHUTDOWN, m_stream->getEventTarget());
+    if (stream_) {
+        m_events->removeHandler(EventType::STREAM_INPUT_READY, stream_->getEventTarget());
+        m_events->removeHandler(EventType::STREAM_OUTPUT_ERROR, stream_->getEventTarget());
+        m_events->removeHandler(EventType::STREAM_INPUT_SHUTDOWN, stream_->getEventTarget());
+        m_events->removeHandler(EventType::STREAM_INPUT_FORMAT_ERROR, stream_->getEventTarget());
+        m_events->removeHandler(EventType::STREAM_OUTPUT_SHUTDOWN, stream_->getEventTarget());
     }
     if (m_proxy != nullptr) {
         m_events->removeHandler(EventType::CLIENT_PROXY_READY, m_proxy);
@@ -149,7 +147,7 @@ void ClientProxyUnknown::handle_data()
     std::string name("<unknown>");
     try {
         // limit the maximum length of the hello
-        std::uint32_t n = m_stream->getSize();
+        std::uint32_t n = stream_->getSize();
         if (n > kMaxHelloLength) {
             LOG((CLOG_DEBUG1 "hello reply too long"));
             throw XBadClient();
@@ -157,8 +155,7 @@ void ClientProxyUnknown::handle_data()
 
         // parse the reply to hello
         std::int16_t major, minor;
-        if (!ProtocolUtil::readf(m_stream, kMsgHelloBack,
-                                    &major, &minor, &name)) {
+        if (!ProtocolUtil::readf(stream_.get(), kMsgHelloBack, &major, &minor, &name)) {
             throw XBadClient();
         }
 
@@ -176,7 +173,7 @@ void ClientProxyUnknown::handle_data()
         if (major == 1) {
             switch (minor) {
             case 6:
-                m_proxy = new ClientProxy1_6(name, m_stream, m_server, m_events);
+                m_proxy = new ClientProxy1_6(name, std::move(stream_), m_server, m_events);
                 break;
             default:
                 break;
@@ -188,9 +185,7 @@ void ClientProxyUnknown::handle_data()
             throw XIncompatibleClient(major, minor);
         }
 
-        // the proxy is created and now proxy now owns the stream
         LOG((CLOG_DEBUG1 "created proxy for client \"%s\" version %d.%d", name.c_str(), major, minor));
-        m_stream = nullptr;
 
         // wait until the proxy signals that it's ready or has disconnected
         addProxyHandlers();
@@ -199,14 +194,13 @@ void ClientProxyUnknown::handle_data()
     catch (XIncompatibleClient& e) {
         // client is incompatible
         LOG((CLOG_WARN "client \"%s\" has incompatible version %d.%d)", name.c_str(), e.getMajor(), e.getMinor()));
-        ProtocolUtil::writef(m_stream,
-                            kMsgEIncompatible,
-                            kProtocolMajorVersion, kProtocolMinorVersion);
+        ProtocolUtil::writef(stream_.get(), kMsgEIncompatible,
+                             kProtocolMajorVersion, kProtocolMinorVersion);
     }
     catch (XBadClient&) {
         // client not behaving
         LOG((CLOG_WARN "protocol error from client \"%s\"", name.c_str()));
-        ProtocolUtil::writef(m_stream, kMsgEBad);
+        ProtocolUtil::writef(stream_.get(), kMsgEBad);
     }
     catch (XBase& e) {
         // misc error

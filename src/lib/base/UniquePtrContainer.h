@@ -38,11 +38,16 @@ public:
         data_.push_back(std::move(d));
     }
 
-    void erase(T* p)
+    std::unique_ptr<T> erase(T* p)
     {
-        data_.erase(std::remove_if(data_.begin(), data_.end(),
-                                   [p](const auto& d) { return d.get() == p; }),
-                    data_.end());
+        for (auto it = data_.begin(); it != data_.end(); ++it) {
+            if (it->get() == p) {
+                std::unique_ptr<T> ret = std::move(*it);
+                data_.erase(it);
+                return std::move(ret);
+            }
+        }
+        return {};
     }
 
     typename Container::iterator begin() { return data_.begin(); }

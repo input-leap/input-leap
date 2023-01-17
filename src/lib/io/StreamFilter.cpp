@@ -21,23 +21,19 @@
 
 namespace inputleap {
 
-StreamFilter::StreamFilter(IEventQueue* events, IStream* stream, bool adoptStream) :
-    m_stream(stream),
-    m_adopted(adoptStream),
+StreamFilter::StreamFilter(IEventQueue* events, std::unique_ptr<IStream> stream) :
+    stream_(std::move(stream)),
     m_events(events)
 {
     // replace handlers for m_stream
-    m_events->removeHandlers(m_stream->getEventTarget());
-    m_events->add_handler(EventType::UNKNOWN, m_stream->getEventTarget(),
+    m_events->removeHandlers(stream_->getEventTarget());
+    m_events->add_handler(EventType::UNKNOWN, stream_->getEventTarget(),
                           [this](const auto& e){ handle_upstream_event(e); });
 }
 
 StreamFilter::~StreamFilter()
 {
-    m_events->removeHandler(EventType::UNKNOWN, m_stream->getEventTarget());
-    if (m_adopted) {
-        delete m_stream;
-    }
+    m_events->removeHandler(EventType::UNKNOWN, stream_->getEventTarget());
 }
 
 void
@@ -89,12 +85,6 @@ StreamFilter::isReady() const
 std::uint32_t StreamFilter::getSize() const
 {
     return getStream()->getSize();
-}
-
-inputleap::IStream*
-StreamFilter::getStream() const
-{
-    return m_stream;
 }
 
 void

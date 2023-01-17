@@ -21,6 +21,7 @@
 #include "server/BaseClientProxy.h"
 #include "base/Event.h"
 #include "base/EventTypes.h"
+#include <memory>
 
 namespace inputleap {
 
@@ -32,7 +33,7 @@ public:
     /*!
     \c name is the name of the client.
     */
-    ClientProxy(const std::string& name, IStream* adoptedStream);
+    ClientProxy(const std::string& name, std::unique_ptr<IStream> stream);
     ~ClientProxy();
 
     //! @name manipulators
@@ -52,7 +53,7 @@ public:
     /*!
     Returns the original stream passed to the c'tor.
     */
-    IStream* getStream() const override;
+    IStream* getStream() const override { return stream_.get(); }
 
     //@}
 
@@ -60,7 +61,7 @@ public:
     void* getEventTarget() const override;
 
 private:
-    IStream* m_stream;
+    std::unique_ptr<IStream> stream_;
 };
 
 } // namespace inputleap

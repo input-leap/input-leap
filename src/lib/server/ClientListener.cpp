@@ -31,36 +31,34 @@
 namespace inputleap {
 
 ClientListener::ClientListener(const NetworkAddress& address,
-                ISocketFactory* socketFactory,
+                               std::unique_ptr<ISocketFactory> socket_factory,
                 IEventQueue* events,
                                ConnectionSecurityLevel security_level) :
-    m_socketFactory(socketFactory),
+    socket_factory_{std::move(socket_factory)},
     m_server(nullptr),
     m_events(events),
     security_level_{security_level}
 {
-    assert(m_socketFactory != nullptr);
-
     try {
-        m_listen = m_socketFactory->createListen(ARCH->getAddrFamily(address.getAddress()),
+        listen_ = socket_factory_->create_listen(ARCH->getAddrFamily(address.getAddress()),
                                                  security_level);
 
         // setup event handler
-        m_events->add_handler(EventType::LISTEN_SOCKET_CONNECTING, m_listen,
+        m_events->add_handler(EventType::LISTEN_SOCKET_CONNECTING, listen_.get(),
                               [this](const auto& e){ handle_client_connecting(); });
 
         // bind listen address
         LOG((CLOG_DEBUG1 "binding listen socket"));
-        m_listen->bind(address);
+        listen_->bind(address);
     }
     catch (XSocketAddressInUse&) {
         cleanupListenSocket();
-        delete m_socketFactory;
+        socket_factory_.reset();
         throw;
     }
     catch (XBase&) {
         cleanupListenSocket();
-        delete m_socketFactory;
+        socket_factory_.reset();
         throw;
     }
     LOG((CLOG_DEBUG1 "listening for clients"));
@@ -87,10 +85,8 @@ ClientListener::~ClientListener()
         client = getNextClient();
     }
 
-    m_events->removeHandler(EventType::LISTEN_SOCKET_CONNECTING, m_listen);
     cleanupListenSocket();
     cleanupClientSockets();
-    delete m_socketFactory;
 }
 
 void
@@ -115,7 +111,7 @@ ClientListener::getNextClient()
 void ClientListener::handle_client_connecting()
 {
     // accept client connection
-    auto socket = m_listen->accept();
+    auto socket = listen_->accept();
 
     if (!socket) {
         return;
@@ -137,17 +133,21 @@ void ClientListener::handle_client_connecting()
     }
 }
 
-void
-ClientListener::handle_client_accepted(IDataSocket* socket)
+void ClientListener::handle_client_accepted(IDataSocket* socket_ptr)
 {
     LOG((CLOG_NOTE "accepted client connection"));
+    auto socket = client_sockets_.erase(socket_ptr);
+    if (!socket) {
+        throw std::runtime_error("Got more than one CLIENT_LISTENER_ACCEPTED event");
+    }
 
     // filter socket messages, including a packetizing filter
-    inputleap::IStream* stream = new PacketStreamFilter(m_events, socket, false);
+    auto stream = std::make_unique<PacketStreamFilter>(m_events, std::move(socket));
     assert(m_server != nullptr);
 
     // create proxy for unknown client
-    ClientProxyUnknown* client = new ClientProxyUnknown(stream, 30.0, m_server, m_events);
+    ClientProxyUnknown* client = new ClientProxyUnknown(std::move(stream), 30.0, m_server,
+                                                        m_events);
 
     m_newClients.insert(client);
 
@@ -197,12 +197,8 @@ void ClientListener::handle_client_disconnected(ClientProxy* client)
             m_waitingClients.erase(i);
             m_events->removeHandler(EventType::CLIENT_PROXY_DISCONNECTED, client);
 
-            // pull out the socket before deleting the client so
-            // we know which socket we no longer need
-            IDataSocket* socket = static_cast<IDataSocket*>(client->getStream());
+            // FIXME: there are multiple dangling pointers in handlers left for the socket
             delete client;
-            client_sockets_.erase(socket);
-
             break;
         }
     }
@@ -211,7 +207,8 @@ void ClientListener::handle_client_disconnected(ClientProxy* client)
 void
 ClientListener::cleanupListenSocket()
 {
-    delete m_listen;
+    m_events->removeHandler(EventType::LISTEN_SOCKET_CONNECTING, listen_.get());
+    listen_.reset();
 }
 
 void

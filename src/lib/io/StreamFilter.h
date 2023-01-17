@@ -20,6 +20,7 @@
 
 #include "io/IStream.h"
 #include "base/IEventQueue.h"
+#include <memory>
 
 namespace inputleap {
 
@@ -35,7 +36,7 @@ public:
     this object takes ownership of the stream and will delete it in the
     d'tor.
     */
-    StreamFilter(IEventQueue* events, IStream* stream, bool adoptStream = true);
+    StreamFilter(IEventQueue* events, std::unique_ptr<IStream> stream);
     ~StreamFilter() override;
 
     // IStream overrides
@@ -55,7 +56,7 @@ public:
     /*!
     Returns the stream passed to the c'tor.
     */
-    inputleap::IStream* getStream() const;
+    inputleap::IStream* getStream() const { return stream_.get(); }
 
 protected:
     //! Handle events from source stream
@@ -69,8 +70,7 @@ private:
     void handle_upstream_event(const Event&);
 
 private:
-    inputleap::IStream* m_stream;
-    bool m_adopted;
+    std::unique_ptr<IStream> stream_;
     IEventQueue* m_events;
 };
 

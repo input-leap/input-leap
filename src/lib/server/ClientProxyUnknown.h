@@ -20,6 +20,7 @@
 
 #include "base/Event.h"
 #include "base/EventTypes.h"
+#include <memory>
 
 namespace inputleap {
 
@@ -31,7 +32,8 @@ class IEventQueue;
 
 class ClientProxyUnknown {
 public:
-    ClientProxyUnknown(inputleap::IStream* stream, double timeout, Server* server, IEventQueue* events);
+    ClientProxyUnknown(std::unique_ptr<IStream> stream, double timeout, Server* server,
+                       IEventQueue* events);
     ~ClientProxyUnknown();
 
     //! @name manipulators
@@ -46,7 +48,7 @@ public:
     ClientProxy* orphanClientProxy();
 
     //! Get the stream
-    inputleap::IStream* getStream() { return m_stream; }
+    inputleap::IStream* getStream() { return stream_.get(); }
 
     //@}
 
@@ -64,7 +66,7 @@ private:
     void handle_ready();
 
 private:
-    inputleap::IStream* m_stream;
+    std::unique_ptr<inputleap::IStream> stream_;
     EventQueueTimer* m_timer;
     ClientProxy* m_proxy;
     bool m_ready;

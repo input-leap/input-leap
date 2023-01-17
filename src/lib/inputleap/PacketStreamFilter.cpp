@@ -25,8 +25,8 @@
 
 namespace inputleap {
 
-PacketStreamFilter::PacketStreamFilter(IEventQueue* events, inputleap::IStream* stream, bool adoptStream) :
-    StreamFilter(events, stream, adoptStream),
+PacketStreamFilter::PacketStreamFilter(IEventQueue* events, std::unique_ptr<IStream> stream) :
+    StreamFilter(events, std::move(stream)),
     m_size(0),
     m_inputShutdown(false),
     m_events(events)

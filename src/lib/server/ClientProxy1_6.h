@@ -32,7 +32,7 @@ class Server;
 //! Proxy for client implementing protocol version 1.0
 class ClientProxy1_6 : public ClientProxy {
 public:
-    ClientProxy1_6(const std::string& name, inputleap::IStream* stream, Server* server,
+    ClientProxy1_6(const std::string& name, std::unique_ptr<IStream> stream, Server* server,
                    IEventQueue* events);
     ~ClientProxy1_6() override;
 

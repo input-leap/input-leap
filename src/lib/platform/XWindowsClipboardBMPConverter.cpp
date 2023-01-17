@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "base/BitUtilities.h"
 #include "platform/XWindowsClipboardBMPConverter.h"
 
 namespace inputleap {
@@ -29,41 +30,6 @@ public:
     std::uint16_t reserved2;
     std::uint32_t offset;
 };
-
-// BMP is little-endian
-static inline std::uint32_t fromLEU32(const std::uint8_t* data)
-{
-    return static_cast<std::uint32_t>(data[0]) |
-            (static_cast<std::uint32_t>(data[1]) <<  8) |
-            (static_cast<std::uint32_t>(data[2]) << 16) |
-            (static_cast<std::uint32_t>(data[3]) << 24);
-}
-
-static void toLE(std::uint8_t*& dst, char src)
-{
-    dst[0] = static_cast<std::uint8_t>(src);
-    dst += 1;
-}
-
-static void toLE(std::uint8_t*& dst, std::uint16_t src)
-{
-    dst[0] = static_cast<std::uint8_t>(src & 0xffu);
-    dst[1] = static_cast<std::uint8_t>((src >> 8) & 0xffu);
-    dst += 2;
-}
-
-static void toLE(std::uint8_t*& dst, std::uint32_t src)
-{
-    dst[0] = static_cast<std::uint8_t>(src & 0xffu);
-    dst[1] = static_cast<std::uint8_t>((src >>  8) & 0xffu);
-    dst[2] = static_cast<std::uint8_t>((src >> 16) & 0xffu);
-    dst[3] = static_cast<std::uint8_t>((src >> 24) & 0xffu);
-    dst += 4;
-}
-
-//
-// XWindowsClipboardBMPConverter
-//
 
 XWindowsClipboardBMPConverter::XWindowsClipboardBMPConverter(
                 Display* display) :
@@ -100,12 +66,12 @@ std::string XWindowsClipboardBMPConverter::fromIClipboard(const std::string& bmp
     // create BMP image
     std::uint8_t header[14];
     std::uint8_t* dst = header;
-    toLE(dst, 'B');
-    toLE(dst, 'M');
-    toLE(dst, static_cast<std::uint32_t>(14 + bmp.size()));
-    toLE(dst, static_cast<std::uint16_t>(0));
-    toLE(dst, static_cast<std::uint16_t>(0));
-    toLE(dst, static_cast<std::uint32_t>(14 + 40));
+    store_little_endian_u8(dst, 'B');
+    store_little_endian_u8(dst, 'M');
+    store_little_endian_u32(dst, 14 + bmp.size());
+    store_little_endian_u16(dst, 0);
+    store_little_endian_u16(dst, 0);
+    store_little_endian_u32(dst, 14 + 40);
     return std::string(reinterpret_cast<const char*>(header), 14) + bmp;
 }
 
@@ -123,7 +89,7 @@ std::string XWindowsClipboardBMPConverter::toIClipboard(const std::string& bmp) 
     }
 
     // get offset to image data
-    std::uint32_t offset = fromLEU32(rawBMPHeader + 10);
+    std::uint32_t offset = load_little_endian_u32(rawBMPHeader + 10);
 
     // construct BMP
     if (offset == 14 + 40) {

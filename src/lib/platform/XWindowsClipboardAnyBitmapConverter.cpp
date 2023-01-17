@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "base/BitUtilities.h"
 #include "platform/XWindowsClipboardAnyBitmapConverter.h"
 
 namespace inputleap {
@@ -35,60 +36,6 @@ public:
     std::uint32_t biClrUsed;
     std::uint32_t biClrImportant;
 };
-
-// BMP is little-endian
-
-static void toLE(std::uint8_t*& dst, std::uint16_t src)
-{
-    dst[0] = static_cast<std::uint8_t>(src & 0xffu);
-    dst[1] = static_cast<std::uint8_t>((src >> 8) & 0xffu);
-    dst += 2;
-}
-
-static void toLE(std::uint8_t*& dst, std::int32_t src)
-{
-    dst[0] = static_cast<std::uint8_t>(src & 0xffu);
-    dst[1] = static_cast<std::uint8_t>((src >>  8) & 0xffu);
-    dst[2] = static_cast<std::uint8_t>((src >> 16) & 0xffu);
-    dst[3] = static_cast<std::uint8_t>((src >> 24) & 0xffu);
-    dst += 4;
-}
-
-static void toLE(std::uint8_t*& dst, std::uint32_t src)
-{
-    dst[0] = static_cast<std::uint8_t>(src & 0xffu);
-    dst[1] = static_cast<std::uint8_t>((src >>  8) & 0xffu);
-    dst[2] = static_cast<std::uint8_t>((src >> 16) & 0xffu);
-    dst[3] = static_cast<std::uint8_t>((src >> 24) & 0xffu);
-    dst += 4;
-}
-
-static inline std::uint16_t fromLEU16(const std::uint8_t* data)
-{
-    return static_cast<std::uint16_t>(data[0]) |
-            (static_cast<std::uint16_t>(data[1]) << 8);
-}
-
-static inline std::int32_t fromLES32(const std::uint8_t* data)
-{
-    return static_cast<std::int32_t>(static_cast<std::uint32_t>(data[0]) |
-            (static_cast<std::uint32_t>(data[1]) <<  8) |
-            (static_cast<std::uint32_t>(data[2]) << 16) |
-            (static_cast<std::uint32_t>(data[3]) << 24));
-}
-
-static inline std::uint32_t fromLEU32(const std::uint8_t* data)
-{
-    return static_cast<std::uint32_t>(data[0]) |
-            (static_cast<std::uint32_t>(data[1]) <<  8) |
-            (static_cast<std::uint32_t>(data[2]) << 16) |
-            (static_cast<std::uint32_t>(data[3]) << 24);
-}
-
-
-//
-// XWindowsClipboardAnyBitmapConverter
-//
 
 XWindowsClipboardAnyBitmapConverter::XWindowsClipboardAnyBitmapConverter()
 {
@@ -117,17 +64,17 @@ std::string XWindowsClipboardAnyBitmapConverter::fromIClipboard(const std::strin
     // fill BMP info header with native-endian data
     CBMPInfoHeader infoHeader;
     const std::uint8_t* rawBMPInfoHeader = reinterpret_cast<const std::uint8_t*>(bmp.data());
-    infoHeader.biSize             = fromLEU32(rawBMPInfoHeader +  0);
-    infoHeader.biWidth            = fromLES32(rawBMPInfoHeader +  4);
-    infoHeader.biHeight           = fromLES32(rawBMPInfoHeader +  8);
-    infoHeader.biPlanes           = fromLEU16(rawBMPInfoHeader + 12);
-    infoHeader.biBitCount         = fromLEU16(rawBMPInfoHeader + 14);
-    infoHeader.biCompression      = fromLEU32(rawBMPInfoHeader + 16);
-    infoHeader.biSizeImage        = fromLEU32(rawBMPInfoHeader + 20);
-    infoHeader.biXPelsPerMeter    = fromLES32(rawBMPInfoHeader + 24);
-    infoHeader.biYPelsPerMeter    = fromLES32(rawBMPInfoHeader + 28);
-    infoHeader.biClrUsed          = fromLEU32(rawBMPInfoHeader + 32);
-    infoHeader.biClrImportant     = fromLEU32(rawBMPInfoHeader + 36);
+    infoHeader.biSize             = load_little_endian_u32(rawBMPInfoHeader +  0);
+    infoHeader.biWidth            = load_little_endian_s32(rawBMPInfoHeader +  4);
+    infoHeader.biHeight           = load_little_endian_s32(rawBMPInfoHeader +  8);
+    infoHeader.biPlanes           = load_little_endian_u16(rawBMPInfoHeader + 12);
+    infoHeader.biBitCount         = load_little_endian_u16(rawBMPInfoHeader + 14);
+    infoHeader.biCompression      = load_little_endian_u32(rawBMPInfoHeader + 16);
+    infoHeader.biSizeImage        = load_little_endian_u32(rawBMPInfoHeader + 20);
+    infoHeader.biXPelsPerMeter    = load_little_endian_s32(rawBMPInfoHeader + 24);
+    infoHeader.biYPelsPerMeter    = load_little_endian_s32(rawBMPInfoHeader + 28);
+    infoHeader.biClrUsed          = load_little_endian_u32(rawBMPInfoHeader + 32);
+    infoHeader.biClrImportant     = load_little_endian_u32(rawBMPInfoHeader + 36);
 
     // check that format is acceptable
     if (infoHeader.biSize != 40 ||
@@ -161,17 +108,17 @@ std::string XWindowsClipboardAnyBitmapConverter::toIClipboard(const std::string&
     // fill BMP info header with little-endian data
     std::uint8_t infoHeader[40];
     std::uint8_t* dst = infoHeader;
-    toLE(dst, static_cast<std::uint32_t>(40));
-    toLE(dst, static_cast<std::int32_t>(w));
-    toLE(dst, static_cast<std::int32_t>(h));
-    toLE(dst, static_cast<std::uint16_t>(1));
-    toLE(dst, static_cast<std::uint16_t>(depth));
-    toLE(dst, static_cast<std::uint32_t>(0));        // BI_RGB
-    toLE(dst, static_cast<std::uint32_t>(image.size()));
-    toLE(dst, static_cast<std::int32_t>(2834));    // 72 dpi
-    toLE(dst, static_cast<std::int32_t>(2834));    // 72 dpi
-    toLE(dst, static_cast<std::uint32_t>(0));
-    toLE(dst, static_cast<std::uint32_t>(0));
+    store_little_endian_u32(dst, 40);
+    store_little_endian_s32(dst, w);
+    store_little_endian_s32(dst, h);
+    store_little_endian_u16(dst, 1);
+    store_little_endian_u16(dst, depth);
+    store_little_endian_u32(dst, 0);        // BI_RGB
+    store_little_endian_u32(dst, image.size());
+    store_little_endian_s32(dst, 2834);    // 72 dpi
+    store_little_endian_s32(dst, 2834);    // 72 dpi
+    store_little_endian_u32(dst, 0);
+    store_little_endian_u32(dst, 0);
 
     // construct image
     return std::string(reinterpret_cast<const char*>(infoHeader),

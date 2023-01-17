@@ -189,7 +189,7 @@ add_executable (input-leap WIN32
 
 include_directories (./src)
 
-target_link_libraries(input-leap net base io Qt5::Core Qt5::Widgets Qt5::Network ${OPENSSL_LIBS})
+target_link_libraries(input-leap net arch base io Qt5::Core Qt5::Widgets Qt5::Network ${OPENSSL_LIBS})
 target_compile_definitions (input-leap PRIVATE -DINPUTLEAP_VERSION_STAGE="${INPUTLEAP_VERSION_STAGE}")
 target_compile_definitions (input-leap PRIVATE -DINPUTLEAP_REVISION="${INPUTLEAP_REVISION}")
 
@@ -206,7 +206,7 @@ if (BUILD_CARBON)
     target_link_libraries(input-leap ${APPSERVICES_LIB})
 endif()
 if (BUILD_XWINDOWS)
-    target_link_libraries (input-leap dns_sd X11)
+    target_link_libraries (input-leap dns_sd X11 Threads::Threads)
 endif()
 
 target_link_libraries (input-leap common)

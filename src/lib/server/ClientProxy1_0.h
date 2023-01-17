@@ -77,6 +77,9 @@ protected:
     virtual bool recvClipboard();
     virtual void keepAlive();
 
+    void fileChunkReceived();
+    void dragInfoReceived();
+
 private:
     void disconnect();
     void removeHandlers();

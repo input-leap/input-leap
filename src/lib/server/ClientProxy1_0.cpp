@@ -20,6 +20,7 @@
 
 #include "inputleap/ProtocolUtil.h"
 #include "inputleap/Exceptions.h"
+#include "inputleap/FileChunk.h"
 #include "server/Server.h"
 #include "io/IStream.h"
 #include "base/Log.h"
@@ -50,6 +51,8 @@ ClientProxy1_0::ClientProxy1_0(const std::string& name, inputleap::IStream* stre
                           [this](const auto& e){ handle_disconnect(); });
     m_events->add_handler(EventType::STREAM_OUTPUT_SHUTDOWN, stream->getEventTarget(),
                           [this](const auto& e){ handle_write_error(); });
+    m_events->add_handler(EventType::FILE_KEEPALIVE, this,
+                          [this](const auto& e){ keepAlive(); });
     m_events->add_handler(EventType::TIMER, this,
                           [this](const auto& e){ handle_flatline(); });
 
@@ -83,6 +86,7 @@ ClientProxy1_0::removeHandlers()
     m_events->removeHandler(EventType::STREAM_INPUT_SHUTDOWN, getStream()->getEventTarget());
     m_events->removeHandler(EventType::STREAM_OUTPUT_SHUTDOWN, getStream()->getEventTarget());
     m_events->removeHandler(EventType::STREAM_INPUT_FORMAT_ERROR, getStream()->getEventTarget());
+    m_events->removeHandler(EventType::FILE_KEEPALIVE, this);
     m_events->removeHandler(EventType::TIMER, this);
 
     // remove timer
@@ -206,7 +210,13 @@ bool ClientProxy1_0::parseHandshakeMessage(const std::uint8_t* code)
 
 bool ClientProxy1_0::parseMessage(const std::uint8_t* code)
 {
-    if (memcmp(code, kMsgCKeepAlive, 4) == 0) {
+    if (memcmp(code, kMsgDFileTransfer, 4) == 0) {
+        fileChunkReceived();
+        return true;
+    } else if (memcmp(code, kMsgDDragInfo, 4) == 0) {
+        dragInfoReceived();
+        return true;
+    } else if (memcmp(code, kMsgCKeepAlive, 4) == 0) {
         // reset alarm
         resetHeartbeatTimer();
         return true;
@@ -372,22 +382,13 @@ void ClientProxy1_0::mouseWheel(std::int32_t xDelta, std::int32_t yDelta)
 
 void ClientProxy1_0::sendDragInfo(std::uint32_t fileCount, const char* info, size_t size)
 {
-    (void) fileCount;
-    (void) info;
-    (void) size;
-
-    // ignore -- not supported in protocol 1.0
-    LOG((CLOG_DEBUG "draggingInfoSending not supported"));
+    std::string data(info, size);
+    ProtocolUtil::writef(getStream(), kMsgDDragInfo, fileCount, &data);
 }
 
 void ClientProxy1_0::fileChunkSending(std::uint8_t mark, const char* data, size_t dataSize)
 {
-    (void) mark;
-    (void) data;
-    (void) dataSize;
-
-    // ignore -- not supported in protocol 1.0
-    LOG((CLOG_DEBUG "fileChunkSending not supported"));
+    FileChunk::send(getStream(), mark, data, dataSize);
 }
 
 void
@@ -499,6 +500,32 @@ ClientProxy1_0::recvGrabClipboard()
 void ClientProxy1_0::keepAlive()
 {
     ProtocolUtil::writef(getStream(), kMsgCKeepAlive);
+}
+
+void ClientProxy1_0::fileChunkReceived()
+{
+    Server* server = getServer();
+    int result = FileChunk::assemble(getStream(), server->getReceivedFileData(),
+                                     server->getExpectedFileSize());
+
+    if (result == kFinish) {
+        m_events->add_event(EventType::FILE_RECEIVE_COMPLETED, server);
+    } else if (result == kStart) {
+        if (server->getFakeDragFileList().size() > 0) {
+            std::string filename = server->getFakeDragFileList().at(0).getFilename();
+            LOG((CLOG_DEBUG "start receiving %s", filename.c_str()));
+        }
+    }
+}
+
+void ClientProxy1_0::dragInfoReceived()
+{
+    // parse
+    std::uint32_t fileNum = 0;
+    std::string content;
+    ProtocolUtil::readf(getStream(), kMsgDDragInfo + 4, &fileNum, &content);
+
+    m_server->dragInfoReceived(fileNum, content);
 }
 
 ClientProxy1_0::ClientClipboard::ClientClipboard() :

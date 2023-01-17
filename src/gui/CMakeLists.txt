@@ -169,6 +169,9 @@ set(TS_FILES
 set_source_files_properties(${TS_FILES} PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/res/lang")
 qt5_add_translation(QM_FILES ${TS_FILES} OPTIONS -silent)
 
+# The following file includes X11 headers that later break Qt headers.
+set_source_files_properties("src/DisplayIsValid.cpp" PROPERTIES SKIP_UNITY_BUILD_INCLUSION TRUE)
+
 if (WIN32)
     set (GUI_RC_FILES res/win/InputLeap.rc)
     set_property(SOURCE res/win/InputLeap.rc PROPERTY COMPILE_FLAGS /nologo)

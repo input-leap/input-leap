@@ -27,6 +27,17 @@ if (BUILD_XWINDOWS)
     file(GLOB xwin_sources "XWindows*.cpp")
 endif()
 
+# CMake does not understand that .mm files should not go together with .cpp files into an Unity
+# build that is compiled in C++ mode
+set_source_files_properties(
+    "OSXDragView.mm"
+    "OSXPasteboardPeeker.mm"
+    "OSXMediaKeySupport.mm"
+    "OSXScreen.mm"
+    "OSXDragSimulator.mm"
+    "OSXScreenSaverUtil.mm"
+    PROPERTIES SKIP_UNITY_BUILD_INCLUSION TRUE)
+
 list(APPEND sources ${mswin_sources} ${carbon_sources} ${xwin_sources})
 list(APPEND headers ${mswin_headers} ${carbon_headers} ${xwin_headers})
 

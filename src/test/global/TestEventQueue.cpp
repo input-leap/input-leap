@@ -17,6 +17,7 @@
 
 #include "test/global/TestEventQueue.h"
 
+#include "base/EventQueueTimer.h"
 #include "base/Log.h"
 #include "base/SimpleEventQueueBuffer.h"
 #include <stdexcept>

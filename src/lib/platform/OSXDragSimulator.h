@@ -23,16 +23,9 @@
 
 namespace inputleap {
 
-#if defined(__cplusplus)
-extern "C" {
-#endif
 void runCocoaApp();
 void stopCocoaLoop();
 void fakeDragging(const char* str, int cursorX, int cursorY);
 CFStringRef getCocoaDropTarget();
-
-#if defined(__cplusplus)
-}
-#endif
 
 } // namespace inputleap

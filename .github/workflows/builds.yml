@@ -107,7 +107,7 @@ jobs:
           brew install qt5
           brew install ninja
       - name: Run the build
-        run: sh -x ./clean_build.sh
+        run: env B_CMAKE_FLAGS="-DCMAKE_UNITY_BUILD=1" sh -x ./clean_build.sh
       - uses: actions/upload-artifact@v3
         with:
           name: Publish the DMG for ${{ matrix.os }}

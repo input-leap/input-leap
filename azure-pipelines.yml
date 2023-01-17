@@ -111,7 +111,7 @@ jobs:
       displayName: Installed newer OpenSSL 1.1.x
     - script: brew install pkg-config qt5
       displayName: Install Qt5 and pkg-config prereqs
-    - script: sh -x ./clean_build.sh
+    - script: env B_CMAKE_FLAGS=-DCMAKE_UNITY_BUILD=1 sh -x ./clean_build.sh
       displayName: Clean Build
     - task: PublishBuildArtifacts@1
       displayName: Publish Release DMG

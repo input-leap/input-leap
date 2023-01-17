@@ -34,13 +34,16 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
 
-      - name: Update image and install pre-reqs
+      - if: matrix.os == 'ubuntu:18.04'
+        name: Add repositories with newer git
         run: |
           apt-get update -y
           # needed for add-apt-repository
           apt-get install -y software-properties-common
           # actions/checkout@v3 wants newer git than what's in default repositories
           add-apt-repository ppa:git-core/ppa
+      - name: Update image and install pre-reqs
+        run: |
           apt-get update -y
           apt-get dist-upgrade -y
           apt-get install -y \

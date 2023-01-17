@@ -330,9 +330,10 @@ void ClientProxy1_0::mouseMove(std::int32_t xAbs, std::int32_t yAbs)
     ProtocolUtil::writef(getStream(), kMsgDMouseMove, xAbs, yAbs);
 }
 
-void ClientProxy1_0::mouseRelativeMove(std::int32_t, std::int32_t)
+void ClientProxy1_0::mouseRelativeMove(std::int32_t xRel, std::int32_t yRel)
 {
-    // ignore -- not supported in protocol 1.0
+    LOG((CLOG_DEBUG2 "send mouse relative move to \"%s\" %d,%d", getName().c_str(), xRel, yRel));
+    ProtocolUtil::writef(getStream(), kMsgDMouseRelMove, xRel, yRel);
 }
 
 void ClientProxy1_0::mouseWheel(std::int32_t, std::int32_t yDelta)

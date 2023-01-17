@@ -28,7 +28,7 @@
 namespace inputleap {
 
 ClientProxy1_3::ClientProxy1_3(const std::string& name, IStream* stream, IEventQueue* events) :
-    ClientProxy1_2(name, stream, events),
+    ClientProxy1_0(name, stream, events),
     m_keepAliveRate(kKeepAliveRate),
     m_keepAliveTimer(nullptr),
     m_events(events)
@@ -57,7 +57,7 @@ bool ClientProxy1_3::parseMessage(const std::uint8_t* code)
         return true;
     }
     else {
-        return ClientProxy1_2::parseMessage(code);
+        return ClientProxy1_0::parseMessage(code);
     }
 }
 
@@ -71,15 +71,15 @@ void
 ClientProxy1_3::setHeartbeatRate(double rate, double)
 {
     m_keepAliveRate = rate;
-    ClientProxy1_2::setHeartbeatRate(rate, rate * kKeepAlivesUntilDeath);
+    ClientProxy1_0::setHeartbeatRate(rate, rate * kKeepAlivesUntilDeath);
 }
 
 void
 ClientProxy1_3::resetHeartbeatTimer()
 {
     // reset the alarm but not the keep alive timer
-    ClientProxy1_2::removeHeartbeatTimer();
-    ClientProxy1_2::addHeartbeatTimer();
+    ClientProxy1_0::removeHeartbeatTimer();
+    ClientProxy1_0::addHeartbeatTimer();
 }
 
 void
@@ -93,7 +93,7 @@ ClientProxy1_3::addHeartbeatTimer()
     }
 
     // superclass does the alarm
-    ClientProxy1_2::addHeartbeatTimer();
+    ClientProxy1_0::addHeartbeatTimer();
 }
 
 void
@@ -107,7 +107,7 @@ ClientProxy1_3::removeHeartbeatTimer()
     }
 
     // superclass does the alarm
-    ClientProxy1_2::removeHeartbeatTimer();
+    ClientProxy1_0::removeHeartbeatTimer();
 }
 
 void ClientProxy1_3::handle_keep_alive()

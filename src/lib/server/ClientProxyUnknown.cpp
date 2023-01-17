@@ -20,7 +20,6 @@
 
 #include "server/Server.h"
 #include "server/ClientProxy1_0.h"
-#include "server/ClientProxy1_2.h"
 #include "server/ClientProxy1_3.h"
 #include "server/ClientProxy1_4.h"
 #include "server/ClientProxy1_5.h"

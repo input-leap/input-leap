@@ -69,7 +69,7 @@ private:
     int secureAccept(int s);
     int secureConnect(int s);
 
-    void checkResult(int n, int& retry); // may only be called with m_ssl_mutex_ acquired.
+    void checkResult(int n, int& retry); // may only be called with ssl_mutex_ acquired.
 
     void showError(const std::string& reason);
     std::string getError();
@@ -95,7 +95,7 @@ private:
     // by it.
     std::mutex ssl_mutex_;
 
-    Ssl* m_ssl;
+    std::unique_ptr<Ssl> m_ssl;
     bool m_secureReady;
     bool m_fatal;
     ConnectionSecurityLevel security_level_ = ConnectionSecurityLevel::ENCRYPTED;

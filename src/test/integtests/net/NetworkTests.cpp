@@ -113,8 +113,9 @@ TEST_F(NetworkTests, sendToClient_mockData)
 
     // server
     SocketMultiplexer serverSocketMultiplexer;
-    TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
-    ClientListener listener(serverAddress, serverSocketFactory, &m_events,
+    ClientListener listener(serverAddress,
+                            std::make_unique<TCPSocketFactory>(&m_events, &serverSocketMultiplexer),
+                            &m_events,
                             ConnectionSecurityLevel::PLAINTEXT);
     NiceMock<MockScreen> serverScreen;
     NiceMock<MockPrimaryClient> primaryClient;
@@ -174,9 +175,9 @@ TEST_F(NetworkTests, sendToClient_mockFile)
 
     // server
     SocketMultiplexer serverSocketMultiplexer;
-    TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
-    ClientListener listener(serverAddress, serverSocketFactory, &m_events,
-                            ConnectionSecurityLevel::PLAINTEXT);
+    ClientListener listener(serverAddress,
+                            std::make_unique<TCPSocketFactory>(&m_events, &serverSocketMultiplexer),
+                            &m_events, ConnectionSecurityLevel::PLAINTEXT);
     NiceMock<MockScreen> serverScreen;
     NiceMock<MockPrimaryClient> primaryClient;
     NiceMock<MockConfig> serverConfig;
@@ -234,9 +235,9 @@ TEST_F(NetworkTests, sendToServer_mockData)
 
     // server
     SocketMultiplexer serverSocketMultiplexer;
-    TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
-    ClientListener listener(serverAddress, serverSocketFactory, &m_events,
-                            ConnectionSecurityLevel::PLAINTEXT);
+    ClientListener listener(serverAddress,
+                            std::make_unique<TCPSocketFactory>(&m_events, &serverSocketMultiplexer),
+                            &m_events, ConnectionSecurityLevel::PLAINTEXT);
     NiceMock<MockScreen> serverScreen;
     NiceMock<MockPrimaryClient> primaryClient;
     NiceMock<MockConfig> serverConfig;
@@ -294,9 +295,9 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 
     // server
     SocketMultiplexer serverSocketMultiplexer;
-    TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
-    ClientListener listener(serverAddress, serverSocketFactory, &m_events,
-                            ConnectionSecurityLevel::PLAINTEXT);
+    ClientListener listener(serverAddress,
+                            std::make_unique<TCPSocketFactory>(&m_events, &serverSocketMultiplexer),
+                            &m_events, ConnectionSecurityLevel::PLAINTEXT);
     NiceMock<MockScreen> serverScreen;
     NiceMock<MockPrimaryClient> primaryClient;
     NiceMock<MockConfig> serverConfig;

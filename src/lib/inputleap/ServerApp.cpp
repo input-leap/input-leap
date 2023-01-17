@@ -648,7 +648,7 @@ ServerApp::openClientListener(const NetworkAddress& address)
 
     ClientListener* listen = new ClientListener(
         address,
-        new TCPSocketFactory(m_events, getSocketMultiplexer()),
+        std::make_unique<TCPSocketFactory>(m_events, getSocketMultiplexer()),
         m_events, security_level);
 
     m_events->add_handler(EventType::CLIENT_LISTENER_CONNECTED, listen,

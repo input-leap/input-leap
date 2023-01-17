@@ -31,18 +31,16 @@
 namespace inputleap {
 
 ClientListener::ClientListener(const NetworkAddress& address,
-                ISocketFactory* socketFactory,
+                               std::unique_ptr<ISocketFactory> socket_factory,
                 IEventQueue* events,
                                ConnectionSecurityLevel security_level) :
-    m_socketFactory(socketFactory),
+    socket_factory_{std::move(socket_factory)},
     m_server(nullptr),
     m_events(events),
     security_level_{security_level}
 {
-    assert(m_socketFactory != nullptr);
-
     try {
-        m_listen = m_socketFactory->createListen(ARCH->getAddrFamily(address.getAddress()),
+        m_listen = socket_factory_->createListen(ARCH->getAddrFamily(address.getAddress()),
                                                  security_level);
 
         // setup event handler
@@ -55,12 +53,12 @@ ClientListener::ClientListener(const NetworkAddress& address,
     }
     catch (XSocketAddressInUse&) {
         cleanupListenSocket();
-        delete m_socketFactory;
+        socket_factory_.reset();
         throw;
     }
     catch (XBase&) {
         cleanupListenSocket();
-        delete m_socketFactory;
+        socket_factory_.reset();
         throw;
     }
     LOG((CLOG_DEBUG1 "listening for clients"));
@@ -90,7 +88,6 @@ ClientListener::~ClientListener()
     m_events->removeHandler(EventType::LISTEN_SOCKET_CONNECTING, m_listen);
     cleanupListenSocket();
     cleanupClientSockets();
-    delete m_socketFactory;
 }
 
 void

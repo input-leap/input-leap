@@ -288,24 +288,26 @@ ClientProxy1_0::setClipboardDirty(ClipboardID id, bool dirty)
     m_clipboard[id].m_dirty = dirty;
 }
 
-void
-ClientProxy1_0::keyDown(KeyID key, KeyModifierMask mask, KeyButton)
+void ClientProxy1_0::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
 {
-    LOG((CLOG_DEBUG1 "send key down to \"%s\" id=%d, mask=0x%04x", getName().c_str(), key, mask));
-    ProtocolUtil::writef(getStream(), kMsgDKeyDown1_0, key, mask);
+    LOG((CLOG_DEBUG1 "send key down to \"%s\" id=%d, mask=0x%04x, button=0x%04x",
+         getName().c_str(), key, mask, button));
+    ProtocolUtil::writef(getStream(), kMsgDKeyDown, key, mask, button);
 }
 
-void ClientProxy1_0::keyRepeat(KeyID key, KeyModifierMask mask, std::int32_t count, KeyButton)
+void ClientProxy1_0::keyRepeat(KeyID key, KeyModifierMask mask, std::int32_t count,
+                               KeyButton button)
 {
-    LOG((CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d", getName().c_str(), key, mask, count));
-    ProtocolUtil::writef(getStream(), kMsgDKeyRepeat1_0, key, mask, count);
+    LOG((CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d, button=0x%04x",
+         getName().c_str(), key, mask, count, button));
+    ProtocolUtil::writef(getStream(), kMsgDKeyRepeat, key, mask, count, button);
 }
 
-void
-ClientProxy1_0::keyUp(KeyID key, KeyModifierMask mask, KeyButton)
+void ClientProxy1_0::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
 {
-    LOG((CLOG_DEBUG1 "send key up to \"%s\" id=%d, mask=0x%04x", getName().c_str(), key, mask));
-    ProtocolUtil::writef(getStream(), kMsgDKeyUp1_0, key, mask);
+    LOG((CLOG_DEBUG1 "send key up to \"%s\" id=%d, mask=0x%04x, button=0x%04x",
+         getName().c_str(), key, mask, button));
+    ProtocolUtil::writef(getStream(), kMsgDKeyUp, key, mask, button);
 }
 
 void
@@ -465,10 +467,6 @@ ClientProxy1_0::recvGrabClipboard()
 
     return true;
 }
-
-//
-// ClientProxy1_0::ClientClipboard
-//
 
 ClientProxy1_0::ClientClipboard::ClientClipboard() :
     m_clipboard(),

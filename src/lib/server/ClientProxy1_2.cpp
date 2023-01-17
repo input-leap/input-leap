@@ -25,7 +25,7 @@ namespace inputleap {
 
 ClientProxy1_2::ClientProxy1_2(const std::string& name, inputleap::IStream* stream,
                                IEventQueue* events) :
-    ClientProxy1_1(name, stream, events)
+    ClientProxy1_0(name, stream, events)
 {
     // do nothing
 }

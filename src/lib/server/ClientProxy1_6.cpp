@@ -89,6 +89,7 @@ void ClientProxy1_6::removeHandlers()
     m_events->removeHandler(EventType::STREAM_OUTPUT_SHUTDOWN, getStream()->getEventTarget());
     m_events->removeHandler(EventType::STREAM_INPUT_FORMAT_ERROR, getStream()->getEventTarget());
     m_events->removeHandler(EventType::FILE_KEEPALIVE, this);
+    m_events->removeHandler(EventType::CLIPBOARD_SENDING, this);
     m_events->removeHandler(EventType::TIMER, this);
 
     // remove timer

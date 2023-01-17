@@ -65,7 +65,6 @@ Client::Client(IEventQueue* events, const std::string& name, const NetworkAddres
     m_events(events),
     m_sendFileThread(nullptr),
     m_writeToDropDirThread(nullptr),
-    m_socket(nullptr),
     m_useSecureNetwork(args.m_enableCrypto),
     m_args(args),
     m_enableClipboard(true)
@@ -140,8 +139,6 @@ Client::connect()
         // create the socket
         IDataSocket* socket = m_socketFactory->create(ARCH->getAddrFamily(m_serverAddress.getAddress()),
                                                       security_level);
-        m_socket = dynamic_cast<TCPSocket*>(socket);
-
         // filter socket messages, including a packetizing filter
         m_stream = socket;
         m_stream = new PacketStreamFilter(m_events, m_stream, true);

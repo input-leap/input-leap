@@ -19,7 +19,7 @@
 #include "server/ClientProxyUnknown.h"
 
 #include "server/Server.h"
-#include "server/ClientProxy1_0.h"
+#include "server/ClientProxy1_6.h"
 #include "inputleap/protocol_types.h"
 #include "inputleap/ProtocolUtil.h"
 #include "inputleap/Exceptions.h"
@@ -176,7 +176,7 @@ void ClientProxyUnknown::handle_data()
         if (major == 1) {
             switch (minor) {
             case 6:
-                m_proxy = new ClientProxy1_0(name, m_stream, m_server, m_events);
+                m_proxy = new ClientProxy1_6(name, m_stream, m_server, m_events);
                 break;
             default:
                 break;

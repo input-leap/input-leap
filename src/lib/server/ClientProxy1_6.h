@@ -30,11 +30,11 @@ class IEventQueue;
 class Server;
 
 //! Proxy for client implementing protocol version 1.0
-class ClientProxy1_0 : public ClientProxy {
+class ClientProxy1_6 : public ClientProxy {
 public:
-    ClientProxy1_0(const std::string& name, inputleap::IStream* stream, Server* server,
+    ClientProxy1_6(const std::string& name, inputleap::IStream* stream, Server* server,
                    IEventQueue* events);
-    ~ClientProxy1_0() override;
+    ~ClientProxy1_6() override;
 
     Server* getServer() { return m_server; }
 
@@ -107,7 +107,7 @@ protected:
     ClientClipboard m_clipboard[kClipboardEnd];
 
 protected:
-    typedef bool (ClientProxy1_0::*MessageParser)(const std::uint8_t*);
+    typedef bool (ClientProxy1_6::*MessageParser)(const std::uint8_t*);
 
     ClientInfo m_info;
     double m_heartbeatAlarm;

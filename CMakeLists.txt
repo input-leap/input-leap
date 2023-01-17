@@ -139,15 +139,7 @@ if (UNIX)
             pkg_check_modules (ICE REQUIRED ice sm)
             include_directories (${XLIB_INCLUDE_DIRS} ${ICE_INCLUDE_DIRS})
 
-            # Old cmake doesn't populate LINK_LIBRARIES.
-            # Use the "normal" libraries but this won't pick up non-standard
-            # library directories paths.
-            # Fixed in cmake 3.12, released July 2018 (commit 92ac721a44)
-            if(${CMAKE_VERSION} VERSION_LESS "3.12.0")
-                list (APPEND libs ${XLIB_LIBRARIES} ${ICE_LIBRARIES})
-            else()
-                list (APPEND libs ${XLIB_LINK_LIBRARIES} ${ICE_LINK_LIBRARIES})
-            endif()
+            list(APPEND libs ${XLIB_LINK_LIBRARIES} ${ICE_LINK_LIBRARIES})
 
             set (HAVE_X11 1)
         endif()

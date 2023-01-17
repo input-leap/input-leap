@@ -22,10 +22,6 @@
 
 namespace inputleap {
 
-#if defined(__cplusplus)
-extern "C" {
-#endif
-
 void* screenSaverUtilCreatePool();
 void screenSaverUtilReleasePool(void*);
 
@@ -36,9 +32,5 @@ void screenSaverUtilDisable(void*);
 void screenSaverUtilActivate(void*);
 void screenSaverUtilDeactivate(void*, int isEnabled);
 int screenSaverUtilIsActive(void*);
-
-#if defined(__cplusplus)
-}
-#endif
 
 } // namespace inputleap

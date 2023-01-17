@@ -1699,10 +1699,6 @@ void OSXScreen::handle_confirm_sleep(const Event& event)
 //
 #if 0
 
-#ifdef	__cplusplus
-extern "C" {
-#endif
-
 typedef int CGSConnection;
 typedef enum {
 	CGSGlobalHotKeyEnable = 0,
@@ -1720,10 +1716,6 @@ typedef CGError (*CGSSetGlobalHotKeyOperatingMode_t)(CGSConnection connection, C
 static _CGSDefaultConnection_t				s__CGSDefaultConnection;
 static CGSGetGlobalHotKeyOperatingMode_t	s_CGSGetGlobalHotKeyOperatingMode;
 static CGSSetGlobalHotKeyOperatingMode_t	s_CGSSetGlobalHotKeyOperatingMode;
-
-#ifdef	__cplusplus
-}
-#endif
 
 #define LOOKUP(name_)													\
     s_ ## name_ = nullptr;													\

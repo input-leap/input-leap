@@ -16,14 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "base/EventQueueTimer.h"
 #include "platform/OSXEventQueueBuffer.h"
 
 #include "base/Event.h"
 #include "base/IEventQueue.h"
 
 namespace inputleap {
-
-class EventQueueTimer { };
 
 OSXEventQueueBuffer::OSXEventQueueBuffer(IEventQueue* events) :
     m_event(nullptr),

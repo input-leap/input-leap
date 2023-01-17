@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <cassert>
+#include "base/EventQueueTimer.h"
 #include "platform/XWindowsEventQueueBuffer.h"
 
 #include "mt/Thread.h"
@@ -27,13 +28,6 @@
 #include <poll.h>
 
 namespace inputleap {
-
-class EventQueueTimer { };
-
-
-//
-// XWindowsEventQueueBuffer
-//
 
 XWindowsEventQueueBuffer::XWindowsEventQueueBuffer(IXWindowsImpl* impl,
         Display* display, Window window, IEventQueue* events) :

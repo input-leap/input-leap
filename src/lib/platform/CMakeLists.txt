@@ -34,7 +34,6 @@ set_source_files_properties(
     "OSXPasteboardPeeker.mm"
     "OSXMediaKeySupport.mm"
     "OSXScreen.mm"
-    "OSXMediaKeySimulator.mm"
     "OSXDragSimulator.mm"
     "OSXScreenSaverUtil.mm"
     PROPERTIES SKIP_UNITY_BUILD_INCLUSION TRUE)

@@ -34,13 +34,24 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
 
-      - name: Update image and install pre-reqs
+      - if: matrix.os == 'ubuntu:18.04'
+        name: Add repositories with newer git and cmake
         run: |
           apt-get update -y
-          # needed for add-apt-repository
-          apt-get install -y software-properties-common
+          # software-properties-common is needed for add-apt-repository
+          apt-get install -y software-properties-common gpg wget
           # actions/checkout@v3 wants newer git than what's in default repositories
           add-apt-repository ppa:git-core/ppa
+          # InputLeap requires at least CMake 3.12.
+          # This mirrors instructions at https://apt.kitware.com
+          wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
+            | gpg --dearmor - \
+            > /usr/share/keyrings/kitware-archive-keyring.gpg
+          echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ bionic main' \
+            > /etc/apt/sources.list.d/kitware.list
+
+      - name: Update image and install pre-reqs
+        run: |
           apt-get update -y
           apt-get dist-upgrade -y
           apt-get install -y \

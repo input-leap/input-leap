@@ -83,9 +83,6 @@ SecureSocket::~SecureSocket()
     removeJob();
     freeSSLResources();
 
-    // removing sleep() because I have no idea why you would want to do it
-    // ... smells of trying to cover up a bug you don't understand
-    //inputleap::this_thread_sleep(1);
     delete m_ssl;
 }
 

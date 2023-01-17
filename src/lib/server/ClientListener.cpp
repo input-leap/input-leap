@@ -137,13 +137,16 @@ void ClientListener::handle_client_connecting()
     }
 }
 
-void
-ClientListener::handle_client_accepted(IDataSocket* socket)
+void ClientListener::handle_client_accepted(IDataSocket* socket_ptr)
 {
     LOG((CLOG_NOTE "accepted client connection"));
+    auto socket = client_sockets_.erase(socket_ptr);
+    if (!socket) {
+        throw std::runtime_error("Got more than one CLIENT_LISTENER_ACCEPTED event");
+    }
 
     // filter socket messages, including a packetizing filter
-    auto stream = std::make_unique<PacketStreamFilter>(m_events, socket, false);
+    auto stream = std::make_unique<PacketStreamFilter>(m_events, std::move(socket));
     assert(m_server != nullptr);
 
     // create proxy for unknown client
@@ -198,12 +201,7 @@ void ClientListener::handle_client_disconnected(ClientProxy* client)
             m_waitingClients.erase(i);
             m_events->removeHandler(EventType::CLIENT_PROXY_DISCONNECTED, client);
 
-            // pull out the socket before deleting the client so
-            // we know which socket we no longer need
-            IDataSocket* socket = static_cast<IDataSocket*>(client->getStream());
             delete client;
-            client_sockets_.erase(socket);
-
             break;
         }
     }

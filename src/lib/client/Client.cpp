@@ -140,8 +140,7 @@ Client::connect()
         IDataSocket* socket = m_socketFactory->create(ARCH->getAddrFamily(m_serverAddress.getAddress()),
                                                       security_level);
         // filter socket messages, including a packetizing filter
-        m_stream = socket;
-        m_stream = new PacketStreamFilter(m_events, m_stream, true);
+        m_stream = new PacketStreamFilter(m_events, std::unique_ptr<IDataSocket>(socket));
 
         // connect
         LOG((CLOG_DEBUG1 "connecting to server"));

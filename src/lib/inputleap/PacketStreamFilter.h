@@ -33,7 +33,7 @@ Filters a stream to read and write packets.
 */
 class PacketStreamFilter : public StreamFilter {
 public:
-    PacketStreamFilter(IEventQueue* events, inputleap::IStream* stream, bool adoptStream = true);
+    PacketStreamFilter(IEventQueue* events, std::unique_ptr<IStream> stream);
     ~PacketStreamFilter() override;
 
     // IStream overrides

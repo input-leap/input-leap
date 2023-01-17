@@ -71,7 +71,7 @@ public:
 private:
     // client connection event handlers
     void handle_client_connecting();
-    void handle_client_accepted(IDataSocket* socket);
+    void handle_client_accepted(IDataSocket* socket_ptr);
     void handle_unknown_client(ClientProxyUnknown* client);
     void handle_client_disconnected(ClientProxy* client);
 

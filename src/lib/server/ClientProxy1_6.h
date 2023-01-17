@@ -1,6 +1,7 @@
 /*
  * InputLeap -- mouse and keyboard sharing utility
- * Copyright (C) 2015-2016 Symless Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2002 Chris Schoeneman
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,28 +18,106 @@
 
 #pragma once
 
-#include "server/ClientProxy1_5.h"
+#include "server/ClientProxy.h"
+#include "inputleap/Clipboard.h"
+#include "inputleap/protocol_types.h"
 
 namespace inputleap {
 
-class Server;
+class Event;
+class EventQueueTimer;
 class IEventQueue;
+class Server;
 
-//! Proxy for client implementing protocol version 1.6
-class ClientProxy1_6 : public ClientProxy1_5 {
+//! Proxy for client implementing protocol version 1.0
+class ClientProxy1_6 : public ClientProxy {
 public:
-    ClientProxy1_6(const std::string& name, inputleap::IStream* adoptedStream, Server* server,
+    ClientProxy1_6(const std::string& name, inputleap::IStream* stream, Server* server,
                    IEventQueue* events);
     ~ClientProxy1_6() override;
 
-    void setClipboard(ClipboardID id, const IClipboard* clipboard) override;
-    bool recvClipboard() override;
+    Server* getServer() { return m_server; }
+
+    // IScreen
+    bool getClipboard(ClipboardID id, IClipboard*) const override;
+    void getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width,
+                  std::int32_t& height) const override;
+    void getCursorPos(std::int32_t& x, std::int32_t& y) const override;
+
+    // IClient overrides
+    void enter(std::int32_t xAbs, std::int32_t yAbs, std::uint32_t seqNum, KeyModifierMask mask,
+               bool forScreensaver) override;
+    bool leave() override;
+    void setClipboard(ClipboardID, const IClipboard*) override;
+    void grabClipboard(ClipboardID) override;
+    void setClipboardDirty(ClipboardID, bool) override;
+    void keyDown(KeyID, KeyModifierMask, KeyButton) override;
+    void keyRepeat(KeyID, KeyModifierMask, std::int32_t count, KeyButton) override;
+    void keyUp(KeyID, KeyModifierMask, KeyButton) override;
+    void mouseDown(ButtonID) override;
+    void mouseUp(ButtonID) override;
+    void mouseMove(std::int32_t xAbs, std::int32_t yAbs) override;
+    void mouseRelativeMove(std::int32_t xRel, std::int32_t yRel) override;
+    void mouseWheel(std::int32_t xDelta, std::int32_t yDelta) override;
+    void screensaver(bool activate) override;
+    void resetOptions() override;
+    void setOptions(const OptionsList& options) override;
+    void sendDragInfo(std::uint32_t fileCount, const char* info, size_t size) override;
+    void fileChunkSending(std::uint8_t mark, const char* data, size_t dataSize) override;
+
+protected:
+    virtual bool parseHandshakeMessage(const std::uint8_t* code);
+    virtual bool parseMessage(const std::uint8_t* code);
+
+    virtual void resetHeartbeatRate();
+    virtual void setHeartbeatRate(double rate, double alarm);
+    virtual void resetHeartbeatTimer();
+    virtual void addHeartbeatTimer();
+    virtual void removeHeartbeatTimer();
+    virtual bool recvClipboard();
+    virtual void keepAlive();
+
+    void fileChunkReceived();
+    void dragInfoReceived();
 
 private:
+    void disconnect();
+    void removeHandlers();
+
+    void handle_data();
+    void handle_disconnect();
+    void handle_write_error();
+    void handle_flatline();
     void handle_clipboard_sending_event(const Event& event);
 
-private:
+    bool recvInfo();
+    bool recvGrabClipboard();
+
+protected:
+    struct ClientClipboard {
+    public:
+        ClientClipboard();
+
+    public:
+        Clipboard m_clipboard;
+        std::uint32_t m_sequenceNumber;
+        bool m_dirty;
+    };
+
+    ClientClipboard m_clipboard[kClipboardEnd];
+
+protected:
+    typedef bool (ClientProxy1_6::*MessageParser)(const std::uint8_t*);
+
+    ClientInfo m_info;
+    double m_heartbeatAlarm;
+    EventQueueTimer* m_heartbeatTimer;
+    MessageParser m_parser;
     IEventQueue* m_events;
+
+    double m_keepAliveRate;
+    EventQueueTimer* m_keepAliveTimer;
+    Server* m_server;
 };
 
 } // namespace inputleap

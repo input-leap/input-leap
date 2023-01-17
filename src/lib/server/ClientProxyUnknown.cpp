@@ -19,12 +19,6 @@
 #include "server/ClientProxyUnknown.h"
 
 #include "server/Server.h"
-#include "server/ClientProxy1_0.h"
-#include "server/ClientProxy1_1.h"
-#include "server/ClientProxy1_2.h"
-#include "server/ClientProxy1_3.h"
-#include "server/ClientProxy1_4.h"
-#include "server/ClientProxy1_5.h"
 #include "server/ClientProxy1_6.h"
 #include "inputleap/protocol_types.h"
 #include "inputleap/ProtocolUtil.h"
@@ -181,30 +175,6 @@ void ClientProxyUnknown::handle_data()
         // create client proxy for highest version supported by the client
         if (major == 1) {
             switch (minor) {
-            case 0:
-                m_proxy = new ClientProxy1_0(name, m_stream, m_events);
-                break;
-
-            case 1:
-                m_proxy = new ClientProxy1_1(name, m_stream, m_events);
-                break;
-
-            case 2:
-                m_proxy = new ClientProxy1_2(name, m_stream, m_events);
-                break;
-
-            case 3:
-                m_proxy = new ClientProxy1_3(name, m_stream, m_events);
-                break;
-
-            case 4:
-                m_proxy = new ClientProxy1_4(name, m_stream, m_server, m_events);
-                break;
-
-            case 5:
-                m_proxy = new ClientProxy1_5(name, m_stream, m_server, m_events);
-                break;
-
             case 6:
                 m_proxy = new ClientProxy1_6(name, m_stream, m_server, m_events);
                 break;

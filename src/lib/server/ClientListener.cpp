@@ -143,11 +143,12 @@ ClientListener::handle_client_accepted(IDataSocket* socket)
     LOG((CLOG_NOTE "accepted client connection"));
 
     // filter socket messages, including a packetizing filter
-    inputleap::IStream* stream = new PacketStreamFilter(m_events, socket, false);
+    auto stream = std::make_unique<PacketStreamFilter>(m_events, socket, false);
     assert(m_server != nullptr);
 
     // create proxy for unknown client
-    ClientProxyUnknown* client = new ClientProxyUnknown(stream, 30.0, m_server, m_events);
+    ClientProxyUnknown* client = new ClientProxyUnknown(std::move(stream), 30.0, m_server,
+                                                        m_events);
 
     m_newClients.insert(client);
 

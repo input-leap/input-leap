@@ -109,7 +109,7 @@ jobs:
       displayName: Remove incompatible OpenSSL 1.0.2t from macOS-10.14 vmImage
     - script: brew reinstall openssl
       displayName: Installed newer OpenSSL 1.1.x
-    - script: brew install pkg-config qt5
+    - script: brew install pkg-config qt5 ninja
       displayName: Install Qt5 and pkg-config prereqs
     - script: env B_CMAKE_FLAGS=-DCMAKE_UNITY_BUILD=1 sh -x ./clean_build.sh
       displayName: Clean Build

@@ -173,7 +173,7 @@ void ClientProxyUnknown::handle_data()
         if (major == 1) {
             switch (minor) {
             case 6:
-                m_proxy = new ClientProxy1_6(name, stream_.get(), m_server, m_events);
+                m_proxy = new ClientProxy1_6(name, std::move(stream_), m_server, m_events);
                 break;
             default:
                 break;
@@ -185,9 +185,7 @@ void ClientProxyUnknown::handle_data()
             throw XIncompatibleClient(major, minor);
         }
 
-        // the proxy is created and now proxy now owns the stream
         LOG((CLOG_DEBUG1 "created proxy for client \"%s\" version %d.%d", name.c_str(), major, minor));
-        stream_.reset();
 
         // wait until the proxy signals that it's ready or has disconnected
         addProxyHandlers();

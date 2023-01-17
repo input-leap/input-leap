@@ -25,16 +25,13 @@
 
 namespace inputleap {
 
-ClientProxy::ClientProxy(const std::string& name, IStream* stream) :
+ClientProxy::ClientProxy(const std::string& name, std::unique_ptr<IStream> stream) :
     BaseClientProxy(name),
-    m_stream(stream)
+    stream_{std::move(stream)}
 {
 }
 
-ClientProxy::~ClientProxy()
-{
-    delete m_stream;
-}
+ClientProxy::~ClientProxy() = default;
 
 void
 ClientProxy::close(const char* msg)
@@ -44,12 +41,6 @@ ClientProxy::close(const char* msg)
 
     // force the close to be sent before we return
     getStream()->flush();
-}
-
-inputleap::IStream*
-ClientProxy::getStream() const
-{
-    return m_stream;
 }
 
 void*

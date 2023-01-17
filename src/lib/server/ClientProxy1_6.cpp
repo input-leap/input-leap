@@ -32,9 +32,9 @@
 
 namespace inputleap {
 
-ClientProxy1_6::ClientProxy1_6(const std::string& name, inputleap::IStream* stream, Server* server,
-                               IEventQueue* events) :
-    ClientProxy(name, stream),
+ClientProxy1_6::ClientProxy1_6(const std::string& name, std::unique_ptr<IStream> stream,
+                               Server* server, IEventQueue* events) :
+    ClientProxy(name, std::move(stream)),
     m_heartbeatTimer(nullptr),
     m_parser(&ClientProxy1_6::parseHandshakeMessage),
     m_events(events),
@@ -43,15 +43,15 @@ ClientProxy1_6::ClientProxy1_6(const std::string& name, inputleap::IStream* stre
     m_server{server}
 {
     // install event handlers
-    m_events->add_handler(EventType::STREAM_INPUT_READY, stream->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_INPUT_READY, getStream()->getEventTarget(),
                           [this](const auto& e){ handle_data(); });
-    m_events->add_handler(EventType::STREAM_OUTPUT_ERROR, stream->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_OUTPUT_ERROR, getStream()->getEventTarget(),
                           [this](const auto& e){ handle_write_error(); });
-    m_events->add_handler(EventType::STREAM_INPUT_SHUTDOWN, stream->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_INPUT_SHUTDOWN, getStream()->getEventTarget(),
                           [this](const auto& e){ handle_disconnect(); });
-    m_events->add_handler(EventType::STREAM_INPUT_FORMAT_ERROR, stream->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_INPUT_FORMAT_ERROR, getStream()->getEventTarget(),
                           [this](const auto& e){ handle_disconnect(); });
-    m_events->add_handler(EventType::STREAM_OUTPUT_SHUTDOWN, stream->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_OUTPUT_SHUTDOWN, getStream()->getEventTarget(),
                           [this](const auto& e){ handle_write_error(); });
     m_events->add_handler(EventType::FILE_KEEPALIVE, this,
                           [this](const auto& e){ keepAlive(); });

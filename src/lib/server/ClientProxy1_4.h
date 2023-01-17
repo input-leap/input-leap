@@ -18,14 +18,14 @@
 
 #pragma once
 
-#include "server/ClientProxy1_3.h"
+#include "server/ClientProxy1_0.h"
 
 namespace inputleap {
 
 class Server;
 
 //! Proxy for client implementing protocol version 1.4
-class ClientProxy1_4 : public ClientProxy1_3 {
+class ClientProxy1_4 : public ClientProxy1_0 {
 public:
     ClientProxy1_4(const std::string& name, inputleap::IStream* adoptedStream, Server* server,
                    IEventQueue* events);

@@ -71,6 +71,8 @@ protected:
     virtual void addHeartbeatTimer();
     virtual void removeHeartbeatTimer();
     virtual bool recvClipboard();
+    virtual void keepAlive();
+
 private:
     void disconnect();
     void removeHandlers();
@@ -104,6 +106,9 @@ private:
     EventQueueTimer* m_heartbeatTimer;
     MessageParser m_parser;
     IEventQueue* m_events;
+
+    double m_keepAliveRate;
+    EventQueueTimer* m_keepAliveTimer;
 };
 
 } // namespace inputleap

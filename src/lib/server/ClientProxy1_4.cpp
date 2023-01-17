@@ -30,7 +30,7 @@ namespace inputleap {
 
 ClientProxy1_4::ClientProxy1_4(const std::string& name, inputleap::IStream* stream, Server* server,
                                IEventQueue* events) :
-    ClientProxy1_3(name, stream, events), m_server(server)
+    ClientProxy1_0(name, stream, events), m_server(server)
 {
     assert(m_server != nullptr);
 }
@@ -42,25 +42,25 @@ ClientProxy1_4::~ClientProxy1_4()
 void
 ClientProxy1_4::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
 {
-    ClientProxy1_3::keyDown(key, mask, button);
+    ClientProxy1_0::keyDown(key, mask, button);
 }
 
 void ClientProxy1_4::keyRepeat(KeyID key, KeyModifierMask mask, std::int32_t count,
                                KeyButton button)
 {
-    ClientProxy1_3::keyRepeat(key, mask, count, button);
+    ClientProxy1_0::keyRepeat(key, mask, count, button);
 }
 
 void
 ClientProxy1_4::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
 {
-    ClientProxy1_3::keyUp(key, mask, button);
+    ClientProxy1_0::keyUp(key, mask, button);
 }
 
 void
 ClientProxy1_4::keepAlive()
 {
-    ClientProxy1_3::keepAlive();
+    ClientProxy1_0::keepAlive();
 }
 
 } // namespace inputleap

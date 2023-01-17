@@ -34,7 +34,7 @@ ClientProxy1_5::ClientProxy1_5(const std::string& name, inputleap::IStream* stre
     m_events(events)
 {
     m_events->add_handler(EventType::FILE_KEEPALIVE, this,
-                          [this](const auto& e){ handle_keep_alive(); });
+                          [this](const auto& e){ keepAlive(); });
 }
 
 ClientProxy1_5::~ClientProxy1_5()

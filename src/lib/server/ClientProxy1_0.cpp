@@ -33,7 +33,9 @@ ClientProxy1_0::ClientProxy1_0(const std::string& name, inputleap::IStream* stre
     ClientProxy(name, stream),
     m_heartbeatTimer(nullptr),
     m_parser(&ClientProxy1_0::parseHandshakeMessage),
-    m_events(events)
+    m_events(events),
+    m_keepAliveRate(kKeepAliveRate),
+    m_keepAliveTimer(nullptr)
 {
     // install event handlers
     m_events->add_handler(EventType::STREAM_INPUT_READY, stream->getEventTarget(),
@@ -53,6 +55,8 @@ ClientProxy1_0::ClientProxy1_0(const std::string& name, inputleap::IStream* stre
 
     LOG((CLOG_DEBUG1 "querying client \"%s\" info", getName().c_str()));
     ProtocolUtil::writef(getStream(), kMsgQInfo);
+
+    setHeartbeatRate(kKeepAliveRate, kKeepAliveRate * kKeepAlivesUntilDeath);
 }
 
 ClientProxy1_0::~ClientProxy1_0()
@@ -86,6 +90,12 @@ ClientProxy1_0::removeHandlers()
 void
 ClientProxy1_0::addHeartbeatTimer()
 {
+    if (m_keepAliveRate > 0.0) {
+        m_keepAliveTimer = m_events->newTimer(m_keepAliveRate, nullptr);
+        m_events->add_handler(EventType::TIMER, m_keepAliveTimer,
+                              [this](const auto& e){ keepAlive(); });
+    }
+
     if (m_heartbeatAlarm > 0.0) {
         m_heartbeatTimer = m_events->newOneShotTimer(m_heartbeatAlarm, this);
     }
@@ -94,6 +104,12 @@ ClientProxy1_0::addHeartbeatTimer()
 void
 ClientProxy1_0::removeHeartbeatTimer()
 {
+    if (m_keepAliveTimer != nullptr) {
+        m_events->removeHandler(EventType::TIMER, m_keepAliveTimer);
+        m_events->deleteTimer(m_keepAliveTimer);
+        m_keepAliveTimer = nullptr;
+    }
+
     if (m_heartbeatTimer != nullptr) {
         m_events->deleteTimer(m_heartbeatTimer);
         m_heartbeatTimer = nullptr;
@@ -103,20 +119,26 @@ ClientProxy1_0::removeHeartbeatTimer()
 void
 ClientProxy1_0::resetHeartbeatTimer()
 {
-    // reset the alarm
-    removeHeartbeatTimer();
-    addHeartbeatTimer();
+    // reset the alarm but not the keep alive timer
+    if (m_heartbeatTimer != nullptr) {
+        m_events->deleteTimer(m_heartbeatTimer);
+        m_heartbeatTimer = nullptr;
+    }
+
+    if (m_heartbeatAlarm > 0.0) {
+        m_heartbeatTimer = m_events->newOneShotTimer(m_heartbeatAlarm, this);
+    }
 }
 
 void
 ClientProxy1_0::resetHeartbeatRate()
 {
-    setHeartbeatRate(kHeartRate, kHeartRate * kHeartBeatsUntilDeath);
+    setHeartbeatRate(kKeepAliveRate, kKeepAliveRate * kKeepAlivesUntilDeath);
 }
 
-void
-ClientProxy1_0::setHeartbeatRate(double, double alarm)
+void ClientProxy1_0::setHeartbeatRate(double rate, double alarm)
 {
+    m_keepAliveRate = rate;
     m_heartbeatAlarm = alarm;
 }
 
@@ -182,7 +204,11 @@ bool ClientProxy1_0::parseHandshakeMessage(const std::uint8_t* code)
 
 bool ClientProxy1_0::parseMessage(const std::uint8_t* code)
 {
-    if (memcmp(code, kMsgDInfo, 4) == 0) {
+    if (memcmp(code, kMsgCKeepAlive, 4) == 0) {
+        // reset alarm
+        resetHeartbeatTimer();
+        return true;
+    } else if (memcmp(code, kMsgDInfo, 4) == 0) {
         if (recvInfo()) {
             m_events->add_event(EventType::SCREEN_SHAPE_CHANGED, getEventTarget());
             return true;
@@ -336,11 +362,10 @@ void ClientProxy1_0::mouseRelativeMove(std::int32_t xRel, std::int32_t yRel)
     ProtocolUtil::writef(getStream(), kMsgDMouseRelMove, xRel, yRel);
 }
 
-void ClientProxy1_0::mouseWheel(std::int32_t, std::int32_t yDelta)
+void ClientProxy1_0::mouseWheel(std::int32_t xDelta, std::int32_t yDelta)
 {
-    // clients prior to 1.3 only support the y axis
-    LOG((CLOG_DEBUG2 "send mouse wheel to \"%s\" %+d", getName().c_str(), yDelta));
-    ProtocolUtil::writef(getStream(), kMsgDMouseWheel1_0, yDelta);
+    LOG((CLOG_DEBUG2 "send mouse wheel to \"%s\" %+d,%+d", getName().c_str(), xDelta, yDelta));
+    ProtocolUtil::writef(getStream(), kMsgDMouseWheel, xDelta, yDelta);
 }
 
 void ClientProxy1_0::sendDragInfo(std::uint32_t fileCount, const char* info, size_t size)
@@ -467,6 +492,11 @@ ClientProxy1_0::recvGrabClipboard()
                         create_event_data<ClipboardInfo>(info));
 
     return true;
+}
+
+void ClientProxy1_0::keepAlive()
+{
+    ProtocolUtil::writef(getStream(), kMsgCKeepAlive);
 }
 
 ClientProxy1_0::ClientClipboard::ClientClipboard() :

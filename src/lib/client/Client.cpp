@@ -137,16 +137,17 @@ Client::connect()
         }
 
         // create the socket
-        IDataSocket* socket = m_socketFactory->create(ARCH->getAddrFamily(m_serverAddress.getAddress()),
-                                                      security_level);
+        auto socket = m_socketFactory->create(ARCH->getAddrFamily(m_serverAddress.getAddress()),
+                                              security_level);
         // filter socket messages, including a packetizing filter
-        m_stream = new PacketStreamFilter(m_events, std::unique_ptr<IDataSocket>(socket));
+        auto socket_ptr = socket.get();
+        m_stream = new PacketStreamFilter(m_events, std::move(socket));
 
         // connect
         LOG((CLOG_DEBUG1 "connecting to server"));
         setupConnecting();
         setupTimer();
-        socket->connect(m_serverAddress);
+        socket_ptr->connect(m_serverAddress);
     }
     catch (XBase& e) {
         cleanupTimer();

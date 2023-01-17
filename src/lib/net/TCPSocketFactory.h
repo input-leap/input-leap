@@ -33,11 +33,13 @@ public:
     virtual ~TCPSocketFactory();
 
     // ISocketFactory overrides
-    IDataSocket* create(IArchNetwork::EAddressFamily family,
-                                ConnectionSecurityLevel security_level) const override;
+    std::unique_ptr<IDataSocket>
+        create(IArchNetwork::EAddressFamily family,
+               ConnectionSecurityLevel security_level) const override;
 
-    IListenSocket* createListen(IArchNetwork::EAddressFamily family,
-                                        ConnectionSecurityLevel security_level) const override;
+    std::unique_ptr<IListenSocket>
+        create_listen(IArchNetwork::EAddressFamily family,
+                      ConnectionSecurityLevel security_level) const override;
 
 private:
     IEventQueue* m_events;

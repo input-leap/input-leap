@@ -20,6 +20,7 @@
 
 #include "arch/IArchNetwork.h"
 #include "net/ConnectionSecurityLevel.h"
+#include <memory>
 
 namespace inputleap {
 
@@ -35,18 +36,15 @@ class ISocketFactory {
 public:
     virtual ~ISocketFactory() { }
 
-    //! @name accessors
-    //@{
-
     //! Create data socket
-    virtual IDataSocket* create(IArchNetwork::EAddressFamily family,
-                                ConnectionSecurityLevel security_level) const = 0;
+    virtual std::unique_ptr<IDataSocket>
+        create(IArchNetwork::EAddressFamily family,
+               ConnectionSecurityLevel security_level) const = 0;
 
     //! Create listen socket
-    virtual IListenSocket* createListen(IArchNetwork::EAddressFamily family,
-                                        ConnectionSecurityLevel security_level) const = 0;
-
-    //@}
+    virtual std::unique_ptr<IListenSocket>
+        create_listen(IArchNetwork::EAddressFamily family,
+                      ConnectionSecurityLevel security_level) const = 0;
 };
 
 } // namespace inputleap

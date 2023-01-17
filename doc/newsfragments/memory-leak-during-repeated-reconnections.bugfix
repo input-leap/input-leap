@@ -1,0 +1,1 @@
+Fixed a potential memory leak that may cause server memory usage to grow during repeated reconnection attempts.

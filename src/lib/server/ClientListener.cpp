@@ -40,16 +40,16 @@ ClientListener::ClientListener(const NetworkAddress& address,
     security_level_{security_level}
 {
     try {
-        m_listen = socket_factory_->createListen(ARCH->getAddrFamily(address.getAddress()),
+        listen_ = socket_factory_->create_listen(ARCH->getAddrFamily(address.getAddress()),
                                                  security_level);
 
         // setup event handler
-        m_events->add_handler(EventType::LISTEN_SOCKET_CONNECTING, m_listen,
+        m_events->add_handler(EventType::LISTEN_SOCKET_CONNECTING, listen_.get(),
                               [this](const auto& e){ handle_client_connecting(); });
 
         // bind listen address
         LOG((CLOG_DEBUG1 "binding listen socket"));
-        m_listen->bind(address);
+        listen_->bind(address);
     }
     catch (XSocketAddressInUse&) {
         cleanupListenSocket();
@@ -85,7 +85,6 @@ ClientListener::~ClientListener()
         client = getNextClient();
     }
 
-    m_events->removeHandler(EventType::LISTEN_SOCKET_CONNECTING, m_listen);
     cleanupListenSocket();
     cleanupClientSockets();
 }
@@ -112,7 +111,7 @@ ClientListener::getNextClient()
 void ClientListener::handle_client_connecting()
 {
     // accept client connection
-    auto socket = m_listen->accept();
+    auto socket = listen_->accept();
 
     if (!socket) {
         return;
@@ -208,7 +207,8 @@ void ClientListener::handle_client_disconnected(ClientProxy* client)
 void
 ClientListener::cleanupListenSocket()
 {
-    delete m_listen;
+    m_events->removeHandler(EventType::LISTEN_SOCKET_CONNECTING, listen_.get());
+    listen_.reset();
 }
 
 void

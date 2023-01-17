@@ -83,7 +83,7 @@ private:
     typedef std::set<ClientProxyUnknown*> NewClients;
     typedef std::deque<ClientProxy*> WaitingClients;
 
-    IListenSocket* m_listen;
+    std::unique_ptr<IListenSocket> listen_;
     std::unique_ptr<ISocketFactory> socket_factory_;
     NewClients m_newClients;
     WaitingClients m_waitingClients;

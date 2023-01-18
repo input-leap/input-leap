@@ -56,11 +56,10 @@ StreamChunker::sendFile(const char* filename,
 
     // send first message (file size)
     std::string fileSize = inputleap::string::sizeTypeToString(size);
-    FileChunk* sizeMessage = FileChunk::start(fileSize);
+    auto sizeMessage = FileChunk::start(fileSize);
 
     events->add_event(EventType::FILE_CHUNK_SENDING, eventTarget,
-                      create_event_data<FileChunk>(*sizeMessage));
-    delete sizeMessage;
+                      create_event_data<FileChunk>(sizeMessage));
 
     // send chunk messages with a fixed chunk size
     size_t sentLength = 0;
@@ -84,12 +83,11 @@ StreamChunker::sendFile(const char* filename,
         char* chunkData = new char[chunkSize];
         file.read(chunkData, chunkSize);
         std::uint8_t* data = reinterpret_cast<std::uint8_t*>(chunkData);
-        FileChunk* fileChunk = FileChunk::data(data, chunkSize);
+        FileChunk fileChunk = FileChunk::data(data, chunkSize);
         delete[] chunkData;
 
         events->add_event(EventType::FILE_CHUNK_SENDING, eventTarget,
-                          create_event_data<FileChunk>(*fileChunk));
-        delete fileChunk;
+                          create_event_data<FileChunk>(fileChunk));
 
         sentLength += chunkSize;
         file.seekg (sentLength, std::ios::beg);
@@ -100,11 +98,10 @@ StreamChunker::sendFile(const char* filename,
     }
 
     // send last message
-    FileChunk* end = FileChunk::end();
+    FileChunk end = FileChunk::end();
 
     events->add_event(EventType::FILE_CHUNK_SENDING, eventTarget,
-                      create_event_data<FileChunk>(*end));
-    delete end;
+                      create_event_data<FileChunk>(end));
 
     file.close();
 

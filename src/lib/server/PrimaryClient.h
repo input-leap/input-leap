@@ -24,6 +24,7 @@
 namespace inputleap {
 
 class Screen;
+class IStream;
 
 //! Primary screen as pseudo-client
 /*!
@@ -145,8 +146,11 @@ public:
     void sendDragInfo(std::uint32_t fileCount, const char* info, size_t size) override;
     void file_chunk_sending(const FileChunk& chunk) override;
 
-    virtual inputleap::IStream*
-    getStream() const override { return nullptr; }
+    virtual IClientConnection& get_conn() const override
+    {
+        throw std::invalid_argument("Unsupported");
+    }
+
     bool isPrimary() const override{ return true; }
 private:
     inputleap::Screen* m_screen;

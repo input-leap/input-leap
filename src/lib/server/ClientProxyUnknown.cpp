@@ -17,7 +17,7 @@
  */
 
 #include "server/ClientProxyUnknown.h"
-
+#include "ClientConnectionByStream.h"
 #include "server/Server.h"
 #include "server/ClientProxy1_6.h"
 #include "inputleap/protocol_types.h"
@@ -173,7 +173,9 @@ void ClientProxyUnknown::handle_data()
         if (major == 1) {
             switch (minor) {
             case 6:
-                m_proxy = new ClientProxy1_6(name, std::move(stream_), m_server, m_events);
+                m_proxy = new ClientProxy1_6(
+                            name, std::make_unique<ClientConnectionByStream>(name, std::move(stream_)),
+                            m_server, m_events);
                 break;
             default:
                 break;

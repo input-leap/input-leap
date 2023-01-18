@@ -28,15 +28,18 @@ class Event;
 class EventQueueTimer;
 class IEventQueue;
 class Server;
+class IStream;
 
 //! Proxy for client implementing protocol version 1.0
 class ClientProxy1_6 : public ClientProxy {
 public:
-    ClientProxy1_6(const std::string& name, std::unique_ptr<IStream> stream, Server* server,
-                   IEventQueue* events);
+    ClientProxy1_6(const std::string& name, std::unique_ptr<IClientConnection> backend,
+                   Server* server, IEventQueue* events);
     ~ClientProxy1_6() override;
 
     Server* getServer() { return m_server; }
+
+    IStream* getStream() const;
 
     // IScreen
     bool getClipboard(ClipboardID id, IClipboard*) const override;

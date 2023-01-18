@@ -383,7 +383,7 @@ void ClientProxy1_6::sendDragInfo(std::uint32_t fileCount, const char* info, siz
 
 void ClientProxy1_6::file_chunk_sending(const FileChunk& chunk)
 {
-    FileChunk::send(getStream(), chunk.mark_, chunk.data_);
+    get_conn().send_file_chunk_1_6(chunk);
 }
 
 void ClientProxy1_6::screensaver(bool on)

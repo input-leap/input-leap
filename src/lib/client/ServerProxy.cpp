@@ -897,7 +897,7 @@ void ServerProxy::handle_clipboard_sending_event(const Event& event)
 
 void ServerProxy::file_chunk_sending(const FileChunk& chunk)
 {
-    FileChunk::send(m_stream, chunk.mark_, chunk.data_);
+    ProtocolUtil::writef(m_stream, kMsgDFileTransfer, chunk.mark_, &chunk.data_);
 }
 
 void ServerProxy::sendDragInfo(std::uint32_t fileCount, const char* info, size_t size)

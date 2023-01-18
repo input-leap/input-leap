@@ -26,6 +26,7 @@
 namespace inputleap {
 
 class IStream;
+class FileChunk;
 
 /// A low-level interface to write protocol messages
 class IClientConnection {
@@ -57,6 +58,7 @@ public:
     virtual void send_keep_alive_1_6() = 0;
     virtual void send_close_1_6(const char* msg) = 0;
 
+    virtual void send_file_chunk_1_6(const FileChunk& chunk) = 0;
     virtual void send_grab_clipboard(ClipboardID id) = 0;
 
     virtual void flush() = 0;

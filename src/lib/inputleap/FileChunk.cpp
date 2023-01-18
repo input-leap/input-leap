@@ -118,25 +118,4 @@ int FileChunk::assemble(inputleap::IStream* stream, std::string& dataReceived, s
     return kError;
 }
 
-void FileChunk::send(inputleap::IStream* stream, std::uint8_t mark, const std::string& data)
-{
-    switch (mark) {
-    case kDataStart:
-        LOG((CLOG_DEBUG2 "sending file chunk start: size=%s", data.c_str()));
-        break;
-
-    case kDataChunk:
-        LOG((CLOG_DEBUG2 "sending file chunk: size=%i", data.size()));
-        break;
-
-    case kDataEnd:
-        LOG((CLOG_DEBUG2 "sending file finished"));
-        break;
-    default:
-        break;
-    }
-
-    ProtocolUtil::writef(stream, kMsgDFileTransfer, mark, &data);
-}
-
 } // namespace inputleap

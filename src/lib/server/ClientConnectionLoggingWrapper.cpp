@@ -16,6 +16,7 @@
 
 #include "ClientConnectionLoggingWrapper.h"
 #include "base/Log.h"
+#include "inputleap/FileChunk.h"
 #include "inputleap/ProtocolUtil.h"
 #include "inputleap/protocol_types.h"
 #include "io/IStream.h"
@@ -155,6 +156,26 @@ void ClientConnectionLoggingWrapper::send_close_1_6(const char* msg)
 {
     LOG((CLOG_DEBUG1 "send close \"%s\" to \"%s\"", msg, name_.c_str()));
     conn_->send_close_1_6(msg);
+}
+
+void ClientConnectionLoggingWrapper::send_file_chunk_1_6(const FileChunk& chunk)
+{
+    switch (chunk.mark_) {
+    case kDataStart:
+        LOG((CLOG_DEBUG2 "sending file chunk start: size=%s", chunk.data_.c_str()));
+        break;
+
+    case kDataChunk:
+        LOG((CLOG_DEBUG2 "sending file chunk: size=%i", chunk.data_.size()));
+        break;
+
+    case kDataEnd:
+        LOG((CLOG_DEBUG2 "sending file finished"));
+        break;
+    default:
+        break;
+    }
+    conn_->send_file_chunk_1_6(chunk);
 }
 
 void ClientConnectionLoggingWrapper::send_grab_clipboard(ClipboardID id)

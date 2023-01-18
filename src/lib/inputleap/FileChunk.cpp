@@ -34,13 +34,14 @@ FileChunk::FileChunk(size_t size)
     m_dataSize = size - FILE_CHUNK_META_SIZE;
 }
 
-FileChunk FileChunk::start(const std::string& size)
+FileChunk FileChunk::start(std::size_t size)
 {
-    size_t sizeLength = size.size();
+    std::string size_string = std::to_string(size);
+    size_t sizeLength = size_string.size();
     FileChunk start(sizeLength + FILE_CHUNK_META_SIZE);
     std::string& chunk = start.chunk_;
     chunk[0] = kDataStart;
-    memcpy(&chunk[1], size.c_str(), sizeLength);
+    memcpy(&chunk[1], size_string.c_str(), sizeLength);
     chunk[sizeLength + 1] = '\0';
 
     return start;

@@ -27,16 +27,14 @@ TEST(ClipboardChunkTests, start_formatStartChunk)
     ClipboardID id = 0;
     std::uint32_t sequence = 0;
     std::string mockDataSize = "10";
-    ClipboardChunk* chunk = ClipboardChunk::start(id, sequence, mockDataSize);
+    ClipboardChunk chunk = ClipboardChunk::start(id, sequence, mockDataSize);
 
-    EXPECT_EQ(id, chunk->chunk_[0]);
-    EXPECT_EQ(sequence, static_cast<std::uint32_t>(chunk->chunk_[1]));
-    EXPECT_EQ(kDataStart, chunk->chunk_[5]);
-    EXPECT_EQ('1', chunk->chunk_[6]);
-    EXPECT_EQ('0', chunk->chunk_[7]);
-    EXPECT_EQ('\0', chunk->chunk_[8]);
-
-    delete chunk;
+    EXPECT_EQ(id, chunk.chunk_[0]);
+    EXPECT_EQ(sequence, static_cast<std::uint32_t>(chunk.chunk_[1]));
+    EXPECT_EQ(kDataStart, chunk.chunk_[5]);
+    EXPECT_EQ('1', chunk.chunk_[6]);
+    EXPECT_EQ('0', chunk.chunk_[7]);
+    EXPECT_EQ('\0', chunk.chunk_[8]);
 }
 
 TEST(ClipboardChunkTests, data_formatDataChunk)
@@ -44,37 +42,33 @@ TEST(ClipboardChunkTests, data_formatDataChunk)
     ClipboardID id = 0;
     std::uint32_t sequence = 1;
     std::string mockData = "mock data";
-    ClipboardChunk* chunk = ClipboardChunk::data(id, sequence, mockData);
+    ClipboardChunk chunk = ClipboardChunk::data(id, sequence, mockData);
 
-    EXPECT_EQ(id, chunk->chunk_[0]);
-    EXPECT_EQ(sequence, static_cast<std::uint32_t>(chunk->chunk_[1]));
-    EXPECT_EQ(kDataChunk, chunk->chunk_[5]);
-    EXPECT_EQ('m', chunk->chunk_[6]);
-    EXPECT_EQ('o', chunk->chunk_[7]);
-    EXPECT_EQ('c', chunk->chunk_[8]);
-    EXPECT_EQ('k', chunk->chunk_[9]);
-    EXPECT_EQ(' ', chunk->chunk_[10]);
-    EXPECT_EQ('d', chunk->chunk_[11]);
-    EXPECT_EQ('a', chunk->chunk_[12]);
-    EXPECT_EQ('t', chunk->chunk_[13]);
-    EXPECT_EQ('a', chunk->chunk_[14]);
-    EXPECT_EQ('\0', chunk->chunk_[15]);
-
-    delete chunk;
+    EXPECT_EQ(id, chunk.chunk_[0]);
+    EXPECT_EQ(sequence, static_cast<std::uint32_t>(chunk.chunk_[1]));
+    EXPECT_EQ(kDataChunk, chunk.chunk_[5]);
+    EXPECT_EQ('m', chunk.chunk_[6]);
+    EXPECT_EQ('o', chunk.chunk_[7]);
+    EXPECT_EQ('c', chunk.chunk_[8]);
+    EXPECT_EQ('k', chunk.chunk_[9]);
+    EXPECT_EQ(' ', chunk.chunk_[10]);
+    EXPECT_EQ('d', chunk.chunk_[11]);
+    EXPECT_EQ('a', chunk.chunk_[12]);
+    EXPECT_EQ('t', chunk.chunk_[13]);
+    EXPECT_EQ('a', chunk.chunk_[14]);
+    EXPECT_EQ('\0', chunk.chunk_[15]);
 }
 
 TEST(ClipboardChunkTests, end_formatDataChunk)
 {
     ClipboardID id = 1;
     std::uint32_t sequence = 1;
-    ClipboardChunk* chunk = ClipboardChunk::end(id, sequence);
+    ClipboardChunk chunk = ClipboardChunk::end(id, sequence);
 
-    EXPECT_EQ(id, chunk->chunk_[0]);
-    EXPECT_EQ(sequence, static_cast<std::uint32_t>(chunk->chunk_[1]));
-    EXPECT_EQ(kDataEnd, chunk->chunk_[5]);
-    EXPECT_EQ('\0', chunk->chunk_[6]);
-
-    delete chunk;
+    EXPECT_EQ(id, chunk.chunk_[0]);
+    EXPECT_EQ(sequence, static_cast<std::uint32_t>(chunk.chunk_[1]));
+    EXPECT_EQ(kDataEnd, chunk.chunk_[5]);
+    EXPECT_EQ('\0', chunk.chunk_[6]);
 }
 
 } // namespace inputleap

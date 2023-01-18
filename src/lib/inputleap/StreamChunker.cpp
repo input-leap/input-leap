@@ -56,10 +56,10 @@ StreamChunker::sendFile(const char* filename,
 
     // send first message (file size)
     std::string fileSize = inputleap::string::sizeTypeToString(size);
-    auto sizeMessage = FileChunk::start(fileSize);
+    auto size_message = FileChunk::start(fileSize);
 
     events->add_event(EventType::FILE_CHUNK_SENDING, eventTarget,
-                      create_event_data<FileChunk>(sizeMessage));
+                      create_event_data<FileChunk>(size_message));
 
     // send chunk messages with a fixed chunk size
     size_t sentLength = 0;
@@ -119,11 +119,10 @@ StreamChunker::sendClipboard(
 {
     // send first message (data size)
     std::string dataSize = inputleap::string::sizeTypeToString(size);
-    ClipboardChunk* sizeMessage = ClipboardChunk::start(id, sequence, dataSize);
+    ClipboardChunk size_message = ClipboardChunk::start(id, sequence, dataSize);
 
     events->add_event(EventType::CLIPBOARD_SENDING, eventTarget,
-                      create_event_data<ClipboardChunk>(*sizeMessage));
-    delete sizeMessage;
+                      create_event_data<ClipboardChunk>(size_message));
 
     // send clipboard chunk with a fixed size
     size_t sentLength = 0;
@@ -138,11 +137,10 @@ StreamChunker::sendClipboard(
         }
 
         std::string chunk(data.substr(sentLength, chunkSize).c_str(), chunkSize);
-        ClipboardChunk* dataChunk = ClipboardChunk::data(id, sequence, chunk);
+        ClipboardChunk data_chunk = ClipboardChunk::data(id, sequence, chunk);
 
         events->add_event(EventType::CLIPBOARD_SENDING, eventTarget,
-                          create_event_data<ClipboardChunk>(*dataChunk));
-        delete dataChunk;
+                          create_event_data<ClipboardChunk>(data_chunk));
 
         sentLength += chunkSize;
         if (sentLength == size) {
@@ -151,11 +149,10 @@ StreamChunker::sendClipboard(
     }
 
     // send last message
-    ClipboardChunk* end = ClipboardChunk::end(id, sequence);
+    ClipboardChunk end = ClipboardChunk::end(id, sequence);
 
     events->add_event(EventType::CLIPBOARD_SENDING, eventTarget,
-                      create_event_data<ClipboardChunk>(*end));
-    delete end;
+                      create_event_data<ClipboardChunk>(end));
 
     LOG((CLOG_DEBUG "sent clipboard size=%d", sentLength));
 }

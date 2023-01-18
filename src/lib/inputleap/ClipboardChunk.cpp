@@ -28,56 +28,35 @@ namespace inputleap {
 
 size_t ClipboardChunk::s_expectedSize = 0;
 
-ClipboardChunk::ClipboardChunk(size_t size)
-{
-    chunk_.resize(size, '\0');
-    m_dataSize = size - CLIPBOARD_CHUNK_META_SIZE;
-}
-
 ClipboardChunk ClipboardChunk::start(ClipboardID id, std::uint32_t sequence,
                                      const std::size_t& size)
 {
-    auto size_string = std::to_string(size);
-    size_t sizeLength = size_string.size();
-    ClipboardChunk start(sizeLength + CLIPBOARD_CHUNK_META_SIZE);
-    std::string& chunk = start.chunk_;
-
-    chunk[0] = id;
-    std::memcpy (&chunk[1], &sequence, 4);
-    chunk[5] = kDataStart;
-    memcpy(&chunk[6], size_string.c_str(), sizeLength);
-    chunk[sizeLength + CLIPBOARD_CHUNK_META_SIZE - 1] = '\0';
-
-    return start;
+    ClipboardChunk chunk;
+    chunk.id_ = id;
+    chunk.sequence_ = sequence;
+    chunk.mark_ = kDataStart;
+    chunk.data_ = std::to_string(size);
+    return chunk;
 }
 
 ClipboardChunk ClipboardChunk::data(ClipboardID id, std::uint32_t sequence,
                                     const std::string& data)
 {
-    size_t dataSize = data.size();
-    ClipboardChunk chunk(dataSize + CLIPBOARD_CHUNK_META_SIZE);
-    std::string& chunkData = chunk.chunk_;
-
-    chunkData[0] = id;
-    std::memcpy (&chunkData[1], &sequence, 4);
-    chunkData[5] = kDataChunk;
-    memcpy(&chunkData[6], data.c_str(), dataSize);
-    chunkData[dataSize + CLIPBOARD_CHUNK_META_SIZE - 1] = '\0';
-
+    ClipboardChunk chunk;
+    chunk.id_ = id;
+    chunk.sequence_ = sequence;
+    chunk.mark_ = kDataChunk;
+    chunk.data_ = data;
     return chunk;
 }
 
 ClipboardChunk ClipboardChunk::end(ClipboardID id, std::uint32_t sequence)
 {
-    ClipboardChunk end(CLIPBOARD_CHUNK_META_SIZE);
-    std::string& chunk = end.chunk_;
-
-    chunk[0] = id;
-    std::memcpy (&chunk[1], &sequence, 4);
-    chunk[5] = kDataEnd;
-    chunk[CLIPBOARD_CHUNK_META_SIZE - 1] = '\0';
-
-    return end;
+    ClipboardChunk chunk;
+    chunk.id_ = id;
+    chunk.sequence_ = sequence;
+    chunk.mark_ = kDataEnd;
+    return chunk;
 }
 
 int ClipboardChunk::assemble(inputleap::IStream* stream, std::string& dataCached,
@@ -116,24 +95,16 @@ int ClipboardChunk::assemble(inputleap::IStream* stream, std::string& dataCached
     return kError;
 }
 
-void ClipboardChunk::send(inputleap::IStream* stream, const ClipboardChunk& clipboard_data)
+void ClipboardChunk::send(inputleap::IStream* stream, const ClipboardChunk& chunk)
 {
     LOG((CLOG_DEBUG1 "sending clipboard chunk"));
-
-    const std::string& chunk = clipboard_data.chunk_;
-    ClipboardID id = chunk[0];
-    std::uint32_t sequence;
-    std::memcpy (&sequence, &chunk[1], 4);
-    std::uint8_t mark = chunk[5];
-    std::string dataChunk(&chunk[6], clipboard_data.m_dataSize);
-
-    switch (mark) {
+    switch (chunk.mark_) {
     case kDataStart:
-        LOG((CLOG_DEBUG2 "sending clipboard chunk start: size=%s", dataChunk.c_str()));
+        LOG((CLOG_DEBUG2 "sending clipboard chunk start: size=%s", chunk.data_.c_str()));
         break;
 
     case kDataChunk:
-        LOG((CLOG_DEBUG2 "sending clipboard chunk data: size=%i", dataChunk.size()));
+        LOG((CLOG_DEBUG2 "sending clipboard chunk data: size=%i", chunk.data_.size()));
         break;
 
     case kDataEnd:
@@ -143,7 +114,8 @@ void ClipboardChunk::send(inputleap::IStream* stream, const ClipboardChunk& clip
         break;
     }
 
-    ProtocolUtil::writef(stream, kMsgDClipboard, id, sequence, mark, &dataChunk);
+    ProtocolUtil::writef(stream, kMsgDClipboard, chunk.id_, chunk.sequence_, chunk.mark_,
+                         &chunk.data_);
 }
 
 } // namespace inputleap

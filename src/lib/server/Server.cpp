@@ -1977,8 +1977,7 @@ void Server::on_file_chunk_sending(const FileChunk& chunk)
 	LOG((CLOG_DEBUG1 "sending file chunk"));
 	assert(m_active != nullptr);
 
-	// relay
-    m_active->fileChunkSending(chunk.chunk_[0], &chunk.chunk_[1], chunk.m_dataSize);
+    m_active->file_chunk_sending(chunk);
 }
 
 void

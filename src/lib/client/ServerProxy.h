@@ -30,6 +30,7 @@ class EventQueueTimer;
 class IClipboard;
 class IStream;
 class IEventQueue;
+class FileChunk;
 
 //! Proxy for server
 /*!
@@ -55,7 +56,7 @@ public:
     //@}
 
     // sending file chunk to server
-    void fileChunkSending(std::uint8_t mark, const char* data, size_t dataSize);
+    void file_chunk_sending(const FileChunk& chunk);
 
     // sending dragging information to server
     void sendDragInfo(std::uint32_t fileCount, const char* info, size_t size);

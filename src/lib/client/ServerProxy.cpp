@@ -895,9 +895,9 @@ void ServerProxy::handle_clipboard_sending_event(const Event& event)
     ClipboardChunk::send(m_stream, event.get_data_as<ClipboardChunk>());
 }
 
-void ServerProxy::fileChunkSending(std::uint8_t mark, const char* data, size_t dataSize)
+void ServerProxy::file_chunk_sending(const FileChunk& chunk)
 {
-    FileChunk::send(m_stream, mark, data, dataSize);
+    FileChunk::send(m_stream, chunk.mark_, chunk.data_);
 }
 
 void ServerProxy::sendDragInfo(std::uint32_t fileCount, const char* info, size_t size)

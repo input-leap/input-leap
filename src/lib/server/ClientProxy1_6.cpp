@@ -391,9 +391,9 @@ void ClientProxy1_6::sendDragInfo(std::uint32_t fileCount, const char* info, siz
     ProtocolUtil::writef(getStream(), kMsgDDragInfo, fileCount, &data);
 }
 
-void ClientProxy1_6::fileChunkSending(std::uint8_t mark, const char* data, size_t dataSize)
+void ClientProxy1_6::file_chunk_sending(const FileChunk& chunk)
 {
-    FileChunk::send(getStream(), mark, data, dataSize);
+    FileChunk::send(getStream(), chunk.mark_, chunk.data_);
 }
 
 void ClientProxy1_6::screensaver(bool on)

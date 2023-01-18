@@ -25,6 +25,7 @@
 
 namespace inputleap {
 
+class ClipboardChunk;
 class IStream;
 class FileChunk;
 
@@ -58,6 +59,7 @@ public:
     virtual void send_keep_alive_1_6() = 0;
     virtual void send_close_1_6(const char* msg) = 0;
 
+    virtual void send_clipboard_chunk_1_6(const ClipboardChunk& chunk) = 0;
     virtual void send_file_chunk_1_6(const FileChunk& chunk) = 0;
     virtual void send_grab_clipboard(ClipboardID id) = 0;
 

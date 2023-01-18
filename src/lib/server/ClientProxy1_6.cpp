@@ -266,7 +266,7 @@ void ClientProxy1_6::handle_flatline()
 
 void ClientProxy1_6::handle_clipboard_sending_event(const Event& event)
 {
-    ClipboardChunk::send(getStream(), event.get_data_as<ClipboardChunk>());
+    get_conn().send_clipboard_chunk_1_6(event.get_data_as<ClipboardChunk>());
 }
 
 bool ClientProxy1_6::getClipboard(ClipboardID id, IClipboard* clipboard) const

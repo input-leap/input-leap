@@ -39,8 +39,6 @@ public:
     static int assemble(inputleap::IStream* stream, std::string& dataCached, ClipboardID& id,
                         std::uint32_t& sequence);
 
-    static void send(inputleap::IStream* stream, const ClipboardChunk& chunk);
-
     static size_t getExpectedSize() { return s_expectedSize; }
 
     std::uint8_t id_ = 0;

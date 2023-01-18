@@ -16,6 +16,7 @@
 
 #include "ClientConnectionByStream.h"
 #include "base/Log.h"
+#include "inputleap/ClipboardChunk.h"
 #include "inputleap/FileChunk.h"
 #include "inputleap/ProtocolUtil.h"
 #include "inputleap/protocol_types.h"
@@ -124,6 +125,12 @@ void ClientConnectionByStream::send_keep_alive_1_6()
 void ClientConnectionByStream::send_close_1_6(const char* msg)
 {
     ProtocolUtil::writef(stream_.get(), msg);
+}
+
+void ClientConnectionByStream::send_clipboard_chunk_1_6(const ClipboardChunk& chunk)
+{
+    ProtocolUtil::writef(stream_.get(), kMsgDClipboard, chunk.id_, chunk.sequence_, chunk.mark_,
+                         &chunk.data_);
 }
 
 void ClientConnectionByStream::send_file_chunk_1_6(const FileChunk& chunk)

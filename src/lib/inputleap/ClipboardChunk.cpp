@@ -95,27 +95,4 @@ int ClipboardChunk::assemble(inputleap::IStream* stream, std::string& dataCached
     return kError;
 }
 
-void ClipboardChunk::send(inputleap::IStream* stream, const ClipboardChunk& chunk)
-{
-    LOG((CLOG_DEBUG1 "sending clipboard chunk"));
-    switch (chunk.mark_) {
-    case kDataStart:
-        LOG((CLOG_DEBUG2 "sending clipboard chunk start: size=%s", chunk.data_.c_str()));
-        break;
-
-    case kDataChunk:
-        LOG((CLOG_DEBUG2 "sending clipboard chunk data: size=%i", chunk.data_.size()));
-        break;
-
-    case kDataEnd:
-        LOG((CLOG_DEBUG2 "sending clipboard finished"));
-        break;
-    default:
-        break;
-    }
-
-    ProtocolUtil::writef(stream, kMsgDClipboard, chunk.id_, chunk.sequence_, chunk.mark_,
-                         &chunk.data_);
-}
-
 } // namespace inputleap

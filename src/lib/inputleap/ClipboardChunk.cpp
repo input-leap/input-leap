@@ -34,12 +34,12 @@ ClipboardChunk::ClipboardChunk(size_t size)
     m_dataSize = size - CLIPBOARD_CHUNK_META_SIZE;
 }
 
-ClipboardChunk* ClipboardChunk::start(ClipboardID id, std::uint32_t sequence,
-                                      const std::string& size)
+ClipboardChunk ClipboardChunk::start(ClipboardID id, std::uint32_t sequence,
+                                     const std::string& size)
 {
     size_t sizeLength = size.size();
-    ClipboardChunk* start = new ClipboardChunk(sizeLength + CLIPBOARD_CHUNK_META_SIZE);
-    std::string& chunk = start->chunk_;
+    ClipboardChunk start(sizeLength + CLIPBOARD_CHUNK_META_SIZE);
+    std::string& chunk = start.chunk_;
 
     chunk[0] = id;
     std::memcpy (&chunk[1], &sequence, 4);
@@ -50,12 +50,12 @@ ClipboardChunk* ClipboardChunk::start(ClipboardID id, std::uint32_t sequence,
     return start;
 }
 
-ClipboardChunk* ClipboardChunk::data(ClipboardID id, std::uint32_t sequence,
-                                     const std::string& data)
+ClipboardChunk ClipboardChunk::data(ClipboardID id, std::uint32_t sequence,
+                                    const std::string& data)
 {
     size_t dataSize = data.size();
-    ClipboardChunk* chunk = new ClipboardChunk(dataSize + CLIPBOARD_CHUNK_META_SIZE);
-    std::string& chunkData = chunk->chunk_;
+    ClipboardChunk chunk(dataSize + CLIPBOARD_CHUNK_META_SIZE);
+    std::string& chunkData = chunk.chunk_;
 
     chunkData[0] = id;
     std::memcpy (&chunkData[1], &sequence, 4);
@@ -66,10 +66,10 @@ ClipboardChunk* ClipboardChunk::data(ClipboardID id, std::uint32_t sequence,
     return chunk;
 }
 
-ClipboardChunk* ClipboardChunk::end(ClipboardID id, std::uint32_t sequence)
+ClipboardChunk ClipboardChunk::end(ClipboardID id, std::uint32_t sequence)
 {
-    ClipboardChunk* end = new ClipboardChunk(CLIPBOARD_CHUNK_META_SIZE);
-    std::string& chunk = end->chunk_;
+    ClipboardChunk end(CLIPBOARD_CHUNK_META_SIZE);
+    std::string& chunk = end.chunk_;
 
     chunk[0] = id;
     std::memcpy (&chunk[1], &sequence, 4);

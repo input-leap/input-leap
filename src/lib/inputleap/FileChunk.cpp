@@ -34,11 +34,11 @@ FileChunk::FileChunk(size_t size)
     m_dataSize = size - FILE_CHUNK_META_SIZE;
 }
 
-FileChunk* FileChunk::start(const std::string& size)
+FileChunk FileChunk::start(const std::string& size)
 {
     size_t sizeLength = size.size();
-    FileChunk* start = new FileChunk(sizeLength + FILE_CHUNK_META_SIZE);
-    std::string& chunk = start->chunk_;
+    FileChunk start(sizeLength + FILE_CHUNK_META_SIZE);
+    std::string& chunk = start.chunk_;
     chunk[0] = kDataStart;
     memcpy(&chunk[1], size.c_str(), sizeLength);
     chunk[sizeLength + 1] = '\0';
@@ -46,10 +46,10 @@ FileChunk* FileChunk::start(const std::string& size)
     return start;
 }
 
-FileChunk* FileChunk::data(std::uint8_t* data, size_t dataSize)
+FileChunk FileChunk::data(std::uint8_t* data, size_t dataSize)
 {
-    FileChunk* chunk = new FileChunk(dataSize + FILE_CHUNK_META_SIZE);
-    std::string& chunkData = chunk->chunk_;
+    FileChunk chunk(dataSize + FILE_CHUNK_META_SIZE);
+    std::string& chunkData = chunk.chunk_;
     chunkData[0] = kDataChunk;
     memcpy(&chunkData[1], data, dataSize);
     chunkData[dataSize + 1] = '\0';
@@ -57,11 +57,10 @@ FileChunk* FileChunk::data(std::uint8_t* data, size_t dataSize)
     return chunk;
 }
 
-FileChunk*
-FileChunk::end()
+FileChunk FileChunk::end()
 {
-    FileChunk* end = new FileChunk(FILE_CHUNK_META_SIZE);
-    std::string& chunk = end->chunk_;
+    FileChunk end(FILE_CHUNK_META_SIZE);
+    std::string& chunk = end.chunk_;
     chunk[0] = kDataEnd;
     chunk[1] = '\0';
 

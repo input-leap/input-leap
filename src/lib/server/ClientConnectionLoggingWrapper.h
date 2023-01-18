@@ -15,8 +15,8 @@
 */
 
 
-#ifndef INPUTLEAP_LIB_SERVER_CLIENT_MESSAGE_BACKEND_TO_STREAM_H
-#define INPUTLEAP_LIB_SERVER_CLIENT_MESSAGE_BACKEND_TO_STREAM_H
+#ifndef INPUTLEAP_LIB_SERVER_CLIENT_CONNECTION_LOGGING_WRAPPER_H
+#define INPUTLEAP_LIB_SERVER_CLIENT_CONNECTION_LOGGING_WRAPPER_H
 
 #include "IClientConnection.h"
 #include <memory>
@@ -25,13 +25,14 @@ namespace inputleap {
 
 class IStream;
 
-/// Writes protocol messages to IStream instance
-class ClientConnectionByStream : public IClientConnection {
+/// Wraps a IClientConnection and logs messages received from and sent to it.
+class ClientConnectionLoggingWrapper : public IClientConnection {
 public:
-    ClientConnectionByStream(std::unique_ptr<IStream> stream);
-    ~ClientConnectionByStream() override;
+    ClientConnectionLoggingWrapper(const std::string& name,
+                                   std::unique_ptr<IClientConnection> conn);
+    ~ClientConnectionLoggingWrapper() override;
 
-    IStream* get_stream() override { return stream_.get(); }
+    IStream* get_stream() override;
 
     void* get_event_target() override;
 
@@ -62,9 +63,10 @@ public:
     void close() override;
 
 private:
-    std::unique_ptr<IStream> stream_;
+    std::string name_;
+    std::unique_ptr<IClientConnection> conn_;
 };
 
 } // namespace inputleap
 
-#endif // INPUTLEAP_LIB_SERVER_CLIENT_MESSAGE_BACKEND_TO_STREAM_H
+#endif // INPUTLEAP_LIB_SERVER_CLIENT_CONNECTION_LOGGING_WRAPPER_H

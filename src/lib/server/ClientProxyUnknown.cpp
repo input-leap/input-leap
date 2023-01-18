@@ -18,6 +18,8 @@
 
 #include "server/ClientProxyUnknown.h"
 #include "ClientConnectionByStream.h"
+#include "ClientConnectionLoggingWrapper.h"
+#include "base/ELevel.h"
 #include "server/Server.h"
 #include "server/ClientProxy1_6.h"
 #include "inputleap/protocol_types.h"
@@ -169,16 +171,23 @@ void ClientProxyUnknown::handle_data()
         // remove those later.
         removeHandlers();
 
-        // create client proxy for highest version supported by the client
-        if (major == 1) {
-            switch (minor) {
-            case 6:
-                m_proxy = new ClientProxy1_6(
-                            name, std::make_unique<ClientConnectionByStream>(name, std::move(stream_)),
-                            m_server, m_events);
-                break;
-            default:
-                break;
+        {
+            std::unique_ptr<IClientConnection> conn =
+                    std::make_unique<ClientConnectionByStream>(std::move(stream_));
+
+            if (Log::getInstance()->getFilter() >= kDEBUG1) {
+                conn = std::make_unique<ClientConnectionLoggingWrapper>(name, std::move(conn));
+            }
+
+            // create client proxy for highest version supported by the client
+            if (major == 1) {
+                switch (minor) {
+                case 6:
+                    m_proxy = new ClientProxy1_6(name, std::move(conn), m_server, m_events);
+                    break;
+                default:
+                    break;
+                }
             }
         }
 

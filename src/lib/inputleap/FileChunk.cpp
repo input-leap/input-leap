@@ -28,43 +28,27 @@ namespace inputleap {
 
 static const std::uint16_t kIntervalThreshold = 1;
 
-FileChunk::FileChunk(size_t size)
+FileChunk FileChunk::start(std::size_t size)
 {
-    chunk_.resize(size, '\0');
-    m_dataSize = size - FILE_CHUNK_META_SIZE;
-}
-
-FileChunk FileChunk::start(const std::string& size)
-{
-    size_t sizeLength = size.size();
-    FileChunk start(sizeLength + FILE_CHUNK_META_SIZE);
-    std::string& chunk = start.chunk_;
-    chunk[0] = kDataStart;
-    memcpy(&chunk[1], size.c_str(), sizeLength);
-    chunk[sizeLength + 1] = '\0';
-
-    return start;
+    FileChunk chunk;
+    chunk.mark_ = kDataStart;
+    chunk.data_ = std::to_string(size);
+    return chunk;
 }
 
 FileChunk FileChunk::data(std::uint8_t* data, size_t dataSize)
 {
-    FileChunk chunk(dataSize + FILE_CHUNK_META_SIZE);
-    std::string& chunkData = chunk.chunk_;
-    chunkData[0] = kDataChunk;
-    memcpy(&chunkData[1], data, dataSize);
-    chunkData[dataSize + 1] = '\0';
-
+    FileChunk chunk;
+    chunk.mark_ = kDataChunk;
+    chunk.data_ = std::string(reinterpret_cast<char*>(data), dataSize);
     return chunk;
 }
 
 FileChunk FileChunk::end()
 {
-    FileChunk end(FILE_CHUNK_META_SIZE);
-    std::string& chunk = end.chunk_;
-    chunk[0] = kDataEnd;
-    chunk[1] = '\0';
-
-    return end;
+    FileChunk chunk;
+    chunk.mark_ = kDataEnd;
+    return chunk;
 }
 
 int FileChunk::assemble(inputleap::IStream* stream, std::string& dataReceived, size_t& expectedSize)
@@ -134,18 +118,15 @@ int FileChunk::assemble(inputleap::IStream* stream, std::string& dataReceived, s
     return kError;
 }
 
-void FileChunk::send(inputleap::IStream* stream, std::uint8_t mark, const char* data,
-                     size_t dataSize)
+void FileChunk::send(inputleap::IStream* stream, std::uint8_t mark, const std::string& data)
 {
-    std::string chunk(data, dataSize);
-
     switch (mark) {
     case kDataStart:
-        LOG((CLOG_DEBUG2 "sending file chunk start: size=%s", data));
+        LOG((CLOG_DEBUG2 "sending file chunk start: size=%s", data.c_str()));
         break;
 
     case kDataChunk:
-        LOG((CLOG_DEBUG2 "sending file chunk: size=%i", chunk.size()));
+        LOG((CLOG_DEBUG2 "sending file chunk: size=%i", data.size()));
         break;
 
     case kDataEnd:
@@ -155,7 +136,7 @@ void FileChunk::send(inputleap::IStream* stream, std::uint8_t mark, const char* 
         break;
     }
 
-    ProtocolUtil::writef(stream, kMsgDFileTransfer, mark, &chunk);
+    ProtocolUtil::writef(stream, kMsgDFileTransfer, mark, &data);
 }
 
 } // namespace inputleap

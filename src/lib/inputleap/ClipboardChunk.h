@@ -29,20 +29,24 @@ namespace inputleap {
 
 class IStream;
 
-class ClipboardChunk : public Chunk {
+class ClipboardChunk {
 public:
-    ClipboardChunk(size_t size);
 
-    static ClipboardChunk start(ClipboardID id, std::uint32_t sequence, const std::string& size);
+    static ClipboardChunk start(ClipboardID id, std::uint32_t sequence, const std::size_t& size);
     static ClipboardChunk data(ClipboardID id, std::uint32_t sequence, const std::string& data);
     static ClipboardChunk end(ClipboardID id, std::uint32_t sequence);
 
     static int assemble(inputleap::IStream* stream, std::string& dataCached, ClipboardID& id,
                         std::uint32_t& sequence);
 
-    static void send(inputleap::IStream* stream, const ClipboardChunk& clipboard_data);
+    static void send(inputleap::IStream* stream, const ClipboardChunk& chunk);
 
     static size_t getExpectedSize() { return s_expectedSize; }
+
+    std::uint8_t id_ = 0;
+    std::uint32_t sequence_ = 0;
+    std::uint8_t mark_ = 0;
+    std::string data_;
 
 private:
     static size_t        s_expectedSize;

@@ -28,15 +28,16 @@ namespace inputleap {
 
 class IStream;
 
-class FileChunk : public Chunk {
+class FileChunk {
 public:
-    FileChunk(size_t size);
-
-    static FileChunk start(const std::string& size);
+    static FileChunk start(std::size_t size);
     static FileChunk data(std::uint8_t* data, size_t dataSize);
     static FileChunk end();
     static int assemble(inputleap::IStream* stream, std::string& dataCached, size_t& expectedSize);
-    static void send(inputleap::IStream* stream, uint8_t mark, const char* data, size_t dataSize);
+    static void send(inputleap::IStream* stream, uint8_t mark, const std::string& data);
+
+    std::uint8_t mark_ = 0;
+    std::string data_;
 };
 
 } // namespace inputleap

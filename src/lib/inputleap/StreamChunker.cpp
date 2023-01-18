@@ -55,8 +55,7 @@ StreamChunker::sendFile(const char* filename,
     size_t size = static_cast<size_t>(file.tellg());
 
     // send first message (file size)
-    std::string fileSize = inputleap::string::sizeTypeToString(size);
-    auto size_message = FileChunk::start(fileSize);
+    auto size_message = FileChunk::start(size);
 
     events->add_event(EventType::FILE_CHUNK_SENDING, eventTarget,
                       create_event_data<FileChunk>(size_message));
@@ -118,8 +117,7 @@ StreamChunker::sendClipboard(
                 void* eventTarget)
 {
     // send first message (data size)
-    std::string dataSize = inputleap::string::sizeTypeToString(size);
-    ClipboardChunk size_message = ClipboardChunk::start(id, sequence, dataSize);
+    ClipboardChunk size_message = ClipboardChunk::start(id, sequence, size);
 
     events->add_event(EventType::CLIPBOARD_SENDING, eventTarget,
                       create_event_data<ClipboardChunk>(size_message));

@@ -426,8 +426,7 @@ void
 NetworkTests::sendMockData(void* eventTarget)
 {
     // send first message (file size)
-    std::string size = inputleap::string::sizeTypeToString(kMockDataSize);
-    FileChunk size_message = FileChunk::start(size);
+    FileChunk size_message = FileChunk::start(kMockDataSize);
 
     m_events.add_event(EventType::FILE_CHUNK_SENDING, eventTarget,
                        create_event_data<FileChunk>(size_message));

@@ -412,8 +412,7 @@ void Client::send_file_chunk(const FileChunk& chunk)
     LOG((CLOG_DEBUG1 "send file chunk"));
     assert(m_server != nullptr);
 
-    // relay
-    m_server->fileChunkSending(chunk.chunk_[0], &chunk.chunk_[1], chunk.m_dataSize);
+    m_server->file_chunk_sending(chunk);
 }
 
 void

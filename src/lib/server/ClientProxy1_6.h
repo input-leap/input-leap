@@ -63,7 +63,7 @@ public:
     void resetOptions() override;
     void setOptions(const OptionsList& options) override;
     void sendDragInfo(std::uint32_t fileCount, const char* info, size_t size) override;
-    void fileChunkSending(std::uint8_t mark, const char* data, size_t dataSize) override;
+    void file_chunk_sending(const FileChunk& chunk) override;
 
 protected:
     virtual bool parseHandshakeMessage(const std::uint8_t* code);

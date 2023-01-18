@@ -23,6 +23,7 @@
 namespace inputleap {
 
 class IStream;
+class FileChunk;
 
 //! Generic proxy for client or primary
 class BaseClientProxy : public IClient {
@@ -62,7 +63,7 @@ public:
 
     // IClient overrides
     virtual void sendDragInfo(std::uint32_t fileCount, const char* info, size_t size) = 0;
-    virtual void fileChunkSending(std::uint8_t mark, const char* data, size_t dataSize) = 0;
+    virtual void file_chunk_sending(const FileChunk& chunk) = 0;
     std::string getName() const override;
     virtual inputleap::IStream* getStream() const = 0;
 

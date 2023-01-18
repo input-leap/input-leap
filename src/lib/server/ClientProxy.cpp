@@ -17,17 +17,14 @@
  */
 
 #include "server/ClientProxy.h"
-
-#include "inputleap/ProtocolUtil.h"
-#include "io/IStream.h"
-#include "base/Log.h"
+#include "IClientConnection.h"
 #include "base/EventQueue.h"
 
 namespace inputleap {
 
-ClientProxy::ClientProxy(const std::string& name, std::unique_ptr<IStream> stream) :
+ClientProxy::ClientProxy(const std::string& name, std::unique_ptr<IClientConnection> backend) :
     BaseClientProxy(name),
-    stream_{std::move(stream)}
+    conn_{std::move(backend)}
 {
 }
 
@@ -36,11 +33,8 @@ ClientProxy::~ClientProxy() = default;
 void
 ClientProxy::close(const char* msg)
 {
-    LOG((CLOG_DEBUG1 "send close \"%s\" to \"%s\"", msg, getName().c_str()));
-    ProtocolUtil::writef(getStream(), msg);
-
     // force the close to be sent before we return
-    getStream()->flush();
+    get_conn().flush();
 }
 
 void*

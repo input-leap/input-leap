@@ -25,19 +25,14 @@
 
 namespace inputleap {
 
-class IStream;
-
 //! Generic proxy for client
 class ClientProxy : public BaseClientProxy {
 public:
     /*!
     \c name is the name of the client.
     */
-    ClientProxy(const std::string& name, std::unique_ptr<IStream> stream);
+    ClientProxy(const std::string& name, std::unique_ptr<IClientConnection> backend);
     ~ClientProxy();
-
-    //! @name manipulators
-    //@{
 
     //! Disconnect
     /*!
@@ -45,23 +40,14 @@ public:
     */
     void close(const char* msg);
 
-    //@}
-    //! @name accessors
-    //@{
-
-    //! Get stream
-    /*!
-    Returns the original stream passed to the c'tor.
-    */
-    IStream* getStream() const override { return stream_.get(); }
-
-    //@}
+    /// Returns original IClientProtocolWriter passed to ctor
+    IClientConnection& get_conn() const override { return *conn_; }
 
     // IScreen
     void* getEventTarget() const override;
 
 private:
-    std::unique_ptr<IStream> stream_;
+    std::unique_ptr<IClientConnection> conn_;
 };
 
 } // namespace inputleap

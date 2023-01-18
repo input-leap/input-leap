@@ -17,6 +17,7 @@
  */
 
 #include "server/ClientProxy1_6.h"
+#include "ClientConnectionByStream.h"
 
 #include "inputleap/ProtocolUtil.h"
 #include "inputleap/ClipboardChunk.h"
@@ -32,9 +33,10 @@
 
 namespace inputleap {
 
-ClientProxy1_6::ClientProxy1_6(const std::string& name, std::unique_ptr<IStream> stream,
+ClientProxy1_6::ClientProxy1_6(const std::string& name,
+                               std::unique_ptr<IClientConnection> backend,
                                Server* server, IEventQueue* events) :
-    ClientProxy(name, std::move(stream)),
+    ClientProxy(name, std::move(backend)),
     m_heartbeatTimer(nullptr),
     m_parser(&ClientProxy1_6::parseHandshakeMessage),
     m_events(events),
@@ -43,15 +45,15 @@ ClientProxy1_6::ClientProxy1_6(const std::string& name, std::unique_ptr<IStream>
     m_server{server}
 {
     // install event handlers
-    m_events->add_handler(EventType::STREAM_INPUT_READY, getStream()->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_INPUT_READY, get_conn().get_event_target(),
                           [this](const auto& e){ handle_data(); });
-    m_events->add_handler(EventType::STREAM_OUTPUT_ERROR, getStream()->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_OUTPUT_ERROR, get_conn().get_event_target(),
                           [this](const auto& e){ handle_write_error(); });
-    m_events->add_handler(EventType::STREAM_INPUT_SHUTDOWN, getStream()->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_INPUT_SHUTDOWN, get_conn().get_event_target(),
                           [this](const auto& e){ handle_disconnect(); });
-    m_events->add_handler(EventType::STREAM_INPUT_FORMAT_ERROR, getStream()->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_INPUT_FORMAT_ERROR, get_conn().get_event_target(),
                           [this](const auto& e){ handle_disconnect(); });
-    m_events->add_handler(EventType::STREAM_OUTPUT_SHUTDOWN, getStream()->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_OUTPUT_SHUTDOWN, get_conn().get_event_target(),
                           [this](const auto& e){ handle_write_error(); });
     m_events->add_handler(EventType::FILE_KEEPALIVE, this,
                           [this](const auto& e){ keepAlive(); });
@@ -62,8 +64,7 @@ ClientProxy1_6::ClientProxy1_6(const std::string& name, std::unique_ptr<IStream>
 
     setHeartbeatRate(kHeartRate, kHeartRate * kHeartBeatsUntilDeath);
 
-    LOG((CLOG_DEBUG1 "querying client \"%s\" info", getName().c_str()));
-    ProtocolUtil::writef(getStream(), kMsgQInfo);
+    get_conn().send_query_info_1_6();
 
     setHeartbeatRate(kKeepAliveRate, kKeepAliveRate * kKeepAlivesUntilDeath);
 }
@@ -73,21 +74,26 @@ ClientProxy1_6::~ClientProxy1_6()
     removeHandlers();
 }
 
+IStream* ClientProxy1_6::getStream() const
+{
+    return get_conn().get_stream();
+}
+
 void ClientProxy1_6::disconnect()
 {
     removeHandlers();
-    getStream()->close();
+    get_conn().close();
     m_events->add_event(EventType::CLIENT_PROXY_DISCONNECTED, getEventTarget());
 }
 
 void ClientProxy1_6::removeHandlers()
 {
     // uninstall event handlers
-    m_events->removeHandler(EventType::STREAM_INPUT_READY, getStream()->getEventTarget());
-    m_events->removeHandler(EventType::STREAM_OUTPUT_ERROR, getStream()->getEventTarget());
-    m_events->removeHandler(EventType::STREAM_INPUT_SHUTDOWN, getStream()->getEventTarget());
-    m_events->removeHandler(EventType::STREAM_OUTPUT_SHUTDOWN, getStream()->getEventTarget());
-    m_events->removeHandler(EventType::STREAM_INPUT_FORMAT_ERROR, getStream()->getEventTarget());
+    m_events->removeHandler(EventType::STREAM_INPUT_READY, get_conn().get_event_target());
+    m_events->removeHandler(EventType::STREAM_OUTPUT_ERROR, get_conn().get_event_target());
+    m_events->removeHandler(EventType::STREAM_INPUT_SHUTDOWN, get_conn().get_event_target());
+    m_events->removeHandler(EventType::STREAM_OUTPUT_SHUTDOWN, get_conn().get_event_target());
+    m_events->removeHandler(EventType::STREAM_INPUT_FORMAT_ERROR, get_conn().get_event_target());
     m_events->removeHandler(EventType::FILE_KEEPALIVE, this);
     m_events->removeHandler(EventType::CLIPBOARD_SENDING, this);
     m_events->removeHandler(EventType::TIMER, this);
@@ -260,7 +266,7 @@ void ClientProxy1_6::handle_flatline()
 
 void ClientProxy1_6::handle_clipboard_sending_event(const Event& event)
 {
-    ClipboardChunk::send(getStream(), event.get_data_as<ClipboardChunk>());
+    get_conn().send_clipboard_chunk_1_6(event.get_data_as<ClipboardChunk>());
 }
 
 bool ClientProxy1_6::getClipboard(ClipboardID id, IClipboard* clipboard) const
@@ -288,16 +294,12 @@ void ClientProxy1_6::getCursorPos(std::int32_t& x, std::int32_t& y) const
 void ClientProxy1_6::enter(std::int32_t xAbs, std::int32_t yAbs, std::uint32_t seqNum,
                            KeyModifierMask mask, bool)
 {
-    LOG((CLOG_DEBUG1 "send enter to \"%s\", %d,%d %d %04x", getName().c_str(), xAbs, yAbs, seqNum, mask));
-    ProtocolUtil::writef(getStream(), kMsgCEnter,
-                                xAbs, yAbs, seqNum, mask);
+    get_conn().send_enter_1_6(xAbs, yAbs, seqNum, mask);
 }
 
 bool ClientProxy1_6::leave()
 {
-    LOG((CLOG_DEBUG1 "send leave to \"%s\"", getName().c_str()));
-    ProtocolUtil::writef(getStream(), kMsgCLeave);
-
+    get_conn().send_leave_1_6();
     // we can never prevent the user from leaving
     return true;
 }
@@ -321,8 +323,7 @@ void ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard* clipboard)
 
 void ClientProxy1_6::grabClipboard(ClipboardID id)
 {
-    LOG((CLOG_DEBUG "send grab clipboard %d to \"%s\"", id, getName().c_str()));
-    ProtocolUtil::writef(getStream(), kMsgCClipboard, id, 0);
+    get_conn().send_grab_clipboard(id);
 
     // this clipboard is now dirty
     m_clipboard[id].m_dirty = true;
@@ -335,78 +336,64 @@ void ClientProxy1_6::setClipboardDirty(ClipboardID id, bool dirty)
 
 void ClientProxy1_6::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
 {
-    LOG((CLOG_DEBUG1 "send key down to \"%s\" id=%d, mask=0x%04x, button=0x%04x",
-         getName().c_str(), key, mask, button));
-    ProtocolUtil::writef(getStream(), kMsgDKeyDown, key, mask, button);
+    get_conn().send_key_down_1_6(key, mask, button);
 }
 
 void ClientProxy1_6::keyRepeat(KeyID key, KeyModifierMask mask, std::int32_t count,
                                KeyButton button)
 {
-    LOG((CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d, button=0x%04x",
-         getName().c_str(), key, mask, count, button));
-    ProtocolUtil::writef(getStream(), kMsgDKeyRepeat, key, mask, count, button);
+    get_conn().send_key_repeat_1_6(key, mask, count, button);
 }
 
 void ClientProxy1_6::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
 {
-    LOG((CLOG_DEBUG1 "send key up to \"%s\" id=%d, mask=0x%04x, button=0x%04x",
-         getName().c_str(), key, mask, button));
-    ProtocolUtil::writef(getStream(), kMsgDKeyUp, key, mask, button);
+    get_conn().send_key_up_1_6(key, mask, button);
 }
 
 void ClientProxy1_6::mouseDown(ButtonID button)
 {
-    LOG((CLOG_DEBUG1 "send mouse down to \"%s\" id=%d", getName().c_str(), button));
-    ProtocolUtil::writef(getStream(), kMsgDMouseDown, button);
+    get_conn().send_mouse_down_1_6(button);
 }
 
 void ClientProxy1_6::mouseUp(ButtonID button)
 {
-    LOG((CLOG_DEBUG1 "send mouse up to \"%s\" id=%d", getName().c_str(), button));
-    ProtocolUtil::writef(getStream(), kMsgDMouseUp, button);
+    get_conn().send_mouse_up_1_6(button);
 }
 
 void ClientProxy1_6::mouseMove(std::int32_t xAbs, std::int32_t yAbs)
 {
-    LOG((CLOG_DEBUG2 "send mouse move to \"%s\" %d,%d", getName().c_str(), xAbs, yAbs));
-    ProtocolUtil::writef(getStream(), kMsgDMouseMove, xAbs, yAbs);
+    get_conn().send_mouse_move_1_6(xAbs, yAbs);
 }
 
 void ClientProxy1_6::mouseRelativeMove(std::int32_t xRel, std::int32_t yRel)
 {
-    LOG((CLOG_DEBUG2 "send mouse relative move to \"%s\" %d,%d", getName().c_str(), xRel, yRel));
-    ProtocolUtil::writef(getStream(), kMsgDMouseRelMove, xRel, yRel);
+    get_conn().send_mouse_relative_move_1_6(xRel, yRel);
 }
 
 void ClientProxy1_6::mouseWheel(std::int32_t xDelta, std::int32_t yDelta)
 {
-    LOG((CLOG_DEBUG2 "send mouse wheel to \"%s\" %+d,%+d", getName().c_str(), xDelta, yDelta));
-    ProtocolUtil::writef(getStream(), kMsgDMouseWheel, xDelta, yDelta);
+    get_conn().send_mouse_wheel_1_6(xDelta, yDelta);
 }
 
 void ClientProxy1_6::sendDragInfo(std::uint32_t fileCount, const char* info, size_t size)
 {
     std::string data(info, size);
-    ProtocolUtil::writef(getStream(), kMsgDDragInfo, fileCount, &data);
+    get_conn().send_drag_info_1_6(fileCount, data);
 }
 
 void ClientProxy1_6::file_chunk_sending(const FileChunk& chunk)
 {
-    FileChunk::send(getStream(), chunk.mark_, chunk.data_);
+    get_conn().send_file_chunk_1_6(chunk);
 }
 
 void ClientProxy1_6::screensaver(bool on)
 {
-    LOG((CLOG_DEBUG1 "send screen saver to \"%s\" on=%d", getName().c_str(), on ? 1 : 0));
-    ProtocolUtil::writef(getStream(), kMsgCScreenSaver, on ? 1 : 0);
+    get_conn().send_screensaver_1_6(on);
 }
 
 void ClientProxy1_6::resetOptions()
 {
-    LOG((CLOG_DEBUG1 "send reset options to \"%s\"", getName().c_str()));
-    ProtocolUtil::writef(getStream(), kMsgCResetOptions);
-
+    get_conn().send_reset_options_1_6();
     // reset heart rate and death
     resetHeartbeatRate();
     removeHeartbeatTimer();
@@ -415,8 +402,7 @@ void ClientProxy1_6::resetOptions()
 
 void ClientProxy1_6::setOptions(const OptionsList& options)
 {
-    LOG((CLOG_DEBUG1 "send set options to \"%s\" size=%d", getName().c_str(), options.size()));
-    ProtocolUtil::writef(getStream(), kMsgDSetOptions, &options);
+    get_conn().send_set_options_1_6(options);
 
     // check options
     for (std::uint32_t i = 0, n = static_cast<std::uint32_t>(options.size()); i < n; i += 2) {
@@ -460,8 +446,7 @@ bool ClientProxy1_6::recvInfo()
     m_info.m_my = my;
 
     // acknowledge receipt
-    LOG((CLOG_DEBUG1 "send info ack to \"%s\"", getName().c_str()));
-    ProtocolUtil::writef(getStream(), kMsgCInfoAck);
+    get_conn().send_info_ack_1_6();
     return true;
 }
 
@@ -522,7 +507,7 @@ bool ClientProxy1_6::recvGrabClipboard()
 
 void ClientProxy1_6::keepAlive()
 {
-    ProtocolUtil::writef(getStream(), kMsgCKeepAlive);
+    get_conn().send_keep_alive_1_6();
 }
 
 void ClientProxy1_6::fileChunkReceived()

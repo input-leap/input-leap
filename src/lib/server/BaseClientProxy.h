@@ -22,6 +22,7 @@
 
 namespace inputleap {
 
+class IClientConnection;
 class IStream;
 class FileChunk;
 
@@ -65,7 +66,7 @@ public:
     virtual void sendDragInfo(std::uint32_t fileCount, const char* info, size_t size) = 0;
     virtual void file_chunk_sending(const FileChunk& chunk) = 0;
     std::string getName() const override;
-    virtual inputleap::IStream* getStream() const = 0;
+    virtual IClientConnection& get_conn() const = 0;
 
 private:
     std::string m_name;

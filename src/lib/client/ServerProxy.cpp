@@ -892,12 +892,14 @@ ServerProxy::dragInfoReceived()
 
 void ServerProxy::handle_clipboard_sending_event(const Event& event)
 {
-    ClipboardChunk::send(m_stream, event.get_data_as<ClipboardChunk>());
+    const auto& chunk = event.get_data_as<ClipboardChunk>();
+    ProtocolUtil::writef(m_stream, kMsgDClipboard, chunk.id_, chunk.sequence_, chunk.mark_,
+                         &chunk.data_);
 }
 
 void ServerProxy::file_chunk_sending(const FileChunk& chunk)
 {
-    FileChunk::send(m_stream, chunk.mark_, chunk.data_);
+    ProtocolUtil::writef(m_stream, kMsgDFileTransfer, chunk.mark_, &chunk.data_);
 }
 
 void ServerProxy::sendDragInfo(std::uint32_t fileCount, const char* info, size_t size)

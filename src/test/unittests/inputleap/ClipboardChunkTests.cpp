@@ -26,8 +26,7 @@ TEST(ClipboardChunkTests, start_formatStartChunk)
 {
     ClipboardID id = 0;
     std::uint32_t sequence = 0;
-    std::string mockDataSize = "10";
-    ClipboardChunk chunk = ClipboardChunk::start(id, sequence, mockDataSize);
+    ClipboardChunk chunk = ClipboardChunk::start(id, sequence, 10);
 
     EXPECT_EQ(id, chunk.chunk_[0]);
     EXPECT_EQ(sequence, static_cast<std::uint32_t>(chunk.chunk_[1]));

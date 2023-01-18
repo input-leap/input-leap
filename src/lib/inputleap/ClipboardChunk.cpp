@@ -35,16 +35,17 @@ ClipboardChunk::ClipboardChunk(size_t size)
 }
 
 ClipboardChunk ClipboardChunk::start(ClipboardID id, std::uint32_t sequence,
-                                     const std::string& size)
+                                     const std::size_t& size)
 {
-    size_t sizeLength = size.size();
+    auto size_string = std::to_string(size);
+    size_t sizeLength = size_string.size();
     ClipboardChunk start(sizeLength + CLIPBOARD_CHUNK_META_SIZE);
     std::string& chunk = start.chunk_;
 
     chunk[0] = id;
     std::memcpy (&chunk[1], &sequence, 4);
     chunk[5] = kDataStart;
-    memcpy(&chunk[6], size.c_str(), sizeLength);
+    memcpy(&chunk[6], size_string.c_str(), sizeLength);
     chunk[sizeLength + CLIPBOARD_CHUNK_META_SIZE - 1] = '\0';
 
     return start;

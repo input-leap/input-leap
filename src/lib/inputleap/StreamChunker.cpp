@@ -117,8 +117,7 @@ StreamChunker::sendClipboard(
                 void* eventTarget)
 {
     // send first message (data size)
-    std::string dataSize = inputleap::string::sizeTypeToString(size);
-    ClipboardChunk size_message = ClipboardChunk::start(id, sequence, dataSize);
+    ClipboardChunk size_message = ClipboardChunk::start(id, sequence, size);
 
     events->add_event(EventType::CLIPBOARD_SENDING, eventTarget,
                       create_event_data<ClipboardChunk>(size_message));

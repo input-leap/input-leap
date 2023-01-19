@@ -36,7 +36,7 @@ TEST(CXWindowsScreenTests, fakeMouseMove_nonPrimary_getCursorPosValuesCorrect)
     MockEventQueue eventQueue;
     EXPECT_CALL(eventQueue, add_handler(_, _, _)).Times(2);
     EXPECT_CALL(eventQueue, adoptBuffer(_)).Times(2);
-    EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(2);
+    EXPECT_CALL(eventQueue, remove_handler(_, _)).Times(2);
     XWindowsScreen screen(new XWindowsImpl(), displayName, false, 0, &eventQueue);
 
     screen.fakeMouseMove(10, 20);

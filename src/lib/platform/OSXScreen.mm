@@ -19,6 +19,7 @@
 #include "platform/OSXScreen.h"
 
 #include "base/EventQueue.h"
+#include "base/EventQueueTimer.h"
 #include "client/Client.h"
 #include "platform/OSXClipboard.h"
 #include "platform/OSXEventQueueBuffer.h"
@@ -148,7 +149,7 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
         m_pmWatchThread = new Thread([this](){ watchSystemPowerThread(); });
 	}
 	catch (...) {
-        m_events->removeHandler(EventType::OSX_SCREEN_CONFIRM_SLEEP, get_event_target());
+        m_events->remove_handler(EventType::OSX_SCREEN_CONFIRM_SLEEP, get_event_target());
 		if (m_switchEventHandlerRef != 0) {
 			RemoveEventHandler(m_switchEventHandlerRef);
 		}
@@ -172,7 +173,7 @@ OSXScreen::~OSXScreen()
 {
 	disable();
     m_events->adoptBuffer(nullptr);
-    m_events->removeHandler(EventType::SYSTEM, m_events->getSystemTarget());
+    m_events->remove_handler(EventType::SYSTEM, m_events->getSystemTarget());
 
 	if (m_pmWatchThread) {
 		// make sure the thread has setup the runloop.
@@ -189,7 +190,7 @@ OSXScreen::~OSXScreen()
         m_pmWatchThread = nullptr;
 	}
 
-    m_events->removeHandler(EventType::OSX_SCREEN_CONFIRM_SLEEP,
+    m_events->remove_handler(EventType::OSX_SCREEN_CONFIRM_SLEEP,
                                 get_event_target());
 
 	RemoveEventHandler(m_switchEventHandlerRef);
@@ -200,7 +201,7 @@ OSXScreen::~OSXScreen()
 	delete m_screensaver;
 }
 
-const void* OSXScreen::get_event_target() const
+const EventTarget* OSXScreen::get_event_target() const
 {
     return this;
 }
@@ -780,7 +781,7 @@ OSXScreen::disable()
 
 	// uninstall clipboard timer
     if (m_clipboardTimer != nullptr) {
-        m_events->removeHandler(EventType::TIMER, m_clipboardTimer);
+        m_events->remove_handler(EventType::TIMER, m_clipboardTimer);
 		m_events->deleteTimer(m_clipboardTimer);
         m_clipboardTimer = nullptr;
 	}
@@ -1423,7 +1424,7 @@ OSXScreen::enableDragTimer(bool enable)
 		CFRelease(event);
 	}
     else if (!enable && m_dragTimer != nullptr) {
-        m_events->removeHandler(EventType::TIMER, m_dragTimer);
+        m_events->remove_handler(EventType::TIMER, m_dragTimer);
 		m_events->deleteTimer(m_dragTimer);
         m_dragTimer = nullptr;
 	}

@@ -26,9 +26,10 @@ namespace inputleap {
 
 class StreamChunker {
 public:
-    static void sendFile(const char* filename, IEventQueue* events, void* eventTarget);
+    static void sendFile(const char* filename, IEventQueue* events, const EventTarget* event_target);
     static void sendClipboard(std::string& data, std::size_t size, ClipboardID id,
-                              std::uint32_t sequence, IEventQueue* events, void* eventTarget);
+                              std::uint32_t sequence, IEventQueue* events,
+                              const EventTarget* event_target);
     static void interruptFile();
 
 private:

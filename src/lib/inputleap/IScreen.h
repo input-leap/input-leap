@@ -46,7 +46,7 @@ public:
     /*!
     Returns the target used for events created by this object.
     */
-    virtual const void* get_event_target() const = 0;
+    virtual const EventTarget* get_event_target() const = 0;
 
     //! Get clipboard
     /*!

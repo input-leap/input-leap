@@ -17,6 +17,7 @@
 #ifndef INPUTLEAP_LIB_SERVER_ICLIENT_CONNECTION_H
 #define INPUTLEAP_LIB_SERVER_ICLIENT_CONNECTION_H
 
+#include "base/Fwd.h"
 #include "inputleap/Fwd.h"
 #include "inputleap/clipboard_types.h"
 #include "inputleap/key_types.h"
@@ -33,7 +34,7 @@ class IClientConnection {
 public:
     virtual ~IClientConnection() = default;
 
-    virtual const void* get_event_target() = 0;
+    virtual const EventTarget* get_event_target() = 0;
 
     virtual IStream* get_stream() = 0;
 

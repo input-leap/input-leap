@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "base/EventTarget.h"
 #include "inputleap/IPlatformScreen.h"
 #include "inputleap/DragInformation.h"
 #include <stdexcept>
@@ -30,7 +31,7 @@ This screen implementation is the superclass of all other screen
 implementations.  It implements a handful of methods and requires
 subclasses to implement the rest.
 */
-class PlatformScreen : public IPlatformScreen {
+class PlatformScreen : public IPlatformScreen, public EventTarget {
 public:
     PlatformScreen(IEventQueue* events);
     ~PlatformScreen() override;

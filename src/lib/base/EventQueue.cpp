@@ -17,6 +17,7 @@
  */
 
 #include "base/EventQueue.h"
+#include "EventQueueTimer.h"
 
 #include "arch/Arch.h"
 #include "base/SimpleEventQueueBuffer.h"
@@ -36,8 +37,7 @@ interrupt(Arch::ESignal, void* data)
     events->add_event(EventType::QUIT);
 }
 
-EventQueue::EventQueue() :
-    m_systemTarget(0)
+EventQueue::EventQueue()
 {
     ARCH->setSignalHandler(Arch::kINTERRUPT, &interrupt, this);
     ARCH->setSignalHandler(Arch::kTERMINATE, &interrupt, this);
@@ -48,6 +48,10 @@ EventQueue::~EventQueue()
 {
     ARCH->setSignalHandler(Arch::kINTERRUPT, nullptr, nullptr);
     ARCH->setSignalHandler(Arch::kTERMINATE, nullptr, nullptr);
+
+    for (const auto& handlers : m_handlers) {
+        handlers.first->event_queue_ = nullptr;
+    }
 }
 
 void
@@ -166,15 +170,15 @@ retry:
 bool
 EventQueue::dispatchEvent(const Event& event)
 {
-    const void* target = event.getTarget();
+    auto* target = event.getTarget();
 
-    const auto* type_handler = get_handler(event.getType(), target);
+    auto type_handler = get_handler(event.getType(), target);
     if (type_handler) {
         (*type_handler)(event);
         return true;
     }
 
-    const auto* any_handler = get_handler(EventType::UNKNOWN, target);
+    auto any_handler = get_handler(EventType::UNKNOWN, target);
     if (any_handler) {
         (*any_handler)(event);
         return true;
@@ -221,8 +225,7 @@ void EventQueue::add_event_to_buffer(Event&& event)
     }
 }
 
-EventQueueTimer*
-EventQueue::newTimer(double duration, void* target)
+EventQueueTimer* EventQueue::newTimer(double duration, const EventTarget* target)
 {
     assert(duration > 0.0);
 
@@ -240,8 +243,7 @@ EventQueue::newTimer(double duration, void* target)
     return timer;
 }
 
-EventQueueTimer*
-EventQueue::newOneShotTimer(double duration, void* target)
+EventQueueTimer* EventQueue::newOneShotTimer(double duration, const EventTarget* target)
 {
     assert(duration > 0.0);
 
@@ -277,14 +279,24 @@ EventQueue::deleteTimer(EventQueueTimer* timer)
     buffer_->deleteTimer(timer);
 }
 
-void EventQueue::add_handler(EventType type, const void* target, const EventHandler& handler)
+void EventQueue::add_handler(EventType type, const EventTarget* target, const EventHandler& handler)
 {
     std::lock_guard<std::mutex> lock(mutex_);
-    m_handlers[target][type] = handler;
+    if (target->event_queue_ == nullptr) {
+        target->event_queue_ = this;
+    } else if (target->event_queue_ != this) {
+        throw std::invalid_argument("EventTarget added to wrong EventQueue");
+    }
+
+    m_handlers[target][type] = std::make_shared<EventHandler>(handler);
 }
 
-void EventQueue::removeHandler(EventType type, const void* target)
+void EventQueue::remove_handler(EventType type, const EventTarget* target)
 {
+    if (target->event_queue_ == nullptr) {
+        return;
+    }
+
     std::lock_guard<std::mutex> lock(mutex_);
     HandlerTable::iterator index = m_handlers.find(target);
     if (index != m_handlers.end()) {
@@ -293,19 +305,33 @@ void EventQueue::removeHandler(EventType type, const void* target)
         if (index2 != typeHandlers.end()) {
             typeHandlers.erase(index2);
         }
+        if (typeHandlers.empty()) {
+            m_handlers.erase(index);
+            target->event_queue_ = nullptr;
+        }
     }
 }
 
-void EventQueue::removeHandlers(const void* target)
+void EventQueue::remove_handlers(const EventTarget* target)
 {
+    if (target->event_queue_ == nullptr) {
+        return;
+    }
+
     std::lock_guard<std::mutex> lock(mutex_);
+    if (target->event_queue_ != this) {
+        throw std::invalid_argument("EventTarget sent to wrong EventQueue");
+    }
+
     HandlerTable::iterator index = m_handlers.find(target);
     if (index != m_handlers.end()) {
-        index->second.clear();
+        m_handlers.erase(index);
     }
+    target->event_queue_ = nullptr;
 }
 
-const EventQueue::EventHandler* EventQueue::get_handler(EventType type, const void* target) const
+std::shared_ptr<EventQueue::EventHandler>
+    EventQueue::get_handler(EventType type, const EventTarget* target) const
 {
     std::lock_guard<std::mutex> lock(mutex_);
     HandlerTable::const_iterator index = m_handlers.find(target);
@@ -313,7 +339,7 @@ const EventQueue::EventHandler* EventQueue::get_handler(EventType type, const vo
         const TypeHandlerTable& typeHandlers = index->second;
         TypeHandlerTable::const_iterator index2 = typeHandlers.find(type);
         if (index2 != typeHandlers.end()) {
-            return &index2->second;
+            return index2->second;
         }
     }
     return nullptr;
@@ -387,7 +413,7 @@ EventQueue::hasTimerExpired(Event& event)
 
     // prepare event and reset the timer's clock
     timer.fillEvent(m_timerEvent);
-    event = Event(EventType::TIMER, timer.getTarget(),
+    event = Event(EventType::TIMER, timer.get_target(),
                   create_event_data<TimerEvent*>(&m_timerEvent));
     timer.reset();
 
@@ -414,11 +440,9 @@ EventQueue::getNextTimerTimeout() const
     return m_timerQueue.top();
 }
 
-void*
-EventQueue::getSystemTarget()
+const EventTarget* EventQueue::getSystemTarget()
 {
-    // any unique arbitrary pointer will do
-    return &m_systemTarget;
+    return &system_target_;
 }
 
 void
@@ -436,10 +460,10 @@ EventQueue::waitForReady() const
 //
 
 EventQueue::Timer::Timer(EventQueueTimer* timer, double timeout,
-                double initialTime, void* target, bool oneShot) :
+                         double initialTime, const EventTarget* target, bool oneShot) :
     m_timer(timer),
     m_timeout(timeout),
-    m_target(target),
+    target_(target),
     m_oneShot(oneShot),
     m_time(initialTime)
 {
@@ -479,12 +503,6 @@ EventQueueTimer*
 EventQueue::Timer::getTimer() const
 {
     return m_timer;
-}
-
-void*
-EventQueue::Timer::getTarget() const
-{
-    return m_target;
 }
 
 void

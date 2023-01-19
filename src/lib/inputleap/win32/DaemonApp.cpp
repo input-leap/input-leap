@@ -213,7 +213,7 @@ DaemonApp::mainLoop(bool daemonized)
         m_watchdog->stop();
         delete m_watchdog;
 
-        m_events->removeHandler(EventType::IPC_SERVER_MESSAGE_RECEIVED, m_ipcServer);
+        m_events->remove_handler(EventType::IPC_SERVER_MESSAGE_RECEIVED, m_ipcServer);
 
         CLOG->remove(m_ipcLogOutputter);
         delete m_ipcLogOutputter;

@@ -23,6 +23,7 @@
 #include "arch/win32/ArchMiscWindows.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
+#include "base/EventQueueTimer.h"
 
 // extended mouse buttons
 #if !defined(VK_XBUTTON1)
@@ -620,7 +621,7 @@ void
 MSWindowsKeyState::disable()
 {
 	if (m_fixTimer != nullptr) {
-        m_events->removeHandler(EventType::TIMER, m_fixTimer);
+        m_events->remove_handler(EventType::TIMER, m_fixTimer);
 		m_events->deleteTimer(m_fixTimer);
 		m_fixTimer = nullptr;
 	}
@@ -744,8 +745,9 @@ MSWindowsKeyState::onKey(KeyButton button, bool down, KeyModifierMask newState)
 	KeyState::onKey(button, down, newState);
 }
 
-void MSWindowsKeyState::sendKeyEvent(const void* target, bool press, bool isAutoRepeat, KeyID key,
-                                     KeyModifierMask mask, std::int32_t count, KeyButton button)
+void MSWindowsKeyState::sendKeyEvent(const EventTarget* target, bool press, bool isAutoRepeat,
+                                     KeyID key, KeyModifierMask mask, std::int32_t count,
+                                     KeyButton button)
 {
 	if (press || isAutoRepeat) {
 		// send key

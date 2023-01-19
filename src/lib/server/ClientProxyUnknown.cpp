@@ -52,7 +52,7 @@ ClientProxyUnknown::ClientProxyUnknown(std::unique_ptr<inputleap::IStream> strea
 
 ClientProxyUnknown::~ClientProxyUnknown()
 {
-    removeHandlers();
+    remove_handlers();
     removeTimer();
     delete m_proxy;
 }
@@ -61,7 +61,7 @@ ClientProxy*
 ClientProxyUnknown::orphanClientProxy()
 {
     if (m_ready) {
-        removeHandlers();
+        remove_handlers();
         ClientProxy* proxy = m_proxy;
         m_proxy = nullptr;
         return proxy;
@@ -85,7 +85,7 @@ ClientProxyUnknown::sendFailure()
     delete m_proxy;
     m_proxy = nullptr;
     m_ready = false;
-    removeHandlers();
+    remove_handlers();
     removeTimer();
     m_events->add_event(EventType::CLIENT_PROXY_UNKNOWN_FAILURE, this);
 }
@@ -117,18 +117,18 @@ ClientProxyUnknown::addProxyHandlers()
 }
 
 void
-ClientProxyUnknown::removeHandlers()
+ClientProxyUnknown::remove_handlers()
 {
     if (stream_) {
-        m_events->removeHandler(EventType::STREAM_INPUT_READY, stream_->get_event_target());
-        m_events->removeHandler(EventType::STREAM_OUTPUT_ERROR, stream_->get_event_target());
-        m_events->removeHandler(EventType::STREAM_INPUT_SHUTDOWN, stream_->get_event_target());
-        m_events->removeHandler(EventType::STREAM_INPUT_FORMAT_ERROR, stream_->get_event_target());
-        m_events->removeHandler(EventType::STREAM_OUTPUT_SHUTDOWN, stream_->get_event_target());
+        m_events->remove_handler(EventType::STREAM_INPUT_READY, stream_->get_event_target());
+        m_events->remove_handler(EventType::STREAM_OUTPUT_ERROR, stream_->get_event_target());
+        m_events->remove_handler(EventType::STREAM_INPUT_SHUTDOWN, stream_->get_event_target());
+        m_events->remove_handler(EventType::STREAM_INPUT_FORMAT_ERROR, stream_->get_event_target());
+        m_events->remove_handler(EventType::STREAM_OUTPUT_SHUTDOWN, stream_->get_event_target());
     }
     if (m_proxy != nullptr) {
-        m_events->removeHandler(EventType::CLIENT_PROXY_READY, m_proxy);
-        m_events->removeHandler(EventType::CLIENT_PROXY_DISCONNECTED, m_proxy);
+        m_events->remove_handler(EventType::CLIENT_PROXY_READY, m_proxy);
+        m_events->remove_handler(EventType::CLIENT_PROXY_DISCONNECTED, m_proxy);
     }
 }
 
@@ -137,7 +137,7 @@ ClientProxyUnknown::removeTimer()
 {
     if (m_timer != nullptr) {
         m_events->deleteTimer(m_timer);
-        m_events->removeHandler(EventType::TIMER, this);
+        m_events->remove_handler(EventType::TIMER, this);
         m_timer = nullptr;
     }
 }
@@ -169,7 +169,7 @@ void ClientProxyUnknown::handle_data()
         // remove stream event handlers.  the proxy we're about to create
         // may install its own handlers and we don't want to accidentally
         // remove those later.
-        removeHandlers();
+        remove_handlers();
 
         {
             std::unique_ptr<IClientConnection> conn =

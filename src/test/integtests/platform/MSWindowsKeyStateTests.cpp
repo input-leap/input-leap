@@ -36,7 +36,7 @@ namespace inputleap {
 using ::testing::_;
 using ::testing::NiceMock;
 
-class MSWindowsKeyStateTests : public ::testing::Test
+class MSWindowsKeyStateTests : public ::testing::Test, public EventTarget
 {
 protected:
 	virtual void SetUp()
@@ -54,7 +54,7 @@ protected:
 		return new MSWindowsDesks(true, false, m_screensaver, eventQueue, [](){}, false);
 	}
 
-	const void* get_event_target() const
+    const EventTarget* get_event_target() const
 	{
         return this;
 	}
@@ -70,7 +70,7 @@ TEST_F(MSWindowsKeyStateTests, disable_eventQueueNotUsed)
 	MockKeyMap keyMap;
 	MSWindowsKeyState keyState(desks, get_event_target(), &eventQueue, keyMap);
 
-	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(0);
+    EXPECT_CALL(eventQueue, remove_handler(_, _)).Times(0);
 
 	keyState.disable();
 	delete desks;

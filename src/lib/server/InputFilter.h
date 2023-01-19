@@ -19,6 +19,7 @@
 #pragma once
 
 #include "base/Fwd.h"
+#include "base/EventTarget.h"
 #include "inputleap/key_types.h"
 #include "inputleap/mouse_types.h"
 #include "inputleap/protocol_types.h"
@@ -31,7 +32,7 @@ namespace inputleap {
 
 class PrimaryClient;
 
-class InputFilter {
+class InputFilter : public EventTarget {
 public:
     // -------------------------------------------------------------------------
     // Input Filter Condition Classes

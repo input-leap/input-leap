@@ -14,52 +14,18 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTLEAP_LIB_BASE_FWD_H
-#define INPUTLEAP_LIB_BASE_FWD_H
+#include "EventTarget.h"
+#include "IEventQueue.h"
 
 namespace inputleap {
 
-// Event.h
-class EventDataBase;
-template<class T> class EventData;
-class Event;
+EventTarget::EventTarget() = default;
 
-// EventQueue.h
-class EventQueue;
-
-// EventQueueTimer.h
-class EventQueueTimer;
-
-// EventTarget.h
-class EventTarget;
-
-// IEventQueue.h
-class IEventQueue;
-
-// IEventQueueBuffer.h
-class IEventQueueBuffer;
-
-// ILogOutputter.h
-class ILogOutputter;
-
-// Log.h
-class Log;
-
-// log_outputters.h
-class StopLogOutputter;
-class ConsoleLogOutputter;
-class FileLogOutputter;
-class SystemLogOutputter;
-class SystemLogger;
-class BufferedLogOutputter;
-class MesssageBoxLogOutputter;
-
-// SimpleEventQueueBuffer.h
-class SimpleEventQueueBuffer;
-
-// Stopwatch.h
-class Stopwatch;
+EventTarget::~EventTarget()
+{
+    if (event_queue_ != nullptr) {
+        event_queue_->remove_handlers(this);
+    }
+}
 
 } // namespace inputleap
-
-#endif // INPUTLEAP_LIB_BASE_FWD_H

@@ -36,7 +36,7 @@ IpcServerProxy::IpcServerProxy(inputleap::IStream& stream, IEventQueue* events) 
 
 IpcServerProxy::~IpcServerProxy()
 {
-    m_events->removeHandler(EventType::STREAM_INPUT_READY, m_stream.get_event_target());
+    m_events->remove_handler(EventType::STREAM_INPUT_READY, m_stream.get_event_target());
 }
 
 void IpcServerProxy::handle_data()

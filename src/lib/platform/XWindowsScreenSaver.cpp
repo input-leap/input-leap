@@ -32,7 +32,7 @@
 namespace inputleap {
 
 XWindowsScreenSaver::XWindowsScreenSaver(IXWindowsImpl* impl, Display* display,
-                                         Window window, const void* event_target,
+                                         Window window, const EventTarget* event_target,
                                          IEventQueue* events) :
     m_display(display),
     m_xscreensaverSink(window),
@@ -106,7 +106,7 @@ XWindowsScreenSaver::~XWindowsScreenSaver()
     if (m_disableTimer != nullptr) {
         m_events->deleteTimer(m_disableTimer);
     }
-    m_events->removeHandler(EventType::TIMER, this);
+    m_events->remove_handler(EventType::TIMER, this);
 
     if (m_display != nullptr) {
         enableDPMS(m_dpmsEnabled);

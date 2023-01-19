@@ -37,10 +37,8 @@ static const size_t g_chunkSize = 32 * 1024; //32kb
 bool StreamChunker::s_isChunkingFile = false;
 bool StreamChunker::s_interruptFile = false;
 
-void
-StreamChunker::sendFile(const char* filename,
-                IEventQueue* events,
-                void* eventTarget)
+void StreamChunker::sendFile(const char* filename, IEventQueue* events,
+                             const EventTarget* event_target)
 {
     s_isChunkingFile = true;
 
@@ -57,7 +55,7 @@ StreamChunker::sendFile(const char* filename,
     // send first message (file size)
     auto size_message = FileChunk::start(size);
 
-    events->add_event(EventType::FILE_CHUNK_SENDING, eventTarget,
+    events->add_event(EventType::FILE_CHUNK_SENDING, event_target,
                       create_event_data<FileChunk>(size_message));
 
     // send chunk messages with a fixed chunk size
@@ -72,7 +70,7 @@ StreamChunker::sendFile(const char* filename,
             break;
         }
 
-        events->add_event(EventType::FILE_KEEPALIVE, eventTarget);
+        events->add_event(EventType::FILE_KEEPALIVE, event_target);
 
         // make sure we don't read too much from the mock data.
         if (sentLength + chunkSize > size) {
@@ -85,7 +83,7 @@ StreamChunker::sendFile(const char* filename,
         FileChunk fileChunk = FileChunk::data(data, chunkSize);
         delete[] chunkData;
 
-        events->add_event(EventType::FILE_CHUNK_SENDING, eventTarget,
+        events->add_event(EventType::FILE_CHUNK_SENDING, event_target,
                           create_event_data<FileChunk>(fileChunk));
 
         sentLength += chunkSize;
@@ -99,7 +97,7 @@ StreamChunker::sendFile(const char* filename,
     // send last message
     FileChunk end = FileChunk::end();
 
-    events->add_event(EventType::FILE_CHUNK_SENDING, eventTarget,
+    events->add_event(EventType::FILE_CHUNK_SENDING, event_target,
                       create_event_data<FileChunk>(end));
 
     file.close();
@@ -107,19 +105,14 @@ StreamChunker::sendFile(const char* filename,
     s_isChunkingFile = false;
 }
 
-void
-StreamChunker::sendClipboard(
-                std::string& data,
-                size_t size,
-                ClipboardID id,
-                std::uint32_t sequence,
-                IEventQueue* events,
-                void* eventTarget)
+void StreamChunker::sendClipboard(std::string& data, std::size_t size, ClipboardID id,
+                                  std::uint32_t sequence, IEventQueue* events,
+                                  const EventTarget* event_target)
 {
     // send first message (data size)
     ClipboardChunk size_message = ClipboardChunk::start(id, sequence, size);
 
-    events->add_event(EventType::CLIPBOARD_SENDING, eventTarget,
+    events->add_event(EventType::CLIPBOARD_SENDING, event_target,
                       create_event_data<ClipboardChunk>(size_message));
 
     // send clipboard chunk with a fixed size
@@ -127,7 +120,7 @@ StreamChunker::sendClipboard(
     size_t chunkSize = g_chunkSize;
 
     while (true) {
-        events->add_event(EventType::FILE_KEEPALIVE, eventTarget);
+        events->add_event(EventType::FILE_KEEPALIVE, event_target);
 
         // make sure we don't read too much from the mock data.
         if (sentLength + chunkSize > size) {
@@ -137,7 +130,7 @@ StreamChunker::sendClipboard(
         std::string chunk(data.substr(sentLength, chunkSize).c_str(), chunkSize);
         ClipboardChunk data_chunk = ClipboardChunk::data(id, sequence, chunk);
 
-        events->add_event(EventType::CLIPBOARD_SENDING, eventTarget,
+        events->add_event(EventType::CLIPBOARD_SENDING, event_target,
                           create_event_data<ClipboardChunk>(data_chunk));
 
         sentLength += chunkSize;
@@ -149,7 +142,7 @@ StreamChunker::sendClipboard(
     // send last message
     ClipboardChunk end = ClipboardChunk::end(id, sequence);
 
-    events->add_event(EventType::CLIPBOARD_SENDING, eventTarget,
+    events->add_event(EventType::CLIPBOARD_SENDING, event_target,
                       create_event_data<ClipboardChunk>(end));
 
     LOG((CLOG_DEBUG "sent clipboard size=%d", sentLength));

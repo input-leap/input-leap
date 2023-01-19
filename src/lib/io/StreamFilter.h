@@ -20,6 +20,7 @@
 
 #include "io/IStream.h"
 #include "base/IEventQueue.h"
+#include "base/EventTarget.h"
 #include <memory>
 
 namespace inputleap {
@@ -29,7 +30,7 @@ namespace inputleap {
 This class wraps a stream.  Subclasses provide indirect access
 to the wrapped stream, typically performing some filtering.
 */
-class StreamFilter : public IStream {
+class StreamFilter : public IStream, public EventTarget {
 public:
     /*!
     Create a wrapper around \c stream.  Iff \c adoptStream is true then
@@ -48,7 +49,7 @@ public:
     void flush() override;
     void shutdownInput() override;
     void shutdownOutput() override;
-    const void* get_event_target() const override;
+    const EventTarget* get_event_target() const override;
     bool isReady() const override;
     std::uint32_t getSize() const override;
 

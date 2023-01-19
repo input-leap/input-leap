@@ -122,7 +122,7 @@ TCPSocket::close()
     }
 }
 
-const void* TCPSocket::get_event_target() const
+const EventTarget* TCPSocket::get_event_target() const
 {
     return this;
 }

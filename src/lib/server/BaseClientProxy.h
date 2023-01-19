@@ -18,8 +18,9 @@
 
 #pragma once
 
-#include "inputleap/IClient.h"
+#include "base/EventTarget.h"
 #include "inputleap/Fwd.h"
+#include "inputleap/IClient.h"
 
 namespace inputleap {
 
@@ -27,7 +28,7 @@ class IClientConnection;
 class IStream;
 
 //! Generic proxy for client or primary
-class BaseClientProxy : public IClient {
+class BaseClientProxy : public IClient, public EventTarget {
 public:
     /*!
     \c name is the name of the client.

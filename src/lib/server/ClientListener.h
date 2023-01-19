@@ -19,6 +19,7 @@
 #pragma once
 
 #include "server/Config.h"
+#include "base/EventTarget.h"
 #include "base/EventTypes.h"
 #include "base/Event.h"
 #include "base/UniquePtrContainer.h"
@@ -34,7 +35,7 @@ class ClientProxy;
 class ClientProxyUnknown;
 class Server;
 
-class ClientListener {
+class ClientListener : public EventTarget {
 public:
     // The factories are adopted.
     ClientListener(const NetworkAddress&,

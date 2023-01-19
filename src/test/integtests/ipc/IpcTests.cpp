@@ -82,7 +82,7 @@ TEST_F(IpcTests, connectToServer)
 
     m_events.initQuitTimeout(5);
     m_events.loop();
-    m_events.removeHandler(EventType::IPC_SERVER_MESSAGE_RECEIVED, &server);
+    m_events.remove_handler(EventType::IPC_SERVER_MESSAGE_RECEIVED, &server);
     m_events.cleanupQuitTimeout();
 
     EXPECT_EQ(true, m_connectToServer_helloMessageReceived);
@@ -108,7 +108,7 @@ TEST_F(IpcTests, sendMessageToServer)
 
     m_events.initQuitTimeout(5);
     m_events.loop();
-    m_events.removeHandler(EventType::IPC_SERVER_MESSAGE_RECEIVED, &server);
+    m_events.remove_handler(EventType::IPC_SERVER_MESSAGE_RECEIVED, &server);
     m_events.cleanupQuitTimeout();
 
     EXPECT_EQ("test", m_sendMessageToServer_receivedString);
@@ -139,8 +139,8 @@ TEST_F(IpcTests, sendMessageToClient)
 
     m_events.initQuitTimeout(5);
     m_events.loop();
-    m_events.removeHandler(EventType::IPC_SERVER_MESSAGE_RECEIVED, &server);
-    m_events.removeHandler(EventType::IPC_CLIENT_MESSAGE_RECEIVED, &client);
+    m_events.remove_handler(EventType::IPC_SERVER_MESSAGE_RECEIVED, &server);
+    m_events.remove_handler(EventType::IPC_CLIENT_MESSAGE_RECEIVED, &client);
     m_events.cleanupQuitTimeout();
 
     EXPECT_EQ("test", m_sendMessageToClient_receivedString);

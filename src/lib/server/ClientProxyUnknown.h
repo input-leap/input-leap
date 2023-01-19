@@ -19,6 +19,7 @@
 #pragma once
 
 #include "base/Event.h"
+#include "base/EventTarget.h"
 #include "base/EventTypes.h"
 #include "base/Fwd.h"
 #include <memory>
@@ -29,7 +30,7 @@ class ClientProxy;
 class IStream;
 class Server;
 
-class ClientProxyUnknown {
+class ClientProxyUnknown : public EventTarget {
 public:
     ClientProxyUnknown(std::unique_ptr<IStream> stream, double timeout, Server* server,
                        IEventQueue* events);
@@ -56,7 +57,7 @@ private:
     void sendFailure();
     void addStreamHandlers();
     void addProxyHandlers();
-    void removeHandlers();
+    void remove_handlers();
     void removeTimer();
     void handle_data();
     void handle_write_error();

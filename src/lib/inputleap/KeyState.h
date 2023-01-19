@@ -53,7 +53,7 @@ public:
     events in some circumstances.  If this is overridden it must forward
     to the superclass.
     */
-    virtual void sendKeyEvent(const void* target, bool press, bool isAutoRepeat, KeyID key,
+    virtual void sendKeyEvent(const EventTarget* target, bool press, bool isAutoRepeat, KeyID key,
                               KeyModifierMask mask, std::int32_t count, KeyButton button);
 
     //@}

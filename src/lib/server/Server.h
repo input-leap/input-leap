@@ -29,6 +29,7 @@
 #include "inputleap/ServerArgs.h"
 #include "base/Fwd.h"
 #include "base/Event.h"
+#include "base/EventTarget.h"
 #include "base/Stopwatch.h"
 #include "base/EventTypes.h"
 
@@ -45,7 +46,7 @@ class Thread;
 class ClientListener;
 
 /// This class implements the top-level server algorithms for InputLeap.
-class Server : public INode {
+class Server : public INode, public EventTarget {
 public:
     //! Lock cursor to screen data
     class LockCursorToScreenInfo {

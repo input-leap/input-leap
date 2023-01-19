@@ -74,8 +74,8 @@ public:
     Looks up the dispatcher for the event's target and invokes it.
     Returns true iff a dispatcher exists for the target.
 
-    The caller must ensure that the target of the event is not removed by removeHandler() or
-    removeHandlers().
+    The caller must ensure that the target of the event is not removed by remove_handler() or
+    remove_handlers().
     */
     virtual bool dispatchEvent(const Event& event) = 0;
 
@@ -86,7 +86,8 @@ public:
     virtual void add_event(Event&& event) = 0;
 
     /// A helper wrapper for cases when an event is created immediately
-    void add_event(EventType type, const void* target = nullptr, EventDataBase* data = nullptr,
+    void add_event(EventType type, const EventTarget* target = nullptr,
+                   EventDataBase* data = nullptr,
                    Event::Flags flags = Event::kNone)
     {
         add_event(Event(type, target, data, flags));
@@ -108,8 +109,7 @@ public:
     have been put on the queue since the last event for the timer was
     removed (or since the timer was added).
     */
-    virtual EventQueueTimer*
-                        newTimer(double duration, void* target) = 0;
+    virtual EventQueueTimer* newTimer(double duration, const EventTarget* target) = 0;
 
     //! Create a one-shot timer
     /*!
@@ -122,9 +122,7 @@ public:
     uses the given \p target.  If \p target is nullptr it uses the returned
     timer as the target.
     */
-    virtual EventQueueTimer*
-                        newOneShotTimer(double duration,
-                            void* target) = 0;
+    virtual EventQueueTimer* newOneShotTimer(double duration, const EventTarget* target) = 0;
 
     //! Destroy a timer
     /*!
@@ -141,20 +139,18 @@ public:
     of type \p type.  If no such handler exists it will use the handler
     for \p target and type \p kUnknown if it exists.
     */
-    virtual void add_handler(EventType type, const void* target, const EventHandler& handler) = 0;
+    virtual void add_handler(EventType type, const EventTarget* target,
+                             const EventHandler& handler) = 0;
 
     //! Unregister an event handler for an event type
     /*!
     Unregisters an event handler for the \p type, \p target pair and
     deletes it.
     */
-    virtual void removeHandler(EventType type, const void* target) = 0;
+    virtual void remove_handler(EventType type, const EventTarget* target) = 0;
 
-    //! Unregister all event handlers for an event target
-    /*!
-    Unregisters all event handlers for the \p target and deletes them.
-    */
-    virtual void removeHandlers(const void* target) = 0;
+    /// Unregister all event handlers for an event target
+    virtual void remove_handlers(const EventTarget* target) = 0;
 
     //! Wait for event queue to become ready
     /*!
@@ -171,7 +167,7 @@ public:
     /*!
     Returns the target to use for dispatching \c EventType::SYSTEM events.
     */
-    virtual void* getSystemTarget() = 0;
+    virtual const EventTarget* getSystemTarget() = 0;
 
     //@}
 };

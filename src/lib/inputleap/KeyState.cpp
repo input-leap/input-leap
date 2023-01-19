@@ -444,7 +444,7 @@ KeyState::onKey(KeyButton button, bool down, KeyModifierMask newState)
     }
 }
 
-void KeyState::sendKeyEvent(const void* target, bool press, bool isAutoRepeat, KeyID key,
+void KeyState::sendKeyEvent(const EventTarget* target, bool press, bool isAutoRepeat, KeyID key,
                             KeyModifierMask mask, std::int32_t count, KeyButton button)
 {
     if (m_keyMap.isHalfDuplex(key, button)) {

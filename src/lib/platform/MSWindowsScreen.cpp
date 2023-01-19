@@ -37,6 +37,7 @@
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
+#include "base/EventQueueTimer.h"
 #include "base/Time.h"
 
 #include <string.h>
@@ -170,7 +171,7 @@ MSWindowsScreen::~MSWindowsScreen()
 
     disable();
     m_events->adoptBuffer(nullptr);
-    m_events->removeHandler(EventType::SYSTEM, m_events->getSystemTarget());
+    m_events->remove_handler(EventType::SYSTEM, m_events->getSystemTarget());
     delete m_keyState;
     delete m_desks;
     delete m_screensaver;
@@ -259,7 +260,7 @@ MSWindowsScreen::disable()
 
     // uninstall fix timer
     if (m_fixTimer != nullptr) {
-        m_events->removeHandler(EventType::TIMER, m_fixTimer);
+        m_events->remove_handler(EventType::TIMER, m_fixTimer);
         m_events->deleteTimer(m_fixTimer);
         m_fixTimer = nullptr;
     }
@@ -478,7 +479,7 @@ MSWindowsScreen::isPrimary() const
     return m_isPrimary;
 }
 
-const void* MSWindowsScreen::get_event_target() const
+const EventTarget* MSWindowsScreen::get_event_target() const
 {
     return this;
 }

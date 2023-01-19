@@ -18,9 +18,11 @@
 #ifndef INPUTLEAP_LIB_BASE_EVENT_QUEUE_TIMER_H
 #define INPUTLEAP_LIB_BASE_EVENT_QUEUE_TIMER_H
 
+#include "EventTarget.h"
+
 namespace inputleap {
 
-class EventQueueTimer {
+class EventQueueTimer : public EventTarget {
 public:
     virtual ~EventQueueTimer() = default;
 };

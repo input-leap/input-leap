@@ -19,13 +19,17 @@
 
 #define INPUTLEAP_TEST_ENV
 
+#include "base/EventTarget.h"
 #include "inputleap/Screen.h"
 
 #include <gmock/gmock.h>
 
-class MockScreen : public inputleap::Screen
+namespace inputleap {
+
+class MockScreen : public Screen, public EventTarget
 {
 public:
+    const EventTarget* get_event_target() const override { return this; }
     MockScreen() : inputleap::Screen() { }
     MOCK_METHOD0(disable, void());
     MOCK_CONST_METHOD4(getShape, void(std::int32_t&, std::int32_t&, std::int32_t&, std::int32_t&));
@@ -34,3 +38,5 @@ public:
     MOCK_METHOD1(setOptions, void(const OptionsList&));
     MOCK_METHOD0(enable, void());
 };
+
+} // namespace inputleap

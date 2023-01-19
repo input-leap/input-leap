@@ -39,7 +39,7 @@ client/server process or the GUI. The IPC server runs on the daemon process.
 This allows the GUI to send config changes to the daemon and client/server,
 and allows the daemon and client/server to send log data to the GUI.
 */
-class IpcServer {
+class IpcServer : public EventTarget {
 public:
     IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
     IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer, int port);

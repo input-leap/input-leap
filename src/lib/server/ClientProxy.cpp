@@ -37,7 +37,7 @@ ClientProxy::close(const char* msg)
     get_conn().flush();
 }
 
-const void* ClientProxy::get_event_target() const
+const EventTarget* ClientProxy::get_event_target() const
 {
     return this;
 }

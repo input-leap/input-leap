@@ -164,7 +164,7 @@ XWindowsScreen::~XWindowsScreen()
     assert(m_display != nullptr);
 
     m_events->adoptBuffer(nullptr);
-    m_events->removeHandler(EventType::SYSTEM, m_events->getSystemTarget());
+    m_events->remove_handler(EventType::SYSTEM, m_events->getSystemTarget());
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 		delete m_clipboard[id];
 	}
@@ -437,7 +437,7 @@ XWindowsScreen::isPrimary() const
 	return m_isPrimary;
 }
 
-const void* XWindowsScreen::get_event_target() const
+const EventTarget* XWindowsScreen::get_event_target() const
 {
     return this;
 }

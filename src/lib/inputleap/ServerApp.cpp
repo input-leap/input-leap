@@ -32,6 +32,7 @@
 #include "net/XSocket.h"
 #include "arch/Arch.h"
 #include "base/EventQueue.h"
+#include "base/EventQueueTimer.h"
 #include "base/log_outputters.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
@@ -291,9 +292,9 @@ ServerApp::closeServer(Server* server)
 
     m_events->loop();
 
-    m_events->removeHandler(EventType::TIMER, timer);
+    m_events->remove_handler(EventType::TIMER, timer);
     m_events->deleteTimer(timer);
-    m_events->removeHandler(EventType::SERVER_DISCONNECTED, server);
+    m_events->remove_handler(EventType::SERVER_DISCONNECTED, server);
 
     // done with server
     delete server;
@@ -303,7 +304,7 @@ void
 ServerApp::stopRetryTimer()
 {
     if (m_timer != nullptr) {
-        m_events->removeHandler(EventType::TIMER, m_timer);
+        m_events->remove_handler(EventType::TIMER, m_timer);
         m_events->deleteTimer(m_timer);
         m_timer = nullptr;
     }
@@ -327,7 +328,7 @@ void
 ServerApp::closeClientListener(ClientListener* listen)
 {
     if (listen != nullptr) {
-        m_events->removeHandler(EventType::CLIENT_LISTENER_CONNECTED, listen);
+        m_events->remove_handler(EventType::CLIENT_LISTENER_CONNECTED, listen);
         delete listen;
     }
 }
@@ -360,9 +361,9 @@ void
 ServerApp::closeServerScreen(inputleap::Screen* screen)
 {
     if (screen != nullptr) {
-        m_events->removeHandler(EventType::SCREEN_ERROR, screen->get_event_target());
-        m_events->removeHandler(EventType::SCREEN_SUSPEND, screen->get_event_target());
-        m_events->removeHandler(EventType::SCREEN_RESUME, screen->get_event_target());
+        m_events->remove_handler(EventType::SCREEN_ERROR, screen->get_event_target());
+        m_events->remove_handler(EventType::SCREEN_SUSPEND, screen->get_event_target());
+        m_events->remove_handler(EventType::SCREEN_RESUME, screen->get_event_target());
         delete screen;
     }
 }
@@ -784,8 +785,8 @@ ServerApp::mainLoop()
 
     // close down
     LOG((CLOG_DEBUG1 "stopping server"));
-    m_events->removeHandler(EventType::SERVER_APP_FORCE_RECONNECT, m_events->getSystemTarget());
-    m_events->removeHandler(EventType::SERVER_APP_RELOAD_CONFIG, m_events->getSystemTarget());
+    m_events->remove_handler(EventType::SERVER_APP_FORCE_RECONNECT, m_events->getSystemTarget());
+    m_events->remove_handler(EventType::SERVER_APP_RELOAD_CONFIG, m_events->getSystemTarget());
     cleanupServer();
     updateStatus();
     LOG((CLOG_NOTE "stopped server"));

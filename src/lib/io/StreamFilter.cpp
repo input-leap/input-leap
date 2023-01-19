@@ -26,14 +26,14 @@ StreamFilter::StreamFilter(IEventQueue* events, std::unique_ptr<IStream> stream)
     m_events(events)
 {
     // replace handlers for m_stream
-    m_events->removeHandlers(stream_->get_event_target());
+    m_events->remove_handlers(stream_->get_event_target());
     m_events->add_handler(EventType::UNKNOWN, stream_->get_event_target(),
                           [this](const auto& e){ handle_upstream_event(e); });
 }
 
 StreamFilter::~StreamFilter()
 {
-    m_events->removeHandler(EventType::UNKNOWN, stream_->get_event_target());
+    m_events->remove_handler(EventType::UNKNOWN, stream_->get_event_target());
 }
 
 void
@@ -70,7 +70,7 @@ StreamFilter::shutdownOutput()
     getStream()->shutdownOutput();
 }
 
-const void* StreamFilter::get_event_target() const
+const EventTarget* StreamFilter::get_event_target() const
 {
     return this;
 }

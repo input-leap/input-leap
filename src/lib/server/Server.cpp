@@ -39,6 +39,7 @@
 #include "net/XSocket.h"
 #include "mt/Thread.h"
 #include "arch/Arch.h"
+#include "base/EventQueueTimer.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/Time.h"
@@ -187,19 +188,19 @@ Server::~Server()
 	}
 
 	// remove event handlers and timers
-    m_events->removeHandler(EventType::KEY_STATE_KEY_DOWN, m_inputFilter);
-    m_events->removeHandler(EventType::KEY_STATE_KEY_UP, m_inputFilter);
-    m_events->removeHandler(EventType::KEY_STATE_KEY_REPEAT, m_inputFilter);
-    m_events->removeHandler(EventType::PRIMARY_SCREEN_BUTTON_DOWN, m_inputFilter);
-    m_events->removeHandler(EventType::PRIMARY_SCREEN_BUTTON_UP, m_inputFilter);
-    m_events->removeHandler(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY, m_primaryClient->get_event_target());
-    m_events->removeHandler(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY, m_primaryClient->get_event_target());
-    m_events->removeHandler(EventType::PRIMARY_SCREEN_WHEEL, m_primaryClient->get_event_target());
-    m_events->removeHandler(EventType::PRIMARY_SCREEN_SAVER_ACTIVATED, m_primaryClient->get_event_target());
-    m_events->removeHandler(EventType::PRIMARY_SCREEN_SAVER_DEACTIVATED, m_primaryClient->get_event_target());
-    m_events->removeHandler(EventType::PRIMARY_SCREEN_FAKE_INPUT_BEGIN, m_inputFilter);
-    m_events->removeHandler(EventType::PRIMARY_SCREEN_FAKE_INPUT_END, m_inputFilter);
-    m_events->removeHandler(EventType::TIMER, this);
+    m_events->remove_handler(EventType::KEY_STATE_KEY_DOWN, m_inputFilter);
+    m_events->remove_handler(EventType::KEY_STATE_KEY_UP, m_inputFilter);
+    m_events->remove_handler(EventType::KEY_STATE_KEY_REPEAT, m_inputFilter);
+    m_events->remove_handler(EventType::PRIMARY_SCREEN_BUTTON_DOWN, m_inputFilter);
+    m_events->remove_handler(EventType::PRIMARY_SCREEN_BUTTON_UP, m_inputFilter);
+    m_events->remove_handler(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY, m_primaryClient->get_event_target());
+    m_events->remove_handler(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY, m_primaryClient->get_event_target());
+    m_events->remove_handler(EventType::PRIMARY_SCREEN_WHEEL, m_primaryClient->get_event_target());
+    m_events->remove_handler(EventType::PRIMARY_SCREEN_SAVER_ACTIVATED, m_primaryClient->get_event_target());
+    m_events->remove_handler(EventType::PRIMARY_SCREEN_SAVER_DEACTIVATED, m_primaryClient->get_event_target());
+    m_events->remove_handler(EventType::PRIMARY_SCREEN_FAKE_INPUT_BEGIN, m_inputFilter);
+    m_events->remove_handler(EventType::PRIMARY_SCREEN_FAKE_INPUT_END, m_inputFilter);
+    m_events->remove_handler(EventType::TIMER, this);
 	stopSwitch();
 
 	// force immediate disconnection of secondary clients
@@ -208,8 +209,8 @@ Server::~Server()
 							index != m_oldClients.end(); ++index) {
 		BaseClientProxy* client = index->first;
 		m_events->deleteTimer(index->second);
-        m_events->removeHandler(EventType::TIMER, client);
-        m_events->removeHandler(EventType::CLIENT_PROXY_DISCONNECTED, client);
+        m_events->remove_handler(EventType::TIMER, client);
+        m_events->remove_handler(EventType::CLIENT_PROXY_DISCONNECTED, client);
 		delete client;
 	}
 
@@ -2041,9 +2042,9 @@ Server::removeClient(BaseClientProxy* client)
 	}
 
 	// remove event handlers
-    m_events->removeHandler(EventType::SCREEN_SHAPE_CHANGED, client->get_event_target());
-    m_events->removeHandler(EventType::CLIPBOARD_GRABBED, client->get_event_target());
-    m_events->removeHandler(EventType::CLIPBOARD_CHANGED, client->get_event_target());
+    m_events->remove_handler(EventType::SCREEN_SHAPE_CHANGED, client->get_event_target());
+    m_events->remove_handler(EventType::CLIPBOARD_GRABBED, client->get_event_target());
+    m_events->remove_handler(EventType::CLIPBOARD_CHANGED, client->get_event_target());
 
 	// remove from list
 	m_clients.erase(getName(client));
@@ -2120,7 +2121,7 @@ Server::removeActiveClient(BaseClientProxy* client)
 {
 	if (removeClient(client)) {
 		forceLeaveClient(client);
-        m_events->removeHandler(EventType::CLIENT_PROXY_DISCONNECTED, client);
+        m_events->remove_handler(EventType::CLIENT_PROXY_DISCONNECTED, client);
 		if (m_clients.size() == 1 && m_oldClients.empty()) {
             m_events->add_event(EventType::SERVER_DISCONNECTED, this);
 		}
@@ -2132,8 +2133,8 @@ Server::removeOldClient(BaseClientProxy* client)
 {
 	OldClients::iterator i = m_oldClients.find(client);
 	if (i != m_oldClients.end()) {
-        m_events->removeHandler(EventType::CLIENT_PROXY_DISCONNECTED, client);
-        m_events->removeHandler(EventType::TIMER, i->second);
+        m_events->remove_handler(EventType::CLIENT_PROXY_DISCONNECTED, client);
+        m_events->remove_handler(EventType::TIMER, i->second);
 		m_events->deleteTimer(i->second);
 		m_oldClients.erase(i);
 		if (m_clients.size() == 1 && m_oldClients.empty()) {

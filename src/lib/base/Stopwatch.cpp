@@ -19,9 +19,7 @@
 #include "base/Stopwatch.h"
 #include "base/Time.h"
 
-//
-// Stopwatch
-//
+namespace inputleap {
 
 Stopwatch::Stopwatch(bool triggered) :
     m_mark(0.0),
@@ -128,3 +126,5 @@ Stopwatch::operator double() const
 {
     return getTime();
 }
+
+} // namespace inputleap

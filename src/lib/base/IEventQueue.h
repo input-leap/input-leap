@@ -74,8 +74,8 @@ public:
     Looks up the dispatcher for the event's target and invokes it.
     Returns true iff a dispatcher exists for the target.
 
-    The caller must ensure that the target of the event is not removed by removeHandler() or
-    removeHandlers().
+    The caller must ensure that the target of the event is not removed by remove_handler() or
+    remove_handlers().
     */
     virtual bool dispatchEvent(const Event& event) = 0;
 
@@ -148,13 +148,13 @@ public:
     Unregisters an event handler for the \p type, \p target pair and
     deletes it.
     */
-    virtual void removeHandler(EventType type, const void* target) = 0;
+    virtual void remove_handler(EventType type, const void* target) = 0;
 
     //! Unregister all event handlers for an event target
     /*!
     Unregisters all event handlers for the \p target and deletes them.
     */
-    virtual void removeHandlers(const void* target) = 0;
+    virtual void remove_handlers(const void* target) = 0;
 
     //! Wait for event queue to become ready
     /*!

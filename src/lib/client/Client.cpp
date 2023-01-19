@@ -92,8 +92,8 @@ Client::~Client()
         return;
     }
 
-    m_events->removeHandler(EventType::SCREEN_SUSPEND, get_event_target());
-    m_events->removeHandler(EventType::SCREEN_RESUME, get_event_target());
+    m_events->remove_handler(EventType::SCREEN_SUSPEND, get_event_target());
+    m_events->remove_handler(EventType::SCREEN_RESUME, get_event_target());
 
     cleanupTimer();
     cleanupScreen();
@@ -477,8 +477,8 @@ void
 Client::cleanupConnecting()
 {
     if (m_stream != nullptr) {
-        m_events->removeHandler(EventType::DATA_SOCKET_CONNECTED, m_stream->get_event_target());
-        m_events->removeHandler(EventType::DATA_SOCKET_CONNECTION_FAILED,
+        m_events->remove_handler(EventType::DATA_SOCKET_CONNECTED, m_stream->get_event_target());
+        m_events->remove_handler(EventType::DATA_SOCKET_CONNECTION_FAILED,
                                 m_stream->get_event_target());
     }
 }
@@ -487,12 +487,12 @@ void
 Client::cleanupConnection()
 {
     if (m_stream != nullptr) {
-        m_events->removeHandler(EventType::STREAM_INPUT_READY, m_stream->get_event_target());
-        m_events->removeHandler(EventType::STREAM_OUTPUT_ERROR, m_stream->get_event_target());
-        m_events->removeHandler(EventType::STREAM_INPUT_SHUTDOWN, m_stream->get_event_target());
-        m_events->removeHandler(EventType::STREAM_OUTPUT_SHUTDOWN, m_stream->get_event_target());
-        m_events->removeHandler(EventType::SOCKET_DISCONNECTED, m_stream->get_event_target());
-        m_events->removeHandler(EventType::SOCKET_STOP_RETRY, m_stream->get_event_target());
+        m_events->remove_handler(EventType::STREAM_INPUT_READY, m_stream->get_event_target());
+        m_events->remove_handler(EventType::STREAM_OUTPUT_ERROR, m_stream->get_event_target());
+        m_events->remove_handler(EventType::STREAM_INPUT_SHUTDOWN, m_stream->get_event_target());
+        m_events->remove_handler(EventType::STREAM_OUTPUT_SHUTDOWN, m_stream->get_event_target());
+        m_events->remove_handler(EventType::SOCKET_DISCONNECTED, m_stream->get_event_target());
+        m_events->remove_handler(EventType::SOCKET_STOP_RETRY, m_stream->get_event_target());
         cleanupStream();
     }
 }
@@ -505,8 +505,8 @@ Client::cleanupScreen()
             m_screen->disable();
             m_ready = false;
         }
-        m_events->removeHandler(EventType::SCREEN_SHAPE_CHANGED, get_event_target());
-        m_events->removeHandler(EventType::CLIPBOARD_GRABBED, get_event_target());
+        m_events->remove_handler(EventType::SCREEN_SHAPE_CHANGED, get_event_target());
+        m_events->remove_handler(EventType::CLIPBOARD_GRABBED, get_event_target());
         delete m_server;
         m_server = nullptr;
     }
@@ -516,7 +516,7 @@ void
 Client::cleanupTimer()
 {
     if (m_timer != nullptr) {
-        m_events->removeHandler(EventType::TIMER, m_timer);
+        m_events->remove_handler(EventType::TIMER, m_timer);
         m_events->deleteTimer(m_timer);
         m_timer = nullptr;
     }

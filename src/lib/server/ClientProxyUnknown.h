@@ -56,7 +56,7 @@ private:
     void sendFailure();
     void addStreamHandlers();
     void addProxyHandlers();
-    void removeHandlers();
+    void remove_handlers();
     void removeTimer();
     void handle_data();
     void handle_write_error();

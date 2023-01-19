@@ -66,8 +66,8 @@ IpcClient::connect()
 void
 IpcClient::disconnect()
 {
-    m_events->removeHandler(EventType::DATA_SOCKET_CONNECTED, m_socket.get_event_target());
-    m_events->removeHandler(EventType::IPC_SERVER_PROXY_MESSAGE_RECEIVED, server_.get());
+    m_events->remove_handler(EventType::DATA_SOCKET_CONNECTED, m_socket.get_event_target());
+    m_events->remove_handler(EventType::IPC_SERVER_PROXY_MESSAGE_RECEIVED, server_.get());
 
     server_->disconnect();
     server_.reset();

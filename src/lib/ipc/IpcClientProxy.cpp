@@ -45,10 +45,10 @@ IpcClientProxy::IpcClientProxy(std::unique_ptr<IStream>&& stream, IEventQueue* e
 
 IpcClientProxy::~IpcClientProxy()
 {
-    m_events->removeHandler(EventType::STREAM_INPUT_READY, stream_->get_event_target());
-    m_events->removeHandler(EventType::STREAM_OUTPUT_ERROR, stream_->get_event_target());
-    m_events->removeHandler(EventType::STREAM_INPUT_SHUTDOWN, stream_->get_event_target());
-    m_events->removeHandler(EventType::STREAM_OUTPUT_SHUTDOWN, stream_->get_event_target());
+    m_events->remove_handler(EventType::STREAM_INPUT_READY, stream_->get_event_target());
+    m_events->remove_handler(EventType::STREAM_OUTPUT_ERROR, stream_->get_event_target());
+    m_events->remove_handler(EventType::STREAM_INPUT_SHUTDOWN, stream_->get_event_target());
+    m_events->remove_handler(EventType::STREAM_OUTPUT_SHUTDOWN, stream_->get_event_target());
 
     // Ensure that client proxy is not deleted from below some active client feet
     {

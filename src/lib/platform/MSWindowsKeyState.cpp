@@ -620,7 +620,7 @@ void
 MSWindowsKeyState::disable()
 {
 	if (m_fixTimer != nullptr) {
-        m_events->removeHandler(EventType::TIMER, m_fixTimer);
+        m_events->remove_handler(EventType::TIMER, m_fixTimer);
 		m_events->deleteTimer(m_fixTimer);
 		m_fixTimer = nullptr;
 	}

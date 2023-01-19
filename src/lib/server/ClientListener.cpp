@@ -72,9 +72,9 @@ ClientListener::~ClientListener()
     for (NewClients::iterator index = m_newClients.begin();
                                 index != m_newClients.end(); ++index) {
         ClientProxyUnknown* client = *index;
-        m_events->removeHandler(EventType::CLIENT_PROXY_UNKNOWN_SUCCESS, client);
-        m_events->removeHandler(EventType::CLIENT_PROXY_UNKNOWN_FAILURE, client);
-        m_events->removeHandler(EventType::CLIENT_PROXY_DISCONNECTED, client);
+        m_events->remove_handler(EventType::CLIENT_PROXY_UNKNOWN_SUCCESS, client);
+        m_events->remove_handler(EventType::CLIENT_PROXY_UNKNOWN_FAILURE, client);
+        m_events->remove_handler(EventType::CLIENT_PROXY_DISCONNECTED, client);
         delete client;
     }
 
@@ -103,7 +103,7 @@ ClientListener::getNextClient()
     if (!m_waitingClients.empty()) {
         client = m_waitingClients.front();
         m_waitingClients.pop_front();
-        m_events->removeHandler(EventType::CLIENT_PROXY_DISCONNECTED, client);
+        m_events->remove_handler(EventType::CLIENT_PROXY_DISCONNECTED, client);
     }
     return client;
 }
@@ -181,8 +181,8 @@ void ClientListener::handle_unknown_client(ClientProxyUnknown* unknownClient)
     }
 
     // now finished with unknown client
-    m_events->removeHandler(EventType::CLIENT_PROXY_UNKNOWN_SUCCESS, client);
-    m_events->removeHandler(EventType::CLIENT_PROXY_UNKNOWN_FAILURE, client);
+    m_events->remove_handler(EventType::CLIENT_PROXY_UNKNOWN_SUCCESS, client);
+    m_events->remove_handler(EventType::CLIENT_PROXY_UNKNOWN_FAILURE, client);
     m_newClients.erase(unknownClient);
 
     delete unknownClient;
@@ -195,7 +195,7 @@ void ClientListener::handle_client_disconnected(ClientProxy* client)
                             n = m_waitingClients.end(); i != n; ++i) {
         if (*i == client) {
             m_waitingClients.erase(i);
-            m_events->removeHandler(EventType::CLIENT_PROXY_DISCONNECTED, client);
+            m_events->remove_handler(EventType::CLIENT_PROXY_DISCONNECTED, client);
 
             // FIXME: there are multiple dangling pointers in handlers left for the socket
             delete client;
@@ -207,7 +207,7 @@ void ClientListener::handle_client_disconnected(ClientProxy* client)
 void
 ClientListener::cleanupListenSocket()
 {
-    m_events->removeHandler(EventType::LISTEN_SOCKET_CONNECTING, listen_.get());
+    m_events->remove_handler(EventType::LISTEN_SOCKET_CONNECTING, listen_.get());
     listen_.reset();
 }
 

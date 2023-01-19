@@ -164,7 +164,7 @@ XWindowsScreen::~XWindowsScreen()
     assert(m_display != nullptr);
 
     m_events->adoptBuffer(nullptr);
-    m_events->removeHandler(EventType::SYSTEM, m_events->getSystemTarget());
+    m_events->remove_handler(EventType::SYSTEM, m_events->getSystemTarget());
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 		delete m_clipboard[id];
 	}

@@ -151,7 +151,7 @@ MSWindowsDesks::disable()
 {
     // remove timer
     if (m_timer != nullptr) {
-        m_events->removeHandler(EventType::TIMER, m_timer);
+        m_events->remove_handler(EventType::TIMER, m_timer);
         m_events->deleteTimer(m_timer);
         m_timer = nullptr;
     }

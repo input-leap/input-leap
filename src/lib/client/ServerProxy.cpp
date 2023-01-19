@@ -72,15 +72,15 @@ ServerProxy::ServerProxy(Client* client, inputleap::IStream* stream, IEventQueue
 ServerProxy::~ServerProxy()
 {
     setKeepAliveRate(-1.0);
-    m_events->removeHandler(EventType::STREAM_INPUT_READY, m_stream->get_event_target());
-    m_events->removeHandler(EventType::CLIPBOARD_SENDING, this);
+    m_events->remove_handler(EventType::STREAM_INPUT_READY, m_stream->get_event_target());
+    m_events->remove_handler(EventType::CLIPBOARD_SENDING, this);
 }
 
 void
 ServerProxy::resetKeepAliveAlarm()
 {
     if (m_keepAliveAlarmTimer != nullptr) {
-        m_events->removeHandler(EventType::TIMER, m_keepAliveAlarmTimer);
+        m_events->remove_handler(EventType::TIMER, m_keepAliveAlarmTimer);
         m_events->deleteTimer(m_keepAliveAlarmTimer);
         m_keepAliveAlarmTimer = nullptr;
     }

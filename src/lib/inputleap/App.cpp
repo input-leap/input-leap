@@ -211,7 +211,7 @@ void
 App::cleanupIpcClient()
 {
     m_ipcClient->disconnect();
-    m_events->removeHandler(EventType::IPC_CLIENT_MESSAGE_RECEIVED, m_ipcClient);
+    m_events->remove_handler(EventType::IPC_CLIENT_MESSAGE_RECEIVED, m_ipcClient);
     delete m_ipcClient;
 }
 

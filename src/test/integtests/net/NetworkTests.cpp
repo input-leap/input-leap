@@ -161,8 +161,8 @@ TEST_F(NetworkTests, sendToClient_mockData)
 
     m_events.initQuitTimeout(10);
     m_events.loop();
-    m_events.removeHandler(EventType::CLIENT_LISTENER_CONNECTED, &listener);
-    m_events.removeHandler(EventType::FILE_RECEIVE_COMPLETED, &client);
+    m_events.remove_handler(EventType::CLIENT_LISTENER_CONNECTED, &listener);
+    m_events.remove_handler(EventType::FILE_RECEIVE_COMPLETED, &client);
     m_events.cleanupQuitTimeout();
 }
 
@@ -222,8 +222,8 @@ TEST_F(NetworkTests, sendToClient_mockFile)
 
     m_events.initQuitTimeout(10);
     m_events.loop();
-    m_events.removeHandler(EventType::CLIENT_LISTENER_CONNECTED, &listener);
-    m_events.removeHandler(EventType::FILE_RECEIVE_COMPLETED, &client);
+    m_events.remove_handler(EventType::CLIENT_LISTENER_CONNECTED, &listener);
+    m_events.remove_handler(EventType::FILE_RECEIVE_COMPLETED, &client);
     m_events.cleanupQuitTimeout();
 }
 
@@ -281,8 +281,8 @@ TEST_F(NetworkTests, sendToServer_mockData)
 
     m_events.initQuitTimeout(10);
     m_events.loop();
-    m_events.removeHandler(EventType::CLIENT_LISTENER_CONNECTED, &listener);
-    m_events.removeHandler(EventType::FILE_RECEIVE_COMPLETED, &server);
+    m_events.remove_handler(EventType::CLIENT_LISTENER_CONNECTED, &listener);
+    m_events.remove_handler(EventType::FILE_RECEIVE_COMPLETED, &server);
     m_events.cleanupQuitTimeout();
 }
 
@@ -341,8 +341,8 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 
     m_events.initQuitTimeout(10);
     m_events.loop();
-    m_events.removeHandler(EventType::CLIENT_LISTENER_CONNECTED, &listener);
-    m_events.removeHandler(EventType::FILE_RECEIVE_COMPLETED, &server);
+    m_events.remove_handler(EventType::CLIENT_LISTENER_CONNECTED, &listener);
+    m_events.remove_handler(EventType::FILE_RECEIVE_COMPLETED, &server);
     m_events.cleanupQuitTimeout();
 }
 

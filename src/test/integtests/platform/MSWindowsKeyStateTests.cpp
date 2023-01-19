@@ -70,7 +70,7 @@ TEST_F(MSWindowsKeyStateTests, disable_eventQueueNotUsed)
 	MockKeyMap keyMap;
 	MSWindowsKeyState keyState(desks, get_event_target(), &eventQueue, keyMap);
 
-	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(0);
+    EXPECT_CALL(eventQueue, remove_handler(_, _)).Times(0);
 
 	keyState.disable();
 	delete desks;

@@ -106,7 +106,7 @@ XWindowsScreenSaver::~XWindowsScreenSaver()
     if (m_disableTimer != nullptr) {
         m_events->deleteTimer(m_disableTimer);
     }
-    m_events->removeHandler(EventType::TIMER, this);
+    m_events->remove_handler(EventType::TIMER, this);
 
     if (m_display != nullptr) {
         enableDPMS(m_dpmsEnabled);

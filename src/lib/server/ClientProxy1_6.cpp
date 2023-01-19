@@ -71,7 +71,7 @@ ClientProxy1_6::ClientProxy1_6(const std::string& name,
 
 ClientProxy1_6::~ClientProxy1_6()
 {
-    removeHandlers();
+    remove_handlers();
 }
 
 IStream* ClientProxy1_6::getStream() const
@@ -81,22 +81,22 @@ IStream* ClientProxy1_6::getStream() const
 
 void ClientProxy1_6::disconnect()
 {
-    removeHandlers();
+    remove_handlers();
     get_conn().close();
     m_events->add_event(EventType::CLIENT_PROXY_DISCONNECTED, get_event_target());
 }
 
-void ClientProxy1_6::removeHandlers()
+void ClientProxy1_6::remove_handlers()
 {
     // uninstall event handlers
-    m_events->removeHandler(EventType::STREAM_INPUT_READY, get_conn().get_event_target());
-    m_events->removeHandler(EventType::STREAM_OUTPUT_ERROR, get_conn().get_event_target());
-    m_events->removeHandler(EventType::STREAM_INPUT_SHUTDOWN, get_conn().get_event_target());
-    m_events->removeHandler(EventType::STREAM_OUTPUT_SHUTDOWN, get_conn().get_event_target());
-    m_events->removeHandler(EventType::STREAM_INPUT_FORMAT_ERROR, get_conn().get_event_target());
-    m_events->removeHandler(EventType::FILE_KEEPALIVE, this);
-    m_events->removeHandler(EventType::CLIPBOARD_SENDING, this);
-    m_events->removeHandler(EventType::TIMER, this);
+    m_events->remove_handler(EventType::STREAM_INPUT_READY, get_conn().get_event_target());
+    m_events->remove_handler(EventType::STREAM_OUTPUT_ERROR, get_conn().get_event_target());
+    m_events->remove_handler(EventType::STREAM_INPUT_SHUTDOWN, get_conn().get_event_target());
+    m_events->remove_handler(EventType::STREAM_OUTPUT_SHUTDOWN, get_conn().get_event_target());
+    m_events->remove_handler(EventType::STREAM_INPUT_FORMAT_ERROR, get_conn().get_event_target());
+    m_events->remove_handler(EventType::FILE_KEEPALIVE, this);
+    m_events->remove_handler(EventType::CLIPBOARD_SENDING, this);
+    m_events->remove_handler(EventType::TIMER, this);
 
     // remove timer
     removeHeartbeatTimer();
@@ -118,7 +118,7 @@ void ClientProxy1_6::addHeartbeatTimer()
 void ClientProxy1_6::removeHeartbeatTimer()
 {
     if (m_keepAliveTimer != nullptr) {
-        m_events->removeHandler(EventType::TIMER, m_keepAliveTimer);
+        m_events->remove_handler(EventType::TIMER, m_keepAliveTimer);
         m_events->deleteTimer(m_keepAliveTimer);
         m_keepAliveTimer = nullptr;
     }

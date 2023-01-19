@@ -83,7 +83,7 @@ protected:
 
 private:
     void disconnect();
-    void removeHandlers();
+    void remove_handlers();
 
     void handle_data();
     void handle_disconnect();

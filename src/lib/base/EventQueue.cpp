@@ -283,7 +283,7 @@ void EventQueue::add_handler(EventType type, const void* target, const EventHand
     m_handlers[target][type] = handler;
 }
 
-void EventQueue::removeHandler(EventType type, const void* target)
+void EventQueue::remove_handler(EventType type, const void* target)
 {
     std::lock_guard<std::mutex> lock(mutex_);
     HandlerTable::iterator index = m_handlers.find(target);
@@ -296,7 +296,7 @@ void EventQueue::removeHandler(EventType type, const void* target)
     }
 }
 
-void EventQueue::removeHandlers(const void* target)
+void EventQueue::remove_handlers(const void* target)
 {
     std::lock_guard<std::mutex> lock(mutex_);
     HandlerTable::iterator index = m_handlers.find(target);

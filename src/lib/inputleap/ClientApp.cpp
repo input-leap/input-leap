@@ -248,7 +248,7 @@ void
 ClientApp::closeClientScreen(inputleap::Screen* screen)
 {
     if (screen != nullptr) {
-        m_events->removeHandler(EventType::SCREEN_ERROR,
+        m_events->remove_handler(EventType::SCREEN_ERROR,
             screen->get_event_target());
         delete screen;
     }
@@ -260,7 +260,7 @@ ClientApp::handle_client_restart(const Event&, EventQueueTimer* timer)
 {
     // discard old timer
     m_events->deleteTimer(timer);
-    m_events->removeHandler(EventType::TIMER, timer);
+    m_events->remove_handler(EventType::TIMER, timer);
 
     // reconnect
     startClient();
@@ -353,9 +353,9 @@ ClientApp::closeClient(Client* client)
         return;
     }
 
-    m_events->removeHandler(EventType::CLIENT_CONNECTED, client);
-    m_events->removeHandler(EventType::CLIENT_CONNECTION_FAILED, client);
-    m_events->removeHandler(EventType::CLIENT_DISCONNECTED, client);
+    m_events->remove_handler(EventType::CLIENT_CONNECTED, client);
+    m_events->remove_handler(EventType::CLIENT_CONNECTION_FAILED, client);
+    m_events->remove_handler(EventType::CLIENT_DISCONNECTED, client);
     delete client;
 }
 

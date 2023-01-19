@@ -64,7 +64,7 @@ IpcServer::~IpcServer()
         return;
     }
 
-    m_events->removeHandler(EventType::LISTEN_SOCKET_CONNECTING, socket_.get());
+    m_events->remove_handler(EventType::LISTEN_SOCKET_CONNECTING, socket_.get());
     socket_.reset();
 
     {
@@ -130,8 +130,8 @@ void IpcServer::handle_message_received(const Event& e)
 void
 IpcServer::deleteClient(IpcClientProxy* proxy)
 {
-    m_events->removeHandler(EventType::IPC_CLIENT_PROXY_MESSAGE_RECEIVED, proxy);
-    m_events->removeHandler(EventType::IPC_CLIENT_PROXY_DISCONNECTED, proxy);
+    m_events->remove_handler(EventType::IPC_CLIENT_PROXY_MESSAGE_RECEIVED, proxy);
+    m_events->remove_handler(EventType::IPC_CLIENT_PROXY_DISCONNECTED, proxy);
     delete proxy;
 }
 

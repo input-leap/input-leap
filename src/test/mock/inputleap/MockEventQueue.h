@@ -32,12 +32,12 @@ public:
     MOCK_METHOD2(newTimer, EventQueueTimer*(double, void*));
     MOCK_METHOD2(getEvent, bool(Event&, double));
     MOCK_METHOD1(adoptBuffer, void(IEventQueueBuffer*));
-    MOCK_METHOD1(removeHandlers, void(const void*));
+    MOCK_METHOD1(remove_handlers, void(const void*));
     MOCK_METHOD1(registerType, EventType(const char*));
     MOCK_CONST_METHOD0(isEmpty, bool());
     MOCK_METHOD3(add_handler, void(EventType, const void*, const EventHandler&));
     MOCK_METHOD1(add_event, void(Event&&));
-    MOCK_METHOD2(removeHandler, void(EventType, const void*));
+    MOCK_METHOD2(remove_handler, void(EventType, const void*));
     MOCK_METHOD1(dispatchEvent, bool(const Event&));
     MOCK_METHOD1(deleteTimer, void(EventQueueTimer*));
     MOCK_METHOD0(getSystemTarget, void*());

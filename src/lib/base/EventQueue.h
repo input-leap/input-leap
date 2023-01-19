@@ -53,8 +53,8 @@ public:
     EventQueueTimer* newOneShotTimer(double duration, void* target) override;
     void deleteTimer(EventQueueTimer*) override;
     void add_handler(EventType type, const void* target, const EventHandler& handler) override;
-    void removeHandler(EventType type, const void* target) override;
-    void removeHandlers(const void* target) override;
+    void remove_handler(EventType type, const void* target) override;
+    void remove_handlers(const void* target) override;
     void* getSystemTarget() override;
     void waitForReady() const override;
 

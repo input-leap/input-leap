@@ -17,7 +17,6 @@
 
 #pragma once
 
-#include "inputleap/Chunk.h"
 #include "inputleap/clipboard_types.h"
 
 #include <cstdint>

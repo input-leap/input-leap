@@ -22,7 +22,6 @@
 #include "mt/XThread.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
-#include "base/IJob.h"
 
 namespace inputleap {
 

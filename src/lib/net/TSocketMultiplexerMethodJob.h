@@ -20,6 +20,7 @@
 
 #include "net/ISocketMultiplexerJob.h"
 #include "arch/Arch.h"
+#include <functional>
 
 namespace inputleap {
 

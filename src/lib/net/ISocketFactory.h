@@ -18,14 +18,12 @@
 
 #pragma once
 
+#include "Fwd.h"
 #include "arch/IArchNetwork.h"
 #include "net/ConnectionSecurityLevel.h"
 #include <memory>
 
 namespace inputleap {
-
-class IDataSocket;
-class IListenSocket;
 
 //! Socket factory
 /*!

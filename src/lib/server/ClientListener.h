@@ -23,6 +23,7 @@
 #include "base/Event.h"
 #include "base/UniquePtrContainer.h"
 #include "net/ConnectionSecurityLevel.h"
+#include "net/Fwd.h"
 #include <deque>
 #include <memory>
 #include <set>
@@ -31,11 +32,7 @@ namespace inputleap {
 
 class ClientProxy;
 class ClientProxyUnknown;
-class NetworkAddress;
-class IListenSocket;
-class ISocketFactory;
 class Server;
-class IDataSocket;
 
 class ClientListener {
 public:

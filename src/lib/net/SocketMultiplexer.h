@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "Fwd.h"
 #include "arch/IArchNetwork.h"
 #include <condition_variable>
 #include <list>
@@ -28,8 +29,6 @@
 namespace inputleap {
 
 class Thread;
-class ISocket;
-class ISocketMultiplexerJob;
 
 //! Socket multiplexer
 /*!

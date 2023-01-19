@@ -37,7 +37,6 @@ namespace inputleap {
 
 class IArchTaskBarReceiver;
 class Screen;
-class SocketMultiplexer;
 
 typedef IArchTaskBarReceiver* (*CreateTaskBarReceiverFunc)(const BufferedLogOutputter*, IEventQueue* events);
 

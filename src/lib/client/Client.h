@@ -24,6 +24,7 @@
 #include "inputleap/DragInformation.h"
 #include "inputleap/INode.h"
 #include "inputleap/ClientArgs.h"
+#include "net/Fwd.h"
 #include "net/NetworkAddress.h"
 #include "base/EventTypes.h"
 
@@ -32,11 +33,8 @@ namespace inputleap {
 class FileChunk;
 class Screen;
 class ServerProxy;
-class IDataSocket;
-class ISocketFactory;
 class IStream;
 class Thread;
-class TCPSocket;
 
 /// This class implements the top-level client algorithms for InputLeap.
 class Client : public IClient, public INode {

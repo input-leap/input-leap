@@ -21,7 +21,6 @@
 
 namespace inputleap {
 
-class NetworkAddress;
 class Config;
 
 class ServerArgs : public ArgsBase {

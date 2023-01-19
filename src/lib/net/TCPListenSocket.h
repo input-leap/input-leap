@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "Fwd.h"
+#include "base/Fwd.h"
 #include "net/IListenSocket.h"
 #include "net/ISocketMultiplexerJob.h"
 #include "arch/IArchNetwork.h"
@@ -26,7 +28,6 @@
 
 namespace inputleap {
 
-class IEventQueue;
 class SocketMultiplexer;
 
 //! TCP listen socket

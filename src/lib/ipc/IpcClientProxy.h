@@ -22,6 +22,7 @@
 #include "arch/IArchMultithread.h"
 #include "base/EventTypes.h"
 #include "base/Event.h"
+#include "base/Fwd.h"
 
 #include <mutex>
 
@@ -30,7 +31,6 @@ namespace inputleap {
 class IpcMessage;
 class IpcCommandMessage;
 class IpcHelloMessage;
-class IEventQueue;
 class IStream;
 
 class IpcClientProxy {

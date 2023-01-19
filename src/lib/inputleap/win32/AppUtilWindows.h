@@ -19,6 +19,7 @@
 #pragma once
 
 #include "inputleap/AppUtil.h"
+#include "base/Fwd.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include "Windows.h"
@@ -26,8 +27,6 @@
 #define ARCH_APP_UTIL AppUtilWindows
 
 namespace inputleap {
-
-class IEventQueue;
 
 enum AppExitMode {
     kExitModeNormal,

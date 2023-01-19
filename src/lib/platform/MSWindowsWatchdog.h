@@ -19,6 +19,7 @@
 #pragma once
 
 #include "platform/MSWindowsSession.h"
+#include "base/Fwd.h"
 #include "inputleap/Exceptions.h"
 #include "arch/IArchMultithread.h"
 
@@ -32,7 +33,6 @@ namespace inputleap {
 class Thread;
 class IpcLogOutputter;
 class IpcServer;
-class FileLogOutputter;
 
 class MSWindowsWatchdog {
 public:

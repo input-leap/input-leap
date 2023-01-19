@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "base/Fwd.h"
 #include "inputleap/key_types.h"
 #include "inputleap/mouse_types.h"
 #include "inputleap/protocol_types.h"
@@ -29,8 +30,6 @@
 namespace inputleap {
 
 class PrimaryClient;
-class Event;
-class IEventQueue;
 
 class InputFilter {
 public:

@@ -21,7 +21,7 @@
 #include "config.h"
 
 #include "inputleap/IScreenSaver.h"
-#include "base/IEventQueue.h"
+#include "base/Fwd.h"
 #include "XWindowsImpl.h"
 
 #include <X11/Xlib.h>
@@ -29,9 +29,6 @@
 #include <map>
 
 namespace inputleap {
-
-class Event;
-class EventQueueTimer;
 
 //! X11 screen saver implementation
 class XWindowsScreenSaver : public IScreenSaver {

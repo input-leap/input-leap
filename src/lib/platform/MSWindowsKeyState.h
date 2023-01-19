@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "base/Fwd.h"
 #include "inputleap/KeyState.h"
 
 #define WIN32_LEAN_AND_MEAN
@@ -27,10 +28,7 @@
 
 namespace inputleap {
 
-class Event;
-class EventQueueTimer;
 class MSWindowsDesks;
-class IEventQueue;
 
 //! Microsoft Windows key mapper
 /*!

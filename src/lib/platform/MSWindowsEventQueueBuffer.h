@@ -19,13 +19,12 @@
 #pragma once
 
 #include "base/IEventQueueBuffer.h"
+#include "base/Fwd.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
 namespace inputleap {
-
-class IEventQueue;
 
 //! Event queue buffer for Win32
 class MSWindowsEventQueueBuffer : public IEventQueueBuffer {

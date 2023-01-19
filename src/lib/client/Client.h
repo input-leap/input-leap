@@ -18,8 +18,8 @@
 
 #pragma once
 
+#include "base/Fwd.h"
 #include "inputleap/IClient.h"
-
 #include "inputleap/Clipboard.h"
 #include "inputleap/DragInformation.h"
 #include "inputleap/INode.h"
@@ -29,14 +29,12 @@
 
 namespace inputleap {
 
-class EventQueueTimer;
 class FileChunk;
 class Screen;
 class ServerProxy;
 class IDataSocket;
 class ISocketFactory;
 class IStream;
-class IEventQueue;
 class Thread;
 class TCPSocket;
 

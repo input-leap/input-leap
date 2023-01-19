@@ -22,7 +22,6 @@
 
 namespace inputleap {
 
-class IEventQueue;
 class SocketMultiplexer;
 class IDataSocket;
 

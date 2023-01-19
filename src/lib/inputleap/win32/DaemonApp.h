@@ -19,16 +19,14 @@
 #pragma once
 
 #include "arch/Arch.h"
+#include "base/Fwd.h"
 #include "ipc/IpcServer.h"
 
 #include <string>
 
 namespace inputleap {
 
-class Event;
 class IpcLogOutputter;
-class FileLogOutputter;
-
 class MSWindowsWatchdog;
 
 class DaemonApp {

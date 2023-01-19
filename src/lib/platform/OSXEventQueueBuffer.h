@@ -18,13 +18,12 @@
 
 #pragma once
 
+#include "base/Fwd.h"
 #include "base/IEventQueueBuffer.h"
 
 #include <Carbon/Carbon.h>
 
 namespace inputleap {
-
-class IEventQueue;
 
 //! Event queue buffer for OS X
 class OSXEventQueueBuffer : public IEventQueueBuffer {

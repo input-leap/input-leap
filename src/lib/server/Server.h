@@ -26,6 +26,7 @@
 #include "inputleap/INode.h"
 #include "inputleap/DragInformation.h"
 #include "inputleap/ServerArgs.h"
+#include "base/Fwd.h"
 #include "base/Event.h"
 #include "base/Stopwatch.h"
 #include "base/EventTypes.h"
@@ -37,12 +38,10 @@
 namespace inputleap {
 
 class BaseClientProxy;
-class EventQueueTimer;
 class FileChunk;
 class PrimaryClient;
 class InputFilter;
 class Screen;
-class IEventQueue;
 class Thread;
 class ClientListener;
 

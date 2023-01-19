@@ -22,8 +22,6 @@
 
 #include <gmock/gmock.h>
 
-class IEventQueue;
-
 class MockStream : public inputleap::IStream
 {
 public:

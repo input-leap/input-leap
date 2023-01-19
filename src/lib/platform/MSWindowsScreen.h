@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include "base/Fwd.h"
 #include "platform/MSWindowsHook.h"
 #include "inputleap/PlatformScreen.h"
 #include "inputleap/DragInformation.h"
@@ -31,7 +32,6 @@
 
 namespace inputleap {
 
-class EventQueueTimer;
 class MSWindowsDesks;
 class MSWindowsKeyState;
 class MSWindowsScreenSaver;

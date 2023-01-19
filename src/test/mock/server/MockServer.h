@@ -23,8 +23,6 @@
 
 #include <gmock/gmock.h>
 
-class IEventQueue;
-
 class MockServer : public Server
 {
 public:

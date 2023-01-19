@@ -20,6 +20,7 @@
 
 #include "inputleap/ArgsBase.h"
 #include "inputleap/App.h"
+#include "base/Fwd.h"
 #include "server/Config.h"
 #include "net/NetworkAddress.h"
 #include "arch/Arch.h"
@@ -43,9 +44,7 @@ enum EServerState {
 class Server;
 class Screen;
 class ClientListener;
-class EventQueueTimer;
 class ILogOutputter;
-class IEventQueue;
 class ServerArgs;
 
 class ServerApp : public App {

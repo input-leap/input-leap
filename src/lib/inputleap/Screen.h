@@ -24,12 +24,12 @@
 #include "inputleap/key_types.h"
 #include "inputleap/mouse_types.h"
 #include "inputleap/option_types.h"
+#include "base/Fwd.h"
 
 namespace inputleap {
 
 class IClipboard;
 class IPlatformScreen;
-class IEventQueue;
 
 //! Platform independent screen
 /*!

@@ -22,6 +22,7 @@
 #include "inputleap/PlatformScreen.h"
 #include "inputleap/DragInformation.h"
 #include "base/EventTypes.h"
+#include "base/Fwd.h"
 
 #include <Carbon/Carbon.h>
 #include <mach/mach_port.h>
@@ -44,11 +45,9 @@ extern "C" {
     int _CGSDefaultConnection();
 }
 
-class EventQueueTimer;
 class Thread;
 class OSXKeyState;
 class OSXScreenSaver;
-class IEventQueue;
 
 //! Implementation of IPlatformScreen for OS X
 class OSXScreen : public PlatformScreen {

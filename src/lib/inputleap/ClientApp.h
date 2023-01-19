@@ -18,13 +18,13 @@
 
 #pragma once
 
+#include "base/Fwd.h"
 #include "inputleap/App.h"
 #include "ClientArgs.h"
 
 namespace inputleap {
 
 class Screen;
-class Event;
 class Client;
 class NetworkAddress;
 class ClientArgs;

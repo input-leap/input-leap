@@ -20,13 +20,13 @@
 
 #include "base/Event.h"
 #include "base/EventTypes.h"
+#include "base/Fwd.h"
 
 namespace inputleap {
 
 class IStream;
 class IpcMessage;
 class IpcLogLineMessage;
-class IEventQueue;
 
 class IpcServerProxy {
     friend class IpcClient;

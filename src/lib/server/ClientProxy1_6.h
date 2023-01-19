@@ -19,14 +19,12 @@
 #pragma once
 
 #include "server/ClientProxy.h"
+#include "base/Fwd.h"
 #include "inputleap/Clipboard.h"
 #include "inputleap/protocol_types.h"
 
 namespace inputleap {
 
-class Event;
-class EventQueueTimer;
-class IEventQueue;
 class Server;
 class IStream;
 

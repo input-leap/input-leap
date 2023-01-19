@@ -18,12 +18,10 @@
 
 #pragma once
 
+#include "Fwd.h"
 #include <cstdint>
 
 namespace inputleap {
-
-class Event;
-class EventQueueTimer;
 
 //! Event queue buffer interface
 /*!

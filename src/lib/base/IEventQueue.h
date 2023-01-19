@@ -18,15 +18,13 @@
 
 #pragma once
 
+#include "Fwd.h"
 #include "base/Event.h"
 #include "base/EventTypes.h"
 #include <functional>
 #include <string>
 
 namespace inputleap {
-
-class IEventQueueBuffer;
-class EventQueueTimer;
 
 //! Event queue interface
 /*!

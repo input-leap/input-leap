@@ -31,8 +31,6 @@ namespace inputleap {
 using ::testing::_;
 using ::testing::Invoke;
 
-class IEventQueue;
-
 class MockIpcServer : public IpcServer
 {
 public:

@@ -35,7 +35,6 @@ class NetworkAddress;
 class IListenSocket;
 class ISocketFactory;
 class Server;
-class IEventQueue;
 class IDataSocket;
 
 class ClientListener {

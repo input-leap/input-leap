@@ -19,12 +19,11 @@
 #pragma once
 
 #include "inputleap/AppUtil.h"
+#include "base/Fwd.h"
 
 #define ARCH_APP_UTIL AppUtilUnix
 
 namespace inputleap {
-
-class IEventQueue;
 
 class AppUtilUnix : public AppUtil {
 public:

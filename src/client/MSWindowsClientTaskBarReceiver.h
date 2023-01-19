@@ -18,13 +18,11 @@
 
 #pragma once
 
+#include "base/Fwd.h"
 #include "inputleap/ClientTaskBarReceiver.h"
 #include "common/win32/winapi.h"
 
 namespace inputleap {
-
-class BufferedLogOutputter;
-class IEventQueue;
 
 //! Implementation of ClientTaskBarReceiver for Microsoft Windows
 class MSWindowsClientTaskBarReceiver : public ClientTaskBarReceiver {

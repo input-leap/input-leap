@@ -28,8 +28,6 @@
 
 namespace inputleap {
 
-class IEventQueue;
-
 //! Implementation of IArchTaskBarReceiver for the InputLeap server
 class ServerTaskBarReceiver : public IArchTaskBarReceiver {
 public:

@@ -32,7 +32,6 @@ namespace inputleap {
 class Event;
 class IpcClientProxy;
 class IpcMessage;
-class IEventQueue;
 class SocketMultiplexer;
 
 //! IPC server for communication between daemon and GUI.

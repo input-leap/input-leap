@@ -20,15 +20,14 @@
 
 #include "base/Event.h"
 #include "base/EventTypes.h"
+#include "base/Fwd.h"
 #include <memory>
 
 namespace inputleap {
 
 class ClientProxy;
-class EventQueueTimer;
 class IStream;
 class Server;
-class IEventQueue;
 
 class ClientProxyUnknown {
 public:

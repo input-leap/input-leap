@@ -20,16 +20,15 @@
 
 #include "inputleap/clipboard_types.h"
 #include "inputleap/key_types.h"
+#include "base/Fwd.h"
 #include "base/Event.h"
 
 namespace inputleap {
 
 class Client;
 class ClientInfo;
-class EventQueueTimer;
 class IClipboard;
 class IStream;
-class IEventQueue;
 class FileChunk;
 
 //! Proxy for server

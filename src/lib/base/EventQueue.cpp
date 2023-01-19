@@ -172,13 +172,13 @@ EventQueue::dispatchEvent(const Event& event)
 {
     auto* target = event.getTarget();
 
-    const auto* type_handler = get_handler(event.getType(), target);
+    auto type_handler = get_handler(event.getType(), target);
     if (type_handler) {
         (*type_handler)(event);
         return true;
     }
 
-    const auto* any_handler = get_handler(EventType::UNKNOWN, target);
+    auto any_handler = get_handler(EventType::UNKNOWN, target);
     if (any_handler) {
         (*any_handler)(event);
         return true;
@@ -288,7 +288,7 @@ void EventQueue::add_handler(EventType type, const EventTarget* target, const Ev
         throw std::invalid_argument("EventTarget added to wrong EventQueue");
     }
 
-    m_handlers[target][type] = handler;
+    m_handlers[target][type] = std::make_shared<EventHandler>(handler);
 }
 
 void EventQueue::remove_handler(EventType type, const EventTarget* target)
@@ -330,8 +330,8 @@ void EventQueue::remove_handlers(const EventTarget* target)
     target->event_queue_ = nullptr;
 }
 
-const EventQueue::EventHandler* EventQueue::get_handler(EventType type,
-                                                        const EventTarget* target) const
+std::shared_ptr<EventQueue::EventHandler>
+    EventQueue::get_handler(EventType type, const EventTarget* target) const
 {
     std::lock_guard<std::mutex> lock(mutex_);
     HandlerTable::const_iterator index = m_handlers.find(target);
@@ -339,7 +339,7 @@ const EventQueue::EventHandler* EventQueue::get_handler(EventType type,
         const TypeHandlerTable& typeHandlers = index->second;
         TypeHandlerTable::const_iterator index2 = typeHandlers.find(type);
         if (index2 != typeHandlers.end()) {
-            return &index2->second;
+            return index2->second;
         }
     }
     return nullptr;

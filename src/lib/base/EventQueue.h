@@ -98,7 +98,7 @@ private:
     typedef PriorityQueue<Timer> TimerQueue;
     typedef std::map<std::uint32_t, Event> EventTable;
     typedef std::vector<std::uint32_t> EventIDList;
-    using TypeHandlerTable = std::map<EventType, EventHandler>;
+    using TypeHandlerTable = std::map<EventType, std::shared_ptr<EventHandler>>;
     using HandlerTable = std::map<const EventTarget*, TypeHandlerTable>;
 
     EventTarget system_target_;
@@ -123,7 +123,7 @@ private:
 private:
     // returns nullptr if handler is not found
 
-    const EventHandler* get_handler(EventType type, const EventTarget* target) const;
+    std::shared_ptr<EventHandler> get_handler(EventType type, const EventTarget* target) const;
 
     mutable std::mutex          ready_mutex_;
     mutable std::condition_variable ready_cv_;

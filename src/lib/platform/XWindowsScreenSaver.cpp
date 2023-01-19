@@ -32,7 +32,7 @@
 namespace inputleap {
 
 XWindowsScreenSaver::XWindowsScreenSaver(IXWindowsImpl* impl, Display* display,
-                                         Window window, const void* event_target,
+                                         Window window, const EventTarget* event_target,
                                          IEventQueue* events) :
     m_display(display),
     m_xscreensaverSink(window),

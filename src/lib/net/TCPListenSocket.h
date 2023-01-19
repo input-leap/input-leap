@@ -20,6 +20,7 @@
 
 #include "Fwd.h"
 #include "base/Fwd.h"
+#include "base/EventTarget.h"
 #include "net/IListenSocket.h"
 #include "net/ISocketMultiplexerJob.h"
 #include "arch/IArchNetwork.h"
@@ -34,7 +35,7 @@ class SocketMultiplexer;
 /*!
 A listen socket using TCP.
 */
-class TCPListenSocket : public IListenSocket {
+class TCPListenSocket : public IListenSocket, public EventTarget {
 public:
     TCPListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family);
     virtual ~TCPListenSocket();
@@ -42,7 +43,7 @@ public:
     // ISocket overrides
     void bind(const NetworkAddress&) override;
     void close() override;
-    const void* get_event_target() const override;
+    const EventTarget* get_event_target() const override;
 
     // IListenSocket overrides
     std::unique_ptr<IDataSocket> accept() override;

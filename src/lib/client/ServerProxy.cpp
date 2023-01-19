@@ -30,6 +30,7 @@
 #include "io/IStream.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
+#include "base/EventQueueTimer.h"
 #include "base/XBase.h"
 
 #include <memory>

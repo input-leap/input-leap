@@ -44,7 +44,7 @@ ClientListener::ClientListener(const NetworkAddress& address,
                                                  security_level);
 
         // setup event handler
-        m_events->add_handler(EventType::LISTEN_SOCKET_CONNECTING, listen_.get(),
+        m_events->add_handler(EventType::LISTEN_SOCKET_CONNECTING, listen_->get_event_target(),
                               [this](const auto& e){ handle_client_connecting(); });
 
         // bind listen address
@@ -207,7 +207,7 @@ void ClientListener::handle_client_disconnected(ClientProxy* client)
 void
 ClientListener::cleanupListenSocket()
 {
-    m_events->remove_handler(EventType::LISTEN_SOCKET_CONNECTING, listen_.get());
+    m_events->remove_handler(EventType::LISTEN_SOCKET_CONNECTING, listen_->get_event_target());
     listen_.reset();
 }
 

@@ -82,7 +82,7 @@ public:
         delete[] m_mockData;
     }
 
-    void                sendMockData(void* eventTarget);
+    void sendMockData(const EventTarget* eventTarget);
 
     void sendToClient_mockData_handle_client_connected(const Event&, ClientListener* listener);
     void sendToClient_mockData_file_receive_completed(const Event&);
@@ -422,13 +422,12 @@ void NetworkTests::sendToServer_mockFile_file_recieve_completed(const Event& eve
     m_events.raiseQuitEvent();
 }
 
-void
-NetworkTests::sendMockData(void* eventTarget)
+void NetworkTests::sendMockData(const EventTarget* event_target)
 {
     // send first message (file size)
     FileChunk size_message = FileChunk::start(kMockDataSize);
 
-    m_events.add_event(EventType::FILE_CHUNK_SENDING, eventTarget,
+    m_events.add_event(EventType::FILE_CHUNK_SENDING, event_target,
                        create_event_data<FileChunk>(size_message));
 
     // send chunk messages with incrementing chunk size
@@ -444,7 +443,7 @@ NetworkTests::sendMockData(void* eventTarget)
 
         // first byte is the chunk mark, last is \0
         FileChunk chunk = FileChunk::data(m_mockData, dataSize);
-        m_events.add_event(EventType::FILE_CHUNK_SENDING, eventTarget,
+        m_events.add_event(EventType::FILE_CHUNK_SENDING, event_target,
                            create_event_data<FileChunk>(chunk));
 
         sentLength += dataSize;
@@ -458,7 +457,7 @@ NetworkTests::sendMockData(void* eventTarget)
 
     // send last message
     FileChunk transferFinished = FileChunk::end();
-    m_events.add_event(EventType::FILE_CHUNK_SENDING, eventTarget,
+    m_events.add_event(EventType::FILE_CHUNK_SENDING, event_target,
                        create_event_data<FileChunk>(transferFinished));
 }
 

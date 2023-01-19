@@ -39,6 +39,7 @@
 #include "net/XSocket.h"
 #include "mt/Thread.h"
 #include "arch/Arch.h"
+#include "base/EventQueueTimer.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/Time.h"

@@ -20,6 +20,7 @@
 
 #include "base/Event.h"
 #include "base/EventTypes.h"
+#include "base/EventTarget.h"
 #include "base/Fwd.h"
 
 namespace inputleap {
@@ -28,7 +29,7 @@ class IStream;
 class IpcMessage;
 class IpcLogLineMessage;
 
-class IpcServerProxy {
+class IpcServerProxy : public EventTarget {
     friend class IpcClient;
 
 public:

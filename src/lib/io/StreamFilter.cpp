@@ -70,7 +70,7 @@ StreamFilter::shutdownOutput()
     getStream()->shutdownOutput();
 }
 
-const void* StreamFilter::get_event_target() const
+const EventTarget* StreamFilter::get_event_target() const
 {
     return this;
 }

@@ -149,7 +149,7 @@ public:
 	// KeyState overrides
 	virtual void		onKey(KeyButton button, bool down,
 							KeyModifierMask newState);
-    virtual void sendKeyEvent(const void* target, bool press, bool isAutoRepeat, KeyID key,
+    virtual void sendKeyEvent(const EventTarget* target, bool press, bool isAutoRepeat, KeyID key,
                               KeyModifierMask mask, std::int32_t count, KeyButton button);
 
 	// Unit test accessors

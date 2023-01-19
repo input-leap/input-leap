@@ -19,6 +19,7 @@
 #include "platform/OSXScreen.h"
 
 #include "base/EventQueue.h"
+#include "base/EventQueueTimer.h"
 #include "client/Client.h"
 #include "platform/OSXClipboard.h"
 #include "platform/OSXEventQueueBuffer.h"
@@ -200,7 +201,7 @@ OSXScreen::~OSXScreen()
 	delete m_screensaver;
 }
 
-const void* OSXScreen::get_event_target() const
+const EventTarget* OSXScreen::get_event_target() const
 {
     return this;
 }

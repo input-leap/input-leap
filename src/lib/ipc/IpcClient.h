@@ -21,6 +21,7 @@
 #include "net/Fwd.h"
 #include "net/NetworkAddress.h"
 #include "net/TCPSocket.h"
+#include "base/EventTarget.h"
 #include "base/EventTypes.h"
 #include <memory>
 
@@ -33,7 +34,7 @@ class IpcMessage;
 /*!
  * See \ref IpcServer description.
  */
-class IpcClient {
+class IpcClient : public EventTarget {
 public:
     IpcClient(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
     IpcClient(IEventQueue* events, SocketMultiplexer* socketMultiplexer, int port);

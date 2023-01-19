@@ -37,6 +37,7 @@
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
+#include "base/EventQueueTimer.h"
 #include "base/Time.h"
 
 #include <string.h>
@@ -478,7 +479,7 @@ MSWindowsScreen::isPrimary() const
     return m_isPrimary;
 }
 
-const void* MSWindowsScreen::get_event_target() const
+const EventTarget* MSWindowsScreen::get_event_target() const
 {
     return this;
 }

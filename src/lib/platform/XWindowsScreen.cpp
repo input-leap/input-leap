@@ -437,7 +437,7 @@ XWindowsScreen::isPrimary() const
 	return m_isPrimary;
 }
 
-const void* XWindowsScreen::get_event_target() const
+const EventTarget* XWindowsScreen::get_event_target() const
 {
     return this;
 }

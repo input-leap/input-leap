@@ -93,7 +93,7 @@ PrimaryClient::isLockedToScreen() const
     return m_screen->isLockedToScreen();
 }
 
-const void* PrimaryClient::get_event_target() const
+const EventTarget* PrimaryClient::get_event_target() const
 {
     return m_screen->get_event_target();
 }

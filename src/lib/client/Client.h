@@ -19,6 +19,7 @@
 #pragma once
 
 #include "base/Fwd.h"
+#include "base/EventTarget.h"
 #include "inputleap/Fwd.h"
 #include "inputleap/IClient.h"
 #include "inputleap/Clipboard.h"
@@ -36,7 +37,7 @@ class IStream;
 class Thread;
 
 /// This class implements the top-level client algorithms for InputLeap.
-class Client : public IClient, public INode {
+class Client : public IClient, public INode, public EventTarget {
 public:
     class FailInfo {
     public:
@@ -128,7 +129,7 @@ public:
     //@}
 
     // IScreen overrides
-    const void* get_event_target() const override;
+    const EventTarget* get_event_target() const override;
     bool getClipboard(ClipboardID id, IClipboard*) const override;
     void getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width,
                   std::int32_t& height) const override;

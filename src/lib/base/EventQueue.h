@@ -19,6 +19,7 @@
 #pragma once
 
 #include "arch/IArchMultithread.h"
+#include "EventTarget.h"
 #include "base/IEventQueue.h"
 #include "base/Event.h"
 #include "base/PriorityQueue.h"
@@ -49,13 +50,14 @@ public:
     bool getEvent(Event& event, double timeout = -1.0) override;
     bool dispatchEvent(const Event& event) override;
     void add_event(Event&& event) override;
-    EventQueueTimer* newTimer(double duration, void* target) override;
-    EventQueueTimer* newOneShotTimer(double duration, void* target) override;
+    EventQueueTimer* newTimer(double duration, const EventTarget* target) override;
+    EventQueueTimer* newOneShotTimer(double duration, const EventTarget* target) override;
     void deleteTimer(EventQueueTimer*) override;
-    void add_handler(EventType type, const void* target, const EventHandler& handler) override;
-    void remove_handler(EventType type, const void* target) override;
-    void remove_handlers(const void* target) override;
-    void* getSystemTarget() override;
+    void add_handler(EventType type, const EventTarget* target,
+                     const EventHandler& handler) override;
+    void remove_handler(EventType type, const EventTarget* target) override;
+    void remove_handlers(const EventTarget* target) override;
+    const EventTarget* getSystemTarget() override;
     void waitForReady() const override;
 
 private:
@@ -69,7 +71,7 @@ private:
     class Timer {
     public:
         Timer(EventQueueTimer*, double timeout, double initialTime,
-              void* target, bool oneShot);
+              const EventTarget* target, bool oneShot);
         ~Timer();
 
         void reset();
@@ -79,7 +81,7 @@ private:
 
         bool isOneShot() const;
         EventQueueTimer* getTimer() const;
-        void* getTarget() const;
+        const EventTarget* get_target() const { return target_; }
         void fillEvent(TimerEvent&) const;
 
         bool operator<(const Timer&) const;
@@ -87,7 +89,7 @@ private:
     private:
         EventQueueTimer* m_timer;
         double m_timeout;
-        void* m_target;
+        const EventTarget* target_;
         bool m_oneShot;
         double m_time;
     };
@@ -97,9 +99,9 @@ private:
     typedef std::map<std::uint32_t, Event> EventTable;
     typedef std::vector<std::uint32_t> EventIDList;
     using TypeHandlerTable = std::map<EventType, EventHandler>;
-    typedef std::map<const void*, TypeHandlerTable> HandlerTable;
+    using HandlerTable = std::map<const EventTarget*, TypeHandlerTable>;
 
-    int m_systemTarget;
+    EventTarget system_target_;
     mutable std::mutex mutex_;
 
     // buffer of events
@@ -120,7 +122,8 @@ private:
 
 private:
     // returns nullptr if handler is not found
-    const EventHandler* get_handler(EventType type, const void* target) const;
+
+    const EventHandler* get_handler(EventType type, const EventTarget* target) const;
 
     mutable std::mutex          ready_mutex_;
     mutable std::condition_variable ready_cv_;

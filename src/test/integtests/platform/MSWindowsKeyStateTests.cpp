@@ -36,7 +36,7 @@ namespace inputleap {
 using ::testing::_;
 using ::testing::NiceMock;
 
-class MSWindowsKeyStateTests : public ::testing::Test
+class MSWindowsKeyStateTests : public ::testing::Test, public EventTarget
 {
 protected:
 	virtual void SetUp()
@@ -54,7 +54,7 @@ protected:
 		return new MSWindowsDesks(true, false, m_screensaver, eventQueue, [](){}, false);
 	}
 
-	const void* get_event_target() const
+    const EventTarget* get_event_target() const
 	{
         return this;
 	}

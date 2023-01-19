@@ -22,6 +22,7 @@
 #include "arch/IArchMultithread.h"
 #include "base/EventTypes.h"
 #include "base/Event.h"
+#include "base/EventTarget.h"
 #include "base/Fwd.h"
 
 #include <mutex>
@@ -33,7 +34,7 @@ class IpcCommandMessage;
 class IpcHelloMessage;
 class IStream;
 
-class IpcClientProxy {
+class IpcClientProxy : public EventTarget {
     friend class IpcServer;
 
 public:

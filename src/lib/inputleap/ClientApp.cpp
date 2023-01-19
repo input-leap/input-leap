@@ -33,6 +33,7 @@
 #include "arch/Arch.h"
 #include "base/String.h"
 #include "base/Event.h"
+#include "base/EventQueueTimer.h"
 #include "base/IEventQueue.h"
 #include "base/log_outputters.h"
 #include "base/EventQueue.h"

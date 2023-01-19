@@ -32,7 +32,7 @@ ClientConnectionLoggingWrapper::ClientConnectionLoggingWrapper(
 
 ClientConnectionLoggingWrapper::~ClientConnectionLoggingWrapper() = default;
 
-const void* ClientConnectionLoggingWrapper::get_event_target()
+const EventTarget* ClientConnectionLoggingWrapper::get_event_target()
 {
     return conn_->get_event_target();
 }

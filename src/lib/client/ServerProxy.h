@@ -23,6 +23,7 @@
 #include "inputleap/Fwd.h"
 #include "base/Fwd.h"
 #include "base/Event.h"
+#include "base/EventTarget.h"
 
 namespace inputleap {
 
@@ -35,7 +36,7 @@ class IStream;
 This class acts a proxy for the server, converting calls into messages
 to the server and messages from the server to calls on the client.
 */
-class ServerProxy {
+class ServerProxy : public EventTarget {
 public:
     /*!
     Process messages from the server on \p stream and forward to

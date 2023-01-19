@@ -26,7 +26,7 @@
 #include "arch/win32/ArchMiscWindows.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
-#include "base/IEventQueue.h"
+#include "base/EventQueueTimer.h"
 
 #include <malloc.h>
 #include <VersionHelpers.h>

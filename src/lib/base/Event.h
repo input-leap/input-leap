@@ -18,11 +18,13 @@
 
 #pragma once
 
+#include "Fwd.h"
 #include "EventTypes.h"
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
+#include <utility>
 #include <stdexcept>
 
 namespace inputleap {
@@ -74,7 +76,7 @@ public:
         @param target is the intended recipient of the event.
         @param flags is any combination of \c Flags.
     */
-    Event(EventType type, const void* target = nullptr, EventDataBase* data = nullptr,
+    Event(EventType type, const EventTarget* target = nullptr, EventDataBase* data = nullptr,
           Flags flags = kNone) :
         type_{type},
         target_{target},
@@ -113,7 +115,7 @@ public:
     /*!
     Returns the event target.
     */
-    const void* getTarget() const { return target_; }
+    const EventTarget* getTarget() const { return target_; }
 
     /// Returns stored event data as specified type
     template<class T>
@@ -142,7 +144,7 @@ public:
 
 private:
     EventType type_ = EventType::UNKNOWN;
-    const void* target_ = nullptr;
+    const EventTarget* target_ = nullptr;
     EventDataBase* data_ = nullptr;
     Flags flags_ = 0;
     EventDataBase* data_object_ = nullptr;

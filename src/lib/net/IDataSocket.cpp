@@ -28,7 +28,7 @@ IDataSocket::close()
     assert(0 && "bad call");
 }
 
-const void* IDataSocket::get_event_target() const
+const EventTarget* IDataSocket::get_event_target() const
 {
     // this is here to work around a VC++6 bug.  see the header file.
     assert(0 && "bad call");

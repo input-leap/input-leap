@@ -35,8 +35,10 @@
 #include "net/SecureSocket.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
+#include "base/EventQueueTimer.h"
 #include "base/IEventQueue.h"
 #include "base/Time.h"
+
 
 #include <cstring>
 #include <cstdlib>
@@ -201,7 +203,7 @@ Client::getServerAddress() const
     return m_serverAddress;
 }
 
-const void* Client::get_event_target() const
+const EventTarget* Client::get_event_target() const
 {
     return m_screen->get_event_target();
 }

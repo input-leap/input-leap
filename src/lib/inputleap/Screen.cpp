@@ -456,9 +456,9 @@ void Screen::setDropTarget(const std::string& target)
     return m_screen->setDropTarget(target);
 }
 
-const void* Screen::get_event_target() const
+const EventTarget* Screen::get_event_target() const
 {
-    return m_screen;
+    return m_screen->get_event_target();
 }
 
 bool

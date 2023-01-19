@@ -33,7 +33,7 @@ namespace inputleap {
 void getProcessSerialNumber(const char* name, ProcessSerialNumber& psn);
 bool testProcessName(const char* name, const ProcessSerialNumber& psn);
 
-OSXScreenSaver::OSXScreenSaver(IEventQueue* events, const void* event_target) :
+OSXScreenSaver::OSXScreenSaver(IEventQueue* events, const EventTarget* event_target) :
     event_target_(event_target),
     m_enabled(true),
     m_events(events)

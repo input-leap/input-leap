@@ -19,6 +19,7 @@
 #pragma once
 
 #include "Fwd.h"
+#include "base/EventTarget.h"
 #include "net/IDataSocket.h"
 #include "net/ISocketMultiplexerJob.h"
 #include "io/StreamBuffer.h"
@@ -35,7 +36,7 @@ class Thread;
 /*!
 A data socket using TCP.
 */
-class TCPSocket : public IDataSocket {
+class TCPSocket : public IDataSocket, public EventTarget {
 public:
     TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family);
     TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket);
@@ -44,7 +45,7 @@ public:
     // ISocket overrides
     void bind(const NetworkAddress&) override;
     void close() override;
-    const void* get_event_target() const override;
+    const EventTarget* get_event_target() const override;
 
     // IStream overrides
     std::uint32_t read(void* buffer, std::uint32_t n) override;

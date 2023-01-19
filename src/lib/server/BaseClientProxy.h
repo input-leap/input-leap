@@ -19,12 +19,12 @@
 #pragma once
 
 #include "inputleap/IClient.h"
+#include "inputleap/Fwd.h"
 
 namespace inputleap {
 
 class IClientConnection;
 class IStream;
-class FileChunk;
 
 //! Generic proxy for client or primary
 class BaseClientProxy : public IClient {

@@ -24,8 +24,6 @@
 
 namespace inputleap {
 
-class IDataSocket;
-
 //! Listen socket interface
 /*!
 This interface defines the methods common to all network sockets that

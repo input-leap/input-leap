@@ -23,6 +23,7 @@
 #include "inputleap/Clipboard.h"
 #include "inputleap/key_types.h"
 #include "inputleap/mouse_types.h"
+#include "inputleap/Fwd.h"
 #include "inputleap/INode.h"
 #include "inputleap/DragInformation.h"
 #include "inputleap/ServerArgs.h"
@@ -38,10 +39,8 @@
 namespace inputleap {
 
 class BaseClientProxy;
-class FileChunk;
 class PrimaryClient;
 class InputFilter;
-class Screen;
 class Thread;
 class ClientListener;
 

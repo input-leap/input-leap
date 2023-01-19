@@ -17,16 +17,12 @@
 
 #pragma once
 
+#include "Fwd.h"
 #include <deque>
 #include <string>
 #include <vector>
 
 namespace inputleap {
-
-class ServerArgs;
-class ClientArgs;
-class ArgsBase;
-class App;
 
 // Thrown whenever the option parsing fails.
 class XArgvParserError {

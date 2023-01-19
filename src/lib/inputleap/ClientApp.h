@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "Fwd.h"
 #include "base/Fwd.h"
 #include "net/Fwd.h"
 #include "inputleap/App.h"
@@ -25,9 +26,7 @@
 
 namespace inputleap {
 
-class Screen;
 class Client;
-class ClientArgs;
 
 class ClientApp : public App {
 public:

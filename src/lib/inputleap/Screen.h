@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "inputleap/Fwd.h"
 #include "inputleap/DragInformation.h"
 #include "inputleap/clipboard_types.h"
 #include "inputleap/IScreen.h"
@@ -27,9 +28,6 @@
 #include "base/Fwd.h"
 
 namespace inputleap {
-
-class IClipboard;
-class IPlatformScreen;
 
 //! Platform independent screen
 /*!

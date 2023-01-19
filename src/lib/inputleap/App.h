@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "Fwd.h"
 #include "base/Fwd.h"
 #include "ipc/IpcClient.h"
 #include "inputleap/IApp.h"
@@ -36,7 +37,6 @@
 namespace inputleap {
 
 class IArchTaskBarReceiver;
-class Screen;
 
 typedef IArchTaskBarReceiver* (*CreateTaskBarReceiverFunc)(const BufferedLogOutputter*, IEventQueue* events);
 

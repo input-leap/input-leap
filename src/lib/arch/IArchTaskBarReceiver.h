@@ -18,12 +18,10 @@
 
 #pragma once
 
+#include "inputleap/Fwd.h"
 #include <string>
 
 namespace inputleap {
-
-class IScreen;
-class INode;
 
 /** This interface defines the task bar icon event handlers required by InputLeap.
     Each architecture must implement this interface though each operation can be a no-op.

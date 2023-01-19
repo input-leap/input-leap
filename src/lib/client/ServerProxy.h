@@ -20,6 +20,7 @@
 
 #include "inputleap/clipboard_types.h"
 #include "inputleap/key_types.h"
+#include "inputleap/Fwd.h"
 #include "base/Fwd.h"
 #include "base/Event.h"
 
@@ -27,9 +28,7 @@ namespace inputleap {
 
 class Client;
 class ClientInfo;
-class IClipboard;
 class IStream;
-class FileChunk;
 
 //! Proxy for server
 /*!

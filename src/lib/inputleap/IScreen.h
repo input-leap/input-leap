@@ -19,12 +19,11 @@
 #pragma once
 
 #include "inputleap/clipboard_types.h"
+#include "inputleap/Fwd.h"
 #include "base/Event.h"
 #include "base/EventTypes.h"
 
 namespace inputleap {
-
-class IClipboard;
 
 //! Screen interface
 /*!

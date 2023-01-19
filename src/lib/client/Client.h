@@ -19,6 +19,7 @@
 #pragma once
 
 #include "base/Fwd.h"
+#include "inputleap/Fwd.h"
 #include "inputleap/IClient.h"
 #include "inputleap/Clipboard.h"
 #include "inputleap/DragInformation.h"
@@ -30,8 +31,6 @@
 
 namespace inputleap {
 
-class FileChunk;
-class Screen;
 class ServerProxy;
 class IStream;
 class Thread;

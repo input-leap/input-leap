@@ -21,6 +21,7 @@
 
 #include "platform/synwinhk.h"
 #include "base/Fwd.h"
+#include "inputleap/Fwd.h"
 #include "inputleap/key_types.h"
 #include "inputleap/mouse_types.h"
 #include "inputleap/option_types.h"
@@ -37,7 +38,6 @@
 namespace inputleap {
 
 class Thread;
-class IScreenSaver;
 
 //! Microsoft Windows desk handling
 /*!

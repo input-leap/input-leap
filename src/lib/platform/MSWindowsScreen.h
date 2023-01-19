@@ -71,7 +71,7 @@ public:
     //@}
 
     // IScreen overrides
-    virtual void* getEventTarget() const;
+    virtual const void* get_event_target() const;
     virtual bool getClipboard(ClipboardID id, IClipboard*) const;
     virtual void getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width,
                           std::int32_t& height) const;

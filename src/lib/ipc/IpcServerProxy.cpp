@@ -30,13 +30,13 @@ IpcServerProxy::IpcServerProxy(inputleap::IStream& stream, IEventQueue* events) 
     m_stream(stream),
     m_events(events)
 {
-    m_events->add_handler(EventType::STREAM_INPUT_READY, stream.getEventTarget(),
+    m_events->add_handler(EventType::STREAM_INPUT_READY, stream.get_event_target(),
                           [this](const auto& e){ handle_data(); });
 }
 
 IpcServerProxy::~IpcServerProxy()
 {
-    m_events->removeHandler(EventType::STREAM_INPUT_READY, m_stream.getEventTarget());
+    m_events->removeHandler(EventType::STREAM_INPUT_READY, m_stream.get_event_target());
 }
 
 void IpcServerProxy::handle_data()

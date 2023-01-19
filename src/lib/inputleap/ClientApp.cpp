@@ -238,7 +238,7 @@ ClientApp::openClientScreen()
         screen->setDropTarget(argsBase().m_dropTarget);
     }
     screen->setEnableDragDrop(argsBase().m_enableDragDrop);
-    m_events->add_handler(EventType::SCREEN_ERROR, screen->getEventTarget(),
+    m_events->add_handler(EventType::SCREEN_ERROR, screen->get_event_target(),
                           [this](const auto& e){ handle_screen_error(); });
     return screen;
 }
@@ -249,7 +249,7 @@ ClientApp::closeClientScreen(inputleap::Screen* screen)
 {
     if (screen != nullptr) {
         m_events->removeHandler(EventType::SCREEN_ERROR,
-            screen->getEventTarget());
+            screen->get_event_target());
         delete screen;
     }
 }
@@ -330,11 +330,11 @@ Client* ClientApp::openClient(const std::string& name, const NetworkAddress& add
         args());
 
     try {
-        m_events->add_handler(EventType::CLIENT_CONNECTED, client->getEventTarget(),
+        m_events->add_handler(EventType::CLIENT_CONNECTED, client->get_event_target(),
                               [this](const auto& e) { handle_client_connected(); });
-        m_events->add_handler(EventType::CLIENT_CONNECTION_FAILED, client->getEventTarget(),
+        m_events->add_handler(EventType::CLIENT_CONNECTION_FAILED, client->get_event_target(),
                               [this](const auto& e) { handle_client_failed(e); });
-        m_events->add_handler(EventType::CLIENT_DISCONNECTED, client->getEventTarget(),
+        m_events->add_handler(EventType::CLIENT_DISCONNECTED, client->get_event_target(),
                               [this](const auto& e) { handle_client_disconnected(); });
 
     } catch (std::bad_alloc &ba) {

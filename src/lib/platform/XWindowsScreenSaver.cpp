@@ -32,11 +32,11 @@
 namespace inputleap {
 
 XWindowsScreenSaver::XWindowsScreenSaver(IXWindowsImpl* impl, Display* display,
-                                         Window window, void* eventTarget,
+                                         Window window, const void* event_target,
                                          IEventQueue* events) :
     m_display(display),
     m_xscreensaverSink(window),
-    m_eventTarget(eventTarget),
+    event_target_(event_target),
     m_xscreensaver(None),
     m_xscreensaverActive(false),
     m_dpms(false),
@@ -373,9 +373,9 @@ XWindowsScreenSaver::setXScreenSaverActive(bool activated)
         updateDisableTimer();
 
         if (activated) {
-            m_events->add_event(EventType::PRIMARY_SCREEN_SAVER_ACTIVATED, m_eventTarget);
+            m_events->add_event(EventType::PRIMARY_SCREEN_SAVER_ACTIVATED, event_target_);
         } else {
-            m_events->add_event(EventType::PRIMARY_SCREEN_SAVER_DEACTIVATED, m_eventTarget);
+            m_events->add_event(EventType::PRIMARY_SCREEN_SAVER_DEACTIVATED, event_target_);
         }
     }
 }

@@ -55,12 +55,12 @@ public:
     //@}
 
     // ISocket overrides
-    // close() and getEventTarget() aren't pure to work around a bug
+    // close() and get_event_target() aren't pure to work around a bug
     // in VC++6.  it claims the methods are unused locals and warns
     // that it's removing them.  it's presumably tickled by inheriting
     // methods with identical signatures from both superclasses.
     void close() override;
-    void* getEventTarget() const override;
+    const void* get_event_target() const override;
 
     // IStream overrides
     virtual bool isFatal() const = 0;

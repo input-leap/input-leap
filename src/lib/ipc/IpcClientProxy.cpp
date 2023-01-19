@@ -33,22 +33,22 @@ IpcClientProxy::IpcClientProxy(std::unique_ptr<IStream>&& stream, IEventQueue* e
     m_disconnecting(false),
     m_events(events)
 {
-    m_events->add_handler(EventType::STREAM_INPUT_READY, stream_->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_INPUT_READY, stream_->get_event_target(),
                           [this](const auto& e){ handle_data(); });
-    m_events->add_handler(EventType::STREAM_OUTPUT_ERROR, stream_->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_OUTPUT_ERROR, stream_->get_event_target(),
                           [this](const auto& e){ handle_write_error(); });
-    m_events->add_handler(EventType::STREAM_INPUT_SHUTDOWN, stream_->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_INPUT_SHUTDOWN, stream_->get_event_target(),
                           [this](const auto& e){ handle_disconnect(); });
-    m_events->add_handler(EventType::STREAM_OUTPUT_SHUTDOWN, stream_->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_OUTPUT_SHUTDOWN, stream_->get_event_target(),
                           [this](const auto& e){ handle_write_error(); });
 }
 
 IpcClientProxy::~IpcClientProxy()
 {
-    m_events->removeHandler(EventType::STREAM_INPUT_READY, stream_->getEventTarget());
-    m_events->removeHandler(EventType::STREAM_OUTPUT_ERROR, stream_->getEventTarget());
-    m_events->removeHandler(EventType::STREAM_INPUT_SHUTDOWN, stream_->getEventTarget());
-    m_events->removeHandler(EventType::STREAM_OUTPUT_SHUTDOWN, stream_->getEventTarget());
+    m_events->removeHandler(EventType::STREAM_INPUT_READY, stream_->get_event_target());
+    m_events->removeHandler(EventType::STREAM_OUTPUT_ERROR, stream_->get_event_target());
+    m_events->removeHandler(EventType::STREAM_INPUT_SHUTDOWN, stream_->get_event_target());
+    m_events->removeHandler(EventType::STREAM_OUTPUT_SHUTDOWN, stream_->get_event_target());
 
     // Ensure that client proxy is not deleted from below some active client feet
     {

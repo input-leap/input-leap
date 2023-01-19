@@ -33,7 +33,7 @@ public:
 
     IStream* get_stream() override { return stream_.get(); }
 
-    void* get_event_target() override;
+    const void* get_event_target() override;
 
     void send_query_info_1_6() override;
     void send_enter_1_6(std::int32_t x_abs, std::int32_t y_abs, std::uint32_t seq_num,

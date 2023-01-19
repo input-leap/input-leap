@@ -794,9 +794,8 @@ bool OSXKeyState::map_hot_key_to_mac(KeyID key, KeyModifierMask mask,
     return true;
 }
 
-void
-OSXKeyState::handleModifierKeys(void* target,
-                KeyModifierMask oldMask, KeyModifierMask newMask)
+void OSXKeyState::handleModifierKeys(const void* target,
+                                     KeyModifierMask oldMask, KeyModifierMask newMask)
 {
     // compute changed modifiers
     KeyModifierMask changed = (oldMask ^ newMask);
@@ -828,7 +827,7 @@ OSXKeyState::handleModifierKeys(void* target,
     }
 }
 
-void OSXKeyState::handleModifierKey(void* target, std::uint32_t virtualKey, KeyID id, bool down,
+void OSXKeyState::handleModifierKey(const void* target, std::uint32_t virtualKey, KeyID id, bool down,
                                     KeyModifierMask newMask)
 {
     KeyButton button = mapVirtualKeyToKeyButton(virtualKey);

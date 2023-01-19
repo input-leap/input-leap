@@ -109,7 +109,7 @@ void SecureSocket::freeSSLResources()
 void
 SecureSocket::connect(const NetworkAddress& addr)
 {
-    m_events->add_handler(EventType::DATA_SOCKET_CONNECTED, getEventTarget(),
+    m_events->add_handler(EventType::DATA_SOCKET_CONNECTED, get_event_target(),
                           [this](const auto& e){ handle_tcp_connected(e); });
 
     TCPSocket::connect(addr);

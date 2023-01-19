@@ -365,7 +365,7 @@ void NetworkTests::sendToClient_mockData_handle_client_connected(const Event&,
 
 void NetworkTests::sendToClient_mockData_file_receive_completed(const Event& event)
 {
-    Client* client = static_cast<Client*>(event.getTarget());
+    auto* client = const_cast<Client*>(static_cast<const Client*>(event.getTarget()));
     EXPECT_TRUE(client->isReceivedFileSizeValid());
 
     m_events.raiseQuitEvent();
@@ -390,7 +390,7 @@ void NetworkTests::sendToClient_mockFile_handle_client_connected(const Event&,
 
 void NetworkTests::sendToClient_mockFile_file_receive_completed(const Event& event)
 {
-    Client* client = static_cast<Client*>(event.getTarget());
+    Client* client = const_cast<Client*>(static_cast<const Client*>(event.getTarget()));
     EXPECT_TRUE(client->isReceivedFileSizeValid());
 
     m_events.raiseQuitEvent();
@@ -403,7 +403,7 @@ void NetworkTests::sendToServer_mockData_handle_client_connected(const Event&, C
 
 void NetworkTests::sendToServer_mockData_file_receive_completed(const Event& event)
 {
-    Server* server = static_cast<Server*>(event.getTarget());
+    Server* server = const_cast<Server*>(static_cast<const Server*>(event.getTarget()));
     EXPECT_TRUE(server->isReceivedFileSizeValid());
 
     m_events.raiseQuitEvent();
@@ -416,7 +416,7 @@ void NetworkTests::sendToServer_mockFile_handle_client_connected(const Event&, C
 
 void NetworkTests::sendToServer_mockFile_file_recieve_completed(const Event& event)
 {
-    Server* server = static_cast<Server*>(event.getTarget());
+    Server* server = const_cast<Server*>(static_cast<const Server*>(event.getTarget()));
     EXPECT_TRUE(server->isReceivedFileSizeValid());
 
     m_events.raiseQuitEvent();

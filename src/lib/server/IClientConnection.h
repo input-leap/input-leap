@@ -33,7 +33,7 @@ class IClientConnection {
 public:
     virtual ~IClientConnection() = default;
 
-    virtual void* get_event_target() = 0;
+    virtual const void* get_event_target() = 0;
 
     virtual IStream* get_stream() = 0;
 

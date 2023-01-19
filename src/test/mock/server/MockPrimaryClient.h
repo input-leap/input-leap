@@ -28,7 +28,7 @@ namespace inputleap {
 class MockPrimaryClient : public PrimaryClient
 {
 public:
-    MOCK_CONST_METHOD0(getEventTarget, void*());
+    MOCK_CONST_METHOD0(get_event_target, const void*());
     MOCK_CONST_METHOD2(getCursorPos, void(std::int32_t&, std::int32_t&));
     MOCK_CONST_METHOD2(setJumpCursorPos, void(std::int32_t, std::int32_t));
     MOCK_METHOD1(reconfigure, void(std::uint32_t));

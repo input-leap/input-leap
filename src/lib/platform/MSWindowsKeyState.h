@@ -36,8 +36,9 @@ This class maps KeyIDs to keystrokes.
 */
 class MSWindowsKeyState : public KeyState {
 public:
-	MSWindowsKeyState(MSWindowsDesks* desks, void* eventTarget, IEventQueue* events);
-	MSWindowsKeyState(MSWindowsDesks* desks, void* eventTarget, IEventQueue* events, inputleap::KeyMap& keyMap);
+    MSWindowsKeyState(MSWindowsDesks* desks, const void* event_target, IEventQueue* events);
+    MSWindowsKeyState(MSWindowsDesks* desks, const void* event_target, IEventQueue* events,
+                      inputleap::KeyMap& keyMap);
 	virtual ~MSWindowsKeyState();
 
 	//! @name manipulators
@@ -148,7 +149,7 @@ public:
 	// KeyState overrides
 	virtual void		onKey(KeyButton button, bool down,
 							KeyModifierMask newState);
-    virtual void sendKeyEvent(void* target, bool press, bool isAutoRepeat, KeyID key,
+    virtual void sendKeyEvent(const void* target, bool press, bool isAutoRepeat, KeyID key,
                               KeyModifierMask mask, std::int32_t count, KeyButton button);
 
 	// Unit test accessors
@@ -190,7 +191,7 @@ private:
 	typedef std::map<HKL, std::int32_t> GroupMap;
 	typedef std::map<KeyID, UINT> KeyToVKMap;
 
-	void*				m_eventTarget;
+    const void* event_target_;
 	MSWindowsDesks*	m_desks;
 	HKL					m_keyLayout;
 	UINT				m_buttonToVK[512];

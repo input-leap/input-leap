@@ -74,7 +74,7 @@ public:
         @param target is the intended recipient of the event.
         @param flags is any combination of \c Flags.
     */
-    Event(EventType type, void* target = nullptr, EventDataBase* data = nullptr,
+    Event(EventType type, const void* target = nullptr, EventDataBase* data = nullptr,
           Flags flags = kNone) :
         type_{type},
         target_{target},
@@ -113,7 +113,7 @@ public:
     /*!
     Returns the event target.
     */
-    void* getTarget() const { return target_; }
+    const void* getTarget() const { return target_; }
 
     /// Returns stored event data as specified type
     template<class T>
@@ -142,7 +142,7 @@ public:
 
 private:
     EventType type_ = EventType::UNKNOWN;
-    void* target_ = nullptr;
+    const void* target_ = nullptr;
     EventDataBase* data_ = nullptr;
     Flags flags_ = 0;
     EventDataBase* data_object_ = nullptr;

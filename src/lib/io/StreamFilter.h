@@ -40,15 +40,15 @@ public:
     ~StreamFilter() override;
 
     // IStream overrides
-    // These all just forward to the underlying stream except getEventTarget.
-    // Override as necessary.  getEventTarget returns a pointer to this.
+    // These all just forward to the underlying stream except get_event_target.
+    // Override as necessary.  get_event_target returns a pointer to this.
     void close() override;
     std::uint32_t read(void* buffer, std::uint32_t n) override;
     void write(const void* buffer, std::uint32_t n) override;
     void flush() override;
     void shutdownInput() override;
     void shutdownOutput() override;
-    void* getEventTarget() const override;
+    const void* get_event_target() const override;
     bool isReady() const override;
     std::uint32_t getSize() const override;
 

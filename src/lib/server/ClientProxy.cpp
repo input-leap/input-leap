@@ -37,10 +37,9 @@ ClientProxy::close(const char* msg)
     get_conn().flush();
 }
 
-void*
-ClientProxy::getEventTarget() const
+const void* ClientProxy::get_event_target() const
 {
-    return static_cast<IScreen*>(const_cast<ClientProxy*>(this));
+    return this;
 }
 
 } // namespace inputleap

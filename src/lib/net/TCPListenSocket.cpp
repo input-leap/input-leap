@@ -96,10 +96,9 @@ TCPListenSocket::close()
     }
 }
 
-void*
-TCPListenSocket::getEventTarget() const
+const void* TCPListenSocket::get_event_target() const
 {
-    return const_cast<void*>(static_cast<const void*>(this));
+    return this;
 }
 
 std::unique_ptr<IDataSocket> TCPListenSocket::accept()

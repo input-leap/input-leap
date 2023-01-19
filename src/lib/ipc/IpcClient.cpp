@@ -53,7 +53,7 @@ IpcClient::~IpcClient()
 void
 IpcClient::connect()
 {
-    m_events->add_handler(EventType::DATA_SOCKET_CONNECTED, m_socket.getEventTarget(),
+    m_events->add_handler(EventType::DATA_SOCKET_CONNECTED, m_socket.get_event_target(),
                           [this](const auto& e){ handle_connected(); });
 
     m_socket.connect(m_serverAddress);
@@ -66,7 +66,7 @@ IpcClient::connect()
 void
 IpcClient::disconnect()
 {
-    m_events->removeHandler(EventType::DATA_SOCKET_CONNECTED, m_socket.getEventTarget());
+    m_events->removeHandler(EventType::DATA_SOCKET_CONNECTED, m_socket.get_event_target());
     m_events->removeHandler(EventType::IPC_SERVER_PROXY_MESSAGE_RECEIVED, server_.get());
 
     server_->disconnect();

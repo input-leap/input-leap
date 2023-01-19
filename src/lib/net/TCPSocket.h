@@ -44,7 +44,7 @@ public:
     // ISocket overrides
     void bind(const NetworkAddress&) override;
     void close() override;
-    void* getEventTarget() const override;
+    const void* get_event_target() const override;
 
     // IStream overrides
     std::uint32_t read(void* buffer, std::uint32_t n) override;

@@ -30,9 +30,9 @@ ClientConnectionByStream::ClientConnectionByStream(std::unique_ptr<IStream> stre
 
 ClientConnectionByStream::~ClientConnectionByStream() = default;
 
-void* ClientConnectionByStream::get_event_target()
+const void* ClientConnectionByStream::get_event_target()
 {
-    return stream_->getEventTarget();
+    return stream_->get_event_target();
 }
 
 void ClientConnectionByStream::send_query_info_1_6()

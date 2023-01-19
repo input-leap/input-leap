@@ -110,7 +110,8 @@ void IpcServer::handle_client_connecting()
 
 void IpcServer::handle_client_disconnected(const Event& e)
 {
-    IpcClientProxy* proxy = static_cast<IpcClientProxy*>(e.getTarget());
+    IpcClientProxy* proxy = const_cast<IpcClientProxy*>(
+                static_cast<const IpcClientProxy*>(e.getTarget()));
 
     std::lock_guard<std::mutex> lock(m_clientsMutex);
     m_clients.remove(proxy);

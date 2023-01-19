@@ -912,20 +912,20 @@ InputFilter::setPrimaryClient(PrimaryClient* client)
             rule->disable(m_primaryClient);
         }
 
-        m_events->removeHandler(EventType::KEY_STATE_KEY_DOWN, m_primaryClient->getEventTarget());
-        m_events->removeHandler(EventType::KEY_STATE_KEY_UP, m_primaryClient->getEventTarget());
-        m_events->removeHandler(EventType::KEY_STATE_KEY_REPEAT, m_primaryClient->getEventTarget());
-        m_events->removeHandler(EventType::PRIMARY_SCREEN_BUTTON_DOWN, m_primaryClient->getEventTarget());
-        m_events->removeHandler(EventType::PRIMARY_SCREEN_BUTTON_UP, m_primaryClient->getEventTarget());
-        m_events->removeHandler(EventType::PRIMARY_SCREEN_HOTKEY_DOWN, m_primaryClient->getEventTarget());
-        m_events->removeHandler(EventType::PRIMARY_SCREEN_HOTKEY_UP, m_primaryClient->getEventTarget());
-        m_events->removeHandler(EventType::SERVER_CONNECTED, m_primaryClient->getEventTarget());
+        m_events->removeHandler(EventType::KEY_STATE_KEY_DOWN, m_primaryClient->get_event_target());
+        m_events->removeHandler(EventType::KEY_STATE_KEY_UP, m_primaryClient->get_event_target());
+        m_events->removeHandler(EventType::KEY_STATE_KEY_REPEAT, m_primaryClient->get_event_target());
+        m_events->removeHandler(EventType::PRIMARY_SCREEN_BUTTON_DOWN, m_primaryClient->get_event_target());
+        m_events->removeHandler(EventType::PRIMARY_SCREEN_BUTTON_UP, m_primaryClient->get_event_target());
+        m_events->removeHandler(EventType::PRIMARY_SCREEN_HOTKEY_DOWN, m_primaryClient->get_event_target());
+        m_events->removeHandler(EventType::PRIMARY_SCREEN_HOTKEY_UP, m_primaryClient->get_event_target());
+        m_events->removeHandler(EventType::SERVER_CONNECTED, m_primaryClient->get_event_target());
     }
 
     m_primaryClient = client;
 
     if (m_primaryClient != nullptr) {
-        auto event_target = m_primaryClient->getEventTarget();
+        auto event_target = m_primaryClient->get_event_target();
         m_events->add_handler(EventType::KEY_STATE_KEY_DOWN, event_target,
                               [this](const auto& e){ handle_event(e); });
         m_events->add_handler(EventType::KEY_STATE_KEY_UP, event_target,

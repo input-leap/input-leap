@@ -456,8 +456,7 @@ void Screen::setDropTarget(const std::string& target)
     return m_screen->setDropTarget(target);
 }
 
-void*
-Screen::getEventTarget() const
+const void* Screen::get_event_target() const
 {
     return m_screen;
 }
@@ -485,7 +484,7 @@ Screen::enablePrimary()
     m_screen->openScreensaver(true);
 
     // claim screen changed size
-    m_events->add_event(EventType::SCREEN_SHAPE_CHANGED, getEventTarget());
+    m_events->add_event(EventType::SCREEN_SHAPE_CHANGED, get_event_target());
 }
 
 void

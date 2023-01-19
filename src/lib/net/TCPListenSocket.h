@@ -42,7 +42,7 @@ public:
     // ISocket overrides
     void bind(const NetworkAddress&) override;
     void close() override;
-    void* getEventTarget() const override;
+    const void* get_event_target() const override;
 
     // IListenSocket overrides
     std::unique_ptr<IDataSocket> accept() override;

@@ -571,10 +571,10 @@ static const Win32Modifiers s_modifiers[] =
 	{ VK_RWIN,     KeyModifierSuper   }
 };
 
-MSWindowsKeyState::MSWindowsKeyState(
-	MSWindowsDesks* desks, void* eventTarget, IEventQueue* events) :
+MSWindowsKeyState::MSWindowsKeyState(MSWindowsDesks* desks, const void* event_target,
+                                     IEventQueue* events) :
 	KeyState(events),
-	m_eventTarget(eventTarget),
+    event_target_(event_target),
 	m_desks(desks),
 	m_keyLayout(GetKeyboardLayout(0)),
 	m_fixTimer(nullptr),
@@ -588,9 +588,9 @@ MSWindowsKeyState::MSWindowsKeyState(
 }
 
 MSWindowsKeyState::MSWindowsKeyState(
-	MSWindowsDesks* desks, void* eventTarget, IEventQueue* events, inputleap::KeyMap& keyMap) :
+    MSWindowsDesks* desks, const void* event_target, IEventQueue* events, inputleap::KeyMap& keyMap) :
 	KeyState(events, keyMap),
-	m_eventTarget(eventTarget),
+    event_target_(event_target),
 	m_desks(desks),
 	m_keyLayout(GetKeyboardLayout(0)),
 	m_fixTimer(nullptr),
@@ -744,7 +744,7 @@ MSWindowsKeyState::onKey(KeyButton button, bool down, KeyModifierMask newState)
 	KeyState::onKey(button, down, newState);
 }
 
-void MSWindowsKeyState::sendKeyEvent(void* target, bool press, bool isAutoRepeat, KeyID key,
+void MSWindowsKeyState::sendKeyEvent(const void* target, bool press, bool isAutoRepeat, KeyID key,
                                      KeyModifierMask mask, std::int32_t count, KeyButton button)
 {
 	if (press || isAutoRepeat) {

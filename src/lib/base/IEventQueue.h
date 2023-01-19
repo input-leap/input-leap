@@ -86,7 +86,7 @@ public:
     virtual void add_event(Event&& event) = 0;
 
     /// A helper wrapper for cases when an event is created immediately
-    void add_event(EventType type, void* target = nullptr, EventDataBase* data = nullptr,
+    void add_event(EventType type, const void* target = nullptr, EventDataBase* data = nullptr,
                    Event::Flags flags = Event::kNone)
     {
         add_event(Event(type, target, data, flags));
@@ -141,20 +141,20 @@ public:
     of type \p type.  If no such handler exists it will use the handler
     for \p target and type \p kUnknown if it exists.
     */
-    virtual void add_handler(EventType type, void* target, const EventHandler& handler) = 0;
+    virtual void add_handler(EventType type, const void* target, const EventHandler& handler) = 0;
 
     //! Unregister an event handler for an event type
     /*!
     Unregisters an event handler for the \p type, \p target pair and
     deletes it.
     */
-    virtual void removeHandler(EventType type, void* target) = 0;
+    virtual void removeHandler(EventType type, const void* target) = 0;
 
     //! Unregister all event handlers for an event target
     /*!
     Unregisters all event handlers for the \p target and deletes them.
     */
-    virtual void removeHandlers(void* target) = 0;
+    virtual void removeHandlers(const void* target) = 0;
 
     //! Wait for event queue to become ready
     /*!

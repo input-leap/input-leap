@@ -36,7 +36,7 @@ public:
     MOCK_METHOD0(getOutputErrorEvent, EventType());
     MOCK_METHOD0(getInputShutdownEvent, EventType());
     MOCK_METHOD0(getOutputShutdownEvent, EventType());
-    MOCK_CONST_METHOD0(getEventTarget, void*());
+    MOCK_CONST_METHOD0(get_event_target, void*());
     MOCK_CONST_METHOD0(isReady, bool());
     MOCK_CONST_METHOD0(getSize, std::uint32_t());
 };

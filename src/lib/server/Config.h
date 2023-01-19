@@ -23,6 +23,7 @@
 #include "inputleap/protocol_types.h"
 #include "inputleap/IPlatformScreen.h"
 #include "net/NetworkAddress.h"
+#include "base/Fwd.h"
 #include "base/String.h"
 #include "base/XBase.h"
 
@@ -47,7 +48,6 @@ namespace inputleap {
 
 class Config;
 class ConfigReadContext;
-class IEventQueue;
 
 //! Server configuration
 /*!

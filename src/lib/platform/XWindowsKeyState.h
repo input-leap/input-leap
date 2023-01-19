@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+#include "base/Fwd.h"
 #include "inputleap/KeyState.h"
 #include "XWindowsImpl.h"
 
@@ -31,8 +32,6 @@
 #include <vector>
 
 namespace inputleap {
-
-class IEventQueue;
 
 //! X Windows key state
 /*!

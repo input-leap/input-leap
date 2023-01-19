@@ -18,13 +18,12 @@
 
 #pragma once
 
+#include "base/Fwd.h"
 #include "inputleap/IScreenSaver.h"
 
 #include <Carbon/Carbon.h>
 
 namespace inputleap {
-
-class IEventQueue;
 
 //! OSX screen saver implementation
 class OSXScreenSaver : public IScreenSaver {

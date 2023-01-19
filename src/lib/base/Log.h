@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "Fwd.h"
 #include "arch/IArchMultithread.h"
 #include "arch/Arch.h"
 #include "common/common.h"
@@ -31,7 +32,6 @@
 
 namespace inputleap {
 
-class ILogOutputter;
 class Thread;
 
 //! Logging facility

@@ -18,13 +18,12 @@
 
 #pragma once
 
+#include "Fwd.h"
+#include "base/Fwd.h"
 #include "net/ISocketFactory.h"
 #include "arch/IArchNetwork.h"
 
 namespace inputleap {
-
-class IEventQueue;
-class SocketMultiplexer;
 
 //! Socket factory for TCP sockets
 class TCPSocketFactory : public ISocketFactory {

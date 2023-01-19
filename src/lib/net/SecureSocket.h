@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include "Fwd.h"
 #include "ConnectionSecurityLevel.h"
 #include "net/TCPSocket.h"
 #include "net/XSocket.h"
@@ -24,10 +25,6 @@
 #include <mutex>
 
 namespace inputleap {
-
-class IEventQueue;
-class SocketMultiplexer;
-class ISocketMultiplexerJob;
 
 struct Ssl;
 

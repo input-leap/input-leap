@@ -18,12 +18,11 @@
 
 #pragma once
 
+#include "Fwd.h"
 #include "base/Event.h"
 #include "base/EventTypes.h"
 
 namespace inputleap {
-
-class NetworkAddress;
 
 //! Generic socket interface
 /*!

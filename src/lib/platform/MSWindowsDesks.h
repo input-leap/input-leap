@@ -20,6 +20,8 @@
 #pragma once
 
 #include "platform/synwinhk.h"
+#include "base/Fwd.h"
+#include "inputleap/Fwd.h"
 #include "inputleap/key_types.h"
 #include "inputleap/mouse_types.h"
 #include "inputleap/option_types.h"
@@ -35,11 +37,7 @@
 
 namespace inputleap {
 
-class Event;
-class EventQueueTimer;
 class Thread;
-class IScreenSaver;
-class IEventQueue;
 
 //! Microsoft Windows desk handling
 /*!

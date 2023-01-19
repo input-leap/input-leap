@@ -21,8 +21,7 @@
 #include "base/Event.h"
 #include "base/IEventQueue.h"
 #include "base/EventTypes.h"
-
-class IEventQueue;
+#include "base/Fwd.h"
 
 namespace inputleap {
 

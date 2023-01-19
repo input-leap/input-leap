@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+#include "base/Fwd.h"
 #include "base/IEventQueueBuffer.h"
 #include "XWindowsImpl.h"
 
@@ -28,8 +29,6 @@
 #include <vector>
 
 namespace inputleap {
-
-class IEventQueue;
 
 //! Event queue buffer for X11
 class XWindowsEventQueueBuffer : public IEventQueueBuffer {

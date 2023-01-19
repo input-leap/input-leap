@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "Fwd.h"
 #include "net/IDataSocket.h"
 #include "net/ISocketMultiplexerJob.h"
 #include "io/StreamBuffer.h"
@@ -29,8 +30,6 @@
 namespace inputleap {
 
 class Thread;
-class IEventQueue;
-class SocketMultiplexer;
 
 //! TCP data socket
 /*!

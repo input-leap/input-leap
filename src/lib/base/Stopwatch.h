@@ -20,6 +20,8 @@
 
 #include "common/common.h"
 
+namespace inputleap {
+
 //! A timer class
 /*!
 This class measures time intervals.  All time interval measurement
@@ -107,3 +109,5 @@ private:
     bool m_triggered;
     bool m_stopped;
 };
+
+} // namespace inputleap

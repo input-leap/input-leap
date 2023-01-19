@@ -20,12 +20,11 @@
 #define CCLIENTTASKBARRECEIVER_H
 
 #include "arch/IArchTaskBarReceiver.h"
+#include "base/Fwd.h"
 #include "base/log_outputters.h"
 #include "client/Client.h"
 
 namespace inputleap {
-
-class IEventQueue;
 
 /// Implementation of IArchTaskBarReceiver for the InputLeap server
 class ClientTaskBarReceiver : public IArchTaskBarReceiver {

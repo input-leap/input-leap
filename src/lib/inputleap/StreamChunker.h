@@ -18,12 +18,11 @@
 #pragma once
 
 #include "inputleap/clipboard_types.h"
+#include "base/Fwd.h"
 
 #include <string>
 
 namespace inputleap {
-
-class IEventQueue;
 
 class StreamChunker {
 public:

@@ -17,14 +17,11 @@
 
 #pragma once
 
+#include "Fwd.h"
 #include "net/TCPListenSocket.h"
 #include "ConnectionSecurityLevel.h"
 
 namespace inputleap {
-
-class IEventQueue;
-class SocketMultiplexer;
-class IDataSocket;
 
 class SecureListenSocket : public TCPListenSocket {
 public:

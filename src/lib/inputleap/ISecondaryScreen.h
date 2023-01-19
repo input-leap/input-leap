@@ -22,6 +22,8 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 
+namespace inputleap {
+
 //! Secondary screen interface
 /*!
 This interface defines the methods common to all platform dependent
@@ -60,3 +62,5 @@ public:
 
     //@}
 };
+
+} // namespace inputleap

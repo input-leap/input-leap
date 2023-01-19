@@ -26,8 +26,6 @@
 #include "inputleap/IKeyState.h"
 #include "inputleap/option_types.h"
 
-class IClipboard;
-
 namespace inputleap {
 
 //! Screen interface

@@ -18,18 +18,16 @@
 
 #pragma once
 
+#include "inputleap/Fwd.h"
 #include "inputleap/DragInformation.h"
 #include "inputleap/clipboard_types.h"
 #include "inputleap/IScreen.h"
 #include "inputleap/key_types.h"
 #include "inputleap/mouse_types.h"
 #include "inputleap/option_types.h"
+#include "base/Fwd.h"
 
 namespace inputleap {
-
-class IClipboard;
-class IPlatformScreen;
-class IEventQueue;
 
 //! Platform independent screen
 /*!

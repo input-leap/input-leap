@@ -25,8 +25,6 @@
 
 namespace inputleap {
 
-class IEventQueue;
-
 //! Packetizing stream filter
 /*!
 Filters a stream to read and write packets.

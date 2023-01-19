@@ -18,15 +18,14 @@
 
 #pragma once
 
+#include "Fwd.h"
+#include "base/Fwd.h"
+
 namespace inputleap {
 
 typedef int (*StartupFunc)(int, char**);
 
-class ILogOutputter;
-class ArgsBase;
 class IArchTaskBarReceiver;
-class Screen;
-class IEventQueue;
 
 class IApp {
 public:

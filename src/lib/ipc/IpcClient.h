@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "net/Fwd.h"
 #include "net/NetworkAddress.h"
 #include "net/TCPSocket.h"
 #include "base/EventTypes.h"
@@ -27,8 +28,6 @@ namespace inputleap {
 
 class IpcServerProxy;
 class IpcMessage;
-class IEventQueue;
-class SocketMultiplexer;
 
 //! IPC client for communication between daemon and GUI.
 /*!

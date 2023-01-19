@@ -17,6 +17,7 @@
 #ifndef INPUTLEAP_LIB_SERVER_ICLIENT_CONNECTION_H
 #define INPUTLEAP_LIB_SERVER_ICLIENT_CONNECTION_H
 
+#include "inputleap/Fwd.h"
 #include "inputleap/clipboard_types.h"
 #include "inputleap/key_types.h"
 #include "inputleap/mouse_types.h"
@@ -25,9 +26,7 @@
 
 namespace inputleap {
 
-class ClipboardChunk;
 class IStream;
-class FileChunk;
 
 /// A low-level interface to write protocol messages
 class IClientConnection {

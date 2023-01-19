@@ -19,11 +19,11 @@
 #pragma once
 
 #include "server/BaseClientProxy.h"
+#include "inputleap/Fwd.h"
 #include "inputleap/protocol_types.h"
 
 namespace inputleap {
 
-class Screen;
 class IStream;
 
 //! Primary screen as pseudo-client

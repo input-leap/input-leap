@@ -52,9 +52,9 @@ public:
     EventQueueTimer* newTimer(double duration, void* target) override;
     EventQueueTimer* newOneShotTimer(double duration, void* target) override;
     void deleteTimer(EventQueueTimer*) override;
-    void add_handler(EventType type, void* target, const EventHandler& handler) override;
-    void removeHandler(EventType type, void* target) override;
-    void removeHandlers(void* target) override;
+    void add_handler(EventType type, const void* target, const EventHandler& handler) override;
+    void removeHandler(EventType type, const void* target) override;
+    void removeHandlers(const void* target) override;
     void* getSystemTarget() override;
     void waitForReady() const override;
 
@@ -97,7 +97,7 @@ private:
     typedef std::map<std::uint32_t, Event> EventTable;
     typedef std::vector<std::uint32_t> EventIDList;
     using TypeHandlerTable = std::map<EventType, EventHandler>;
-    typedef std::map<void*, TypeHandlerTable> HandlerTable;
+    typedef std::map<const void*, TypeHandlerTable> HandlerTable;
 
     int m_systemTarget;
     mutable std::mutex mutex_;
@@ -120,7 +120,7 @@ private:
 
 private:
     // returns nullptr if handler is not found
-    const EventHandler* get_handler(EventType type, void* target) const;
+    const EventHandler* get_handler(EventType type, const void* target) const;
 
     mutable std::mutex          ready_mutex_;
     mutable std::condition_variable ready_cv_;

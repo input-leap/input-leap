@@ -134,7 +134,7 @@ enum class EventType : std::uint32_t {
     CLIENT_PROXY_READY,
 
     /** This event is sent when the client disconnects or is disconnected. The target is
-        getEventTarget().
+        get_event_target().
     */
     CLIENT_PROXY_DISCONNECTED,
 

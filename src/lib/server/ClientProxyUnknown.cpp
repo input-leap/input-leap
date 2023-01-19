@@ -94,15 +94,15 @@ void
 ClientProxyUnknown::addStreamHandlers()
 {
     assert(stream_.get() != nullptr);
-    m_events->add_handler(EventType::STREAM_INPUT_READY, stream_->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_INPUT_READY, stream_->get_event_target(),
                           [this](const auto& e){ handle_data(); });
-    m_events->add_handler(EventType::STREAM_OUTPUT_ERROR, stream_->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_OUTPUT_ERROR, stream_->get_event_target(),
                           [this](const auto& e){ handle_write_error(); });
-    m_events->add_handler(EventType::STREAM_INPUT_SHUTDOWN, stream_->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_INPUT_SHUTDOWN, stream_->get_event_target(),
                           [this](const auto& e){ handle_disconnect(); });
-    m_events->add_handler(EventType::STREAM_INPUT_FORMAT_ERROR, stream_->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_INPUT_FORMAT_ERROR, stream_->get_event_target(),
                           [this](const auto& e){ handle_disconnect(); });
-    m_events->add_handler(EventType::STREAM_OUTPUT_SHUTDOWN, stream_->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_OUTPUT_SHUTDOWN, stream_->get_event_target(),
                           [this](const auto& e){ handle_write_error(); });
 }
 
@@ -120,11 +120,11 @@ void
 ClientProxyUnknown::removeHandlers()
 {
     if (stream_) {
-        m_events->removeHandler(EventType::STREAM_INPUT_READY, stream_->getEventTarget());
-        m_events->removeHandler(EventType::STREAM_OUTPUT_ERROR, stream_->getEventTarget());
-        m_events->removeHandler(EventType::STREAM_INPUT_SHUTDOWN, stream_->getEventTarget());
-        m_events->removeHandler(EventType::STREAM_INPUT_FORMAT_ERROR, stream_->getEventTarget());
-        m_events->removeHandler(EventType::STREAM_OUTPUT_SHUTDOWN, stream_->getEventTarget());
+        m_events->removeHandler(EventType::STREAM_INPUT_READY, stream_->get_event_target());
+        m_events->removeHandler(EventType::STREAM_OUTPUT_ERROR, stream_->get_event_target());
+        m_events->removeHandler(EventType::STREAM_INPUT_SHUTDOWN, stream_->get_event_target());
+        m_events->removeHandler(EventType::STREAM_INPUT_FORMAT_ERROR, stream_->get_event_target());
+        m_events->removeHandler(EventType::STREAM_OUTPUT_SHUTDOWN, stream_->get_event_target());
     }
     if (m_proxy != nullptr) {
         m_events->removeHandler(EventType::CLIENT_PROXY_READY, m_proxy);

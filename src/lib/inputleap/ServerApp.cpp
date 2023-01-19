@@ -360,9 +360,9 @@ void
 ServerApp::closeServerScreen(inputleap::Screen* screen)
 {
     if (screen != nullptr) {
-        m_events->removeHandler(EventType::SCREEN_ERROR, screen->getEventTarget());
-        m_events->removeHandler(EventType::SCREEN_SUSPEND, screen->getEventTarget());
-        m_events->removeHandler(EventType::SCREEN_RESUME, screen->getEventTarget());
+        m_events->removeHandler(EventType::SCREEN_ERROR, screen->get_event_target());
+        m_events->removeHandler(EventType::SCREEN_SUSPEND, screen->get_event_target());
+        m_events->removeHandler(EventType::SCREEN_RESUME, screen->get_event_target());
         delete screen;
     }
 }
@@ -499,11 +499,11 @@ ServerApp::openServerScreen()
         screen->setDropTarget(argsBase().m_dropTarget);
     }
     screen->setEnableDragDrop(argsBase().m_enableDragDrop);
-    m_events->add_handler(EventType::SCREEN_ERROR, screen->getEventTarget(),
+    m_events->add_handler(EventType::SCREEN_ERROR, screen->get_event_target(),
                           [this](const auto& e){ handle_screen_error(); });
-    m_events->add_handler(EventType::SCREEN_SUSPEND, screen->getEventTarget(),
+    m_events->add_handler(EventType::SCREEN_SUSPEND, screen->get_event_target(),
                           [this](const auto& e){ handle_suspend(); });
-    m_events->add_handler(EventType::SCREEN_RESUME, screen->getEventTarget(),
+    m_events->add_handler(EventType::SCREEN_RESUME, screen->get_event_target(),
                           [this](const auto& e){ handle_resume(); });
     return screen;
 }

@@ -102,7 +102,7 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 	try {
 		m_displayID   = CGMainDisplayID();
 		updateScreenShape(m_displayID, 0);
-		m_screensaver = new OSXScreenSaver(m_events, getEventTarget());
+        m_screensaver = new OSXScreenSaver(m_events, get_event_target());
 		m_keyState	  = new OSXKeyState(m_events);
 
 		// only needed when running as a server.
@@ -139,7 +139,7 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 		constructMouseButtonEventMap();
 
 		// watch for requests to sleep
-        m_events->add_handler(EventType::OSX_SCREEN_CONFIRM_SLEEP, getEventTarget(),
+        m_events->add_handler(EventType::OSX_SCREEN_CONFIRM_SLEEP, get_event_target(),
                               [this](const auto& e){ handle_confirm_sleep(e); });
 
 		// create thread for monitoring system power state.
@@ -148,7 +148,7 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
         m_pmWatchThread = new Thread([this](){ watchSystemPowerThread(); });
 	}
 	catch (...) {
-        m_events->removeHandler(EventType::OSX_SCREEN_CONFIRM_SLEEP, getEventTarget());
+        m_events->removeHandler(EventType::OSX_SCREEN_CONFIRM_SLEEP, get_event_target());
 		if (m_switchEventHandlerRef != 0) {
 			RemoveEventHandler(m_switchEventHandlerRef);
 		}
@@ -190,7 +190,7 @@ OSXScreen::~OSXScreen()
 	}
 
     m_events->removeHandler(EventType::OSX_SCREEN_CONFIRM_SLEEP,
-								getEventTarget());
+                                get_event_target());
 
 	RemoveEventHandler(m_switchEventHandlerRef);
 
@@ -200,10 +200,9 @@ OSXScreen::~OSXScreen()
 	delete m_screensaver;
 }
 
-void*
-OSXScreen::getEventTarget() const
+const void* OSXScreen::get_event_target() const
 {
-	return const_cast<OSXScreen*>(this);
+    return this;
 }
 
 bool
@@ -935,7 +934,7 @@ OSXScreen::isPrimary() const
 
 void OSXScreen::sendEvent(EventType type, EventDataBase* data) const
 {
-    m_events->add_event(type, getEventTarget(), data);
+    m_events->add_event(type, get_event_target(), data);
 }
 
 void OSXScreen::sendClipboardEvent(EventType type, ClipboardID id) const
@@ -1194,7 +1193,7 @@ OSXScreen::onKey(CGEventRef event)
 		// get old and new modifier state
 		KeyModifierMask oldMask = getActiveModifiers();
 		KeyModifierMask newMask = m_keyState->mapModifiersFromOSX(macMask);
-		m_keyState->handleModifierKeys(getEventTarget(), oldMask, newMask);
+        m_keyState->handleModifierKeys(get_event_target(), oldMask, newMask);
 
 		// if the current set of modifiers exactly matches a modifiers-only
 		// hot key then generate a hot key down event.
@@ -1202,7 +1201,7 @@ OSXScreen::onKey(CGEventRef event)
 			if (m_modifierHotKeys.count(newMask) > 0) {
 				m_activeModifierHotKey     = m_modifierHotKeys[newMask];
 				m_activeModifierHotKeyMask = newMask;
-                m_events->add_event(EventType::PRIMARY_SCREEN_HOTKEY_DOWN, getEventTarget(),
+                m_events->add_event(EventType::PRIMARY_SCREEN_HOTKEY_DOWN, get_event_target(),
                                     create_event_data<HotKeyInfo>(HotKeyInfo{m_activeModifierHotKey}));
 			}
 		}
@@ -1212,7 +1211,7 @@ OSXScreen::onKey(CGEventRef event)
 		else if (m_activeModifierHotKey != 0) {
 			KeyModifierMask mask = (newMask & m_activeModifierHotKeyMask);
 			if (mask != m_activeModifierHotKeyMask) {
-                m_events->add_event(EventType::PRIMARY_SCREEN_HOTKEY_UP, getEventTarget(),
+                m_events->add_event(EventType::PRIMARY_SCREEN_HOTKEY_UP, get_event_target(),
                                     create_event_data<HotKeyInfo>(HotKeyInfo{m_activeModifierHotKey}));
                 m_activeModifierHotKey     = 0;
 				m_activeModifierHotKeyMask = 0;
@@ -1237,7 +1236,7 @@ OSXScreen::onKey(CGEventRef event)
 		else {
 			return false;
 		}
-        m_events->add_event(type, getEventTarget(), create_event_data<HotKeyInfo>(HotKeyInfo{id}));
+        m_events->add_event(type, get_event_target(), create_event_data<HotKeyInfo>(HotKeyInfo{id}));
 		return true;
 	}
 
@@ -1278,7 +1277,7 @@ OSXScreen::onKey(CGEventRef event)
 	// send key events
 	for (OSXKeyState::KeyIDs::const_iterator i = keys.begin();
 							i != keys.end(); ++i) {
-		m_keyState->sendKeyEvent(getEventTarget(), down, isRepeat,
+        m_keyState->sendKeyEvent(get_event_target(), down, isRepeat,
 							*i, sendMask, 1, button);
 	}
 
@@ -1303,7 +1302,7 @@ OSXScreen::onMediaKey(CGEventRef event)
 
 	KeyButton button = 0;
 	KeyModifierMask mask = m_keyState->getActiveModifiers();
-	m_keyState->sendKeyEvent(getEventTarget(), down, isRepeat, keyID, mask, 1, button);
+    m_keyState->sendKeyEvent(get_event_target(), down, isRepeat, keyID, mask, 1, button);
 }
 
 bool
@@ -1328,7 +1327,7 @@ OSXScreen::onHotKey(EventRef event) const
 		return false;
 	}
 
-    m_events->add_event(type, getEventTarget(), create_event_data<HotKeyInfo>(HotKeyInfo{id}));
+    m_events->add_event(type, get_event_target(), create_event_data<HotKeyInfo>(HotKeyInfo{id}));
 
 	return true;
 }
@@ -1537,11 +1536,11 @@ OSXScreen::userSwitchCallback(EventHandlerCallRef nextHandler,
 
 	if (kind == kEventSystemUserSessionDeactivated) {
 		LOG((CLOG_DEBUG "user session deactivated"));
-        events->add_event(EventType::SCREEN_SUSPEND, screen->getEventTarget());
+        events->add_event(EventType::SCREEN_SUSPEND, screen->get_event_target());
 	}
 	else if (kind == kEventSystemUserSessionActivated) {
 		LOG((CLOG_DEBUG "user session activated"));
-        events->add_event(EventType::SCREEN_RESUME, screen->getEventTarget());
+        events->add_event(EventType::SCREEN_RESUME, screen->get_event_target());
 	}
 	return (CallNextEventHandler(nextHandler, theEvent));
 }
@@ -1646,13 +1645,13 @@ OSXScreen::handlePowerChangeRequest(natural_t messageType, void* messageArg)
 		// OSXScreen has to handle this in the main thread so we have to
 		// queue a confirm sleep event here.  we actually don't allow the
 		// system to sleep until the event is handled.
-        m_events->add_event(EventType::OSX_SCREEN_CONFIRM_SLEEP, getEventTarget(),
+        m_events->add_event(EventType::OSX_SCREEN_CONFIRM_SLEEP, get_event_target(),
                             create_event_data<long>(reinterpret_cast<long>(messageArg)));
 		return;
 
 	case kIOMessageSystemHasPoweredOn:
 		LOG((CLOG_DEBUG "system wakeup"));
-        m_events->add_event(EventType::SCREEN_RESUME, getEventTarget());
+        m_events->add_event(EventType::SCREEN_RESUME, get_event_target());
 		break;
 
 	default:
@@ -1672,7 +1671,7 @@ void OSXScreen::handle_confirm_sleep(const Event& event)
         std::lock_guard<std::mutex> lock(pm_mutex_);
 		if (m_pmRootPort != 0) {
 			// deliver suspend event immediately.
-            m_events->add_event(EventType::SCREEN_SUSPEND, getEventTarget(),
+            m_events->add_event(EventType::SCREEN_SUSPEND, get_event_target(),
                                 nullptr, Event::kDeliverImmediately);
 
 			LOG((CLOG_DEBUG "system will sleep"));

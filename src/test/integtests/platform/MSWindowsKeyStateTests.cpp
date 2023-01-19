@@ -54,9 +54,9 @@ protected:
 		return new MSWindowsDesks(true, false, m_screensaver, eventQueue, [](){}, false);
 	}
 
-	void* getEventTarget() const
+	const void* get_event_target() const
 	{
-		return const_cast<MSWindowsKeyStateTests*>(this);
+        return this;
 	}
 
 private:
@@ -68,7 +68,7 @@ TEST_F(MSWindowsKeyStateTests, disable_eventQueueNotUsed)
 	NiceMock<MockEventQueue> eventQueue;
 	MSWindowsDesks* desks = newDesks(&eventQueue);
 	MockKeyMap keyMap;
-	MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
+	MSWindowsKeyState keyState(desks, get_event_target(), &eventQueue, keyMap);
 
 	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(0);
 
@@ -81,7 +81,7 @@ TEST_F(MSWindowsKeyStateTests, testAutoRepeat_noRepeatAndButtonIsZero_resultIsTr
 	NiceMock<MockEventQueue> eventQueue;
 	MSWindowsDesks* desks = newDesks(&eventQueue);
 	MockKeyMap keyMap;
-	MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
+	MSWindowsKeyState keyState(desks, get_event_target(), &eventQueue, keyMap);
 	keyState.setLastDown(1);
 
 	bool actual = keyState.testAutoRepeat(true, false, 1);
@@ -95,7 +95,7 @@ TEST_F(MSWindowsKeyStateTests, testAutoRepeat_pressFalse_lastDownIsZero)
 	NiceMock<MockEventQueue> eventQueue;
 	MSWindowsDesks* desks = newDesks(&eventQueue);
 	MockKeyMap keyMap;
-	MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
+	MSWindowsKeyState keyState(desks, get_event_target(), &eventQueue, keyMap);
 	keyState.setLastDown(1);
 
 	keyState.testAutoRepeat(false, false, 1);
@@ -109,7 +109,7 @@ TEST_F(MSWindowsKeyStateTests, saveModifiers_noModifiers_savedModifiers0)
 	NiceMock<MockEventQueue> eventQueue;
 	MSWindowsDesks* desks = newDesks(&eventQueue);
 	MockKeyMap keyMap;
-	MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
+	MSWindowsKeyState keyState(desks, get_event_target(), &eventQueue, keyMap);
 
 	keyState.saveModifiers();
 
@@ -122,7 +122,7 @@ TEST_F(MSWindowsKeyStateTests, testKoreanLocale_inputModeKey_resultCorrectKeyID)
 	NiceMock<MockEventQueue> eventQueue;
 	MSWindowsDesks* desks = newDesks(&eventQueue);
 	MockKeyMap keyMap;
-	MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
+	MSWindowsKeyState keyState(desks, get_event_target(), &eventQueue, keyMap);
 
 	keyState.setKeyLayout((HKL)0x00000412u);	// for ko-KR local ID
 	ASSERT_EQ(0xEF31, keyState.getKeyID(0x15u, 0x1f2u));	// VK_HANGUL from Hangul key

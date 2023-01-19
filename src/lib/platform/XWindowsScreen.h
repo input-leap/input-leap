@@ -49,7 +49,7 @@ public:
     //@}
 
     // IScreen overrides
-    void* getEventTarget() const override;
+    const void* get_event_target() const override;
     bool getClipboard(ClipboardID id, IClipboard*) const override;
     void getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width, std::int32_t& height) const override;
     void getCursorPos(std::int32_t& x, std::int32_t& y) const override;

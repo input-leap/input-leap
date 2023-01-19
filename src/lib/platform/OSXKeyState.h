@@ -51,7 +51,7 @@ public:
     Determines which modifier keys have changed and updates the modifier
     state and sends key events as appropriate.
     */
-    void handleModifierKeys(void* target,
+    void handleModifierKeys(const void* target,
                             KeyModifierMask oldMask, KeyModifierMask newMask);
 
     //@}
@@ -126,7 +126,7 @@ private:
     void checkKeyboardLayout();
 
     // Send an event for the given modifier key
-    void handleModifierKey(void* target, std::uint32_t virtualKey, KeyID id, bool down,
+    void handleModifierKey(const void* target, std::uint32_t virtualKey, KeyID id, bool down,
                            KeyModifierMask newMask);
 
     // Checks if any in \p ids is a glyph key and if \p isCommand is false.

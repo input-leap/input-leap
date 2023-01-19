@@ -120,7 +120,7 @@ void ClientListener::handle_client_connecting()
     auto socket_ptr = socket.get();
     client_sockets_.insert(std::move(socket));
 
-    m_events->add_handler(EventType::CLIENT_LISTENER_ACCEPTED, socket_ptr->getEventTarget(),
+    m_events->add_handler(EventType::CLIENT_LISTENER_ACCEPTED, socket_ptr->get_event_target(),
                           [this, socket_ptr](const auto& e)
     {
         handle_client_accepted(socket_ptr);
@@ -129,7 +129,7 @@ void ClientListener::handle_client_connecting()
     // When using non SSL, server accepts clients immediately, while SSL
     // has to call secure accept which may require retry
     if (security_level_ == ConnectionSecurityLevel::PLAINTEXT) {
-        m_events->add_event(EventType::CLIENT_LISTENER_ACCEPTED, socket_ptr->getEventTarget());
+        m_events->add_event(EventType::CLIENT_LISTENER_ACCEPTED, socket_ptr->get_event_target());
     }
 }
 

@@ -112,7 +112,7 @@ XWindowsScreen::XWindowsScreen(
 		saveShape();
 		m_window      = openWindow();
         m_screensaver = new XWindowsScreenSaver(m_impl, m_display,
-								m_window, getEventTarget(), events);
+                                m_window, get_event_target(), events);
         m_keyState    = new XWindowsKeyState(m_impl, m_display, m_xkb, events,
                                              m_keyMap);
 		LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_xinerama ? "(xinerama)" : ""));
@@ -437,10 +437,9 @@ XWindowsScreen::isPrimary() const
 	return m_isPrimary;
 }
 
-void*
-XWindowsScreen::getEventTarget() const
+const void* XWindowsScreen::get_event_target() const
 {
-	return const_cast<XWindowsScreen*>(this);
+    return this;
 }
 
 bool
@@ -1074,7 +1073,7 @@ XWindowsScreen::openIM()
 
 void XWindowsScreen::sendEvent(EventType type, EventDataBase* data)
 {
-    m_events->add_event(type, getEventTarget(), data);
+    m_events->add_event(type, get_event_target(), data);
 }
 
 void XWindowsScreen::sendClipboardEvent(EventType type, ClipboardID id)
@@ -1403,12 +1402,12 @@ XWindowsScreen::onKeyPress(XKeyEvent& xkey)
 		}
 
 		// handle key
-		m_keyState->sendKeyEvent(getEventTarget(),
+        m_keyState->sendKeyEvent(get_event_target(),
 							true, false, key, mask, 1, keycode);
 
 		// do fake release if this is a fake press
 		if (isFake) {
-			m_keyState->sendKeyEvent(getEventTarget(),
+            m_keyState->sendKeyEvent(get_event_target(),
 							false, false, key, mask, 1, keycode);
 		}
 	}
@@ -1437,7 +1436,7 @@ XWindowsScreen::onKeyRelease(XKeyEvent& xkey, bool isRepeat)
 		if (!isRepeat) {
 			// no press event follows so it's a plain release
 			LOG((CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", keycode, xkey.state));
-			m_keyState->sendKeyEvent(getEventTarget(),
+            m_keyState->sendKeyEvent(get_event_target(),
 							false, false, key, mask, 1, keycode);
 		}
 		else {
@@ -1446,7 +1445,7 @@ XWindowsScreen::onKeyRelease(XKeyEvent& xkey, bool isRepeat)
 			// repeats but we'll just send a repeat of 1.
 			// note that we discard the press event.
 			LOG((CLOG_DEBUG1 "event: repeat code=%d, state=0x%04x", keycode, xkey.state));
-			m_keyState->sendKeyEvent(getEventTarget(),
+            m_keyState->sendKeyEvent(get_event_target(),
 							false, true, key, mask, 1, keycode);
 		}
 	}
@@ -1476,7 +1475,7 @@ XWindowsScreen::onHotKey(XKeyEvent& xkey, bool isRepeat)
 
 	// generate event (ignore key repeats)
 	if (!isRepeat) {
-        m_events->add_event(type, getEventTarget(),
+        m_events->add_event(type, get_event_target(),
                             create_event_data<HotKeyInfo>(HotKeyInfo{i->second}));
 	}
 	return true;

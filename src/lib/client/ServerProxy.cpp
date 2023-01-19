@@ -60,7 +60,7 @@ ServerProxy::ServerProxy(Client* client, inputleap::IStream* stream, IEventQueue
         m_modifierTranslationTable[id] = id;
 
     // handle data on stream
-    m_events->add_handler(EventType::STREAM_INPUT_READY, m_stream->getEventTarget(),
+    m_events->add_handler(EventType::STREAM_INPUT_READY, m_stream->get_event_target(),
                           [this](const auto& e){ handle_data(); });
     m_events->add_handler(EventType::CLIPBOARD_SENDING, this,
                           [this](const auto& e){ handle_clipboard_sending_event(e); });
@@ -72,7 +72,7 @@ ServerProxy::ServerProxy(Client* client, inputleap::IStream* stream, IEventQueue
 ServerProxy::~ServerProxy()
 {
     setKeepAliveRate(-1.0);
-    m_events->removeHandler(EventType::STREAM_INPUT_READY, m_stream->getEventTarget());
+    m_events->removeHandler(EventType::STREAM_INPUT_READY, m_stream->get_event_target());
     m_events->removeHandler(EventType::CLIPBOARD_SENDING, this);
 }
 

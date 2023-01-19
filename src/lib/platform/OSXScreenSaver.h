@@ -28,7 +28,7 @@ namespace inputleap {
 //! OSX screen saver implementation
 class OSXScreenSaver : public IScreenSaver {
 public:
-    OSXScreenSaver(IEventQueue* events, void* eventTarget);
+    OSXScreenSaver(IEventQueue* events, const void* event_target);
     virtual ~OSXScreenSaver();
 
     // IScreenSaver overrides
@@ -49,7 +49,7 @@ private:
 
 private:
     // the target for the events we generate
-    void* m_eventTarget;
+    const void* event_target_;
 
     bool m_enabled;
     void* m_screenSaverController;

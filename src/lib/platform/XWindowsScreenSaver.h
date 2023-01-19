@@ -34,7 +34,7 @@ namespace inputleap {
 class XWindowsScreenSaver : public IScreenSaver {
 public:
     XWindowsScreenSaver(IXWindowsImpl* impl, Display*, Window,
-                        void* eventTarget, IEventQueue* events);
+                        const void* event_target, IEventQueue* events);
     virtual ~XWindowsScreenSaver();
 
     //! @name manipulators
@@ -121,7 +121,7 @@ private:
     Window m_xscreensaverSink;
 
     // the target for the events we generate
-    void* m_eventTarget;
+    const void* event_target_;
 
     // xscreensaver's window
     Window m_xscreensaver;

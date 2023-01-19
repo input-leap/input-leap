@@ -122,10 +122,9 @@ TCPSocket::close()
     }
 }
 
-void*
-TCPSocket::getEventTarget() const
+const void* TCPSocket::get_event_target() const
 {
-    return const_cast<void*>(static_cast<const void*>(this));
+    return this;
 }
 
 std::uint32_t TCPSocket::read(void* buffer, std::uint32_t n)
@@ -438,13 +437,13 @@ void
 TCPSocket::sendConnectionFailedEvent(const char* msg)
 {
     ConnectionFailedInfo info{msg};
-    m_events->add_event(EventType::DATA_SOCKET_CONNECTION_FAILED, getEventTarget(),
+    m_events->add_event(EventType::DATA_SOCKET_CONNECTION_FAILED, get_event_target(),
                         create_event_data<ConnectionFailedInfo>(info));
 }
 
 void TCPSocket::sendEvent(EventType type)
 {
-    m_events->add_event(type, getEventTarget());
+    m_events->add_event(type, get_event_target());
 }
 
 void

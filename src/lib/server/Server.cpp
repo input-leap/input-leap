@@ -126,19 +126,19 @@ Server::Server(
     m_events->add_handler(EventType::PRIMARY_SCREEN_BUTTON_UP, m_inputFilter,
                           [this](const auto& e){ handle_button_up_event(e); });
     m_events->add_handler(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY,
-                          m_primaryClient->getEventTarget(),
+                          m_primaryClient->get_event_target(),
                           [this](const auto& e){ handle_motion_primary_event(e); });
     m_events->add_handler(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY,
-                          m_primaryClient->getEventTarget(),
+                          m_primaryClient->get_event_target(),
                           [this](const auto& e){ handle_motion_secondary_event(e); });
     m_events->add_handler(EventType::PRIMARY_SCREEN_WHEEL,
-                          m_primaryClient->getEventTarget(),
+                          m_primaryClient->get_event_target(),
                           [this](const auto& e){ handle_wheel_event(e); });
     m_events->add_handler(EventType::PRIMARY_SCREEN_SAVER_ACTIVATED,
-                          m_primaryClient->getEventTarget(),
+                          m_primaryClient->get_event_target(),
                           [this](const auto& e){ handle_screensaver_activated_event(); });
     m_events->add_handler(EventType::PRIMARY_SCREEN_SAVER_DEACTIVATED,
-                          m_primaryClient->getEventTarget(),
+                          m_primaryClient->get_event_target(),
                           [this](const auto& e){ handle_screensaver_deactivated_event(); });
     m_events->add_handler(EventType::SERVER_SWITCH_TO_SCREEN, m_inputFilter,
                           [this](const auto& e){ handle_switch_to_screen_event(e); });
@@ -192,11 +192,11 @@ Server::~Server()
     m_events->removeHandler(EventType::KEY_STATE_KEY_REPEAT, m_inputFilter);
     m_events->removeHandler(EventType::PRIMARY_SCREEN_BUTTON_DOWN, m_inputFilter);
     m_events->removeHandler(EventType::PRIMARY_SCREEN_BUTTON_UP, m_inputFilter);
-    m_events->removeHandler(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY, m_primaryClient->getEventTarget());
-    m_events->removeHandler(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY, m_primaryClient->getEventTarget());
-    m_events->removeHandler(EventType::PRIMARY_SCREEN_WHEEL, m_primaryClient->getEventTarget());
-    m_events->removeHandler(EventType::PRIMARY_SCREEN_SAVER_ACTIVATED, m_primaryClient->getEventTarget());
-    m_events->removeHandler(EventType::PRIMARY_SCREEN_SAVER_DEACTIVATED, m_primaryClient->getEventTarget());
+    m_events->removeHandler(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY, m_primaryClient->get_event_target());
+    m_events->removeHandler(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY, m_primaryClient->get_event_target());
+    m_events->removeHandler(EventType::PRIMARY_SCREEN_WHEEL, m_primaryClient->get_event_target());
+    m_events->removeHandler(EventType::PRIMARY_SCREEN_SAVER_ACTIVATED, m_primaryClient->get_event_target());
+    m_events->removeHandler(EventType::PRIMARY_SCREEN_SAVER_DEACTIVATED, m_primaryClient->get_event_target());
     m_events->removeHandler(EventType::PRIMARY_SCREEN_FAKE_INPUT_BEGIN, m_inputFilter);
     m_events->removeHandler(EventType::PRIMARY_SCREEN_FAKE_INPUT_END, m_inputFilter);
     m_events->removeHandler(EventType::TIMER, this);
@@ -298,7 +298,7 @@ Server::adoptClient(BaseClientProxy* client)
 
 	// send notification
     Server::ScreenConnectedInfo info{getName(client)};
-    m_events->add_event(EventType::SERVER_CONNECTED, m_primaryClient->getEventTarget(),
+    m_events->add_event(EventType::SERVER_CONNECTED, m_primaryClient->get_event_target(),
                         create_event_data<Server::ScreenConnectedInfo>(info));
 }
 
@@ -2009,11 +2009,11 @@ Server::addClient(BaseClientProxy* client)
 	}
 
 	// add event handlers
-    m_events->add_handler(EventType::SCREEN_SHAPE_CHANGED, client->getEventTarget(),
+    m_events->add_handler(EventType::SCREEN_SHAPE_CHANGED, client->get_event_target(),
                           [this, client](const auto& e){ handle_shape_changed(client); });
-    m_events->add_handler(EventType::CLIPBOARD_GRABBED, client->getEventTarget(),
+    m_events->add_handler(EventType::CLIPBOARD_GRABBED, client->get_event_target(),
                           [this, client](const auto& e){ handle_clipboard_grabbed(e, client); });
-    m_events->add_handler(EventType::CLIPBOARD_CHANGED, client->getEventTarget(),
+    m_events->add_handler(EventType::CLIPBOARD_CHANGED, client->get_event_target(),
                           [this, client](const auto& e){ handle_clipboard_changed(e, client); });
 
 	// add to list
@@ -2041,9 +2041,9 @@ Server::removeClient(BaseClientProxy* client)
 	}
 
 	// remove event handlers
-    m_events->removeHandler(EventType::SCREEN_SHAPE_CHANGED, client->getEventTarget());
-    m_events->removeHandler(EventType::CLIPBOARD_GRABBED, client->getEventTarget());
-    m_events->removeHandler(EventType::CLIPBOARD_CHANGED, client->getEventTarget());
+    m_events->removeHandler(EventType::SCREEN_SHAPE_CHANGED, client->get_event_target());
+    m_events->removeHandler(EventType::CLIPBOARD_GRABBED, client->get_event_target());
+    m_events->removeHandler(EventType::CLIPBOARD_CHANGED, client->get_event_target());
 
 	// remove from list
 	m_clients.erase(getName(client));

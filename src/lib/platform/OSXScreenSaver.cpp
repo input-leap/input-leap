@@ -33,8 +33,8 @@ namespace inputleap {
 void getProcessSerialNumber(const char* name, ProcessSerialNumber& psn);
 bool testProcessName(const char* name, const ProcessSerialNumber& psn);
 
-OSXScreenSaver::OSXScreenSaver(IEventQueue* events, void* eventTarget) :
-    m_eventTarget(eventTarget),
+OSXScreenSaver::OSXScreenSaver(IEventQueue* events, const void* event_target) :
+    event_target_(event_target),
     m_enabled(true),
     m_events(events)
 {
@@ -109,7 +109,7 @@ OSXScreenSaver::processLaunched(ProcessSerialNumber psn)
         m_screenSaverPSN = psn;
         LOG((CLOG_DEBUG1 "ScreenSaverEngine launched. Enabled=%d", m_enabled));
         if (m_enabled) {
-            m_events->add_event(EventType::PRIMARY_SCREEN_SAVER_ACTIVATED, m_eventTarget);
+            m_events->add_event(EventType::PRIMARY_SCREEN_SAVER_ACTIVATED, event_target_);
         }
     }
 }
@@ -121,7 +121,7 @@ OSXScreenSaver::processTerminated(ProcessSerialNumber psn)
         m_screenSaverPSN.lowLongOfPSN  == psn.lowLongOfPSN) {
         LOG((CLOG_DEBUG1 "ScreenSaverEngine terminated. Enabled=%d", m_enabled));
         if (m_enabled) {
-            m_events->add_event(EventType::PRIMARY_SCREEN_SAVER_DEACTIVATED, m_eventTarget);
+            m_events->add_event(EventType::PRIMARY_SCREEN_SAVER_DEACTIVATED, event_target_);
         }
 
         m_screenSaverPSN.highLongOfPSN = 0;

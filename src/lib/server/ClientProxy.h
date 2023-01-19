@@ -44,7 +44,7 @@ public:
     IClientConnection& get_conn() const override { return *conn_; }
 
     // IScreen
-    void* getEventTarget() const override;
+    const void* get_event_target() const override;
 
 private:
     std::unique_ptr<IClientConnection> conn_;

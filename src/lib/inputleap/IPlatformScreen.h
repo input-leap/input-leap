@@ -177,7 +177,7 @@ protected:
     mapping changes.
 
     The target of all events should be the value returned by
-    \c getEventTarget().
+    \c get_event_target().
     */
     virtual void handle_system_event(const Event& event) = 0;
 };

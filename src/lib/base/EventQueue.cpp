@@ -166,7 +166,7 @@ retry:
 bool
 EventQueue::dispatchEvent(const Event& event)
 {
-    void* target   = event.getTarget();
+    const void* target = event.getTarget();
 
     const auto* type_handler = get_handler(event.getType(), target);
     if (type_handler) {
@@ -277,14 +277,13 @@ EventQueue::deleteTimer(EventQueueTimer* timer)
     buffer_->deleteTimer(timer);
 }
 
-void EventQueue::add_handler(EventType type, void* target, const EventHandler& handler)
+void EventQueue::add_handler(EventType type, const void* target, const EventHandler& handler)
 {
     std::lock_guard<std::mutex> lock(mutex_);
     m_handlers[target][type] = handler;
 }
 
-void
-EventQueue::removeHandler(EventType type, void* target)
+void EventQueue::removeHandler(EventType type, const void* target)
 {
     std::lock_guard<std::mutex> lock(mutex_);
     HandlerTable::iterator index = m_handlers.find(target);
@@ -297,8 +296,7 @@ EventQueue::removeHandler(EventType type, void* target)
     }
 }
 
-void
-EventQueue::removeHandlers(void* target)
+void EventQueue::removeHandlers(const void* target)
 {
     std::lock_guard<std::mutex> lock(mutex_);
     HandlerTable::iterator index = m_handlers.find(target);
@@ -307,7 +305,7 @@ EventQueue::removeHandlers(void* target)
     }
 }
 
-const EventQueue::EventHandler* EventQueue::get_handler(EventType type, void* target) const
+const EventQueue::EventHandler* EventQueue::get_handler(EventType type, const void* target) const
 {
     std::lock_guard<std::mutex> lock(mutex_);
     HandlerTable::const_iterator index = m_handlers.find(target);

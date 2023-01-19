@@ -132,7 +132,7 @@ MSWindowsScreen::MSWindowsScreen(
                             m_events,
                                            [this]() { updateKeysCB(); },
                             stopOnDeskSwitch);
-        m_keyState    = new MSWindowsKeyState(m_desks, getEventTarget(), m_events);
+        m_keyState    = new MSWindowsKeyState(m_desks, get_event_target(), m_events);
 
         updateScreenShape();
         m_class       = createWindowClass();
@@ -478,10 +478,9 @@ MSWindowsScreen::isPrimary() const
     return m_isPrimary;
 }
 
-void*
-MSWindowsScreen::getEventTarget() const
+const void* MSWindowsScreen::get_event_target() const
 {
-    return const_cast<MSWindowsScreen*>(this);
+    return this;
 }
 
 bool
@@ -873,7 +872,7 @@ MSWindowsScreen::destroyWindow(HWND hwnd) const
 
 void MSWindowsScreen::sendEvent(EventType type, EventDataBase* data)
 {
-    m_events->add_event(type, getEventTarget(), data);
+    m_events->add_event(type, get_event_target(), data);
 }
 
 void MSWindowsScreen::sendClipboardEvent(EventType type, ClipboardID id)
@@ -1028,12 +1027,12 @@ MSWindowsScreen::onEvent(HWND, UINT msg,
         case PBT_APMRESUMEAUTOMATIC:
         case PBT_APMRESUMECRITICAL:
         case PBT_APMRESUMESUSPEND:
-            m_events->add_event(EventType::SCREEN_RESUME, getEventTarget(), nullptr,
+            m_events->add_event(EventType::SCREEN_RESUME, get_event_target(), nullptr,
                                 Event::kDeliverImmediately);
             break;
 
         case PBT_APMSUSPEND:
-            m_events->add_event(EventType::SCREEN_SUSPEND, getEventTarget(), nullptr,
+            m_events->add_event(EventType::SCREEN_SUSPEND, get_event_target(), nullptr,
                                 Event::kDeliverImmediately);
             break;
         }
@@ -1176,7 +1175,7 @@ MSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
         button    = static_cast<KeyButton>((lParam & 0x01ff0000u) >> 16);
         if (key != kKeyNone) {
             // do it
-            m_keyState->sendKeyEvent(getEventTarget(),
+            m_keyState->sendKeyEvent(get_event_target(),
                             ((lParam & 0x80000000u) == 0),
                             ((lParam & 0x40000000u) != 0),
                             key, mask, (std::int32_t)(lParam & 0xffff), button);
@@ -1230,7 +1229,7 @@ MSWindowsScreen::onHotKey(WPARAM wParam, LPARAM lParam)
     }
 
     // generate event
-    m_events->add_event(type, getEventTarget(),
+    m_events->add_event(type, get_event_target(),
                         create_event_data<HotKeyInfo>(HotKeyInfo{i->second}));
 
     return true;
@@ -1697,7 +1696,7 @@ MSWindowsScreen::updateKeysCB()
         KeyModifierMask mask = pollActiveModifiers();
         for (KeyButton i = 0; i < IKeyState::kNumButtons; ++i) {
             if (down[i] && !m_keyState->isKeyDown(i)) {
-                m_keyState->sendKeyEvent(getEventTarget(),
+                m_keyState->sendKeyEvent(get_event_target(),
                             false, false, kKeyNone, mask, 1, i);
             }
         }

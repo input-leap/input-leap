@@ -83,7 +83,7 @@ void ClientProxy1_6::disconnect()
 {
     removeHandlers();
     get_conn().close();
-    m_events->add_event(EventType::CLIENT_PROXY_DISCONNECTED, getEventTarget());
+    m_events->add_event(EventType::CLIENT_PROXY_DISCONNECTED, get_event_target());
 }
 
 void ClientProxy1_6::removeHandlers()
@@ -204,7 +204,7 @@ bool ClientProxy1_6::parseHandshakeMessage(const std::uint8_t* code)
         // not ClientProxy1_3 implementation of it.
         m_parser = &ClientProxy1_6::parseMessage;
         if (recvInfo()) {
-            m_events->add_event(EventType::CLIENT_PROXY_READY, getEventTarget());
+            m_events->add_event(EventType::CLIENT_PROXY_READY, get_event_target());
             addHeartbeatTimer();
             return true;
         }
@@ -226,7 +226,7 @@ bool ClientProxy1_6::parseMessage(const std::uint8_t* code)
         return true;
     } else if (memcmp(code, kMsgDInfo, 4) == 0) {
         if (recvInfo()) {
-            m_events->add_event(EventType::SCREEN_SHAPE_CHANGED, getEventTarget());
+            m_events->add_event(EventType::SCREEN_SHAPE_CHANGED, get_event_target());
             return true;
         }
         return false;
@@ -473,7 +473,7 @@ bool ClientProxy1_6::recvClipboard()
         ClipboardInfo info;
         info.m_id = id;
         info.m_sequenceNumber = seq;
-        m_events->add_event(EventType::CLIPBOARD_CHANGED, getEventTarget(),
+        m_events->add_event(EventType::CLIPBOARD_CHANGED, get_event_target(),
                             create_event_data<ClipboardInfo>(info));
     }
 
@@ -499,7 +499,7 @@ bool ClientProxy1_6::recvGrabClipboard()
     ClipboardInfo info;
     info.m_id = id;
     info.m_sequenceNumber = seqNum;
-    m_events->add_event(EventType::CLIPBOARD_GRABBED, getEventTarget(),
+    m_events->add_event(EventType::CLIPBOARD_GRABBED, get_event_target(),
                         create_event_data<ClipboardInfo>(info));
 
     return true;

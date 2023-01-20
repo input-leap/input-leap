@@ -23,6 +23,7 @@
 #include "server/ClientProxy.h"
 #include "server/PrimaryClient.h"
 #include "inputleap/ArgParser.h"
+#include "PlatformScreenLoggingWrapper.h"
 #include "inputleap/Screen.h"
 #include "inputleap/XScreen.h"
 #include "inputleap/ServerTaskBarReceiver.h"
@@ -568,7 +569,11 @@ ServerApp::startServer()
 
 std::unique_ptr<Screen> ServerApp::create_screen()
 {
-    return std::make_unique<Screen>(create_platform_screen(), m_events);
+    auto plat_screen = create_platform_screen();
+    if (Log::getInstance()->getFilter() >= kDEBUG2) {
+        plat_screen = std::make_unique<PlatformScreenLoggingWrapper>(std::move(plat_screen));
+    }
+    return std::make_unique<Screen>(std::move(plat_screen), m_events);
 }
 
 PrimaryClient* ServerApp::openPrimaryClient(const std::string& name, inputleap::Screen* screen)

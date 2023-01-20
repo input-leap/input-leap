@@ -20,6 +20,7 @@
 
 #include "client/Client.h"
 #include "inputleap/ArgParser.h"
+#include "PlatformScreenLoggingWrapper.h"
 #include "inputleap/protocol_types.h"
 #include "inputleap/Screen.h"
 #include "inputleap/XScreen.h"
@@ -160,7 +161,11 @@ ClientApp::daemonInfo() const
 
 std::unique_ptr<Screen> ClientApp::create_screen()
 {
-    return std::make_unique<Screen>(create_platform_screen(), m_events);
+    auto plat_screen = create_platform_screen();
+    if (Log::getInstance()->getFilter() >= kDEBUG2) {
+        plat_screen = std::make_unique<PlatformScreenLoggingWrapper>(std::move(plat_screen));
+    }
+    return std::make_unique<Screen>(std::move(plat_screen), m_events);
 }
 
 void

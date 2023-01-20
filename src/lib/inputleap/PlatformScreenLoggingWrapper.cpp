@@ -159,9 +159,9 @@ void PlatformScreenLoggingWrapper::setDropTarget(const std::string& target)
     screen_->setDropTarget(target);
 }
 
-void* PlatformScreenLoggingWrapper::getEventTarget() const
+const EventTarget* PlatformScreenLoggingWrapper::get_event_target() const
 {
-    return screen_->getEventTarget();
+    return screen_->get_event_target();
 }
 
 bool PlatformScreenLoggingWrapper::getClipboard(ClipboardID id, IClipboard* clipboard) const

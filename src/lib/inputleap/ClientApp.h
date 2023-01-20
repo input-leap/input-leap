@@ -77,6 +77,8 @@ public:
     Client* getClientPtr() { return m_client; }
 
 private:
+    std::unique_ptr<IPlatformScreen> create_platform_screen();
+
     Client* m_client;
     std::unique_ptr<inputleap::Screen> m_clientScreen;
     NetworkAddress* m_serverAddress;

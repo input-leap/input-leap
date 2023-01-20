@@ -52,14 +52,13 @@ public:
     int foregroundStartup(int argc, char** argv) override;
     int standardStartup(int argc, char** argv) override;
     int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup) override;
-    inputleap::Screen* createScreen() override;
+    std::unique_ptr<Screen> create_screen() override;
     void updateStatus();
     void updateStatus(const std::string& msg);
     void resetRestartTimeout();
     double nextRestartTimeout();
     void handle_screen_error();
-    inputleap::Screen* openClientScreen();
-    void closeClientScreen(inputleap::Screen* screen);
+    std::unique_ptr<Screen> open_client_screen();
     void handle_client_restart(const Event& event, EventQueueTimer* timer);
     void scheduleClientRestart(double retryTime);
     void handle_client_connected();
@@ -79,7 +78,7 @@ public:
 
 private:
     Client* m_client;
-    inputleap::Screen* m_clientScreen;
+    std::unique_ptr<inputleap::Screen> m_clientScreen;
     NetworkAddress* m_serverAddress;
 };
 

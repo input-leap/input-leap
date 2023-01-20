@@ -46,7 +46,7 @@ public:
 
     // IEventQueue overrides
     void loop() override;
-    void adoptBuffer(IEventQueueBuffer*) override;
+    void set_buffer(std::unique_ptr<IEventQueueBuffer> buffer) override;
     bool getEvent(Event& event, double timeout = -1.0) override;
     bool dispatchEvent(const Event& event) override;
     void add_event(Event&& event) override;

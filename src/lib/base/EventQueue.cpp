@@ -80,8 +80,7 @@ EventQueue::loop()
     }
 }
 
-void
-EventQueue::adoptBuffer(IEventQueueBuffer* buffer)
+void EventQueue::set_buffer(std::unique_ptr<IEventQueueBuffer> buffer)
 {
     std::lock_guard<std::mutex> lock(mutex_);
 
@@ -102,8 +101,8 @@ EventQueue::adoptBuffer(IEventQueueBuffer* buffer)
     m_oldEventIDs.clear();
 
     // use new buffer
-    buffer_.reset(buffer);
-    if (buffer_ == nullptr) {
+    buffer_ = std::move(buffer);
+    if (!buffer_) {
         buffer_ = std::make_unique<SimpleEventQueueBuffer>();
     }
 }

@@ -25,13 +25,9 @@
 
 namespace inputleap {
 
-//
-// Screen
-//
-
-Screen::Screen(IPlatformScreen* platformScreen, IEventQueue* events) :
-    m_screen(platformScreen),
-    m_isPrimary(platformScreen->isPrimary()),
+Screen::Screen(std::unique_ptr<IPlatformScreen> platform_screen, IEventQueue* events) :
+    m_screen(std::move(platform_screen)),
+    m_isPrimary(m_screen->isPrimary()),
     m_enabled(false),
     m_entered(m_isPrimary),
     m_screenSaverSync(true),
@@ -40,8 +36,6 @@ Screen::Screen(IPlatformScreen* platformScreen, IEventQueue* events) :
     m_mock(false),
     m_enableDragDrop(false)
 {
-    assert(m_screen != nullptr);
-
     // reset options
     resetOptions();
 
@@ -59,7 +53,6 @@ Screen::~Screen()
     }
     assert(!m_enabled);
     assert(m_entered == m_isPrimary);
-    delete m_screen;
     LOG((CLOG_DEBUG "closed display"));
 }
 

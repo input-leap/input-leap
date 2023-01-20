@@ -68,9 +68,8 @@ namespace inputleap {
 
 ServerApp::ServerApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver) :
     App(events, createTaskBarReceiver, new ServerArgs()),
-    m_server(nullptr),
     m_serverState(kUninitialized),
-    m_serverScreen(nullptr),
+    server_screen_(nullptr),
     m_primaryClient(nullptr),
     m_listener(nullptr),
     m_timer(nullptr),
@@ -176,8 +175,8 @@ void ServerApp::reload_config()
 {
     LOG((CLOG_DEBUG "reload configuration"));
     if (loadConfig(args().m_configFile)) {
-        if (m_server != nullptr) {
-            m_server->setConfig(*args().m_config);
+        if (server_) {
+            server_->setConfig(*args().m_config);
         }
         LOG((CLOG_NOTE "reloaded configuration"));
     }
@@ -253,8 +252,8 @@ bool ServerApp::loadConfig(const std::string& pathname)
 
 void ServerApp::force_reconnect()
 {
-    if (m_server != nullptr) {
-        m_server->disconnect();
+    if (server_) {
+        server_->disconnect();
     }
 }
 
@@ -262,7 +261,7 @@ void ServerApp::handle_client_connected(const Event&, ClientListener* listener)
 {
     ClientProxy* client = listener->getNextClient();
     if (client != nullptr) {
-        m_server->adoptClient(client);
+        server_->adoptClient(client);
         updateStatus();
     }
 }
@@ -295,9 +294,6 @@ ServerApp::closeServer(Server* server)
     m_events->remove_handler(EventType::TIMER, timer);
     m_events->deleteTimer(timer);
     m_events->remove_handler(EventType::SERVER_DISCONNECTED, server);
-
-    // done with server
-    delete server;
 }
 
 void
@@ -320,7 +316,7 @@ void ServerApp::updateStatus(const std::string& msg)
 {
     if (m_taskBarReceiver)
     {
-        m_taskBarReceiver->updateStatus(m_server, msg);
+        m_taskBarReceiver->updateStatus(server_.get(), msg);
     }
 }
 
@@ -337,9 +333,9 @@ void
 ServerApp::stopServer()
 {
     if (m_serverState == kStarted) {
-        closeServer(m_server);
+        closeServer(server_.get());
         closeClientListener(m_listener);
-        m_server = nullptr;
+        server_.reset();
         m_listener = nullptr;
         m_serverState = kInitialized;
     }
@@ -347,7 +343,7 @@ ServerApp::stopServer()
         stopRetryTimer();
         m_serverState = kInitialized;
     }
-    assert(m_server == nullptr);
+    assert(!server_);
     assert(m_listener == nullptr);
 }
 
@@ -357,25 +353,13 @@ ServerApp::closePrimaryClient(PrimaryClient* primaryClient)
     delete primaryClient;
 }
 
-void
-ServerApp::closeServerScreen(inputleap::Screen* screen)
-{
-    if (screen != nullptr) {
-        m_events->remove_handler(EventType::SCREEN_ERROR, screen->get_event_target());
-        m_events->remove_handler(EventType::SCREEN_SUSPEND, screen->get_event_target());
-        m_events->remove_handler(EventType::SCREEN_RESUME, screen->get_event_target());
-        delete screen;
-    }
-}
-
 void ServerApp::cleanupServer()
 {
     stopServer();
     if (m_serverState == kInitialized) {
         closePrimaryClient(m_primaryClient);
-        closeServerScreen(m_serverScreen);
         m_primaryClient = nullptr;
-        m_serverScreen = nullptr;
+        server_screen_.reset();
         m_serverState   = kUninitialized;
     }
     else if (m_serverState == kInitializing ||
@@ -384,7 +368,7 @@ void ServerApp::cleanupServer()
             m_serverState = kUninitialized;
     }
     assert(m_primaryClient == nullptr);
-    assert(m_serverScreen == nullptr);
+    assert(server_screen_.get() == nullptr);
     assert(m_serverState == kUninitialized);
 }
 
@@ -444,35 +428,31 @@ bool ServerApp::initServer()
     }
 
     double retryTime;
-    inputleap::Screen* serverScreen = nullptr;
     PrimaryClient* primaryClient = nullptr;
     try {
         std::string name = args().m_config->getCanonicalName(args().m_name);
-        serverScreen    = openServerScreen();
-        primaryClient   = openPrimaryClient(name, serverScreen);
-        m_serverScreen  = serverScreen;
+        auto server_screen = open_server_screen();
+        primaryClient   = openPrimaryClient(name, server_screen.get());
         m_primaryClient = primaryClient;
         m_serverState   = kInitialized;
         updateStatus();
+        server_screen_ = std::move(server_screen);
         return true;
     }
     catch (XScreenUnavailable& e) {
         LOG((CLOG_WARN "primary screen unavailable: %s", e.what()));
         closePrimaryClient(primaryClient);
-        closeServerScreen(serverScreen);
         updateStatus(std::string("primary screen unavailable: ") + e.what());
         retryTime = e.getRetryTime();
     }
     catch (XScreenOpenFailure& e) {
         LOG((CLOG_CRIT "failed to start server: %s", e.what()));
         closePrimaryClient(primaryClient);
-        closeServerScreen(serverScreen);
         return false;
     }
     catch (XBase& e) {
         LOG((CLOG_CRIT "failed to start server: %s", e.what()));
         closePrimaryClient(primaryClient);
-        closeServerScreen(serverScreen);
         return false;
     }
 
@@ -492,10 +472,9 @@ bool ServerApp::initServer()
     }
 }
 
-inputleap::Screen*
-ServerApp::openServerScreen()
+std::unique_ptr<Screen> ServerApp::open_server_screen()
 {
-    inputleap::Screen* screen = createScreen();
+    auto screen = create_screen();
     if (!argsBase().m_dropTarget.empty()) {
         screen->setDropTarget(argsBase().m_dropTarget);
     }
@@ -547,9 +526,9 @@ ServerApp::startServer()
         auto listenAddress = args().m_config->get_listen_address();
         auto family = family_string(ARCH->getAddrFamily(listenAddress.getAddress()));
         listener   = openClientListener(listenAddress);
-        m_server   = openServer(*args().m_config, m_primaryClient);
-        listener->setServer(m_server);
-        m_server->setListener(listener);
+        server_ = open_server(*args().m_config, m_primaryClient);
+        listener->setServer(server_.get());
+        server_->setListener(listener);
         m_listener = listener;
         updateStatus();
 
@@ -587,20 +566,19 @@ ServerApp::startServer()
     }
 }
 
-inputleap::Screen*
-ServerApp::createScreen()
+std::unique_ptr<Screen> ServerApp::create_screen()
 {
 #if WINAPI_MSWINDOWS
-    return new inputleap::Screen(new MSWindowsScreen(
+    return std::make_unique<Screen>(std::make_unique<MSWindowsScreen>(
         true, args().m_noHooks, args().m_stopOnDeskSwitch, m_events), m_events);
 #endif
 #if WINAPI_XWINDOWS
-    return new inputleap::Screen(new XWindowsScreen(
+    return std::make_unique<Screen>(std::make_unique<XWindowsScreen>(
         new XWindowsImpl(),
         args().m_display, true, 0, m_events), m_events);
 #endif
 #if WINAPI_CARBON
-    return new inputleap::Screen(new OSXScreen(m_events, true), m_events);
+    return std::make_unique<Screen>(std::make_unique<OSXScreen>(m_events, true), m_events);
 #endif
     throw std::runtime_error("Failed to create screen, this shouldn't happen");
 }
@@ -658,20 +636,15 @@ ServerApp::openClientListener(const NetworkAddress& address)
     return listen;
 }
 
-Server*
-ServerApp::openServer(Config& config, PrimaryClient* primaryClient)
+std::unique_ptr<Server> ServerApp::open_server(Config& config, PrimaryClient* primaryClient)
 {
-    Server* server = new Server(config, primaryClient, m_serverScreen, m_events, args());
-    try {
-        m_events->add_handler(EventType::SERVER_DISCONNECTED, server,
-                              [this](const auto& e){ handle_no_clients(); });
-        m_events->add_handler(EventType::SERVER_SCREEN_SWITCHED, server,
-                              [this](const auto& e){ handle_screen_switched(e); });
+    auto server = std::make_unique<Server>(config, primaryClient, server_screen_.get(), m_events,
+                                           args());
 
-    } catch (std::bad_alloc &ba) {
-        delete server;
-        throw ba;
-    }
+    m_events->add_handler(EventType::SERVER_DISCONNECTED, server.get(),
+                          [this](const auto& e){ handle_no_clients(); });
+    m_events->add_handler(EventType::SERVER_SCREEN_SWITCHED, server.get(),
+                          [this](const auto& e){ handle_screen_switched(e); });
 
     return server;
 }
@@ -742,7 +715,7 @@ ServerApp::mainLoop()
     appUtil().startNode();
 
     // init ipc client after node start, since create a new screen wipes out
-    // the event queue (the screen ctors call adoptBuffer).
+    // the event queue (the screen ctors call set_buffer).
     if (argsBase().m_enableIpc) {
         initIpcClient();
     }
@@ -773,7 +746,7 @@ ServerApp::mainLoop()
 
     // wait until carbon loop is ready
     OSXScreen* screen = dynamic_cast<OSXScreen*>(
-        m_serverScreen->getPlatformScreen());
+        server_screen_->getPlatformScreen());
     screen->waitForCarbonLoop();
 
     runCocoaApp();

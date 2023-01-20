@@ -158,21 +158,20 @@ ClientApp::daemonInfo() const
 #endif
 }
 
-inputleap::Screen*
-ClientApp::createScreen()
+std::unique_ptr<Screen> ClientApp::create_screen()
 {
 #if WINAPI_MSWINDOWS
-    return new inputleap::Screen(new MSWindowsScreen(
+    return std::make_unique<Screen>(std::make_unique<MSWindowsScreen>(
         false, args().m_noHooks, args().m_stopOnDeskSwitch, m_events), m_events);
 #endif
 #if WINAPI_XWINDOWS
-    return new inputleap::Screen(new XWindowsScreen(
+    return std::make_unique<Screen>(std::make_unique<XWindowsScreen>(
         new XWindowsImpl(),
         args().m_display, false,
         args().m_yscroll, m_events), m_events);
 #endif
 #if WINAPI_CARBON
-    return new inputleap::Screen(new OSXScreen(m_events, false), m_events);
+    return std::make_unique<Screen>(std::make_unique<OSXScreen>(m_events, false), m_events);
 #endif
     throw std::runtime_error("Failed to create screen, this shouldn't happen");
 }
@@ -231,10 +230,9 @@ void ClientApp::handle_screen_error()
 }
 
 
-inputleap::Screen*
-ClientApp::openClientScreen()
+std::unique_ptr<Screen> ClientApp::open_client_screen()
 {
-    inputleap::Screen* screen = createScreen();
+    auto screen = create_screen();
     if (!argsBase().m_dropTarget.empty()) {
         screen->setDropTarget(argsBase().m_dropTarget);
     }
@@ -243,18 +241,6 @@ ClientApp::openClientScreen()
                           [this](const auto& e){ handle_screen_error(); });
     return screen;
 }
-
-
-void
-ClientApp::closeClientScreen(inputleap::Screen* screen)
-{
-    if (screen != nullptr) {
-        m_events->remove_handler(EventType::SCREEN_ERROR,
-            screen->get_event_target());
-        delete screen;
-    }
-}
-
 
 void
 ClientApp::handle_client_restart(const Event&, EventQueueTimer* timer)
@@ -373,13 +359,12 @@ bool
 ClientApp::startClient()
 {
     double retryTime;
-    inputleap::Screen* clientScreen = nullptr;
+    std::unique_ptr<Screen> client_screen;
     try {
-        if (m_clientScreen == nullptr) {
-            clientScreen = openClientScreen();
-            m_client     = openClient(args().m_name,
-                *m_serverAddress, clientScreen);
-            m_clientScreen  = clientScreen;
+        if (!m_clientScreen) {
+            client_screen = open_client_screen();
+            m_client = openClient(args().m_name, *m_serverAddress, client_screen.get());
+            m_clientScreen = std::move(client_screen);
             LOG((CLOG_NOTE "started client"));
         }
 
@@ -390,18 +375,18 @@ ClientApp::startClient()
     }
     catch (XScreenUnavailable& e) {
         LOG((CLOG_WARN "secondary screen unavailable: %s", e.what()));
-        closeClientScreen(clientScreen);
         updateStatus(std::string("secondary screen unavailable: ") + e.what());
+        m_clientScreen.reset();
         retryTime = e.getRetryTime();
     }
     catch (XScreenOpenFailure& e) {
         LOG((CLOG_CRIT "failed to start client: %s", e.what()));
-        closeClientScreen(clientScreen);
+        m_clientScreen.reset();
         return false;
     }
     catch (XBase& e) {
         LOG((CLOG_CRIT "failed to start client: %s", e.what()));
-        closeClientScreen(clientScreen);
+        m_clientScreen.reset();
         return false;
     }
 
@@ -420,9 +405,8 @@ void
 ClientApp::stopClient()
 {
     closeClient(m_client);
-    closeClientScreen(m_clientScreen);
     m_client = nullptr;
-    m_clientScreen = nullptr;
+    m_clientScreen.reset();
 }
 
 
@@ -437,7 +421,7 @@ ClientApp::mainLoop()
     appUtil().startNode();
 
     // init ipc client after node start, since create a new screen wipes out
-    // the event queue (the screen ctors call adoptBuffer).
+    // the event queue (the screen ctors call set_buffer).
     if (argsBase().m_enableIpc) {
         initIpcClient();
     }

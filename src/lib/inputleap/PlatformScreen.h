@@ -33,7 +33,7 @@ subclasses to implement the rest.
 */
 class PlatformScreen : public IPlatformScreen, public EventTarget {
 public:
-    PlatformScreen(IEventQueue* events);
+    PlatformScreen();
     ~PlatformScreen() override;
 
     // IKeyState overrides

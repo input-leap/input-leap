@@ -68,7 +68,6 @@ bool					OSXScreen::s_testedForGHOM = false;
 bool					OSXScreen::s_hasGHOM	    = false;
 
 OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCursor) :
-	PlatformScreen(events),
 	m_isPrimary(isPrimary),
 	m_isOnScreen(m_isPrimary),
 	m_cursorPosValid(false),
@@ -166,13 +165,13 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
                           [this](const auto& e){ handle_system_event(e); });
 
 	// install the platform event queue
-	m_events->adoptBuffer(new OSXEventQueueBuffer(m_events));
+    m_events->set_buffer(std::make_unique<OSXEventQueueBuffer>(m_events));
 }
 
 OSXScreen::~OSXScreen()
 {
 	disable();
-    m_events->adoptBuffer(nullptr);
+    m_events->set_buffer(nullptr);
     m_events->remove_handler(EventType::SYSTEM, m_events->getSystemTarget());
 
 	if (m_pmWatchThread) {

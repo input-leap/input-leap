@@ -83,14 +83,14 @@ public:
     void cleanupServer();
     bool initServer();
     void handle_retry();
-    inputleap::Screen* openServerScreen();
-    inputleap::Screen* createScreen() override;
+    std::unique_ptr<Screen> open_server_screen();
+    std::unique_ptr<Screen> create_screen() override;
     PrimaryClient* openPrimaryClient(const std::string& name, inputleap::Screen* screen);
     void handle_screen_error();
     void handle_suspend();
     void handle_resume();
     ClientListener* openClientListener(const NetworkAddress& address);
-    Server* openServer(Config& config, PrimaryClient* primaryClient);
+    std::unique_ptr<Server> open_server(Config& config, PrimaryClient* primaryClient);
     void handle_no_clients();
     bool startServer();
     int mainLoop() override;
@@ -101,11 +101,11 @@ public:
 
     static ServerApp& instance() { return static_cast<ServerApp&>(App::instance()); }
 
-    Server* getServerPtr() { return m_server; }
+    Server* getServerPtr() { return server_.get(); }
 
-    Server* m_server;
+    std::unique_ptr<Server> server_;
     EServerState m_serverState;
-    inputleap::Screen* m_serverScreen;
+    std::unique_ptr<Screen> server_screen_;
     PrimaryClient* m_primaryClient;
     ClientListener* m_listener;
     EventQueueTimer* m_timer;

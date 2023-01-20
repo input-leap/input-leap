@@ -22,8 +22,7 @@
 
 namespace inputleap {
 
-PlatformScreen::PlatformScreen(IEventQueue* events) :
-    IPlatformScreen(events),
+PlatformScreen::PlatformScreen() :
     m_draggingStarted(false),
     m_fakeDraggingStarted(false)
 {

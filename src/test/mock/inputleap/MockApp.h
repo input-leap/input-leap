@@ -20,6 +20,7 @@
 #define INPUTLEAP_TEST_ENV
 
 #include "inputleap/App.h"
+#include "inputleap/Screen.h"
 
 #include <gmock/gmock.h>
 
@@ -42,7 +43,7 @@ public:
     MOCK_METHOD0(startNode, void());
     MOCK_METHOD0(mainLoop, int());
     MOCK_METHOD2(foregroundStartup, int(int, char**));
-    MOCK_METHOD0(createScreen, inputleap::Screen*());
+    MOCK_METHOD0(create_screen, std::unique_ptr<Screen>());
 };
 
 } // namespace inputleap

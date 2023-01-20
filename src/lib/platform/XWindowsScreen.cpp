@@ -64,7 +64,6 @@ XWindowsScreen::XWindowsScreen(
 		bool isPrimary,
 		int mouseScrollDelta,
 		IEventQueue* events) :
-    PlatformScreen(events),
     m_isPrimary(isPrimary),
     m_mouseScrollDelta(mouseScrollDelta),
     m_x_accumulatedScroll(0),
@@ -154,8 +153,8 @@ XWindowsScreen::XWindowsScreen(
                           [this](const auto& e){ handle_system_event(e); });
 
 	// install the platform event queue
-    m_events->adoptBuffer(new XWindowsEventQueueBuffer(m_impl,
-		m_display, m_window, m_events));
+    m_events->set_buffer(std::make_unique<XWindowsEventQueueBuffer>(m_impl, m_display,
+                                                                    m_window, m_events));
 }
 
 XWindowsScreen::~XWindowsScreen()
@@ -163,7 +162,7 @@ XWindowsScreen::~XWindowsScreen()
     assert(s_screen != nullptr);
     assert(m_display != nullptr);
 
-    m_events->adoptBuffer(nullptr);
+    m_events->set_buffer(nullptr);
     m_events->remove_handler(EventType::SYSTEM, m_events->getSystemTarget());
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 		delete m_clipboard[id];
@@ -1690,7 +1689,7 @@ void
 XWindowsScreen::onError()
 {
 	// prevent further access to the X display
-    m_events->adoptBuffer(nullptr);
+    m_events->set_buffer(nullptr);
 	m_screensaver->destroy();
     m_screensaver = nullptr;
     m_display = nullptr;

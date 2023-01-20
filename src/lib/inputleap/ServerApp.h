@@ -90,7 +90,7 @@ public:
     void handle_suspend();
     void handle_resume();
     ClientListener* openClientListener(const NetworkAddress& address);
-    Server* openServer(Config& config, PrimaryClient* primaryClient);
+    std::unique_ptr<Server> open_server(Config& config, PrimaryClient* primaryClient);
     void handle_no_clients();
     bool startServer();
     int mainLoop() override;
@@ -101,9 +101,9 @@ public:
 
     static ServerApp& instance() { return static_cast<ServerApp&>(App::instance()); }
 
-    Server* getServerPtr() { return m_server; }
+    Server* getServerPtr() { return server_.get(); }
 
-    Server* m_server;
+    std::unique_ptr<Server> server_;
     EServerState m_serverState;
     std::unique_ptr<Screen> server_screen_;
     PrimaryClient* m_primaryClient;

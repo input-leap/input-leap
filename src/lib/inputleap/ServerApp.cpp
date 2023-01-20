@@ -68,7 +68,6 @@ namespace inputleap {
 
 ServerApp::ServerApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver) :
     App(events, createTaskBarReceiver, new ServerArgs()),
-    m_server(nullptr),
     m_serverState(kUninitialized),
     server_screen_(nullptr),
     m_primaryClient(nullptr),
@@ -176,8 +175,8 @@ void ServerApp::reload_config()
 {
     LOG((CLOG_DEBUG "reload configuration"));
     if (loadConfig(args().m_configFile)) {
-        if (m_server != nullptr) {
-            m_server->setConfig(*args().m_config);
+        if (server_) {
+            server_->setConfig(*args().m_config);
         }
         LOG((CLOG_NOTE "reloaded configuration"));
     }
@@ -253,8 +252,8 @@ bool ServerApp::loadConfig(const std::string& pathname)
 
 void ServerApp::force_reconnect()
 {
-    if (m_server != nullptr) {
-        m_server->disconnect();
+    if (server_) {
+        server_->disconnect();
     }
 }
 
@@ -262,7 +261,7 @@ void ServerApp::handle_client_connected(const Event&, ClientListener* listener)
 {
     ClientProxy* client = listener->getNextClient();
     if (client != nullptr) {
-        m_server->adoptClient(client);
+        server_->adoptClient(client);
         updateStatus();
     }
 }
@@ -295,9 +294,6 @@ ServerApp::closeServer(Server* server)
     m_events->remove_handler(EventType::TIMER, timer);
     m_events->deleteTimer(timer);
     m_events->remove_handler(EventType::SERVER_DISCONNECTED, server);
-
-    // done with server
-    delete server;
 }
 
 void
@@ -320,7 +316,7 @@ void ServerApp::updateStatus(const std::string& msg)
 {
     if (m_taskBarReceiver)
     {
-        m_taskBarReceiver->updateStatus(m_server, msg);
+        m_taskBarReceiver->updateStatus(server_.get(), msg);
     }
 }
 
@@ -337,9 +333,9 @@ void
 ServerApp::stopServer()
 {
     if (m_serverState == kStarted) {
-        closeServer(m_server);
+        closeServer(server_.get());
         closeClientListener(m_listener);
-        m_server = nullptr;
+        server_.reset();
         m_listener = nullptr;
         m_serverState = kInitialized;
     }
@@ -347,7 +343,7 @@ ServerApp::stopServer()
         stopRetryTimer();
         m_serverState = kInitialized;
     }
-    assert(m_server == nullptr);
+    assert(!server_);
     assert(m_listener == nullptr);
 }
 
@@ -530,9 +526,9 @@ ServerApp::startServer()
         auto listenAddress = args().m_config->get_listen_address();
         auto family = family_string(ARCH->getAddrFamily(listenAddress.getAddress()));
         listener   = openClientListener(listenAddress);
-        m_server   = openServer(*args().m_config, m_primaryClient);
-        listener->setServer(m_server);
-        m_server->setListener(listener);
+        server_ = open_server(*args().m_config, m_primaryClient);
+        listener->setServer(server_.get());
+        server_->setListener(listener);
         m_listener = listener;
         updateStatus();
 
@@ -640,20 +636,15 @@ ServerApp::openClientListener(const NetworkAddress& address)
     return listen;
 }
 
-Server*
-ServerApp::openServer(Config& config, PrimaryClient* primaryClient)
+std::unique_ptr<Server> ServerApp::open_server(Config& config, PrimaryClient* primaryClient)
 {
-    Server* server = new Server(config, primaryClient, server_screen_.get(), m_events, args());
-    try {
-        m_events->add_handler(EventType::SERVER_DISCONNECTED, server,
-                              [this](const auto& e){ handle_no_clients(); });
-        m_events->add_handler(EventType::SERVER_SCREEN_SWITCHED, server,
-                              [this](const auto& e){ handle_screen_switched(e); });
+    auto server = std::make_unique<Server>(config, primaryClient, server_screen_.get(), m_events,
+                                           args());
 
-    } catch (std::bad_alloc &ba) {
-        delete server;
-        throw ba;
-    }
+    m_events->add_handler(EventType::SERVER_DISCONNECTED, server.get(),
+                          [this](const auto& e){ handle_no_clients(); });
+    m_events->add_handler(EventType::SERVER_SCREEN_SWITCHED, server.get(),
+                          [this](const auto& e){ handle_screen_switched(e); });
 
     return server;
 }

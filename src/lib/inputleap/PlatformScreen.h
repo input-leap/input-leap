@@ -67,6 +67,8 @@ public:
     void setDropTarget(const std::string&) override
         { throw std::runtime_error("setDropTarget not implemented"); }
 
+    bool fakeMediaKey(KeyID id) override;
+
 protected:
     //! Update mouse buttons
     /*!

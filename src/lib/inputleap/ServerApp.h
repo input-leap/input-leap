@@ -112,6 +112,7 @@ public:
     NetworkAddress* listen_address_;
 
 private:
+    std::unique_ptr<IPlatformScreen> create_platform_screen();
     void handle_screen_switched(const Event& event);
 };
 

@@ -143,8 +143,6 @@ public:
 
     //@}
 
-    bool fakeMediaKey(KeyID id) override;
-
     virtual std::string& getDraggingFilename() = 0;
     virtual void clearDraggingFilename() = 0;
     virtual bool isDraggingStarted() = 0;
@@ -154,7 +152,6 @@ public:
     virtual const std::string& getDropTarget() const = 0;
     virtual void setDropTarget(const std::string&) = 0;
 
-protected:
     //! Handle system event
     /*!
     A platform screen is expected to install a handler for system

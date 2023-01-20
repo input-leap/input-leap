@@ -23,6 +23,7 @@
 #include "server/ClientProxy.h"
 #include "server/PrimaryClient.h"
 #include "inputleap/ArgParser.h"
+#include "PlatformScreenLoggingWrapper.h"
 #include "inputleap/Screen.h"
 #include "inputleap/XScreen.h"
 #include "inputleap/ServerTaskBarReceiver.h"
@@ -568,19 +569,11 @@ ServerApp::startServer()
 
 std::unique_ptr<Screen> ServerApp::create_screen()
 {
-#if WINAPI_MSWINDOWS
-    return std::make_unique<Screen>(std::make_unique<MSWindowsScreen>(
-        true, args().m_noHooks, args().m_stopOnDeskSwitch, m_events), m_events);
-#endif
-#if WINAPI_XWINDOWS
-    return std::make_unique<Screen>(std::make_unique<XWindowsScreen>(
-        new XWindowsImpl(),
-        args().m_display, true, 0, m_events), m_events);
-#endif
-#if WINAPI_CARBON
-    return std::make_unique<Screen>(std::make_unique<OSXScreen>(m_events, true), m_events);
-#endif
-    throw std::runtime_error("Failed to create screen, this shouldn't happen");
+    auto plat_screen = create_platform_screen();
+    if (Log::getInstance()->getFilter() >= kDEBUG2) {
+        plat_screen = std::make_unique<PlatformScreenLoggingWrapper>(std::move(plat_screen));
+    }
+    return std::make_unique<Screen>(std::move(plat_screen), m_events);
 }
 
 PrimaryClient* ServerApp::openPrimaryClient(const std::string& name, inputleap::Screen* screen)
@@ -862,6 +855,22 @@ ServerApp::startNode()
     if (!startServer()) {
         m_bye(kExitFailed);
     }
+}
+
+std::unique_ptr<IPlatformScreen> ServerApp::create_platform_screen()
+{
+#if WINAPI_MSWINDOWS
+    return std::make_unique<MSWindowsScreen>(true, args().m_noHooks, args().m_stopOnDeskSwitch,
+                                             m_events);
+#endif
+#if WINAPI_XWINDOWS
+    return std::make_unique<XWindowsScreen>(new XWindowsImpl(), args().m_display, true, 0,
+                                            m_events);
+#endif
+#if WINAPI_CARBON
+    return std::make_unique<OSXScreen>(m_events, true);
+#endif
+    throw std::runtime_error("Failed to create screen, this shouldn't happen");
 }
 
 } // namespace inputleap

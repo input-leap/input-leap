@@ -591,16 +591,16 @@ inputleap::Screen*
 ServerApp::createScreen()
 {
 #if WINAPI_MSWINDOWS
-    return new inputleap::Screen(new MSWindowsScreen(
+    return new inputleap::Screen(std::make_unique<MSWindowsScreen>(
         true, args().m_noHooks, args().m_stopOnDeskSwitch, m_events), m_events);
 #endif
 #if WINAPI_XWINDOWS
-    return new inputleap::Screen(new XWindowsScreen(
+    return new inputleap::Screen(std::make_unique<XWindowsScreen>(
         new XWindowsImpl(),
         args().m_display, true, 0, m_events), m_events);
 #endif
 #if WINAPI_CARBON
-    return new inputleap::Screen(new OSXScreen(m_events, true), m_events);
+    return new inputleap::Screen(std::make_unique<OSXScreen>(m_events, true), m_events);
 #endif
     throw std::runtime_error("Failed to create screen, this shouldn't happen");
 }

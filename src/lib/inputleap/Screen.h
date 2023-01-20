@@ -26,6 +26,7 @@
 #include "inputleap/mouse_types.h"
 #include "inputleap/option_types.h"
 #include "base/Fwd.h"
+#include <memory>
 
 namespace inputleap {
 
@@ -36,7 +37,7 @@ primary or secondary screen.
 */
 class Screen : public IScreen {
 public:
-    Screen(IPlatformScreen* platformScreen, IEventQueue* events);
+    Screen(std::unique_ptr<IPlatformScreen> platform_screen, IEventQueue* events);
     virtual ~Screen();
 
 #ifdef INPUTLEAP_TEST_ENV
@@ -298,7 +299,7 @@ public:
                   std::int32_t& height) const override;
     void getCursorPos(std::int32_t& x, std::int32_t& y) const override;
 
-    IPlatformScreen* getPlatformScreen() { return m_screen; }
+    IPlatformScreen* getPlatformScreen() { return m_screen.get(); }
 
 protected:
     void enablePrimary();
@@ -313,7 +314,7 @@ protected:
 
 private:
     // our platform dependent screen
-    IPlatformScreen* m_screen;
+    std::unique_ptr<IPlatformScreen> m_screen;
 
     // true if screen is being used as a primary screen, false otherwise
     bool m_isPrimary;

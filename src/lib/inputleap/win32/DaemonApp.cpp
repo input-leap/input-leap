@@ -197,7 +197,7 @@ DaemonApp::mainLoop(bool daemonized)
         m_ipcServer->listen();
 
         // install the platform event queue to handle service stop events.
-        m_events->adoptBuffer(new MSWindowsEventQueueBuffer(m_events));
+        m_events->set_buffer(std::make_unique<MSWindowsEventQueueBuffer>(m_events));
 
         std::string command = ARCH->setting("Command");
         bool elevate = ARCH->setting("Elevate") == "1";

@@ -161,7 +161,7 @@ MSWindowsScreen::MSWindowsScreen(
                           [this](const auto& e){ handle_system_event(e); });
 
     // install the platform event queue
-    m_events->adoptBuffer(new MSWindowsEventQueueBuffer(m_events));
+    m_events->set_buffer(std::make_unique<MSWindowsEventQueueBuffer>(m_events));
 }
 
 MSWindowsScreen::~MSWindowsScreen()
@@ -169,7 +169,7 @@ MSWindowsScreen::~MSWindowsScreen()
     assert(s_screen != nullptr);
 
     disable();
-    m_events->adoptBuffer(nullptr);
+    m_events->set_buffer(nullptr);
     m_events->remove_handler(EventType::SYSTEM, m_events->getSystemTarget());
     delete m_keyState;
     delete m_desks;

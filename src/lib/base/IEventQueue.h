@@ -22,6 +22,7 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 #include <functional>
+#include <memory>
 #include <string>
 
 namespace inputleap {
@@ -54,12 +55,10 @@ public:
     */
     virtual void loop() = 0;
 
-    //! Set the buffer
-    /*!
-    Replace the current event queue buffer.  Any queued events are
-    discarded.  The queue takes ownership of the buffer.
+    /** Replace the current event queue buffer.  Any queued events are discarded.
+        The queue takes ownership of the buffer.
     */
-    virtual void adoptBuffer(IEventQueueBuffer*) = 0;
+    virtual void set_buffer(std::unique_ptr<IEventQueueBuffer>) = 0;
 
     //! Remove event from queue
     /*!

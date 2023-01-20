@@ -421,7 +421,7 @@ ClientApp::mainLoop()
     appUtil().startNode();
 
     // init ipc client after node start, since create a new screen wipes out
-    // the event queue (the screen ctors call adoptBuffer).
+    // the event queue (the screen ctors call set_buffer).
     if (argsBase().m_enableIpc) {
         initIpcClient();
     }

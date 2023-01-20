@@ -19,8 +19,9 @@
 #pragma once
 
 #include "base/IEventQueue.h"
-
+#include "base/IEventQueueBuffer.h"
 #include <gmock/gmock.h>
+#include <memory>
 
 namespace inputleap {
 
@@ -31,7 +32,7 @@ public:
     MOCK_METHOD2(newOneShotTimer, EventQueueTimer*(double, const EventTarget*));
     MOCK_METHOD2(newTimer, EventQueueTimer*(double, const EventTarget*));
     MOCK_METHOD2(getEvent, bool(Event&, double));
-    MOCK_METHOD1(adoptBuffer, void(IEventQueueBuffer*));
+    MOCK_METHOD1(set_buffer, void(std::unique_ptr<IEventQueueBuffer>));
     MOCK_METHOD1(remove_handlers, void(const EventTarget*));
     MOCK_METHOD1(registerType, EventType(const char*));
     MOCK_CONST_METHOD0(isEmpty, bool());

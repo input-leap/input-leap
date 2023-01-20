@@ -152,7 +152,6 @@ public:
     virtual const std::string& getDropTarget() const = 0;
     virtual void setDropTarget(const std::string&) = 0;
 
-protected:
     //! Handle system event
     /*!
     A platform screen is expected to install a handler for system

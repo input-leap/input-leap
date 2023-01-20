@@ -43,8 +43,6 @@ public:
     Type getEvent(Event& event, std::uint32_t& dataID) override;
     bool addEvent(std::uint32_t dataID) override;
     bool isEmpty() const override;
-    EventQueueTimer* newTimer(double duration, bool oneShot) const override;
-    void deleteTimer(EventQueueTimer*) const override;
 
 private:
     void flush();

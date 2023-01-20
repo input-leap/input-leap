@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "base/EventQueueTimer.h"
 #include "platform/MSWindowsEventQueueBuffer.h"
 
 #include "arch/win32/ArchMiscWindows.h"
@@ -129,18 +128,6 @@ bool
 MSWindowsEventQueueBuffer::isEmpty() const
 {
     return (HIWORD(GetQueueStatus(m_os_supported_message_types)) == 0);
-}
-
-EventQueueTimer*
-MSWindowsEventQueueBuffer::newTimer(double, bool) const
-{
-    return new EventQueueTimer;
-}
-
-void
-MSWindowsEventQueueBuffer::deleteTimer(EventQueueTimer* timer) const
-{
-    delete timer;
 }
 
 } // namespace inputleap

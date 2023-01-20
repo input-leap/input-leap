@@ -37,8 +37,6 @@ public:
     virtual Type getEvent(Event& event, std::uint32_t& dataID);
     virtual bool addEvent(std::uint32_t dataID);
     virtual bool isEmpty() const;
-    virtual EventQueueTimer* newTimer(double duration, bool oneShot) const;
-    virtual void deleteTimer(EventQueueTimer*) const;
 
 private:
     EventRef m_event;

@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <cassert>
-#include "base/EventQueueTimer.h"
 #include "platform/XWindowsEventQueueBuffer.h"
 
 #include "mt/Thread.h"
@@ -207,18 +206,6 @@ XWindowsEventQueueBuffer::isEmpty() const
 {
     std::lock_guard<std::mutex> lock(mutex_);
     return (m_impl->XPending(m_display) == 0 );
-}
-
-EventQueueTimer*
-XWindowsEventQueueBuffer::newTimer(double, bool) const
-{
-    return new EventQueueTimer;
-}
-
-void
-XWindowsEventQueueBuffer::deleteTimer(EventQueueTimer* timer) const
-{
-    delete timer;
 }
 
 void

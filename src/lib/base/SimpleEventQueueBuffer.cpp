@@ -79,16 +79,4 @@ SimpleEventQueueBuffer::isEmpty() const
     return !m_queueReady;
 }
 
-EventQueueTimer*
-SimpleEventQueueBuffer::newTimer(double, bool) const
-{
-    return new EventQueueTimer;
-}
-
-void
-SimpleEventQueueBuffer::deleteTimer(EventQueueTimer* timer) const
-{
-    delete timer;
-}
-
 } // namespace inputleap

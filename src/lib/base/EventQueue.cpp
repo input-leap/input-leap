@@ -228,7 +228,7 @@ EventQueueTimer* EventQueue::newTimer(double duration, const EventTarget* target
 {
     assert(duration > 0.0);
 
-    EventQueueTimer* timer = buffer_->newTimer(duration, false);
+    EventQueueTimer* timer = new EventQueueTimer;
     if (target == nullptr) {
         target = timer;
     }
@@ -246,7 +246,7 @@ EventQueueTimer* EventQueue::newOneShotTimer(double duration, const EventTarget*
 {
     assert(duration > 0.0);
 
-    EventQueueTimer* timer = buffer_->newTimer(duration, true);
+    EventQueueTimer* timer = new EventQueueTimer;
     if (target == nullptr) {
         target = timer;
     }
@@ -275,7 +275,7 @@ EventQueue::deleteTimer(EventQueueTimer* timer)
     if (index != m_timers.end()) {
         m_timers.erase(index);
     }
-    buffer_->deleteTimer(timer);
+    delete timer;
 }
 
 void EventQueue::add_handler(EventType type, const EventTarget* target, const EventHandler& handler)

@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "base/EventQueueTimer.h"
 #include "platform/OSXEventQueueBuffer.h"
 
 #include "base/Event.h"
@@ -119,18 +118,6 @@ OSXEventQueueBuffer::isEmpty() const
     EventRef event;
     OSStatus status = ReceiveNextEvent(0, nullptr, 0.0, false, &event);
     return (status == eventLoopTimedOutErr);
-}
-
-EventQueueTimer*
-OSXEventQueueBuffer::newTimer(double, bool) const
-{
-    return new EventQueueTimer;
-}
-
-void
-OSXEventQueueBuffer::deleteTimer(EventQueueTimer* timer) const
-{
-    delete timer;
 }
 
 } // namespace inputleap

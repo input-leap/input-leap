@@ -64,7 +64,6 @@ XWindowsScreen::XWindowsScreen(
 		bool isPrimary,
 		int mouseScrollDelta,
 		IEventQueue* events) :
-    PlatformScreen(events),
     m_isPrimary(isPrimary),
     m_mouseScrollDelta(mouseScrollDelta),
     m_x_accumulatedScroll(0),

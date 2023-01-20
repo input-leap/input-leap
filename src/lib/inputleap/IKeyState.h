@@ -35,8 +35,6 @@ class IKeyState {
 public:
     virtual ~IKeyState() { }
 
-    IKeyState(IEventQueue* events);
-
     enum {
         kNumButtons = 0x200
     };

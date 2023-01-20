@@ -91,7 +91,6 @@ MSWindowsScreen::MSWindowsScreen(
     bool noHooks,
     bool stopOnDeskSwitch,
     IEventQueue* events) :
-    PlatformScreen(events),
     m_isPrimary(isPrimary),
     m_noHooks(noHooks),
     m_isOnScreen(m_isPrimary),

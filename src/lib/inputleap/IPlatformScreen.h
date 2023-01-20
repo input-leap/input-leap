@@ -41,8 +41,6 @@ public:
     //! @name manipulators
     //@{
 
-    IPlatformScreen(IEventQueue* events) : IKeyState(events) { }
-
     //! Enable screen
     /*!
     Enable the screen, preparing it to report system and user events.

@@ -24,11 +24,6 @@
 
 namespace inputleap {
 
-IKeyState::IKeyState(IEventQueue* events)
-{
-    (void) events;
-}
-
 IKeyState::KeyInfo IKeyState::KeyInfo::create(KeyID id, KeyModifierMask mask, KeyButton button,
                                               std::int32_t count,
                                               const std::set<std::string>& destinations)

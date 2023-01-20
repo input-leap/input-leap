@@ -386,7 +386,6 @@ static const KeyID s_numpadTable[] = {
 //
 
 KeyState::KeyState(IEventQueue* events) :
-    IKeyState(events),
     m_keyMapPtr(new inputleap::KeyMap()),
     m_keyMap(*m_keyMapPtr),
     m_mask(0),
@@ -396,7 +395,6 @@ KeyState::KeyState(IEventQueue* events) :
 }
 
 KeyState::KeyState(IEventQueue* events, inputleap::KeyMap& keyMap) :
-    IKeyState(events),
     m_keyMapPtr(nullptr),
     m_keyMap(keyMap),
     m_mask(0),

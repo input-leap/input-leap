@@ -238,8 +238,8 @@ void
 ClientApp::handle_client_restart(const Event&, EventQueueTimer* timer)
 {
     // discard old timer
-    m_events->deleteTimer(timer);
     m_events->remove_handler(EventType::TIMER, timer);
+    m_events->deleteTimer(timer);
 
     // reconnect
     startClient();

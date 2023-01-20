@@ -143,8 +143,6 @@ public:
 
     //@}
 
-    bool fakeMediaKey(KeyID id) override;
-
     virtual std::string& getDraggingFilename() = 0;
     virtual void clearDraggingFilename() = 0;
     virtual bool isDraggingStarted() = 0;

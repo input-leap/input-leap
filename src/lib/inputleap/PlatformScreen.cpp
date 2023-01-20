@@ -121,4 +121,10 @@ PlatformScreen::isDraggingStarted()
     return false;
 }
 
+bool PlatformScreen::fakeMediaKey(KeyID id)
+{
+    (void) id;
+    return false;
+}
+
 } // namespace inputleap

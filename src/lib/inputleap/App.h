@@ -132,7 +132,7 @@ public:
     void startNode() override;
     int mainLoop() override;
     int foregroundStartup(int argc, char** argv) override;
-    inputleap::Screen* createScreen() override;
+    std::unique_ptr<Screen> create_screen() override;
     void loadConfig() override;
     bool loadConfig(const std::string& pathname) override;
     const char* daemonInfo() const override;

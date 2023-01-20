@@ -17,6 +17,7 @@
  */
 
 #include "inputleap/App.h"
+#include "Screen.h"
 
 #include "base/Log.h"
 #include "common/Version.h"
@@ -290,8 +291,7 @@ MinimalApp::foregroundStartup(int argc, char** argv)
     return 0;
 }
 
-inputleap::Screen*
-MinimalApp::createScreen()
+std::unique_ptr<Screen> MinimalApp::create_screen()
 {
     return nullptr;
 }

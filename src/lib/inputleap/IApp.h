@@ -20,6 +20,7 @@
 
 #include "Fwd.h"
 #include "base/Fwd.h"
+#include <memory>
 
 namespace inputleap {
 
@@ -42,7 +43,7 @@ public:
     virtual void initApp(int argc, const char** argv) = 0;
     virtual const char* daemonName() const = 0;
     virtual int foregroundStartup(int argc, char** argv) = 0;
-    virtual inputleap::Screen* createScreen() = 0;
+    virtual std::unique_ptr<Screen> create_screen() = 0;
     virtual IEventQueue* getEvents() const = 0;
 };
 

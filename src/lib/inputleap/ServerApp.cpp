@@ -70,7 +70,7 @@ ServerApp::ServerApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBa
     App(events, createTaskBarReceiver, new ServerArgs()),
     m_server(nullptr),
     m_serverState(kUninitialized),
-    m_serverScreen(nullptr),
+    server_screen_(nullptr),
     m_primaryClient(nullptr),
     m_listener(nullptr),
     m_timer(nullptr),
@@ -357,25 +357,13 @@ ServerApp::closePrimaryClient(PrimaryClient* primaryClient)
     delete primaryClient;
 }
 
-void
-ServerApp::closeServerScreen(inputleap::Screen* screen)
-{
-    if (screen != nullptr) {
-        m_events->remove_handler(EventType::SCREEN_ERROR, screen->get_event_target());
-        m_events->remove_handler(EventType::SCREEN_SUSPEND, screen->get_event_target());
-        m_events->remove_handler(EventType::SCREEN_RESUME, screen->get_event_target());
-        delete screen;
-    }
-}
-
 void ServerApp::cleanupServer()
 {
     stopServer();
     if (m_serverState == kInitialized) {
         closePrimaryClient(m_primaryClient);
-        closeServerScreen(m_serverScreen);
         m_primaryClient = nullptr;
-        m_serverScreen = nullptr;
+        server_screen_.reset();
         m_serverState   = kUninitialized;
     }
     else if (m_serverState == kInitializing ||
@@ -384,7 +372,7 @@ void ServerApp::cleanupServer()
             m_serverState = kUninitialized;
     }
     assert(m_primaryClient == nullptr);
-    assert(m_serverScreen == nullptr);
+    assert(server_screen_.get() == nullptr);
     assert(m_serverState == kUninitialized);
 }
 
@@ -444,35 +432,31 @@ bool ServerApp::initServer()
     }
 
     double retryTime;
-    inputleap::Screen* serverScreen = nullptr;
     PrimaryClient* primaryClient = nullptr;
     try {
         std::string name = args().m_config->getCanonicalName(args().m_name);
-        serverScreen    = openServerScreen();
-        primaryClient   = openPrimaryClient(name, serverScreen);
-        m_serverScreen  = serverScreen;
+        auto server_screen = open_server_screen();
+        primaryClient   = openPrimaryClient(name, server_screen.get());
         m_primaryClient = primaryClient;
         m_serverState   = kInitialized;
         updateStatus();
+        server_screen_ = std::move(server_screen);
         return true;
     }
     catch (XScreenUnavailable& e) {
         LOG((CLOG_WARN "primary screen unavailable: %s", e.what()));
         closePrimaryClient(primaryClient);
-        closeServerScreen(serverScreen);
         updateStatus(std::string("primary screen unavailable: ") + e.what());
         retryTime = e.getRetryTime();
     }
     catch (XScreenOpenFailure& e) {
         LOG((CLOG_CRIT "failed to start server: %s", e.what()));
         closePrimaryClient(primaryClient);
-        closeServerScreen(serverScreen);
         return false;
     }
     catch (XBase& e) {
         LOG((CLOG_CRIT "failed to start server: %s", e.what()));
         closePrimaryClient(primaryClient);
-        closeServerScreen(serverScreen);
         return false;
     }
 
@@ -492,10 +476,9 @@ bool ServerApp::initServer()
     }
 }
 
-inputleap::Screen*
-ServerApp::openServerScreen()
+std::unique_ptr<Screen> ServerApp::open_server_screen()
 {
-    inputleap::Screen* screen = createScreen();
+    auto screen = create_screen();
     if (!argsBase().m_dropTarget.empty()) {
         screen->setDropTarget(argsBase().m_dropTarget);
     }
@@ -587,20 +570,19 @@ ServerApp::startServer()
     }
 }
 
-inputleap::Screen*
-ServerApp::createScreen()
+std::unique_ptr<Screen> ServerApp::create_screen()
 {
 #if WINAPI_MSWINDOWS
-    return new inputleap::Screen(std::make_unique<MSWindowsScreen>(
+    return std::make_unique<Screen>(std::make_unique<MSWindowsScreen>(
         true, args().m_noHooks, args().m_stopOnDeskSwitch, m_events), m_events);
 #endif
 #if WINAPI_XWINDOWS
-    return new inputleap::Screen(std::make_unique<XWindowsScreen>(
+    return std::make_unique<Screen>(std::make_unique<XWindowsScreen>(
         new XWindowsImpl(),
         args().m_display, true, 0, m_events), m_events);
 #endif
 #if WINAPI_CARBON
-    return new inputleap::Screen(std::make_unique<OSXScreen>(m_events, true), m_events);
+    return std::make_unique<Screen>(std::make_unique<OSXScreen>(m_events, true), m_events);
 #endif
     throw std::runtime_error("Failed to create screen, this shouldn't happen");
 }
@@ -661,7 +643,7 @@ ServerApp::openClientListener(const NetworkAddress& address)
 Server*
 ServerApp::openServer(Config& config, PrimaryClient* primaryClient)
 {
-    Server* server = new Server(config, primaryClient, m_serverScreen, m_events, args());
+    Server* server = new Server(config, primaryClient, server_screen_.get(), m_events, args());
     try {
         m_events->add_handler(EventType::SERVER_DISCONNECTED, server,
                               [this](const auto& e){ handle_no_clients(); });
@@ -773,7 +755,7 @@ ServerApp::mainLoop()
 
     // wait until carbon loop is ready
     OSXScreen* screen = dynamic_cast<OSXScreen*>(
-        m_serverScreen->getPlatformScreen());
+        server_screen_->getPlatformScreen());
     screen->waitForCarbonLoop();
 
     runCocoaApp();

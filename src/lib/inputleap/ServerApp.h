@@ -83,8 +83,8 @@ public:
     void cleanupServer();
     bool initServer();
     void handle_retry();
-    inputleap::Screen* openServerScreen();
-    inputleap::Screen* createScreen() override;
+    std::unique_ptr<Screen> open_server_screen();
+    std::unique_ptr<Screen> create_screen() override;
     PrimaryClient* openPrimaryClient(const std::string& name, inputleap::Screen* screen);
     void handle_screen_error();
     void handle_suspend();
@@ -105,7 +105,7 @@ public:
 
     Server* m_server;
     EServerState m_serverState;
-    inputleap::Screen* m_serverScreen;
+    std::unique_ptr<Screen> server_screen_;
     PrimaryClient* m_primaryClient;
     ClientListener* m_listener;
     EventQueueTimer* m_timer;

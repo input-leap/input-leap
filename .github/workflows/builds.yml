@@ -66,6 +66,8 @@ jobs:
                   libxinerama-dev \
                   libxrandr-dev \
                   libxtst-dev \
+                  libxkbcommon-dev \
+                  libglib2.0-dev \
                   ninja-build \
                   qtdeclarative5-dev \
                   qttools5-dev
@@ -77,10 +79,44 @@ jobs:
       - name: Work around git safe directory check
         run: git config --global --add safe.directory $GITHUB_WORKSPACE
 
-      - name: Run the build
+      - if: matrix.os == 'ubuntu:22.04'
+        name: build libei from git
+        run: |
+            apt-get install -y python3-pip
+            pip3 install meson
+            apt-get install -y libsystemd-dev protobuf-compiler protobuf-c-compiler libprotobuf-c-dev meson git ca-certificates python3-pytest python3-attr python3-dbusmock
+            git clone https://gitlab.freedesktop.org/libinput/libei
+            cd libei
+            meson -Dprefix=/usr _libei_builddir
+            ninja -C _libei_builddir install
+            cd ..
+            rm -rf libei
+
+      - if: matrix.os == 'ubuntu:22.04'
+        name: build libportal from whot/libportal
+        run: |
+            apt-get install -y libglib2.0 gettext dbus meson libgirepository1.0-dev libgtk-3-dev valac python3-pip python3-dbusmock
+            git clone https://github.com/whot/libportal
+            cd libportal
+            git checkout wip/inputcapture
+            meson -Dprefix=/usr -Dbackend-gtk3=enabled -Ddocs=false _libportal_builddir
+            ninja -C _libportal_builddir install
+            cd ..
+            rm -rf libportal
+
+      - if: matrix.os == 'ubuntu:22.04'
+        name: Run the build (with libei)
         run: sh -x ./clean_build.sh
         env:
             VERBOSE: 1
+            B_CMAKE_FLAGS: -DINPUTLEAP_BUILD_LIBEI=TRUE
+
+      - if: matrix.os != 'ubuntu:22.04'
+        name: Run the build
+        run: sh -x ./clean_build.sh
+        env:
+            VERBOSE: 1
+            B_CMAKE_FLAGS: -DINPUTLEAP_BUILD_LIBEI=FALSE
 
       - name: Run the tests
         run: |

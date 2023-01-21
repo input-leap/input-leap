@@ -27,3 +27,9 @@
 
 /* Define to the type of arg 5 for `select`. */
 #cmakedefine SELECT_TYPE_ARG5 ${SELECT_TYPE_ARG5}
+
+/* Define if libportal has xdp_session_connect_to_eis */
+#cmakedefine HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS ${HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS}
+
+/* Define if libportal has inputcapture support */
+#cmakedefine HAVE_LIBPORTAL_INPUTCAPTURE ${HAVE_LIBPORTAL_INPUTCAPTURE}

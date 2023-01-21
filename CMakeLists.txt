@@ -23,6 +23,7 @@ option(INPUTLEAP_BUILD_INSTALLER "Build the installer" ON)
 option(INPUTLEAP_BUILD_TESTS "Build the tests" ON)
 option(INPUTLEAP_USE_EXTERNAL_GTEST "Use external installation of Google Test framework" OFF)
 option(INPUTLEAP_BUILD_X11 "Build with XWindows support" ON)
+option(INPUTLEAP_BUILD_LIBEI "Build with libei/libeis support" OFF)
 
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set (CMAKE_CXX_STANDARD 14)
@@ -144,6 +145,30 @@ if (UNIX)
             set (HAVE_X11 1)
         endif()
 
+        if (INPUTLEAP_BUILD_LIBEI)
+            pkg_check_modules(LIBEI REQUIRED libei libeis)
+            pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
+            pkg_check_modules(GLIB2 REQUIRED glib-2.0 gio-2.0)
+            pkg_check_modules(LIBPORTAL REQUIRED libportal)
+            include_directories(${LIBEI_INCLUDE_DIRS} ${LIBXKBCOMMON_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS} ${LIBPORTAL_INCLUDE_DIRS})
+            list(APPEND libs ${LIBEI_LINK_LIBRARIES} ${LIBXKBCOMMON_LINK_LIBRARIES} ${GLIB2_LINK_LIBRARIES} ${LIBPORTAL_LINK_LIBRARIES})
+
+            # no libportal release has xdp_session_connect_to_eis, so let's check for that
+            # and enable the hackaround in the code
+            include(CMakePushCheckState)
+            cmake_push_check_state(RESET)
+            set(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${LIBPORTAL_INCLUDE_DIRS};${GLIB2_INCLUDE_DIRS}")
+            set(CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES};${LIBPORTAL_LINK_LIBRARIES};${GLIB2_LINK_LIBRARIES}")
+            check_symbol_exists(xdp_session_connect_to_eis "libportal/portal.h" HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS)
+            check_symbol_exists(xdp_input_capture_session_connect_to_eis "libportal/inputcapture.h" HAVE_LIBPORTAL_INPUTCAPTURE)
+            cmake_pop_check_state()
+
+            # Flatpak bits
+            install(FILES "dist/flatpak/input-leap-flatpak"
+                    DESTINATION bin
+                    PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+        endif()
+
         check_include_files ("dns_sd.h" HAVE_DNSSD)
         if(INPUTLEAP_BUILD_GUI AND NOT HAVE_DNSSD)
             message (FATAL_ERROR "Missing header: dns_sd.h")
@@ -163,11 +188,16 @@ if (UNIX)
         add_definitions (-DWINAPI_CARBON=1 -D_THREAD_SAFE)
         set (BUILD_CARBON 1)
     else()
-        if (INPUTLEAP_BUILD_X11)
+        if(INPUTLEAP_BUILD_X11)
             add_definitions (-DWINAPI_XWINDOWS=1)
             set (BUILD_XWINDOWS 1)
-        else()
-            message(FATAL_ERROR "X11 build must be enabled on unix")
+        endif()
+        if(INPUTLEAP_BUILD_LIBEI)
+            add_definitions(-DWINAPI_LIBEI=1)
+            set(BUILD_LIBEI 1)
+        endif()
+        if(NOT INPUTLEAP_BUILD_X11 AND NOT INPUTLEAP_BUILD_LIBEI)
+            message(FATAL_ERROR "One of X11 or libei is required")
         endif()
     endif()
 

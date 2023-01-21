@@ -52,6 +52,9 @@
 #include <signal.h>
 #include "platform/XWindowsScreen.h"
 #endif
+#if WINAPI_LIBEI
+#include "platform/EiScreen.h"
+#endif
 #if WINAPI_CARBON
 #include "platform/OSXScreen.h"
 #endif
@@ -128,7 +131,10 @@ ServerApp::help()
            << " [--address <address>]"
            << " [--config <pathname>]"
 #ifdef WINAPI_XWINDOWS
-           << " [--display <display>]"
+           << " [--use-x11] [--display <display>]"
+#endif
+#ifdef WINAPI_LIBEI
+           << " [--use-ei]"
 #endif
            << HELP_SYS_ARGS
            << HELP_COMMON_ARGS
@@ -141,10 +147,14 @@ ServerApp::help()
            << "      --disable-client-cert-checking disable client SSL certificate \n"
               "                                     checking (deprecated)\n"
 #ifdef WINAPI_XWINDOWS
+           << "      --use-x11            use the X11 backend\n"
            << "      --display <display>  connect to the X server at <display>\n"
            << "      --screen-change-script <path>\n"
            << "                           full path to script to run on screen change\n"
            << "                           first argument is the new screen name\n"
+#endif
+#ifdef WINAPI_LIBEI
+           << "      --use-ei             use the EI backend\n"
 #endif
            << HELP_SYS_INFO
            << HELP_COMMON_INFO_2
@@ -864,8 +874,15 @@ std::unique_ptr<IPlatformScreen> ServerApp::create_platform_screen()
                                              m_events);
 #endif
 #if WINAPI_XWINDOWS
-    return std::make_unique<XWindowsScreen>(new XWindowsImpl(), args().m_display, true, 0,
-                                            m_events);
+    if (args().use_x11) {
+        return std::make_unique<XWindowsScreen>(new XWindowsImpl(), args().m_display, true, 0,
+                                                m_events);
+    }
+#endif
+#if WINAPI_LIBEI
+    if (args().use_ei) {
+        return std::make_unique<EiScreen>(true, m_events, true /* use_portal */);
+    }
 #endif
 #if WINAPI_CARBON
     return std::make_unique<OSXScreen>(m_events, true);

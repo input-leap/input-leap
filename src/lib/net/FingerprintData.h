@@ -18,6 +18,7 @@
 #ifndef INPUTLEAP_LIB_NET_FINGERPRINT_DATA_H
 #define INPUTLEAP_LIB_NET_FINGERPRINT_DATA_H
 
+#include <cstdint>
 #include <string>
 #include <vector>
 

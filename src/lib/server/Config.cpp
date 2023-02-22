@@ -739,6 +739,9 @@ Config::readSectionOptions(ConfigReadContext& s)
 		else if (name == "clipboardSharing") {
 			addOption("", kOptionClipboardSharing, s.parseBoolean(value));
 		}
+		else if (name == "clipboardSharingSize") {
+			addOption("", kOptionClipboardSharingSize, s.parseInt(value));
+		}
 
 		else {
 			handled = false;
@@ -1349,6 +1352,9 @@ Config::getOptionName(OptionID id)
 	if (id == kOptionClipboardSharing) {
 		return "clipboardSharing";
 	}
+	if (id == kOptionClipboardSharingSize) {
+		return "clipboardSharingSize";
+	}
 	return nullptr;
 }
 
@@ -1365,7 +1371,8 @@ std::string Config::getOptionValue(OptionID id, OptionValue value)
 		id == kOptionRelativeMouseMoves ||
 		id == kOptionWin32KeepForeground ||
 		id == kOptionScreenPreserveFocus ||
-		id == kOptionClipboardSharing) {
+		id == kOptionClipboardSharing ||
+		id == kOptionClipboardSharingSize) {
 		return (value != 0) ? "true" : "false";
 	}
 	if (id == kOptionModifierMapForShift ||

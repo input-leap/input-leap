@@ -52,6 +52,7 @@ ServerConfig::ServerConfig(QSettings* settings, int numColumns, int numRows ,
     m_IgnoreAutoConfigClient(false),
     m_EnableDragAndDrop(false),
     m_ClipboardSharing(true),
+    m_ClipboardSharingSize(defaultClipboardSharingSize()),
     m_pMainWindow(mainWindow)
 {
     Q_ASSERT(m_pSettings);
@@ -119,6 +120,7 @@ void ServerConfig::saveSettings()
     settings().setValue("ignoreAutoConfigClient", ignoreAutoConfigClient());
     settings().setValue("enableDragAndDrop", enableDragAndDrop());
     settings().setValue("clipboardSharing", clipboardSharing());
+    settings().setValue("clipboardSharingSize", (int)clipboardSharingSize());
 
     writeSettings<bool>(settings(), switchCorners(), "switchCorner");
 
@@ -164,6 +166,8 @@ void ServerConfig::loadSettings()
     setIgnoreAutoConfigClient(settings().value("ignoreAutoConfigClient").toBool());
     setEnableDragAndDrop(settings().value("enableDragAndDrop", true).toBool());
     setClipboardSharing(settings().value("clipboardSharing", true).toBool());
+    setClipboardSharingSize(settings().value("clipboardSharingSize",
+        (int) ServerConfig::defaultClipboardSharingSize()).toULongLong());
 
     readSettings<bool>(settings(), switchCorners(), "switchCorner", false,
                        static_cast<int>(SwitchCorner::Count));
@@ -412,4 +416,19 @@ void::ServerConfig::addToFirstEmptyGrid(const QString &clientName)
             break;
         }
     }
+}
+
+size_t ServerConfig::defaultClipboardSharingSize() {
+    return 100 * 1000 * 1000; // 100 MB
+}
+
+size_t ServerConfig::setClipboardSharingSize(size_t size) {
+    if (size) {
+        setClipboardSharing(true);
+    } else {
+        setClipboardSharing(false);
+    }
+    using std::swap;
+    swap (size, m_ClipboardSharingSize);
+    return size;
 }

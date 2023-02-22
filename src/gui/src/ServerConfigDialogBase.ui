@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>795</width>
-    <height>534</height>
+    <width>816</width>
+    <height>545</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="m_pTabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="m_pTabScreens">
       <attribute name="title">
@@ -422,6 +422,57 @@ Double click on a screen to edit its settings.</string>
           <string>&amp;Options</string>
          </property>
          <layout class="QGridLayout">
+          <item row="7" column="0">
+           <widget class="QGroupBox" name="groupBox_3">
+            <property name="title">
+             <string/>
+            </property>
+            <widget class="QLabel" name="m_pLabelSharingSize">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>201</width>
+               <height>21</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Max Clipboard sharing size</string>
+             </property>
+            </widget>
+            <widget class="QSpinBox" name="m_pSpinBoxClipboardSizeLimit">
+             <property name="geometry">
+              <rect>
+               <x>250</x>
+               <y>0</y>
+               <width>131</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="toolTip">
+              <string>Clipboard sharing size in bytes</string>
+             </property>
+             <property name="toolTipDuration">
+              <number>-3</number>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+             <property name="minimum">
+              <number>1000000</number>
+             </property>
+             <property name="maximum">
+              <number>100000000</number>
+             </property>
+             <property name="singleStep">
+              <number>1000</number>
+             </property>
+             <property name="value">
+              <number>3000000</number>
+             </property>
+            </widget>
+           </widget>
+          </item>
           <item row="3" column="0">
            <widget class="QCheckBox" name="m_pCheckBoxWin32KeepForeground">
             <property name="enabled">
@@ -432,23 +483,10 @@ Double click on a screen to edit its settings.</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxRelativeMouseMoves">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
+          <item row="5" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxEnableDragAndDrop">
             <property name="text">
-             <string>Use &amp;relative mouse moves</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxScreenSaverSync">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>S&amp;ynchronize screen savers</string>
+             <string>Enable drag and drop file transfers</string>
             </property>
            </widget>
           </item>
@@ -505,7 +543,44 @@ Double click on a screen to edit its settings.</string>
             </item>
            </layout>
           </item>
-          <item row="7" column="0">
+          <item row="6" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxEnableClipboard">
+            <property name="text">
+             <string>Enable clipboard sharing</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxIgnoreAutoConfigClient">
+            <property name="text">
+             <string>Ignore auto config clients</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxScreenSaverSync">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>S&amp;ynchronize screen savers</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxRelativeMouseMoves">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>Use &amp;relative mouse moves</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
            <spacer>
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -517,30 +592,6 @@ Double click on a screen to edit its settings.</string>
              </size>
             </property>
            </spacer>
-          </item>
-          <item row="5" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxEnableDragAndDrop">
-            <property name="text">
-             <string>Enable drag and drop file transfers</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxIgnoreAutoConfigClient">
-            <property name="text">
-             <string>Ignore auto config clients</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxEnableClipboard">
-            <property name="text">
-             <string>Enable clipboard sharing</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
           </item>
          </layout>
         </widget>

@@ -63,6 +63,10 @@ XWindowsClipboardBMPConverter::getDataSize() const
 
 std::string XWindowsClipboardBMPConverter::fromIClipboard(const std::string& bmp) const
 {
+    if (bmp.empty()) {
+        return {};
+    }
+
     // create BMP image
     std::uint8_t header[14];
     std::uint8_t* dst = header;
@@ -77,6 +81,10 @@ std::string XWindowsClipboardBMPConverter::fromIClipboard(const std::string& bmp
 
 std::string XWindowsClipboardBMPConverter::toIClipboard(const std::string& bmp) const
 {
+    if (bmp.empty()) {
+        return {};
+    }
+
     // make sure data is big enough for a BMP file
     if (bmp.size() <= 14 + 40) {
         return {};

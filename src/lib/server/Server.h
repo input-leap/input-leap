@@ -476,6 +476,7 @@ private:
     std::string m_dragFileExt;
     bool m_ignoreFileTransfer;
     bool m_enableClipboard;
+    size_t m_maximumClipboardSize;
 
     Thread* m_sendDragInfoThread;
     bool m_waitDragInfoThread;

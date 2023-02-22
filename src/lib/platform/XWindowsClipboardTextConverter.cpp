@@ -59,6 +59,10 @@ std::string XWindowsClipboardTextConverter::fromIClipboard(const std::string& da
 
 std::string XWindowsClipboardTextConverter::toIClipboard(const std::string& data) const
 {
+    if (data.empty()) {
+        return {};
+    }
+
     // convert to UTF-8
     bool errors;
     std::string utf8 = Unicode::textToUTF8(data, &errors);

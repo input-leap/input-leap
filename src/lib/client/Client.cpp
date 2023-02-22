@@ -69,7 +69,8 @@ Client::Client(IEventQueue* events, const std::string& name, const NetworkAddres
     m_writeToDropDirThread(nullptr),
     m_useSecureNetwork(args.m_enableCrypto),
     m_args(args),
-    m_enableClipboard(true)
+    m_enableClipboard(true),
+    m_maximumClipboardSize(INT_MAX)
 {
     assert(m_socketFactory != nullptr);
     assert(m_screen != nullptr);
@@ -347,7 +348,18 @@ Client::setOptions(const OptionsList& options)
             m_enableClipboard = *index;
 
             break;
+        } else if (id == kOptionClipboardSharingSize) {
+            index++;
+            if (index != options.end()) {
+				m_maximumClipboardSize = *index;
+            }
         }
+    }
+
+    if (m_enableClipboard && !m_maximumClipboardSize) {
+        m_enableClipboard = false;
+        LOG((CLOG_NOTE "clipboard sharing is disabled because the server "
+                       "set the maximum clipboard size to 0"));
     }
 
     m_screen->setOptions(options);
@@ -384,6 +396,12 @@ Client::sendClipboard(ClipboardID id)
 
         // marshall the data
         std::string data = clipboard.marshall();
+        if (data.size() >= m_maximumClipboardSize) {
+            LOG((CLOG_NOTE "Skipping clipboard transfer because the clipboard"
+                " contents exceeds the %i MB size limit set by the server",
+                m_maximumClipboardSize));
+            return;
+        }
 
         // save and send data if different or not yet sent
         if (!m_sentClipboard[id] || data != m_dataClipboard[id]) {
@@ -593,7 +611,7 @@ void Client::handle_shape_changed()
 
 void Client::handle_clipboard_grabbed(const Event& event)
 {
-    if (!m_enableClipboard) {
+    if (!m_enableClipboard || (m_maximumClipboardSize == 0)) {
         return;
     }
 

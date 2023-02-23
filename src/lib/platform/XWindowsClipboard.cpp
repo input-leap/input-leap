@@ -552,14 +552,6 @@ XWindowsClipboard::icccmFillCache()
         // available rather than checking TARGETS.  i've seen clipboard
         // owners that don't report all the targets they support.
         target = converter->getAtom();
-        #if 0
-        for (std::uint32_t i = 0; i < numTargets; ++i) {
-            if (converter->getAtom() == targets[i]) {
-                target = targets[i];
-                break;
-            }
-        }
-        #endif
         if (target == None) {
             continue;
         }

@@ -1811,9 +1811,11 @@ XWindowsUtil::ErrorLock::internalHandler(Display* display, XErrorEvent* event)
 }
 
 void
-XWindowsUtil::ErrorLock::ignoreHandler(Display*, XErrorEvent* e, void*)
+XWindowsUtil::ErrorLock::ignoreHandler(Display* display, XErrorEvent* e, void*)
 {
-    LOG((CLOG_DEBUG1 "ignoring X error: %d", e->error_code));
+    char errtxt[1024];
+    XGetErrorText(display, e->error_code, errtxt, 1023);
+    LOG((CLOG_DEBUG1 "ignoring X error: %d - %.1023s", e->error_code, errtxt));
 }
 
 void

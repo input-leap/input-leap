@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>795</width>
-    <height>534</height>
+    <width>816</width>
+    <height>545</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -422,6 +422,57 @@ Double click on a screen to edit its settings.</string>
           <string>&amp;Options</string>
          </property>
          <layout class="QGridLayout">
+          <item row="7" column="0">
+           <widget class="QGroupBox" name="groupBox_3">
+            <property name="title">
+             <string/>
+            </property>
+            <widget class="QLabel" name="m_pLabelSharingSize">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>201</width>
+               <height>21</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Max Clipboard sharing size</string>
+             </property>
+            </widget>
+            <widget class="QSpinBox" name="m_pSpinBoxClipboardSizeLimit">
+             <property name="geometry">
+              <rect>
+               <x>250</x>
+               <y>0</y>
+               <width>131</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="toolTip">
+              <string>Clipboard sharing size in bytes</string>
+             </property>
+             <property name="toolTipDuration">
+              <number>-3</number>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+             <property name="minimum">
+              <number>1000000</number>
+             </property>
+             <property name="maximum">
+              <number>100000000</number>
+             </property>
+             <property name="singleStep">
+              <number>1000</number>
+             </property>
+             <property name="value">
+              <number>3000000</number>
+             </property>
+            </widget>
+           </widget>
+          </item>
           <item row="3" column="0">
            <widget class="QCheckBox" name="m_pCheckBoxWin32KeepForeground">
             <property name="enabled">

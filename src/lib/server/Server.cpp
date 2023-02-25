@@ -90,6 +90,7 @@ Server::Server(
 	m_writeToDropDirThread(nullptr),
 	m_ignoreFileTransfer(false),
 	m_enableClipboard(true),
+	m_maximumClipboardSize(INT_MAX),
 	m_sendDragInfoThread(nullptr),
 	m_waitDragInfoThread(true),
 	m_args(args)
@@ -457,6 +458,10 @@ void Server::switchScreen(BaseClientProxy* dst, std::int32_t x, std::int32_t y, 
 		if (m_enableClipboard) {
 			// send the clipboard data to new active screen
 			for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+				// Hackity hackity hack
+				if (m_clipboards[id].m_clipboard.marshall().size() > m_maximumClipboardSize) {
+					continue;
+				}
 				m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
 			}
 		}
@@ -1121,6 +1126,15 @@ Server::processOptions()
 				LOG((CLOG_NOTE "clipboard sharing is disabled"));
 			}
 		}
+		else if (id == kOptionClipboardSharingSize) {
+			if (value <= 0) {
+				m_maximumClipboardSize = 0;
+				LOG((CLOG_NOTE "clipboard sharing is disabled because the "
+							   "maximum shared clipboard size is set to 0"));
+			} else {
+				m_maximumClipboardSize = static_cast<size_t>(value);
+			}
+		}
 	}
 	if (m_relativeMoves && !newRelativeMoves) {
 		stopRelativeMoves();
@@ -1161,7 +1175,7 @@ void Server::handle_shape_changed(BaseClientProxy* client)
 
 void Server::handle_clipboard_grabbed(const Event& event, BaseClientProxy* grabber)
 {
-	if (!m_enableClipboard) {
+	if (!m_enableClipboard || (m_maximumClipboardSize == 0)) {
 		return;
 	}
 
@@ -1466,6 +1480,11 @@ void Server::onClipboardChanged(BaseClientProxy* sender, ClipboardID id, std::ui
 
 	// ignore if data hasn't changed
     std::string data = clipboard.m_clipboard.marshall();
+	if (data.size() > m_maximumClipboardSize) {
+		LOG((CLOG_NOTE "not updating clipboard because it's over the size limit (%i KB) configured by the server",
+			m_maximumClipboardSize));
+		return;
+	}
 	if (data == clipboard.m_clipboardData) {
 		LOG((CLOG_DEBUG "ignored screen \"%s\" update of clipboard %d (unchanged)", clipboard.m_clipboardOwner.c_str(), id));
 		return;

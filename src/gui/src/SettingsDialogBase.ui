@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>368</width>
-    <height>428</height>
+    <width>616</width>
+    <height>580</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -93,7 +93,7 @@
          <string>Specify when the InputLeap service should run at an elevated privilege level</string>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>2</number>
         </property>
         <item>
          <property name="text">

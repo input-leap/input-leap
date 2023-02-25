@@ -30,6 +30,7 @@ jobs:
     container: ${{ matrix.os }}
     strategy:
       matrix:
+        fail-fast: false
         os: ["ubuntu:18.04", "ubuntu:20.04", "ubuntu:22.04"]
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -127,6 +128,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        fail-fast: false
         os: [macos-11, macos-12]
 
     env:

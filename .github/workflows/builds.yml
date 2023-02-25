@@ -29,6 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         fail-fast: false
         os: ["ubuntu:18.04", "ubuntu:20.04", "ubuntu:22.04"]
@@ -127,6 +128,7 @@ jobs:
   mac-build:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         fail-fast: false
         os: [macos-11, macos-12]

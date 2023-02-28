@@ -37,6 +37,8 @@
 #include <cstdlib>
 #include <algorithm>
 
+#define SCROLL_LOCK_EXCLUDE_MASK 0xDFFF
+// To ignore scroll lock state for hotkeys, as it is used for alternate keyboard layout indication
 namespace inputleap {
 
 static int xi_opcode;
@@ -1455,7 +1457,7 @@ XWindowsScreen::onHotKey(XKeyEvent& xkey, bool isRepeat)
 {
 	// find the hot key id
 	HotKeyToIDMap::const_iterator i =
-		m_hotKeyToIDMap.find(HotKeyItem(xkey.keycode, xkey.state));
+		m_hotKeyToIDMap.find(HotKeyItem(xkey.keycode, xkey.state & SCROLL_LOCK_EXCLUDE_MASK));
 	if (i == m_hotKeyToIDMap.end()) {
 		return false;
 	}

@@ -46,7 +46,7 @@ std::unique_ptr<IDataSocket>
         auto secure_socket = std::make_unique<SecureSocket>(m_events, m_socketMultiplexer, family,
                                                             security_level);
         secure_socket->initSsl(false);
-        return std::move(secure_socket);
+        return secure_socket;
     } else {
         return std::make_unique<TCPSocket>(m_events, m_socketMultiplexer, family);
     }

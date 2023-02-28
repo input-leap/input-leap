@@ -156,11 +156,16 @@ if (UNIX)
             # no libportal release has xdp_session_connect_to_eis, so let's check for that
             # and enable the hackaround in the code
             include(CMakePushCheckState)
+            include(CheckCXXSourceCompiles)
             cmake_push_check_state(RESET)
             set(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${LIBPORTAL_INCLUDE_DIRS};${GLIB2_INCLUDE_DIRS}")
             set(CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES};${LIBPORTAL_LINK_LIBRARIES};${GLIB2_LINK_LIBRARIES}")
             check_symbol_exists(xdp_session_connect_to_eis "libportal/portal.h" HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS)
             check_symbol_exists(xdp_input_capture_session_connect_to_eis "libportal/inputcapture.h" HAVE_LIBPORTAL_INPUTCAPTURE)
+            # check_symbol_exists can’t check for enum values
+            check_cxx_source_compiles("#include <libportal/portal.h>
+                int main() { XdpOutputType out = XDP_OUTPUT_NONE; }
+            " HAVE_LIBPORTAL_OUTPUT_NONE)
             cmake_pop_check_state()
 
             # Flatpak bits

@@ -166,4 +166,6 @@ QDataStream& operator>>(QDataStream& inStream, Screen& screen)
     for (auto mod : modifiers) {
         screen.m_Modifiers.push_back(static_cast<Screen::Modifier>(mod));
     }
+
+    return inStream;
 }

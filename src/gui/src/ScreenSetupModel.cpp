@@ -67,8 +67,13 @@ QVariant ScreenSetupModel::data(const QModelIndex& index, int role) const
 
 Qt::ItemFlags ScreenSetupModel::flags(const QModelIndex& index) const
 {
-    if (!index.isValid() || index.row() >= m_NumRows || index.column() >= m_NumColumns)
+    if (!index.isValid() || index.row() >= m_NumRows || index.column() >= m_NumColumns) {
+#if QT_VERSION >= QT_VERSION_CHECK(5,15,0)
+        return Qt::ItemFlags();
+#else
         return nullptr;
+#endif
+    }
 
     if (!screen(index).isNull())
         return Qt::ItemIsEnabled | Qt::ItemIsDragEnabled | Qt::ItemIsSelectable | Qt::ItemIsDropEnabled;

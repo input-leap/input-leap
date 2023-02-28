@@ -81,12 +81,12 @@ jobs:
         run: git config --global --add safe.directory $GITHUB_WORKSPACE
 
       - if: matrix.os == 'ubuntu:22.04'
-        name: build libei from git
+        name: build libei from git tag (0.3)
         run: |
             apt-get install -y python3-pip
             pip3 install meson
             apt-get install -y libsystemd-dev protobuf-compiler protobuf-c-compiler libprotobuf-c-dev meson git ca-certificates python3-pytest python3-attr python3-dbusmock
-            git clone https://gitlab.freedesktop.org/libinput/libei
+            git clone --depth 1 --branch 0.3 https://gitlab.freedesktop.org/libinput/libei
             cd libei
             meson -Dprefix=/usr _libei_builddir
             ninja -C _libei_builddir install

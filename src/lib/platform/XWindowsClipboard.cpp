@@ -23,6 +23,10 @@
 #include "platform/XWindowsClipboardUTF8Converter.h"
 #include "platform/XWindowsClipboardHTMLConverter.h"
 #include "platform/XWindowsClipboardBMPConverter.h"
+#include "platform/XWindowsClipboardJPGConverter.h"
+#include "platform/XWindowsClipboardPNGConverter.h"
+#include "platform/XWindowsClipboardTIFConverter.h"
+#include "platform/XWindowsClipboardWEBPConverter.h"
 #include "platform/XWindowsUtil.h"
 #include "mt/Thread.h"
 #include "arch/Arch.h"
@@ -82,11 +86,15 @@ XWindowsClipboard::XWindowsClipboard(IXWindowsImpl* impl, Display* display,
     }
 
     // add converters, most desired first
+    m_converters.push_back(new XWindowsClipboardPNGConverter(m_display));
+    m_converters.push_back(new XWindowsClipboardWEBPConverter(m_display));
+    m_converters.push_back(new XWindowsClipboardJPGConverter(m_display));
+    m_converters.push_back(new XWindowsClipboardTIFConverter(m_display));
+    m_converters.push_back(new XWindowsClipboardBMPConverter(m_display));
     m_converters.push_back(new XWindowsClipboardHTMLConverter(m_display,
                                 "text/html"));
     m_converters.push_back(new XWindowsClipboardHTMLConverter(m_display,
                                 "application/x-moz-nativehtml"));
-    m_converters.push_back(new XWindowsClipboardBMPConverter(m_display));
     m_converters.push_back(new XWindowsClipboardUTF8Converter(m_display,
                                 "text/plain;charset=UTF-8"));
     m_converters.push_back(new XWindowsClipboardUTF8Converter(m_display,
@@ -544,31 +552,45 @@ XWindowsClipboard::icccmFillCache()
         // available rather than checking TARGETS.  i've seen clipboard
         // owners that don't report all the targets they support.
         target = converter->getAtom();
-        /*
-        for (std::uint32_t i = 0; i < numTargets; ++i) {
-            if (converter->getAtom() == targets[i]) {
-                target = targets[i];
-                break;
-            }
-        }
-        */
         if (target == None) {
             continue;
         }
 
         // get the data
         Atom actualTarget;
+        IClipboard::EFormat format = converter->getFormat();
         std::string targetData;
         if (!icccmGetSelection(target, &actualTarget, &targetData)) {
             LOG((CLOG_DEBUG1 "  no data for target %s", XWindowsUtil::atomToString(m_display, target).c_str()));
+            m_added[format] = false;
             continue;
         }
 
-        // add to clipboard and note we've done it
-        IClipboard::EFormat format = converter->getFormat();
-        m_data[format]  = converter->toIClipboard(targetData);
-        m_added[format] = true;
-        LOG((CLOG_DEBUG "added format %d for target %s (%u %s)", format, XWindowsUtil::atomToString(m_display, target).c_str(), targetData.size(), targetData.size() == 1 ? "byte" : "bytes"));
+        if (actualTarget != target) {
+            LOG((CLOG_DEBUG1 "  target %s not same as actual target %s",
+                XWindowsUtil::atomToString(m_display, target).c_str(),
+                XWindowsUtil::atomToString(m_display, actualTarget).c_str()));
+            m_added[format] = false;
+            continue;
+        }
+
+        if (targetData.empty()) {
+            m_added[format] = false;
+            LOG((CLOG_DEBUG1 "  no targetdata for target %s (actual target %s)",
+                XWindowsUtil::atomToString(m_display, target).c_str(),
+                XWindowsUtil::atomToString(m_display, actualTarget).c_str()));
+             continue;
+        }
+
+        if (!converter->toIClipboard(targetData).empty()) {
+            // add to clipboard and note we've done it
+            m_data[format]  = converter->toIClipboard(targetData);
+            m_added[format] = true;
+            LOG((CLOG_DEBUG "  added format %d for target %s (%u %s)", format, XWindowsUtil::atomToString(m_display, target).c_str(), targetData.size(), targetData.size() == 1 ? "byte" : "bytes"));
+        } else {
+            LOG((CLOG_DEBUG1 "  no clipboard data for target %s", XWindowsUtil::atomToString(m_display, target).c_str()));
+            m_added[format] = false;
+        }
     }
 }
 
@@ -798,18 +820,39 @@ XWindowsClipboard::motifFillCache()
 
         // get the data (finally)
         Atom actualTarget;
+        IClipboard::EFormat format = converter->getFormat();
         std::string targetData;
         if (!motifGetSelection(&motifFormat, &actualTarget, &targetData)) {
             LOG((CLOG_DEBUG1 "  no data for target %s", XWindowsUtil::atomToString(m_display, target).c_str()));
+            m_added[format] = false;
             continue;
         }
 
-        // add to clipboard and note we've done it
-        IClipboard::EFormat clipboard_format = converter->getFormat();
-        m_data[clipboard_format]  = converter->toIClipboard(targetData);
-        m_added[clipboard_format] = true;
-        LOG((CLOG_DEBUG "added format %d for target %s", clipboard_format,
-             XWindowsUtil::atomToString(m_display, target).c_str()));
+        if (actualTarget != target) {
+            LOG((CLOG_DEBUG1 "  target %s not same as actual target %s",
+                XWindowsUtil::atomToString(m_display, target).c_str(),
+                XWindowsUtil::atomToString(m_display, actualTarget).c_str()));
+            m_added[format] = false;
+            continue;
+        }
+
+        if (targetData.empty()) {
+            m_added[format] = false;
+            LOG((CLOG_DEBUG1 "  no targetdata for target %s (actual target %s)",
+                XWindowsUtil::atomToString(m_display, target).c_str(),
+                XWindowsUtil::atomToString(m_display, actualTarget).c_str()));
+            continue;
+        }
+
+        if (!converter->toIClipboard(targetData).empty()) {
+            // add to clipboard and note we've done it
+            m_data[format]  = converter->toIClipboard(targetData);
+            m_added[format] = true;
+            LOG((CLOG_DEBUG "  added format %d for target %s (%u %s)", format, XWindowsUtil::atomToString(m_display, target).c_str(), targetData.size(), targetData.size() == 1 ? "byte" : "bytes"));
+        } else {
+            LOG((CLOG_DEBUG1 "  no clipboard data for target %s", XWindowsUtil::atomToString(m_display, target).c_str()));
+            m_added[format] = false;
+        }
     }
 }
 

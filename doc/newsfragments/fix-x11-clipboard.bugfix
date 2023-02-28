@@ -1,0 +1,1 @@
+fixes issue with X11 clipboard sharing images as text targets or in other targetsthan the one it should have.

@@ -59,6 +59,8 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, co
     m_pCheckBoxEnableDragAndDrop->setChecked(serverConfig().enableDragAndDrop());
 
     m_pCheckBoxEnableClipboard->setChecked(serverConfig().clipboardSharing());
+    m_pSpinBoxClipboardSizeLimit->setValue(serverConfig().clipboardSharingSize());
+    m_pSpinBoxClipboardSizeLimit->setEnabled(serverConfig().clipboardSharing());
 
     for (const Hotkey& hotkey : serverConfig().hotkeys()) {
         m_pListHotkeys->addItem(hotkey.text());
@@ -110,6 +112,7 @@ void ServerConfigDialog::accept()
     serverConfig().setIgnoreAutoConfigClient(m_pCheckBoxIgnoreAutoConfigClient->isChecked());
     serverConfig().setEnableDragAndDrop(m_pCheckBoxEnableDragAndDrop->isChecked());
     serverConfig().setClipboardSharing(m_pCheckBoxEnableClipboard->isChecked());
+    serverConfig().setClipboardSharingSize(m_pSpinBoxClipboardSizeLimit->value());
 
     // now that the dialog has been accepted, copy the new server config to the original one,
     // which is a reference to the one in MainWindow.

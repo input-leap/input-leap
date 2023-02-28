@@ -61,6 +61,10 @@ XWindowsClipboardAnyBitmapConverter::getDataSize() const
 
 std::string XWindowsClipboardAnyBitmapConverter::fromIClipboard(const std::string& bmp) const
 {
+    if (bmp.empty()) {
+        return {};
+    }
+
     // fill BMP info header with native-endian data
     CBMPInfoHeader infoHeader;
     const std::uint8_t* rawBMPInfoHeader = reinterpret_cast<const std::uint8_t*>(bmp.data());
@@ -98,6 +102,10 @@ std::string XWindowsClipboardAnyBitmapConverter::fromIClipboard(const std::strin
 
 std::string XWindowsClipboardAnyBitmapConverter::toIClipboard(const std::string& image) const
 {
+    if (image.empty()) {
+        return {};
+    }
+
     // convert to raw BMP data
     std::uint32_t w, h, depth;
     std::string rawBMP = doToIClipboard(image, w, h, depth);

@@ -1,9 +1,9 @@
 [Desktop Entry]
 Type=Application
-Name=Barrier
+Name=Input Leap
 Comment=Keyboard and mouse sharing solution
-Exec=barrier
-Icon=barrier
+Exec=input-leap
+Icon=input-leap
 Terminal=false
 Categories=Utility;RemoteAccess;
 Keywords=keyboard;mouse;sharing;network;share;

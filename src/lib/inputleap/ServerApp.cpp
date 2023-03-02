@@ -663,7 +663,7 @@ void ServerApp::handle_screen_switched(const Event& e)
         const auto& info = e.get_data_as<Server::SwitchToScreenInfo>();
 
         if (!args().m_screenChangeScript.empty()) {
-            LOG((CLOG_INFO "Running shell script for screen \"%s\"", info.m_screen));
+            LOG((CLOG_INFO "Running shell script for screen \"%s\"", info.m_screen.c_str()));
 
             signal(SIGCHLD, SIG_IGN);
 
@@ -671,7 +671,7 @@ void ServerApp::handle_screen_switched(const Event& e)
                 pid_t pid = fork();
                 if (pid == 0) {
                     execl(args().m_screenChangeScript.c_str(),args().m_screenChangeScript.c_str(),
-                          info.m_screen,nullptr);
+                          info.m_screen.c_str(),nullptr);
                     exit(0);
                 } else if (pid < 0) {
                     LOG((CLOG_ERR "Script forking error"));

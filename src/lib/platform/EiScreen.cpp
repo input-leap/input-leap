@@ -617,6 +617,7 @@ void EiScreen::handle_system_event(const Event& sysevent)
                 throw std::runtime_error("Oops, EIS didn't like us");
             case EI_EVENT_DEVICE_PAUSED:
                 LOG((CLOG_DEBUG "device %s is paused", ei_device_get_name(device)));
+                break;
             case EI_EVENT_DEVICE_RESUMED:
                 LOG((CLOG_DEBUG "device %s is resumed", ei_device_get_name(device)));
                 break;

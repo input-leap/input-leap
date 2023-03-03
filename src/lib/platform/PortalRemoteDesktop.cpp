@@ -25,8 +25,8 @@ namespace inputleap {
 PortalRemoteDesktop::PortalRemoteDesktop(EiScreen *screen,
                                          IEventQueue* events) :
     screen_(screen),
-    portal_(xdp_portal_new()),
     events_(events),
+    portal_(xdp_portal_new()),
     session_(nullptr)
 {
     glib_main_loop_ = g_main_loop_new(NULL, true);

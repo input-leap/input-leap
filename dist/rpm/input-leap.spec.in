@@ -13,6 +13,7 @@ URL: https://github.com/input-leap/input-leap
 # Run cmake package_source to get this tarball
 Source0: %{tarname}.tar.xz
 
+%if 0%{?fedora}
 BuildRequires: avahi-compat-libdns_sd-devel
 BuildRequires: cmake3
 BuildRequires: desktop-file-utils
@@ -28,6 +29,32 @@ BuildRequires: openssl-devel
 BuildRequires: qt5-qtbase-devel
 BuildRequires: qt5-linguist
 BuildRequires: make
+%endif
+
+%if 0%{?suse_version}
+BuildRequires: avahi-compat-mDNSResponder-devel
+BuildRequires: cmake >= 3
+BuildRequires: desktop-file-utils
+BuildRequires: gcc-c++
+BuildRequires: gmock
+BuildRequires: gtest
+BuildRequires: libX11-devel
+BuildRequires: libXtst-devel libXinerama-devel libXrandr-devel
+BuildRequires: libICE-devel libSM-devel
+BuildRequires: libcurl-devel
+BuildRequires: libopenssl-devel
+BuildRequires: libqt5-qtbase-devel
+BuildRequires: libqt5-linguist libqt5-linguist-devel
+BuildRequires: make
+
+Requires: libc libstdc++ libgcc_s1
+Requires: libdns_sd
+Requires: libQt5Core5 libQt5Gui5 libQt5Network5 libQt5Widgets5
+Requires: libopenssl3
+Requires: libX11-6 libXext6 libXinerama1 libXrandr2 libXtst6
+
+%{?!cmake3:%define cmake3 %cmake}
+%endif
 
 %description
 InputLeap allows you to share one mouse and keyboard between multiple computers.

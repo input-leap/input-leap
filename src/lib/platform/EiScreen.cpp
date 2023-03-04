@@ -245,6 +245,17 @@ void EiScreen::enter()
 {
     is_on_screen_ = true;
     if (!is_primary_) {
+#if HAVE_LIBEI_SEQUENCE_NUMBER
+        if (ei_pointer_) {
+            ei_device_start_emulating(ei_pointer_, 0);
+        }
+        if (ei_keyboard_) {
+            ei_device_start_emulating(ei_keyboard_, 0);
+        }
+        if (ei_abs_) {
+            ei_device_start_emulating(ei_abs_, 0);
+        }
+#else
         if (ei_pointer_) {
             ei_device_start_emulating(ei_pointer_);
         }
@@ -254,6 +265,7 @@ void EiScreen::enter()
         if (ei_abs_) {
             ei_device_start_emulating(ei_abs_);
         }
+#endif
     }
 #if HAVE_LIBPORTAL_INPUTCAPTURE
     else {
@@ -605,6 +617,7 @@ void EiScreen::handle_system_event(const Event& sysevent)
                 throw std::runtime_error("Oops, EIS didn't like us");
             case EI_EVENT_DEVICE_PAUSED:
                 LOG((CLOG_DEBUG "device %s is paused", ei_device_get_name(device)));
+                break;
             case EI_EVENT_DEVICE_RESUMED:
                 LOG((CLOG_DEBUG "device %s is resumed", ei_device_get_name(device)));
                 break;

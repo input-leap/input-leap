@@ -44,7 +44,7 @@ public:
             if (it->get() == p) {
                 std::unique_ptr<T> ret = std::move(*it);
                 data_.erase(it);
-                return std::move(ret);
+                return ret;
             }
         }
         return {};

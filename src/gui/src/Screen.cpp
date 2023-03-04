@@ -91,19 +91,19 @@ void Screen::saveSettings(QSettings& settings) const
 
 QTextStream& Screen::writeScreensSection(QTextStream& outStream) const
 {
-    outStream << "\t" << name() << ":" << endl;
+    outStream << "\t" << name() << ":\n";
 
     for (int i = 0; i < modifiers().size(); i++) {
         auto mod = static_cast<Modifier>(i);
         if (modifier(mod) != mod) {
             outStream << "\t\t" << modifierName(mod) << " = " << modifierName(modifier(mod))
-                      << endl;
+                      << "\n";
         }
     }
 
     for (int i = 0; i < fixes().size(); i++) {
         auto fix = static_cast<Fix>(i);
-        outStream << "\t\t" << fixName(fix) << " = " << (fixes()[i] ? "true" : "false") << endl;
+        outStream << "\t\t" << fixName(fix) << " = " << (fixes()[i] ? "true" : "false") << "\n";
     }
 
     outStream << "\t\t" << "switchCorners = none ";
@@ -112,9 +112,9 @@ QTextStream& Screen::writeScreensSection(QTextStream& outStream) const
             outStream << "+" << switchCornerName(static_cast<SwitchCorner>(i)) << " ";
         }
     }
-    outStream << endl;
+    outStream << "\n";
 
-    outStream << "\t\t" << "switchCornerSize = " << switchCornerSize() << endl;
+    outStream << "\t\t" << "switchCornerSize = " << switchCornerSize() << "\n";
 
     return outStream;
 }
@@ -123,10 +123,10 @@ QTextStream& Screen::writeAliasesSection(QTextStream& outStream) const
 {
     if (!aliases().isEmpty())
     {
-        outStream << "\t" << name() << ":" << endl;
+        outStream << "\t" << name() << ":\n";
 
         for (const QString& alias : aliases()) {
-            outStream << "\t\t" << alias << endl;
+            outStream << "\t\t" << alias << "\n";
         }
     }
 
@@ -166,4 +166,6 @@ QDataStream& operator>>(QDataStream& inStream, Screen& screen)
     for (auto mod : modifiers) {
         screen.m_Modifiers.push_back(static_cast<Screen::Modifier>(mod));
     }
+
+    return inStream;
 }

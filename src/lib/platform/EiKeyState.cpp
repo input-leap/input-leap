@@ -43,7 +43,7 @@ EiKeyState::EiKeyState(EiScreen* screen, IEventQueue* events) :
 void EiKeyState::init_default_keymap()
 {
     const struct xkb_rule_names names = {
-        NULL, // Use libxkbcommon compile-time defaults/env vars
+        NULL, NULL, NULL, NULL, NULL // Use libxkbcommon compile-time defaults/env vars
     };
 
     if (xkb_keymap_) {

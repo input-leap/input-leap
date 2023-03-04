@@ -168,7 +168,11 @@ void generate_pem_self_signed_cert(const std::string& path)
     }
     auto private_key_free = finally([private_key](){ EVP_PKEY_free(private_key); });
 
+#if OPENSSL_VERSION_NUMBER < 0x30000000L
     auto* rsa = RSA_generate_key(2048, RSA_F4, nullptr, nullptr);
+#else
+    auto* rsa = EVP_RSA_gen(2048);
+#endif
     if (!rsa) {
         throw std::runtime_error("Failed to generate RSA key");
     }

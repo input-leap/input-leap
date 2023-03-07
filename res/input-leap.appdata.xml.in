@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2018 Ding-Yi Chen <dchen@redhat.com> -->
 <component type="desktop-application">
-  <id></id>
+  <id>input-leap</id>
   <metadata_license>FSFAP</metadata_license>
   <project_license>GPLv2</project_license>
-  <name>barrier</name>
+  <name>input-leap</name>
   <summary>Share mouse and keyboard between multiple computers over the network</summary>
 
   <description>

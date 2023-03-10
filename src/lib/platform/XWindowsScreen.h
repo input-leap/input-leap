@@ -88,7 +88,7 @@ public:
 
 protected:
     // IPlatformScreen overrides
-    virtual void handle_system_event(const Event& event);
+    virtual void handle_system_event(const Event& event) override;
     void updateButtons() override;
     IKeyState* getKeyState() const override;
 

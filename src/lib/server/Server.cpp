@@ -1468,8 +1468,16 @@ void Server::onClipboardChanged(BaseClientProxy* sender, ClipboardID id, std::ui
 		return;
 	}
 
-	// should be the expected client
-	assert(sender == m_clients.find(clipboard.m_clipboardOwner)->second);
+	// Block updates in the event that the sender does not match the owner.
+	// This helps prevent server crashes that can come from the de-synchronizing
+	// of clipboard state in this situation.
+	//
+	// Note that this can prevent some clipboard updates when the screen is
+	// switched extremely quickly after a copy.
+	if (sender != m_clients.find(clipboard.m_clipboardOwner)->second) {
+		LOG((CLOG_DEBUG "ignored screen \"%s\" update of clipboard %d (screen does not own clipboard)", getName(sender).c_str(), id));
+		return;
+	}
 
 	// get data
 	if (!sender->getClipboard(id, &clipboard.m_clipboard)) {

@@ -1,0 +1,1 @@
+The server will now block clipboard updates from screens that do not own the clipboard, which can lead to server crashes upon switching the screen in some cases.

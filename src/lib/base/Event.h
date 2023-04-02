@@ -147,7 +147,6 @@ private:
     const EventTarget* target_ = nullptr;
     EventDataBase* data_ = nullptr;
     Flags flags_ = 0;
-    EventDataBase* data_object_ = nullptr;
 };
 
 } // namespace inputleap

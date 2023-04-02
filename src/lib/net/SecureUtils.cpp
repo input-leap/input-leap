@@ -161,22 +161,33 @@ FingerprintData get_pem_file_cert_fingerprint(const std::string& path, Fingerpri
 void generate_pem_self_signed_cert(const std::string& path)
 {
     auto expiration_days = 365;
+    constexpr unsigned key_bits = 2048;
 
-    auto* private_key = EVP_PKEY_new();
+#if OPENSSL_VERSION_NUMBER < 0x30000000L
+    EVP_PKEY* private_key = EVP_PKEY_new();
     if (!private_key) {
         throw std::runtime_error("Could not allocate private key for certificate");
     }
-    auto private_key_free = finally([private_key](){ EVP_PKEY_free(private_key); });
-
-#if OPENSSL_VERSION_NUMBER < 0x30000000L
-    auto* rsa = RSA_generate_key(2048, RSA_F4, nullptr, nullptr);
-#else
-    auto* rsa = EVP_RSA_gen(2048);
-#endif
+# if OPENSSL_VERSION_NUMBER < 0x00908000L
+    RSA* rsa = RSA_generate_key(key_bits, RSA_F4, nullptr, nullptr);
     if (!rsa) {
         throw std::runtime_error("Failed to generate RSA key");
     }
+# else // OpenSSL ≥ 0.9.8 and < 3
+    BIGNUM *bignum = BN_new();
+    auto bignum_free = finally([bignum](){ BN_free(bignum); });
+
+    RSA* rsa = RSA_new();
+    if (!BN_set_word(bignum, RSA_F4) || !RSA_generate_key_ex(rsa, key_bits, bignum, nullptr)) {
+        RSA_free(rsa);  // This is the only case where *rsa is not owned by *private_key
+        throw std::runtime_error("Failed to generate RSA key");
+    }
+# endif
     EVP_PKEY_assign_RSA(private_key, rsa);
+#else // OpenSSL ≥ 3
+    EVP_PKEY* private_key = EVP_RSA_gen(key_bits);
+#endif
+    auto private_key_free = finally([private_key](){ EVP_PKEY_free(private_key); });
 
     auto* cert = X509_new();
     if (!cert) {

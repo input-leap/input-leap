@@ -851,6 +851,7 @@ InputFilter::InputFilter(IEventQueue* events) :
 }
 
 InputFilter::InputFilter(const InputFilter& x) :
+    EventTarget(),
     m_ruleList(x.m_ruleList),
     m_primaryClient(nullptr),
     m_events(x.m_events)

@@ -37,8 +37,8 @@ enum signals {
 
 PortalInputCapture::PortalInputCapture(EiScreen* screen, IEventQueue* events) :
     screen_(screen),
-    portal_(xdp_portal_new()),
     events_(events),
+    portal_(xdp_portal_new()),
     signals_(_N_SIGNALS)
 {
     glib_main_loop_ = g_main_loop_new(nullptr, true);

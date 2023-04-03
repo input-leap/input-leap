@@ -1,5 +1,30 @@
 #!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+# export DH_VERBOSE=1
+
+DPKG_EXPORT_BUILDFLAGS = 1
+include /usr/share/dpkg/default.mk
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+export INPUTLEAP_VERSION_STAGE=Release
+
+ifneq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	CONFIGURE_FLAGS += -DINPUTLEAP_BUILD_TESTS=no
+else ifeq (,$(filter amd64 i386,$(DEB_HOST_ARCH)))
+	CONFIGURE_FLAGS += -DINPUTLEAP_BUILD_TESTS=no
+endif
 
 %:
-	dh $@ --buildsystem=cmake --builddirectory=build -Pbuild/debian --parallel
+	dh $@ --builddirectory=builddir
 
+override_dh_auto_configure:
+	dh_auto_configure --builddirectory=builddir -- -DINPUTLEAP_USE_EXTERNAL_GTEST=ON $(CONFIGURE_FLAGS)
+
+override_dh_auto_test:
+ifneq (,$(filter amd64 i386,$(DEB_HOST_ARCH)))
+	builddir/bin/guiunittests
+	xvfb-run -a builddir/bin/integtests
+	builddir/bin/unittests
+endif

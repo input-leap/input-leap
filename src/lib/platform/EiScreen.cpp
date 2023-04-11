@@ -69,7 +69,7 @@ EiScreen::EiScreen(bool is_primary, IEventQueue* events, bool use_portal) :
             portal_remote_desktop_ = new PortalRemoteDesktop(this, events_);
         }
     } else {
-        auto rc = ei_setup_backend_socket(ei_, NULL);
+        auto rc = ei_setup_backend_socket(ei_, nullptr);
         if (rc != 0) {
             LOG((CLOG_DEBUG "ei init error: %s", strerror(-rc)));
             throw std::runtime_error("Failed to init ei context");
@@ -347,7 +347,7 @@ void EiScreen::update_shape()
     for (auto it = ei_devices_.begin(); it != ei_devices_.end(); it++) {
         auto idx = 0;
         struct ei_region *r;
-        while ((r = ei_device_get_region(*it, idx++)) != NULL) {
+        while ((r = ei_device_get_region(*it, idx++)) != nullptr) {
             x_ = std::min(ei_region_get_x(r), x_);
             y_ = std::min(ei_region_get_y(r), y_);
             w_ = std::max(ei_region_get_x(r) + ei_region_get_width(r), w_);

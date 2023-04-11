@@ -121,7 +121,7 @@ ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
 #endif
 
         while (!a.empty()) {
-            const char *optarg = NULL;
+            const char *optarg = nullptr;
 
             if (parsePlatformArg(args, a)) {
                 continue;
@@ -176,7 +176,7 @@ ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
 #endif
 
         while (!a.empty()) {
-            const char *optarg = NULL;
+            const char *optarg = nullptr;
 
             if (parsePlatformArg(args, a)) {
                 continue;
@@ -246,7 +246,7 @@ ArgParser::parseCarbonArg(ArgsBase& argsBase, Argv& argv)
 bool
 ArgParser::parseXWindowsArg(ArgsBase& argsBase, Argv& argv)
 {
-    const char* optarg = NULL;
+    const char* optarg = nullptr;
 
     if (argv.shift("--use-x11")) {
         // noop
@@ -345,7 +345,7 @@ ArgParser::parsePlatformArg(ArgsBase& argsBase, Argv& argv)
 bool
 ArgParser::parseGenericArgs(Argv& argv)
 {
-    const char *optarg = NULL;
+    const char *optarg = nullptr;
 
     if (argv.shift("-d", "--debug", &optarg)) {
         // change logging level

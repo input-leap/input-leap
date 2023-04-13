@@ -51,7 +51,7 @@ public:
     Determines which modifier keys have changed and updates the modifier
     state and sends key events as appropriate.
     */
-    void handleModifierKeys(const EventTarget* target,
+    void handleModifierKeys(const EventTarget* target, std::uint32_t virtualKey,
                             KeyModifierMask oldMask, KeyModifierMask newMask);
 
     //@}

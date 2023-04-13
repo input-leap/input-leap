@@ -29,7 +29,7 @@ PortalRemoteDesktop::PortalRemoteDesktop(EiScreen *screen,
     portal_(xdp_portal_new()),
     session_(nullptr)
 {
-    glib_main_loop_ = g_main_loop_new(NULL, true);
+    glib_main_loop_ = g_main_loop_new(nullptr, true);
     glib_thread_ = new Thread([this](){ glib_thread(); });
 
     auto init_cb = [](gpointer data) -> gboolean
@@ -49,10 +49,10 @@ PortalRemoteDesktop::~PortalRemoteDesktop()
         glib_thread_->cancel();
         glib_thread_->wait();
         delete glib_thread_;
-        glib_thread_ = NULL;
+        glib_thread_ = nullptr;
 
         g_main_loop_unref(glib_main_loop_);
-        glib_main_loop_ = NULL;
+        glib_main_loop_ = nullptr;
     }
 
     if (session_signal_id_)
@@ -105,7 +105,7 @@ void PortalRemoteDesktop::cb_session_closed(XdpSession* session)
 
 void PortalRemoteDesktop::cb_session_started(GObject* object, GAsyncResult* res)
 {
-    g_autoptr(GError) error = NULL;
+    g_autoptr(GError) error = nullptr;
     auto session = XDP_SESSION(object);
     auto success = xdp_session_start_finish(session, res, &error);
     if (!success) {
@@ -146,7 +146,7 @@ void PortalRemoteDesktop::cb_session_started(GObject* object, GAsyncResult* res)
 void PortalRemoteDesktop::cb_init_remote_desktop_session(GObject* object, GAsyncResult* res)
 {
     LOG((CLOG_DEBUG "Session ready"));
-    g_autoptr(GError) error = NULL;
+    g_autoptr(GError) error = nullptr;
 
     auto session = xdp_portal_create_remote_desktop_session_finish(XDP_PORTAL(object), res, &error);
     if (!session) {

@@ -48,7 +48,7 @@ TEST(ArgParserTests, isArg_hasOptarg)
     const char* argv[argc] = { "stub", "-t", "foo" };
     Argv a(argc, argv);
 
-     const char *optarg = NULL;
+     const char *optarg = nullptr;
      auto result = a.shift("-t", nullptr, &optarg);
 
      EXPECT_STREQ(result, "-t");
@@ -63,7 +63,7 @@ TEST(ArgParserTests, isArg_missingArgs_throws)
 
     EXPECT_THROW({
              try {
-                 const char *optarg = NULL;
+                 const char *optarg = nullptr;
                  a.shift("-t", nullptr, &optarg);
              } catch (XArgvParserError e) {
                  EXPECT_STREQ(e.message.c_str(), "missing argument for `-t'");

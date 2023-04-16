@@ -1,0 +1,1 @@
+Fix a dead lock entered when a server screen is suspended, so that screen-resume message will work as expected.

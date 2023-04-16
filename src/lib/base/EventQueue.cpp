@@ -263,17 +263,19 @@ EventQueueTimer* EventQueue::newOneShotTimer(double duration, const EventTarget*
 void
 EventQueue::deleteTimer(EventQueueTimer* timer)
 {
-    std::lock_guard<std::mutex> lock(mutex_);
-    for (TimerQueue::iterator index = m_timerQueue.begin();
-                            index != m_timerQueue.end(); ++index) {
-        if (index->getTimer() == timer) {
-            m_timerQueue.erase(index);
-            break;
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        for (TimerQueue::iterator index = m_timerQueue.begin();
+                                index != m_timerQueue.end(); ++index) {
+            if (index->getTimer() == timer) {
+                m_timerQueue.erase(index);
+                break;
+            }
         }
-    }
-    Timers::iterator index = m_timers.find(timer);
-    if (index != m_timers.end()) {
-        m_timers.erase(index);
+        Timers::iterator index = m_timers.find(timer);
+        if (index != m_timers.end()) {
+            m_timers.erase(index);
+        }
     }
     delete timer;
 }

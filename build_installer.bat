@@ -1,5 +1,5 @@
 @echo off
-set INNO_ROOT=C:\Program Files (x86)\Inno Setup 5
+set INNO_ROOT=E:\Tools\Inno Setup 5
 
 set savedir=%cd%
 cd /d %~dp0

@@ -1,10 +1,10 @@
 @echo off
 
 REM defaults - override them by creating a build_env.bat file
-set B_BUILD_TYPE=Debug
-set B_QT_ROOT=C:\Qt
-set B_QT_VER=5.11.1
-set B_QT_MSVC=msvc2017_64
+set B_BUILD_TYPE=Release
+set B_QT_ROOT=E:\Libs\Qt
+set B_QT_VER=5.15.2
+set B_QT_MSVC=msvc2019_64
 set B_BONJOUR=C:\Program Files\Bonjour SDK
 
 set savedir=%cd%

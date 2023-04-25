@@ -97,7 +97,8 @@ OSXUchrKeyResource::isValid() const
 
 std::uint32_t OSXUchrKeyResource::getNumModifierCombinations() const
 {
-    return 256;
+    // only 32 (not 256) because the righthanded modifier bits are ignored
+    return 32;
 }
 
 std::uint32_t OSXUchrKeyResource::getNumTables() const

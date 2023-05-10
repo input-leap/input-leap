@@ -243,17 +243,19 @@ void EiScreen::disable()
 
 void EiScreen::enter()
 {
+    static int sequence_number;
     is_on_screen_ = true;
     if (!is_primary_) {
 #if HAVE_LIBEI_SEQUENCE_NUMBER
+        ++sequence_number;
         if (ei_pointer_) {
-            ei_device_start_emulating(ei_pointer_, 0);
+            ei_device_start_emulating(ei_pointer_, sequence_number);
         }
         if (ei_keyboard_) {
-            ei_device_start_emulating(ei_keyboard_, 0);
+            ei_device_start_emulating(ei_keyboard_, sequence_number);
         }
         if (ei_abs_) {
-            ei_device_start_emulating(ei_abs_, 0);
+            ei_device_start_emulating(ei_abs_, sequence_number);
         }
 #else
         if (ei_pointer_) {

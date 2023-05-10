@@ -171,7 +171,7 @@ if (UNIX)
             cmake_push_check_state(RESET)
             set(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${LIBEI_INCLUDE_DIRS}")
             set(CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES};${LIBEI_LINK_LIBRARIES}")
-            check_cxx_source_compiles("#include <libei/libei.h>
+            check_cxx_source_compiles("#include <libei.h>
                 int main() { ei_device_start_emulating(nullptr, 0); }
             " HAVE_LIBEI_SEQUENCE_NUMBER)
             cmake_pop_check_state()

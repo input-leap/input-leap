@@ -246,7 +246,6 @@ void EiScreen::enter()
     static int sequence_number;
     is_on_screen_ = true;
     if (!is_primary_) {
-#if HAVE_LIBEI_SEQUENCE_NUMBER
         ++sequence_number;
         if (ei_pointer_) {
             ei_device_start_emulating(ei_pointer_, sequence_number);
@@ -257,17 +256,6 @@ void EiScreen::enter()
         if (ei_abs_) {
             ei_device_start_emulating(ei_abs_, sequence_number);
         }
-#else
-        if (ei_pointer_) {
-            ei_device_start_emulating(ei_pointer_);
-        }
-        if (ei_keyboard_) {
-            ei_device_start_emulating(ei_keyboard_);
-        }
-        if (ei_abs_) {
-            ei_device_start_emulating(ei_abs_);
-        }
-#endif
     }
 #if HAVE_LIBPORTAL_INPUTCAPTURE
     else {

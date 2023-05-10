@@ -621,10 +621,6 @@ void EiScreen::handle_system_event(const Event& sysevent)
             case EI_EVENT_DEVICE_RESUMED:
                 LOG((CLOG_DEBUG "device %s is resumed", ei_device_get_name(device)));
                 break;
-            case EI_EVENT_PROPERTY:
-                LOG((CLOG_DEBUG "property %s: %s", ei_event_property_get_name(event),
-                     ei_event_property_get_value(event)));
-                break;
             case EI_EVENT_KEYBOARD_MODIFIERS:
                 // FIXME
                 break;

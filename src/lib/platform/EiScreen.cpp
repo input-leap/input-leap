@@ -243,29 +243,19 @@ void EiScreen::disable()
 
 void EiScreen::enter()
 {
+    static int sequence_number;
     is_on_screen_ = true;
     if (!is_primary_) {
-#if HAVE_LIBEI_SEQUENCE_NUMBER
+        ++sequence_number;
         if (ei_pointer_) {
-            ei_device_start_emulating(ei_pointer_, 0);
+            ei_device_start_emulating(ei_pointer_, sequence_number);
         }
         if (ei_keyboard_) {
-            ei_device_start_emulating(ei_keyboard_, 0);
+            ei_device_start_emulating(ei_keyboard_, sequence_number);
         }
         if (ei_abs_) {
-            ei_device_start_emulating(ei_abs_, 0);
+            ei_device_start_emulating(ei_abs_, sequence_number);
         }
-#else
-        if (ei_pointer_) {
-            ei_device_start_emulating(ei_pointer_);
-        }
-        if (ei_keyboard_) {
-            ei_device_start_emulating(ei_keyboard_);
-        }
-        if (ei_abs_) {
-            ei_device_start_emulating(ei_abs_);
-        }
-#endif
     }
 #if HAVE_LIBPORTAL_INPUTCAPTURE
     else {
@@ -591,9 +581,9 @@ void EiScreen::handle_system_event(const Event& sysevent)
             case EI_EVENT_SEAT_ADDED:
                 if (!ei_seat_) {
                     ei_seat_ = ei_seat_ref(seat);
-                    ei_seat_bind_capability(ei_seat_, EI_DEVICE_CAP_POINTER);
-                    ei_seat_bind_capability(ei_seat_, EI_DEVICE_CAP_POINTER_ABSOLUTE);
-                    ei_seat_bind_capability(ei_seat_, EI_DEVICE_CAP_KEYBOARD);
+                    ei_seat_bind_capabilities(ei_seat_, EI_DEVICE_CAP_POINTER,
+                                              EI_DEVICE_CAP_POINTER_ABSOLUTE,
+                                              EI_DEVICE_CAP_KEYBOARD, NULL);
                     LOG((CLOG_DEBUG "using seat %s", ei_seat_get_name(ei_seat_)));
                     // we don't care about touch
                 }
@@ -620,10 +610,6 @@ void EiScreen::handle_system_event(const Event& sysevent)
                 break;
             case EI_EVENT_DEVICE_RESUMED:
                 LOG((CLOG_DEBUG "device %s is resumed", ei_device_get_name(device)));
-                break;
-            case EI_EVENT_PROPERTY:
-                LOG((CLOG_DEBUG "property %s: %s", ei_event_property_get_name(event),
-                     ei_event_property_get_value(event)));
                 break;
             case EI_EVENT_KEYBOARD_MODIFIERS:
                 // FIXME

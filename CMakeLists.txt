@@ -23,7 +23,7 @@ option(INPUTLEAP_BUILD_INSTALLER "Build the installer" ON)
 option(INPUTLEAP_BUILD_TESTS "Build the tests" ON)
 option(INPUTLEAP_USE_EXTERNAL_GTEST "Use external installation of Google Test framework" OFF)
 option(INPUTLEAP_BUILD_X11 "Build with XWindows support" ON)
-option(INPUTLEAP_BUILD_LIBEI "Build with libei/libeis support" OFF)
+option(INPUTLEAP_BUILD_LIBEI "Build with libei support" OFF)
 
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set (CMAKE_CXX_STANDARD 14)
@@ -146,7 +146,7 @@ if (UNIX)
         endif()
 
         if (INPUTLEAP_BUILD_LIBEI)
-            pkg_check_modules(LIBEI REQUIRED libei libeis)
+            pkg_check_modules(LIBEI REQUIRED "libei>=0.5")
             pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
             pkg_check_modules(GLIB2 REQUIRED glib-2.0 gio-2.0)
             pkg_check_modules(LIBPORTAL REQUIRED libportal)
@@ -167,15 +167,6 @@ if (UNIX)
                 int main() { XdpOutputType out = XDP_OUTPUT_NONE; }
             " HAVE_LIBPORTAL_OUTPUT_NONE)
             cmake_pop_check_state()
-
-            cmake_push_check_state(RESET)
-            set(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${LIBEI_INCLUDE_DIRS}")
-            set(CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES};${LIBEI_LINK_LIBRARIES}")
-            check_cxx_source_compiles("#include <libei/libei.h>
-                int main() { ei_device_start_emulating(nullptr, 0); }
-            " HAVE_LIBEI_SEQUENCE_NUMBER)
-            cmake_pop_check_state()
-
 
             # Flatpak bits
             install(FILES "dist/flatpak/input-leap-flatpak"

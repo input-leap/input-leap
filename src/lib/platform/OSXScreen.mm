@@ -1374,7 +1374,7 @@ std::int32_t OSXScreen::map_scroll_wheel_to_osx(float x) const
 {
 	// use server's acceleration with a little boost since other platforms
 	// take one wheel step as a larger step than the mac does.
-    return static_cast<std::int32_t>(3.0 * x / 120.0);
+    return static_cast<std::int32_t>(1.0 * x / 120.0);
 }
 
 double

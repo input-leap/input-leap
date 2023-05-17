@@ -146,7 +146,7 @@ if (UNIX)
         endif()
 
         if (INPUTLEAP_BUILD_LIBEI)
-            pkg_check_modules(LIBEI REQUIRED "libei>=0.5")
+            pkg_check_modules(LIBEI REQUIRED "libei-1.0 >= 0.99.1")
             pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
             pkg_check_modules(GLIB2 REQUIRED glib-2.0 gio-2.0)
             pkg_check_modules(LIBPORTAL REQUIRED libportal)

@@ -189,7 +189,7 @@ void EiScreen::fakeMouseButton(ButtonID button, bool press)
         break;
     }
 
-    ei_device_pointer_button(ei_pointer_, code, press);
+    ei_device_button_button(ei_pointer_, code, press);
     ei_device_frame(ei_pointer_, ei_now(ei_));
 }
 
@@ -219,7 +219,7 @@ void EiScreen::fakeMouseWheel(int32_t xDelta, int32_t yDelta) const
     // libEI and InputLeap seem to use opposite directions, so we have
     // to send EI the opposite of the value received if we want to remain
     // compatible with other platforms (including X11).
-    ei_device_pointer_scroll_discrete(ei_pointer_, -xDelta, -yDelta);
+    ei_device_scroll_discrete(ei_pointer_, -xDelta, -yDelta);
     ei_device_frame(ei_pointer_, ei_now(ei_));
 }
 
@@ -360,8 +360,12 @@ void EiScreen::add_device(struct ei_device *device)
     // route: one device for each capability. Note this may be the same device
     // if the first device comes with multiple capabilities.
 
-    if (!ei_pointer_ && ei_device_has_capability(device, EI_DEVICE_CAP_POINTER))
+    if (!ei_pointer_ &&
+        ei_device_has_capability(device, EI_DEVICE_CAP_POINTER) &&
+        ei_device_has_capability(device, EI_DEVICE_CAP_BUTTON) &&
+        ei_device_has_capability(device, EI_DEVICE_CAP_SCROLL)) {
         ei_pointer_ = ei_device_ref(device);
+    }
 
     if (!ei_keyboard_ && ei_device_has_capability(device, EI_DEVICE_CAP_KEYBOARD)) {
         ei_keyboard_ = ei_device_ref(device);
@@ -383,8 +387,12 @@ void EiScreen::add_device(struct ei_device *device)
         key_state_->updateKeyMap();
     }
 
-    if (!ei_abs_ && ei_device_has_capability(device, EI_DEVICE_CAP_POINTER_ABSOLUTE))
+    if (!ei_abs_ &&
+        ei_device_has_capability(device, EI_DEVICE_CAP_POINTER_ABSOLUTE) &&
+        ei_device_has_capability(device, EI_DEVICE_CAP_BUTTON) &&
+        ei_device_has_capability(device, EI_DEVICE_CAP_SCROLL)) {
         ei_abs_ = ei_device_ref(device);
+    }
 
     ei_devices_.emplace_back(ei_device_ref(device));
 
@@ -420,7 +428,7 @@ void EiScreen::send_event(EventType type, EventDataBase* data)
 
 ButtonID EiScreen::map_button_from_evdev(ei_event* event) const
 {
-    uint32_t button = ei_event_pointer_get_button(event);
+    uint32_t button = ei_event_button_get_button(event);
 
     switch (button)
     {
@@ -466,7 +474,7 @@ void EiScreen::on_button_event(ei_event* event)
     assert(is_primary_);
 
     ButtonID button = map_button_from_evdev(event);
-    bool pressed = ei_event_pointer_get_button_is_press(event);
+    bool pressed = ei_event_button_get_is_press(event);
     KeyModifierMask mask = key_state_->pollActiveModifiers();
 
     LOG((CLOG_DEBUG1 "event: Button %s button=%d mask=0x%x", pressed ? "press" : "release", button, mask));
@@ -486,8 +494,8 @@ void EiScreen::on_pointer_scroll_event(ei_event* event)
     LOG((CLOG_DEBUG "on_pointer_scroll_event"));
     assert(is_primary_);
 
-    double dx = ei_event_pointer_get_scroll_x(event);
-    double dy = ei_event_pointer_get_scroll_y(event);
+    double dx = ei_event_scroll_get_dx(event);
+    double dy = ei_event_scroll_get_dy(event);
 
     LOG((CLOG_DEBUG1 "event: Scroll (%.1f,%.1f)", dx, dy));
 
@@ -504,8 +512,8 @@ void EiScreen::on_pointer_scroll_discrete_event(ei_event* event)
     LOG((CLOG_DEBUG "on_pointer_scroll_discrete_event"));
     assert(is_primary_);
 
-    double dx = ei_event_pointer_get_scroll_discrete_x(event);
-    double dy = ei_event_pointer_get_scroll_discrete_y(event);
+    double dx = ei_event_scroll_get_discrete_dx(event);
+    double dy = ei_event_scroll_get_discrete_dy(event);
 
     LOG((CLOG_DEBUG1 "event: Scroll (%.1f,%.1f)", dx, dy));
 
@@ -583,7 +591,10 @@ void EiScreen::handle_system_event(const Event& sysevent)
                     ei_seat_ = ei_seat_ref(seat);
                     ei_seat_bind_capabilities(ei_seat_, EI_DEVICE_CAP_POINTER,
                                               EI_DEVICE_CAP_POINTER_ABSOLUTE,
-                                              EI_DEVICE_CAP_KEYBOARD, NULL);
+                                              EI_DEVICE_CAP_KEYBOARD,
+                                              EI_DEVICE_CAP_BUTTON,
+                                              EI_DEVICE_CAP_SCROLL,
+                                              NULL);
                     LOG((CLOG_DEBUG "using seat %s", ei_seat_get_name(ei_seat_)));
                     // we don't care about touch
                 }
@@ -627,7 +638,7 @@ void EiScreen::handle_system_event(const Event& sysevent)
             case EI_EVENT_KEYBOARD_KEY:
                 on_key_event(event);
                 break;
-            case EI_EVENT_POINTER_BUTTON:
+            case EI_EVENT_BUTTON_BUTTON:
                 on_button_event(event);
                 break;
             case EI_EVENT_POINTER_MOTION:
@@ -642,14 +653,14 @@ void EiScreen::handle_system_event(const Event& sysevent)
                 break;
             case EI_EVENT_TOUCH_DOWN:
                 break;
-            case EI_EVENT_POINTER_SCROLL:
+            case EI_EVENT_SCROLL_DELTA:
                 on_pointer_scroll_event(event);
                 break;
-            case EI_EVENT_POINTER_SCROLL_DISCRETE:
+            case EI_EVENT_SCROLL_DISCRETE:
                 on_pointer_scroll_discrete_event(event);
                 break;
-            case EI_EVENT_POINTER_SCROLL_STOP:
-            case EI_EVENT_POINTER_SCROLL_CANCEL:
+            case EI_EVENT_SCROLL_STOP:
+            case EI_EVENT_SCROLL_CANCEL:
                 break;
         }
         ei_event_unref(event);

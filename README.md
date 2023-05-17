@@ -72,6 +72,9 @@ the same machine.
 Note that if the keyboard's Scroll Lock is active then this will prevent the
 mouse from switching screens.
 
+To find information about configuring Input Leap look at the
+[wiki](https://github.com/input-leap/input-leap/wiki)
+
 ### Contact & support
 
 Please be aware that the *only* way to draw our attention to a bug is to create

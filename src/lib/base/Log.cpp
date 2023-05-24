@@ -174,8 +174,7 @@ Log::print(const char* file, int line, const char* fmt, ...)
         time_t t;
         time(&t);
         tm = localtime(&t);
-        sprintf(timestamp, "%04i-%02i-%02iT%02i:%02i:%02i", tm->tm_year + 1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
-
+        snprintf(timestamp, sizeof(timestamp), "%04i-%02i-%02iT%02i:%02i:%02i", tm->tm_year + 1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
         // square brackets, spaces, comma and null terminator take about 10
         size_t size = 10;
         size += strlen(timestamp);
@@ -189,9 +188,9 @@ Log::print(const char* file, int line, const char* fmt, ...)
         char* message = new char[size];
 
 #ifndef NDEBUG
-        sprintf(message, "[%s] %s: %s\n\t%s,%d", timestamp, g_priority[priority], buffer, file, line);
+        snprintf(message, sizeof(message), "[%s] %s: %s\n\t%s,%d", timestamp, g_priority[priority], buffer, file, line);
 #else
-        sprintf(message, "[%s] %s: %s", timestamp, g_priority[priority], buffer);
+        snprintf(message, sizeof(message), "[%s] %s: %s", timestamp, g_priority[priority], buffer);
 #endif
 
         output(priority, message);

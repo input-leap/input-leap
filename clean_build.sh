@@ -15,11 +15,18 @@ B_BUILD_DIR="${B_BUILD_DIR:-build}"
 B_BUILD_TYPE="${B_BUILD_TYPE:-Debug}"
 B_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=${B_BUILD_TYPE} ${B_CMAKE_FLAGS:-}"
 
+ARCH=$(uname -m)
 if [ "$(uname)" = "Darwin" ]; then
     # macOS needs a little help, so we source this environment script to fix paths.
     . ./macos_environment.sh
-    #B_CMAKE_FLAGS="${B_CMAKE_FLAGS} -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/SDKs/MacOSX.sdk -DCMAKE_OSX_DEPLOYMENT_TARGET=13.3" # macos for intel on 13.4
-    B_CMAKE_FLAGS="${B_CMAKE_FLAGS} -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -DCMAKE_OSX_DEPLOYMENT_TARGET=13.3"
+
+    if [[ $ARCH == "x86_64" ]]; then
+        # Intel-based Mac
+        B_CMAKE_FLAGS="${B_CMAKE_FLAGS} -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/SDKs/MacOSX.sdk -DCMAKE_OSX_DEPLOYMENT_TARGET=13.3"
+    else
+        # macOS Apple Silicon
+        B_CMAKE_FLAGS="${B_CMAKE_FLAGS} -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -DCMAKE_OSX_DEPLOYMENT_TARGET=13.3"
+    fi
 fi
 
 # Prefer ninja if available

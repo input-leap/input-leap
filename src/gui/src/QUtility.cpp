@@ -102,9 +102,9 @@ QString getOSInformation()
         CommandProcess cp("/bin/cat", arguments);
         QString output = cp.run();
 
-        QRegExp resultRegex(".*PRETTY_NAME=\"([^\"]+)\".*");
-        if (resultRegex.exactMatch(output)) {
-            result = resultRegex.cap(1);
+        QRegularExpression resultRegex(".*PRETTY_NAME=\"([^\"]+)\".*");
+        if (resultRegex.match(output).hasMatch()) {
+            result = resultRegex.captured(1);
         }
     } catch (...) {
     }

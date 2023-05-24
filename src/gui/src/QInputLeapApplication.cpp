@@ -30,7 +30,14 @@ QInputLeapApplication::QInputLeapApplication(int& argc, char** argv) :
     s_Instance = this;
 }
 
-QInputLeapApplication::~QInputLeapApplication() = default;
+QInputLeapApplication::~QInputLeapApplication() {
+    s_Instance = nullptr;
+    // Add any additional cleanup code here if needed.
+}
+
+QInputLeapApplication* QInputLeapApplication::getInstance() {
+    return s_Instance;
+}
 
 void QInputLeapApplication::commitData(QSessionManager&)
 {
@@ -41,11 +48,6 @@ void QInputLeapApplication::commitData(QSessionManager&)
     }
 }
 
-QInputLeapApplication* QInputLeapApplication::getInstance()
-{
-    return s_Instance;
-}
-
 void QInputLeapApplication::switchTranslator(QString lang)
 {
     if (translator_) {
@@ -54,10 +56,15 @@ void QInputLeapApplication::switchTranslator(QString lang)
     }
 
     QResource locale(":/res/lang/gui_" + lang + ".qm");
-    translator_ = std::make_unique<QTranslator>();
-    translator_->load(locale.data(), locale.size());
-    installTranslator(translator_.get());
+    if (locale.isValid() && locale.data() != nullptr) {
+        QByteArray localeData(reinterpret_cast<const char*>(locale.data()), locale.size());
+        translator_ = std::make_unique<QTranslator>();
+        if (translator_->load(localeData)) {
+            installTranslator(translator_.get());
+        }
+    }
 }
+
 
 void QInputLeapApplication::setTranslator(QTranslator* translator)
 {

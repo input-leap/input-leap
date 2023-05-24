@@ -19,19 +19,19 @@ if [ -z "$INPUTLEAP_BUILD_ENV" ]; then
     if command -v port; then
         printf "Detected Macports\n"
 
-        check_dir_exists '/opt/local/lib/cmake/Qt5' 'qt5-qtbase port'
+        check_dir_exists '/opt/local/lib/cmake/Qt6' 'qt6-qtbase port'
 
         export INPUTLEAP_BUILD_MACPORTS=1
-        export CMAKE_PREFIX_PATH="/opt/local/lib/cmake/Qt5:$CMAKE_PREFIX_PATH"
+        export CMAKE_PREFIX_PATH="/opt/local/lib/cmake/Qt6:$CMAKE_PREFIX_PATH"
         export LD_LIBRARY_PATH="/opt/local/lib:$LD_LIBRARY_PATH"
         export CPATH="/opt/local/include:$CPATH"
-        export PKG_CONFIG_PATH="/opt/local/libexec/qt5/lib/pkgconfig:$PKG_CONFIG_PATH"
+        export PKG_CONFIG_PATH="/opt/local/libexec/qt6/lib/pkgconfig:$PKG_CONFIG_PATH"
 
     elif command -v brew; then
         printf "Detected Homebrew\n"
-        QT_PATH=$(brew --prefix qt@5)
+        QT_PATH=$(brew --prefix qt)
 
-        check_dir_exists "$QT_PATH" 'qt5'
+        check_dir_exists "$QT_PATH" 'qt'
 
         export INPUTLEAP_BUILD_BREW=1
         export CMAKE_PREFIX_PATH="/opt/procursus:$QT_PATH:$CMAKE_PREFIX_PATH"

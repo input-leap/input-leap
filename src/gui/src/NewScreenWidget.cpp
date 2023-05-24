@@ -49,7 +49,6 @@ void NewScreenWidget::mousePressEvent(QMouseEvent* event)
         *pixmap()
 #endif
     );
-    pDrag->setHotSpot(event->pos());
-
+    pDrag->setHotSpot(event->position().toPoint());
     pDrag->exec(Qt::CopyAction, Qt::CopyAction);
 }

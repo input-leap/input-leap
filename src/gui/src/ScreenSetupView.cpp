@@ -140,8 +140,8 @@ void ScreenSetupView::mouseDoubleClickEvent(QMouseEvent* event)
 {
     if (event->buttons() & Qt::LeftButton)
     {
-        int col = columnAt(event->pos().x());
-        int row = rowAt(event->pos().y());
+        int col = columnAt(event->position().x());
+        int row = rowAt(event->position().y());
         enter(model()->createIndex(row, col));
     }
     else
@@ -171,8 +171,8 @@ void ScreenSetupView::dragMoveEvent(QDragMoveEvent* event)
         }
         else
         {
-            int col = columnAt(event->pos().x());
-            int row = rowAt(event->pos().y());
+            int col = columnAt(event->position().x());
+            int row = rowAt(event->position().y());
 
             // a drop from outside is not allowed if there's a screen already there.
             if (!model()->screen(col, row).isNull())
@@ -218,7 +218,7 @@ void ScreenSetupView::startDrag(Qt::DropActions)
 
 QStyleOptionViewItem ScreenSetupView::viewOptions() const
 {
-    QStyleOptionViewItem option = QTableView::viewOptions();
+    QStyleOptionViewItem option = this->viewOptions();
     option.showDecorationSelected = true;
     option.decorationPosition = QStyleOptionViewItem::Top;
     option.displayAlignment = Qt::AlignCenter;

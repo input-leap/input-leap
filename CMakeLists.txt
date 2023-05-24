@@ -270,10 +270,9 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
             ${OPENSSL_ROOT}/lib/libcrypto.a
             z
         )
-    elseif (IS_DIRECTORY /usr/local/opt/openssl AND BREW_PROGRAM)
-        # brew
-        set (OPENSSL_ROOT /usr/local/opt/openssl)
-
+    elseif (BREW_PROGRAM)
+        exec_program(brew ARGS "--prefix openssl" OUTPUT_VARIABLE OPENSSL_ROOT)
+        
         include_directories (BEFORE SYSTEM ${OPENSSL_ROOT}/include)
 
         set (OPENSSL_LIBS

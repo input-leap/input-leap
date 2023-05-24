@@ -20,22 +20,22 @@
 
 namespace inputleap {
 
-CFStringRef
+CFStringRef 
 getDraggedFileURL()
 {
-	NSString* pbName = NSDragPboard;
-	NSPasteboard* pboard = [NSPasteboard pasteboardWithName:pbName];
-	
-	NSMutableString* string;
-	string = [[NSMutableString alloc] initWithCapacity:0];
+    NSString* pbName = NSPasteboardNameDrag;
+    NSPasteboard* pboard = [NSPasteboard pasteboardWithName:pbName];
 
-	NSArray* files = [pboard propertyListForType:NSFilenamesPboardType];
-	for (id file in files) {
-		[string appendString: (NSString*)file];
-		[string appendString: @"\0"];
-	}
-	
-	return (CFStringRef)string;
+    NSMutableString* string;
+    string = [[NSMutableString alloc] initWithCapacity:0];
+
+    NSArray* files = [pboard propertyListForType:NSPasteboardTypeFileURL];
+    for (id file in files) {
+        [string appendString: (NSString*)file];
+        [string appendString: @"\0"];
+    }
+
+    return (CFStringRef)string;
 }
 
 } // namespace inputleap

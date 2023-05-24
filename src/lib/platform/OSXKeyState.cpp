@@ -476,8 +476,7 @@ static io_connect_t getEventDriver(void)
 
     if (!sEventDrvrRef) {
         // Get master device port
-        kr = IOMasterPort(bootstrap_port, &masterPort);
-        assert(KERN_SUCCESS == kr);
+        masterPort = kIOMainPortDefault;  // use kIOMainPortDefault instead of IOMasterPort
 
         kr = IOServiceGetMatchingServices(masterPort,
                 IOServiceMatching(kIOHIDSystemClass), &iter);
@@ -501,89 +500,65 @@ void OSXKeyState::postHIDVirtualKey(const std::uint8_t virtualKeyCode, const boo
 {
     static std::uint32_t modifiers = 0;
 
-    NXEventData event;
-    IOGPoint loc = { 0, 0 };
-    std::uint32_t modifiersDelta = 0;
-
-    bzero(&event, sizeof(NXEventData));
+    CGEventRef eventRef;
+    CGEventSourceRef eventSource = CGEventSourceCreate(kCGEventSourceStateHIDSystemState);
+    CGPoint loc = { 0, 0 };
 
     switch (virtualKeyCode)
     {
-    case kVK_Shift:
-    case kVK_RightShift:
-    case kVK_Command:
-    case kVK_RightCommand:
-    case kVK_Option:
-    case kVK_RightOption:
-    case kVK_Control:
-    case kVK_RightControl:
-    case kVK_CapsLock:
-        switch (virtualKeyCode)
-        {
         case kVK_Shift:
-                modifiersDelta = NX_SHIFTMASK | NX_DEVICELSHIFTKEYMASK;
-                m_shiftPressed = postDown;
-                break;
         case kVK_RightShift:
-                modifiersDelta = NX_SHIFTMASK | NX_DEVICERSHIFTKEYMASK;
-                m_shiftPressed = postDown;
-                break;
         case kVK_Command:
-                modifiersDelta = NX_COMMANDMASK | NX_DEVICELCMDKEYMASK;
-                m_superPressed = postDown;
-                break;
         case kVK_RightCommand:
-                modifiersDelta = NX_COMMANDMASK | NX_DEVICERCMDKEYMASK;
-                m_superPressed = postDown;
-                break;
         case kVK_Option:
-                modifiersDelta = NX_ALTERNATEMASK | NX_DEVICELALTKEYMASK;
-                m_altPressed = postDown;
-                break;
         case kVK_RightOption:
-                modifiersDelta = NX_ALTERNATEMASK | NX_DEVICERALTKEYMASK;
-                m_altPressed = postDown;
-                break;
         case kVK_Control:
-                modifiersDelta = NX_CONTROLMASK | NX_DEVICELCTLKEYMASK;
-                m_controlPressed = postDown;
-                break;
         case kVK_RightControl:
-                modifiersDelta = NX_CONTROLMASK | NX_DEVICERCTLKEYMASK;
-                m_controlPressed = postDown;
-                break;
         case kVK_CapsLock:
-                modifiersDelta = NX_ALPHASHIFTMASK;
-                m_capsPressed = postDown;
-                break;
-        }
+            switch (virtualKeyCode)
+            {
+                case kVK_Shift:
+                case kVK_RightShift:
+                    modifiers |= kCGEventFlagMaskShift;
+                    m_shiftPressed = postDown;
+                    break;
+                case kVK_Command:
+                case kVK_RightCommand:
+                    modifiers |= kCGEventFlagMaskCommand;
+                    m_superPressed = postDown;
+                    break;
+                case kVK_Option:
+                case kVK_RightOption:
+                    modifiers |= kCGEventFlagMaskAlternate;
+                    m_altPressed = postDown;
+                    break;
+                case kVK_Control:
+                case kVK_RightControl:
+                    modifiers |= kCGEventFlagMaskControl;
+                    m_controlPressed = postDown;
+                    break;
+                case kVK_CapsLock:
+                    // Caps Lock doesn't have a modifier flag, handled separately
+                    m_capsPressed = postDown;
+                    break;
+            }
 
-        // update the modifier bit
-        if (postDown) {
-            modifiers |= modifiersDelta;
-        }
-        else {
-            modifiers &= ~modifiersDelta;
-        }
+            eventRef = CGEventCreateKeyboardEvent(eventSource, virtualKeyCode, postDown);
+            CGEventSetFlags(eventRef, modifiers);
+            CGEventSetLocation(eventRef, loc);
+            CGEventPost(kCGHIDEventTap, eventRef);
+            CFRelease(eventRef);
+            break;
 
-        kern_return_t kr;
-        event.key.keyCode = virtualKeyCode;
-        kr = IOHIDPostEvent(getEventDriver(), NX_FLAGSCHANGED, loc,
-                &event, kNXEventDataVersion, modifiers, true);
-        assert(KERN_SUCCESS == kr);
-        break;
-
-    default:
-        event.key.repeat = false;
-        event.key.keyCode = virtualKeyCode;
-        event.key.origCharSet = event.key.charSet = NX_ASCIISET;
-        event.key.origCharCode = event.key.charCode = 0;
-        kr = IOHIDPostEvent(getEventDriver(),
-                postDown ? NX_KEYDOWN : NX_KEYUP,
-                loc, &event, kNXEventDataVersion, 0, false);
-        assert(KERN_SUCCESS == kr);
-        break;
+        default:
+            eventRef = CGEventCreateKeyboardEvent(eventSource, virtualKeyCode, postDown);
+            CGEventSetLocation(eventRef, loc);
+            CGEventPost(kCGHIDEventTap, eventRef);
+            CFRelease(eventRef);
+            break;
     }
+
+    CFRelease(eventSource);
 }
 
 void

@@ -56,24 +56,29 @@ acceptsFirstMouse:(NSEvent *)theEvent
 	return YES;
 }
 
-- (void)
-mouseDown:(NSEvent *)theEvent
+- (void)mouseDown:(NSEvent *)theEvent
 {
-	NSLog ( @"cocoa mouse down");
-	NSPoint dragPosition;
-	NSRect imageLocation;
-	dragPosition = [self convertPoint:[theEvent locationInWindow]
-							 fromView:nil];
-	
-	dragPosition.x -= 16;
-	dragPosition.y -= 16;
-	imageLocation.origin = dragPosition;
-	imageLocation.size = NSMakeSize(32,32);
-	[self dragPromisedFilesOfTypes:[NSArray arrayWithObject:m_dragFileExt]
-								fromRect:imageLocation
-								  source:self
-							   slideBack:NO
-								   event:theEvent];
+    NSLog(@"cocoa mouse down");
+    NSPoint dragPosition;
+    NSRect imageLocation;
+    dragPosition = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+
+    dragPosition.x -= 16;
+    dragPosition.y -= 16;
+    imageLocation.origin = dragPosition;
+    imageLocation.size = NSMakeSize(32, 32);
+
+    NSPasteboardItem *pasteboardItem = [[NSPasteboardItem alloc] init];
+    NSDraggingItem *draggingItem = [[NSDraggingItem alloc] initWithPasteboardWriter:pasteboardItem];
+    [draggingItem setDraggingFrame:imageLocation contents:nil];
+
+    NSDraggingSession *draggingSession = [self beginDraggingSessionWithItems:@[draggingItem] event:theEvent source:self];
+    draggingSession.animatesToStartingPositionsOnCancelOrFail = YES;
+}
+
+- (BOOL)validateProposedFirstResponder:(NSResponder *)responder forEvent:(NSEvent *)event
+{
+    return YES;
 }
 
 - (NSArray*)

@@ -1,51 +1,76 @@
 #!/bin/sh
+set -e
 
+# Change to the directory of the script
 cd "$(dirname "$0")" || exit 1
 
-# some environments have cmake v2 as 'cmake' and v3 as 'cmake3'
-# check for cmake3 first then fallback to just cmake
-[ -n "$B_CMAKE" ] || B_CMAKE=$(command -v cmake3)
-[ -n "$B_CMAKE" ] || B_CMAKE=$(command -v cmake)
+# Set default values for the build environment
+: "${B_CMAKE:=$(command -v cmake3)}"
+: "${B_CMAKE:=$(command -v cmake)}"
+: "${B_BUILD_DIR:=build}"
+: "${B_BUILD_TYPE:=Debug}"
+
+# Check if CMake is installed
 if [ -z "$B_CMAKE" ]; then
-    echo "ERROR: CMake not in $PATH, cannot build! Please install CMake, or if this persists, file a bug report."
+    echo "ERROR: CMake not in \$PATH, cannot build! Please install CMake, or if this persists, file a bug report."
     exit 1
 fi
 
-B_BUILD_DIR="${B_BUILD_DIR:-build}"
-B_BUILD_TYPE="${B_BUILD_TYPE:-Debug}"
-B_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=${B_BUILD_TYPE} ${B_CMAKE_FLAGS:-}"
-
-ARCH=$(uname -m)
-if [ "$(uname)" = "Darwin" ]; then
-    # macOS needs a little help, so we source this environment script to fix paths.
-    . ./macos_environment.sh
-
-    if [[ $ARCH == "x86_64" ]]; then
-        # Intel-based Mac
-        B_CMAKE_FLAGS="${B_CMAKE_FLAGS} -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/SDKs/MacOSX.sdk -DCMAKE_OSX_DEPLOYMENT_TARGET=13.3"
-    else
-        # macOS Apple Silicon
-        B_CMAKE_FLAGS="${B_CMAKE_FLAGS} -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -DCMAKE_OSX_DEPLOYMENT_TARGET=13.3"
-    fi
-fi
-
-# Prefer ninja if available
-if command -v ninja 2>/dev/null; then
+# Check if ninja is installed and modify the CMake flags if it is
+if command -v ninja >/dev/null; then
     B_CMAKE_FLAGS="-GNinja ${B_CMAKE_FLAGS}"
 fi
 
-# allow local customizations to build environment
-[ -r ./build_env.sh ] && . ./build_env.sh
+# Default flags for CMake
+B_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=${B_BUILD_TYPE} ${B_CMAKE_FLAGS}"
 
-set -e
+# Check if system is MacOS
+if [ "$(uname)" = "Darwin" ]; then
+    # Source the macOS environment script if it exists
+    if [ -f ./macos_environment.sh ]; then
+        . ./macos_environment.sh
+    fi
 
-# Initialise Git submodules
-git submodule update --init --recursive
+    # Detect latest compatible SDK version
+    MACOS_VERSION=$(sw_vers -productVersion)
+    AVAILABLE_SDK_VERSIONS=$(xcodebuild -showsdks | grep macosx | awk '{print substr($NF, 7)}' | sort -r)
+    for SDK_VERSION in $AVAILABLE_SDK_VERSIONS
+    do
+        if [[ "$(printf '%s\n' "$SDK_VERSION" "$MACOS_VERSION" | sort -V | head -n1)" == "$SDK_VERSION" ]]; then
+            MACOS_SDK_VERSION=$SDK_VERSION
+            break
+        fi
+    done
 
-rm -rf ${B_BUILD_DIR}
-mkdir ${B_BUILD_DIR}
-cd ${B_BUILD_DIR}
-echo "Starting Input Leap $B_BUILD_TYPE build in '${B_BUILD_DIR}'..."
-"$B_CMAKE" $B_CMAKE_FLAGS ..
+    # Different paths for Intel and Apple Silicon
+    case "$(uname -m)" in
+        "x86_64")
+            B_CMAKE_FLAGS="${B_CMAKE_FLAGS} -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/SDKs/MacOSX.sdk -DCMAKE_OSX_DEPLOYMENT_TARGET=${MACOS_SDK_VERSION}"
+            ;;
+        *)
+            B_CMAKE_FLAGS="${B_CMAKE_FLAGS} -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -DCMAKE_OSX_DEPLOYMENT_TARGET=${MACOS_SDK_VERSION}"
+            ;;
+    esac
+fi
+
+# Allow local customizations to build environment
+if [ -f ./build_env.sh ]; then
+    . ./build_env.sh
+fi
+
+# Check Git submodules
+if ! git submodule status | egrep -q '^ '; then
+    echo "Initializing Git submodules"
+    git submodule update --init --recursive
+else
+    echo "Git submodules already initialized"
+fi
+
+# Build
+echo "Starting build in '${B_BUILD_DIR}'..."
+rm -rf "${B_BUILD_DIR}"
+mkdir "${B_BUILD_DIR}"
+cd "${B_BUILD_DIR}"
+"$B_CMAKE" "$B_CMAKE_FLAGS" ..
 "$B_CMAKE" --build . --parallel
 echo "Build completed successfully"

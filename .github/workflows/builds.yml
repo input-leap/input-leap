@@ -129,7 +129,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-11, macos-12]
+        os: [macos-11, macos-12, macos-13]
 
     env:
       VERBOSE: 1
@@ -142,7 +142,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Setup the image
         run: |
-          brew install qt5
+          brew install qt@6
           brew install ninja
       - name: Run the build
         run: env B_CMAKE_FLAGS="-DCMAKE_UNITY_BUILD=1" sh -x ./clean_build.sh

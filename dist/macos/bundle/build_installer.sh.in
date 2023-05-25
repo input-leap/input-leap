@@ -1,83 +1,103 @@
-#!/bin/sh
+#!/bin/bash
 
-# add warning for users running manually
-warn() { tput bold; tput setaf 3; echo "$@"; tput sgr0 ; }
-warn "The scripts build_installer.sh and reref_dylibs.sh have been deprecated."
-warn "Please use build_dist.sh instead to deploy using macdeployqt"
+# Define constant variables
+readonly INSTALLER_PACKAGE_NAME="InputLeap-@INPUTLEAP_VERSION@.dmg"
+readonly SCRIPT_DIRECTORY=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
+readonly RE_REFERENCE_SCRIPT="$SCRIPT_DIRECTORY/reref_dylibs.sh"
+QT_VERSION="${QT_VERSION:-6}"
+QT_VERSION_SUFFIX=""
+if [ "$QT_VERSION" -eq "5" ]; then
+    QT_VERSION_SUFFIX="5"
+fi
+QT_PLUGIN_NAME="libqcocoa.dylib"
+QT_PLUGIN_PATH=""
 
-# change this to rename the installer package
-B_DMG="InputLeap-@INPUTLEAP_VERSION@.dmg"
+# Helper function to print warnings in yellow color
+warn() { 
+    echo -e "\e[1;33m${*}\e[0m"
+}
 
-cd "$( dirname "$0" )"
-OWNDIR="$( pwd )"
+# Notify user about deprecated scripts
+warn "Note: The scripts build_installer.sh and reref_dylibs.sh are deprecated."
+warn "Please use build_dist.sh instead for deploying using macdeployqt."
 
-B_REREF_SCRIPT="$OWNDIR/reref_dylibs.sh"
-if [ ! -x "$B_REREF_SCRIPT" ]; then
-    echo "Missing script: $B_REREF_SCRIPT"
+# Change to script directory
+cd "$SCRIPT_DIRECTORY" || exit 1
+
+# Check if the re-reference script exists and is executable
+if [[ ! -x "$RE_REFERENCE_SCRIPT" ]]; then
+    echo "The required script is missing: $RE_REFERENCE_SCRIPT"
     exit 1
 fi
 
-# remove any old copies so there's no confusion about whether this
-# process completes successfully or not
-rm -rf temp.dmg "$B_DMG"
+# Remove any existing installer package
+rm -rf temp.dmg "$INSTALLER_PACKAGE_NAME"
 
-cd InputLeap.app/Contents 2>/dev/null
-if [ $? -ne 0 ]; then
-    echo "Please make sure that the build completed successfully"
-    echo "before trying to create the installer."
+# Check if the application's Contents directory exists
+if [[ ! -d "InputLeap.app/Contents" ]]; then
+    echo "Please ensure the application was built successfully"
+    echo "before attempting to create the installer."
     exit 1
 fi
 
-# MacOS folder holds the executables, non-system libraries,
-# and the startup script
+# Move into the Contents directory
+cd InputLeap.app/Contents || exit 1
+
+# Clean and recreate MacOS directory
 rm -rf MacOS
-mkdir MacOS || exit 1
-cd MacOS || exit 1
+mkdir MacOS && cd MacOS || exit 1
 
-# copy all executables
+# Copy all executable files to the MacOS directory
 cp @CMAKE_RUNTIME_OUTPUT_DIRECTORY@/* . || exit 1
 
-# copy the qt platform plugin
-# TODO: this is hacky and will probably break if there is more than one qt
-# version installed. need a better way to find this library
-B_COCOA=$(find /usr/local/Cellar/qt -type f -name libqcocoa.dylib | head -1)
-if [ "x$B_COCOA" = "x" ]; then
-    B_COCOA=$(find /opt/local/libexec/qt5/plugins -type f -name libqcocoa.dylib | head -1)
+# Find the path to the required Qt plugin
+if command -v brew >/dev/null; then
+    echo "Homebrew detected"
+    QT_PLUGIN_PATH=$(find "$(brew --cellar)/qt${QT_VERSION_SUFFIX}" -type f -name "${QT_PLUGIN_NAME}" -print -quit)
 fi
-if [ "x$B_COCOA" = "x" ]; then
-    echo "Could not find cocoa platform plugin"
-    exit 1
+
+# If the plugin is not found yet, look in the opt directory
+if [[ -z "$QT_PLUGIN_PATH" ]]; then
+    QT_PLUGIN_PATH=$(find "/opt/local/libexec/qt${QT_VERSION}/plugins" -type f -name "${QT_PLUGIN_NAME}" -print -quit)
 fi
-mkdir platforms
-cp $B_COCOA platforms/ || exit 1
 
-# make sure we can r/w all these binaries
-chmod -R u+rw * || exit 1
-
-# only one executable (input-leap) needs non-system libraries although it's
-# libraries can call each other. use a recursive script to handle the
-# re-referencing
-$B_REREF_SCRIPT input-leap || exit 1
-# the cocoa platform plugin also needs to know where to find the qt libraries.
-# because it exists in a subdirectory we append ../ to the relative path of the
-# libraries in its metadata
-$B_REREF_SCRIPT platforms/libqcocoa.dylib ../ || exit 1
-
-echo "InputLeap.app created successfully"
-
-# sanity check so we don't distribute a dmg with debug symbols
-if [ "@CMAKE_BUILD_TYPE@" != "Release" ]; then
-    echo "dmg only created for Release builds"
+# If the plugin is still not found, exit with an error
+if [[ -z "$QT_PLUGIN_PATH" ]]; then
+    echo "The cocoa platform plugin for Qt version ${QT_VERSION} could not be found."
     exit 1
 fi
 
-# create the DMG to be distributed in build/bundle
-cd ../../..
+# Copy the Qt platform plugin to the platforms directory
+mkdir platforms && cp "$QT_PLUGIN_PATH" platforms/ || exit 1
+
+# Update file permissions
+chmod -R u+rw . || exit 1
+
+# Update library references
+$RE_REFERENCE_SCRIPT input-leap || exit 1
+$RE_REFERENCE_SCRIPT platforms/libqcocoa.dylib ../ || exit 1
+
+echo "InputLeap.app was created successfully"
+
+# Ensure only release builds are distributed
+if [[ "@CMAKE_BUILD_TYPE@" != "Release" ]]; then
+    echo "Only release builds can create a dmg."
+    exit 1
+fi
+
+# Move back to the root directory
+cd ../../.. || exit 1
+
+# Create a new disk image file
 hdiutil create -size 64m -fs HFS+ -volname "InputLeap" temp.dmg || exit 1
 hdiutil attach temp.dmg -mountpoint mnt || exit 1
+
+# Copy the application into the disk image
 cp -r InputLeap.app mnt/ || exit 1
 hdiutil detach mnt || exit 1
-hdiutil convert temp.dmg -format UDZO -o "$B_DMG" || exit 1
+
+# Convert the disk image to a compressed format
+hdiutil convert temp.dmg -format UDZO -o "$INSTALLER_PACKAGE_NAME" || exit 1
 rm temp.dmg
 
-echo "dmg $B_DMG created successfully"
+echo "The dmg $INSTALLER_PACKAGE_NAME was created successfully"

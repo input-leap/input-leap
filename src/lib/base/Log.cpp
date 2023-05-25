@@ -174,8 +174,7 @@ Log::print(const char* file, int line, const char* fmt, ...)
         time_t t;
         time(&t);
         tm = localtime(&t);
-        snprintf(timestamp, sizeof(timestamp), "%04i-%02i-%02iT%02i:%02i:%02i", tm->tm_year + 1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
-        // square brackets, spaces, comma and null terminator take about 10
+        snprintf(timestamp, sizeof(timestamp), "%04i-%02i-%02iT%02i:%02i:%02i", tm->tm_year + 1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);        // square brackets, spaces, comma and null terminator take about 10
         size_t size = 10;
         size += strlen(timestamp);
         size += strlen(g_priority[priority]);
@@ -188,11 +187,11 @@ Log::print(const char* file, int line, const char* fmt, ...)
         char* message = new char[size];
 
 #ifndef NDEBUG
-        snprintf(message, sizeof(message), "[%s] %s: %s\n\t%s,%d", timestamp, g_priority[priority], buffer, file, line);
+    snprintf(message, size, "[%s] %s: %s\n\t%s,%d", timestamp, g_priority[priority], buffer, file, line);
 #else
-        snprintf(message, sizeof(message), "[%s] %s: %s", timestamp, g_priority[priority], buffer);
+    snprintf(message, size, "[%s] %s: %s", timestamp, g_priority[priority], buffer);
 #endif
-
+    
         output(priority, message);
         delete[] message;
     } else {

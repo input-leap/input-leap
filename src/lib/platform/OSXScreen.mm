@@ -817,6 +817,8 @@ OSXScreen::enter()
 			IORegistryEntrySetCFProperty(entry, CFSTR("IORequestIdle"), kCFBooleanFalse);
 			IOObjectRelease(entry);
 		}
+		IOPMAssertionID assertionID;
+		IOPMAssertionDeclareUserActivity(CFSTR("Input Leap Wakeup Assertion"), kIOPMUserActiveLocal, &assertionID);
 
 		avoidSupression();
 	}

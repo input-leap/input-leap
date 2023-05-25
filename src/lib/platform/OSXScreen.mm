@@ -804,7 +804,13 @@ OSXScreen::enter()
 		// wakes the client screen
 		// http://symless.com/spit/issues/details/3287#c12
 		io_registry_entry_t entry = IORegistryEntryFromPath(
-			kIOMainPortDefault,
+
+			#if __MAC_OS_X_VERSION_MAX_ALLOWED >= 120000
+				kIOMainPortDefault,
+			#else
+				IOMasterPort(MACH_PORT_NULL),
+			#endif
+
 			"IOService:/IOResources/IODisplayWrangler");
 
 		if (entry != MACH_PORT_NULL) {

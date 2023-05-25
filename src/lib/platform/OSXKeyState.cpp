@@ -475,8 +475,12 @@ static io_connect_t getEventDriver(void)
     kern_return_t kr;
 
     if (!sEventDrvrRef) {
-        // Get master device port
-        masterPort = kIOMainPortDefault;  // use kIOMainPortDefault instead of IOMasterPort
+
+        #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 120000
+            masterPort = kIOMainPortDefault;
+        #else
+            masterPort = IOMasterPort(MACH_PORT_NULL);
+        #endif
 
         kr = IOServiceGetMatchingServices(masterPort,
                 IOServiceMatching(kIOHIDSystemClass), &iter);

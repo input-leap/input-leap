@@ -9,7 +9,7 @@ set -uo pipefail
 B_MACOS="InputLeap.app/Contents/MacOS"
 B_VERSION="@INPUTLEAP_VERSION@"
 B_BINDIR="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@"
-B_BUILDTYPE="@CMAKE_BUILD_TYPE@"
+B_BUILD_TYPE="@CMAKE_BUILD_TYPE@"
 B_INPUTLEAPC="InputLeap.app/Contents/MacOS/input-leapc"
 B_INPUTLEAPS="InputLeap.app/Contents/MacOS/input-leaps"
 
@@ -55,7 +55,7 @@ if command -v brew >/dev/null ; then
 fi
 
 # Use macdeployqt to include libraries and create dmg
-if [ "$B_BUILDTYPE" = "Release" ]; then
+if [ "$B_BUILD_TYPE" = "Release" ]; then
     info "Building Release disk image (dmg)"
     "$DEPLOYQT" InputLeap.app -dmg \
     -executable="$B_INPUTLEAPC" \

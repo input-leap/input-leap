@@ -7,9 +7,6 @@ cd "$(dirname "$0")" || exit 1
 # Set default values for the build environment
 : "${B_CMAKE:=$(command -v cmake3)}"
 : "${B_CMAKE:=$(command -v cmake)}"
-: "${B_BUILD_DIR:=build}"
-: "${B_BUILD_TYPE:=Debug}"
-
 # Check if CMake is installed
 if [ -z "$B_CMAKE" ]; then
     echo "ERROR: CMake not in \$PATH, cannot build! Please install CMake, or if this persists, file a bug report."
@@ -22,9 +19,11 @@ if command -v ninja >/dev/null; then
 fi
 
 # Default flags for CMake
+B_BUILD_DIR="${B_BUILD_DIR:-build}"
+B_BUILD_TYPE="${B_BUILD_TYPE:-Debug}"
 B_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=${B_BUILD_TYPE} ${B_CMAKE_FLAGS}"
 
-# Check if system is MacOS
+# Check if system is macOS
 if [ "$(uname)" = "Darwin" ]; then
     # Source the macOS environment script if it exists
     if [ -f ./macos_environment.sh ]; then
@@ -34,8 +33,7 @@ if [ "$(uname)" = "Darwin" ]; then
     # Detect latest compatible SDK version
     MACOS_VERSION=$(sw_vers -productVersion)
     AVAILABLE_SDK_VERSIONS=$(xcodebuild -showsdks | grep macosx | awk '{print substr($NF, 7)}' | sort -r)
-    for SDK_VERSION in $AVAILABLE_SDK_VERSIONS
-    do
+    for SDK_VERSION in $AVAILABLE_SDK_VERSIONS; do
         if [[ "$(printf '%s\n' "$SDK_VERSION" "$MACOS_VERSION" | sort -V | head -n1)" == "$SDK_VERSION" ]]; then
             MACOS_SDK_VERSION=$SDK_VERSION
             break

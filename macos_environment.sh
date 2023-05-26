@@ -18,8 +18,8 @@ echo "Modifying environment for InputLeap build on macOS..."
 
 # Set default QT_VERSION to 6
 QT_VERSION="${QT_VERSION:-6}"
-if [ "$QT_VERSION" -ne 6 ]; then
-    echo "Invalid QT_VERSION. It must be 6." >&2
+if [ "$QT_VERSION" -ne 6 ] && [ "$QT_VERSION" -ne 5 ]; then
+    echo "Invalid QT_VERSION. It must be either 5 or 6." >&2
     exit 1
 fi
 
@@ -49,5 +49,3 @@ else
     echo "Neither Homebrew nor Macports is installed. Can't get dependency paths" >&2
     exit 1
 fi
-
-export INPUTLEAP_BUILD_ENV=1

@@ -22,6 +22,7 @@
 #include "arch/Arch.h"
 #include "base/Log.h"
 
+#include <ApplicationServices/ApplicationServices.h>
 #include <Carbon/Carbon.h>
 #include <CoreServices/CoreServices.h>
 #include <IOKit/hidsystem/IOHIDLib.h>
@@ -475,9 +476,11 @@ static io_connect_t getEventDriver(void)
     kern_return_t kr;
 
     if (!sEventDrvrRef) {
-        // Get master device port
-        kr = IOMasterPort(bootstrap_port, &masterPort);
-        assert(KERN_SUCCESS == kr);
+        #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 120000
+            masterPort = kIOMainPortDefault;
+        #else
+            masterPort = IOMasterPort(MACH_PORT_NULL);
+        #endif
 
         kr = IOServiceGetMatchingServices(masterPort,
                 IOServiceMatching(kIOHIDSystemClass), &iter);
@@ -500,12 +503,8 @@ static io_connect_t getEventDriver(void)
 void OSXKeyState::postHIDVirtualKey(const std::uint8_t virtualKeyCode, const bool postDown)
 {
     static std::uint32_t modifiers = 0;
-
-    NXEventData event;
-    IOGPoint loc = { 0, 0 };
     std::uint32_t modifiersDelta = 0;
-
-    bzero(&event, sizeof(NXEventData));
+    CGEventRef event;
 
     switch (virtualKeyCode)
     {
@@ -566,22 +565,16 @@ void OSXKeyState::postHIDVirtualKey(const std::uint8_t virtualKeyCode, const boo
             modifiers &= ~modifiersDelta;
         }
 
-        kern_return_t kr;
-        event.key.keyCode = virtualKeyCode;
-        kr = IOHIDPostEvent(getEventDriver(), NX_FLAGSCHANGED, loc,
-                &event, kNXEventDataVersion, modifiers, true);
-        assert(KERN_SUCCESS == kr);
+        event = CGEventCreateKeyboardEvent(NULL, (CGKeyCode)virtualKeyCode, postDown);
+        CGEventSetFlags(event, (CGEventFlags)modifiers);
+        CGEventPost(kCGHIDEventTap, event);
+        CFRelease(event);
         break;
 
     default:
-        event.key.repeat = false;
-        event.key.keyCode = virtualKeyCode;
-        event.key.origCharSet = event.key.charSet = NX_ASCIISET;
-        event.key.origCharCode = event.key.charCode = 0;
-        kr = IOHIDPostEvent(getEventDriver(),
-                postDown ? NX_KEYDOWN : NX_KEYUP,
-                loc, &event, kNXEventDataVersion, 0, false);
-        assert(KERN_SUCCESS == kr);
+        event = CGEventCreateKeyboardEvent(NULL, (CGKeyCode)virtualKeyCode, postDown);
+        CGEventPost(kCGHIDEventTap, event);
+        CFRelease(event);
         break;
     }
 }

@@ -19,10 +19,10 @@
 
 #include "common/common.h"
 
-#import <CoreFoundation/CoreFoundation.h>
+#include <string>
 
 namespace inputleap {
 
-CFStringRef getDraggedFileURL();
+std::string getDraggedFileURL();
 
 } // namespace inputleap

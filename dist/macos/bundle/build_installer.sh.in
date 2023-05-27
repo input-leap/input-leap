@@ -5,6 +5,12 @@ warn() { tput bold; tput setaf 3; echo "$@"; tput sgr0 ; }
 warn "The scripts build_installer.sh and reref_dylibs.sh have been deprecated."
 warn "Please use build_dist.sh instead to deploy using macdeployqt"
 
+QT_VERSION="${QT_VERSION:-6}"
+QT_VERSION_SUFFIX=""
+if [ "$QT_VERSION" -eq "5" ]; then
+    QT_VERSION_SUFFIX="5"
+fi
+
 # change this to rename the installer package
 B_DMG="InputLeap-@INPUTLEAP_VERSION@.dmg"
 
@@ -40,9 +46,19 @@ cp @CMAKE_RUNTIME_OUTPUT_DIRECTORY@/* . || exit 1
 # copy the qt platform plugin
 # TODO: this is hacky and will probably break if there is more than one qt
 # version installed. need a better way to find this library
-B_COCOA=$(find /usr/local/Cellar/qt -type f -name libqcocoa.dylib | head -1)
-if [ "x$B_COCOA" = "x" ]; then
-    B_COCOA=$(find /opt/local/libexec/qt5/plugins -type f -name libqcocoa.dylib | head -1)
+if [ "$QT_VERSION" != "6" ]; then
+    B_COCOA=$(find $(brew --cellar)/qt@$QT_VERSION -type f -name libqcocoa.dylib | head -1)
+else
+    B_COCOA=$(find $(brew --cellar)/qt -type f -name libqcocoa.dylib | head -1)
+fi
+if [ "$QT_VERSION" != "6" ]; then
+    if [ "x$B_COCOA" = "x" ]; then
+        B_COCOA=$(find "/opt/local/libexec/qt$QT_VERSION/plugins" -type f -name libqcocoa.dylib | head -1)
+    fi
+else
+    if [ "x$B_COCOA" = "x" ]; then
+        B_COCOA=$(find "/opt/local/libexec/qt/plugins" -type f -name libqcocoa.dylib | head -1)
+    fi
 fi
 if [ "x$B_COCOA" = "x" ]; then
     echo "Could not find cocoa platform plugin"

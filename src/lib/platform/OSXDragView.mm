@@ -16,6 +16,7 @@
  */
 
 #import "platform/OSXDragView.h"
+#import <Foundation/Foundation.h>
 
 #ifdef MAC_OS_X_VERSION_10_7
 
@@ -30,14 +31,28 @@
    for resetSpringLoading() satisfies the compiler */
 @synthesize springLoadingHighlight = _springLoadingHighlight;
 
+
+- (void)filePromiseProvider:(NSFilePromiseProvider *)filePromiseProvider writePromiseToURL:(NSURL *)url completionHandler:(void (^)(NSError * _Nullable errorOrNil))completionHandler {
+    NSError *error = nil;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+
+    NSString *existingFilePath = @"imputleap_temp";
+
+    BOOL success = [fileManager copyItemAtURL:[NSURL fileURLWithPath:existingFilePath] toURL:url error:&error];
+
+    if (!success) {
+        NSLog(@"Error writing file at %@: %@", url, error);
+    }
+
+    completionHandler(error);
+}
+
 /* unused */
-- (void)
-resetSpringLoading
+- (void)resetSpringLoading
 {
 }
 
-- (id)
-initWithFrame:(NSRect)frame
+- (id)initWithFrame:(NSRect)frame
 {
 	self = [super initWithFrame:frame];
 	m_dropTarget = [[NSMutableString alloc] initWithCapacity:0];
@@ -45,39 +60,40 @@ initWithFrame:(NSRect)frame
     return self;
 }
 
-- (void)
-drawRect:(NSRect)dirtyRect
+- (void)drawRect:(NSRect)dirtyRect
 {
 }
 
-- (BOOL)
-acceptsFirstMouse:(NSEvent *)theEvent
+- (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
 {
 	return YES;
 }
 
-- (void)
-mouseDown:(NSEvent *)theEvent
+- (void)mouseDown:(NSEvent *)theEvent
 {
-	NSLog ( @"cocoa mouse down");
+	NSLog (@"cocoa mouse down");
 	NSPoint dragPosition;
 	NSRect imageLocation;
-	dragPosition = [self convertPoint:[theEvent locationInWindow]
-							 fromView:nil];
-	
+	dragPosition = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 	dragPosition.x -= 16;
 	dragPosition.y -= 16;
 	imageLocation.origin = dragPosition;
-	imageLocation.size = NSMakeSize(32,32);
-	[self dragPromisedFilesOfTypes:[NSArray arrayWithObject:m_dragFileExt]
-								fromRect:imageLocation
-								  source:self
-							   slideBack:NO
-								   event:theEvent];
+	imageLocation.size = NSSize { .width = 32, .height = 32 };
+
+	NSFilePromiseProvider *filePromiseProvider = [[NSFilePromiseProvider alloc] initWithFileType:m_dragFileExt delegate:self];
+	NSDraggingItem *draggingItem = [[NSDraggingItem alloc] initWithPasteboardWriter:filePromiseProvider];
+	[draggingItem setDraggingFrame:imageLocation contents:nil];
+	
+	NSArray *draggingItems = @[draggingItem];
+
+	[self beginDraggingSessionWithItems:draggingItems event:theEvent source:self];
 }
 
-- (NSArray*)
-namesOfPromisedFilesDroppedAtDestination:(NSURL *)dropDestination
+- (NSString *)filePromiseProvider:(NSFilePromiseProvider *)filePromiseProvider fileNameForType:(NSString *)fileType {
+    return [NSString stringWithFormat:@"inputleap_temp.%@", fileType];
+}
+
+- (NSArray*)namesOfPromisedFilesDroppedAtDestination:(NSURL *)dropDestination
 {
 	[m_dropTarget setString:@""];
 	[m_dropTarget appendString:dropDestination.path];
@@ -85,14 +101,12 @@ namesOfPromisedFilesDroppedAtDestination:(NSURL *)dropDestination
 	return nil;
 }
 
-- (NSDragOperation)
-draggingSourceOperationMaskForLocal:(BOOL)flag
+- (NSDragOperation)draggingSourceOperationMaskForLocal:(BOOL)flag
 {
 	return NSDragOperationCopy;
 }
 
-- (CFStringRef)
-getDropTarget
+- (CFStringRef)getDropTarget
 {
 	NSMutableString* string;
 	string = [[NSMutableString alloc] initWithCapacity:0];
@@ -100,14 +114,12 @@ getDropTarget
 	return (CFStringRef)string;
 }
 
-- (void)
-clearDropTarget
+- (void)clearDropTarget
 {
 	[m_dropTarget setString:@""];
 }
 
-- (void)
-setFileExt:(NSString*) ext
+- (void)setFileExt:(NSString*) ext
 {
 	[ext retain];
 	[m_dragFileExt release];
@@ -115,14 +127,12 @@ setFileExt:(NSString*) ext
 	NSLog(@"drag file ext: %@", m_dragFileExt);
 }
 
-- (NSWindow *)
-draggingDestinationWindow
+- (NSWindow *)draggingDestinationWindow
 {
 	return nil;
 }
 
-- (NSDragOperation)
-draggingSourceOperationMask
+- (NSDragOperation)draggingSourceOperationMask
 {
 	return NSDragOperationCopy;
 }

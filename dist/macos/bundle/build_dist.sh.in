@@ -3,6 +3,12 @@
 # Use the same verbose variable as CMake
 [ "$VERBOSE" = "1" ] && set -x
 
+QT_VERSION="${QT_VERSION:-6}"
+QT_VERSION_SUFFIX=""
+if [ "$QT_VERSION" -eq "5" ]; then
+    QT_VERSION_SUFFIX="5"
+fi
+
 # Exit on unset variables or pipe errors
 set -uo pipefail
 
@@ -36,19 +42,23 @@ info "Copying binaries into bundle"
 cp -r "$B_BINDIR" "$B_MACOS" || exit 1
 
 # Check for macdeployqt on MacPorts
-if which -s port ; then
+if command -v port >/dev/null ; then
     info "MacPorts found, searching for macdeployqt"
-    DEPLOYQT="$(port contents qt5-qttools | grep --only --max-count 1 '/.*macdeployqt')"
+        DEPLOYQT="$(port contents qt$(QT_VERSION)-qttools | grep --only --max-count 1 '/.*macdeployqt')"
     if [ ! -x "$DEPLOYQT" ]; then
-        error "Please install package qt5-qttools"
+        error "Please install package qt$(QT_VERSION)-qttools"
         exit 1
     fi
 fi
 
 # Check for macdeployqt on Homebrew
-if which -s brew ; then
+if command -v brew >/dev/null ; then
     info "Homebrew found, searching for macdeployqt"
-    DEPLOYQT="$(brew list qt@5 | grep --only '/.*macdeployqt' | head -1)"
+    if [ "$QT_VERSION" != "6" ]; then
+        DEPLOYQT="$(brew --prefix qt@${QT_VERSION})/bin/macdeployqt"
+    else
+        DEPLOYQT="$(brew --prefix qt)/bin/macdeployqt"    
+    fi
     if [ ! -x "$DEPLOYQT" ]; then
         error "Please install package qt"
         exit 1

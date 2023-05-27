@@ -22,6 +22,7 @@ src/gui/.qmake.stash
 src/gui/.rnd
 src/setup/win32/input-leap.suo
 Makefile
+cmake-build-debug
 *.cmake
 **/CMakeFiles/
 CMakeCache.txt
@@ -35,3 +36,4 @@ CMakeUserPresets.json
 # Transient in-project-directory dependencies
 /deps/
 /out/build/x64-Debug
+.idea/

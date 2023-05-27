@@ -4,3 +4,6 @@
 [submodule "ext/gulrak-filesystem"]
 	path = ext/gulrak-filesystem
 	url = https://github.com/gulrak/filesystem
+[submodule "ext/brotli"]
+	path = ext/brotli
+	url = https://github.com/google/brotli.git

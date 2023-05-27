@@ -50,7 +50,7 @@ class ScreenSetupView : public QTableView
         void dragEnterEvent(QDragEnterEvent* event) override;
         void dragMoveEvent(QDragMoveEvent* event) override;
         void startDrag(Qt::DropActions supportedActions) override;
-        QStyleOptionViewItem viewOptions() const override;
+        QStyleOptionViewItem viewOptions() const;
         void scrollTo(const QModelIndex&, ScrollHint) override {}
     private:
         void enter(const QModelIndex&);

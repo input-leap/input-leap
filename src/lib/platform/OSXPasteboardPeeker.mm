@@ -15,27 +15,24 @@
 #import "platform/OSXPasteboardPeeker.h"
 
 #import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
 #import <Cocoa/Cocoa.h>
 
 namespace inputleap {
 
-CFStringRef
+std::string
 getDraggedFileURL()
 {
-	NSString* pbName = NSDragPboard;
-	NSPasteboard* pboard = [NSPasteboard pasteboardWithName:pbName];
-	
-	NSMutableString* string;
-	string = [[NSMutableString alloc] initWithCapacity:0];
+    NSPasteboard* pboard = [NSPasteboard pasteboardWithName:NSPasteboardNameDrag];
+    
+    NSMutableString* string = [[NSMutableString alloc] init];
 
-	NSArray* files = [pboard propertyListForType:NSFilenamesPboardType];
-	for (id file in files) {
-		[string appendString: (NSString*)file];
-		[string appendString: @"\0"];
-	}
-	
-	return (CFStringRef)string;
+    NSArray<NSURL*>* files = [pboard readObjectsForClasses:@[[NSURL class]] options:@{NSPasteboardURLReadingFileURLsOnlyKey : @YES}];
+    for (NSURL* fileURL in files) {
+        [string appendString:[fileURL path]];
+        [string appendString:@"\0"];
+    }
+    
+    return [string UTF8String];
 }
 
 } // namespace inputleap

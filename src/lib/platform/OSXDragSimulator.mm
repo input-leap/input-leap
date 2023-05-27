@@ -37,7 +37,7 @@ runCocoaApp()
 
     NSWindow* window = [[NSWindow alloc]
 						initWithContentRect: NSMakeRect(0, 0, 3, 3)
-						styleMask: NSBorderlessWindowMask
+						styleMask: NSWindowStyleMaskBorderless
 						backing: NSBackingStoreBuffered
 						defer: NO];
     [window setTitle: @""];

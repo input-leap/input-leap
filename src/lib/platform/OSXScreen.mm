@@ -804,13 +804,11 @@ OSXScreen::enter()
 		// wakes the client screen
 		// http://symless.com/spit/issues/details/3287#c12
 		io_registry_entry_t entry = IORegistryEntryFromPath(
-
 			#if __MAC_OS_X_VERSION_MAX_ALLOWED >= 120000
 				kIOMainPortDefault,
 			#else
 				IOMasterPort(MACH_PORT_NULL),
 			#endif
-
 			"IOService:/IOResources/IODisplayWrangler");
 
 		if (entry != MACH_PORT_NULL) {
@@ -1996,26 +1994,22 @@ OSXScreen::fakeDraggingFiles(DragFileList fileList)
 
 std::string& OSXScreen::getDraggingFilename()
 {
-	if (m_draggingStarted) {
-		CFStringRef dragInfo = getDraggedFileURL();
-        char* info = nullptr;
-		info = CFStringRefToUTF8String(dragInfo);
-        if (info == nullptr) {
-			m_draggingFilename.clear();
-		}
-		else {
-			LOG((CLOG_DEBUG "drag info: %s", info));
-			CFRelease(dragInfo);
-            std::string fileList = info;
-			m_draggingFilename = fileList;
-		}
+    if (m_draggingStarted) {
+        std::string dragInfo = getDraggedFileURL();
+        if (dragInfo.empty()) {
+            m_draggingFilename.clear();
+        }
+        else {
+            LOG((CLOG_DEBUG "drag info: %s", dragInfo.c_str()));
+            m_draggingFilename = dragInfo;
+        }
 
-		// fake a escape key down and up then left mouse button up
-		fakeKeyDown(kKeyEscape, 8192, 1);
-		fakeKeyUp(1);
-		fakeMouseButton(kButtonLeft, false);
-	}
-	return m_draggingFilename;
+        // fake a escape key down and up then left mouse button up
+        fakeKeyDown(kKeyEscape, 8192, 1);
+        fakeKeyUp(1);
+        fakeMouseButton(kButtonLeft, false);
+    }
+    return m_draggingFilename;
 }
 
 void

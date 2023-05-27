@@ -19,7 +19,7 @@
 
 #ifdef MAC_OS_X_VERSION_10_7
 
-@interface OSXDragView : NSView<NSDraggingSource,NSDraggingInfo>
+@interface OSXDragView : NSView<NSDraggingSource, NSDraggingInfo, NSFilePromiseProviderDelegate>
 {
     NSMutableString* m_dropTarget;
     NSString* m_dragFileExt;

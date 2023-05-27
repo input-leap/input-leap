@@ -37,4 +37,3 @@ CMakeUserPresets.json
 /deps/
 /out/build/x64-Debug
 .idea/
-.idea/*

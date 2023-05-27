@@ -271,8 +271,9 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
             z
         )
     elseif (BREW_PROGRAM)
+        # brew
         exec_program(brew ARGS "--prefix openssl" OUTPUT_VARIABLE OPENSSL_ROOT)
-        
+
         include_directories (BEFORE SYSTEM ${OPENSSL_ROOT}/include)
 
         set (OPENSSL_LIBS

@@ -46,9 +46,7 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen) :
     m_pLineEditName->setText(check_name_param(m_pScreen->name()));
     m_pLineEditName->setValidator(new QRegularExpressionValidator(ValidScreenName, m_pLineEditName));
     m_pLineEditName->selectAll();
-
     m_pLineEditAlias->setValidator(new QRegularExpressionValidator(ValidScreenName, m_pLineEditName));
-
     for (int i = 0; i < m_pScreen->aliases().count(); i++)
         new QListWidgetItem(m_pScreen->aliases()[i], m_pListAliases);
 

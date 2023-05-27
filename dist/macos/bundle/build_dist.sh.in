@@ -3,13 +3,19 @@
 # Use the same verbose variable as CMake
 [ "$VERBOSE" = "1" ] && set -x
 
+QT_VERSION="${QT_VERSION:-6}"
+QT_VERSION_SUFFIX=""
+if [ "$QT_VERSION" -eq "5" ]; then
+    QT_VERSION_SUFFIX="5"
+fi
+
 # Exit on unset variables or pipe errors
 set -uo pipefail
 
 B_MACOS="InputLeap.app/Contents/MacOS"
 B_VERSION="@INPUTLEAP_VERSION@"
 B_BINDIR="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@"
-B_BUILD_TYPE="@CMAKE_BUILD_TYPE@"
+B_BUILDTYPE="@CMAKE_BUILD_TYPE@"
 B_INPUTLEAPC="InputLeap.app/Contents/MacOS/input-leapc"
 B_INPUTLEAPS="InputLeap.app/Contents/MacOS/input-leaps"
 
@@ -32,12 +38,13 @@ if [ -d "$B_MACOS" ]; then
 fi
 
 info "Copying binaries into bundle"
+# Copy the folder instead of globbing unquoted path
 cp -r "$B_BINDIR" "$B_MACOS" || exit 1
 
 # Check for macdeployqt on MacPorts
 if command -v port >/dev/null ; then
     info "MacPorts found, searching for macdeployqt"
-    DEPLOYQT="$(port contents qt$(QT_VERSION)-qttools | grep --only --max-count 1 '/.*macdeployqt')"
+        DEPLOYQT="$(port contents qt$(QT_VERSION)-qttools | grep --only --max-count 1 '/.*macdeployqt')"
     if [ ! -x "$DEPLOYQT" ]; then
         error "Please install package qt$(QT_VERSION)-qttools"
         exit 1
@@ -47,7 +54,11 @@ fi
 # Check for macdeployqt on Homebrew
 if command -v brew >/dev/null ; then
     info "Homebrew found, searching for macdeployqt"
-    DEPLOYQT="$(brew --prefix qt)/bin/macdeployqt"
+    if [ "$QT_VERSION" != "6" ]; then
+        DEPLOYQT="$(brew --prefix qt@${QT_VERSION})/bin/macdeployqt"
+    else
+        DEPLOYQT="$(brew --prefix qt)/bin/macdeployqt"    
+    fi
     if [ ! -x "$DEPLOYQT" ]; then
         error "Please install package qt"
         exit 1
@@ -55,7 +66,7 @@ if command -v brew >/dev/null ; then
 fi
 
 # Use macdeployqt to include libraries and create dmg
-if [ "$B_BUILD_TYPE" = "Release" ]; then
+if [ "$B_BUILDTYPE" = "Release" ]; then
     info "Building Release disk image (dmg)"
     "$DEPLOYQT" InputLeap.app -dmg \
     -executable="$B_INPUTLEAPC" \

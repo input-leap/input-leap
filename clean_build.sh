@@ -1,27 +1,19 @@
 #!/bin/sh
-set -e
 
-# Change to the directory of the script
 cd "$(dirname "$0")" || exit 1
 
-# Set default values for the build environment
-: "${B_CMAKE:=$(command -v cmake3)}"
-: "${B_CMAKE:=$(command -v cmake)}"
-# Check if CMake is installed
+# some environments have cmake v2 as 'cmake' and v3 as 'cmake3'
+# check for cmake3 first then fallback to just cmake
+[ -n "$B_CMAKE" ] || B_CMAKE=$(command -v cmake3)
+[ -n "$B_CMAKE" ] || B_CMAKE=$(command -v cmake)
 if [ -z "$B_CMAKE" ]; then
-    echo "ERROR: CMake not in \$PATH, cannot build! Please install CMake, or if this persists, file a bug report."
+    echo "ERROR: CMake not in $PATH, cannot build! Please install CMake, or if this persists, file a bug report."
     exit 1
 fi
 
-# Check if ninja is installed and modify the CMake flags if it is
-if command -v ninja >/dev/null; then
-    B_CMAKE_FLAGS="-GNinja ${B_CMAKE_FLAGS}"
-fi
-
-# Default flags for CMake
 B_BUILD_DIR="${B_BUILD_DIR:-build}"
 B_BUILD_TYPE="${B_BUILD_TYPE:-Debug}"
-B_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=${B_BUILD_TYPE} ${B_CMAKE_FLAGS}"
+B_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=${B_BUILD_TYPE} ${B_CMAKE_FLAGS:-}"
 
 # Check if system is macOS
 if [ "$(uname)" = "Darwin" ]; then
@@ -51,24 +43,35 @@ if [ "$(uname)" = "Darwin" ]; then
     esac
 fi
 
-# Allow local customizations to build environment
-if [ -f ./build_env.sh ]; then
-    . ./build_env.sh
+# Prefer ninja if available
+if command -v ninja 2>/dev/null; then
+    B_CMAKE_FLAGS="-GNinja ${B_CMAKE_FLAGS}"
 fi
 
-# Check Git submodules
-if ! git submodule status | egrep -q '^ '; then
-    echo "Initializing Git submodules"
-    git submodule update --init --recursive
-else
-    echo "Git submodules already initialized"
+# Set default QT_VERSION to 6
+QT_VERSION="${QT_VERSION:-6}"
+if [ "$QT_VERSION" -ne 6 ] && [ "$QT_VERSION" -ne 5 ]; then
+    echo "Invalid QT_VERSION. It must be either 5 or 6." >&2
+    exit 1
 fi
+
+echo "Using Qt version $QT_VERSION"
+
+# allow local customizations to build environment
+[ -r ./build_env.sh ] && . ./build_env.sh
+
+set -e
+
+# Initialise Git submodules
+git submodule update --init --recursive
+
+# Clean
+rm -rf ${B_BUILD_DIR}
+mkdir ${B_BUILD_DIR}
+cd ${B_BUILD_DIR}
 
 # Build
-echo "Starting build in '${B_BUILD_DIR}'..."
-rm -rf "${B_BUILD_DIR}"
-mkdir "${B_BUILD_DIR}"
-cd "${B_BUILD_DIR}"
-"$B_CMAKE" "$B_CMAKE_FLAGS" ..
+echo "Starting Input Leap $B_BUILD_TYPE build in '${B_BUILD_DIR}'..."
+"$B_CMAKE" $B_CMAKE_FLAGS ..
 "$B_CMAKE" --build . --parallel
 echo "Build completed successfully"

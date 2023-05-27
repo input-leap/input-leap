@@ -28,35 +28,34 @@ NSWindow* g_dragWindow = nullptr;
 OSXDragView* g_dragView = nullptr;
 NSString* g_ext = nullptr;
 
-void 
+void
 runCocoaApp()
 {
-    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 
-    [NSApplication sharedApplication];
+	[NSApplication sharedApplication];
 
     NSWindow* window = [[NSWindow alloc]
-                        initWithContentRect: NSMakeRect(0, 0, 3, 3)
-                        styleMask: NSWindowStyleMaskBorderless
-                        backing: NSBackingStoreBuffered
-                        defer: NO];
+						initWithContentRect: NSMakeRect(0, 0, 3, 3)
+						styleMask: NSWindowStyleMaskBorderless
+						backing: NSBackingStoreBuffered
+						defer: NO];
     [window setTitle: @""];
-    [window setAlphaValue:0.1];
-    [window makeKeyAndOrderFront:nil];
+	[window setAlphaValue:0.1];
+	[window makeKeyAndOrderFront:nil];
 
-    OSXDragView* dragView = [[OSXDragView alloc] initWithFrame:NSMakeRect(0, 0, 3, 3)];
+	OSXDragView* dragView = [[OSXDragView alloc] initWithFrame:NSMakeRect(0, 0, 3, 3)];
 
-    g_dragWindow = window;
-    g_dragView = dragView;
-    [window setContentView: dragView];
+	g_dragWindow = window;
+	g_dragView = dragView;
+	[window setContentView: dragView];
 
-    NSLog(@"starting cocoa loop");
-    [NSApp run];
+	NSLog(@"starting cocoa loop");
+	[NSApp run];
 
-    NSLog(@"cocoa: release");
-    [pool release];
+	NSLog(@"cocoa: release");
+	[pool release];
 }
-
 
 void
 stopCocoaLoop()

@@ -447,7 +447,7 @@ void MainWindow::checkConnected(const QString& line)
 
 void MainWindow::checkFingerprint(const QString& line)
 {
-    QRegularExpression fingerprintRegex(QRegularExpression::anchoredPattern(".*peer fingerprint \\(SHA1\\): ([A-F0-9:]+) \\(SHA256\\): ([A-F0-9:]+)"));
+    QRegularExpression fingerprintRegex("peer fingerprint \\(SHA1\\): ([A-F0-9:]+) \\(SHA256\\): ([A-F0-9:]+)");
     QRegularExpressionMatch match = fingerprintRegex.match(line);
     if (!match.hasMatch()) {
         return;

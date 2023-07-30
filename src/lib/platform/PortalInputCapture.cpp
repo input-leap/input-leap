@@ -140,9 +140,9 @@ void PortalInputCapture::cb_init_input_capture_session(GObject* object, GAsyncRe
 
     session_ = session;
 
-    auto fd = xdp_input_capture_session_connect_to_eis(session);
+    auto fd = xdp_input_capture_session_connect_to_eis(session, &error);
     if (fd < 0) {
-            LOG((CLOG_ERR "Failed to connect to EIS: %s", strerror(-fd)));
+            LOG((CLOG_ERR "Failed to connect to EIS: %s", error->message));
 
             // FIXME: Development hack to avoid having to assemble all parts just for
             // testing this code.

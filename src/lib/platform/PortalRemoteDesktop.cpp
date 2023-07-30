@@ -119,13 +119,10 @@ void PortalRemoteDesktop::cb_session_started(GObject* object, GAsyncResult* res)
     // top of everything...
     auto fd = -1;
 #if HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS
-    fd = xdp_session_connect_to_eis(session);
+    fd = xdp_session_connect_to_eis(session, &error);
 #endif
     if (fd < 0) {
-        if (fd == -ENOTSUP)
-            LOG((CLOG_ERR "The XDG desktop portal does not support EI.", strerror(-fd)));
-        else
-            LOG((CLOG_ERR "Failed to connect to EIS: %s", strerror(-fd)));
+        LOG((CLOG_ERR "Failed to connect to EIS: %s", error->message));
 
         // FIXME: Development hack to avoid having to assemble all parts just for
         // testing this code.

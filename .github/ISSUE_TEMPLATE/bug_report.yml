@@ -5,6 +5,14 @@ body:
     attributes:
       value: |
         Thanks for taking the time to fill out this bug report!
+
+        Please, if you want an update on the bug report, refrain from bumping the issue. Instead, hit the 'subscribe' button on the right-hand side.
+
+      If you want to express that you too are experiencing the same issue, please react to the original issue with the `:+1:` reaction.
+
+      Additionally, please don't open 'questions' on the bug tracker. These will be turned into Discussions. To save this step, use the Discussions tab for questions, feature requests, or other things that aren't bugs.
+
+      By following these tips, you save time for the maintainers, and avoid creating noise. Otherwise, we have to hide comments, and direct in the right direction. This would then lead to a bad user experience, and we don't want that.
   - type: textarea
     id: what-happened
     attributes:

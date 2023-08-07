@@ -105,6 +105,7 @@ int main(int argc, char* argv[])
 
 	QApplication::setQuitOnLastWindowClosed(false);
 
+    // TODO: Remove once Wayland support is stabilised.
     if (QGuiApplication::platformName() == "wayland") {
         QMessageBox::warning(
         nullptr, "InputLeap",

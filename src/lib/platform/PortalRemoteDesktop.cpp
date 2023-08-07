@@ -192,17 +192,10 @@ void PortalRemoteDesktop::glib_thread()
 {
     auto context = g_main_loop_get_context(glib_main_loop_);
 
-    LOG((CLOG_DEBUG "GLib thread running"));
-
     while (g_main_loop_is_running(glib_main_loop_)) {
         Thread::testCancel();
-
-        if (g_main_context_iteration(context, true)) {
-            LOG((CLOG_DEBUG "Glib events!!"));
-        }
+        g_main_context_iteration(context, true);
     }
-
-    LOG((CLOG_DEBUG "Shutting down GLib thread"));
 }
 
 } // namespace inputleap

@@ -48,7 +48,7 @@ body:
       label: If applicable, where did you install Input Leap from?
       description: This includes Snaps, Flatpaks, and self-built executables.
     validations:
-      required: false
+      required: true
   - type: dropdown
     id: os
     attributes:
@@ -58,8 +58,16 @@ body:
         - Linux
         - Windows
         - macOS
+        - FreeBSD
     validations:
       required: true
+  - type: textarea
+    id: backend
+    attributes:
+      label: If applicable, are you using Wayland or X11?
+      description: This applies to both client(s) and the server.
+    validations:
+      required: false
   - type: textarea
     id: os-version
     attributes:
@@ -71,7 +79,7 @@ body:
     id: logs
     attributes:
       label: Relevant log output
-      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      description: Please copy and paste any relevant log output. This will be automatically formatted correctly, so no need for backticks.
       render: shell
   - type: textarea
     id: misc-info

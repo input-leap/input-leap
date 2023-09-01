@@ -1183,10 +1183,6 @@ void Server::handle_clipboard_grabbed(const Event& event, BaseClientProxy* grabb
 	if (m_clientSet.count(grabber) == 0) {
 		return;
 	}
-  // ignore grab event from non-active client, which happens if their clipboard is updated in background
-	if (grabber != m_active) {
-		return;
-	}
     const auto& info = event.get_data_as<IScreen::ClipboardInfo>();
 
 	// ignore grab if sequence number is old.  always allow primary

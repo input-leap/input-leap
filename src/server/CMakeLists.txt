@@ -21,7 +21,10 @@ set(sources
 if (BUILD_MSWINDOWS)
     file(GLOB mswin_headers "MSWindows*.h")
     file(GLOB mswin_sources "MSWindows*.cpp")
-    list(APPEND sources input-leaps.rc)
+    list(APPEND sources
+        input-leaps.exe.manifest
+        input-leaps.rc
+    )        
     set_property(SOURCE input-leaps.rc PROPERTY COMPILE_FLAGS /nologo)
 endif()
 if (BUILD_CARBON)

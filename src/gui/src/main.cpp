@@ -38,6 +38,8 @@
 #include <cstdlib>
 #endif
 
+#include "config.h"
+
 class QThreadImpl : public QThread
 {
 public:
@@ -106,11 +108,13 @@ int main(int argc, char* argv[])
 	QApplication::setQuitOnLastWindowClosed(false);
 
     // TODO: Remove once Wayland support is stabilised.
+#if !HAVE_LIBPORTAL_INPUTCAPTURE or !HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS
     if (QGuiApplication::platformName() == "wayland") {
         QMessageBox::warning(
         nullptr, "InputLeap",
         "You are using wayland session, which is currently not fully supported by InputLeap.");
     }
+#endif
 
 	QSettings settings;
     if (settings.allKeys().empty()) {

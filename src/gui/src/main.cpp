@@ -38,8 +38,6 @@
 #include <cstdlib>
 #endif
 
-#include "config.h"
-
 class QThreadImpl : public QThread
 {
 public:
@@ -108,7 +106,7 @@ int main(int argc, char* argv[])
 	QApplication::setQuitOnLastWindowClosed(false);
 
     // TODO: Remove once Wayland support is stabilised.
-#if !HAVE_LIBPORTAL_INPUTCAPTURE or !HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS
+#if defined(INPUTLEAP_WARN_ON_WAYLAND) && (!defined(HAVE_LIBPORTAL_INPUTCAPTURE) || !defined(HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS))
     if (QGuiApplication::platformName() == "wayland") {
         QMessageBox::warning(
         nullptr, "InputLeap",

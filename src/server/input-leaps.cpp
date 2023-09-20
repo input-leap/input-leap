@@ -20,6 +20,7 @@
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/EventQueue.h"
+#include "config.h"
 
 #if WINAPI_MSWINDOWS
 #include "MSWindowsServerTaskBarReceiver.h"
@@ -50,6 +51,22 @@ int server_main(int argc, char** argv)
 
     Log log;
     EventQueue events;
+
+    // TODO: Remove once Wayland support is stabilised.
+
+    // This block only warns when `libportal` and `libeis` aren't available - as well as if the top-level CMake option is enabled - by default, it is.
+    // It serves as a way to warn users that using Wayland on platforms matching this boolean expression, that their platform might not be fully supported.
+    // It does *not* run on X11 platforms, Win32, or macOS.
+#if (defined(WINAPI_LIBEI) && defined(INPUTLEAP_WARN_ON_WAYLAND)) && (!defined(HAVE_LIBPORTAL_INPUTCAPTURE) || !defined(HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS))
+    const char *val = std::getenv("WAYLAND_DISPLAY");
+    if (val == nullptr) {
+        // Return, we're not running on Wayland. Possibly. Could be enhanced.
+        return
+    } else {
+        // We are running on Wayland.
+        // TODO: Add log message.
+    };
+#endif
 
     ServerApp app(&events, createTaskBarReceiver);
     int result = app.run(argc, argv);

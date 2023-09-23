@@ -1328,14 +1328,6 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>VersionChecker</name>
-    <message>
-        <location filename="src/VersionChecker.cpp" line="102"/>
-        <source>Unknown</source>
-        <translation>Unbekannt</translation>
-    </message>
-</context>
-<context>
     <name>WebClient</name>
     <message>
         <location filename="src/WebClient.cpp" line="44"/>

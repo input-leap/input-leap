@@ -20,6 +20,7 @@
 
 #include <QtCore>
 #include <QtGui>
+#include "common/Version.h"
 
 AboutDialog::AboutDialog(QWidget* parent, const QString& app_name) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
@@ -27,8 +28,7 @@ AboutDialog::AboutDialog(QWidget* parent, const QString& app_name) :
 {
 	setupUi(this);
 
-    m_versionChecker.setApp(app_name);
-	QString version = m_versionChecker.getVersion();
+    QString version = kVersion;
 	version = version + '-' + INPUTLEAP_VERSION_STAGE;
 #ifdef INPUTLEAP_REVISION
     version +=  '-';

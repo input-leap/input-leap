@@ -1,7 +1,6 @@
 # Input Leap
 
-<!-- add CI badges, flatpak, snap, use github actions badges or Azure? Decide on
-*one* -->
+<!-- add badges: flatpak, snap, GitHub Actions -->
 
 ### Contact info:
 
@@ -17,10 +16,14 @@ you're controlling at any given moment. Input Leap does this in software, allowi
 you to tell it which machine to control by moving your mouse to the edge of the
 screen, or by using a keypress to switch focus to a different system.
 
-<!-- add info about fork from barrier
-Input Leap was forked from Symless's Synergy 1.9 codebase. Synergy was a
-commercialized reimplementation of the original CosmoSynergy written by Chris
-Schoeneman.  -->
+Input Leap was [forked](https://github.com/input-leap/input-leap/issues/1414)
+from Barrier in November 2021. At this time, Input Leap is in heavy
+development, and not ready for production use. We hope to release our first
+post-fork release (v3.0.0) very soon.
+
+But for now, we advise sticking with Barrier v2.4.0/v2.3.4, and avoid building
+from Git - unless you're aware that building from Git may result in unexpected
+behaviour. Of course, testing is welcome.
 
 At the moment, Input Leap is not compatible with Synergy.
 
@@ -105,20 +108,27 @@ specific packages.
 
 [![Packaging status](https://repology.org/badge/vertical-allrepos/input-leap.svg)](https://repology.org/project/input-leap/versions)
 
+<!-- TODO: Move the FAQ to the wiki, link here. Keep the README short and simple. -->
+
 ## FAQ - Frequently Asked Questions
 
 **Q: Input Leap vs. barrier?**
 
 > A: Input Leap is a fork of barrier, by **barrier's active maintainers**. See [issue #1414](https://github.com/input-leap/input-leap/issues/1414)
->    for more details. barrier is considered unmaintained.
+>    for more details. Currently, barrier is considered unmaintained.
 
 **Q: Does drag and drop work on linux?**
 
 > A: No *(see [#855](https://github.com/input-leap/input-leap/issues/855) if you'd like to change that)*
 
-
 **Q: What OSes are supported?**
 
+Currently, Input Leap is in heavy development, and we hope to make our first
+post-fork release very soon. However, we wish to make clear that building from
+Git is prone to breaking changes and other bugs/issues. Our advice is to stick
+with Barrier v2.4.0/v2.3.4 for the time-being.
+
+<!-- TODO: Update upon v3.0.0 release.
 > A: The [most recent release](https://github.com/input-leap/input-leap/releases/latest) of Input Leap is known to work on:
 >  - Windows 7, 8, 8.1, 10, and 11
 >  - macOS *(previously known as OS X or Mac OS X)*
@@ -126,13 +136,15 @@ specific packages.
 >  - Linux
 >  - FreeBSD
 >  - OpenBSD
+-->
 
-
+<!-- TODO: Update upon v3.0.0 release.
 **Q: Are 32-bit versions of Windows supported?**
 
 > A: Not officially.
+-->
 
-
+<!-- TODO: Update upon v3.0.0 release.
 __Q: Is it possible to use Input Leap on Mac OS X / OS X versions prior to 10.12?__
 
 > A: Not officially.
@@ -146,7 +158,7 @@ __Q: Is it possible to use Input Leap on Mac OS X / OS X versions prior to 10.12
 > Note: Only versions [v2.3.4](https://github.com/input-leap/input-leap/releases/tag/v2.3.4) and [later](https://github.com/input-leap/input-leap/releases/latest) of Input Leap can be supported by this project.
 >  - Anyone using an earlier version is advised to upgrade due to recently-addressed security vulnerabilities *(and other bug fixes)*.
 >    - This is especially important for computers accessible from the public Internet *(or from other shared/untrusted networks, such as when using shared WiFi)*.
-
+-->
 
 **Q: How do I load my configuration on startup?**
 
@@ -169,6 +181,7 @@ __Q: Is it possible to use Input Leap on Mac OS X / OS X versions prior to 10.12
 > A: Currently:
 >    - Input Leap currently has limited UTF-8 support; issues have been reported with processing various languages.
 >      - *(see [#860](https://github.com/input-leap/input-leap/issues/860))*
+>
 >    - There is interest in future support for the Wayland compositor/display server protocol *([official site](https://wayland.freedesktop.org/) | [Wikipedia article](https://en.wikipedia.org/wiki/Wayland_(display_server_protocol)))* on Linux.
 >      - As of mid-2022, there is no expected completion date for *Wayland* support.
 >      - *(see [#109](https://github.com/input-leap/input-leap/issues/109) and [#1251](https://github.com/input-leap/input-leap/issues/1251) for status or to volunteer your talents)*

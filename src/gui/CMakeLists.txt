@@ -52,7 +52,6 @@ set(GUI_SOURCE_FILES
     src/SetupWizard.cpp
     src/SslCertificate.cpp
     src/TrashScreenWidget.cpp
-    src/VersionChecker.cpp
     src/ZeroconfBrowser.cpp
     src/ZeroconfRegister.cpp
     src/ZeroconfServer.cpp
@@ -93,7 +92,6 @@ set(GUI_HEADER_FILES
     src/SetupWizard.h
     src/SslCertificate.h
     src/TrashScreenWidget.h
-    src/VersionChecker.h
     src/ZeroconfBrowser.h
     src/ZeroconfRecord.h
     src/ZeroconfRegister.h

@@ -41,7 +41,7 @@ void AppLocale::loadLanguages()
             throw std::exception();
         }
 
-        if (xml.name() == "language" && token == QXmlStreamReader::StartElement)
+        if (xml.name() == QLatin1String("language") && token == QXmlStreamReader::StartElement)
         {
             QXmlStreamAttributes attributes = xml.attributes();
             addLanguage(

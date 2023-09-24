@@ -44,7 +44,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QDesktopServices>
-#include <QDesktopWidget>
+#include <QRegularExpression>
 
 #if defined(Q_OS_MAC)
 #include <ApplicationServices/ApplicationServices.h>
@@ -367,7 +367,11 @@ void MainWindow::logOutput()
     if (cmd_app_process_)
     {
         QString text(cmd_app_process_->readAllStandardOutput());
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        for (QString line : text.split(QRegularExpression("\r|\n|\r\n"))) {
+#else
         for (QString line : text.split(QRegExp("\r|\n|\r\n"))) {
+#endif
             if (!line.isEmpty())
             {
                 appendLogRaw(line);
@@ -404,7 +408,12 @@ void MainWindow::appendLogError(const QString& text)
 
 void MainWindow::appendLogRaw(const QString& text)
 {
-    for (QString line : text.split(QRegExp("\r|\n|\r\n"))) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    auto lines = text.split(QRegularExpression("\r|\n|\r\n"));
+#else
+    auto lines = text.split(QRegExp("\r|\n|\r\n"));
+#endif
+    for (const auto& line : lines) {
         if (!line.isEmpty()) {
             m_pLogWindow->appendRaw(line);
             updateFromLogLine(line);
@@ -443,19 +452,33 @@ void MainWindow::checkConnected(const QString& line)
 
 void MainWindow::checkFingerprint(const QString& line)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    QRegularExpression fingerprintRegex("peer fingerprint \\(SHA1\\): ([A-F0-9:]+) \\(SHA256\\): ([A-F0-9:]+)$");
+    QRegularExpressionMatch match = fingerprintRegex.match(line);
+    if (!match.hasMatch()) {
+        return;
+    }
+
+    auto match1 = match.captured(1).toStdString();
+    auto match2 = match.captured(2).toStdString();
+#else
     QRegExp fingerprintRegex(".*peer fingerprint \\(SHA1\\): ([A-F0-9:]+) \\(SHA256\\): ([A-F0-9:]+)");
     if (!fingerprintRegex.exactMatch(line)) {
         return;
     }
 
+    auto match1 = fingerprintRegex.cap(1).toStdString();
+    auto match2 = fingerprintRegex.cap(2).toStdString();
+#endif
+
     inputleap::FingerprintData fingerprint_sha1 = {
         inputleap::fingerprint_type_to_string(inputleap::FingerprintType::SHA1),
-        inputleap::string::from_hex(fingerprintRegex.cap(1).toStdString())
+        inputleap::string::from_hex(match1)
     };
 
     inputleap::FingerprintData fingerprint_sha256 = {
         inputleap::fingerprint_type_to_string(inputleap::FingerprintType::SHA256),
-        inputleap::string::from_hex(fingerprintRegex.cap(2).toStdString())
+        inputleap::string::from_hex(match2)
     };
 
     bool is_client = app_role() == AppRole::Client;

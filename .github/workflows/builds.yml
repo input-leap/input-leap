@@ -1,18 +1,24 @@
 name: Build tests
 
 on:
+  release:
+
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
 
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      build_release:
+        description: 'Build Release binaries'
+        required: false
+        type: boolean
 
+# Set the build type here
 env:
-  CI_ENV_BUILD_TYPE: Debug
-  B_BUILD_DIR: build
-  B_BUILD_TYPE: Debug
-  INPUTLEAP_VERSION_STAGE: Debug
+  B_BUILD_TYPE: ${{ (inputs.build_release || github.event_name == 'release') && 'Release' || 'Debug' }}
   DEBIAN_FRONTEND: noninteractive
 
 jobs:
@@ -23,8 +29,19 @@ jobs:
       fail-fast: false
       matrix:
         os: ["ubuntu:18.04", "ubuntu:20.04", "ubuntu:22.04"]
+        cc: ["gcc"]
+        wayland: [false]
+        include:
+          - cc: "gcc"
+            cxx: "g++"
+          - os: "ubuntu:22.04"
+            cc: "clang"
+            cxx: "clang++"
+          - os: "ubuntu:22.04"
+            wayland: true
     steps:
 
+      # Preparation steps
       - if: matrix.os == 'ubuntu:18.04'
         name: Add repositories with newer git and cmake
         run: |
@@ -48,6 +65,7 @@ jobs:
           apt-get install -y \
                   cmake \
                   g++ \
+                  clang \
                   git \
                   libavahi-compat-libdnssd-dev \
                   libcurl4-openssl-dev \
@@ -63,59 +81,93 @@ jobs:
                   qtdeclarative5-dev \
                   qttools5-dev
 
-      - uses: actions/checkout@v3
+      - if: matrix.wayland
+        name: Install libei and libportal pre-reqs
+        run: |
+          apt-get install -y \
+                  ca-certificates \
+                  dbus \
+                  gettext \
+                  git \
+                  libgirepository1.0-dev \
+                  libglib2.0 \
+                  libgtk-3-dev \
+                  libprotobuf-c-dev \
+                  libsystemd-dev \
+                  meson \
+                  protobuf-c-compiler \
+                  protobuf-compiler \
+                  python3-attr \
+                  python3-dbusmock \
+                  python3-jinja2 \
+                  python3-pip \
+                  python3-pytest \
+                  python3-jinja2 \
+                  valac
+
+      # Code checkout steps
+      - name: Checkout input-leap
+        uses: actions/checkout@v3
         with:
+          path: input-leap
           submodules: recursive
+          set-safe-directory: ${{ github.workspace }}
 
-      - name: Work around git safe directory check
-        run: git config --global --add safe.directory $GITHUB_WORKSPACE
-
-      - if: matrix.os == 'ubuntu:22.04'
-        name: build libei from git tag (0.99.1)
+      - name: Get libei v1.0.0 from freedesktop
+        # Manual checkout of libinput/libei ref 1.0.0 from https://gitlab.freedesktop.org
+        # because actions/checkout does not support gitlab
+        if: matrix.wayland
         run: |
-            apt-get install -y python3-pip
-            pip3 install meson
-            apt-get install -y libsystemd-dev meson git ca-certificates python3-pytest python3-attr python3-dbusmock python3-structlog python3-jinja2
-            git clone --depth 1 --branch 0.99.1 https://gitlab.freedesktop.org/libinput/libei
-            cd libei
-            meson -Dprefix=/usr -Dtests=disabled -Dliboeffis=disabled -Ddocumentation=[] _libei_builddir
+          git clone --depth=1 --branch="$ref" --recurse-submodules -- \
+            "https://gitlab.freedesktop.org/libinput/libei" libei
+        env:
+          ref: 1.0.0
+
+      - name: Get libportal from whot/libportal
+        uses: actions/checkout@v3
+        if: matrix.wayland
+        with:
+          repository: whot/libportal
+          ref: wip/inputcapture
+          path: libportal
+
+      - if: matrix.wayland
+        name: build libei from git tag (1.0.0)
+        run: |
+            meson setup -Dprefix=/usr -Dtests=disabled -Dliboeffis=disabled -Ddocumentation=[] libei _libei_builddir
             ninja -C _libei_builddir install
-            cd ..
-            rm -rf libei
 
-      - if: matrix.os == 'ubuntu:22.04'
-        name: build libportal from whot/libportal
+      - if: matrix.wayland
+        name: build libportal
         run: |
-            apt-get install -y libglib2.0 gettext dbus meson libgirepository1.0-dev libgtk-3-dev valac python3-pip python3-dbusmock
-            git clone https://github.com/whot/libportal
-            cd libportal
-            git checkout wip/inputcapture
-            meson -Dprefix=/usr -Dbackend-gtk3=enabled -Ddocs=false _libportal_builddir
+            meson setup --prefix=/usr -Dbackend-gtk3=enabled -Ddocs=false libportal _libportal_builddir
             ninja -C _libportal_builddir install
-            cd ..
-            rm -rf libportal
 
-      - if: matrix.os == 'ubuntu:22.04'
-        name: Run the build (with libei)
-        run: sh -x ./clean_build.sh
+      - name: Configure the build
+        run: |
+          cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build \
+                -DCMAKE_CXX_FLAGS:STRING="-Wall -Wextra -Wno-unused-parameter" \
+                -DCMAKE_CXX_FLAGS_DEBUG:STRING="-g -Werror" \
+                -DINPUTLEAP_BUILD_LIBEI:BOOL=${{ matrix.wayland }}
         env:
             VERBOSE: 1
-            B_CMAKE_FLAGS: -DINPUTLEAP_BUILD_LIBEI=TRUE
+            CC: ${{ matrix.cc }}
+            CXX: ${{ matrix.cxx }}
 
-      - if: matrix.os != 'ubuntu:22.04'
-        name: Run the build
-        run: sh -x ./clean_build.sh
+      - name: Run the build
+        run: |
+          cmake --build build --parallel
         env:
             VERBOSE: 1
-            B_CMAKE_FLAGS: -DINPUTLEAP_BUILD_LIBEI=FALSE
 
+      # Finally, test step!
       - name: Run the tests
         run: |
-            cd ${B_BUILD_DIR}
-            ctest --verbose
+            ctest --test-dir build --verbose
 
   mac-build:
     runs-on: ${{ matrix.os }}
+
     strategy:
       fail-fast: false
       matrix:
@@ -126,84 +178,151 @@ jobs:
       TERM: xterm-256color
 
     steps:
-      - uses: actions/checkout@v3
-
       - name: Setup the image
         run: |
           brew install qt5
           brew install ninja
+
+      - uses: actions/checkout@v3
+        with:
+          path: input-leap
+          submodules: recursive
+
+      - name: Setup the build
+        run: |
+          . input-leap/macos_environment.sh
+          cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build -G Ninja \
+                -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk \
+                -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DCMAKE_UNITY_BUILD=1
+
       - name: Run the build
-        run: env B_CMAKE_FLAGS="-DCMAKE_UNITY_BUILD=1" sh -x ./clean_build.sh
+        run: |
+          cmake --build build --parallel
+
       - uses: actions/upload-artifact@v3
+        if: env.B_BUILD_TYPE == 'Release'
         with:
-          name: Publish the DMG for ${{ matrix.os }}
+          name: ${{ matrix.os }}-installer
           path: ./build/bundle/*.dmg
-          if-no-files-found: warn
-        if: ${{ env.B_BUILD_TYPE == 'Release' }}
+          if-no-files-found: error
 
-  win-build-2019:
-    runs-on: windows-2019
 
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '3.7'
-          architecture: 'x64'
-      - name: Download Bonjour SDK-like
-        run: ./azure-pipelines/download_install_bonjour_sdk_like.ps1
-      - name: Installing QT
-        run: ./azure-pipelines/download_install_qt.ps1
-      - name: Get build env
-        run: Copy-Item azure-pipelines\build_env_tmpl.bat build_env.bat
-      - name: Build
-        run: call "%ProgramFiles(x86)%\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=amd64 && clean_build.bat
-        shell: cmd
-      - uses: papeloto/action-zip@v1
-        with:
-          files: build\bin\${{ env.CI_ENV_BUILD_TYPE }}
-          dest: ${{ env.CI_ENV_BUILD_TYPE }}.zip
-        name: Archive Completed Build Directory
-      - uses: actions/upload-artifact@v3
-        with:
-          name: Windows-2019-${{ env.CI_ENV_BUILD_TYPE }}
-          path: ${{ env.CI_ENV_BUILD_TYPE }}.zip
-          if-no-files-found: warn
+  win-build:
+    runs-on: ${{ matrix.os }}
 
-  win-build-2022:
-    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2019, windows-2022]
 
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v2
+        with:
+          path: input-leap
+          submodules: recursive
+
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.7'
           architecture: 'x64'
+
       - name: Download Bonjour SDK-like
-        run: ./azure-pipelines/download_install_bonjour_sdk_like.ps1
+        id: bonjour
+        run: |
+          $ErrorActionPreference = "Stop"
+          New-Item -Force -ItemType Directory -Path .\deps
+
+          Invoke-WebRequest 'https://github.com/nelsonjchen/mDNSResponder/releases/download/v2019.05.08.1/x64_RelWithDebInfo.zip' -OutFile 'deps\BonjourSDKLike.zip' ;
+          Expand-Archive .\deps\BonjourSDKLike.zip -DestinationPath .\deps\BonjourSDKLike
+          Remove-Item deps\BonjourSDKLike.zip
+
+          "path=$env:GITHUB_WORKSPACE\deps\BonjourSDKLike" >> $env:GITHUB_OUTPUT
+
       - name: Installing QT
-        run: ./azure-pipelines/download_install_qt.ps1
-      - name: Get build env
-        run: Copy-Item azure-pipelines\build_env_tmpl.bat build_env.bat
-      - name: Build
-        run: call "%ProgramFiles%\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=amd64 && clean_build.bat
+        id: qt
+        run: |
+          $ErrorActionPreference = "Stop"
+          New-Item -Force -ItemType Directory -Path .\deps
+
+          $qli_install_version = '2019.05.26.1'
+          $qt_version = '5.15.2'
+          $qt_msvc = 'msvc2019_64'
+
+          Invoke-WebRequest "https://github.com/nelsonjchen/qli-installer/archive/v$qli_install_version.zip" -OutFile '.\deps\qli-installer.zip' ;
+          Expand-Archive deps\qli-installer.zip deps\
+          Move-Item .\deps\qli-installer-$qli_install_version\ .\deps\qli-installer
+
+          pip install -r .\deps\qli-installer\requirements.txt
+
+          $env:QLI_OUT_DIR = ".\deps\Qt\Qt$qt_version"
+          $env:QLI_BASE_URL = "https://download.qt.io/online/qtsdkrepository/"
+          python .\deps\qli-installer\qli-installer.py $qt_version windows desktop win64_$qt_msvc
+
+          "root=$env:GITHUB_WORKSPACE\deps\Qt" >> $env:GITHUB_OUTPUT
+          "version=Qt$qt_version\$qt_version" >> $env:GITHUB_OUTPUT
+          "msvc=$qt_msvc" >> $env:GITHUB_OUTPUT
+          "path=$env:GITHUB_WORKSPACE\deps\Qt\Qt$qt_version\$qt_version\$qt_msvc" >> $env:GITHUB_OUTPUT
+
+      - name: Configure build system
+        # NB. use cmd here to set variables from VsDevCmd.bat
         shell: cmd
-      - uses: papeloto/action-zip@v1
+        run: |
+          call "%VS_PATH%\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=amd64
+
+          cmake -S input-leap -B build -G "%CMAKE_GEN%" -A x64 -D CMAKE_BUILD_TYPE=%B_BUILD_TYPE% ^
+            -DCMAKE_PREFIX_PATH="%B_QT_FULLPATH%" -DQT_VERSION="%B_QT_VER%" ^
+            -DDNSSD_LIB="%BONJOUR_SDK_HOME%\Lib\x64\dnssd.lib"
+        env:
+          VS_PATH: ${{ matrix.os == 'windows-2019' && '%ProgramFiles(x86)%\Microsoft Visual Studio\2019' || '%ProgramFiles%\Microsoft Visual Studio\2022' }}
+          CMAKE_GEN: ${{ matrix.os == 'windows-2019' && 'Visual Studio 16 2019' || 'Visual Studio 17 2022' }}
+          BONJOUR_SDK_HOME: ${{ steps.bonjour.outputs.path }}
+          B_QT_ROOT: ${{ steps.qt.outputs.root }}
+          B_QT_VER: ${{ steps.qt.outputs.version }}
+          B_QT_MSVC: ${{ steps.qt.outputs.msvc }}
+          B_QT_FULLPATH: ${{ steps.qt.outputs.path }}
+
+      - name: Run build system
+        run: |
+          cmake --build build --config $env:B_BUILD_TYPE
+
+      - name: Copy supporting binaries
+        run: |
+          copy $env:B_QT_FULLPATH\bin\Qt5Core$env:LIB_SUFFIX.dll $env:BIN_PATH\
+          copy $env:B_QT_FULLPATH\bin\Qt5Gui$env:LIB_SUFFIX.dll $env:BIN_PATH\
+          copy $env:B_QT_FULLPATH\bin\Qt5Network$env:LIB_SUFFIX.dll $env:BIN_PATH\
+          copy $env:B_QT_FULLPATH\bin\Qt5Widgets$env:LIB_SUFFIX.dll $env:BIN_PATH\
+
+          mkdir $env:BIN_PATH\platforms\
+          copy $env:B_QT_FULLPATH\plugins\platforms\qwindows$env:LIB_SUFFIX.dll $env:BIN_PATH\platforms\
+
+          copy input-leap\ext\openssl\windows\x64\bin\*.dll $env:BIN_PATH\
+        env:
+          # NB: don’t put '' before || as it is falsey
+          LIB_SUFFIX: ${{ env.B_BUILD_TYPE == 'Debug' && 'd' || '' }}
+          B_QT_FULLPATH: ${{ steps.qt.outputs.path }}
+          BIN_PATH: build\bin\${{ env.B_BUILD_TYPE }}
+
+      - name: Archive Completed Build Directory
+        uses: vimtor/action-zip@v1
         with:
-          files: build\bin\${{ env.CI_ENV_BUILD_TYPE }}
-          dest: ${{ env.CI_ENV_BUILD_TYPE }}.zip
-        name: Archive Completed Build Directory
+          files: build\bin\${{ env.B_BUILD_TYPE }}
+          dest: ${{ env.B_BUILD_TYPE }}.zip
+
       - uses: actions/upload-artifact@v3
         with:
-          name: Windows-2022-${{ env.CI_ENV_BUILD_TYPE }}
-          path: ${{ env.CI_ENV_BUILD_TYPE }}.zip
+          name: ${{ matrix.os }}-${{ env.B_BUILD_TYPE }}
+          path: ${{ env.B_BUILD_TYPE }}.zip
+          if-no-files-found: warn
+
+      # Only build & upload installer for release builds on windows-2022
       - name: Build the Installer
-        run: .\build_installer.bat
-        if: ${{ env.CI_ENV_BUILD_TYPE == 'Release' }}
-        shell: cmd
+        if: matrix.os == 'windows-2022' && env.B_BUILD_TYPE == 'Release'
+        run: |
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" /Qp .\build\installer-inno\input-leap.iss
+
       - uses: actions/upload-artifact@v3
-        if: ${{ env.CI_ENV_BUILD_TYPE == 'Release' }}
+        if: matrix.os == 'windows-2022' && env.B_BUILD_TYPE == 'Release'
         with:
-          name: Publish the Installer
+          name: windows-installer
           path: .\build\installer-inno\bin
-          if-no-files-found: warn
+          if-no-files-found: error

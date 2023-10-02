@@ -173,12 +173,6 @@ if (UNIX)
             install(FILES "dist/flatpak/input-leap-flatpak"
                     DESTINATION bin
                     PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-
-	    if (INPUTLEAP_WARN_ON_WAYLAND)
-                add_definitions(-DINPUTLEAP_WARN_ON_WAYLAND=1)
-                set(INPUTLEAP_WARN_ON_WAYLAND=1)
-            endif()
-
         endif()
 
         check_include_files ("dns_sd.h" HAVE_DNSSD)
@@ -207,6 +201,10 @@ if (UNIX)
         if(INPUTLEAP_BUILD_LIBEI)
             add_definitions(-DWINAPI_LIBEI=1)
             set(BUILD_LIBEI 1)
+            if (INPUTLEAP_WARN_ON_WAYLAND)
+                add_definitions(-DINPUTLEAP_WARN_ON_WAYLAND=1)
+                set(INPUTLEAP_WARN_ON_WAYLAND 1)
+            endif()
         endif()
         if(NOT INPUTLEAP_BUILD_X11 AND NOT INPUTLEAP_BUILD_LIBEI)
             message(FATAL_ERROR "One of X11 or libei is required")

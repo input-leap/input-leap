@@ -32,6 +32,21 @@ namespace inputleap {
 CreateTaskBarReceiverFunc createTaskBarReceiver = nullptr;
 #endif
 
+#if (defined(WINAPI_LIBEI) && defined(INPUTLEAP_WARN_ON_WAYLAND)) && (!defined(HAVE_LIBPORTAL_INPUTCAPTURE) || !defined(HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS))
+#include <cstdlib>
+
+void check_for_wayland() {
+    const char *val = std::getenv("WAYLAND_DISPLAY");
+    if (val == nullptr) {
+        // Return, we're not running on Wayland. Possibly. Could be enhanced.
+        return;
+    } else {
+        // We are running on Wayland.
+        // TODO: Add log message.
+    };
+}
+#endif
+
 int server_main(int argc, char** argv)
 {
 #if SYSAPI_WIN32
@@ -54,18 +69,16 @@ int server_main(int argc, char** argv)
 
     // TODO: Remove once Wayland support is stabilised.
 
-    // This block only warns when `libportal` and `libeis` aren't available - as well as if the top-level CMake option is enabled - by default, it is.
-    // It serves as a way to warn users that using Wayland on platforms matching this boolean expression, that their platform might not be fully supported.
+    // This block only warns when `libportal` and `libeis` aren't available - as
+    // well as if the top-level CMake option is enabled - by default, it is.
+
+    // It serves as a way to warn users that using Wayland on platforms matching
+    // this boolean expression, that their platform might not be fully
+    // supported.
+
     // It does *not* run on X11 platforms, Win32, or macOS.
 #if (defined(WINAPI_LIBEI) && defined(INPUTLEAP_WARN_ON_WAYLAND)) && (!defined(HAVE_LIBPORTAL_INPUTCAPTURE) || !defined(HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS))
-    const char *val = std::getenv("WAYLAND_DISPLAY");
-    if (val == nullptr) {
-        // Return, we're not running on Wayland. Possibly. Could be enhanced.
-        return
-    } else {
-        // We are running on Wayland.
-        // TODO: Add log message.
-    };
+    check_for_wayland();
 #endif
 
     ServerApp app(&events, createTaskBarReceiver);

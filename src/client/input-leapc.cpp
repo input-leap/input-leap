@@ -32,6 +32,21 @@ namespace inputleap {
 CreateTaskBarReceiverFunc createTaskBarReceiver = nullptr;
 #endif
 
+#if (defined(WINAPI_LIBEI) && defined(INPUTLEAP_WARN_ON_WAYLAND)) && (!defined(HAVE_LIBPORTAL_INPUTCAPTURE) || !defined(HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS))
+#include <cstdlib>
+
+void check_for_wayland() {
+    const char *val = std::getenv("WAYLAND_DISPLAY");
+    if (val == nullptr) {
+        // Return, we're not running on Wayland. Possibly. Could be enhanced.
+        return;
+    } else {
+        // We are running on Wayland.
+        // TODO: Add log message.
+    };
+}
+#endif
+
 int client_main(int argc, char** argv) {
 #if SYSAPI_WIN32
     // record window instance for tray icon, etc
@@ -55,14 +70,7 @@ int client_main(int argc, char** argv) {
 
     // It does *not* run on X11 platforms, Win32, or macOS.
 #if (defined(WINAPI_LIBEI) && defined(INPUTLEAP_WARN_ON_WAYLAND)) && (!defined(HAVE_LIBPORTAL_INPUTCAPTURE) || !defined(HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS))
-    const char *val = std::getenv("WAYLAND_DISPLAY");
-    if (val == nullptr) {
-        // Return, we're not running on Wayland. Possibly. Could be enhanced.
-        return
-    } else {
-        // We are running on Wayland.
-        // TODO: Add log message.
-    };
+    check_for_wayland();
 #endif
 
     ClientApp app(&events, createTaskBarReceiver);

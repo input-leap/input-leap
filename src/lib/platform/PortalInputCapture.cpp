@@ -213,7 +213,7 @@ gboolean PortalInputCapture::init_input_capture_session()
     xdp_portal_create_input_capture_session(
                 portal_,
                 nullptr, // parent
-                static_cast<XdpCapability>(XDP_CAPABILITY_KEYBOARD | XDP_CAPABILITY_POINTER),
+                static_cast<XdpInputCapability>(XDP_INPUT_CAPABILITY_KEYBOARD | XDP_INPUT_CAPABILITY_POINTER),
                 nullptr, // cancellable
                 [](GObject *obj, GAsyncResult *res, gpointer data) {
                 reinterpret_cast<PortalInputCapture*>(data)->cb_init_input_capture_session(obj, res);

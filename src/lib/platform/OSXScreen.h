@@ -250,6 +250,9 @@ private:
     // true if mouse has entered the screen
     bool m_isOnScreen;
 
+    // IOKit power management assertion, refreshed on every enter()
+    IOPMAssertionID assertionID;
+
     // the display
     CGDirectDisplayID m_displayID;
 

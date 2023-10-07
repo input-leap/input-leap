@@ -594,7 +594,7 @@ void EiScreen::handle_system_event(const Event& sysevent)
                                               EI_DEVICE_CAP_KEYBOARD,
                                               EI_DEVICE_CAP_BUTTON,
                                               EI_DEVICE_CAP_SCROLL,
-                                              NULL);
+                                              nullptr);
                     LOG((CLOG_DEBUG "using seat %s", ei_seat_get_name(ei_seat_)));
                     // we don't care about touch
                 }

@@ -47,15 +47,7 @@ EiScreen::EiScreen(bool is_primary, IEventQueue* events, bool use_portal) :
     events_(events),
     is_on_screen_(is_primary)
 {
-    if (is_primary)
-        ei_ = ei_new_receiver(nullptr); // we receive from the display server
-    else
-        ei_ = ei_new_sender(nullptr); // we send to the display server
-    ei_set_user_data(ei_, this);
-    ei_log_set_priority(ei_, EI_LOG_PRIORITY_DEBUG);
-    ei_log_set_handler(ei_, cb_handle_ei_log_event);
-    ei_configure_name(ei_, "InputLeap client");
-
+    init_ei();
     key_state_ = new EiKeyState(this, events);
     // install event handlers
     events_->add_handler(EventType::SYSTEM, events_->getSystemTarget(),
@@ -71,18 +63,18 @@ EiScreen::EiScreen(bool is_primary, IEventQueue* events, bool use_portal) :
             throw std::invalid_argument("Missing libportal InputCapture portal support");
 #endif
         } else {
+            events_->add_handler(EventType::EI_SESSION_CLOSED, get_event_target(),
+                                 [this](const auto& e){ handle_portal_session_closed(e); });
             portal_remote_desktop_ = new PortalRemoteDesktop(this, events_);
         }
     } else {
+        // Note: socket backend does not support reconnections
         auto rc = ei_setup_backend_socket(ei_, nullptr);
         if (rc != 0) {
             LOG_DEBUG("ei init error: %s", strerror(-rc));
             throw std::runtime_error("Failed to init ei context");
         }
     }
-
-    // install the platform event queue
-    events_->set_buffer(std::make_unique<EiEventQueueBuffer>(this, ei_, events_));
 }
 
 EiScreen::~EiScreen()
@@ -122,6 +114,23 @@ void EiScreen::handle_ei_log_event(ei* ei,
             LOG_PRINT("ei: %s", message);
             break;
     }
+}
+
+void EiScreen::init_ei()
+{
+    if (is_primary_) {
+        ei_ = ei_new_receiver(nullptr); // we receive from the display server
+    } else {
+        ei_ = ei_new_sender(nullptr); // we send to the display server
+    }
+    ei_set_user_data(ei_, this);
+    ei_log_set_priority(ei_, EI_LOG_PRIORITY_DEBUG);
+    ei_log_set_handler(ei_, cb_handle_ei_log_event);
+    ei_configure_name(ei_, "InputLeap client");
+
+    // install the platform event queue
+    events_->set_buffer(nullptr);
+    events_->set_buffer(std::make_unique<EiEventQueueBuffer>(this, ei_, events_));
 }
 
 void EiScreen::cleanup_ei()
@@ -694,9 +703,18 @@ void EiScreen::handle_connected_to_eis_event(const Event& event)
     }
 }
 
+void EiScreen::handle_portal_session_closed(const Event &event)
+{
+    // Portal may or may EI_EVENT_DISCONNECT us before sending the DBus Closed signal
+    // Let's clean up either way.
+    cleanup_ei();
+    init_ei();
+}
+
 void EiScreen::handle_system_event(const Event& sysevent)
 {
     std::lock_guard<std::mutex> lock(mutex_);
+    bool disconnected = false;
 
     // Only one ei_dispatch per system event, see the comment in
     // EiEventQueueBuffer::addEvent
@@ -741,7 +759,14 @@ void EiScreen::handle_system_event(const Event& sysevent)
                 }
                 break;
             case EI_EVENT_DISCONNECT:
-                throw std::runtime_error("Oops, EIS didn't like us");
+                // We're using libei which emulates the various seat/device remove events
+                // so by the time we get here our EiScreen should be in a neutral state.
+                //
+                // We don't do anything here, we let the portal's Session.Closed signal
+                // handle the rest.
+                LOG_WARN("disconnected from EIS");
+                disconnected = true;
+                break;
             case EI_EVENT_DEVICE_PAUSED:
                 LOG_DEBUG("device %s is paused", ei_device_get_name(device));
                 break;
@@ -791,6 +816,9 @@ void EiScreen::handle_system_event(const Event& sysevent)
         }
         ei_event_unref(event);
     }
+
+    if (disconnected)
+        ei_ = ei_unref(ei_);
 }
 
 void EiScreen::updateButtons()

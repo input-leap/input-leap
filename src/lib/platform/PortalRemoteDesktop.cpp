@@ -31,12 +31,7 @@ PortalRemoteDesktop::PortalRemoteDesktop(EiScreen *screen,
     glib_main_loop_ = g_main_loop_new(nullptr, true);
     glib_thread_ = new Thread([this](){ glib_thread(); });
 
-    auto init_cb = [](gpointer data) -> gboolean
-    {
-        return reinterpret_cast<PortalRemoteDesktop*>(data)->init_remote_desktop_session();
-    };
-
-    g_idle_add(init_cb, this);
+    reconnect(0);
 }
 
 PortalRemoteDesktop::~PortalRemoteDesktop()
@@ -59,6 +54,8 @@ PortalRemoteDesktop::~PortalRemoteDesktop()
     if (session_ != nullptr)
         g_object_unref(session_);
     g_object_unref(portal_);
+
+    free(session_restore_token_);
 }
 
 gboolean PortalRemoteDesktop::timeout_handler()
@@ -66,13 +63,30 @@ gboolean PortalRemoteDesktop::timeout_handler()
     return true; // keep re-triggering
 }
 
+void PortalRemoteDesktop::reconnect(unsigned int timeout)
+{
+    auto init_cb = [](gpointer data) -> gboolean
+    {
+        return reinterpret_cast<PortalRemoteDesktop*>(data)->init_remote_desktop_session();
+    };
+
+    if (timeout > 0)
+        g_timeout_add(timeout, init_cb, this);
+    else
+        g_idle_add(init_cb, this);
+}
+
 void PortalRemoteDesktop::cb_session_closed(XdpSession* session)
 {
-    LOG_ERR("Our RemoteDesktop session was closed, exiting.");
-    g_main_loop_quit(glib_main_loop_);
-    events_->add_event(EventType::QUIT);
-
+    LOG_ERR("Our RemoteDesktop session was closed, re-connecting.");
     g_signal_handler_disconnect(session, session_signal_id_);
+    session_signal_id_ = 0;
+    events_->add_event(EventType::EI_SESSION_CLOSED, screen_->get_event_target());
+
+    // gcc warning "Suspicious usage of 'sizeof(A*)'" can be ignored
+    g_clear_object(&session_);
+
+    reconnect(1000);
 }
 
 void PortalRemoteDesktop::cb_session_started(GObject* object, GAsyncResult* res)
@@ -86,6 +100,8 @@ void PortalRemoteDesktop::cb_session_started(GObject* object, GAsyncResult* res)
         events_->add_event(EventType::QUIT);
         return;
     }
+
+    session_restore_token_ = xdp_session_get_restore_token(session);
 
     // ConnectToEIS requires version 2 of the xdg-desktop-portal (and the same
     // version in the impl.portal), i.e. you'll need an updated compositor on
@@ -112,13 +128,19 @@ void PortalRemoteDesktop::cb_init_remote_desktop_session(GObject* object, GAsync
 
     auto session = xdp_portal_create_remote_desktop_session_finish(XDP_PORTAL(object), res, &error);
     if (!session) {
-        LOG_ERR("Failed to initialize RemoteDesktop session, quitting: %s", error->message);
-        g_main_loop_quit(glib_main_loop_);
-        events_->add_event(EventType::QUIT);
+        LOG_ERR("Failed to initialize RemoteDesktop session: %s", error->message);
+        // This was the first attempt to connect to the RD portal - quit if that fails.
+        if (session_iteration_ == 0) {
+            g_main_loop_quit(glib_main_loop_);
+            events_->add_event(EventType::QUIT);
+        } else {
+            this->reconnect(1000);
+        }
         return;
     }
 
     session_ = session;
+    ++session_iteration_;
 
     // FIXME: the lambda trick doesn't work here for unknown reasons, we need
     // the static function
@@ -126,6 +148,7 @@ void PortalRemoteDesktop::cb_init_remote_desktop_session(GObject* object, GAsync
                                          G_CALLBACK(cb_session_closed_cb),
                                          this);
 
+    LOG_DEBUG("Session ready, starting");
     xdp_session_start(session,
                       nullptr, // parent
                       nullptr, // cancellable
@@ -137,20 +160,22 @@ void PortalRemoteDesktop::cb_init_remote_desktop_session(GObject* object, GAsync
 
 gboolean PortalRemoteDesktop::init_remote_desktop_session()
 {
-    LOG_DEBUG("Setting up the RemoteDesktop session");
-    xdp_portal_create_remote_desktop_session(
+    LOG_DEBUG("Setting up the RemoteDesktop session with restore token %s", session_restore_token_);
+    xdp_portal_create_remote_desktop_session_full(
                 portal_,
                 static_cast<XdpDeviceType>(XDP_DEVICE_POINTER | XDP_DEVICE_KEYBOARD),
                 XDP_OUTPUT_NONE,
                 XDP_REMOTE_DESKTOP_FLAG_NONE,
                 XDP_CURSOR_MODE_HIDDEN,
+                XDP_PERSIST_MODE_TRANSIENT,
+                session_restore_token_,
                 nullptr, // cancellable
                 [](GObject *obj, GAsyncResult *res, gpointer data) {
                     reinterpret_cast<PortalRemoteDesktop*>(data)->cb_init_remote_desktop_session(obj, res);
                 },
                 this);
 
-    return false;
+    return false; // don't reschedule
 }
 
 void PortalRemoteDesktop::glib_thread()

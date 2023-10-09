@@ -91,6 +91,7 @@ protected:
     // IPlatformScreen overrides
     void handle_system_event(const Event& event) override;
     void handle_connected_to_eis_event(const Event& event);
+    void handle_portal_session_closed(const Event &event);
     void updateButtons() override;
     IKeyState* getKeyState() const override;
 
@@ -99,6 +100,7 @@ protected:
     void remove_device(ei_device* device);
 
 private:
+    void init_ei();
     void cleanup_ei();
     void send_event(EventType type, EventDataBase* data);
     ButtonID map_button_from_evdev(ei_event* event) const;

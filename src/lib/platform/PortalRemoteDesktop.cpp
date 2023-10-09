@@ -140,6 +140,18 @@ void PortalRemoteDesktop::cb_session_started(GObject* object, GAsyncResult* res)
                         create_event_data<int>(fd));
 }
 
+void PortalRemoteDesktop::cb_inhibited(GObject* object, GAsyncResult* res)
+{
+    g_autoptr(GError) error = nullptr;
+    auto id = xdp_portal_session_inhibit_finish (portal_, res, &error);
+    if (!id) {
+        LOG((CLOG_ERR "Failed to inhibit session"));
+    } else {
+        // Save the ID somewhere so we can call xdp_portal_session_uninhibit() later
+
+    }
+}
+
 void PortalRemoteDesktop::cb_init_remote_desktop_session(GObject* object, GAsyncResult* res)
 {
     LOG((CLOG_DEBUG "Session ready"));
@@ -168,6 +180,16 @@ void PortalRemoteDesktop::cb_init_remote_desktop_session(GObject* object, GAsync
                           reinterpret_cast<PortalRemoteDesktop*>(data)->cb_session_started(obj, res);
                       },
                       this);
+
+    xdp_portal_session_inhibit (portal_,
+                                nullptr, // parent
+                                "InputLeap remote control",
+                                XDP_INHIBIT_FLAG_IDLE,
+                                nullptr, // cancellable
+                                  [](GObject *obj, GAsyncResult *res, gpointer data) {
+                                      reinterpret_cast<PortalRemoteDesktop*>(data)->cb_inhibited(obj, res);
+                                  },
+                                this);
 }
 
 gboolean PortalRemoteDesktop::init_remote_desktop_session()

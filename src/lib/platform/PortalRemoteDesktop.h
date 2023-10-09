@@ -45,6 +45,7 @@ private:
     void cb_init_remote_desktop_session(GObject* object, GAsyncResult* res);
     void cb_session_started(GObject* object, GAsyncResult* res);
     void cb_session_closed(XdpSession* session);
+    void cb_inhibited(GObject* object, GAsyncResult* res);
 
     /// g_signal_connect callback wrapper
     static void cb_session_closed_cb(XdpSession* session, gpointer data)

@@ -160,9 +160,6 @@ void PortalInputCapture::cb_init_input_capture_session(GObject* object, GAsyncRe
 
     // FIXME: the lambda trick doesn't work here for unknown reasons, we need
     // the static function
-    signals_[SESSION_CLOSED] = g_signal_connect(G_OBJECT(session), "closed",
-                                                G_CALLBACK(cb_session_closed_cb),
-                                                this);
     signals_[DISABLED] = g_signal_connect(G_OBJECT(session), "disabled",
                                           G_CALLBACK(cb_disabled_cb),
                                           this);
@@ -174,6 +171,10 @@ void PortalInputCapture::cb_init_input_capture_session(GObject* object, GAsyncRe
                                               this);
     signals_[ZONES_CHANGED] = g_signal_connect(G_OBJECT(session_), "zones-changed",
                                                 G_CALLBACK(cb_zones_changed_cb),
+                                                this);
+    XdpSession *parent_session = xdp_input_capture_session_get_session(session);
+    signals_[SESSION_CLOSED] = g_signal_connect(G_OBJECT(parent_session), "closed",
+                                                G_CALLBACK(cb_session_closed_cb),
                                                 this);
 
     cb_zones_changed(session_, nullptr);

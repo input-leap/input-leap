@@ -196,16 +196,33 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-11, macos-12]
+       include:
+         - os: macos-11
+           qt-version: 5.15
+           minOS-version: 10.9
+           arch: 'x86_64'
+         - os: macos-12
+           qt-version: 6.6
+           minOS-version: 11
+           qt-modules: qt5compat
+           arch: 'arm64;x86_64'
 
     env:
       VERBOSE: 1
       TERM: xterm-256color
 
     steps:
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          dir: /Users/runner
+          version: ${{matrix.qt-version}}
+          modules: ${{matrix.qt-modules}}
+          cache: true
+          cache-key-prefix: macOS-${{matrix.os}}-Qt${{matrix.qt-version}}
+
       - name: Setup the image
         run: |
-          brew install qt5
           brew install ninja
 
       - uses: actions/checkout@v3
@@ -215,10 +232,9 @@ jobs:
 
       - name: Setup the build
         run: |
-          . input-leap/macos_environment.sh
           cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build -G Ninja \
                 -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk \
-                -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DCMAKE_UNITY_BUILD=1
+                -DCMAKE_OSX_DEPLOYMENT_TARGET=${{matrix.minOS-version}} -DCMAKE_UNITY_BUILD=1 -DCMAKE_OSX_ARCHITECTURES="${{matrix.arch}}"
 
       - name: Run the build
         run: |

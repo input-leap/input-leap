@@ -54,6 +54,23 @@ endif()
 
 set (libs)
 
+if (INPUTLEAP_BUILD_GUI)
+    find_package (QT NAMES Qt6 Qt5 REQUIRED)
+    find_package (Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
+    get_target_property(qmake_executable Qt${QT_VERSION_MAJOR}::qmake IMPORTED_LOCATION)
+    get_filename_component(_qt_bin_dir "${qmake_executable}" DIRECTORY)
+    if(WIN32 OR APPLE)
+        if(WIN32)
+            set(deployqtapp windeployqt)
+        elseif(APPLE)
+            set(deployqtapp macdeployqt)
+            find_library(QT_PLATFORM_PLUGIN libqcocoa.dylib HINTS "${_qt_bin_dir}../plugins/platforms")
+        endif()
+        find_program(QT_DEPLOY_TOOL ${deployqtapp} HINTS "${_qt_bin_dir}")
+    endif()
+endif()
+
+
 if (UNIX)
     if (NOT APPLE)
         set (CMAKE_POSITION_INDEPENDENT_CODE TRUE)

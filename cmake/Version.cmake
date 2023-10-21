@@ -1,4 +1,3 @@
-cmake_minimum_required (VERSION 3.4)
 
 set(INPUTLEAP_VERSION_MAJOR 2)
 set(INPUTLEAP_VERSION_MINOR 4)

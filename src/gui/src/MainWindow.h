@@ -33,7 +33,6 @@
 
 #include "ServerConfig.h"
 #include "AppConfig.h"
-#include "VersionChecker.h"
 #include "IpcClient.h"
 #include "Ipc.h"
 #include "LogWindow.h"
@@ -94,7 +93,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
         QString address();
         QString appPath(const QString& name);
         void open();
-        VersionChecker& versionChecker() { return m_VersionChecker; }
         QString getScreenName();
         ServerConfig& serverConfig() { return m_ServerConfig; }
         void showConfigureServer(const QString& message);
@@ -171,7 +169,6 @@ public slots:
         QSystemTrayIcon* m_pTrayIcon;
         QMenu* m_pTrayIconMenu;
         bool m_AlreadyHidden;
-        VersionChecker m_VersionChecker;
         IpcClient m_IpcClient;
         QMenuBar* m_pMenuBar;
         QMenu* main_menu_;

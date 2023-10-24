@@ -1268,14 +1268,6 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>VersionChecker</name>
-    <message>
-        <location filename="../../src/VersionChecker.cpp" line="110"/>
-        <source>Unknown</source>
-        <translation>未知</translation>
-    </message>
-</context>
-<context>
     <name>ZeroconfService</name>
     <message>
         <location filename="../../src/ZeroconfService.cpp" line="106"/>

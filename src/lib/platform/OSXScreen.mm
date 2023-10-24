@@ -811,8 +811,9 @@ OSXScreen::enter()
 			IORegistryEntrySetCFProperty(entry, CFSTR("IORequestIdle"), kCFBooleanFalse);
 			IOObjectRelease(entry);
 		}
-		IOPMAssertionID assertionID;
-		IOPMAssertionDeclareUserActivity(CFSTR("Input Leap Wakeup Assertion"), kIOPMUserActiveLocal, &assertionID);
+
+		// IOKit API for declaring a power management assertion
+		IOPMAssertionDeclareUserActivity(CFSTR("Input Leap - entering screen"), kIOPMUserActiveLocal, &assertionID);
 
 		avoidSupression();
 	}

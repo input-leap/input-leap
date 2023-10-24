@@ -1,0 +1,1 @@
+[#1433](https://github.com/input-leap/input-leap/issues/1433) has been reverted as it creates issues in some situations where a clipboard update is attempted off-screen, as mentioned in [#1624](https://github.com/input-leap/input-leap/pull/1624).

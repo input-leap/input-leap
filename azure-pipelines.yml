@@ -67,8 +67,6 @@ jobs:
 - job: LinuxBuild
   strategy:
     matrix:
-      ubuntu-18.04:
-        imageName: 'ubuntu-18.04'
       ubuntu-20.04:
         imageName: 'ubuntu-20.04'
       ubuntu-22.04:
@@ -93,10 +91,6 @@ jobs:
           INPUTLEAP_VERSION_STAGE: Release
       big-sur-Release:
           imageName: "macOS-11"
-          B_BUILD_TYPE: Release
-          INPUTLEAP_VERSION_STAGE: Release
-      catalina-Release:
-          imageName: "macOS-10.15"
           B_BUILD_TYPE: Release
           INPUTLEAP_VERSION_STAGE: Release
   pool:

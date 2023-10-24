@@ -21,7 +21,6 @@
 #define ABOUTDIALOG__H
 
 #include <QDialog>
-#include "VersionChecker.h"
 
 #include "ui_AboutDialogBase.h"
 
@@ -34,9 +33,6 @@ class AboutDialog : public QDialog, public Ui::AboutDialogBase
 
     public:
         AboutDialog(QWidget* parent, const QString& app_name);
-
-    private:
-        VersionChecker m_versionChecker;
 };
 
 #endif

@@ -216,6 +216,15 @@ void ScreenSetupView::startDrag(Qt::DropActions)
     }
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+void ScreenSetupView::initViewItemOption(QStyleOptionViewItem *option) const
+{
+    option->showDecorationSelected = true;
+    option->decorationPosition = QStyleOptionViewItem::Top;
+    option->displayAlignment = Qt::AlignCenter;
+    option->textElideMode = Qt::ElideMiddle;
+}
+#else
 QStyleOptionViewItem ScreenSetupView::viewOptions() const
 {
     QStyleOptionViewItem option = QTableView::viewOptions();
@@ -225,3 +234,4 @@ QStyleOptionViewItem ScreenSetupView::viewOptions() const
     option.textElideMode = Qt::ElideMiddle;
     return option;
 }
+#endif

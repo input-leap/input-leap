@@ -89,26 +89,3 @@ qProcessorArch getProcessorArch()
 
     return kProcessorArchUnknown;
 }
-
-QString getOSInformation()
-{
-    QString result;
-
-#if defined(Q_OS_LINUX)
-    result = "Linux";
-    try {
-        QStringList arguments;
-        arguments.append("/etc/os-release");
-        CommandProcess cp("/bin/cat", arguments);
-        QString output = cp.run();
-
-        QRegExp resultRegex(".*PRETTY_NAME=\"([^\"]+)\".*");
-        if (resultRegex.exactMatch(output)) {
-            result = resultRegex.cap(1);
-        }
-    } catch (...) {
-    }
-#endif
-
-    return result;
-}

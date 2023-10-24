@@ -42,20 +42,45 @@ jobs:
     steps:
 
       # Preparation steps
-      - if: matrix.os == 'ubuntu:18.04'
-        name: Add repositories with newer git and cmake
+      - name: preinstall depends
         run: |
           apt-get update -y
           # software-properties-common is needed for add-apt-repository
           apt-get install -y software-properties-common gpg wget
           # actions/checkout@v3 wants newer git than what's in default repositories
           add-apt-repository ppa:git-core/ppa
-          # InputLeap requires at least CMake 3.12.
+
+      - if: matrix.os == 'ubuntu:18.04'
+        name: Add repositories with newer git and cmake
+        run: |
+          # InputLeap requires at least CMake 3.21.
           # This mirrors instructions at https://apt.kitware.com
           wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
             | gpg --dearmor - \
             > /usr/share/keyrings/kitware-archive-keyring.gpg
           echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ bionic main' \
+            > /etc/apt/sources.list.d/kitware.list
+
+      - if: matrix.os == 'ubuntu:20.04'
+        name: Add repositories with newer git and cmake
+        run: |
+          # InputLeap requires at least CMake 3.21.
+          # This mirrors instructions at https://apt.kitware.com
+          wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
+            | gpg --dearmor - \
+            > /usr/share/keyrings/kitware-archive-keyring.gpg
+          echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ focal main' \
+            > /etc/apt/sources.list.d/kitware.list
+
+      - if: matrix.os == 'ubuntu:22.04'
+        name: Add repositories with newer git and cmake
+        run: |
+          # InputLeap requires at least CMake 3.21.
+          # This mirrors instructions at https://apt.kitware.com
+          wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
+            | gpg --dearmor - \
+            > /usr/share/keyrings/kitware-archive-keyring.gpg
+          echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' \
             > /etc/apt/sources.list.d/kitware.list
 
       - name: Update image and install pre-reqs
@@ -262,6 +287,10 @@ jobs:
           "version=Qt$qt_version\$qt_version" >> $env:GITHUB_OUTPUT
           "msvc=$qt_msvc" >> $env:GITHUB_OUTPUT
           "path=$env:GITHUB_WORKSPACE\deps\Qt\Qt$qt_version\$qt_version\$qt_msvc" >> $env:GITHUB_OUTPUT
+
+      - name: Install OpenSSL
+        run: |
+            choco install openssl
 
       - name: Configure build system
         # NB. use cmd here to set variables from VsDevCmd.bat

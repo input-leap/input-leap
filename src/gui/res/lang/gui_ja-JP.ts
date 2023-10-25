@@ -2,14 +2,14 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ja_JP" sourcelanguage="en">
 <context>
-    <name>AboutDialogBase</name>
+    <name>AboutDialog</name>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="38"/>
+        <location filename="res/AboutDialog.ui" line="38"/>
         <source>About InputLeap</source>
         <translation>InputLeap について</translation>
     </message>
     <message utf8="true">
-        <location filename="res/AboutDialogBase.ui" line="53"/>
+        <location filename="res/AboutDialog.ui" line="53"/>
         <source>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
 Copyright © 2018 Debauchee Open Source Group&lt;br /&gt;
@@ -30,22 +30,22 @@ InputLeap の GUI のベースは QSynergy で、これは Volker Lanz 開発で
 &lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="140"/>
+        <location filename="res/AboutDialog.ui" line="140"/>
         <source>Unknown</source>
         <translation>不明</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="124"/>
+        <location filename="res/AboutDialog.ui" line="124"/>
         <source>Version:</source>
         <translation>バージョン:</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="167"/>
+        <location filename="res/AboutDialog.ui" line="167"/>
         <source>Build Date: </source>
         <translation>ビルド日: </translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="163"/>
+        <location filename="res/AboutDialog.ui" line="163"/>
         <source>&amp;Ok</source>
         <translation>OK(&amp;O)</translation>
     </message>

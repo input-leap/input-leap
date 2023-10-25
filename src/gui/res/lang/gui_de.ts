@@ -2,14 +2,14 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="de" sourcelanguage="en">
 <context>
-    <name>AboutDialogBase</name>
+    <name>AboutDialog</name>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="38"/>
+        <location filename="res/AboutDialog.ui" line="38"/>
         <source>About InputLeap</source>
         <translation>Über InputLeap</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="53"/>
+        <location filename="res/AboutDialog.ui" line="53"/>
         <source>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
@@ -39,17 +39,17 @@ Besuchen Sie unsere Website für Hilfe und Info (symless.com).
 &lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="140"/>
+        <location filename="res/AboutDialog.ui" line="140"/>
         <source>Unknown</source>
         <translation>Unbekannt</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="124"/>
+        <location filename="res/AboutDialog.ui" line="124"/>
         <source>Version:</source>
         <translation>Version:</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="163"/>
+        <location filename="res/AboutDialog.ui" line="163"/>
         <source>&amp;Ok</source>
         <translation>&amp;Ok</translation>
     </message>

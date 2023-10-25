@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE TS><TS language="fi" sourcelanguage="en" version="2.0">
 <context>
-    <name>AboutDialogBase</name>
+    <name>AboutDialog</name>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="38"/>
+        <location filename="res/AboutDialog.ui" line="38"/>
         <source>About InputLeap</source>
         <translation type="finished">Tietoa InputLeapstä</translation>
     </message>
     <message utf8="true">
-        <location filename="res/AboutDialogBase.ui" line="53"/>
+        <location filename="res/AboutDialog.ui" line="53"/>
         <source>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
@@ -29,17 +29,17 @@ Visit our website for help and info (symless.com).
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="140"/>
+        <location filename="res/AboutDialog.ui" line="140"/>
         <source>Unknown</source>
         <translation type="finished">Tuntematon</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="124"/>
+        <location filename="res/AboutDialog.ui" line="124"/>
         <source>Version:</source>
         <translation type="finished">Versio:</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="163"/>
+        <location filename="res/AboutDialog.ui" line="163"/>
         <source>&amp;Ok</source>
         <translation type="finished">OK</translation>
     </message>

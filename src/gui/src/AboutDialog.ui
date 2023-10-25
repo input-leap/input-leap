@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AboutDialogBase</class>
- <widget class="QDialog" name="AboutDialogBase">
+ <class>AboutDialog</class>
+ <widget class="QDialog" name="AboutDialog">
   <property name="windowModality">
    <enum>Qt::ApplicationModal</enum>
   </property>
@@ -12,8 +12,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>450</width>
-    <height>300</height>
+    <width>0</width>
+    <height>0</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -21,18 +21,6 @@
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
-  </property>
-  <property name="minimumSize">
-   <size>
-    <width>450</width>
-    <height>300</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>450</width>
-    <height>300</height>
-   </size>
   </property>
   <property name="windowTitle">
    <string>About InputLeap</string>
@@ -51,7 +39,9 @@
      </property>
      <property name="text">
       <string>&lt;p&gt;
-Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
+A Cross platform and open source Keyboard and mouse sharing application. &lt;br /&gt;&lt;br /&gt;
+
+Copyright © 2022 InputLeap Open Source Group&lt;br /&gt;
 Copyright © 2018 Debauchee Open Source Group&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
@@ -76,21 +66,18 @@ The InputLeap GUI is based on QSynergy by Volker Lanz.
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>100</height>
+       <height>50</height>
       </size>
      </property>
     </spacer>
    </item>
    <item row="0" column="1">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="../res/InputLeap.qrc">:/res/image/about.png</pixmap>
-     </property>
-     <property name="margin">
-      <number>0</number>
+    <widget class="QLabel" name="m_pLabelAppLogo">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
     </widget>
    </item>
@@ -192,7 +179,7 @@ The InputLeap GUI is based on QSynergy by Volker Lanz.
   <connection>
    <sender>buttonOk</sender>
    <signal>clicked()</signal>
-   <receiver>AboutDialogBase</receiver>
+   <receiver>AboutDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">

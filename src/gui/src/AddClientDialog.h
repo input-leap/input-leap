@@ -1,5 +1,6 @@
 /*
  * InputLeap -- mouse and keyboard sharing utility
+ * Copyright (C) 2023 InputLeap Developers
  * Copyright (C) 2014-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -18,9 +19,12 @@
 #ifndef ADDCLIENTDIALOG_H
 #define ADDCLIENTDIALOG_H
 
-#include "ui_AddClientDialogBase.h"
-
 #include <QDialog>
+
+namespace Ui
+{
+    class AddClientDialog;
+}
 
 class QPushButton;
 class QLabel;
@@ -34,12 +38,12 @@ enum {
     kAddClientIgnore
 };
 
-class AddClientDialog : public QDialog, public Ui::AddClientDialog
+class AddClientDialog : public QDialog
 {
     Q_OBJECT
 public:
     AddClientDialog(const QString& clientName, QWidget* parent = nullptr);
-    ~AddClientDialog() override;
+    ~AddClientDialog() = default;
 
     int addResult() { return m_AddResult; }
     bool ignoreAutoConfigClient() { return m_IgnoreAutoConfigClient; }
@@ -56,11 +60,12 @@ private slots:
     void handleButtonAdvanced();
 
 private:
-    QPushButton* m_pButtonLeft;
-    QPushButton* m_pButtonUp;
-    QPushButton* m_pButtonRight;
-    QPushButton* m_pButtonDown;
-    QLabel* m_pLabelCenter;
+    Ui::AddClientDialog *ui = nullptr;
+    QPushButton* m_pButtonLeft = nullptr;
+    QPushButton* m_pButtonUp = nullptr;
+    QPushButton* m_pButtonRight = nullptr;
+    QPushButton* m_pButtonDown = nullptr;
+    QLabel* m_pLabelCenter = nullptr;
     int m_AddResult;
     bool m_IgnoreAutoConfigClient;
 };

@@ -107,7 +107,7 @@ set(GUI_HEADER_FILES
 set(GUI_UI_FILES
     src/AboutDialog.ui
     src/ActionDialog.ui
-    src/AddClientDialogBase.ui
+    src/AddClientDialog.ui
     src/FingerprintAcceptDialog.ui
     src/HotkeyDialogBase.ui
     src/LogWindowBase.ui

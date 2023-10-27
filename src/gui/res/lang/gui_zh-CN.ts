@@ -157,17 +157,17 @@ InputLeap GUI 基于 Volker Lanz 制作的 QSynergy.
 <context>
     <name>AddClientDialog</name>
     <message>
-        <location filename="../../src/AddClientDialogBase.ui" line="20"/>
+        <location filename="../../src/AddClientDialog.ui" line="20"/>
         <source>Dialog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/AddClientDialogBase.ui" line="35"/>
+        <location filename="../../src/AddClientDialog.ui" line="35"/>
         <source>TextLabel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/AddClientDialogBase.ui" line="83"/>
+        <location filename="../../src/AddClientDialog.ui" line="83"/>
         <source>Ignore auto connect clients</source>
         <translation>忽略自动连接的客户端</translation>
     </message>

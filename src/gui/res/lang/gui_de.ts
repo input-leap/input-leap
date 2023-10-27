@@ -55,99 +55,99 @@ Besuchen Sie unsere Website für Hilfe und Info (symless.com).
     </message>
 </context>
 <context>
-    <name>ActionDialogBase</name>
+    <name>ActionDialog</name>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="14"/>
+        <location filename="res/ActionDialog.ui" line="14"/>
         <source>Configure Action</source>
         <translation>Aktion konfigurieren</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="20"/>
+        <location filename="res/ActionDialog.ui" line="20"/>
         <source>Choose the action to perform</source>
         <translation>Wähle eine Aktion, die ausgeführt werden soll</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="26"/>
+        <location filename="res/ActionDialog.ui" line="26"/>
         <source>Press a hotkey</source>
         <translation>Hotkey drücken</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="36"/>
+        <location filename="res/ActionDialog.ui" line="36"/>
         <source>Release a hotkey</source>
         <translation>Hotkey loslassen</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="43"/>
+        <location filename="res/ActionDialog.ui" line="43"/>
         <source>Press and release a hotkey</source>
         <translation>Hotkey drücken und loslassen</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="69"/>
+        <location filename="res/ActionDialog.ui" line="69"/>
         <source>only on these screens</source>
         <translation>nur auf diesen Bildschirmen</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="119"/>
+        <location filename="res/ActionDialog.ui" line="119"/>
         <source>Switch to screen</source>
         <translation>Zum Bildschirm wechseln</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="150"/>
+        <location filename="res/ActionDialog.ui" line="150"/>
         <source>Switch in direction</source>
         <translation>In Richtung wechseln</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="174"/>
+        <location filename="res/ActionDialog.ui" line="174"/>
         <source>left</source>
         <translation>links</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="179"/>
+        <location filename="res/ActionDialog.ui" line="179"/>
         <source>right</source>
         <translation>rechts</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="184"/>
+        <location filename="res/ActionDialog.ui" line="184"/>
         <source>up</source>
         <translation>hoch</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="189"/>
+        <location filename="res/ActionDialog.ui" line="189"/>
         <source>down</source>
         <translation>runter</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="201"/>
+        <location filename="res/ActionDialog.ui" line="201"/>
         <source>Lock cursor to screen</source>
         <translation>Cursor auf Bildschirm beschränken</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="225"/>
+        <location filename="res/ActionDialog.ui" line="225"/>
         <source>toggle</source>
         <translation>umschalten</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="230"/>
+        <location filename="res/ActionDialog.ui" line="230"/>
         <source>on</source>
         <translation>ein</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="235"/>
+        <location filename="res/ActionDialog.ui" line="235"/>
         <source>off</source>
         <translation>aus</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="248"/>
+        <location filename="res/ActionDialog.ui" line="248"/>
         <source>This action is performed when</source>
         <translation>Diese Aktion wird ausgeführt, wenn</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="254"/>
+        <location filename="res/ActionDialog.ui" line="254"/>
         <source>the hotkey is pressed</source>
         <translation>wenn der Hotkey gedrückt wird</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="264"/>
+        <location filename="res/ActionDialog.ui" line="264"/>
         <source>the hotkey is released</source>
         <translation>wenn der Hotkey losgelassen wird</translation>
     </message>

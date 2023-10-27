@@ -52,104 +52,104 @@ InputLeap GUI 基于 Volker Lanz 制作的 QSynergy.
     </message>
 </context>
 <context>
-    <name>ActionDialogBase</name>
+    <name>ActionDialog</name>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="14"/>
+        <location filename="../../src/ActionDialog.ui" line="14"/>
         <source>Configure Action</source>
         <translation>配置动作</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="20"/>
+        <location filename="../../src/ActionDialog.ui" line="20"/>
         <source>Choose the action to perform</source>
         <translation>选择要执行的动作</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="26"/>
+        <location filename="../../src/ActionDialog.ui" line="26"/>
         <source>Press a hotkey</source>
         <translation>按下热键</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="36"/>
+        <location filename="../../src/ActionDialog.ui" line="36"/>
         <source>Release a hotkey</source>
         <translation>松开热键</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="43"/>
+        <location filename="../../src/ActionDialog.ui" line="43"/>
         <source>Press and release a hotkey</source>
         <translation>单击热键</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="69"/>
+        <location filename="../../src/ActionDialog.ui" line="69"/>
         <source>only on these screens</source>
         <translation>仅在这些屏幕上</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="119"/>
+        <location filename="../../src/ActionDialog.ui" line="119"/>
         <source>Switch to screen</source>
         <translation>切换到屏幕</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="161"/>
+        <location filename="../../src/ActionDialog.ui" line="161"/>
         <source>Switch in direction</source>
         <translation>切换方向</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="185"/>
+        <location filename="../../src/ActionDialog.ui" line="185"/>
         <source>left</source>
         <translation>左</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="190"/>
+        <location filename="../../src/ActionDialog.ui" line="190"/>
         <source>right</source>
         <translation>右侧</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="195"/>
+        <location filename="../../src/ActionDialog.ui" line="195"/>
         <source>up</source>
         <translation>上方</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="200"/>
+        <location filename="../../src/ActionDialog.ui" line="200"/>
         <source>down</source>
         <translation>下方</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="212"/>
+        <location filename="../../src/ActionDialog.ui" line="212"/>
         <source>Lock cursor to screen</source>
         <translation>锁定指针于屏幕</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="236"/>
+        <location filename="../../src/ActionDialog.ui" line="236"/>
         <source>toggle</source>
         <translation>切换</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="241"/>
+        <location filename="../../src/ActionDialog.ui" line="241"/>
         <source>on</source>
         <translation>启用</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="246"/>
+        <location filename="../../src/ActionDialog.ui" line="246"/>
         <source>off</source>
         <translation>禁用</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="259"/>
+        <location filename="../../src/ActionDialog.ui" line="259"/>
         <source>This action is performed when</source>
         <translation>当……时启用此动作</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="265"/>
+        <location filename="../../src/ActionDialog.ui" line="265"/>
         <source>the hotkey is pressed</source>
         <translation>热键被按下</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="275"/>
+        <location filename="../../src/ActionDialog.ui" line="275"/>
         <source>the hotkey is released</source>
         <translation>热键被松开</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="150"/>
+        <location filename="../../src/ActionDialog.ui" line="150"/>
         <source>Toggle screen</source>
         <translation>切换屏幕</translation>
     </message>

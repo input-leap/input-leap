@@ -45,99 +45,99 @@ Visit our website for help and info (symless.com).
     </message>
 </context>
 <context>
-    <name>ActionDialogBase</name>
+    <name>ActionDialog</name>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="14"/>
+        <location filename="res/ActionDialog.ui" line="14"/>
         <source>Configure Action</source>
         <translation type="finished">Διαμόρφωσε την ενέργεια αυτή</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="20"/>
+        <location filename="res/ActionDialog.ui" line="20"/>
         <source>Choose the action to perform</source>
         <translation type="finished">Επιλέξτε την ενέργεια για να εκτελέστεί</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="26"/>
+        <location filename="res/ActionDialog.ui" line="26"/>
         <source>Press a hotkey</source>
         <translation type="finished">Πιέστε ένα πλήκτρο άμεσης πρόσβασης</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="36"/>
+        <location filename="res/ActionDialog.ui" line="36"/>
         <source>Release a hotkey</source>
         <translation type="finished">Άφηστε ένα πλήκτρο άμεσης πρόσβασης</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="43"/>
+        <location filename="res/ActionDialog.ui" line="43"/>
         <source>Press and release a hotkey</source>
         <translation type="finished">Πιέστε και αφήστε ένα πλήκτρο άμεσης πρόσβασης</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="69"/>
+        <location filename="res/ActionDialog.ui" line="69"/>
         <source>only on these screens</source>
         <translation type="finished">μόνο σε αυτές τις οθόνες</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="119"/>
+        <location filename="res/ActionDialog.ui" line="119"/>
         <source>Switch to screen</source>
         <translation type="finished">Άλλαγή στην οθόνη</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="150"/>
+        <location filename="res/ActionDialog.ui" line="150"/>
         <source>Switch in direction</source>
         <translation type="finished">Αλλαγή στην κατεύθυνση</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="174"/>
+        <location filename="res/ActionDialog.ui" line="174"/>
         <source>left</source>
         <translation type="finished">αριστερά</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="179"/>
+        <location filename="res/ActionDialog.ui" line="179"/>
         <source>right</source>
         <translation type="finished">δεξιά</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="184"/>
+        <location filename="res/ActionDialog.ui" line="184"/>
         <source>up</source>
         <translation type="finished">πάνω</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="189"/>
+        <location filename="res/ActionDialog.ui" line="189"/>
         <source>down</source>
         <translation type="finished">κάτω</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="201"/>
+        <location filename="res/ActionDialog.ui" line="201"/>
         <source>Lock cursor to screen</source>
         <translation type="finished">Κλείδωμα δείκτη στην οθόνη</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="225"/>
+        <location filename="res/ActionDialog.ui" line="225"/>
         <source>toggle</source>
         <translation type="finished">Εναλλαγή</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="230"/>
+        <location filename="res/ActionDialog.ui" line="230"/>
         <source>on</source>
         <translation type="finished">άνοιξε</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="235"/>
+        <location filename="res/ActionDialog.ui" line="235"/>
         <source>off</source>
         <translation type="finished">κλείσε</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="248"/>
+        <location filename="res/ActionDialog.ui" line="248"/>
         <source>This action is performed when</source>
         <translation type="finished">Η δράση αυτή πραγματοποιείται όταν</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="254"/>
+        <location filename="res/ActionDialog.ui" line="254"/>
         <source>the hotkey is pressed</source>
         <translation type="finished">Το άμεσο πλήκτρο έχει πατηθεί</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="264"/>
+        <location filename="res/ActionDialog.ui" line="264"/>
         <source>the hotkey is released</source>
         <translation type="finished">Το άμεσο πλήκτρο έχει αφεθεί</translation>
     </message>

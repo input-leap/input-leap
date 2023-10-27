@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ActionDialogBase</class>
- <widget class="QDialog" name="ActionDialogBase">
+ <class>ActionDialog</class>
+ <widget class="QDialog" name="ActionDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>372</width>
-    <height>484</height>
+    <width>617</width>
+    <height>820</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -98,6 +98,12 @@
            </property>
            <property name="selectionMode">
             <enum>QAbstractItemView::ExtendedSelection</enum>
+           </property>
+           <property name="resizeMode">
+            <enum>QListView::Adjust</enum>
+           </property>
+           <property name="layoutMode">
+            <enum>QListView::SinglePass</enum>
            </property>
           </widget>
          </item>
@@ -303,7 +309,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>ActionDialogBase</receiver>
+   <receiver>ActionDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -319,7 +325,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>ActionDialogBase</receiver>
+   <receiver>ActionDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

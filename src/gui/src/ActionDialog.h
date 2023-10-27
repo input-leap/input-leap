@@ -1,5 +1,6 @@
 /*
  * InputLeap -- mouse and keyboard sharing utility
+ * Copyright (C) 2023 Input Leap Devs
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -21,8 +22,12 @@
 #define ACTIONDIALOG_H
 
 #include <QDialog>
+#include "KeySequenceWidget.h"
 
-#include "ui_ActionDialogBase.h"
+namespace Ui
+{
+    class ActionDialog;
+}
 
 class Hotkey;
 class Action;
@@ -30,10 +35,9 @@ class QRadioButton;
 class QButtonGroup;
 class ServerConfig;
 
-class ActionDialog : public QDialog, public Ui::ActionDialogBase
+class ActionDialog : public QDialog
 {
     Q_OBJECT
-
     public:
         ActionDialog(QWidget* parent, ServerConfig& config, Hotkey& hotkey, Action& action);
 
@@ -42,7 +46,7 @@ class ActionDialog : public QDialog, public Ui::ActionDialogBase
         void on_m_pKeySequenceWidgetHotkey_keySequenceChanged();
 
     protected:
-        const KeySequenceWidget* sequenceWidget() const { return m_pKeySequenceWidgetHotkey; }
+        const KeySequenceWidget* sequenceWidget() const;
         const ServerConfig& serverConfig() const { return m_ServerConfig; }
 
     private:
@@ -51,6 +55,6 @@ class ActionDialog : public QDialog, public Ui::ActionDialogBase
         Action& m_Action;
 
         QButtonGroup* m_pButtonGroupType;
+        Ui::ActionDialog *ui = nullptr;
 };
-
 #endif

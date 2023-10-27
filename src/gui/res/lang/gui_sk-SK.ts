@@ -55,99 +55,99 @@ Pre pomoc a ďalšie informácie navštívte našu webovú stránku (symless.com
     </message>
 </context>
 <context>
-    <name>ActionDialogBase</name>
+    <name>ActionDialog</name>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="14"/>
+        <location filename="res/ActionDialog.ui" line="14"/>
         <source>Configure Action</source>
         <translation>Nastaviť akciu</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="20"/>
+        <location filename="res/ActionDialog.ui" line="20"/>
         <source>Choose the action to perform</source>
         <translation>Vyberte akciu, ktorá sa má vykonať</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="26"/>
+        <location filename="res/ActionDialog.ui" line="26"/>
         <source>Press a hotkey</source>
         <translation>Stlačte klávesovú skratku</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="36"/>
+        <location filename="res/ActionDialog.ui" line="36"/>
         <source>Release a hotkey</source>
         <translation>Uvoľnite klávesovú skratku</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="43"/>
+        <location filename="res/ActionDialog.ui" line="43"/>
         <source>Press and release a hotkey</source>
         <translation>Stlačte a uvoľnite klávesovú skratku</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="69"/>
+        <location filename="res/ActionDialog.ui" line="69"/>
         <source>only on these screens</source>
         <translation>iba na týchto obrazovkách</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="119"/>
+        <location filename="res/ActionDialog.ui" line="119"/>
         <source>Switch to screen</source>
         <translation>Prepnúť na obrazovku</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="150"/>
+        <location filename="res/ActionDialog.ui" line="150"/>
         <source>Switch in direction</source>
         <translation>Prepnúť v smere</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="174"/>
+        <location filename="res/ActionDialog.ui" line="174"/>
         <source>left</source>
         <translation>doľava</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="179"/>
+        <location filename="res/ActionDialog.ui" line="179"/>
         <source>right</source>
         <translation>doprava</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="184"/>
+        <location filename="res/ActionDialog.ui" line="184"/>
         <source>up</source>
         <translation>hore</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="189"/>
+        <location filename="res/ActionDialog.ui" line="189"/>
         <source>down</source>
         <translation>dole</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="201"/>
+        <location filename="res/ActionDialog.ui" line="201"/>
         <source>Lock cursor to screen</source>
         <translation>Zamknúť kurzor na obrazovke</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="225"/>
+        <location filename="res/ActionDialog.ui" line="225"/>
         <source>toggle</source>
         <translation>prepnúť</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="230"/>
+        <location filename="res/ActionDialog.ui" line="230"/>
         <source>on</source>
         <translation>zap</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="235"/>
+        <location filename="res/ActionDialog.ui" line="235"/>
         <source>off</source>
         <translation>vyp</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="248"/>
+        <location filename="res/ActionDialog.ui" line="248"/>
         <source>This action is performed when</source>
         <translation>Táto akcia sa vykoná pri</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="254"/>
+        <location filename="res/ActionDialog.ui" line="254"/>
         <source>the hotkey is pressed</source>
         <translation>stlačení klávesovej skratky</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="264"/>
+        <location filename="res/ActionDialog.ui" line="264"/>
         <source>the hotkey is released</source>
         <translation>uvoľnení klávesovej skratky</translation>
     </message>

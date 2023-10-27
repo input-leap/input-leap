@@ -55,99 +55,99 @@ A grafikus felületet Volker Lanz QSynergy alkalmazása alapján készült.
     </message>
 </context>
 <context>
-    <name>ActionDialogBase</name>
+    <name>ActionDialog</name>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="14"/>
+        <location filename="res/ActionDialog.ui" line="14"/>
         <source>Configure Action</source>
         <translation>Művelet beállítása</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="20"/>
+        <location filename="res/ActionDialog.ui" line="20"/>
         <source>Choose the action to perform</source>
         <translation>Válasszon egy műveletet</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="26"/>
+        <location filename="res/ActionDialog.ui" line="26"/>
         <source>Press a hotkey</source>
         <translation>Gyorsbillentyű lenyomása</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="36"/>
+        <location filename="res/ActionDialog.ui" line="36"/>
         <source>Release a hotkey</source>
         <translation>Gyorsbillentyű felengedése</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="43"/>
+        <location filename="res/ActionDialog.ui" line="43"/>
         <source>Press and release a hotkey</source>
         <translation>Gyorsbillentyű lenyomása és felengedése</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="69"/>
+        <location filename="res/ActionDialog.ui" line="69"/>
         <source>only on these screens</source>
         <translation>alkalmazás csak eze(ke)n a gépe(ke)n</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="119"/>
+        <location filename="res/ActionDialog.ui" line="119"/>
         <source>Switch to screen</source>
         <translation>Váltás másik gépre</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="150"/>
+        <location filename="res/ActionDialog.ui" line="150"/>
         <source>Switch in direction</source>
         <translation>Irányváltás</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="174"/>
+        <location filename="res/ActionDialog.ui" line="174"/>
         <source>left</source>
         <translation>bal</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="179"/>
+        <location filename="res/ActionDialog.ui" line="179"/>
         <source>right</source>
         <translation>jobb</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="184"/>
+        <location filename="res/ActionDialog.ui" line="184"/>
         <source>up</source>
         <translation>fel</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="189"/>
+        <location filename="res/ActionDialog.ui" line="189"/>
         <source>down</source>
         <translation>le</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="201"/>
+        <location filename="res/ActionDialog.ui" line="201"/>
         <source>Lock cursor to screen</source>
         <translation>Kurzor zárolása adott gépen</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="225"/>
+        <location filename="res/ActionDialog.ui" line="225"/>
         <source>toggle</source>
         <translation>váltás</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="230"/>
+        <location filename="res/ActionDialog.ui" line="230"/>
         <source>on</source>
         <translation>be</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="235"/>
+        <location filename="res/ActionDialog.ui" line="235"/>
         <source>off</source>
         <translation>ki</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="248"/>
+        <location filename="res/ActionDialog.ui" line="248"/>
         <source>This action is performed when</source>
         <translation>Művelet végrehajtása a gyorsbillentyű...</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="254"/>
+        <location filename="res/ActionDialog.ui" line="254"/>
         <source>the hotkey is pressed</source>
         <translation>lenyomása esetén</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="264"/>
+        <location filename="res/ActionDialog.ui" line="264"/>
         <source>the hotkey is released</source>
         <translation>felengedése esetén</translation>
     </message>

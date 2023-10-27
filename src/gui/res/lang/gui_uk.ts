@@ -45,99 +45,99 @@ Visit our website for help and info (symless.com).
     </message>
 </context>
 <context>
-    <name>ActionDialogBase</name>
+    <name>ActionDialog</name>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="14"/>
+        <location filename="res/ActionDialog.ui" line="14"/>
         <source>Configure Action</source>
         <translation type="finished">Налаштування дій</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="20"/>
+        <location filename="res/ActionDialog.ui" line="20"/>
         <source>Choose the action to perform</source>
         <translation type="finished">Виберіть дію, що виконується</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="26"/>
+        <location filename="res/ActionDialog.ui" line="26"/>
         <source>Press a hotkey</source>
         <translation type="finished">Натисніть гарячу клавішу</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="36"/>
+        <location filename="res/ActionDialog.ui" line="36"/>
         <source>Release a hotkey</source>
         <translation type="finished">Відпустіть гарячу клавішу</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="43"/>
+        <location filename="res/ActionDialog.ui" line="43"/>
         <source>Press and release a hotkey</source>
         <translation type="finished">Натисніть та відпустіть гарячу клавішу</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="69"/>
+        <location filename="res/ActionDialog.ui" line="69"/>
         <source>only on these screens</source>
         <translation type="finished">тільки на цих екранах</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="119"/>
+        <location filename="res/ActionDialog.ui" line="119"/>
         <source>Switch to screen</source>
         <translation type="finished">Перехід на екран</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="150"/>
+        <location filename="res/ActionDialog.ui" line="150"/>
         <source>Switch in direction</source>
         <translation type="finished">Перехід в напрямку</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="174"/>
+        <location filename="res/ActionDialog.ui" line="174"/>
         <source>left</source>
         <translation type="finished">вліво</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="179"/>
+        <location filename="res/ActionDialog.ui" line="179"/>
         <source>right</source>
         <translation type="finished">вправо</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="184"/>
+        <location filename="res/ActionDialog.ui" line="184"/>
         <source>up</source>
         <translation type="finished">вверх</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="189"/>
+        <location filename="res/ActionDialog.ui" line="189"/>
         <source>down</source>
         <translation type="finished">вниз</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="201"/>
+        <location filename="res/ActionDialog.ui" line="201"/>
         <source>Lock cursor to screen</source>
         <translation type="finished">Закріпити курсор за екраном</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="225"/>
+        <location filename="res/ActionDialog.ui" line="225"/>
         <source>toggle</source>
         <translation type="finished">переключити</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="230"/>
+        <location filename="res/ActionDialog.ui" line="230"/>
         <source>on</source>
         <translation type="finished">ввімк.</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="235"/>
+        <location filename="res/ActionDialog.ui" line="235"/>
         <source>off</source>
         <translation type="finished">вимк.</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="248"/>
+        <location filename="res/ActionDialog.ui" line="248"/>
         <source>This action is performed when</source>
         <translation type="finished">Ця дія виконується коли</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="254"/>
+        <location filename="res/ActionDialog.ui" line="254"/>
         <source>the hotkey is pressed</source>
         <translation type="finished">гаряча клавіша натиснута</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="264"/>
+        <location filename="res/ActionDialog.ui" line="264"/>
         <source>the hotkey is released</source>
         <translation type="finished">гаряча клавіша відпущена</translation>
     </message>

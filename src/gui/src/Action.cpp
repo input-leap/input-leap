@@ -1,5 +1,6 @@
 /*
  * InputLeap -- mouse and keyboard sharing utility
+ * Copyright (C) 2023 InputLeap Developers
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -31,6 +32,8 @@ const char* Action::m_ActionTypeNames[] =
 
 const char* Action::m_SwitchDirectionNames[] = { "left", "right", "up", "down" };
 const char* Action::m_LockCursorModeNames[] = { "toggle", "on", "off" };
+const QString Action::m_commandTemplate = QStringLiteral("(%1)");
+
 
 Action::Action() :
     m_KeySequence(),
@@ -51,58 +54,48 @@ QString Action::text() const
      * in the end but now argument inside. If you need a function with no
      * argument, it can not have () in the end.
      */
-    QString text = QString(m_ActionTypeNames[m_KeySequence.isMouseButton() ?
-                                             type() + int(mouseDown) : type()]);
-
+    QString text = QString(m_ActionTypeNames[m_KeySequence.isMouseButton() ? type() + int(mouseDown) : type()]);
     switch (type())
     {
         case keyDown:
         case keyUp:
         case keystroke:
             {
-                text += "(";
-                text += m_KeySequence.toString();
-
+                QString commandArgs = m_KeySequence.toString();
                 if (!m_KeySequence.isMouseButton())
                 {
                     const QStringList& screens = typeScreenNames();
                     if (haveScreens() && !screens.isEmpty())
                     {
-                        text += ",";
-
+                        QString screenList;
                         for (int i = 0; i < screens.size(); i++)
                         {
-                            text += screens[i];
+                            screenList.append(screens[i]);
                             if (i != screens.size() - 1)
-                                text += ":";
+                                screenList.append(QStringLiteral(":"));
                         }
+                        commandArgs.append(QStringLiteral(",%1").arg(screenList));
                     }
                     else
-                        text += ",*";
+                        commandArgs.append(QStringLiteral(",*"));
                 }
-                text += ")";
+                text.append(m_commandTemplate.arg(commandArgs));
             }
             break;
 
         case switchToScreen:
-            text += "(";
-            text += switchScreenName();
-            text += ")";
+            text.append(m_commandTemplate.arg(switchScreenName()));
             break;
 
         case toggleScreen:
             break;
 
         case switchInDirection:
-            text += "(";
-            text += m_SwitchDirectionNames[m_SwitchDirection];
-            text += ")";
+            text.append(m_commandTemplate.arg(m_SwitchDirectionNames[m_SwitchDirection]));
             break;
 
         case lockCursorToScreen:
-            text += "(";
-            text += m_LockCursorModeNames[m_LockCursorMode];
-            text += ")";
+            text.append(m_commandTemplate.arg(m_LockCursorModeNames[m_LockCursorMode]));
             break;
 
         default:
@@ -110,49 +103,48 @@ QString Action::text() const
             break;
     }
 
-
     return text;
 }
 
 void Action::loadSettings(QSettings& settings)
 {
     m_KeySequence.loadSettings(settings);
-    setType(settings.value("type", keyDown).toInt());
+    setType(settings.value(SETTINGS::ACTION_TYPE, keyDown).toInt());
 
     m_TypeScreenNames.clear();
-    int numTypeScreens = settings.beginReadArray("typeScreenNames");
+    int numTypeScreens = settings.beginReadArray(SETTINGS::SCREEN_NAMES);
     for (int i = 0; i < numTypeScreens; i++)
     {
         settings.setArrayIndex(i);
-        m_TypeScreenNames.append(settings.value("typeScreenName").toString());
+            m_TypeScreenNames.append(settings.value(SETTINGS::SCREEN_NAME).toString());
     }
     settings.endArray();
 
-    setSwitchScreenName(settings.value("switchScreenName").toString());
-    setSwitchDirection(settings.value("switchInDirection", switchLeft).toInt());
-    setLockCursorMode(settings.value("lockCursorToScreen", lockCursorToggle).toInt());
-    setActiveOnRelease(settings.value("activeOnRelease", false).toBool());
-    setHaveScreens(settings.value("hasScreens", false).toBool());
+    setSwitchScreenName(settings.value(SETTINGS::SWITCH_TO_SCREEN).toString());
+    setSwitchDirection(settings.value(SETTINGS::SWITCH_DIRECTION, switchLeft).toInt());
+    setLockCursorMode(settings.value(SETTINGS::LOCKTOSCREEN, lockCursorToggle).toInt());
+    setActiveOnRelease(settings.value(SETTINGS::ACTIVEONRELEASE, false).toBool());
+    setHaveScreens(settings.value(SETTINGS::HASSCREENS, false).toBool());
 }
 
 void Action::saveSettings(QSettings& settings) const
 {
     m_KeySequence.saveSettings(settings);
-    settings.setValue("type", type());
+    settings.setValue(SETTINGS::ACTION_TYPE, type());
 
-    settings.beginWriteArray("typeScreenNames");
+    settings.beginWriteArray(SETTINGS::SCREEN_NAMES);
     for (int i = 0; i < typeScreenNames().size(); i++)
     {
         settings.setArrayIndex(i);
-        settings.setValue("typeScreenName", typeScreenNames()[i]);
+        settings.setValue(SETTINGS::SCREEN_NAME, typeScreenNames()[i]);
     }
     settings.endArray();
 
-    settings.setValue("switchScreenName", switchScreenName());
-    settings.setValue("switchInDirection", switchDirection());
-    settings.setValue("lockCursorToScreen", lockCursorMode());
-    settings.setValue("activeOnRelease", activeOnRelease());
-    settings.setValue("hasScreens", haveScreens());
+    settings.setValue(SETTINGS::SWITCH_TO_SCREEN, switchScreenName());
+    settings.setValue(SETTINGS::SWITCH_DIRECTION, switchDirection());
+    settings.setValue(SETTINGS::LOCKTOSCREEN, lockCursorMode());
+    settings.setValue(SETTINGS::ACTIVEONRELEASE, activeOnRelease());
+    settings.setValue(SETTINGS::HASSCREENS, haveScreens());
 }
 
 QTextStream& operator<<(QTextStream& outStream, const Action& action)

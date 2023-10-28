@@ -1,5 +1,6 @@
 /*
  * InputLeap -- mouse and keyboard sharing utility
+ * Copyright (C) 2023 InputLeap Developers
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -29,6 +30,17 @@
 class ActionDialog;
 class QSettings;
 class QTextStream;
+
+namespace SETTINGS {
+    static const QString ACTION_TYPE = QStringLiteral("type");
+    static const QString SCREEN_NAMES = QStringLiteral("typeScreenNames");
+    static const QString SCREEN_NAME = QStringLiteral("typeScreenName");
+    static const QString SWITCH_TO_SCREEN = QStringLiteral("switchScreenName");
+    static const QString SWITCH_DIRECTION = QStringLiteral("switchInDirection");
+    static const QString LOCKTOSCREEN = QStringLiteral("lockCursorToScreen");
+    static const QString ACTIVEONRELEASE = QStringLiteral("activeOnRelease");
+    static const QString HASSCREENS = QStringLiteral("hasScreens");
+};
 
 class Action
 {
@@ -85,6 +97,7 @@ class Action
         static const char* m_ActionTypeNames[];
         static const char* m_SwitchDirectionNames[];
         static const char* m_LockCursorModeNames[];
+        static const QString m_commandTemplate;
 };
 
 QTextStream& operator<<(QTextStream& outStream, const Action& action);

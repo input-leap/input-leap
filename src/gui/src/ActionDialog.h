@@ -50,11 +50,11 @@ class ActionDialog : public QDialog
         const ServerConfig& serverConfig() const { return m_ServerConfig; }
 
     private:
+        Ui::ActionDialog *ui = nullptr;
         const ServerConfig& m_ServerConfig;
         Hotkey& m_Hotkey;
         Action& m_Action;
 
         QButtonGroup* m_pButtonGroupType;
-        Ui::ActionDialog *ui = nullptr;
 };
 #endif

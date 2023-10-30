@@ -48,8 +48,7 @@ void ZeroconfBrowser::browseForType(const QString& type)
         }
         else {
             socket_ = std::make_unique<QSocketNotifier>(sockFD, QSocketNotifier::Read, this);
-            connect(socket_.get(), SIGNAL(activated(int)), this,
-                SLOT(socketReadyRead()));
+            connect(socket_.get(), &QSocketNotifier::activated, this, &ZeroconfBrowser::socketReadyRead);
         }
     }
 }

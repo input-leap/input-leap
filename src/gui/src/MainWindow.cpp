@@ -149,9 +149,9 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 
 #if defined(Q_OS_WIN)
     // ipc must always be enabled, so that we can disable command when switching to desktop mode.
-    connect(&m_IpcClient, SIGNAL(readLogLine(const QString&)), this, SLOT(appendLogRaw(const QString&)));
-    connect(&m_IpcClient, SIGNAL(errorMessage(const QString&)), this, SLOT(appendLogError(const QString&)));
-    connect(&m_IpcClient, SIGNAL(infoMessage(const QString&)), this, SLOT(appendLogInfo(const QString&)));
+    connect(&m_IpcClient, &IpcClient::readLogLine, this, &MainWindow::appendLogRaw);
+    connect(&m_IpcClient, &IpcClient::errorMessage, this, &MainWindow::appendLogError);
+    connect(&m_IpcClient, &IpcClient::infoMessage, this, &MainWindow::appendLogInfo);
     m_IpcClient.connectToHost();
 #endif
 
@@ -174,7 +174,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 
     updateSSLFingerprint();
 
-    connect(toolbutton_show_fingerprint, &QToolButton::clicked, [this](bool checked)
+    connect(toolbutton_show_fingerprint, &QToolButton::clicked, this, [this](bool checked)
     {
         (void) checked;
 
@@ -261,8 +261,7 @@ void MainWindow::createTrayIcon()
     m_pTrayIcon->setContextMenu(m_pTrayIconMenu);
     m_pTrayIcon->setToolTip("InputLeap");
 
-    connect(m_pTrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-            this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
+    connect(m_pTrayIcon, &QSystemTrayIcon::activated, this, &MainWindow::trayActivated);
 
     set_icon(AppConnectionState::DISCONNECTED);
 
@@ -313,12 +312,12 @@ void MainWindow::loadSettings()
 
 void MainWindow::initConnections()
 {
-    connect(m_pActionMinimize, SIGNAL(triggered()), this, SLOT(hide()));
-    connect(m_pActionRestore, SIGNAL(triggered()), this, SLOT(showNormal()));
-    connect(m_pActionStartCmdApp, SIGNAL(triggered()), this, SLOT(start_cmd_app()));
-    connect(m_pActionStopCmdApp, SIGNAL(triggered()), this, SLOT(stop_cmd_app()));
-    connect(m_pActionShowLog, SIGNAL(triggered()), this, SLOT(showLogWindow()));
-    connect(m_pActionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
+    connect(m_pActionMinimize, &QAction::triggered, this, &MainWindow::hide);
+    connect(m_pActionRestore, &QAction::triggered, this, &MainWindow::showNormal);
+    connect(m_pActionStartCmdApp, &QAction::triggered, this, &MainWindow::start_cmd_app);
+    connect(m_pActionStopCmdApp, &QAction::triggered, this, &MainWindow::stop_cmd_app);
+    connect(m_pActionShowLog, &QAction::triggered, this, &MainWindow::showLogWindow);
+    connect(m_pActionQuit, &QAction::triggered, qApp, &QCoreApplication::quit);
 }
 
 void MainWindow::saveSettings()
@@ -607,9 +606,9 @@ void MainWindow::start_cmd_app()
 
     if (desktopMode)
     {
-        connect(cmd_app_process_, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(cmd_app_finished(int, QProcess::ExitStatus)));
-        connect(cmd_app_process_, SIGNAL(readyReadStandardOutput()), this, SLOT(logOutput()));
-        connect(cmd_app_process_, SIGNAL(readyReadStandardError()), this, SLOT(logError()));
+        connect(cmd_app_process_, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &MainWindow::cmd_app_finished);
+        connect(cmd_app_process_, &QProcess::readyReadStandardOutput, this, &MainWindow::logOutput);
+        connect(cmd_app_process_, &QProcess::readyReadStandardError, this, &MainWindow::logError);
     }
 
     m_pLogWindow->startNewInstance();
@@ -845,7 +844,7 @@ void MainWindow::cmd_app_finished(int exitCode, QProcess::ExitStatus)
     }
 
     if (m_ExpectedRunningState == kStarted) {
-        QTimer::singleShot(1000, this, SLOT(start_cmd_app()));
+        QTimer::singleShot(1000, this, &MainWindow::start_cmd_app);
         appendLogInfo(QString("detected process not running, auto restarting"));
     }
     else {
@@ -860,15 +859,15 @@ void MainWindow::set_connection_state(AppConnectionState state)
 
     if (state == AppConnectionState::CONNECTED || state == AppConnectionState::CONNECTING)
     {
-        disconnect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartCmdApp, SLOT(trigger()));
-        connect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopCmdApp, SLOT(trigger()));
+        disconnect(m_pButtonToggleStart, &QPushButton::clicked, m_pActionStartCmdApp, &QAction::trigger);
+        connect(m_pButtonToggleStart, &QPushButton::clicked, m_pActionStopCmdApp, &QAction::trigger);
         m_pButtonToggleStart->setText(tr("&Stop"));
         m_pButtonReload->setEnabled(true);
     }
     else if (state == AppConnectionState::DISCONNECTED)
     {
-        disconnect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopCmdApp, SLOT(trigger()));
-        connect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartCmdApp, SLOT(trigger()));
+        disconnect(m_pButtonToggleStart, &QPushButton::clicked, m_pActionStopCmdApp, &QAction::trigger);
+        connect(m_pButtonToggleStart, &QPushButton::clicked, m_pActionStartCmdApp, &QAction::trigger);
         m_pButtonToggleStart->setText(tr("&Start"));
         m_pButtonReload->setEnabled(false);
     }
@@ -1050,10 +1049,7 @@ void MainWindow::updateSSLFingerprint()
 {
     if (m_AppConfig->getCryptoEnabled() && m_pSslCertificate == nullptr) {
         m_pSslCertificate = new SslCertificate(this);
-        connect(m_pSslCertificate, &SslCertificate::info, [&](QString info)
-        {
-            appendLogInfo(info);
-        });
+        connect(m_pSslCertificate, &SslCertificate::info, this, &MainWindow::appendLogInfo);
         m_pSslCertificate->generateCertificate();
     }
 
@@ -1267,7 +1263,7 @@ void MainWindow::downloadBonjour()
 
     if (m_pDataDownloader == nullptr) {
         m_pDataDownloader = new DataDownloader(this);
-        connect(m_pDataDownloader, SIGNAL(isComplete()), SLOT(installBonjour()));
+        connect(m_pDataDownloader, &DataDownloader::isComplete, this, &MainWindow::installBonjour);
     }
 
     m_pDataDownloader->download(url);
@@ -1325,10 +1321,9 @@ void MainWindow::installBonjour()
     }
 
     QThread* thread = new QThread;
-    connect(m_BonjourInstall, SIGNAL(finished()), this,
-        SLOT(bonjourInstallFinished()));
-    connect(m_BonjourInstall, SIGNAL(finished()), thread, SLOT(quit()));
-    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    connect(m_BonjourInstall, &QThread::finished, this, &MainWindow::bonjourInstallFinished);
+    connect(m_BonjourInstall, &QThread::finished, thread, &QThread::quit);
+    connect(thread, &QThread::finished, thread, &QThread::deleteLater);
 
     m_BonjourInstall->moveToThread(thread);
     thread->start();

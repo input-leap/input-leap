@@ -57,7 +57,7 @@ QString CommandProcess::run()
                 .toStdString());
     }
 
-    emit finished();
+    Q_EMIT finished();
 
     return output;
 }

@@ -32,7 +32,7 @@ SslCertificate::SslCertificate(QObject *parent) :
     QObject(parent)
 {
     if (inputleap::DataDirectories::profile().empty()) {
-        emit error(tr("Failed to get profile directory."));
+        Q_EMIT error(tr("Failed to get profile directory."));
     }
 }
 
@@ -49,16 +49,16 @@ void SslCertificate::generateCertificate()
 
             inputleap::generate_pem_self_signed_cert(cert_path.u8string());
         }  catch (const std::exception& e) {
-            emit error(QString("SSL tool failed: %1").arg(e.what()));
+            Q_EMIT error(QString("SSL tool failed: %1").arg(e.what()));
             return;
         }
 
-        emit info(tr("SSL certificate generated."));
+        Q_EMIT info(tr("SSL certificate generated."));
     }
 
     generate_fingerprint(cert_path);
 
-    emit generateFinished();
+    Q_EMIT generateFinished();
 }
 
 void SslCertificate::generate_fingerprint(const inputleap::fs::path& cert_path)
@@ -77,9 +77,9 @@ void SslCertificate::generate_fingerprint(const inputleap::fs::path& cert_path)
                                                               inputleap::FingerprintType::SHA256));
         db.write(local_path);
 
-        emit info(tr("SSL fingerprint generated."));
+        Q_EMIT info(tr("SSL fingerprint generated."));
     } catch (const std::exception& e) {
-        emit error(tr("Failed to find SSL fingerprint.") + e.what());
+        Q_EMIT error(tr("Failed to find SSL fingerprint.") + e.what());
     }
 }
 
@@ -90,35 +90,35 @@ bool SslCertificate::is_certificate_valid(const inputleap::fs::path& path)
 
     auto fp = inputleap::fopen_utf8_path(path, "r");
     if (!fp) {
-        emit info(tr("Could not read from default certificate file."));
+        Q_EMIT info(tr("Could not read from default certificate file."));
         return false;
     }
     auto file_close = inputleap::finally([fp]() { std::fclose(fp); });
 
     auto* cert = PEM_read_X509(fp, nullptr, nullptr, nullptr);
     if (!cert) {
-        emit info(tr("Error loading default certificate file to memory."));
+        Q_EMIT info(tr("Error loading default certificate file to memory."));
         return false;
     }
     auto cert_free = inputleap::finally([cert]() { X509_free(cert); });
 
     auto* pubkey = X509_get_pubkey(cert);
     if (!pubkey) {
-        emit info(tr("Default certificate key file does not contain valid public key"));
+        Q_EMIT info(tr("Default certificate key file does not contain valid public key"));
         return false;
     }
     auto pubkey_free = inputleap::finally([pubkey]() { EVP_PKEY_free(pubkey); });
 
     auto type = EVP_PKEY_type(EVP_PKEY_id(pubkey));
     if (type != EVP_PKEY_RSA && type != EVP_PKEY_DSA) {
-        emit info(tr("Public key in default certificate key file is not RSA or DSA"));
+        Q_EMIT info(tr("Public key in default certificate key file is not RSA or DSA"));
         return false;
     }
 
     auto bits = EVP_PKEY_bits(pubkey);
     if (bits < 2048) {
         // We could have small keys in old InputLeap installations
-        emit info(tr("Public key in default certificate key file is too small."));
+        Q_EMIT info(tr("Public key in default certificate key file is too small."));
         return false;
     }
 

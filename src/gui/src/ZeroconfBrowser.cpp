@@ -39,12 +39,12 @@ void ZeroconfBrowser::browseForType(const QString& type)
         type.toUtf8().constData(), nullptr, browseReply, this);
 
     if (err != kDNSServiceErr_NoError) {
-        emit error(err);
+        Q_EMIT error(err);
     }
     else {
         int sockFD = DNSServiceRefSockFD(m_DnsServiceRef);
         if (sockFD == -1) {
-            emit error(kDNSServiceErr_Invalid);
+            Q_EMIT error(kDNSServiceErr_Invalid);
         }
         else {
             socket_ = std::make_unique<QSocketNotifier>(sockFD, QSocketNotifier::Read, this);
@@ -57,7 +57,7 @@ void ZeroconfBrowser::socketReadyRead()
 {
     DNSServiceErrorType err = DNSServiceProcessResult(m_DnsServiceRef);
     if (err != kDNSServiceErr_NoError) {
-        emit error(err);
+        Q_EMIT error(err);
     }
 }
 
@@ -67,7 +67,7 @@ void ZeroconfBrowser::browseReply(DNSServiceRef, DNSServiceFlags flags,
 {
     ZeroconfBrowser* browser = static_cast<ZeroconfBrowser*>(context);
     if (errorCode != kDNSServiceErr_NoError) {
-        emit browser->error(errorCode);
+        Q_EMIT browser->error(errorCode);
     }
     else {
         ZeroconfRecord record(serviceName, regType, replyDomain);
@@ -80,7 +80,7 @@ void ZeroconfBrowser::browseReply(DNSServiceRef, DNSServiceFlags flags,
             browser->m_Records.removeAll(record);
         }
         if (!(flags & kDNSServiceFlagsMoreComing)) {
-            emit browser->currentRecordsChanged(browser->m_Records);
+            Q_EMIT browser->currentRecordsChanged(browser->m_Records);
         }
     }
 }

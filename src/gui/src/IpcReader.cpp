@@ -76,7 +76,7 @@ void IpcReader::read()
             QString line = QString::fromUtf8(data, len);
             delete[] data;
 
-            readLogLine(line);
+            Q_EMIT readLogLine(line);
         }
         else {
             IPC_LOG(std::cerr << "aborting, message invalid" << std::endl);

@@ -56,12 +56,12 @@ void ZeroconfRegister::registerService(const ZeroconfRecord& record,
         nullptr, bigEndianPort, 0, nullptr, registerService, this);
 
     if (err != kDNSServiceErr_NoError) {
-        emit error(err);
+        Q_EMIT error(err);
     }
     else {
         int sockfd = DNSServiceRefSockFD(m_DnsServiceRef);
         if (sockfd == -1) {
-            emit error(kDNSServiceErr_Invalid);
+            Q_EMIT error(kDNSServiceErr_Invalid);
         }
         else {
             socket_ = std::make_unique<QSocketNotifier>(sockfd, QSocketNotifier::Read, this);
@@ -74,7 +74,7 @@ void ZeroconfRegister::socketReadyRead()
 {
     DNSServiceErrorType err = DNSServiceProcessResult(m_DnsServiceRef);
     if (err != kDNSServiceErr_NoError) {
-        emit error(err);
+        Q_EMIT error(err);
     }
 }
 
@@ -88,6 +88,6 @@ void ZeroconfRegister::registerService(DNSServiceRef, DNSServiceFlags,
 
     ZeroconfRegister* serviceRegister = static_cast<ZeroconfRegister*>(data);
     if (errorCode != kDNSServiceErr_NoError) {
-        emit serviceRegister->error(errorCode);
+        Q_EMIT serviceRegister->error(errorCode);
     }
 }

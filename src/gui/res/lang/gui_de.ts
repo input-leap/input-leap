@@ -171,14 +171,14 @@ Besuchen Sie unsere Website für Hilfe und Info (symless.com).
     </message>
 </context>
 <context>
-    <name>HotkeyDialogBase</name>
+    <name>HotkeyDialog</name>
     <message>
-        <location filename="res/HotkeyDialogBase.ui" line="14"/>
+        <location filename="res/HotkeyDialog.ui" line="14"/>
         <source>Hotkey</source>
         <translation>Hotkey</translation>
     </message>
     <message>
-        <location filename="res/HotkeyDialogBase.ui" line="20"/>
+        <location filename="res/HotkeyDialog.ui" line="20"/>
         <source>Enter the specification for the hotkey:</source>
         <translation>Definition für den Hotkey eingeben:</translation>
     </message>

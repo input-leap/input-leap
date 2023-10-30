@@ -1,5 +1,6 @@
 /*
  * InputLeap -- mouse and keyboard sharing utility
+ * Copyright (C) 2023 InputLeap Developers
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -20,12 +21,17 @@
 
 #define HOTKEYDIALOG_H
 
-#include "ui_HotkeyDialogBase.h"
 #include "Hotkey.h"
 
 #include <QDialog>
 
-class HotkeyDialog : public QDialog, public Ui::HotkeyDialogBase
+class KeySequenceWidget;
+namespace Ui
+{
+    class HotkeyDialog;
+}
+
+class HotkeyDialog : public QDialog
 {
     Q_OBJECT
 
@@ -39,10 +45,11 @@ class HotkeyDialog : public QDialog, public Ui::HotkeyDialogBase
         void accept() override;
 
     protected:
-        const KeySequenceWidget* sequenceWidget() const { return m_pKeySequenceWidgetHotkey; }
+        const KeySequenceWidget* sequenceWidget() const;
         Hotkey& hotkey() { return m_Hotkey; }
 
     private:
+        Ui::HotkeyDialog *ui = nullptr;
         Hotkey& m_Hotkey;
 };
 

@@ -161,14 +161,14 @@ Visit our website for help and info (symless.com).
     </message>
 </context>
 <context>
-    <name>HotkeyDialogBase</name>
+    <name>HotkeyDialog</name>
     <message>
-        <location filename="res/HotkeyDialogBase.ui" line="14"/>
+        <location filename="res/HotkeyDialog.ui" line="14"/>
         <source>Hotkey</source>
         <translation type="finished">Klawisz skrótu</translation>
     </message>
     <message>
-        <location filename="res/HotkeyDialogBase.ui" line="20"/>
+        <location filename="res/HotkeyDialog.ui" line="20"/>
         <source>Enter the specification for the hotkey:</source>
         <translation type="finished">Wprowadź opis dla skrótu klawiszowego:</translation>
     </message>

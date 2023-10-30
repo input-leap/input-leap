@@ -173,14 +173,14 @@ InputLeap GUI 基于 Volker Lanz 制作的 QSynergy.
     </message>
 </context>
 <context>
-    <name>HotkeyDialogBase</name>
+    <name>HotkeyDialog</name>
     <message>
-        <location filename="../../src/HotkeyDialogBase.ui" line="14"/>
+        <location filename="../../src/HotkeyDialog.ui" line="14"/>
         <source>Hotkey</source>
         <translation>热键</translation>
     </message>
     <message>
-        <location filename="../../src/HotkeyDialogBase.ui" line="20"/>
+        <location filename="../../src/HotkeyDialog.ui" line="20"/>
         <source>Enter the specification for the hotkey:</source>
         <translation>指定热键：</translation>
     </message>

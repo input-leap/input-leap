@@ -171,14 +171,14 @@ Pre pomoc a ďalšie informácie navštívte našu webovú stránku (symless.com
     </message>
 </context>
 <context>
-    <name>HotkeyDialogBase</name>
+    <name>HotkeyDialog</name>
     <message>
-        <location filename="res/HotkeyDialogBase.ui" line="14"/>
+        <location filename="res/HotkeyDialog.ui" line="14"/>
         <source>Hotkey</source>
         <translation>Klávesová skratka</translation>
     </message>
     <message>
-        <location filename="res/HotkeyDialogBase.ui" line="20"/>
+        <location filename="res/HotkeyDialog.ui" line="20"/>
         <source>Enter the specification for the hotkey:</source>
         <translation>Vložte popis klávesovej skratky:</translation>
     </message>

@@ -1,5 +1,6 @@
 /*
  * InputLeap -- mouse and keyboard sharing utility
+ * Copyright (C) 2023 InputLeap Developers
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -17,18 +18,16 @@
  */
 
 #include "HotkeyDialog.h"
-
-#include <QtCore>
-#include <QtGui>
+#include "ui_HotkeyDialog.h"
+#include "KeySequenceWidget.h"
 
 HotkeyDialog::HotkeyDialog (QWidget* parent, Hotkey& hotkey) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-    Ui::HotkeyDialogBase(),
+    ui(new Ui::HotkeyDialog),
     m_Hotkey(hotkey)
 {
-    setupUi(this);
-
-    m_pKeySequenceWidgetHotkey->setText(m_Hotkey.text());
+    ui->setupUi(this);
+    ui->m_pKeySequenceWidgetHotkey->setText(m_Hotkey.text());
 }
 
 void HotkeyDialog::accept()
@@ -39,3 +38,5 @@ void HotkeyDialog::accept()
     hotkey().setKeySequence(sequenceWidget()->keySequence());
     QDialog::accept();
 }
+
+const KeySequenceWidget *HotkeyDialog::sequenceWidget() const { return ui->m_pKeySequenceWidgetHotkey; }

@@ -84,7 +84,7 @@ ZeroconfService::~ZeroconfService() = default;
 
 void ZeroconfService::serverDetected(const QList<ZeroconfRecord>& list)
 {
-    for (ZeroconfRecord record : list) {
+    for (const ZeroconfRecord& record : list) {
         registerService(false);
         m_pMainWindow->appendLogInfo(tr("zeroconf server detected: %1").arg(
             record.serviceName));
@@ -94,7 +94,7 @@ void ZeroconfService::serverDetected(const QList<ZeroconfRecord>& list)
 
 void ZeroconfService::clientDetected(const QList<ZeroconfRecord>& list)
 {
-    for (ZeroconfRecord record : list) {
+    for (const ZeroconfRecord& record : list) {
         m_pMainWindow->appendLogInfo(tr("zeroconf client detected: %1").arg(
             record.serviceName));
         m_pMainWindow->autoAddScreen(record.serviceName);

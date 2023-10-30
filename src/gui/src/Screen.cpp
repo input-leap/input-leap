@@ -163,7 +163,7 @@ QDataStream& operator>>(QDataStream& inStream, Screen& screen)
         ;
 
     screen.m_Modifiers.clear();
-    for (auto mod : modifiers) {
+    for (auto mod : qAsConst(modifiers)) {
         screen.m_Modifiers.push_back(static_cast<Screen::Modifier>(mod));
     }
 

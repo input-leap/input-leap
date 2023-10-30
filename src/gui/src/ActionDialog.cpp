@@ -85,7 +85,8 @@ void ActionDialog::accept()
     m_Action.setHaveScreens(m_pGroupBoxScreens->isChecked());
 
     m_Action.clearTypeScreenNames();
-    for (const QListWidgetItem* pItem : m_pListScreens->selectedItems()) {
+    const auto selection = m_pListScreens->selectedItems();
+    for (const QListWidgetItem* pItem : selection) {
         m_Action.appendTypeScreenName(pItem->text());
     }
 

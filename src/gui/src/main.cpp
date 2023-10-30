@@ -55,7 +55,7 @@ bool checkMacAssistiveDevices();
 
 void copy_qsettings(const QSettings &src, QSettings &dst)
 {
-    auto keys = src.allKeys();
+    const auto keys = src.allKeys();
     for (const auto& key : keys) {
         dst.setValue(key, src.value(key));
     }

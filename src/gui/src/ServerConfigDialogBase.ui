@@ -16,9 +16,6 @@
   <layout class="QVBoxLayout">
    <item>
     <widget class="QTabWidget" name="m_pTabWidget">
-     <property name="currentIndex">
-      <number>2</number>
-     </property>
      <widget class="QWidget" name="m_pTabScreens">
       <attribute name="title">
        <string>Screens and links</string>

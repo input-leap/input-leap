@@ -1,0 +1,4 @@
+Solve Issue 159:
+  Corner Size GUI should allow higher value than 99(https://github.com/input-leap/input-leap/issues/159)
+
+Changes the maximum corner size to 9999

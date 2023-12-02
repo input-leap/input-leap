@@ -63,7 +63,7 @@ void copy_qsettings(const QSettings &src, QSettings &dst)
 
 int main(int argc, char* argv[])
 {
-#ifdef WINAPI_XWINDOWS
+#if (defined(WINAPI_XWINDOWS) && (!defined(HAVE_LIBPORTAL_INPUTCAPTURE) || !defined(HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS)))
     // QApplication's constructor will call a fscking abort() if
     // DISPLAY is bad. Let's check it first and handle it gracefully
     if (!display_is_valid()) {

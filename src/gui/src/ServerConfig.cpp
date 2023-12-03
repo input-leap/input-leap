@@ -259,6 +259,7 @@ QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config)
     outStream << "\t" << "screenSaverSync = " << (config.screenSaverSync() ? "true" : "false") << "\n";
     outStream << "\t" << "win32KeepForeground = " << (config.win32KeepForeground() ? "true" : "false") << "\n";
     outStream << "\t" << "clipboardSharing = " << (config.clipboardSharing() ? "true" : "false") << "\n";
+    outStream << "\t" << "clipboardSharingSize = " << config.clipboardSharingSize() << "\n";
 
     if (config.hasSwitchDelay())
         outStream << "\t" << "switchDelay = " << config.switchDelay() << "\n";
@@ -423,11 +424,6 @@ size_t ServerConfig::defaultClipboardSharingSize() {
 }
 
 size_t ServerConfig::setClipboardSharingSize(size_t size) {
-    if (size) {
-        setClipboardSharing(true);
-    } else {
-        setClipboardSharing(false);
-    }
     using std::swap;
     swap (size, m_ClipboardSharingSize);
     return size;

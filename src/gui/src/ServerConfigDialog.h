@@ -49,6 +49,7 @@ class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase
         void on_m_pListActions_itemSelectionChanged();
         void on_m_pButtonEditAction_clicked();
         void on_m_pButtonRemoveAction_clicked();
+        void on_m_pCheckBoxEnableClipboard_stateChanged(int state);
 
     protected:
         ServerConfig& serverConfig() { return m_ServerConfig; }

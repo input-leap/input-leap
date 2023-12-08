@@ -19,6 +19,8 @@
 
 #include <QDateTime>
 
+#include <QTimer>
+
 static QString getTimeStamp()
 {
     QDateTime current = QDateTime::currentDateTime();
@@ -32,33 +34,64 @@ LogWindow::LogWindow(QWidget *parent) :
     // repeatedly until InputLeap is finished
     setAttribute(Qt::WA_DeleteOnClose, false);
     setupUi(this);
+    
+    // Use a timer to flush the buffer every 100 milliseconds
+    QTimer* timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &LogWindow::flushBuffer);
+    timer->start(100);
 }
 
 void LogWindow::startNewInstance()
 {
     // put a space between last log output and new instance.
-    if (!m_pLogOutput->toPlainText().isEmpty())
-        appendRaw("");
+    if (!buffer.isEmpty())
+        buffer += '\n';
 }
 
 void LogWindow::appendInfo(const QString& text)
 {
-    appendRaw(getTimeStamp() + " INFO: " + text);
+    buffer += getTimeStamp() + " INFO: " + text + '\n';
 }
 
 void LogWindow::appendDebug(const QString& text)
 {
-    appendRaw(getTimeStamp() + " DEBUG: " + text);
+    buffer += getTimeStamp() + " DEBUG: " + text + '\n';
 }
 
 void LogWindow::appendError(const QString& text)
 {
-    appendRaw(getTimeStamp() + " ERROR: " + text);
+    buffer += getTimeStamp() + " ERROR: " + text + '\n';
 }
 
 void LogWindow::appendRaw(const QString& text)
 {
-    m_pLogOutput->append(text);
+    buffer += text + '\n';
+
+    // Truncate the buffer if it exceeds the maximum size
+    if (buffer.size() > maxBufferSize)
+    {
+        buffer = buffer.right(maxBufferSize);
+    }
+}
+
+void LogWindow::flushBuffer()
+{
+    if (!buffer.isEmpty())
+    {
+        // Insert the new log content from the buffer
+        m_pLogOutput->appendPlainText(buffer);
+        buffer.clear();
+
+        // Scroll to the bottom if it was at the bottom before
+        QTimer::singleShot(0, this, [this]() {
+            if (m_pLogOutput->textCursor().atEnd()) {
+                QTextCursor cursor = m_pLogOutput->textCursor();
+                cursor.movePosition(QTextCursor::End);
+                m_pLogOutput->setTextCursor(cursor);
+                m_pLogOutput->ensureCursorVisible();
+            }
+        });
+    }
 }
 
 void LogWindow::on_m_pButtonHide_clicked()

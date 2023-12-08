@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>996</width>
     <height>371</height>
    </rect>
   </property>
@@ -27,7 +27,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <widget class="QTextEdit" name="m_pLogOutput">
+    <widget class="QPlainTextEdit" name="m_pLogOutput">
      <property name="font">
       <font>
        <family>Courier</family>
@@ -40,7 +40,7 @@
       <bool>false</bool>
      </property>
      <property name="lineWrapMode">
-       <enum>QTextEdit::NoWrap</enum>
+      <enum>QPlainTextEdit::NoWrap</enum>
      </property>
      <property name="readOnly">
       <bool>true</bool>
@@ -83,4 +83,6 @@
    </item>
   </layout>
  </widget>
+ <resources/>
+ <connections/>
 </ui>

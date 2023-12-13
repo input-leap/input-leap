@@ -66,12 +66,6 @@ void LogWindow::appendError(const QString& text)
 void LogWindow::appendRaw(const QString& text)
 {
     buffer += text + '\n';
-
-    // Truncate the buffer if it exceeds the maximum size
-    if (buffer.size() > maxBufferSize)
-    {
-        buffer = buffer.right(maxBufferSize);
-    }
 }
 
 void LogWindow::flushBuffer()

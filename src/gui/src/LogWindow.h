@@ -37,7 +37,6 @@ class LogWindow : public QDialog, public Ui::LogWindowBase
         void appendDebug(const QString& text);
         void appendError(const QString& text);
         QString buffer;
-        int maxBufferSize = 1024;
         void flushBuffer();
     
     private slots:

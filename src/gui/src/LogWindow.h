@@ -1,5 +1,6 @@
 /*
  * InputLeap -- mouse and keyboard sharing utility
+ * Copyright (C) 2023 InputLeap Developers
  * Copyright (C) 2018 Debauchee Open Source Group
  *
  * This package is free software; you can redistribute it and/or
@@ -21,9 +22,14 @@
 
 #include <QDialog>
 
-#include "ui_LogWindowBase.h"
+#include "ui_LogWindow.h"
 
-class LogWindow : public QDialog, public Ui::LogWindowBase
+namespace Ui
+{
+    class LogWindow;
+}
+
+class LogWindow : public QDialog
 {
     Q_OBJECT
 
@@ -32,15 +38,16 @@ class LogWindow : public QDialog, public Ui::LogWindowBase
 
         void startNewInstance();
 
-        void appendRaw(const QString& text);
-        void appendInfo(const QString& text);
-        void appendDebug(const QString& text);
-        void appendError(const QString& text);
+        void appendRaw(const QString& text = QString());
+        void appendInfo(const QString& text = QString());
+        void appendDebug(const QString& text = QString());
+        void appendError(const QString& text = QString());
 
-    private slots:
-        void on_m_pButtonHide_clicked();
-        void on_m_pButtonClearLog_clicked();
-
+    private:
+        Ui::LogWindow *ui = nullptr;
+        static const QString m_error;
+        static const QString m_info;
+        static const QString m_debug;
 };
 
 #endif // LOGWINDOW__H

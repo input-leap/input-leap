@@ -110,7 +110,7 @@ set(GUI_UI_FILES
     src/AddClientDialog.ui
     src/FingerprintAcceptDialog.ui
     src/HotkeyDialog.ui
-    src/LogWindowBase.ui
+    src/LogWindow.ui
     src/MainWindowBase.ui
     src/ScreenSettingsDialogBase.ui
     src/ServerConfigDialogBase.ui

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LogWindowBase</class>
- <widget class="QDialog" name="LogWindowBase">
+ <class>LogWindow</class>
+ <widget class="QDialog" name="LogWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -9,12 +9,6 @@
     <width>800</width>
     <height>371</height>
    </rect>
-  </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
@@ -27,20 +21,23 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <widget class="QTextEdit" name="m_pLogOutput">
+    <widget class="QTextEdit" name="logOutput">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="font">
       <font>
        <family>Courier</family>
       </font>
      </property>
-     <property name="autoFillBackground">
-      <bool>false</bool>
-     </property>
-     <property name="undoRedoEnabled">
-      <bool>false</bool>
+     <property name="sizeAdjustPolicy">
+      <enum>QAbstractScrollArea::AdjustIgnored</enum>
      </property>
      <property name="lineWrapMode">
-       <enum>QTextEdit::NoWrap</enum>
+      <enum>QTextEdit::NoWrap</enum>
      </property>
      <property name="readOnly">
       <bool>true</bool>
@@ -66,14 +63,14 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="m_pButtonClearLog">
+      <widget class="QPushButton" name="btnClear">
        <property name="text">
         <string>&amp;Clear Log</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="m_pButtonHide">
+      <widget class="QPushButton" name="btnHide">
        <property name="text">
         <string>&amp;Hide</string>
        </property>
@@ -83,4 +80,6 @@
    </item>
   </layout>
  </widget>
+ <resources/>
+ <connections/>
 </ui>

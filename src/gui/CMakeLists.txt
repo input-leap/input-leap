@@ -1,16 +1,6 @@
 
-if(NOT QT_DEFAULT_MAJOR_VERSION)
-    set(QT_DEFAULT_MAJOR_VERSION 5)
-endif()
-
-if (QT_DEFAULT_MAJOR_VERSION EQUAL 5)
-    set(REQUIRED_QT_VERSION 5.9)
-elseif (QT_DEFAULT_MAJOR_VERSION EQUAL 6)
-    set(REQUIRED_QT_VERSION 6.2)
-endif()
-
 find_package (Qt${QT_DEFAULT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} COMPONENTS Core Widgets Network LinguistTools REQUIRED)
-if (Qt6_FOUND)
+if (QT_DEFAULT_MAJOR_VERSION EQUAL 6)
     find_package (Qt6 REQUIRED COMPONENTS Core5Compat)
 endif()
 
@@ -179,7 +169,7 @@ set(TS_FILES
 )
 
 set_source_files_properties(${TS_FILES} PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/res/lang")
-if (Qt5_FOUND)
+if (QT_DEFAULT_MAJOR_VERSION EQUAL 5)
     qt5_add_translation(QM_FILES ${TS_FILES} OPTIONS -silent)
 else()
     qt_add_translation(QM_FILES ${TS_FILES} OPTIONS -silent)
@@ -215,7 +205,7 @@ target_link_libraries(input-leap
     Qt${QT_DEFAULT_MAJOR_VERSION}::Network
 )
 
-if (Qt6_FOUND)
+if (QT_DEFAULT_MAJOR_VERSION EQUAL 6)
     target_link_libraries(input-leap Qt::Core5Compat)
 endif()
 target_link_libraries(input-leap OpenSSL::SSL OpenSSL::Crypto)
@@ -266,4 +256,7 @@ if(INPUTLEAP_BUILD_TESTS)
 
     target_include_directories(guiunittests PUBLIC ../../ext)
     target_link_libraries(guiunittests gtest gmock Qt${QT_DEFAULT_MAJOR_VERSION}::Core Qt${QT_DEFAULT_MAJOR_VERSION}::Widgets Qt${QT_DEFAULT_MAJOR_VERSION}::Network ${libs})
+    if (QT_DEFAULT_MAJOR_VERSION EQUAL 6)
+        target_link_libraries(guiunittests Qt::Core5Compat)
+    endif()
 endif()

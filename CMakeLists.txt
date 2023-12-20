@@ -54,10 +54,19 @@ endif()
 
 set (libs)
 
+
+if(NOT QT_DEFAULT_MAJOR_VERSION)
+    set(QT_DEFAULT_MAJOR_VERSION 5)
+endif()
+
 if (INPUTLEAP_BUILD_GUI)
-    find_package (QT NAMES Qt6 Qt5 REQUIRED)
-    find_package (Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
-    get_target_property(qmake_executable Qt${QT_VERSION_MAJOR}::qmake IMPORTED_LOCATION)
+    if (QT_DEFAULT_MAJOR_VERSION EQUAL 5)
+        set(REQUIRED_QT_VERSION 5.9)
+    elseif (QT_DEFAULT_MAJOR_VERSION EQUAL 6)
+        set(REQUIRED_QT_VERSION 6.2)
+    endif()
+    find_package (Qt${QT_DEFAULT_MAJOR_VERSION} COMPONENTS Core REQUIRED)
+    get_target_property(qmake_executable Qt${QT_DEFAULT_MAJOR_VERSION}::qmake IMPORTED_LOCATION)
     get_filename_component(_qt_bin_dir "${qmake_executable}" DIRECTORY)
     if(WIN32 OR APPLE)
         if(WIN32)

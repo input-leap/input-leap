@@ -56,8 +56,8 @@ void QInputLeapApplication::switchTranslator(QString lang)
 
     QResource locale(":/res/lang/gui_" + lang + ".qm");
     translator_ = std::make_unique<QTranslator>();
-    translator_->load(locale.data(), locale.size());
-    installTranslator(translator_.get());
+    if (translator_->load(locale.data(), locale.size()))
+        installTranslator(translator_.get());
 }
 
 void QInputLeapApplication::setTranslator(QTranslator* translator)

@@ -1322,8 +1322,8 @@ void MainWindow::installBonjour()
     }
 
     QThread* thread = new QThread;
-    connect(m_BonjourInstall, &QThread::finished, this, &MainWindow::bonjourInstallFinished);
-    connect(m_BonjourInstall, &QThread::finished, thread, &QThread::quit);
+    connect(m_BonjourInstall, &CommandProcess::finished, this, &MainWindow::bonjourInstallFinished);
+    connect(m_BonjourInstall, &CommandProcess::finished, thread, &QThread::quit);
     connect(thread, &QThread::finished, thread, &QThread::deleteLater);
 
     m_BonjourInstall->moveToThread(thread);

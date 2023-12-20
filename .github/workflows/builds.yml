@@ -210,6 +210,7 @@ jobs:
     env:
       VERBOSE: 1
       TERM: xterm-256color
+      OpenSSL_Version: 3.2.0
 
     steps:
       - name: Install Qt
@@ -225,6 +226,33 @@ jobs:
         run: |
           brew install ninja
 
+      - name: Cache OpenSSL Universal
+        id: cache-openssl
+        if: matrix.os != 'macos-11'
+        uses: actions/cache@v3.0.11
+        with:
+          path: /Users/runner/openssl
+          key: macOS-${{matrix.os}}-ssl-${{env.OpenSSL_Version}}
+
+      - name: Build OpenSSL Universal
+        if: ((steps.cache-openssl.outputs.cache-hit != 'true') && (matrix.os != 'macos-11'))
+        run: |
+          wget https://github.com/openssl/openssl/releases/download/openssl-${{env.OpenSSL_Version}}/openssl-${{env.OpenSSL_Version}}.tar.gz
+          tar -xf openssl-${{env.OpenSSL_Version}}.tar.gz
+          echo "#!/bin/bash
+          if [[ \$* == *-arch\ x86_64* ]] && ! [[ \$* == *-arch\ arm64* ]]; then
+            cc -arch arm64 \$@
+          else
+            cc \$@
+          fi" >> /Users/runner/cc_override
+          chmod a+x /Users/runner/cc_override
+          cat /Users/runner/cc_override
+          export MACOSX_DEPLOYMENT_TARGET=${{matrix.min-macOS-version}}
+          export CC=/Users/runner/cc_override
+          cd openssl-${{env.OpenSSL_Version}}
+          ./configure no-asm darwin64-x86_64-cc --prefix=/Users/runner/openssl
+          make
+          make install
       - uses: actions/checkout@v3
         with:
           path: input-leap
@@ -232,8 +260,8 @@ jobs:
 
       - name: Setup the build
         run: |
-          cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build -G Ninja \
-                -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk \
+          cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build -G Ninja -DOpenSSL_ROOT=/Users/runner/openssl \
+                -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -DQT_DEFAULT_MAJOR_VERSION=6 \
                 -DCMAKE_OSX_DEPLOYMENT_TARGET=${{matrix.minOS-version}} -DCMAKE_UNITY_BUILD=1 -DCMAKE_OSX_ARCHITECTURES="${{matrix.arch}}"
 
       - name: Run the build

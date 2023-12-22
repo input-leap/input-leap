@@ -224,6 +224,8 @@ jobs:
     env:
       VERBOSE: 1
       TERM: xterm-256color
+      OpenSSL_Install_Path: "/Users/runner/openssl"
+      OpenSSL_Version: 3.2.0
 
     steps:
       - name: Install Qt
@@ -238,6 +240,34 @@ jobs:
         run: |
           brew install ninja
 
+      - name: Cache OpenSSL Universal
+        id: cache-openssl
+        if: matrix.os == 'macos-12'
+        uses: actions/cache@v3.0.11
+        with:
+          path: ${{env.OpenSSL_Install_Path}}
+          key: macOS-${{matrix.os}}-ssl-${{matrix.arch}}-${{env.OpenSSL_Version}}
+
+      - name: Build OpenSSL Universal
+        if: ((steps.cache-openssl.outputs.cache-hit != 'true') && (matrix.os == 'macos-12'))
+        run: |
+          wget https://github.com/openssl/openssl/releases/download/openssl-${{env.OpenSSL_Version}}/openssl-${{env.OpenSSL_Version}}.tar.gz
+          tar -xf openssl-${{env.OpenSSL_Version}}.tar.gz
+          echo "#!/bin/bash
+          if [[ \$* == *-arch\ x86_64* ]] && ! [[ \$* == *-arch\ arm64* ]]; then
+            cc -arch arm64 \$@
+          else
+            cc \$@
+          fi" >> /Users/runner/cc_override
+          chmod a+x /Users/runner/cc_override
+          cat /Users/runner/cc_override
+          export MACOSX_DEPLOYMENT_TARGET=${{matrix.min-macOS-version}}
+          export CC=/Users/runner/cc_override
+          cd openssl-${{env.OpenSSL_Version}}
+          ./configure no-asm darwin64-x86_64-cc --prefix=${{env.OpenSSL_Install_Path}}
+          make
+          make install
+
       - uses: actions/checkout@v4
         with:
           path: input-leap
@@ -245,7 +275,7 @@ jobs:
 
       - name: Setup the build
         run: |
-          cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build -G Ninja \
+          cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build -G Ninja -DOpenSSL_ROOT=${{env.OpenSSL_Install_Path}} \
                 -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk \
                 -DCMAKE_OSX_DEPLOYMENT_TARGET=${{matrix.min-macOS-version}} -DCMAKE_UNITY_BUILD=1 -DQT_DEFAULT_MAJOR_VERSION=$(echo ${{matrix.qt-version}} | cut -c -1)
 

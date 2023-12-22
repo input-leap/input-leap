@@ -206,6 +206,7 @@ jobs:
            minOS-version: 11
            qt-modules: qt5compat
            arch: 'arm64;x86_64'
+           exCMAKE: '-DQT_DEFAULT_MAJOR_VERSION=6'
 
     env:
       VERBOSE: 1
@@ -260,8 +261,8 @@ jobs:
 
       - name: Setup the build
         run: |
-          cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build -G Ninja -DOpenSSL_ROOT=/Users/runner/openssl \
-                -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -DQT_DEFAULT_MAJOR_VERSION=6 \
+          cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build -G Ninja -DOpenSSL_ROOT=/Users/runner/openssl ${{matrix.exCMAKE}}\
+                -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk \
                 -DCMAKE_OSX_DEPLOYMENT_TARGET=${{matrix.minOS-version}} -DCMAKE_UNITY_BUILD=1 -DCMAKE_OSX_ARCHITECTURES="${{matrix.arch}}"
 
       - name: Run the build

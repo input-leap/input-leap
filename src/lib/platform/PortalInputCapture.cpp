@@ -195,7 +195,7 @@ void PortalInputCapture::cb_set_pointer_barriers(GObject* object, GAsyncResult* 
                 if (*elem == it->data) {
                     int x1, x2, y1, y2;
 
-                    g_object_get(G_OBJECT(*elem), "x1", &x1, "x2", &x2, "y1", &y1, "y2", &y2, NULL);
+                    g_object_get(G_OBJECT(*elem), "x1", &x1, "x2", &x2, "y1", &y1, "y2", &y2, nullptr);
 
                     LOG((CLOG_WARN "Failed to apply barrier %d (%d/%d-%d/%d)", id, x1, y1, x2, y2));
                     g_object_unref(*elem);

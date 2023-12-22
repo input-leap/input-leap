@@ -294,6 +294,16 @@ jobs:
           path: ./build/bundle/*.dmg
           if-no-files-found: error
 
+      - name: Archive debug app
+        if: env.B_BUILD_TYPE != 'Release'
+        run: tar -czf InputLeap-${{matrix.name}}.tar.gz -C build/bundle InputLeap.app
+
+      - uses: actions/upload-artifact@v4
+        if: env.B_BUILD_TYPE != 'Release'
+        with:
+          name: ${{ matrix.name }}-debug
+          path: ./InputLeap*.tar.gz
+          if-no-files-found: error
 
   win-build:
     name: ${{ matrix.name }}

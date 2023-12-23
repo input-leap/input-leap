@@ -223,6 +223,12 @@ jobs:
            min-macOS-version: 11
            qt-modules: qt5compat
            arch: 'arm64;x86_64'
+         - name: macOS-Apple_Silicon
+           os: macos-14
+           qt-version: 6.6
+           min-macOS-version: 14
+           qt-modules: qt5compat
+           arch: 'arm64'
 
     env:
       VERBOSE: 1

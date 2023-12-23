@@ -409,3 +409,56 @@ jobs:
           name: windows-installer
           path: .\build\installer-inno\bin
           if-no-files-found: error
+  rpm:
+    runs-on: ubuntu-latest
+    container: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["fedora:36", "opensuse/tumbleweed"]
+        include:
+          - installer: dnf install -y
+            rpm_tag: fedora
+          - os: opensuse/tumbleweed
+            installer: zypper install -y
+            rpm_tag: suse_version
+
+    steps:
+      - name: Install extra build dependencies
+        run: ${{ matrix.installer }} git rpm-build
+
+      # submodules require git to be installed
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          path: input-leap
+          submodules: recursive
+          set-safe-directory: ${{ github.workspace }}
+
+      - name: Install dependencies
+        run: |
+          # Print only what follows ^BuildRequires in the range of lines between %if 0%{?xxxx} and %endif where xxxx is the rpm_tag
+          sed -n '/^%if 0%{?${{ matrix.rpm_tag }}}$/,/^%endif$/{s/^BuildRequires: //p}' input-leap/dist/rpm/input-leap.spec.in | xargs ${{ matrix.installer }}
+
+      - name: prep tree
+        run: |
+          cmake -S input-leap -B build
+          make -C build package_source
+
+      - name: create target directory
+        run: mkdir rpms
+
+      - name:  build SRPM package
+        run: |
+          rpmbuild -D "_sourcedir $PWD/build" -D "_srcrpmdir ${PWD}/rpms" -bs build/rpm/input-leap.spec
+
+      - name: build RPM package
+        run: |
+          rpmbuild -D "_sourcedir $PWD/build" -D "_rpmdir $PWD/rpms" -bb build/rpm/input-leap.spec
+
+      - name: Archive RPM package
+        uses: actions/upload-artifact@v3
+        with:
+          name: input-leap-rpms
+          path: |
+            rpms/**/*.rpm

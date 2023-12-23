@@ -47,12 +47,12 @@ jobs:
           apt-get update -y
           # software-properties-common is needed for add-apt-repository
           apt-get install -y software-properties-common gpg wget
-          # actions/checkout@v3 wants newer git than what's in default repositories
-          add-apt-repository ppa:git-core/ppa
 
       - if: matrix.os == 'ubuntu:18.04'
         name: Add repositories with newer git and cmake
         run: |
+          # actions/checkout@v3 wants newer git than what's in default repositories
+          add-apt-repository ppa:git-core/ppa
           # InputLeap requires at least CMake 3.21.
           # This mirrors instructions at https://apt.kitware.com
           wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \

@@ -652,7 +652,11 @@ Double click on a screen to edit its settings.</string>
              </widget>
             </item>
             <item>
-             <widget class="QSpinBox" name="m_pSpinBoxSwitchCornerSize"/>
+             <widget class="QSpinBox" name="m_pSpinBoxSwitchCornerSize">
+              <property name="maximum">
+               <number>9999</number>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>

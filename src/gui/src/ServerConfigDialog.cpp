@@ -230,3 +230,8 @@ void ServerConfigDialog::on_m_pListActions_itemSelectionChanged()
     m_pButtonEditAction->setEnabled(!m_pListActions->selectedItems().isEmpty());
     m_pButtonRemoveAction->setEnabled(!m_pListActions->selectedItems().isEmpty());
 }
+
+void ServerConfigDialog::on_m_pCheckBoxEnableClipboard_stateChanged(int state)
+{
+    m_pSpinBoxClipboardSizeLimit->setEnabled(state == Qt::Checked);
+}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2018 Ding-Yi Chen <dchen@redhat.com> -->
 <component type="desktop-application">
-  <id>input-leap</id>
+  <id>io.github.input_leap.InputLeap</id>
   <metadata_license>FSFAP</metadata_license>
   <project_license>GPLv2</project_license>
   <name>input-leap</name>
@@ -14,7 +14,7 @@
     </p>
   </description>
 
-  <launchable type="desktop-id">input-leap.desktop</launchable>
+  <launchable type="desktop-id">io.github.input_leap.InputLeap.desktop</launchable>
 
   <url type="homepage">https://github.com/input-leap/input-leap</url>
 

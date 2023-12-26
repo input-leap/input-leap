@@ -371,17 +371,13 @@ endif()
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     install(FILES doc/input-leapc.1 doc/input-leaps.1 DESTINATION share/man/man1)
 
-    configure_file(res/input-leap.appdata.xml.in
-                   ${CMAKE_CURRENT_BINARY_DIR}/res/input-leap.appdata.xml)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/res/input-leap.appdata.xml DESTINATION share/metainfo)
+    configure_file(res/io.github.input_leap.InputLeap.appdata.xml.in
+        ${CMAKE_CURRENT_BINARY_DIR}/res/io.github.input_leap.InputLeap.appdata.xml)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/res/io.github.input_leap.InputLeap.appdata.xml DESTINATION share/metainfo)
 
     configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/rpm ${CMAKE_BINARY_DIR}/rpm)
-    install(FILES res/input-leap.svg DESTINATION share/icons/hicolor/scalable/apps)
-    if("${VERSION_MAJOR}" STREQUAL "2")
-        install(FILES res/input-leap2.desktop DESTINATION share/applications)
-    else()
-        install(FILES res/input-leap.desktop DESTINATION share/applications)
-    endif()
+    install(FILES res/io.github.input_leap.InputLeap.svg DESTINATION share/icons/hicolor/scalable/apps)
+    install(FILES res/io.github.input_leap.InputLeap.desktop DESTINATION share/applications)
 endif()
 
 else()

@@ -107,6 +107,15 @@ jobs:
 
       # Code checkout steps
       - name: Checkout input-leap
+        if: matrix.os != 'ubuntu:18.04'
+        uses: actions/checkout@v4
+        with:
+          path: input-leap
+          submodules: recursive
+          set-safe-directory: ${{ github.workspace }}
+
+      - name: Checkout input-leap
+        if: matrix.os == 'ubuntu:18.04'
         uses: actions/checkout@v3
         with:
           path: input-leap
@@ -124,7 +133,7 @@ jobs:
           ref: 1.0.0
 
       - name: Get libportal from whot/libportal
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         if: matrix.wayland
         with:
           repository: whot/libportal
@@ -198,7 +207,7 @@ jobs:
         run: |
           brew install ninja
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           path: input-leap
           submodules: recursive
@@ -213,7 +222,7 @@ jobs:
         run: |
           cmake --build build --parallel
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: env.B_BUILD_TYPE == 'Release'
         with:
           name: ${{ matrix.os }}-installer
@@ -230,7 +239,7 @@ jobs:
         os: [windows-2019, windows-2022]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           path: input-leap
           submodules: recursive
@@ -281,7 +290,7 @@ jobs:
           files: input-leap-install
           dest: ${{ env.B_BUILD_TYPE }}.zip
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}-${{ env.B_BUILD_TYPE }}
           path: ${{ env.B_BUILD_TYPE }}.zip
@@ -293,7 +302,7 @@ jobs:
         run: |
           & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" /Qp .\build\installer-inno\input-leap.iss
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: matrix.os == 'windows-2022' && env.B_BUILD_TYPE == 'Release'
         with:
           name: windows-installer

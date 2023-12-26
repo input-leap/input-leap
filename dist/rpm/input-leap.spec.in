@@ -76,10 +76,10 @@ Work seamlessly across Windows, macOS and Linux.
 
 desktop-file-install --delete-original \
   --dir %{buildroot}%{_datadir}/applications \
-  --set-icon=%{_datadir}/icons/hicolor/scalable/apps/input-leap.svg \
-  %{buildroot}%{_datadir}/applications/input-leap.desktop
+  --set-icon=%{_datadir}/icons/hicolor/scalable/apps/io.github.input_leap.InputLeap.svg \
+  %{buildroot}%{_datadir}/applications/io.github.input_leap.InputLeap.desktop
 
-desktop-file-validate %{buildroot}/%{_datadir}/applications/input-leap.desktop
+desktop-file-validate %{buildroot}/%{_datadir}/applications/io.github.input_leap.InputLeap.desktop
 
 %files
 # None of the documentation files are actually useful here, they all point to
@@ -88,9 +88,9 @@ desktop-file-validate %{buildroot}/%{_datadir}/applications/input-leap.desktop
 %{_bindir}/input-leap
 %{_bindir}/input-leapc
 %{_bindir}/input-leaps
-%{_datadir}/icons/hicolor/scalable/apps/input-leap.svg
-%{_datadir}/applications/input-leap.desktop
-%{_datadir}/metainfo/input-leap.appdata.xml
+%{_datadir}/icons/hicolor/scalable/apps/io.github.input_leap.InputLeap.svg
+%{_datadir}/applications/io.github.input_leap.InputLeap.desktop
+%{_datadir}/metainfo/io.github.input_leap.InputLeap.appdata.xml
 %{_mandir}/man1/input-leapc.1*
 %{_mandir}/man1/input-leaps.1*
 

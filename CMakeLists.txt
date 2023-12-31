@@ -36,6 +36,10 @@ if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions (-DNDEBUG)
 endif()
 
+if(NOT QT_DEFAULT_MAJOR_VERSION)
+    set(QT_DEFAULT_MAJOR_VERSION 5)
+endif()
+
 include (cmake/Version.cmake)
 include (cmake/Package.cmake)
 
@@ -54,6 +58,14 @@ endif()
 
 set (libs)
 
+
+if (INPUTLEAP_BUILD_GUI)
+    if (QT_DEFAULT_MAJOR_VERSION EQUAL 5)
+        set(REQUIRED_QT_VERSION 5.9)
+    elseif (QT_DEFAULT_MAJOR_VERSION EQUAL 6)
+        set(REQUIRED_QT_VERSION 6.2)
+    endif()
+endif()
 if (UNIX)
     if (NOT APPLE)
         set (CMAKE_POSITION_INDEPENDENT_CODE TRUE)

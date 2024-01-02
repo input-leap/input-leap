@@ -16,9 +16,6 @@
   <layout class="QVBoxLayout">
    <item>
     <widget class="QTabWidget" name="m_pTabWidget">
-     <property name="currentIndex">
-      <number>2</number>
-     </property>
      <widget class="QWidget" name="m_pTabScreens">
       <attribute name="title">
        <string>Screens and links</string>
@@ -427,50 +424,46 @@ Double click on a screen to edit its settings.</string>
             <property name="title">
              <string/>
             </property>
-            <widget class="QLabel" name="m_pLabelSharingSize">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>201</width>
-               <height>21</height>
-              </rect>
-             </property>
-             <property name="text">
-              <string>Max Clipboard sharing size</string>
-             </property>
-            </widget>
-            <widget class="QSpinBox" name="m_pSpinBoxClipboardSizeLimit">
-             <property name="geometry">
-              <rect>
-               <x>250</x>
-               <y>0</y>
-               <width>131</width>
-               <height>20</height>
-              </rect>
-             </property>
-             <property name="toolTip">
-              <string>Clipboard sharing size in bytes</string>
-             </property>
-             <property name="toolTipDuration">
-              <number>-3</number>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-             </property>
-             <property name="minimum">
-              <number>1000000</number>
-             </property>
-             <property name="maximum">
-              <number>100000000</number>
-             </property>
-             <property name="singleStep">
-              <number>1000</number>
-             </property>
-             <property name="value">
-              <number>3000000</number>
-             </property>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <widget class="QLabel" name="m_pLabelSharingSize">
+               <property name="text">
+                <string>Max Clipboard sharing size</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="m_pSpinBoxClipboardSizeLimit">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string>Clipboard sharing size in bytes</string>
+               </property>
+               <property name="toolTipDuration">
+                <number>-3</number>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+               <property name="minimum">
+                <number>1000000</number>
+               </property>
+               <property name="maximum">
+                <number>100000000</number>
+               </property>
+               <property name="singleStep">
+                <number>1000</number>
+               </property>
+               <property name="value">
+                <number>3000000</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
           <item row="3" column="0">
@@ -659,7 +652,11 @@ Double click on a screen to edit its settings.</string>
              </widget>
             </item>
             <item>
-             <widget class="QSpinBox" name="m_pSpinBoxSwitchCornerSize"/>
+             <widget class="QSpinBox" name="m_pSpinBoxSwitchCornerSize">
+              <property name="maximum">
+               <number>9999</number>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>

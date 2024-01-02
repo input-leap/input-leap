@@ -1,14 +1,11 @@
-cmake_minimum_required (VERSION 3.4)
 
-find_package (QT NAMES Qt6 Qt5 REQUIRED)
-find_package (Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets Network LinguistTools REQUIRED)
-# If Qt6 is in use, also link to Core5Compat
-if (Qt6_FOUND)
+find_package (Qt${QT_DEFAULT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} COMPONENTS Core Widgets Network LinguistTools REQUIRED)
+
+if (QT_DEFAULT_MAJOR_VERSION EQUAL 6)
     find_package (Qt6 REQUIRED COMPONENTS Core5Compat)
 endif()
 
-message(STATUS "Using Qt" ${QT_VERSION_MAJOR})
-
+message(STATUS "Using Qt ${QT_DEFAULT_MAJOR_VERSION}")
 
 set (CMAKE_AUTOMOC ON)
 set (CMAKE_AUTORCC ON)
@@ -173,7 +170,7 @@ set(TS_FILES
 )
 
 set_source_files_properties(${TS_FILES} PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/res/lang")
-if (Qt5_FOUND)
+if (QT_DEFAULT_MAJOR_VERSION EQUAL 5)
     qt5_add_translation(QM_FILES ${TS_FILES} OPTIONS -silent)
 else()
     qt_add_translation(QM_FILES ${TS_FILES} OPTIONS -silent)
@@ -204,13 +201,13 @@ target_link_libraries(input-leap
     arch
     base
     io
-    Qt${QT_VERSION_MAJOR}::Core
-    Qt${QT_VERSION_MAJOR}::Widgets
-    Qt${QT_VERSION_MAJOR}::Network
+    Qt${QT_DEFAULT_MAJOR_VERSION}::Core
+    Qt${QT_DEFAULT_MAJOR_VERSION}::Widgets
+    Qt${QT_DEFAULT_MAJOR_VERSION}::Network
 )
 
-if (Qt6_FOUND)
-    target_link_libraries(input-leap Qt6::Core5Compat)
+if (QT_DEFAULT_MAJOR_VERSION EQUAL 6)
+    target_link_libraries(input-leap Qt::Core5Compat)
 endif()
 target_link_libraries(input-leap ${OPENSSL_LIBS})
 
@@ -259,5 +256,8 @@ if(INPUTLEAP_BUILD_TESTS)
              WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
     target_include_directories(guiunittests PUBLIC ../../ext)
-    target_link_libraries(guiunittests gtest gmock Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network ${libs})
+    target_link_libraries(guiunittests gtest gmock Qt${QT_DEFAULT_MAJOR_VERSION}::Core Qt${QT_DEFAULT_MAJOR_VERSION}::Widgets Qt${QT_DEFAULT_MAJOR_VERSION}::Network ${libs})
+    if (QT_DEFAULT_MAJOR_VERSION EQUAL 6)
+        target_link_libraries(guiunittests Qt::Core5Compat)
+    endif()
 endif()

@@ -26,9 +26,8 @@ if (WIN32)
     add_subdirectory(daemon)
 endif()
 
-include(../cmake/gtest.cmake)
-
 if(INPUTLEAP_BUILD_TESTS)
+    include(../cmake/gtest.cmake)
     add_subdirectory(test/integtests)
     add_subdirectory(test/unittests)
 endif()

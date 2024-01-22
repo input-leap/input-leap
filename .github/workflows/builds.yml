@@ -48,7 +48,7 @@ jobs:
           apt-get update -y
           # software-properties-common is needed for add-apt-repository
           apt-get install -y software-properties-common gpg wget
-          # actions/checkout@v3 wants newer git than what's in default repositories
+          # actions/checkout@v4 wants newer git than what's in default repositories
           add-apt-repository ppa:git-core/ppa
           # InputLeap requires at least CMake 3.12.
           # This mirrors instructions at https://apt.kitware.com
@@ -107,7 +107,7 @@ jobs:
 
       # Code checkout steps
       - name: Checkout input-leap
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: input-leap
           submodules: recursive
@@ -124,7 +124,7 @@ jobs:
           ref: 1.0.0
 
       - name: Get libportal from whot/libportal
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         if: matrix.wayland
         with:
           repository: whot/libportal
@@ -183,7 +183,7 @@ jobs:
           brew install qt5
           brew install ninja
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           path: input-leap
           submodules: recursive
@@ -199,7 +199,7 @@ jobs:
         run: |
           cmake --build build --parallel
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: env.B_BUILD_TYPE == 'Release'
         with:
           name: ${{ matrix.os }}-installer
@@ -216,12 +216,12 @@ jobs:
         os: [windows-2019, windows-2022]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           path: input-leap
           submodules: recursive
 
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.7'
           architecture: 'x64'
@@ -308,7 +308,7 @@ jobs:
           files: build\bin\${{ env.B_BUILD_TYPE }}
           dest: ${{ env.B_BUILD_TYPE }}.zip
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}-${{ env.B_BUILD_TYPE }}
           path: ${{ env.B_BUILD_TYPE }}.zip
@@ -320,7 +320,7 @@ jobs:
         run: |
           & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" /Qp .\build\installer-inno\input-leap.iss
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: matrix.os == 'windows-2022' && env.B_BUILD_TYPE == 'Release'
         with:
           name: windows-installer

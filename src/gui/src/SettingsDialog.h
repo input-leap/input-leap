@@ -21,17 +21,24 @@
 #define SETTINGSDIALOG_H
 
 #include <QDialog>
-#include "ui_SettingsDialogBase.h"
+#include <memory>
+
 #include "AppLocale.h"
 
 class AppConfig;
 
-class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
+namespace Ui
+{
+    class SettingsDialog;
+}
+
+class SettingsDialog : public QDialog
 {
     Q_OBJECT
 
     public:
         SettingsDialog(QWidget* parent, AppConfig& config);
+        ~SettingsDialog() override;
 
     protected:
         void accept() override;
@@ -40,6 +47,7 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
         AppConfig& appConfig() { return m_appConfig; }
 
     private:
+        std::unique_ptr<Ui::SettingsDialog> ui_;
         AppConfig& m_appConfig;
         AppLocale m_Locale;
 

@@ -17,24 +17,25 @@
  */
 
 #include "AboutDialog.h"
+#include "ui_AboutDialog.h"
 
 #include <QtCore>
 #include <QtGui>
 #include "common/Version.h"
 
 AboutDialog::AboutDialog(QWidget* parent, const QString& app_name) :
-	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-	Ui::AboutDialogBase()
+    QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
+    ui_{std::make_unique<Ui::AboutDialog>()}
 {
-	setupUi(this);
+    ui_->setupUi(this);
 
     QString version = kVersion;
-	version = version + '-' + INPUTLEAP_VERSION_STAGE;
+    version = version + '-' + INPUTLEAP_VERSION_STAGE;
 #ifdef INPUTLEAP_REVISION
     version +=  '-';
     version += INPUTLEAP_REVISION;
 #endif
-    m_pLabelAppVersion->setText(version);
+    ui_->m_pLabelAppVersion->setText(version);
 
 	// change default size based on os
 #if defined(Q_OS_MAC)
@@ -49,3 +50,5 @@ AboutDialog::AboutDialog(QWidget* parent, const QString& app_name) :
 	resize(size);
 #endif
 }
+
+AboutDialog::~AboutDialog() = default;

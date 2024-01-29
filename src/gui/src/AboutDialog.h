@@ -21,18 +21,25 @@
 #define ABOUTDIALOG__H
 
 #include <QDialog>
+#include <memory>
 
-#include "ui_AboutDialogBase.h"
+namespace Ui
+{
+    class AboutDialog;
+}
 
 class QWidget;
 class QString;
 
-class AboutDialog : public QDialog, public Ui::AboutDialogBase
+class AboutDialog : public QDialog
 {
     Q_OBJECT
 
     public:
-        AboutDialog(QWidget* parent, const QString& app_name);
+        explicit AboutDialog(QWidget* parent, const QString& app_name);
+        ~AboutDialog() override;
+    private:
+        std::unique_ptr<Ui::AboutDialog> ui_;
 };
 
 #endif

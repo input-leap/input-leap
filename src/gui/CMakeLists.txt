@@ -104,17 +104,17 @@ set(GUI_HEADER_FILES
 )
 
 set(GUI_UI_FILES
-    src/AboutDialogBase.ui
-    src/ActionDialogBase.ui
-    src/AddClientDialogBase.ui
+    src/AboutDialog.ui
+    src/ActionDialog.ui
+    src/AddClientDialog.ui
     src/FingerprintAcceptDialog.ui
-    src/HotkeyDialogBase.ui
-    src/LogWindowBase.ui
-    src/MainWindowBase.ui
-    src/ScreenSettingsDialogBase.ui
-    src/ServerConfigDialogBase.ui
-    src/SettingsDialogBase.ui
-    src/SetupWizardBase.ui
+    src/HotkeyDialog.ui
+    src/LogWindow.ui
+    src/MainWindow.ui
+    src/ScreenSettingsDialog.ui
+    src/ServerConfigDialog.ui
+    src/SettingsDialog.ui
+    src/SetupWizard.ui
 )
 
 set(TS_FILES

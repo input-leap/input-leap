@@ -20,15 +20,20 @@
 #define LOGWINDOW__H
 
 #include <QDialog>
+#include <memory>
 
-#include "ui_LogWindowBase.h"
+namespace Ui
+{
+    class LogWindow;
+}
 
-class LogWindow : public QDialog, public Ui::LogWindowBase
+class LogWindow : public QDialog
 {
     Q_OBJECT
 
     public:
         LogWindow(QWidget *parent);
+        ~LogWindow() override;
 
         void startNewInstance();
 
@@ -40,6 +45,9 @@ class LogWindow : public QDialog, public Ui::LogWindowBase
     private slots:
         void on_m_pButtonHide_clicked();
         void on_m_pButtonClearLog_clicked();
+
+    private:
+        std::unique_ptr<Ui::LogWindow> ui_;
 
 };
 

@@ -18,9 +18,8 @@
 #ifndef ADDCLIENTDIALOG_H
 #define ADDCLIENTDIALOG_H
 
-#include "ui_AddClientDialogBase.h"
-
 #include <QDialog>
+#include <memory>
 
 class QPushButton;
 class QLabel;
@@ -33,8 +32,12 @@ enum {
     kAddClientOther,
     kAddClientIgnore
 };
+namespace Ui
+{
+    class AddClientDialog;
+}
 
-class AddClientDialog : public QDialog, public Ui::AddClientDialog
+class AddClientDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -56,6 +59,7 @@ private slots:
     void handleButtonAdvanced();
 
 private:
+    std::unique_ptr<Ui::AddClientDialog> ui_;
     QPushButton* m_pButtonLeft;
     QPushButton* m_pButtonUp;
     QPushButton* m_pButtonRight;

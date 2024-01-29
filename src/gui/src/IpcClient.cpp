@@ -30,15 +30,15 @@ m_ReaderStarted(false),
 m_Enabled(false)
 {
     m_Socket = new QTcpSocket(this);
-    connect(m_Socket, SIGNAL(connected()), this, SLOT(connected()));
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    connect(m_Socket, SIGNAL(errorOccurred(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
+    connect(m_Socket, &QTcpSocket::connected, this, &IpcClient::connected);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
+    connect(m_Socket, &QTcpSocket::errorOccurred, this, &IpcClient::error);
 #else
     connect(m_Socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
 #endif
 
     m_Reader = new IpcReader(m_Socket);
-    connect(m_Reader, SIGNAL(readLogLine(const QString&)), this, SLOT(handleReadLogLine(const QString&)));
+    connect(m_Reader, &IpcReader::readLogLine, this, &IpcClient::handleReadLogLine);
 }
 
 IpcClient::~IpcClient()
@@ -48,14 +48,14 @@ IpcClient::~IpcClient()
 void IpcClient::connected()
 {
     sendHello();
-    infoMessage("connection established");
+    Q_EMIT infoMessage("connection established");
 }
 
 void IpcClient::connectToHost()
 {
     m_Enabled = true;
 
-    infoMessage("connecting to service...");
+    Q_EMIT infoMessage("connecting to service...");
     m_Socket->connectToHost(QHostAddress(QHostAddress::LocalHost), IPC_PORT);
 
     if (!m_ReaderStarted) {
@@ -66,7 +66,7 @@ void IpcClient::connectToHost()
 
 void IpcClient::disconnectFromHost()
 {
-    infoMessage("service disconnect");
+    Q_EMIT infoMessage("service disconnect");
     m_Reader->stop();
     m_Socket->close();
 }
@@ -80,7 +80,7 @@ void IpcClient::error(QAbstractSocket::SocketError error)
         default: text = QString("code=%1").arg(error); break;
     }
 
-    errorMessage(QString("ipc connection error, %1").arg(text));
+    Q_EMIT errorMessage(QString("ipc connection error, %1").arg(text));
 
     QTimer::singleShot(1000, this, SLOT(retryConnect()));
 }
@@ -125,7 +125,7 @@ void IpcClient::sendCommand(const QString& command, ElevateMode const elevate)
 
 void IpcClient::handleReadLogLine(const QString& text)
 {
-    readLogLine(text);
+    Q_EMIT readLogLine(text);
 }
 
 // TODO: qt must have a built in way of converting int to bytes.

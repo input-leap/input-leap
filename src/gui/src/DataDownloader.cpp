@@ -22,8 +22,7 @@ DataDownloader::DataDownloader(QObject* parent) :
     m_pReply(nullptr),
     m_IsFinished(false)
 {
-    connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
-        SLOT(complete(QNetworkReply*)));
+    connect(&m_NetworkManager, &QNetworkAccessManager::finished, this, &DataDownloader::complete);
 }
 
 DataDownloader::~DataDownloader()
@@ -37,7 +36,7 @@ void DataDownloader::complete(QNetworkReply* reply)
 
     if (!m_Data.isEmpty()) {
         m_IsFinished = true;
-        emit isComplete();
+        Q_EMIT isComplete();
     }
 }
 

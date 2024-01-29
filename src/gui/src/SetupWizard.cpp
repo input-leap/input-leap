@@ -46,8 +46,8 @@ SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 
 #endif
 
-    connect(m_pServerRadioButton, SIGNAL(toggled(bool)), m_MainWindow.m_pGroupServer, SLOT(setChecked(bool)));
-    connect(m_pClientRadioButton, SIGNAL(toggled(bool)), m_MainWindow.m_pGroupClient, SLOT(setChecked(bool)));
+    connect(m_pServerRadioButton, &QRadioButton::toggled, m_MainWindow.m_pGroupServer, &QGroupBox::setChecked);
+    connect(m_pClientRadioButton, &QRadioButton::toggled, m_MainWindow.m_pGroupClient, &QGroupBox::setChecked);
 
     m_Locale.fillLanguageComboBox(m_pComboLanguage);
     setIndexFromItemData(m_pComboLanguage, m_MainWindow.appConfig().language());

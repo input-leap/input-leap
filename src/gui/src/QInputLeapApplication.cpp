@@ -34,7 +34,8 @@ QInputLeapApplication::~QInputLeapApplication() = default;
 
 void QInputLeapApplication::commitData(QSessionManager&)
 {
-    for (QWidget* widget : topLevelWidgets()) {
+    const auto all_topLevelWidgets = topLevelWidgets();
+    for (QWidget* widget : all_topLevelWidgets) {
         MainWindow* mainWindow = qobject_cast<MainWindow*>(widget);
         if (mainWindow)
             mainWindow->saveSettings();

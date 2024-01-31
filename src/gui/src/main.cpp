@@ -62,9 +62,7 @@ void copy_qsettings(const QSettings &src, QSettings &dst)
 
 int main(int argc, char* argv[])
 {
-#if (defined(WINAPI_XWINDOWS) || \
-    (defined(HAVE_LIBPORTAL_INPUTCAPTURE) || \
-    defined(HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS)))
+#ifdef INPUTLEAP_WAYLAND_WARN_USER
     const auto platformType = QGuiApplication::platformName();
 
     if (platformType == "xcb") {

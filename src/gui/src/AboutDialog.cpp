@@ -20,8 +20,6 @@
 #include "AboutDialog.h"
 #include "ui_AboutDialog.h"
 
-#include <QtCore>
-#include <QtGui>
 #include "common/Version.h"
 
 AboutDialog::AboutDialog(QWidget* parent, const QString& app_name) :

@@ -27,9 +27,6 @@ namespace Ui
     class AboutDialog;
 }
 
-class QWidget;
-class QString;
-
 class AboutDialog : public QDialog
 {
     Q_OBJECT

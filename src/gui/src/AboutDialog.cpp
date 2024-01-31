@@ -32,19 +32,7 @@ AboutDialog::AboutDialog(QWidget* parent, const QString& app_name) :
     version.append(QStringLiteral("-%1").arg(INPUTLEAP_REVISION));
 #endif
     ui_->m_pLabelAppVersion->setText(version);
-
-	// change default size based on os
-#if defined(Q_OS_MAC)
-	QSize size(600, 380);
-	setMaximumSize(size);
-	setMinimumSize(size);
-	resize(size);
-#elif defined(Q_OS_LINUX)
-	QSize size(600, 330);
-	setMaximumSize(size);
-	setMinimumSize(size);
-	resize(size);
-#endif
+    setFixedSize(sizeHint());
 }
 
 AboutDialog::~AboutDialog() = default;

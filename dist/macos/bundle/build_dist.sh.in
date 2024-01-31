@@ -35,25 +35,7 @@ info "Copying binaries into bundle"
 # Copy the folder instead of globbing unquoted path
 cp -r "$B_BINDIR" "$B_MACOS" || exit 1
 
-# Check for macdeployqt on MacPorts
-if which -s port ; then
-    info "MacPorts found, searching for macdeployqt"
-    DEPLOYQT="$(port contents qt5-qttools | grep --only --max-count 1 '/.*macdeployqt')"
-    if [ ! -x "$DEPLOYQT" ]; then
-        error "Please install package qt5-qttools"
-        exit 1
-    fi
-fi
-
-# Check for macdeployqt on Homebrew
-if which -s brew ; then
-    info "Homebrew found, searching for macdeployqt"
-    DEPLOYQT="$(brew list qt@5 | grep --only '/.*macdeployqt' | head -1)"
-    if [ ! -x "$DEPLOYQT" ]; then
-        error "Please install package qt"
-        exit 1
-    fi
-fi
+DEPLOYQT=@QT_DEPLOY_TOOL@
 
 # Use macdeployqt to include libraries and create dmg
 if [ "$B_BUILDTYPE" = "Release" ]; then

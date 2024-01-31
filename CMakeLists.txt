@@ -66,7 +66,7 @@ if (INPUTLEAP_BUILD_GUI)
         set(REQUIRED_QT_VERSION 6.2)
     endif()
 
-    find_package (Qt${QT_DEFAULT_MAJOR_VERSION} COMPONENTS Core REQUIRED)
+    find_package(Qt${QT_DEFAULT_MAJOR_VERSION} COMPONENTS Core REQUIRED)
     get_target_property(qmake_executable Qt${QT_DEFAULT_MAJOR_VERSION}::qmake IMPORTED_LOCATION)
     get_filename_component(_qt_bin_dir "${qmake_executable}" DIRECTORY)
     if(WIN32 OR APPLE)

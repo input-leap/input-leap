@@ -24,7 +24,9 @@ option(INPUTLEAP_BUILD_TESTS "Build the tests" ON)
 option(INPUTLEAP_USE_EXTERNAL_GTEST "Use external installation of Google Test framework" OFF)
 option(INPUTLEAP_BUILD_X11 "Build with XWindows support" ON)
 option(INPUTLEAP_BUILD_LIBEI "Build with libei support" OFF)
-option(INPUTLEAP_DEPLOY_FLATPAK_SCRIPT "Deploy Flatpak script [Expermental]" OFF)
+option(INPUTLEAP_WAYLAND_WARN_USER "Warn upon GUI start about Wayland support" ON)
+option(INPUTLEAP_DEPLOY_FLATPAK_SCRIPT "Deploy Flatpak script [Experimental]" OFF)
+
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set (CMAKE_CXX_STANDARD 14)
 set (CMAKE_CXX_EXTENSIONS OFF)
@@ -206,6 +208,10 @@ if (UNIX)
                         PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
                 )
             endif()
+        endif()
+
+        if (INPUTLEAP_WAYLAND_WARN_USER AND (BUILD_XWINDOWS OR BUILD_LIBEI))
+            add_definitions(-DINPUTLEAP_WAYLAND_WARN_USER=1)
         endif()
 
         check_include_files ("dns_sd.h" HAVE_DNSSD)

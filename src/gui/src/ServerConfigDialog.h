@@ -23,16 +23,21 @@
 #include "ScreenSetupModel.h"
 #include "ServerConfig.h"
 
-#include "ui_ServerConfigDialogBase.h"
-
 #include <QDialog>
+#include <memory>
 
-class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase
+namespace Ui
+{
+    class ServerConfigDialog;
+}
+
+class ServerConfigDialog : public QDialog
 {
     Q_OBJECT
 
     public:
         ServerConfigDialog(QWidget* parent, ServerConfig& config, const QString& defaultScreenName);
+        ~ServerConfigDialog() override;
 
     public slots:
         void accept() override;
@@ -57,6 +62,7 @@ class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase
         ScreenSetupModel& model() { return m_ScreenSetupModel; }
 
     private:
+        std::unique_ptr<Ui::ServerConfigDialog> ui_;
         ServerConfig& m_OrigServerConfig;
         ServerConfig m_ServerConfig;
         ScreenSetupModel m_ScreenSetupModel;

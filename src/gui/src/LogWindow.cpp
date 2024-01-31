@@ -16,7 +16,7 @@
 */
 
 #include "LogWindow.h"
-
+#include "ui_LogWindow.h"
 #include <QDateTime>
 
 static QString getTimeStamp()
@@ -26,18 +26,19 @@ static QString getTimeStamp()
 }
 
 LogWindow::LogWindow(QWidget *parent) :
-    QDialog(parent)
+    QDialog(parent),
+    ui_{std::make_unique<Ui::LogWindow>()}
 {
     // explicitly unset DeleteOnClose so the log window can be show and hidden
     // repeatedly until InputLeap is finished
     setAttribute(Qt::WA_DeleteOnClose, false);
-    setupUi(this);
+    ui_->setupUi(this);
 }
 
 void LogWindow::startNewInstance()
 {
     // put a space between last log output and new instance.
-    if (!m_pLogOutput->toPlainText().isEmpty())
+    if (!ui_->m_pLogOutput->toPlainText().isEmpty())
         appendRaw("");
 }
 
@@ -58,7 +59,7 @@ void LogWindow::appendError(const QString& text)
 
 void LogWindow::appendRaw(const QString& text)
 {
-    m_pLogOutput->append(text);
+    ui_->m_pLogOutput->append(text);
 }
 
 void LogWindow::on_m_pButtonHide_clicked()
@@ -68,5 +69,7 @@ void LogWindow::on_m_pButtonHide_clicked()
 
 void LogWindow::on_m_pButtonClearLog_clicked()
 {
-    m_pLogOutput->clear();
+    ui_->m_pLogOutput->clear();
 }
+
+LogWindow::~LogWindow() = default;

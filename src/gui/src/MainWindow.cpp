@@ -19,6 +19,7 @@
 #include <iostream>
 
 #include "MainWindow.h"
+#include "ui_MainWindow.h"
 
 #include "AboutDialog.h"
 #include "ServerConfigDialog.h"
@@ -109,6 +110,7 @@ static const char* APP_LARGE_ICON = ":/res/icons/256x256/input-leap.ico";
 } // namespace
 
 MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
+    ui_{std::make_unique<Ui::MainWindow>()},
     m_Settings(settings),
     m_AppConfig(&appConfig),
     cmd_app_process_(nullptr),
@@ -138,14 +140,14 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     // managers will float it by default (X11)
     setAttribute(Qt::WA_X11NetWmWindowTypeDialog, true);
 
-    setupUi(this);
+    ui_->setupUi(this);
     setWindowIcon(QIcon(APP_LARGE_ICON));
     createMenuBar();
     loadSettings();
     initConnections();
 
-    m_pLabelScreenName->setText(getScreenName());
-    m_pLabelIpAddresses->setText(getIPAddresses());
+    ui_->m_pLabelScreenName->setText(getScreenName());
+    ui_->m_pLabelIpAddresses->setText(getIPAddresses());
 
 #if defined(Q_OS_WIN)
     // ipc must always be enabled, so that we can disable command when switching to desktop mode.
@@ -165,26 +167,26 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 #endif
 
     m_SuppressAutoConfigWarning = true;
-    m_pCheckBoxAutoConfig->setChecked(appConfig.autoConfig());
+    ui_->m_pCheckBoxAutoConfig->setChecked(appConfig.autoConfig());
     m_SuppressAutoConfigWarning = false;
 
-    m_pComboServerList->hide();
-    m_pLabelPadlock->hide();
-    frame_fingerprint_details->hide();
+    ui_->m_pComboServerList->hide();
+    ui_->m_pLabelPadlock->hide();
+    ui_->frame_fingerprint_details->hide();
 
     updateSSLFingerprint();
 
-    connect(toolbutton_show_fingerprint, &QToolButton::clicked, this, [this](bool checked)
+    connect(ui_->toolbutton_show_fingerprint, &QToolButton::clicked, this, [this](bool checked)
     {
         (void) checked;
 
         m_fingerprint_expanded = !m_fingerprint_expanded;
         if (m_fingerprint_expanded) {
-            frame_fingerprint_details->show();
-            toolbutton_show_fingerprint->setArrowType(Qt::ArrowType::UpArrow);
+            ui_->frame_fingerprint_details->show();
+            ui_->toolbutton_show_fingerprint->setArrowType(Qt::ArrowType::UpArrow);
         } else {
-            frame_fingerprint_details->hide();
-            toolbutton_show_fingerprint->setArrowType(Qt::ArrowType::DownArrow);
+            ui_->frame_fingerprint_details->hide();
+            ui_->toolbutton_show_fingerprint->setArrowType(Qt::ArrowType::DownArrow);
         }
     });
 
@@ -240,22 +242,22 @@ void MainWindow::open()
 
 void MainWindow::setStatus(const QString &status)
 {
-    m_pStatusLabel->setText(status);
+    ui_->m_pStatusLabel->setText(status);
 }
 
 void MainWindow::createTrayIcon()
 {
     m_pTrayIconMenu = new QMenu(this);
 
-    m_pTrayIconMenu->addAction(m_pActionStartCmdApp);
-    m_pTrayIconMenu->addAction(m_pActionStopCmdApp);
-    m_pTrayIconMenu->addAction(m_pActionShowLog);
+    m_pTrayIconMenu->addAction(ui_->m_pActionStartCmdApp);
+    m_pTrayIconMenu->addAction(ui_->m_pActionStopCmdApp);
+    m_pTrayIconMenu->addAction(ui_->m_pActionShowLog);
     m_pTrayIconMenu->addSeparator();
 
-    m_pTrayIconMenu->addAction(m_pActionMinimize);
-    m_pTrayIconMenu->addAction(m_pActionRestore);
+    m_pTrayIconMenu->addAction(ui_->m_pActionMinimize);
+    m_pTrayIconMenu->addAction(ui_->m_pActionRestore);
     m_pTrayIconMenu->addSeparator();
-    m_pTrayIconMenu->addAction(m_pActionQuit);
+    m_pTrayIconMenu->addAction(ui_->m_pActionQuit);
 
     m_pTrayIcon = new QSystemTrayIcon(this);
     m_pTrayIcon->setContextMenu(m_pTrayIconMenu);
@@ -284,14 +286,14 @@ void MainWindow::createMenuBar()
     m_pMenuBar->addAction(main_menu_->menuAction());
     m_pMenuBar->addAction(m_pMenuHelp->menuAction());
 
-    main_menu_->addAction(m_pActionShowLog);
-    main_menu_->addAction(m_pActionSettings);
-    main_menu_->addAction(m_pActionMinimize);
+    main_menu_->addAction(ui_->m_pActionShowLog);
+    main_menu_->addAction(ui_->m_pActionSettings);
+    main_menu_->addAction(ui_->m_pActionMinimize);
     main_menu_->addSeparator();
-    main_menu_->addAction(m_pActionSave);
+    main_menu_->addAction(ui_->m_pActionSave);
     main_menu_->addSeparator();
-    main_menu_->addAction(m_pActionQuit);
-    m_pMenuHelp->addAction(m_pActionAbout);
+    main_menu_->addAction(ui_->m_pActionQuit);
+    m_pMenuHelp->addAction(ui_->m_pActionAbout);
 
     setMenuBar(m_pMenuBar);
 }
@@ -300,35 +302,35 @@ void MainWindow::loadSettings()
 {
     // the next two must come BEFORE loading groupServerChecked and groupClientChecked or
     // disabling and/or enabling the right widgets won't automatically work
-    m_pRadioExternalConfig->setChecked(settings().value("useExternalConfig", false).toBool());
-    m_pRadioInternalConfig->setChecked(settings().value("useInternalConfig", true).toBool());
+    ui_->m_pRadioExternalConfig->setChecked(settings().value("useExternalConfig", false).toBool());
+    ui_->m_pRadioInternalConfig->setChecked(settings().value("useInternalConfig", true).toBool());
 
-    m_pGroupServer->setChecked(settings().value("groupServerChecked", false).toBool());
-    m_pLineEditConfigFile->setText(settings().value("configFile",
+    ui_->m_pGroupServer->setChecked(settings().value("groupServerChecked", false).toBool());
+    ui_->m_pLineEditConfigFile->setText(settings().value("configFile",
                                                     QDir::homePath() + "/" + APP_CONFIG_NAME).toString());
-    m_pGroupClient->setChecked(settings().value("groupClientChecked", true).toBool());
-    m_pLineEditHostname->setText(settings().value("serverHostname").toString());
+    ui_->m_pGroupClient->setChecked(settings().value("groupClientChecked", true).toBool());
+    ui_->m_pLineEditHostname->setText(settings().value("serverHostname").toString());
 }
 
 void MainWindow::initConnections()
 {
-    connect(m_pActionMinimize, &QAction::triggered, this, &MainWindow::hide);
-    connect(m_pActionRestore, &QAction::triggered, this, &MainWindow::showNormal);
-    connect(m_pActionStartCmdApp, &QAction::triggered, this, &MainWindow::start_cmd_app);
-    connect(m_pActionStopCmdApp, &QAction::triggered, this, &MainWindow::stop_cmd_app);
-    connect(m_pActionShowLog, &QAction::triggered, this, &MainWindow::showLogWindow);
-    connect(m_pActionQuit, &QAction::triggered, qApp, &QCoreApplication::quit);
+    connect(ui_->m_pActionMinimize, &QAction::triggered, this, &MainWindow::hide);
+    connect(ui_->m_pActionRestore, &QAction::triggered, this, &MainWindow::showNormal);
+    connect(ui_->m_pActionStartCmdApp, &QAction::triggered, this, &MainWindow::start_cmd_app);
+    connect(ui_->m_pActionStopCmdApp, &QAction::triggered, this, &MainWindow::stop_cmd_app);
+    connect(ui_->m_pActionShowLog, &QAction::triggered, this, &MainWindow::showLogWindow);
+    connect(ui_->m_pActionQuit, &QAction::triggered, qApp, &QCoreApplication::quit);
 }
 
 void MainWindow::saveSettings()
 {
     // program settings
-    settings().setValue("groupServerChecked", m_pGroupServer->isChecked());
-    settings().setValue("useExternalConfig", m_pRadioExternalConfig->isChecked());
-    settings().setValue("configFile", m_pLineEditConfigFile->text());
-    settings().setValue("useInternalConfig", m_pRadioInternalConfig->isChecked());
-    settings().setValue("groupClientChecked", m_pGroupClient->isChecked());
-    settings().setValue("serverHostname", m_pLineEditHostname->text());
+    settings().setValue("groupServerChecked", ui_->m_pGroupServer->isChecked());
+    settings().setValue("useExternalConfig", ui_->m_pRadioExternalConfig->isChecked());
+    settings().setValue("configFile", ui_->m_pLineEditConfigFile->text());
+    settings().setValue("useInternalConfig", ui_->m_pRadioInternalConfig->isChecked());
+    settings().setValue("groupClientChecked", ui_->m_pGroupClient->isChecked());
+    settings().setValue("serverHostname", ui_->m_pLineEditHostname->text());
 
     settings().sync();
 }
@@ -644,6 +646,12 @@ void MainWindow::start_cmd_app()
     }
 }
 
+void MainWindow::setServerMode(bool isServerMode)
+{
+    ui_->m_pGroupServer->setChecked(isServerMode);
+    ui_->m_pGroupClient->setChecked(!isServerMode);
+}
+
 bool MainWindow::clientArgs(QStringList& args, QString& app)
 {
     app = appPath(appConfig().client_name());
@@ -669,13 +677,13 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 
     // check auto config first, if it is disabled or no server detected,
     // use line edit host name if it is not empty
-    if (m_pCheckBoxAutoConfig->isChecked()) {
-        if (m_pComboServerList->count() != 0) {
-            QString serverIp = m_pComboServerList->currentText();
+    if (ui_->m_pCheckBoxAutoConfig->isChecked()) {
+        if (ui_->m_pComboServerList->count() != 0) {
+            QString serverIp = ui_->m_pComboServerList->currentText();
             args << "[" + serverIp + "]:" + QString::number(appConfig().port());
             return true;
         }
-    } else if (m_pLineEditHostname->text().isEmpty()) {
+    } else if (ui_->m_pLineEditHostname->text().isEmpty()) {
         show();
         if (!m_SuppressEmptyServerWarning) {
             QMessageBox::warning(this, tr("Hostname is empty"),
@@ -684,7 +692,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
         return false;
     }
 
-    args << "[" + m_pLineEditHostname->text() + "]:" + QString::number(appConfig().port());
+    args << "[" + ui_->m_pLineEditHostname->text() + "]:" + QString::number(appConfig().port());
 
     return true;
 }
@@ -692,7 +700,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 QString MainWindow::configFilename()
 {
     QString filename;
-    if (m_pRadioInternalConfig->isChecked())
+    if (ui_->m_pRadioInternalConfig->isChecked())
     {
         // TODO: no need to use a temporary file, since we need it to
         // be permanent (since it'll be used for Windows services, etc).
@@ -711,7 +719,7 @@ QString MainWindow::configFilename()
     }
     else
     {
-        if (!QFile::exists(m_pLineEditConfigFile->text()))
+        if (!QFile::exists(ui_->m_pLineEditConfigFile->text()))
         {
             if (QMessageBox::warning(this, tr("Configuration filename invalid"),
                 tr("You have not filled in a valid configuration file for the InputLeap server. "
@@ -720,14 +728,19 @@ QString MainWindow::configFilename()
                 return "";
         }
 
-        filename = m_pLineEditConfigFile->text();
+        filename = ui_->m_pLineEditConfigFile->text();
     }
     return filename;
 }
 
 AppRole MainWindow::app_role() const
 {
-    return m_pGroupClient->isChecked() ? AppRole::Client : AppRole::Server;
+    return ui_->m_pGroupClient->isChecked() ? AppRole::Client : AppRole::Server;
+}
+
+QString MainWindow::hostname() const
+{
+    return ui_->m_pLineEditHostname->text();
 }
 
 QString MainWindow::address()
@@ -860,17 +873,17 @@ void MainWindow::set_connection_state(AppConnectionState state)
 
     if (state == AppConnectionState::CONNECTED || state == AppConnectionState::CONNECTING)
     {
-        disconnect(m_pButtonToggleStart, &QPushButton::clicked, m_pActionStartCmdApp, &QAction::trigger);
-        connect(m_pButtonToggleStart, &QPushButton::clicked, m_pActionStopCmdApp, &QAction::trigger);
-        m_pButtonToggleStart->setText(tr("&Stop"));
-        m_pButtonReload->setEnabled(true);
+        disconnect(ui_->m_pButtonToggleStart, &QPushButton::clicked, ui_->m_pActionStartCmdApp, &QAction::trigger);
+        connect(ui_->m_pButtonToggleStart, &QPushButton::clicked, ui_->m_pActionStopCmdApp, &QAction::trigger);
+        ui_->m_pButtonToggleStart->setText(tr("&Stop"));
+        ui_->m_pButtonReload->setEnabled(true);
     }
     else if (state == AppConnectionState::DISCONNECTED)
     {
-        disconnect(m_pButtonToggleStart, &QPushButton::clicked, m_pActionStopCmdApp, &QAction::trigger);
-        connect(m_pButtonToggleStart, &QPushButton::clicked, m_pActionStartCmdApp, &QAction::trigger);
-        m_pButtonToggleStart->setText(tr("&Start"));
-        m_pButtonReload->setEnabled(false);
+        disconnect(ui_->m_pButtonToggleStart, &QPushButton::clicked, ui_->m_pActionStopCmdApp, &QAction::trigger);
+        connect(ui_->m_pButtonToggleStart, &QPushButton::clicked, ui_->m_pActionStartCmdApp, &QAction::trigger);
+        ui_->m_pButtonToggleStart->setText(tr("&Start"));
+        ui_->m_pButtonReload->setEnabled(false);
     }
 
     bool connected = false;
@@ -878,17 +891,17 @@ void MainWindow::set_connection_state(AppConnectionState state)
         connected = true;
     }
 
-    m_pActionStartCmdApp->setEnabled(!connected);
-    m_pActionStopCmdApp->setEnabled(connected);
+    ui_->m_pActionStartCmdApp->setEnabled(!connected);
+    ui_->m_pActionStopCmdApp->setEnabled(connected);
 
     switch (state)
     {
     case AppConnectionState::CONNECTED: {
         if (m_AppConfig->getCryptoEnabled()) {
-            m_pLabelPadlock->show();
+            ui_->m_pLabelPadlock->show();
         }
         else {
-            m_pLabelPadlock->hide();
+            ui_->m_pLabelPadlock->hide();
         }
 
         setStatus(tr("InputLeap is running."));
@@ -896,11 +909,11 @@ void MainWindow::set_connection_state(AppConnectionState state)
         break;
     }
     case AppConnectionState::CONNECTING:
-        m_pLabelPadlock->hide();
+        ui_->m_pLabelPadlock->hide();
         setStatus(tr("InputLeap is starting."));
         break;
     case AppConnectionState::DISCONNECTED:
-        m_pLabelPadlock->hide();
+        ui_->m_pLabelPadlock->hide();
         setStatus(tr("InputLeap is not running."));
         break;
     case AppConnectionState::TRANSFERRING:
@@ -917,8 +930,8 @@ void MainWindow::set_connection_state(AppConnectionState state)
 void MainWindow::setVisible(bool visible)
 {
     QMainWindow::setVisible(visible);
-    m_pActionMinimize->setEnabled(visible);
-    m_pActionRestore->setEnabled(!visible);
+    ui_->m_pActionMinimize->setEnabled(visible);
+    ui_->m_pActionRestore->setEnabled(!visible);
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1070 // lion
     // dock hide only supported on lion :(
@@ -986,7 +999,7 @@ void MainWindow::changeEvent(QEvent* event)
         {
         case QEvent::LanguageChange:
         {
-            retranslateUi(this);
+            ui_->retranslateUi(this);
             retranslateMenuBar();
 
             proofreadInfo();
@@ -1036,13 +1049,13 @@ void MainWindow::updateZeroconfService()
 
 void MainWindow::serverDetected(const QString name)
 {
-    if (m_pComboServerList->findText(name) == -1) {
+    if (ui_->m_pComboServerList->findText(name) == -1) {
         // Note: the first added item triggers startInputLeap
-        m_pComboServerList->addItem(name);
+        ui_->m_pComboServerList->addItem(name);
     }
 
-    if (m_pComboServerList->count() > 1) {
-        m_pComboServerList->show();
+    if (ui_->m_pComboServerList->count() > 1) {
+        ui_->m_pComboServerList->show();
     }
 }
 
@@ -1054,8 +1067,8 @@ void MainWindow::updateSSLFingerprint()
         m_pSslCertificate->generateCertificate();
     }
 
-    toolbutton_show_fingerprint->setEnabled(false);
-    m_pLabelLocalFingerprint->setText("Disabled");
+    ui_->toolbutton_show_fingerprint->setEnabled(false);
+    ui_->m_pLabelLocalFingerprint->setText("Disabled");
 
     if (!m_AppConfig->getCryptoEnabled()) {
         return;
@@ -1075,7 +1088,7 @@ void MainWindow::updateSSLFingerprint()
     for (const auto& fingerprint : db.fingerprints()) {
         if (fingerprint.algorithm == "sha1") {
             auto fingerprint_str = inputleap::format_ssl_fingerprint(fingerprint.data);
-            label_sha1_fingerprint_full->setText(QString::fromStdString(fingerprint_str));
+            ui_->label_sha1_fingerprint_full->setText(QString::fromStdString(fingerprint_str));
             continue;
         }
 
@@ -1087,18 +1100,18 @@ void MainWindow::updateSSLFingerprint()
             auto fingerprint_str_cols = inputleap::format_ssl_fingerprint_columns(fingerprint.data);
             auto fingerprint_randomart = inputleap::create_fingerprint_randomart(fingerprint.data);
 
-            m_pLabelLocalFingerprint->setText(QString::fromStdString(fingerprint_str));
-            label_sha256_fingerprint_full->setText(QString::fromStdString(fingerprint_str_cols));
-            label_sha256_randomart->setText(QString::fromStdString(fingerprint_randomart));
+            ui_->m_pLabelLocalFingerprint->setText(QString::fromStdString(fingerprint_str));
+            ui_->label_sha256_fingerprint_full->setText(QString::fromStdString(fingerprint_str_cols));
+            ui_->label_sha256_randomart->setText(QString::fromStdString(fingerprint_randomart));
         }
     }
 
-    toolbutton_show_fingerprint->setEnabled(true);
+    ui_->toolbutton_show_fingerprint->setEnabled(true);
 }
 
 void MainWindow::on_m_pGroupClient_toggled(bool on)
 {
-    m_pGroupServer->setChecked(!on);
+    ui_->m_pGroupServer->setChecked(!on);
     if (on) {
         updateZeroconfService();
     }
@@ -1106,7 +1119,7 @@ void MainWindow::on_m_pGroupClient_toggled(bool on)
 
 void MainWindow::on_m_pGroupServer_toggled(bool on)
 {
-    m_pGroupClient->setChecked(!on);
+    ui_->m_pGroupClient->setChecked(!on);
     if (on) {
         updateZeroconfService();
     }
@@ -1118,7 +1131,7 @@ bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
 
     if (!fileName.isEmpty())
     {
-        m_pLineEditConfigFile->setText(fileName);
+        ui_->m_pLineEditConfigFile->setText(fileName);
         return true;
     }
 
@@ -1350,7 +1363,7 @@ void MainWindow::promptAutoConfig()
         }
         else {
             m_AppConfig->setAutoConfig(false);
-            m_pCheckBoxAutoConfig->setChecked(false);
+            ui_->m_pCheckBoxAutoConfig->setChecked(false);
         }
     }
 
@@ -1359,7 +1372,7 @@ void MainWindow::promptAutoConfig()
 
 void MainWindow::on_m_pComboServerList_currentIndexChanged(QString )
 {
-    if (m_pComboServerList->count() != 0) {
+    if (ui_->m_pComboServerList->count() != 0) {
         restart_cmd_app();
     }
 }
@@ -1379,17 +1392,17 @@ void MainWindow::on_m_pCheckBoxAutoConfig_toggled(bool checked)
             }
         }
 
-        m_pCheckBoxAutoConfig->setChecked(false);
+        ui_->m_pCheckBoxAutoConfig->setChecked(false);
         return;
     }
 
-    m_pLineEditHostname->setDisabled(checked);
+    ui_->m_pLineEditHostname->setDisabled(checked);
     appConfig().setAutoConfig(checked);
     updateZeroconfService();
 
     if (!checked) {
-        m_pComboServerList->clear();
-        m_pComboServerList->hide();
+        ui_->m_pComboServerList->clear();
+        ui_->m_pComboServerList->hide();
     }
 }
 
@@ -1397,7 +1410,7 @@ void MainWindow::bonjourInstallFinished()
 {
     appendLogInfo("Bonjour install finished");
 
-    m_pCheckBoxAutoConfig->setChecked(true);
+    ui_->m_pCheckBoxAutoConfig->setChecked(true);
 }
 
 void MainWindow::windowStateChanged()

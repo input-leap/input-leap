@@ -2,30 +2,30 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN" sourcelanguage="en">
 <context>
-    <name>AboutDialogBase</name>
+    <name>AboutDialog</name>
     <message>
-        <location filename="../../src/AboutDialogBase.ui" line="38"/>
+        <location filename="../../src/AboutDialog.ui" line="38"/>
         <source>About InputLeap</source>
         <translation>关于 InputLeap</translation>
     </message>
     <message>
-        <location filename="../../src/AboutDialogBase.ui" line="140"/>
-        <location filename="../../src/AboutDialogBase.ui" line="174"/>
+        <location filename="../../src/AboutDialog.ui" line="140"/>
+        <location filename="../../src/AboutDialog.ui" line="174"/>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
     <message>
-        <location filename="../../src/AboutDialogBase.ui" line="124"/>
+        <location filename="../../src/AboutDialog.ui" line="124"/>
         <source>Version:</source>
         <translation>版本：</translation>
     </message>
     <message>
-        <location filename="../../src/AboutDialogBase.ui" line="194"/>
+        <location filename="../../src/AboutDialog.ui" line="194"/>
         <source>&amp;Ok</source>
         <translation>确定(&amp;O)</translation>
     </message>
     <message>
-        <location filename="../../src/AboutDialogBase.ui" line="53"/>
+        <location filename="../../src/AboutDialog.ui" line="53"/>
         <source>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
 Copyright © 2018 Debauchee Open Source Group&lt;br /&gt;
@@ -46,110 +46,110 @@ InputLeap GUI 基于 Volker Lanz 制作的 QSynergy.
 &lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/AboutDialogBase.ui" line="167"/>
+        <location filename="../../src/AboutDialog.ui" line="167"/>
         <source>Build Date: </source>
         <translation>日期：</translation>
     </message>
 </context>
 <context>
-    <name>ActionDialogBase</name>
+    <name>ActionDialog</name>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="14"/>
+        <location filename="../../src/ActionDialog.ui" line="14"/>
         <source>Configure Action</source>
         <translation>配置动作</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="20"/>
+        <location filename="../../src/ActionDialog.ui" line="20"/>
         <source>Choose the action to perform</source>
         <translation>选择要执行的动作</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="26"/>
+        <location filename="../../src/ActionDialog.ui" line="26"/>
         <source>Press a hotkey</source>
         <translation>按下热键</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="36"/>
+        <location filename="../../src/ActionDialog.ui" line="36"/>
         <source>Release a hotkey</source>
         <translation>松开热键</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="43"/>
+        <location filename="../../src/ActionDialog.ui" line="43"/>
         <source>Press and release a hotkey</source>
         <translation>单击热键</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="69"/>
+        <location filename="../../src/ActionDialog.ui" line="69"/>
         <source>only on these screens</source>
         <translation>仅在这些屏幕上</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="119"/>
+        <location filename="../../src/ActionDialog.ui" line="119"/>
         <source>Switch to screen</source>
         <translation>切换到屏幕</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="161"/>
+        <location filename="../../src/ActionDialog.ui" line="161"/>
         <source>Switch in direction</source>
         <translation>切换方向</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="185"/>
+        <location filename="../../src/ActionDialog.ui" line="185"/>
         <source>left</source>
         <translation>左</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="190"/>
+        <location filename="../../src/ActionDialog.ui" line="190"/>
         <source>right</source>
         <translation>右侧</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="195"/>
+        <location filename="../../src/ActionDialog.ui" line="195"/>
         <source>up</source>
         <translation>上方</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="200"/>
+        <location filename="../../src/ActionDialog.ui" line="200"/>
         <source>down</source>
         <translation>下方</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="212"/>
+        <location filename="../../src/ActionDialog.ui" line="212"/>
         <source>Lock cursor to screen</source>
         <translation>锁定指针于屏幕</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="236"/>
+        <location filename="../../src/ActionDialog.ui" line="236"/>
         <source>toggle</source>
         <translation>切换</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="241"/>
+        <location filename="../../src/ActionDialog.ui" line="241"/>
         <source>on</source>
         <translation>启用</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="246"/>
+        <location filename="../../src/ActionDialog.ui" line="246"/>
         <source>off</source>
         <translation>禁用</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="259"/>
+        <location filename="../../src/ActionDialog.ui" line="259"/>
         <source>This action is performed when</source>
         <translation>当……时启用此动作</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="265"/>
+        <location filename="../../src/ActionDialog.ui" line="265"/>
         <source>the hotkey is pressed</source>
         <translation>热键被按下</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="275"/>
+        <location filename="../../src/ActionDialog.ui" line="275"/>
         <source>the hotkey is released</source>
         <translation>热键被松开</translation>
     </message>
     <message>
-        <location filename="../../src/ActionDialogBase.ui" line="150"/>
+        <location filename="../../src/ActionDialog.ui" line="150"/>
         <source>Toggle screen</source>
         <translation>切换屏幕</translation>
     </message>
@@ -157,17 +157,17 @@ InputLeap GUI 基于 Volker Lanz 制作的 QSynergy.
 <context>
     <name>AddClientDialog</name>
     <message>
-        <location filename="../../src/AddClientDialogBase.ui" line="20"/>
+        <location filename="../../src/AddClientDialog.ui" line="20"/>
         <source>Dialog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/AddClientDialogBase.ui" line="35"/>
+        <location filename="../../src/AddClientDialog.ui" line="35"/>
         <source>TextLabel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/AddClientDialogBase.ui" line="83"/>
+        <location filename="../../src/AddClientDialog.ui" line="83"/>
         <source>Ignore auto connect clients</source>
         <translation>忽略自动连接的客户端</translation>
     </message>
@@ -617,173 +617,173 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
 </context>
 <context>
-    <name>ScreenSettingsDialogBase</name>
+    <name>ScreenSettingsDialog</name>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="14"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="14"/>
         <source>Screen Settings</source>
         <translation>屏幕设置</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="22"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="22"/>
         <source>Screen &amp;name:</source>
         <translation>屏幕名：</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="42"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="42"/>
         <source>A&amp;liases</source>
         <translation>别名</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="57"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="57"/>
         <source>&amp;Add</source>
         <translation>添加(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="74"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="74"/>
         <source>&amp;Remove</source>
         <translation>删除(&amp;R)</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="97"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="97"/>
         <source>&amp;Modifier keys</source>
         <translation>修改按键</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="106"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="106"/>
         <source>&amp;Shift:</source>
         <translation>Shift:</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="117"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="164"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="211"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="258"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="305"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="117"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="164"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="211"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="258"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="305"/>
         <source>Shift</source>
         <translation>Shift</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="122"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="169"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="216"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="263"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="310"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="122"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="169"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="216"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="263"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="310"/>
         <source>Ctrl</source>
         <translation>Ctrl</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="127"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="174"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="221"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="268"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="315"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="127"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="174"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="221"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="268"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="315"/>
         <source>Alt</source>
         <translation>Alt</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="132"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="179"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="226"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="273"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="320"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="132"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="179"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="226"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="273"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="320"/>
         <source>Meta</source>
         <translation>Meta</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="137"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="184"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="231"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="278"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="325"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="137"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="184"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="231"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="278"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="325"/>
         <source>Super</source>
         <translation>超级</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="142"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="189"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="236"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="283"/>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="330"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="142"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="189"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="236"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="283"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="330"/>
         <source>None</source>
         <translation>无</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="150"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="150"/>
         <source>&amp;Ctrl:</source>
         <translation>&amp;Ctrl：</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="197"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="197"/>
         <source>Al&amp;t:</source>
         <translation>Al&amp;t：</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="244"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="244"/>
         <source>M&amp;eta:</source>
         <translation>M&amp;eta：</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="291"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="291"/>
         <source>S&amp;uper:</source>
         <translation>S&amp;uper：</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="358"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="358"/>
         <source>&amp;Dead corners</source>
         <translation>死角</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="367"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="367"/>
         <source>Top-left</source>
         <translation>左上角</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="374"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="374"/>
         <source>Top-right</source>
         <translation>右上角</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="381"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="381"/>
         <source>Bottom-left</source>
         <translation>左下角</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="388"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="388"/>
         <source>Bottom-right</source>
         <translation>右下角</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="397"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="397"/>
         <source>Corner Si&amp;ze:</source>
         <translation>死角大小</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="428"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="428"/>
         <source>&amp;Fixes</source>
         <translation>修改</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="437"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="437"/>
         <source>Fix CAPS LOCK key</source>
         <translation>修复caps lock键</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="444"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="444"/>
         <source>Fix NUM LOCK key</source>
         <translation>修复num lock键</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="451"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="451"/>
         <source>Fix SCROLL LOCK key</source>
         <translation>修复scroll lock键</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="458"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="458"/>
         <source>Fix XTest for Xinerama</source>
         <translation>修复Xinerama的XTest</translation>
     </message>
     <message>
-        <location filename="../../src/ScreenSettingsDialogBase.ui" line="468"/>
+        <location filename="../../src/ScreenSettingsDialog.ui" line="468"/>
         <source>Fix Preserve Focus</source>
         <translation>修复焦点</translation>
     </message>

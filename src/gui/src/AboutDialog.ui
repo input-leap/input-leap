@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AboutDialogBase</class>
- <widget class="QDialog" name="AboutDialogBase">
+ <class>AboutDialog</class>
+ <widget class="QDialog" name="AboutDialog">
   <property name="windowModality">
    <enum>Qt::ApplicationModal</enum>
   </property>
@@ -192,7 +192,7 @@ The InputLeap GUI is based on QSynergy by Volker Lanz.
   <connection>
    <sender>buttonOk</sender>
    <signal>clicked()</signal>
-   <receiver>AboutDialogBase</receiver>
+   <receiver>AboutDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">

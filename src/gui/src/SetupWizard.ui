@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>SetupWizardBase</class>
- <widget class="QWizard" name="SetupWizardBase">
+ <class>SetupWizard</class>
+ <widget class="QWizard" name="SetupWizard">
   <property name="geometry">
    <rect>
     <x>0</x>

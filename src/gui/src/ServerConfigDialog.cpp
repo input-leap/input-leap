@@ -17,6 +17,8 @@
  */
 
 #include "ServerConfigDialog.h"
+#include <ui_ServerConfigDialog.h>
+
 #include "ServerConfig.h"
 #include "HotkeyDialog.h"
 #include "ActionDialog.h"
@@ -27,46 +29,46 @@
 
 ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, const QString& defaultScreenName) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-    Ui::ServerConfigDialogBase(),
+    ui_{std::make_unique<Ui::ServerConfigDialog>()},
     m_OrigServerConfig(config),
     m_ServerConfig(config),
     m_ScreenSetupModel(serverConfig().screens(), serverConfig().numColumns(), serverConfig().numRows()),
     m_Message("")
 {
-    setupUi(this);
+    ui_->setupUi(this);
 
-    m_pCheckBoxHeartbeat->setChecked(serverConfig().hasHeartbeat());
-    m_pSpinBoxHeartbeat->setValue(serverConfig().heartbeat());
+    ui_->m_pCheckBoxHeartbeat->setChecked(serverConfig().hasHeartbeat());
+    ui_->m_pSpinBoxHeartbeat->setValue(serverConfig().heartbeat());
 
-    m_pCheckBoxRelativeMouseMoves->setChecked(serverConfig().relativeMouseMoves());
-    m_pCheckBoxScreenSaverSync->setChecked(serverConfig().screenSaverSync());
-    m_pCheckBoxWin32KeepForeground->setChecked(serverConfig().win32KeepForeground());
+    ui_->m_pCheckBoxRelativeMouseMoves->setChecked(serverConfig().relativeMouseMoves());
+    ui_->m_pCheckBoxScreenSaverSync->setChecked(serverConfig().screenSaverSync());
+    ui_->m_pCheckBoxWin32KeepForeground->setChecked(serverConfig().win32KeepForeground());
 
-    m_pCheckBoxSwitchDelay->setChecked(serverConfig().hasSwitchDelay());
-    m_pSpinBoxSwitchDelay->setValue(serverConfig().switchDelay());
+    ui_->m_pCheckBoxSwitchDelay->setChecked(serverConfig().hasSwitchDelay());
+    ui_->m_pSpinBoxSwitchDelay->setValue(serverConfig().switchDelay());
 
-    m_pCheckBoxSwitchDoubleTap->setChecked(serverConfig().hasSwitchDoubleTap());
-    m_pSpinBoxSwitchDoubleTap->setValue(serverConfig().switchDoubleTap());
+    ui_->m_pCheckBoxSwitchDoubleTap->setChecked(serverConfig().hasSwitchDoubleTap());
+    ui_->m_pSpinBoxSwitchDoubleTap->setValue(serverConfig().switchDoubleTap());
 
-    m_pCheckBoxCornerTopLeft->setChecked(serverConfig().switchCorner(BaseConfig::SwitchCorner::TopLeft));
-    m_pCheckBoxCornerTopRight->setChecked(serverConfig().switchCorner(BaseConfig::SwitchCorner::TopRight));
-    m_pCheckBoxCornerBottomLeft->setChecked(serverConfig().switchCorner(BaseConfig::SwitchCorner::BottomLeft));
-    m_pCheckBoxCornerBottomRight->setChecked(serverConfig().switchCorner(BaseConfig::SwitchCorner::BottomRight));
-    m_pSpinBoxSwitchCornerSize->setValue(serverConfig().switchCornerSize());
+    ui_->m_pCheckBoxCornerTopLeft->setChecked(serverConfig().switchCorner(BaseConfig::SwitchCorner::TopLeft));
+    ui_->m_pCheckBoxCornerTopRight->setChecked(serverConfig().switchCorner(BaseConfig::SwitchCorner::TopRight));
+    ui_->m_pCheckBoxCornerBottomLeft->setChecked(serverConfig().switchCorner(BaseConfig::SwitchCorner::BottomLeft));
+    ui_->m_pCheckBoxCornerBottomRight->setChecked(serverConfig().switchCorner(BaseConfig::SwitchCorner::BottomRight));
+    ui_->m_pSpinBoxSwitchCornerSize->setValue(serverConfig().switchCornerSize());
 
-    m_pCheckBoxIgnoreAutoConfigClient->setChecked(serverConfig().ignoreAutoConfigClient());
+    ui_->m_pCheckBoxIgnoreAutoConfigClient->setChecked(serverConfig().ignoreAutoConfigClient());
 
-    m_pCheckBoxEnableDragAndDrop->setChecked(serverConfig().enableDragAndDrop());
+    ui_->m_pCheckBoxEnableDragAndDrop->setChecked(serverConfig().enableDragAndDrop());
 
-    m_pCheckBoxEnableClipboard->setChecked(serverConfig().clipboardSharing());
-    m_pSpinBoxClipboardSizeLimit->setValue(serverConfig().clipboardSharingSize());
-    m_pSpinBoxClipboardSizeLimit->setEnabled(serverConfig().clipboardSharing());
+    ui_->m_pCheckBoxEnableClipboard->setChecked(serverConfig().clipboardSharing());
+    ui_->m_pSpinBoxClipboardSizeLimit->setValue(serverConfig().clipboardSharingSize());
+    ui_->m_pSpinBoxClipboardSizeLimit->setEnabled(serverConfig().clipboardSharing());
 
     for (const Hotkey& hotkey : serverConfig().hotkeys()) {
-        m_pListHotkeys->addItem(hotkey.text());
+        ui_->m_pListHotkeys->addItem(hotkey.text());
     }
 
-    m_pScreenSetupView->setModel(&m_ScreenSetupModel);
+    ui_->m_pScreenSetupView->setModel(&m_ScreenSetupModel);
 
     if (serverConfig().numScreens() == 0)
         model().screen(serverConfig().numColumns() / 2, serverConfig().numRows() / 2) = Screen(defaultScreenName);
@@ -87,32 +89,32 @@ void ServerConfigDialog::showEvent(QShowEvent* event)
 
 void ServerConfigDialog::accept()
 {
-    serverConfig().haveHeartbeat(m_pCheckBoxHeartbeat->isChecked());
-    serverConfig().setHeartbeat(m_pSpinBoxHeartbeat->value());
+    serverConfig().haveHeartbeat(ui_->m_pCheckBoxHeartbeat->isChecked());
+    serverConfig().setHeartbeat(ui_->m_pSpinBoxHeartbeat->value());
 
-    serverConfig().setRelativeMouseMoves(m_pCheckBoxRelativeMouseMoves->isChecked());
-    serverConfig().setScreenSaverSync(m_pCheckBoxScreenSaverSync->isChecked());
-    serverConfig().setWin32KeepForeground(m_pCheckBoxWin32KeepForeground->isChecked());
+    serverConfig().setRelativeMouseMoves(ui_->m_pCheckBoxRelativeMouseMoves->isChecked());
+    serverConfig().setScreenSaverSync(ui_->m_pCheckBoxScreenSaverSync->isChecked());
+    serverConfig().setWin32KeepForeground(ui_->m_pCheckBoxWin32KeepForeground->isChecked());
 
-    serverConfig().haveSwitchDelay(m_pCheckBoxSwitchDelay->isChecked());
-    serverConfig().setSwitchDelay(m_pSpinBoxSwitchDelay->value());
+    serverConfig().haveSwitchDelay(ui_->m_pCheckBoxSwitchDelay->isChecked());
+    serverConfig().setSwitchDelay(ui_->m_pSpinBoxSwitchDelay->value());
 
-    serverConfig().haveSwitchDoubleTap(m_pCheckBoxSwitchDoubleTap->isChecked());
-    serverConfig().setSwitchDoubleTap(m_pSpinBoxSwitchDoubleTap->value());
+    serverConfig().haveSwitchDoubleTap(ui_->m_pCheckBoxSwitchDoubleTap->isChecked());
+    serverConfig().setSwitchDoubleTap(ui_->m_pSpinBoxSwitchDoubleTap->value());
 
     serverConfig().setSwitchCorner(BaseConfig::SwitchCorner::TopLeft,
-                                   m_pCheckBoxCornerTopLeft->isChecked());
+                                   ui_->m_pCheckBoxCornerTopLeft->isChecked());
     serverConfig().setSwitchCorner(BaseConfig::SwitchCorner::TopRight,
-                                   m_pCheckBoxCornerTopRight->isChecked());
+                                   ui_->m_pCheckBoxCornerTopRight->isChecked());
     serverConfig().setSwitchCorner(BaseConfig::SwitchCorner::BottomLeft,
-                                   m_pCheckBoxCornerBottomLeft->isChecked());
+                                   ui_->m_pCheckBoxCornerBottomLeft->isChecked());
     serverConfig().setSwitchCorner(BaseConfig::SwitchCorner::BottomRight,
-                                   m_pCheckBoxCornerBottomRight->isChecked());
-    serverConfig().setSwitchCornerSize(m_pSpinBoxSwitchCornerSize->value());
-    serverConfig().setIgnoreAutoConfigClient(m_pCheckBoxIgnoreAutoConfigClient->isChecked());
-    serverConfig().setEnableDragAndDrop(m_pCheckBoxEnableDragAndDrop->isChecked());
-    serverConfig().setClipboardSharing(m_pCheckBoxEnableClipboard->isChecked());
-    serverConfig().setClipboardSharingSize(m_pSpinBoxClipboardSizeLimit->value());
+                                   ui_->m_pCheckBoxCornerBottomRight->isChecked());
+    serverConfig().setSwitchCornerSize(ui_->m_pSpinBoxSwitchCornerSize->value());
+    serverConfig().setIgnoreAutoConfigClient(ui_->m_pCheckBoxIgnoreAutoConfigClient->isChecked());
+    serverConfig().setEnableDragAndDrop(ui_->m_pCheckBoxEnableDragAndDrop->isChecked());
+    serverConfig().setClipboardSharing(ui_->m_pCheckBoxEnableClipboard->isChecked());
+    serverConfig().setClipboardSharingSize(ui_->m_pSpinBoxClipboardSizeLimit->value());
 
     // now that the dialog has been accepted, copy the new server config to the original one,
     // which is a reference to the one in MainWindow.
@@ -128,41 +130,41 @@ void ServerConfigDialog::on_m_pButtonNewHotkey_clicked()
     if (dlg.exec() == QDialog::Accepted)
     {
         serverConfig().hotkeys().push_back(hotkey);
-        m_pListHotkeys->addItem(hotkey.text());
+        ui_->m_pListHotkeys->addItem(hotkey.text());
     }
 }
 
 void ServerConfigDialog::on_m_pButtonEditHotkey_clicked()
 {
-    int idx = m_pListHotkeys->currentRow();
+    int idx = ui_->m_pListHotkeys->currentRow();
     Q_ASSERT(idx >= 0 && idx < static_cast<int>(serverConfig().hotkeys().size()));
     Hotkey& hotkey = serverConfig().hotkeys()[idx];
     HotkeyDialog dlg(this, hotkey);
     if (dlg.exec() == QDialog::Accepted)
-        m_pListHotkeys->currentItem()->setText(hotkey.text());
+        ui_->m_pListHotkeys->currentItem()->setText(hotkey.text());
 }
 
 void ServerConfigDialog::on_m_pButtonRemoveHotkey_clicked()
 {
-    int idx = m_pListHotkeys->currentRow();
+    int idx = ui_->m_pListHotkeys->currentRow();
     Q_ASSERT(idx >= 0 && idx < static_cast<int>(serverConfig().hotkeys().size()));
     serverConfig().hotkeys().erase(serverConfig().hotkeys().begin() + idx);
-    m_pListActions->clear();
-    delete m_pListHotkeys->item(idx);
+    ui_->m_pListActions->clear();
+    delete ui_->m_pListHotkeys->item(idx);
 }
 
 void ServerConfigDialog::on_m_pListHotkeys_itemSelectionChanged()
 {
-    bool itemsSelected = !m_pListHotkeys->selectedItems().isEmpty();
-    m_pButtonEditHotkey->setEnabled(itemsSelected);
-    m_pButtonRemoveHotkey->setEnabled(itemsSelected);
-    m_pButtonNewAction->setEnabled(itemsSelected);
+    bool itemsSelected = !ui_->m_pListHotkeys->selectedItems().isEmpty();
+    ui_->m_pButtonEditHotkey->setEnabled(itemsSelected);
+    ui_->m_pButtonRemoveHotkey->setEnabled(itemsSelected);
+    ui_->m_pButtonNewAction->setEnabled(itemsSelected);
 
     if (itemsSelected && serverConfig().hotkeys().size() > 0)
     {
-        m_pListActions->clear();
+        ui_->m_pListActions->clear();
 
-        int idx = m_pListHotkeys->row(m_pListHotkeys->selectedItems()[0]);
+        int idx = ui_->m_pListHotkeys->row(ui_->m_pListHotkeys->selectedItems()[0]);
 
         // There's a bug somewhere around here: We get idx == 1 right after we deleted the next to last item, so idx can
         // only possibly be 0. GDB shows we got called indirectly from the delete line in
@@ -175,14 +177,14 @@ void ServerConfigDialog::on_m_pListHotkeys_itemSelectionChanged()
 
         const Hotkey& hotkey = serverConfig().hotkeys()[idx];
         for (const Action& action : hotkey.actions()) {
-            m_pListActions->addItem(action.text());
+            ui_->m_pListActions->addItem(action.text());
         }
     }
 }
 
 void ServerConfigDialog::on_m_pButtonNewAction_clicked()
 {
-    int idx = m_pListHotkeys->currentRow();
+    int idx = ui_->m_pListHotkeys->currentRow();
     Q_ASSERT(idx >= 0 && idx < static_cast<int>(serverConfig().hotkeys().size()));
     Hotkey& hotkey = serverConfig().hotkeys()[idx];
 
@@ -191,47 +193,49 @@ void ServerConfigDialog::on_m_pButtonNewAction_clicked()
     if (dlg.exec() == QDialog::Accepted)
     {
         hotkey.appendAction(action);
-        m_pListActions->addItem(action.text());
+        ui_->m_pListActions->addItem(action.text());
     }
 }
 
 void ServerConfigDialog::on_m_pButtonEditAction_clicked()
 {
-    int idxHotkey = m_pListHotkeys->currentRow();
+    int idxHotkey = ui_->m_pListHotkeys->currentRow();
     Q_ASSERT(idxHotkey >= 0 && idxHotkey < static_cast<int>(serverConfig().hotkeys().size()));
     Hotkey& hotkey = serverConfig().hotkeys()[idxHotkey];
 
-    int idxAction = m_pListActions->currentRow();
+    int idxAction = ui_->m_pListActions->currentRow();
     Q_ASSERT(idxAction >= 0 && idxAction < static_cast<int>(hotkey.actions().size()));
     Action action = hotkey.actions()[idxAction];
 
     ActionDialog dlg(this, serverConfig(), hotkey, action);
     if (dlg.exec() == QDialog::Accepted) {
         hotkey.setAction(idxAction, action);
-        m_pListActions->currentItem()->setText(action.text());
+        ui_->m_pListActions->currentItem()->setText(action.text());
     }
 }
 
 void ServerConfigDialog::on_m_pButtonRemoveAction_clicked()
 {
-    int idxHotkey = m_pListHotkeys->currentRow();
+    int idxHotkey = ui_->m_pListHotkeys->currentRow();
     Q_ASSERT(idxHotkey >= 0 && idxHotkey < static_cast<int>(serverConfig().hotkeys().size()));
     Hotkey& hotkey = serverConfig().hotkeys()[idxHotkey];
 
-    int idxAction = m_pListActions->currentRow();
+    int idxAction = ui_->m_pListActions->currentRow();
     Q_ASSERT(idxAction >= 0 && idxAction < static_cast<int>(hotkey.actions().size()));
 
     hotkey.removeAction(idxAction);
-    delete m_pListActions->currentItem();
+    delete ui_->m_pListActions->currentItem();
 }
 
 void ServerConfigDialog::on_m_pListActions_itemSelectionChanged()
 {
-    m_pButtonEditAction->setEnabled(!m_pListActions->selectedItems().isEmpty());
-    m_pButtonRemoveAction->setEnabled(!m_pListActions->selectedItems().isEmpty());
+    ui_->m_pButtonEditAction->setEnabled(!ui_->m_pListActions->selectedItems().isEmpty());
+    ui_->m_pButtonRemoveAction->setEnabled(!ui_->m_pListActions->selectedItems().isEmpty());
 }
 
 void ServerConfigDialog::on_m_pCheckBoxEnableClipboard_stateChanged(int state)
 {
-    m_pSpinBoxClipboardSizeLimit->setEnabled(state == Qt::Checked);
+    ui_->m_pSpinBoxClipboardSizeLimit->setEnabled(state == Qt::Checked);
 }
+
+ServerConfigDialog::~ServerConfigDialog() = default;

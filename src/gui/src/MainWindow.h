@@ -29,7 +29,7 @@
 #include <QProcess>
 #include <QThread>
 
-#include "ui_MainWindowBase.h"
+
 
 #include "ServerConfig.h"
 #include "AppConfig.h"
@@ -38,6 +38,7 @@
 #include "LogWindow.h"
 
 #include <QMutex>
+#include <memory>
 
 class QAction;
 class QMenu;
@@ -61,7 +62,11 @@ class DataDownloader;
 class CommandProcess;
 class SslCertificate;
 
-class MainWindow : public QMainWindow, public Ui::MainWindowBase
+namespace Ui
+{
+    class MainWindow;
+}
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
@@ -88,7 +93,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
         void setVisible(bool visible) override;
         AppRole app_role() const;
         AppConnectionState connection_state() const { return connection_state_; }
-        QString hostname() const { return m_pLineEditHostname->text(); }
+        QString hostname() const;
         QString configFilename();
         QString address();
         QString appPath(const QString& name);
@@ -107,6 +112,7 @@ public slots:
         void appendLogDebug(const QString& text);
         void appendLogError(const QString& text);
         void start_cmd_app();
+        void setServerMode(bool isServerMode);
 
     protected slots:
         void on_m_pGroupClient_toggled(bool on);
@@ -160,6 +166,7 @@ public slots:
         void updateSSLFingerprint();
 
     private:
+        std::unique_ptr<Ui::MainWindow> ui_;
         QSettings& m_Settings;
         AppConfig* m_AppConfig;
         QProcess* cmd_app_process_;

@@ -17,15 +17,19 @@
 
 #pragma once
 
-#include "ui_SetupWizardBase.h"
+
 #include "AppLocale.h"
 
 #include <QWizard>
 #include <QNetworkAccessManager>
+#include <memory>
 
 class MainWindow;
-
-class SetupWizard : public QWizard, public Ui::SetupWizardBase
+namespace Ui
+{
+    class SetupWizard;
+}
+class SetupWizard : public QWizard
 {
     Q_OBJECT
 public:
@@ -44,6 +48,7 @@ protected:
     void reject() override;
 
 private:
+    std::unique_ptr<Ui::SetupWizard> ui_;
     MainWindow& m_MainWindow;
     bool m_StartMain;
     AppLocale m_Locale;

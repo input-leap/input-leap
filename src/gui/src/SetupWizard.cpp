@@ -16,6 +16,7 @@
  */
 
 #include "SetupWizard.h"
+#include "ui_SetupWizard.h"
 #include "MainWindow.h"
 #include "QInputLeapApplication.h"
 #include "QUtility.h"
@@ -23,10 +24,11 @@
 #include <QMessageBox>
 
 SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
+    ui_{std::make_unique<Ui::SetupWizard>()},
     m_MainWindow(mainWindow),
     m_StartMain(startMain)
 {
-    setupUi(this);
+    ui_->setupUi(this);
 
 #if defined(Q_OS_MAC)
 
@@ -46,16 +48,16 @@ SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 
 #endif
 
-    connect(m_pServerRadioButton, &QRadioButton::toggled, m_MainWindow.m_pGroupServer, &QGroupBox::setChecked);
-    connect(m_pClientRadioButton, &QRadioButton::toggled, m_MainWindow.m_pGroupClient, &QGroupBox::setChecked);
+    connect(ui_->m_pServerRadioButton, &QRadioButton::toggled, &m_MainWindow, &MainWindow::setServerMode);
+    connect(ui_->m_pClientRadioButton, &QRadioButton::toggled, this, [=] (bool clientMode) {
+        m_MainWindow.setServerMode(!clientMode);
+    });
 
-    m_Locale.fillLanguageComboBox(m_pComboLanguage);
-    setIndexFromItemData(m_pComboLanguage, m_MainWindow.appConfig().language());
+    m_Locale.fillLanguageComboBox(ui_->m_pComboLanguage);
+    setIndexFromItemData(ui_->m_pComboLanguage, m_MainWindow.appConfig().language());
 }
 
-SetupWizard::~SetupWizard()
-{
-}
+SetupWizard::~SetupWizard() = default;
 
 bool SetupWizard::validateCurrentPage()
 {
@@ -63,10 +65,10 @@ bool SetupWizard::validateCurrentPage()
     message.setWindowTitle(tr("Setup InputLeap"));
     message.setIcon(QMessageBox::Information);
 
-    if (currentPage() == m_pNodePage)
+    if (currentPage() == ui_->m_pNodePage)
     {
-        bool result = m_pClientRadioButton->isChecked() ||
-                 m_pServerRadioButton->isChecked();
+        bool result = ui_->m_pClientRadioButton->isChecked() ||
+                 ui_->m_pServerRadioButton->isChecked();
 
         if (!result)
         {
@@ -87,9 +89,9 @@ void SetupWizard::changeEvent(QEvent* event)
         {
         case QEvent::LanguageChange:
             {
-                m_pComboLanguage->blockSignals(true);
-                retranslateUi(this);
-                m_pComboLanguage->blockSignals(false);
+                ui_->m_pComboLanguage->blockSignals(true);
+                ui_->retranslateUi(this);
+                ui_->m_pComboLanguage->blockSignals(false);
                 break;
             }
 
@@ -103,18 +105,18 @@ void SetupWizard::accept()
 {
     AppConfig& appConfig = m_MainWindow.appConfig();
 
-    appConfig.setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
+    appConfig.setLanguage(ui_->m_pComboLanguage->itemData(ui_->m_pComboLanguage->currentIndex()).toString());
 
     appConfig.setWizardHasRun();
     appConfig.saveSettings();
 
     QSettings& settings = m_MainWindow.settings();
-    if (m_pServerRadioButton->isChecked())
+    if (ui_->m_pServerRadioButton->isChecked())
     {
         settings.setValue("groupServerChecked", true);
         settings.setValue("groupClientChecked", false);
     }
-    if (m_pClientRadioButton->isChecked())
+    if (ui_->m_pClientRadioButton->isChecked())
     {
         settings.setValue("groupClientChecked", true);
         settings.setValue("groupServerChecked", false);
@@ -143,6 +145,6 @@ void SetupWizard::reject()
 
 void SetupWizard::on_m_pComboLanguage_currentIndexChanged(int index)
 {
-    QString ietfCode = m_pComboLanguage->itemData(index).toString();
+    QString ietfCode = ui_->m_pComboLanguage->itemData(index).toString();
     QInputLeapApplication::getInstance()->switchTranslator(ietfCode);
 }

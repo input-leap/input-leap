@@ -32,6 +32,12 @@ AboutDialog::AboutDialog(QWidget* parent, const QString& app_name) :
     version.append(QStringLiteral("-%1").arg(INPUTLEAP_REVISION));
 #endif
     ui_->m_pLabelAppVersion->setText(version);
+    const int scaled_logo_height = sizeHint().width() <= 300 ? 45 : 90;
+    const QPixmap scaled_logo = QPixmap(":/res/image/about.png")
+                 .scaled(QSize(sizeHint().width(), scaled_logo_height),
+                         Qt::KeepAspectRatio, Qt::SmoothTransformation
+    );
+    ui_->logoLabel->setPixmap(scaled_logo);
     setFixedSize(sizeHint());
 }
 

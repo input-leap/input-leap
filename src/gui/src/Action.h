@@ -29,6 +29,17 @@ class ActionDialog;
 class QSettings;
 class QTextStream;
 
+namespace SettingsKeys {
+    static const QString ACTION_TYPE = QStringLiteral("type");
+    static const QString SCREEN_NAMES = QStringLiteral("typeScreenNames");
+    static const QString SCREEN_NAME = QStringLiteral("typeScreenName");
+    static const QString SWITCH_TO_SCREEN = QStringLiteral("switchScreenName");
+    static const QString SWITCH_DIRECTION = QStringLiteral("switchInDirection");
+    static const QString LOCKTOSCREEN = QStringLiteral("lockCursorToScreen");
+    static const QString ACTIVEONRELEASE = QStringLiteral("activeOnRelease");
+    static const QString HASSCREENS = QStringLiteral("hasScreens");
+};
+
 class Action
 {
     public:

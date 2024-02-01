@@ -125,35 +125,35 @@ void Action::loadSettings(QSettings& settings)
     for (int i = 0; i < numTypeScreens; i++)
     {
         settings.setArrayIndex(i);
-        type_screen_names_.append(settings.value("typeScreenName").toString());
+        type_screen_names_.append(settings.value(SettingsKeys::SCREEN_NAME).toString());
     }
     settings.endArray();
 
-    setSwitchScreenName(settings.value("switchScreenName").toString());
-    setSwitchDirection(settings.value("switchInDirection", switchLeft).toInt());
-    setLockCursorMode(settings.value("lockCursorToScreen", lockCursorToggle).toInt());
-    setActiveOnRelease(settings.value("activeOnRelease", false).toBool());
-    setHaveScreens(settings.value("hasScreens", false).toBool());
+    setSwitchScreenName(settings.value(SettingsKeys::SWITCH_TO_SCREEN).toString());
+    setSwitchDirection(settings.value(SettingsKeys::SWITCH_DIRECTION, switchLeft).toInt());
+    setLockCursorMode(settings.value(SettingsKeys::LOCKTOSCREEN, lockCursorToggle).toInt());
+    setActiveOnRelease(settings.value(SettingsKeys::ACTIVEONRELEASE, false).toBool());
+    setHaveScreens(settings.value(SettingsKeys::HASSCREENS, false).toBool());
 }
 
 void Action::saveSettings(QSettings& settings) const
 {
     key_sequence_.saveSettings(settings);
-    settings.setValue("type", type());
+    settings.setValue(SettingsKeys::ACTION_TYPE, type());
 
-    settings.beginWriteArray("typeScreenNames");
+    settings.beginWriteArray(SettingsKeys::SCREEN_NAMES);
     for (int i = 0; i < typeScreenNames().size(); i++)
     {
         settings.setArrayIndex(i);
-        settings.setValue("typeScreenName", typeScreenNames()[i]);
+        settings.setValue(SettingsKeys::SCREEN_NAME, typeScreenNames()[i]);
     }
     settings.endArray();
 
-    settings.setValue("switchScreenName", switchScreenName());
-    settings.setValue("switchInDirection", switchDirection());
-    settings.setValue("lockCursorToScreen", lockCursorMode());
-    settings.setValue("activeOnRelease", activeOnRelease());
-    settings.setValue("hasScreens", haveScreens());
+    settings.setValue(SettingsKeys::SWITCH_TO_SCREEN, switchScreenName());
+    settings.setValue(SettingsKeys::SWITCH_DIRECTION, switchDirection());
+    settings.setValue(SettingsKeys::LOCKTOSCREEN, lockCursorMode());
+    settings.setValue(SettingsKeys::ACTIVEONRELEASE, activeOnRelease());
+    settings.setValue(SettingsKeys::HASSCREENS, haveScreens());
 }
 
 QTextStream& operator<<(QTextStream& outStream, const Action& action)

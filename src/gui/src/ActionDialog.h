@@ -24,7 +24,6 @@
 
 class Hotkey;
 class Action;
-class QButtonGroup;
 class ServerConfig;
 
 namespace Ui
@@ -37,6 +36,15 @@ class ActionDialog : public QDialog
     Q_OBJECT
 
     public:
+        enum ACTIONTYPES {
+            ACTION_PRESS_KEY,
+            ACTION_RELEASE_KEY,
+            ACTION_TOGGLE_KEY,
+            ACTION_SWITCH_TO,
+            ACTION_NEXT_SCREEN,
+            ACTION_SWITCH_IN_DIR,
+            ACTION_MODIFY_CURSOR_LOCK
+        };
         ActionDialog(QWidget* parent, const ServerConfig& config, Hotkey& hotkey, Action& action);
         ~ActionDialog() override;
 
@@ -49,5 +57,6 @@ class ActionDialog : public QDialog
         std::unique_ptr<Ui::ActionDialog> ui_;
         Hotkey& hotkey_;
         Action& action_;
-        QButtonGroup* button_group_type_;
+        void actionTypeChanged(int index);
+        bool isKeyAction(int index);
 };

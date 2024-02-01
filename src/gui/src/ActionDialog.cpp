@@ -53,10 +53,7 @@ ActionDialog::ActionDialog(QWidget* parent, const ServerConfig& config, Hotkey& 
     ui_->m_pComboSwitchInDirection->setCurrentIndex(action_.switchDirection());
     ui_->m_pComboLockCursorToScreen->setCurrentIndex(action_.lockCursorMode());
 
-    if (action_.activeOnRelease())
-        ui_->m_pRadioHotkeyReleased->setChecked(true);
-    else
-        ui_->m_pRadioHotkeyPressed->setChecked(true);
+    ui_->comboTriggerOn->setCurrentIndex(action_.activeOnRelease());
 
     ui_->m_pGroupBoxScreens->setChecked(action_.haveScreens());
 
@@ -94,7 +91,7 @@ void ActionDialog::accept()
     action_.setSwitchScreenName(ui_->m_pComboSwitchToScreen->currentText());
     action_.setSwitchDirection(ui_->m_pComboSwitchInDirection->currentIndex());
     action_.setLockCursorMode(ui_->m_pComboLockCursorToScreen->currentIndex());
-    action_.setActiveOnRelease(ui_->m_pRadioHotkeyReleased->isChecked());
+    action_.setActiveOnRelease(ui_->comboTriggerOn->currentIndex());
 
     QDialog::accept();
 }

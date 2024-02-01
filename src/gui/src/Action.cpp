@@ -32,6 +32,7 @@ const char* Action::action_type_names_[] =
 
 const char* Action::switch_direction_names_[] = { "left", "right", "up", "down" };
 const char* Action::lock_cursor_mode_names_[] = { "toggle", "on", "off" };
+const QString Action::command_template_ = QStringLiteral("(%1)");
 
 Action::Action() :
     key_sequence_(),
@@ -61,49 +62,43 @@ QString Action::text() const
         case keyUp:
         case keystroke:
             {
-                text += "(";
-                text += key_sequence_.toString();
-
+                QString commandArgs = key_sequence_.toString();
                 if (!key_sequence_.isMouseButton())
                 {
                     const QStringList& screens = typeScreenNames();
                     if (haveScreens() && !screens.isEmpty())
                     {
-                        text += ",";
-
+                        QString screenList;
                         for (int i = 0; i < screens.size(); i++)
                         {
-                            text += screens[i];
+                            screenList.append(screens[i]);
                             if (i != screens.size() - 1)
-                                text += ":";
+                                screenList.append(QStringLiteral(":"));
                         }
+                        commandArgs.append(QStringLiteral(",%1").arg(screenList));
                     }
                     else
-                        text += ",*";
+                    {
+                        commandArgs.append(QStringLiteral(",*"));
+                    }
                 }
-                text += ")";
+                text.append(command_template_.arg(commandArgs));
             }
             break;
 
         case switchToScreen:
-            text += "(";
-            text += switchScreenName();
-            text += ")";
+            text.append(command_template_.arg(switchScreenName()));
             break;
 
         case toggleScreen:
             break;
 
         case switchInDirection:
-            text += "(";
-            text += switch_direction_names_[switch_direction_];
-            text += ")";
+            text.append(command_template_.arg(switch_direction_names_[switch_direction_]));
             break;
 
         case lockCursorToScreen:
-            text += "(";
-            text += lock_cursor_mode_names_[lock_cursor_mode_];
-            text += ")";
+            text.append(command_template_.arg(lock_cursor_mode_names_[lock_cursor_mode_]));
             break;
 
         default:

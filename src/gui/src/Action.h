@@ -95,6 +95,7 @@ class Action
         static const char* action_type_names_[];
         static const char* switch_direction_names_[];
         static const char* lock_cursor_mode_names_[];
+        static const QString command_template_;
 };
 
 QTextStream& operator<<(QTextStream& outStream, const Action& action);

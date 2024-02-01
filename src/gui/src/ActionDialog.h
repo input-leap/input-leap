@@ -47,13 +47,12 @@ class ActionDialog : public QDialog
 
     protected:
         const KeySequenceWidget* sequenceWidget() const;
-        const ServerConfig& serverConfig() const { return m_ServerConfig; }
+        const ServerConfig& serverConfig() const { return server_config_; }
 
     private:
         std::unique_ptr<Ui::ActionDialog> ui_;
-        const ServerConfig& m_ServerConfig;
-        Hotkey& m_Hotkey;
-        Action& m_Action;
-
-        QButtonGroup* m_pButtonGroupType;
+        const ServerConfig& server_config_;
+        Hotkey& hotkey_;
+        Action& action_;
+        QButtonGroup* button_group_type_;
 };

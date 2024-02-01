@@ -30,10 +30,10 @@
 ActionDialog::ActionDialog(QWidget* parent, ServerConfig& config, Hotkey& hotkey, Action& action) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
     ui_{std::make_unique<Ui::ActionDialog>()},
-    m_ServerConfig(config),
-    m_Hotkey(hotkey),
-    m_Action(action),
-    m_pButtonGroupType(new QButtonGroup(this))
+    server_config_(config),
+    hotkey_(hotkey),
+    action_(action),
+    button_group_type_(new QButtonGroup(this))
 {
     ui_->setupUi(this);
 
@@ -42,20 +42,20 @@ ActionDialog::ActionDialog(QWidget* parent, ServerConfig& config, Hotkey& hotkey
     QRadioButton* const typeButtons[] = { ui_->m_pRadioPress, ui_->m_pRadioRelease, ui_->m_pRadioPressAndRelease, ui_->m_pRadioSwitchToScreen, ui_->m_pRadioToggleScreen, ui_->m_pRadioSwitchInDirection, ui_->m_pRadioLockCursorToScreen };
 
     for (unsigned int i = 0; i < sizeof(typeButtons) / sizeof(typeButtons[0]); i++)
-        m_pButtonGroupType->addButton(typeButtons[i], i);
+        button_group_type_->addButton(typeButtons[i], i);
 
-    ui_->m_pKeySequenceWidgetHotkey->setText(m_Action.keySequence().toString());
-    ui_->m_pKeySequenceWidgetHotkey->setKeySequence(m_Action.keySequence());
-    m_pButtonGroupType->button(m_Action.type())->setChecked(true);
-    ui_->m_pComboSwitchInDirection->setCurrentIndex(m_Action.switchDirection());
-    ui_->m_pComboLockCursorToScreen->setCurrentIndex(m_Action.lockCursorMode());
+    ui_->m_pKeySequenceWidgetHotkey->setText(action_.keySequence().toString());
+    ui_->m_pKeySequenceWidgetHotkey->setKeySequence(action_.keySequence());
+    button_group_type_->button(action_.type())->setChecked(true);
+    ui_->m_pComboSwitchInDirection->setCurrentIndex(action_.switchDirection());
+    ui_->m_pComboLockCursorToScreen->setCurrentIndex(action_.lockCursorMode());
 
-    if (m_Action.activeOnRelease())
+    if (action_.activeOnRelease())
         ui_->m_pRadioHotkeyReleased->setChecked(true);
     else
         ui_->m_pRadioHotkeyPressed->setChecked(true);
 
-    ui_->m_pGroupBoxScreens->setChecked(m_Action.haveScreens());
+    ui_->m_pGroupBoxScreens->setChecked(action_.haveScreens());
 
     int idx = 0;
     for (const Screen& screen : serverConfig().screens()) {
@@ -63,11 +63,11 @@ ActionDialog::ActionDialog(QWidget* parent, ServerConfig& config, Hotkey& hotkey
         {
             QListWidgetItem *pListItem = new QListWidgetItem(screen.name());
             ui_->m_pListScreens->addItem(pListItem);
-            if (m_Action.typeScreenNames().indexOf(screen.name()) != -1)
+            if (action_.typeScreenNames().indexOf(screen.name()) != -1)
                 ui_->m_pListScreens->setCurrentItem(pListItem);
 
             ui_->m_pComboSwitchToScreen->addItem(screen.name());
-            if (screen.name() == m_Action.switchScreenName())
+            if (screen.name() == action_.switchScreenName())
                 ui_->m_pComboSwitchToScreen->setCurrentIndex(idx);
 
             idx++;
@@ -77,23 +77,23 @@ ActionDialog::ActionDialog(QWidget* parent, ServerConfig& config, Hotkey& hotkey
 
 void ActionDialog::accept()
 {
-    if (!sequenceWidget()->valid() && m_pButtonGroupType->checkedId() >= 0 && m_pButtonGroupType->checkedId() < 3)
+    if (!sequenceWidget()->valid() && button_group_type_->checkedId() >= 0 && button_group_type_->checkedId() < 3)
         return;
 
-    m_Action.setKeySequence(sequenceWidget()->keySequence());
-    m_Action.setType(m_pButtonGroupType->checkedId());
-    m_Action.setHaveScreens(ui_->m_pGroupBoxScreens->isChecked());
+    action_.setKeySequence(sequenceWidget()->keySequence());
+    action_.setType(button_group_type_->checkedId());
+    action_.setHaveScreens(ui_->m_pGroupBoxScreens->isChecked());
 
-    m_Action.clearTypeScreenNames();
+    action_.clearTypeScreenNames();
     const auto selection = ui_->m_pListScreens->selectedItems();
     for (const QListWidgetItem* pItem : selection) {
-        m_Action.appendTypeScreenName(pItem->text());
+        action_.appendTypeScreenName(pItem->text());
     }
 
-    m_Action.setSwitchScreenName(ui_->m_pComboSwitchToScreen->currentText());
-    m_Action.setSwitchDirection(ui_->m_pComboSwitchInDirection->currentIndex());
-    m_Action.setLockCursorMode(ui_->m_pComboLockCursorToScreen->currentIndex());
-    m_Action.setActiveOnRelease(ui_->m_pRadioHotkeyReleased->isChecked());
+    action_.setSwitchScreenName(ui_->m_pComboSwitchToScreen->currentText());
+    action_.setSwitchDirection(ui_->m_pComboSwitchInDirection->currentIndex());
+    action_.setLockCursorMode(ui_->m_pComboLockCursorToScreen->currentIndex());
+    action_.setActiveOnRelease(ui_->m_pRadioHotkeyReleased->isChecked());
 
     QDialog::accept();
 }

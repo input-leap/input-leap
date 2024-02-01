@@ -25,7 +25,6 @@
 
 class Hotkey;
 class Action;
-class QRadioButton;
 class QButtonGroup;
 class ServerConfig;
 

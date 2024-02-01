@@ -98,10 +98,12 @@ void ActionDialog::accept()
 void ActionDialog::key_sequence_changed()
 {
     ui_->listScreens->setEnabled(!ui_->keySequenceWidget->keySequence().isMouseButton());
+    ui_->buttonBox->button(QDialogButtonBox::Ok)->setEnabled((ui_->keySequenceWidget->valid() && isKeyAction(ui_->comboActionType->currentIndex())) || isKeyAction(ui_->comboActionType->currentIndex()));
 }
 
 void ActionDialog::actionTypeChanged(int index)
 {
+    ui_->buttonBox->button(QDialogButtonBox::Ok)->setEnabled((ui_->keySequenceWidget->valid() && isKeyAction(index)) || !isKeyAction(index));
     ui_->keySequenceWidget->setVisible(isKeyAction(index));
     ui_->group_screens->setVisible(isKeyAction(index));
     ui_->listScreens->setEnabled(!ui_->keySequenceWidget->keySequence().isMouseButton());

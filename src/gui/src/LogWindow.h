@@ -48,7 +48,8 @@ class LogWindow : public QDialog
 
     private:
         std::unique_ptr<Ui::LogWindow> ui_;
-
+        QString buffer_;
+        void flushBuffer();
 };
 
 #endif // LOGWINDOW__H

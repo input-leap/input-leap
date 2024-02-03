@@ -19,6 +19,15 @@
 #include "ui_LogWindow.h"
 #include <QDateTime>
 
+#include <QTimer>
+
+#define LOGWINDOW_REFRESH_MSECS 100
+
+static const QString s_error_line = QStringLiteral("%1 ERROR: %2\n");
+static const QString s_info_line = QStringLiteral("%1 INFO: %2\n");
+static const QString s_debug_line = QStringLiteral("%1 DEBUG: %2\n");
+static const QString s_text_line = QStringLiteral("%1\n");
+
 static QString getTimeStamp()
 {
     QDateTime current = QDateTime::currentDateTime();
@@ -33,33 +42,51 @@ LogWindow::LogWindow(QWidget *parent) :
     // repeatedly until InputLeap is finished
     setAttribute(Qt::WA_DeleteOnClose, false);
     ui_->setupUi(this);
+
+    // purge old log entries from the log window once 10,000 lines have been reached.
+    // This caps the memory use around 40 to 50MB
+    ui_->m_pLogOutput->setMaximumBlockCount(10000);
+
+    // Use a timer to flush the buffer every 100 milliseconds
+    QTimer* timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &LogWindow::flushBuffer);
+    timer->start(LOGWINDOW_REFRESH_MSECS);
 }
 
 void LogWindow::startNewInstance()
 {
     // put a space between last log output and new instance.
-    if (!ui_->m_pLogOutput->toPlainText().isEmpty())
+    if (!buffer_.isEmpty())
         appendRaw("");
 }
 
 void LogWindow::appendInfo(const QString& text)
 {
-    appendRaw(getTimeStamp() + " INFO: " + text);
+    buffer_.append(s_info_line.arg(getTimeStamp(),text));
 }
 
 void LogWindow::appendDebug(const QString& text)
 {
-    appendRaw(getTimeStamp() + " DEBUG: " + text);
+    buffer_.append(s_debug_line.arg(getTimeStamp(),text));
 }
 
 void LogWindow::appendError(const QString& text)
 {
-    appendRaw(getTimeStamp() + " ERROR: " + text);
+    buffer_.append(s_error_line.arg(getTimeStamp(),text));
 }
 
 void LogWindow::appendRaw(const QString& text)
 {
-    ui_->m_pLogOutput->append(text);
+    buffer_.append(s_text_line.arg(text));
+}
+
+void LogWindow::flushBuffer()
+{
+    if (!buffer_.isEmpty()) {
+        // Insert the new log content from the buffer
+        ui_->m_pLogOutput->appendPlainText(buffer_);
+        buffer_.clear();
+    }
 }
 
 void LogWindow::on_m_pButtonHide_clicked()

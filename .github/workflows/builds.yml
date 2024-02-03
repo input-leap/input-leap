@@ -206,17 +206,19 @@ jobs:
           if-no-files-found: error
 
   mac-build:
+    name: ${{ matrix.name}}
     runs-on: ${{ matrix.os }}
-
     strategy:
       fail-fast: false
       matrix:
        include:
-         - os: macos-11
+         - name: macOS-x86_64
+           os: macos-11
            qt-version: 5.15
            min-macOS-version: 10.9
            arch: 'x86_64'
-         - os: macos-12
+         - name: macOS-Universal
+           os: macos-12
            qt-version: 6.6
            min-macOS-version: 11
            qt-modules: qt5compat

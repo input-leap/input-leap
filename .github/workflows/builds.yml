@@ -284,42 +284,25 @@ jobs:
           call "%VS_PATH%\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=amd64
 
           cmake -S input-leap -B build -G "%CMAKE_GEN%" -A x64 -D CMAKE_BUILD_TYPE=%B_BUILD_TYPE% ^
-            -DCMAKE_PREFIX_PATH="%B_QT_FULLPATH%" -DQT_VERSION="%B_QT_VER%" ^
-            -DDNSSD_LIB="%BONJOUR_SDK_HOME%\Lib\x64\dnssd.lib"
+            -DDNSSD_LIB="%BONJOUR_SDK_HOME%\Lib\x64\dnssd.lib" -D CMAKE_INSTALL_PREFIX=input-leap-install
         env:
           VS_PATH: ${{ matrix.os == 'windows-2019' && '%ProgramFiles(x86)%\Microsoft Visual Studio\2019' || '%ProgramFiles%\Microsoft Visual Studio\2022' }}
           CMAKE_GEN: ${{ matrix.os == 'windows-2019' && 'Visual Studio 16 2019' || 'Visual Studio 17 2022' }}
           BONJOUR_SDK_HOME: ${{ steps.bonjour.outputs.path }}
-          B_QT_ROOT: ${{ steps.qt.outputs.root }}
-          B_QT_VER: ${{ steps.qt.outputs.version }}
           B_QT_MSVC: ${{ steps.qt.outputs.msvc }}
-          B_QT_FULLPATH: ${{ steps.qt.outputs.path }}
 
       - name: Run build system
         run: |
-          cmake --build build --config $env:B_BUILD_TYPE
+          cmake --build build --config $env:B_BUILD_TYPE --target install
 
       - name: Copy supporting binaries
         run: |
-          copy $env:B_QT_FULLPATH\bin\Qt5Core$env:LIB_SUFFIX.dll $env:BIN_PATH\
-          copy $env:B_QT_FULLPATH\bin\Qt5Gui$env:LIB_SUFFIX.dll $env:BIN_PATH\
-          copy $env:B_QT_FULLPATH\bin\Qt5Network$env:LIB_SUFFIX.dll $env:BIN_PATH\
-          copy $env:B_QT_FULLPATH\bin\Qt5Widgets$env:LIB_SUFFIX.dll $env:BIN_PATH\
-
-          mkdir $env:BIN_PATH\platforms\
-          copy $env:B_QT_FULLPATH\plugins\platforms\qwindows$env:LIB_SUFFIX.dll $env:BIN_PATH\platforms\
-
-          copy input-leap\ext\openssl\windows\x64\bin\*.dll $env:BIN_PATH\
-        env:
-          # NB: don’t put '' before || as it is falsey
-          LIB_SUFFIX: ${{ env.B_BUILD_TYPE == 'Debug' && 'd' || '' }}
-          B_QT_FULLPATH: ${{ steps.qt.outputs.path }}
-          BIN_PATH: build\bin\${{ env.B_BUILD_TYPE }}
+          copy input-leap\ext\openssl\windows\x64\bin\*.dll input-leap-install\
 
       - name: Archive Completed Build Directory
         uses: vimtor/action-zip@v1
         with:
-          files: build\bin\${{ env.B_BUILD_TYPE }}
+          files: input-leap-install
           dest: ${{ env.B_BUILD_TYPE }}.zip
 
       - uses: actions/upload-artifact@v3

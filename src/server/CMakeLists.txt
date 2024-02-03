@@ -24,7 +24,7 @@ if (BUILD_MSWINDOWS)
     list(APPEND sources
         input-leaps.exe.manifest
         input-leaps.rc
-    )        
+    )
     set_property(SOURCE input-leaps.rc PROPERTY COMPILE_FLAGS /nologo)
 endif()
 if (BUILD_CARBON)

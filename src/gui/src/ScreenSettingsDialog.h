@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(SCREENSETTINGSDIALOG__H)
-
-#define SCREENSETTINGSDIALOG__H
+#pragma once
 
 #include <QDialog>
 #include <memory>
@@ -53,5 +51,3 @@ class ScreenSettingsDialog : public QDialog
         std::unique_ptr<Ui::ScreenSettingsDialog> ui_;
         Screen* m_pScreen;
 };
-
-#endif

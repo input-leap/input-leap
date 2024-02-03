@@ -14,8 +14,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTLEAP_LIB_BASE_FWD_H
-#define INPUTLEAP_LIB_BASE_FWD_H
+#pragma once
 
 namespace inputleap {
 
@@ -61,5 +60,3 @@ class SimpleEventQueueBuffer;
 class Stopwatch;
 
 } // namespace inputleap
-
-#endif // INPUTLEAP_LIB_BASE_FWD_H

@@ -15,8 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTLEAP_GUI_FINGERPRINT_ACCEPT_DIALOG_H
-#define INPUTLEAP_GUI_FINGERPRINT_ACCEPT_DIALOG_H
+#pragma once
 
 #include "net/FingerprintData.h"
 #include "inputleap/AppRole.h"
@@ -41,5 +40,3 @@ public:
 private:
     std::unique_ptr<Ui::FingerprintAcceptDialog> ui_;
 };
-
-#endif // INPUTLEAP_GUI_FINGERPRINT_ACCEPT_DIALOG_H

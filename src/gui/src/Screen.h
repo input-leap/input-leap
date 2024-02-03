@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(SCREEN__H)
-
-#define SCREEN__H
+#pragma once
 
 #include <QPixmap>
 #include <QString>
@@ -103,5 +101,3 @@ class Screen : public BaseConfig
 
 QDataStream& operator<<(QDataStream& outStream, const Screen& screen);
 QDataStream& operator>>(QDataStream& inStream, Screen& screen);
-
-#endif

@@ -14,9 +14,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-#ifndef INPUTLEAP_LIB_SERVER_CLIENT_MESSAGE_BACKEND_TO_STREAM_H
-#define INPUTLEAP_LIB_SERVER_CLIENT_MESSAGE_BACKEND_TO_STREAM_H
+#pragma once
 
 #include "IClientConnection.h"
 #include <memory>
@@ -68,5 +66,3 @@ private:
 };
 
 } // namespace inputleap
-
-#endif // INPUTLEAP_LIB_SERVER_CLIENT_MESSAGE_BACKEND_TO_STREAM_H

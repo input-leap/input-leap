@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(NEWSCREENWIDGET__H)
-
-#define NEWSCREENWIDGET__H
+#pragma once
 
 #include <QLabel>
 
@@ -35,5 +33,3 @@ class NewScreenWidget : public QLabel
     protected:
         void mousePressEvent(QMouseEvent* event) override;
 };
-
-#endif

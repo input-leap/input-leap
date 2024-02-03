@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(ABOUTDIALOG__H)
-
-#define ABOUTDIALOG__H
+#pragma once
 
 #include <QDialog>
 #include <memory>
@@ -41,5 +39,3 @@ class AboutDialog : public QDialog
     private:
         std::unique_ptr<Ui::AboutDialog> ui_;
 };
-
-#endif

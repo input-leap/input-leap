@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(ACTIONDIALOG_H)
-
-#define ACTIONDIALOG_H
+#pragma once
 
 #include <QDialog>
 #include "KeySequenceWidget.h"
@@ -59,5 +57,3 @@ class ActionDialog : public QDialog
 
         QButtonGroup* m_pButtonGroupType;
 };
-
-#endif

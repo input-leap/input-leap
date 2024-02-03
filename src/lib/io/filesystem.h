@@ -15,8 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTLEAP_LIB_IO_FILESYSTEM_H
-#define INPUTLEAP_LIB_IO_FILESYSTEM_H
+#pragma once
 
 #include <cstdio>
 #include <iosfwd>
@@ -37,5 +36,3 @@ void open_utf8_path(std::fstream& stream, const fs::path& path,
 std::FILE* fopen_utf8_path(const fs::path& path, const std::string& mode);
 
 } // namespace inputleap
-
-#endif // INPUTLEAP_LIB_IO_FILESYSTEM_H

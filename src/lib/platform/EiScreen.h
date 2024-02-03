@@ -14,8 +14,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTLEAP_LIB_PLATFORM_EI_SCREEN_H
-#define INPUTLEAP_LIB_PLATFORM_EI_SCREEN_H
+#pragma once
 
 #include "config.h"
 
@@ -144,5 +143,3 @@ private:
 };
 
 } // namespace inputleap
-
-#endif // INPUTLEAP_LIB_PLATFORM_EI_SCREEN_H

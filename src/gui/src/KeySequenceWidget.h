@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(KEYSEQUENCEWIDGET__H)
-
-#define KEYSEQUENCEWIDGET__H
+#pragma once
 
 #include <QPushButton>
 
@@ -76,5 +74,3 @@ class KeySequenceWidget : public QPushButton
         QString m_KeyPrefix;
         QString m_KeyPostfix;
 };
-
-#endif

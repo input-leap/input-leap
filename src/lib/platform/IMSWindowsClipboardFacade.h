@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IMWINDOWSCLIPBOARDFACADE
-#define IMWINDOWSCLIPBOARDFACADE
+#pragma once
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -33,5 +32,3 @@ public:
 };
 
 } // namespace inputleap
-
-#endif

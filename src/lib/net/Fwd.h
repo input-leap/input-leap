@@ -14,8 +14,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTLEAP_LIB_NET_FWD_H
-#define INPUTLEAP_LIB_NET_FWD_H
+#pragma once
 
 namespace inputleap {
 
@@ -60,5 +59,3 @@ class TCPSocket;
 class TCPSocketFactory;
 
 } // namespace inputleap
-
-#endif // INPUTLEAP_LIB_NET_FWD_H

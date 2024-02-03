@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(ACTION_H)
-
-#define ACTION_H
+#pragma once
 
 #include "KeySequence.h"
 
@@ -88,5 +86,3 @@ class Action
 };
 
 QTextStream& operator<<(QTextStream& outStream, const Action& action);
-
-#endif

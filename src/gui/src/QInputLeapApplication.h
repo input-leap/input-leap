@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(QInputLeapApplication__H)
-
-#define QInputLeapApplication__H
+#pragma once
 
 #include <QApplication>
 #include <memory>
@@ -44,5 +42,3 @@ class QInputLeapApplication : public QApplication
 
         static QInputLeapApplication* s_Instance;
 };
-
-#endif

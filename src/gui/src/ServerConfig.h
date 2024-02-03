@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(SERVERCONFIG__H)
-
-#define SERVERCONFIG__H
+#pragma once
 
 #include <QList>
 
@@ -140,5 +138,3 @@ enum {
     kAutoAddScreenManualClient,
     kAutoAddScreenIgnore
 };
-
-#endif

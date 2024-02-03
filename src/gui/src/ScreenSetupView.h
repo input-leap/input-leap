@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(SCREENSETUPVIEW__H)
-
-#define SCREENSETUPVIEW__H
+#pragma once
 
 #include <QTableView>
 #include <QFlags>
@@ -60,5 +58,3 @@ class ScreenSetupView : public QTableView
         void enter(const QModelIndex&);
         void remove(const QModelIndex&);
 };
-
-#endif

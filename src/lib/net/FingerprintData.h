@@ -15,8 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTLEAP_LIB_NET_FINGERPRINT_DATA_H
-#define INPUTLEAP_LIB_NET_FINGERPRINT_DATA_H
+#pragma once
 
 #include <cstdint>
 #include <string>
@@ -43,5 +42,3 @@ const char* fingerprint_type_to_string(FingerprintType type);
 FingerprintType fingerprint_type_from_string(const std::string& type);
 
 } // namespace inputleap
-
-#endif // INPUTLEAP_LIB_NET_FINGERPRINT_DATA_H

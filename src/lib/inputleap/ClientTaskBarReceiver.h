@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CCLIENTTASKBARRECEIVER_H
-#define CCLIENTTASKBARRECEIVER_H
+#pragma once
 
 #include "arch/IArchTaskBarReceiver.h"
 #include "base/Fwd.h"
@@ -90,5 +89,3 @@ private:
 IArchTaskBarReceiver* createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events);
 
 } // namespace inputleap
-
-#endif

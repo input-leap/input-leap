@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(BASECONFIG_H)
-
-#define BASECONFIG_H
+#pragma once
 
 #include <QSettings>
 #include <QString>
@@ -123,5 +121,3 @@ public:
         static const char* m_FixNames[];
         static const char* m_SwitchCornerNames[];
 };
-
-#endif

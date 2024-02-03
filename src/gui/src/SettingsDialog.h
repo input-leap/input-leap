@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(SETTINGSDIALOG_H)
-
-#define SETTINGSDIALOG_H
+#pragma once
 
 #include <QDialog>
 #include <memory>
@@ -56,5 +54,3 @@ class SettingsDialog : public QDialog
         void on_m_pCheckBoxLogToFile_stateChanged(int );
         void on_m_pButtonBrowseLog_clicked();
 };
-
-#endif

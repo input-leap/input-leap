@@ -15,9 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(LOGWINDOW__H)
-
-#define LOGWINDOW__H
+#pragma once
 
 #include <QDialog>
 #include <memory>
@@ -51,5 +49,3 @@ class LogWindow : public QDialog
         QString buffer_;
         void flushBuffer();
 };
-
-#endif // LOGWINDOW__H

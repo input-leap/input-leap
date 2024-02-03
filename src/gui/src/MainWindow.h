@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(MAINWINDOW__H)
-
-#define MAINWINDOW__H
+#pragma once
 
 #include "inputleap/AppRole.h"
 #include "AppConnectionState.h"
@@ -203,5 +201,3 @@ private slots:
     void installBonjour();
 
 };
-
-#endif

@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(HOTKEYDIALOG_H)
-
-#define HOTKEYDIALOG_H
+#pragma once
 
 #include "Hotkey.h"
 
@@ -53,5 +51,3 @@ class HotkeyDialog : public QDialog
         std::unique_ptr<Ui::HotkeyDialog> ui_;
         Hotkey& m_Hotkey;
 };
-
-#endif

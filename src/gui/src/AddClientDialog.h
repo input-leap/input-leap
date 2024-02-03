@@ -15,8 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ADDCLIENTDIALOG_H
-#define ADDCLIENTDIALOG_H
+#pragma once
 
 #include <QDialog>
 #include <memory>
@@ -68,5 +67,3 @@ private:
     int m_AddResult;
     bool m_IgnoreAutoConfigClient;
 };
-
-#endif // ADDCLIENTDIALOG_H

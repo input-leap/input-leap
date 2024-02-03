@@ -15,8 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTLEAP_LIB_NET_SECUREUTILS_H
-#define INPUTLEAP_LIB_NET_SECUREUTILS_H
+#pragma once
 
 #include "FingerprintData.h"
 #include <openssl/ossl_typ.h>
@@ -39,5 +38,3 @@ void generate_pem_self_signed_cert(const std::string& path);
 std::string create_fingerprint_randomart(const std::vector<std::uint8_t>& dgst_raw);
 
 } // namespace inputleap
-
-#endif // INPUTLEAP_LIB_NET_SECUREUTILS_H

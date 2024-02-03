@@ -62,7 +62,7 @@ convertNXKeyTypeToKeyID(uint32_t const type)
 {
 	KeyID id = 0;
 
-	switch (type) { 
+	switch (type) {
 	case NX_KEYTYPE_SOUND_UP:
 		id = kKeyAudioUp;
 		break;
@@ -111,7 +111,7 @@ isMediaKeyEvent(CGEventRef event) {
 }
 
 bool
-getMediaKeyEventInfo(CGEventRef event, KeyID* const keyId, 
+getMediaKeyEventInfo(CGEventRef event, KeyID* const keyId,
 					 bool* const down, bool* const isRepeat) {
 	NSEvent* nsEvent = nil;
 	@try {

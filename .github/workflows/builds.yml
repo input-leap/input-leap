@@ -235,11 +235,6 @@ jobs:
           path: input-leap
           submodules: recursive
 
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.7'
-          architecture: 'x64'
-
       - name: Download Bonjour SDK-like
         id: bonjour
         run: |
@@ -252,30 +247,12 @@ jobs:
 
           "path=$env:GITHUB_WORKSPACE\deps\BonjourSDKLike" >> $env:GITHUB_OUTPUT
 
-      - name: Installing QT
-        id: qt
-        run: |
-          $ErrorActionPreference = "Stop"
-          New-Item -Force -ItemType Directory -Path .\deps
-
-          $qli_install_version = '2019.05.26.1'
-          $qt_version = '5.15.2'
-          $qt_msvc = 'msvc2019_64'
-
-          Invoke-WebRequest "https://github.com/nelsonjchen/qli-installer/archive/v$qli_install_version.zip" -OutFile '.\deps\qli-installer.zip' ;
-          Expand-Archive deps\qli-installer.zip deps\
-          Move-Item .\deps\qli-installer-$qli_install_version\ .\deps\qli-installer
-
-          pip install -r .\deps\qli-installer\requirements.txt
-
-          $env:QLI_OUT_DIR = ".\deps\Qt\Qt$qt_version"
-          $env:QLI_BASE_URL = "https://download.qt.io/online/qtsdkrepository/"
-          python .\deps\qli-installer\qli-installer.py $qt_version windows desktop win64_$qt_msvc
-
-          "root=$env:GITHUB_WORKSPACE\deps\Qt" >> $env:GITHUB_OUTPUT
-          "version=Qt$qt_version\$qt_version" >> $env:GITHUB_OUTPUT
-          "msvc=$qt_msvc" >> $env:GITHUB_OUTPUT
-          "path=$env:GITHUB_WORKSPACE\deps\Qt\Qt$qt_version\$qt_version\$qt_msvc" >> $env:GITHUB_OUTPUT
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: 5.15
+          cache: true
+          cache-key-prefix: windows-${{matrix.os}}-Qt${{matrix.qt-version}}
 
       - name: Configure build system
         # NB. use cmd here to set variables from VsDevCmd.bat
@@ -289,7 +266,6 @@ jobs:
           VS_PATH: ${{ matrix.os == 'windows-2019' && '%ProgramFiles(x86)%\Microsoft Visual Studio\2019' || '%ProgramFiles%\Microsoft Visual Studio\2022' }}
           CMAKE_GEN: ${{ matrix.os == 'windows-2019' && 'Visual Studio 16 2019' || 'Visual Studio 17 2022' }}
           BONJOUR_SDK_HOME: ${{ steps.bonjour.outputs.path }}
-          B_QT_MSVC: ${{ steps.qt.outputs.msvc }}
 
       - name: Run build system
         run: |

@@ -37,20 +37,16 @@ class ActionDialog : public QDialog
     Q_OBJECT
 
     public:
-        ActionDialog(QWidget* parent, ServerConfig& config, Hotkey& hotkey, Action& action);
+        ActionDialog(QWidget* parent, const ServerConfig& config, Hotkey& hotkey, Action& action);
         ~ActionDialog() override;
 
     protected slots:
         void accept() override;
 
-    protected:
-        const ServerConfig& serverConfig() const { return server_config_; }
-
     private:
         void key_sequence_changed();
 
         std::unique_ptr<Ui::ActionDialog> ui_;
-        const ServerConfig& server_config_;
         Hotkey& hotkey_;
         Action& action_;
         QButtonGroup* button_group_type_;

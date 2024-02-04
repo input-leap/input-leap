@@ -27,10 +27,9 @@
 
 #include <QButtonGroup>
 
-ActionDialog::ActionDialog(QWidget* parent, ServerConfig& config, Hotkey& hotkey, Action& action) :
+ActionDialog::ActionDialog(QWidget* parent, const ServerConfig& config, Hotkey& hotkey, Action& action) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
     ui_{std::make_unique<Ui::ActionDialog>()},
-    server_config_(config),
     hotkey_(hotkey),
     action_(action),
     button_group_type_(new QButtonGroup(this))
@@ -62,7 +61,7 @@ ActionDialog::ActionDialog(QWidget* parent, ServerConfig& config, Hotkey& hotkey
     ui_->m_pGroupBoxScreens->setChecked(action_.haveScreens());
 
     int idx = 0;
-    for (const Screen& screen : serverConfig().screens()) {
+    for (const Screen& screen : config.screens()) {
         if (!screen.isNull())
         {
             QListWidgetItem *pListItem = new QListWidgetItem(screen.name());

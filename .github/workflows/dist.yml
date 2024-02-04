@@ -28,7 +28,7 @@ jobs:
 
       # submodules require git to be installed
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: input-leap
           submodules: recursive
@@ -56,8 +56,8 @@ jobs:
           rpmbuild -D "_sourcedir $PWD/build" -D "_rpmdir $PWD/rpms" -bb build/rpm/input-leap.spec
 
       - name: Archive RPM package
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: input-leap-rpms
+          name: input-leap-rpms-${{ matrix.rpm_tag }}
           path: |
             rpms/**/*.rpm

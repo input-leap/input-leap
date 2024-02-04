@@ -60,7 +60,6 @@ ActionDialog::ActionDialog(QWidget* parent, const ServerConfig& config, Hotkey& 
 
     ui_->m_pGroupBoxScreens->setChecked(action_.haveScreens());
 
-    int idx = 0;
     for (const Screen& screen : config.screens()) {
         if (screen.isNull())
             continue;
@@ -71,9 +70,7 @@ ActionDialog::ActionDialog(QWidget* parent, const ServerConfig& config, Hotkey& 
 
         ui_->m_pComboSwitchToScreen->addItem(screen.name());
         if (screen.name() == action_.switchScreenName())
-            ui_->m_pComboSwitchToScreen->setCurrentIndex(idx);
-
-        idx++;
+            ui_->m_pComboSwitchToScreen->setCurrentIndex(ui_->m_pComboSwitchToScreen->count() - 1);
     }
 }
 

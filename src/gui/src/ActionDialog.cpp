@@ -101,16 +101,8 @@ void ActionDialog::accept()
 
 void ActionDialog::key_sequence_changed()
 {
-    if (ui_->keySequenceWidget->keySequence().isMouseButton())
-    {
-        ui_->m_pGroupBoxScreens->setEnabled(false);
-        ui_->m_pListScreens->setEnabled(false);
-    }
-    else
-    {
-        ui_->m_pGroupBoxScreens->setEnabled(true);
-        ui_->m_pListScreens->setEnabled(true);
-    }
+    ui_->m_pGroupBoxScreens->setEnabled(!ui_->keySequenceWidget->keySequence().isMouseButton());
+    ui_->m_pListScreens->setEnabled(!ui_->keySequenceWidget->keySequence().isMouseButton());
 }
 
 ActionDialog::~ActionDialog() = default;

@@ -53,7 +53,11 @@ static void silence_avahi_warning()
     const char *name  = "AVAHI_COMPAT_NOWARN";
     const char *value = "1";
 #ifdef _WIN32
+#if QT_VERSION_MAJOR < 6
     SetEnvironmentVariable(name, value);
+#else
+    SetEnvironmentVariable(reinterpret_cast<LPCWSTR>(name), reinterpret_cast<LPCWSTR>(value));
+#endif
 #else
     setenv(name, value, 1);
 #endif

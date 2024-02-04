@@ -45,7 +45,7 @@
        </widget>
       </item>
       <item>
-       <widget class="KeySequenceWidget" name="m_pKeySequenceWidgetHotkey">
+       <widget class="KeySequenceWidget" name="keySequenceWidget">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>1</horstretch>

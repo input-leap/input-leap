@@ -20,7 +20,6 @@
 #pragma once
 
 #include <QDialog>
-#include "KeySequenceWidget.h"
 #include <memory>
 
 class Hotkey;
@@ -43,13 +42,13 @@ class ActionDialog : public QDialog
 
     protected slots:
         void accept() override;
-        void on_m_pKeySequenceWidgetHotkey_keySequenceChanged();
 
     protected:
-        const KeySequenceWidget* sequenceWidget() const;
         const ServerConfig& serverConfig() const { return server_config_; }
 
     private:
+        void key_sequence_changed();
+
         std::unique_ptr<Ui::ActionDialog> ui_;
         const ServerConfig& server_config_;
         Hotkey& hotkey_;

@@ -296,11 +296,8 @@ jobs:
         run: |
           copy input-leap\ext\openssl\windows\x64\bin\*.dll input-leap-install\
 
-      - name: Archive Completed Build Directory
-        uses: vimtor/action-zip@v1
-        with:
-          files: input-leap-install
-          dest: ${{ env.B_BUILD_TYPE }}.zip
+      - name: Create Archive
+        run: Compress-Archive -Path input-leap-install\* -DestinationPath ${{ env.B_BUILD_TYPE }}.zip
 
       - uses: actions/upload-artifact@v4
         with:

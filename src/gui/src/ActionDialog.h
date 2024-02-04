@@ -1,5 +1,6 @@
 /*
  * InputLeap -- mouse and keyboard sharing utility
+ * Copyright (C) 2023-2024 InputLeap Developers
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -19,12 +20,10 @@
 #pragma once
 
 #include <QDialog>
-#include "KeySequenceWidget.h"
 #include <memory>
 
 class Hotkey;
 class Action;
-class QRadioButton;
 class QButtonGroup;
 class ServerConfig;
 
@@ -43,17 +42,16 @@ class ActionDialog : public QDialog
 
     protected slots:
         void accept() override;
-        void on_m_pKeySequenceWidgetHotkey_keySequenceChanged();
 
     protected:
-        const KeySequenceWidget* sequenceWidget() const;
-        const ServerConfig& serverConfig() const { return m_ServerConfig; }
+        const ServerConfig& serverConfig() const { return server_config_; }
 
     private:
-        std::unique_ptr<Ui::ActionDialog> ui_;
-        const ServerConfig& m_ServerConfig;
-        Hotkey& m_Hotkey;
-        Action& m_Action;
+        void key_sequence_changed();
 
-        QButtonGroup* m_pButtonGroupType;
+        std::unique_ptr<Ui::ActionDialog> ui_;
+        const ServerConfig& server_config_;
+        Hotkey& hotkey_;
+        Action& action_;
+        QButtonGroup* button_group_type_;
 };

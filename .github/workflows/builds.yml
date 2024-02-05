@@ -23,22 +23,33 @@ env:
 
 jobs:
   linux-build:
+    name: ${{ matrix.name }}
     runs-on: ubuntu-latest
     container: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu:18.04", "ubuntu:20.04", "ubuntu:22.04"]
-        cc: ["gcc"]
-        wayland: [false]
-        include:
-          - cc: "gcc"
-            cxx: "g++"
-          - os: "ubuntu:22.04"
-            cc: "clang"
-            cxx: "clang++"
-          - os: "ubuntu:22.04"
-            wayland: true
+       include:
+         - name: ubuntu-18-04
+           os: "ubuntu:18.04"
+           cc: "gcc"
+           cxx: "g++"
+           wayland: false
+         - name: ubuntu-20-04
+           os: "ubuntu:20.04"
+           cc: "gcc"
+           cxx: "g++"
+           wayland: false
+         - name: ubuntu-22-04-clang
+           os: "ubuntu:22.04"
+           cc: "clang"
+           cxx: "clang++"
+           wayland: true
+         - name: ubuntu-22-04
+           os: "ubuntu:22.04"
+           cc: "gcc"
+           cxx: "g++"
+           wayland: true
     steps:
 
       # Preparation steps

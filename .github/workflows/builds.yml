@@ -168,7 +168,8 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build \
                 -DCMAKE_CXX_FLAGS:STRING="-Wall -Wextra -Wno-unused-parameter" \
                 -DCMAKE_CXX_FLAGS_DEBUG:STRING="-g -Werror" \
-                -DINPUTLEAP_BUILD_LIBEI:BOOL=${{ matrix.wayland }}
+                -DINPUTLEAP_BUILD_LIBEI:BOOL=${{ matrix.wayland }} \
+                -DCMAKE_INSTALL_PREFIX=input-leap-${{ matrix.name }}
         env:
             VERBOSE: 1
             CC: ${{ matrix.cc }}
@@ -176,7 +177,7 @@ jobs:
 
       - name: Run the build
         run: |
-          cmake --build build --parallel
+          cmake --build build --parallel --target install
         env:
             VERBOSE: 1
 
@@ -184,6 +185,25 @@ jobs:
       - name: Run the tests
         run: |
             ctest --test-dir build --verbose
+
+      - name: Create Artifacts
+        run: tar -cf input-leap-${{matrix.name}}.tar.gz input-leap-${{matrix.name}}
+
+      - name: Upload Artifacts
+        if: matrix.os != 'ubuntu:18.04'
+        uses: actions/upload-artifact@v4
+        with:
+          name: input-leap-${{matrix.name}}
+          path: input-leap-${{matrix.name}}.tar.gz
+          if-no-files-found: error
+
+      - name: Upload Artifacts
+        if: matrix.os == 'ubuntu:18.04'
+        uses: actions/upload-artifact@v3
+        with:
+          name: input-leap-${{matrix.name}}
+          path: input-leap-${{matrix.name}}.tar.gz
+          if-no-files-found: error
 
   mac-build:
     runs-on: ${{ matrix.os }}

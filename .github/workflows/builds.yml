@@ -48,7 +48,7 @@ jobs:
           apt-get update -y
           # software-properties-common is needed for add-apt-repository
           apt-get install -y software-properties-common gpg wget
-          # actions/checkout@v3 wants newer git than what's in default repositories
+          # actions/checkout@v4 wants newer git than what's in default repositories
           add-apt-repository ppa:git-core/ppa
           # InputLeap requires at least CMake 3.12.
           # This mirrors instructions at https://apt.kitware.com
@@ -116,7 +116,7 @@ jobs:
 
       - name: Checkout input-leap
         if: matrix.os == 'ubuntu:18.04'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: input-leap
           submodules: recursive

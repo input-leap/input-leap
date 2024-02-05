@@ -27,10 +27,9 @@
 
 #include <QButtonGroup>
 
-ActionDialog::ActionDialog(QWidget* parent, ServerConfig& config, Hotkey& hotkey, Action& action) :
+ActionDialog::ActionDialog(QWidget* parent, const ServerConfig& config, Hotkey& hotkey, Action& action) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
     ui_{std::make_unique<Ui::ActionDialog>()},
-    server_config_(config),
     hotkey_(hotkey),
     action_(action),
     button_group_type_(new QButtonGroup(this))
@@ -61,21 +60,17 @@ ActionDialog::ActionDialog(QWidget* parent, ServerConfig& config, Hotkey& hotkey
 
     ui_->m_pGroupBoxScreens->setChecked(action_.haveScreens());
 
-    int idx = 0;
-    for (const Screen& screen : serverConfig().screens()) {
-        if (!screen.isNull())
-        {
-            QListWidgetItem *pListItem = new QListWidgetItem(screen.name());
-            ui_->m_pListScreens->addItem(pListItem);
-            if (action_.typeScreenNames().indexOf(screen.name()) != -1)
-                ui_->m_pListScreens->setCurrentItem(pListItem);
+    for (const Screen& screen : config.screens()) {
+        if (screen.isNull())
+            continue;
+        QListWidgetItem *pListItem = new QListWidgetItem(screen.name());
+        ui_->m_pListScreens->addItem(pListItem);
+        if (action_.typeScreenNames().indexOf(screen.name()) != -1)
+            ui_->m_pListScreens->setCurrentItem(pListItem);
 
-            ui_->m_pComboSwitchToScreen->addItem(screen.name());
-            if (screen.name() == action_.switchScreenName())
-                ui_->m_pComboSwitchToScreen->setCurrentIndex(idx);
-
-            idx++;
-        }
+        ui_->m_pComboSwitchToScreen->addItem(screen.name());
+        if (screen.name() == action_.switchScreenName())
+            ui_->m_pComboSwitchToScreen->setCurrentIndex(ui_->m_pComboSwitchToScreen->count() - 1);
     }
 }
 
@@ -106,16 +101,8 @@ void ActionDialog::accept()
 
 void ActionDialog::key_sequence_changed()
 {
-    if (ui_->keySequenceWidget->keySequence().isMouseButton())
-    {
-        ui_->m_pGroupBoxScreens->setEnabled(false);
-        ui_->m_pListScreens->setEnabled(false);
-    }
-    else
-    {
-        ui_->m_pGroupBoxScreens->setEnabled(true);
-        ui_->m_pListScreens->setEnabled(true);
-    }
+    ui_->m_pGroupBoxScreens->setEnabled(!ui_->keySequenceWidget->keySequence().isMouseButton());
+    ui_->m_pListScreens->setEnabled(!ui_->keySequenceWidget->keySequence().isMouseButton());
 }
 
 ActionDialog::~ActionDialog() = default;

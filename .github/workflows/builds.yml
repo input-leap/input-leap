@@ -231,12 +231,22 @@ jobs:
 
 
   win-build:
+    name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-2019, windows-2022]
+       include:
+         - name: Windows Qt5
+           os: windows-2019
+           qt-version: 5.15
+           qt-major: 5
+         - name: Windows Qt6
+           os: windows-2022
+           qt-version: 6.6
+           qt-major: 6
+           qt-modules: qt5compat
 
     steps:
       - uses: actions/checkout@v4
@@ -259,7 +269,8 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
         with:
-          version: 5.15
+          version: ${{matrix.qt-version}}
+          modules: ${{matrix.qt-modules}}
           cache: true
           cache-key-prefix: windows-${{matrix.os}}-Qt${{matrix.qt-version}}
 
@@ -270,6 +281,7 @@ jobs:
           call "%VS_PATH%\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=amd64
 
           cmake -S input-leap -B build -G "%CMAKE_GEN%" -A x64 -D CMAKE_BUILD_TYPE=%B_BUILD_TYPE% ^
+            -DQT_DEFAULT_MAJOR_VERSION=${{matrix.qt-major}} ^
             -DDNSSD_LIB="%BONJOUR_SDK_HOME%\Lib\x64\dnssd.lib" -D CMAKE_INSTALL_PREFIX=input-leap-install
         env:
           VS_PATH: ${{ matrix.os == 'windows-2019' && '%ProgramFiles(x86)%\Microsoft Visual Studio\2019' || '%ProgramFiles%\Microsoft Visual Studio\2022' }}
@@ -284,11 +296,8 @@ jobs:
         run: |
           copy input-leap\ext\openssl\windows\x64\bin\*.dll input-leap-install\
 
-      - name: Archive Completed Build Directory
-        uses: vimtor/action-zip@v1
-        with:
-          files: input-leap-install
-          dest: ${{ env.B_BUILD_TYPE }}.zip
+      - name: Create Archive
+        run: Compress-Archive -Path input-leap-install\* -DestinationPath ${{ env.B_BUILD_TYPE }}.zip
 
       - uses: actions/upload-artifact@v4
         with:

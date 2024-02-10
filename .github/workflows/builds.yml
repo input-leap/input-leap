@@ -23,22 +23,33 @@ env:
 
 jobs:
   linux-build:
+    name: ${{ matrix.name }}
     runs-on: ubuntu-latest
     container: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu:18.04", "ubuntu:20.04", "ubuntu:22.04"]
-        cc: ["gcc"]
-        wayland: [false]
-        include:
-          - cc: "gcc"
-            cxx: "g++"
-          - os: "ubuntu:22.04"
-            cc: "clang"
-            cxx: "clang++"
-          - os: "ubuntu:22.04"
-            wayland: true
+       include:
+         - name: ubuntu-18-04
+           os: "ubuntu:18.04"
+           cc: "gcc"
+           cxx: "g++"
+           wayland: false
+         - name: ubuntu-20-04
+           os: "ubuntu:20.04"
+           cc: "gcc"
+           cxx: "g++"
+           wayland: false
+         - name: ubuntu-22-04-clang
+           os: "ubuntu:22.04"
+           cc: "clang"
+           cxx: "clang++"
+           wayland: true
+         - name: ubuntu-22-04
+           os: "ubuntu:22.04"
+           cc: "gcc"
+           cxx: "g++"
+           wayland: true
     steps:
 
       # Preparation steps
@@ -157,7 +168,8 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build \
                 -DCMAKE_CXX_FLAGS:STRING="-Wall -Wextra -Wno-unused-parameter" \
                 -DCMAKE_CXX_FLAGS_DEBUG:STRING="-g -Werror" \
-                -DINPUTLEAP_BUILD_LIBEI:BOOL=${{ matrix.wayland }}
+                -DINPUTLEAP_BUILD_LIBEI:BOOL=${{ matrix.wayland }} \
+                -DCMAKE_INSTALL_PREFIX=input-leap-${{ matrix.name }}
         env:
             VERBOSE: 1
             CC: ${{ matrix.cc }}
@@ -165,7 +177,7 @@ jobs:
 
       - name: Run the build
         run: |
-          cmake --build build --parallel
+          cmake --build build --parallel --target install
         env:
             VERBOSE: 1
 
@@ -173,6 +185,25 @@ jobs:
       - name: Run the tests
         run: |
             ctest --test-dir build --verbose
+
+      - name: Create Artifacts
+        run: tar -cf input-leap-${{matrix.name}}.tar.gz input-leap-${{matrix.name}}
+
+      - name: Upload Artifacts
+        if: matrix.os != 'ubuntu:18.04'
+        uses: actions/upload-artifact@v4
+        with:
+          name: input-leap-${{matrix.name}}
+          path: input-leap-${{matrix.name}}.tar.gz
+          if-no-files-found: error
+
+      - name: Upload Artifacts
+        if: matrix.os == 'ubuntu:18.04'
+        uses: actions/upload-artifact@v3
+        with:
+          name: input-leap-${{matrix.name}}
+          path: input-leap-${{matrix.name}}.tar.gz
+          if-no-files-found: error
 
   mac-build:
     runs-on: ${{ matrix.os }}

@@ -323,10 +323,6 @@ jobs:
         run: |
           cmake --build build --config $env:B_BUILD_TYPE --target install
 
-      - name: Copy supporting binaries
-        run: |
-          copy input-leap\ext\openssl\windows\x64\bin\*.dll input-leap-install\
-
       - name: Create Archive
         run: Compress-Archive -Path input-leap-install\* -DestinationPath ${{ env.B_BUILD_TYPE }}.zip
 

@@ -79,7 +79,7 @@ endif()
 
 add_executable(integtests ${sources})
 target_link_libraries(integtests
-    arch base client common io ipc mt net platform server synlib ${GTEST_LIBRARIES} ${GMOCK_LIBRARIES} ${libs} ${OPENSSL_LIBS})
+    arch base client common io ipc mt net platform server synlib ${GTEST_LIBRARIES} ${GMOCK_LIBRARIES} ${libs} OpenSSL::SSL OpenSSL::Crypto)
 
 add_test(NAME integrationtests
          COMMAND integtests

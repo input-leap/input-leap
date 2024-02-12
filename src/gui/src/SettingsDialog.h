@@ -46,12 +46,12 @@ class SettingsDialog : public QDialog
         AppConfig& appConfig() { return m_appConfig; }
 
     private:
+        void languageChanged(int index);
+        void logToFileChanged(int i);
+        void browseLogClicked();
+
         std::unique_ptr<Ui::SettingsDialog> ui_;
         AppConfig& m_appConfig;
         AppLocale m_Locale;
 
-    private slots:
-        void on_m_pComboLanguage_currentIndexChanged(int index);
-        void on_m_pCheckBoxLogToFile_stateChanged(int );
-        void on_m_pButtonBrowseLog_clicked();
 };

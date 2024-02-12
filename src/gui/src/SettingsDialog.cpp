@@ -65,6 +65,10 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     ui_->m_pLabelElevate->hide();
     ui_->m_pComboElevate->hide();
 #endif
+
+    connect(ui_->m_pCheckBoxLogToFile, &QCheckBox::stateChanged, this, &SettingsDialog::logToFileChanged);
+    connect(ui_->m_pButtonBrowseLog, &QPushButton::clicked, this, &SettingsDialog::browseLogClicked);
+    connect(ui_->m_pComboLanguage, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &SettingsDialog::languageChanged);
 }
 
 void SettingsDialog::accept()
@@ -118,7 +122,7 @@ void SettingsDialog::changeEvent(QEvent* event)
     }
 }
 
-void SettingsDialog::on_m_pCheckBoxLogToFile_stateChanged(int i)
+void SettingsDialog::logToFileChanged(int i)
 {
     bool checked = i == 2;
 
@@ -126,7 +130,7 @@ void SettingsDialog::on_m_pCheckBoxLogToFile_stateChanged(int i)
     ui_->m_pButtonBrowseLog->setEnabled(checked);
 }
 
-void SettingsDialog::on_m_pButtonBrowseLog_clicked()
+void SettingsDialog::browseLogClicked()
 {
     QString fileName = QFileDialog::getSaveFileName(
         this, tr("Save log file to..."),
@@ -139,7 +143,7 @@ void SettingsDialog::on_m_pButtonBrowseLog_clicked()
     }
 }
 
-void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(int index)
+void SettingsDialog::languageChanged(int index)
 {
     QString ietfCode = ui_->m_pComboLanguage->itemData(index).toString();
     QInputLeapApplication::getInstance()->switchTranslator(ietfCode);

@@ -371,6 +371,9 @@
    <property name="shortcut">
     <string notr="true"/>
    </property>
+   <property name="menuRole">
+    <enum>QAction::AboutRole</enum>
+   </property>
   </action>
   <action name="m_pActionQuit">
    <property name="text">
@@ -381,6 +384,9 @@
    </property>
    <property name="shortcut">
     <string notr="true">Ctrl+Q</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::QuitRole</enum>
    </property>
   </action>
   <action name="m_pActionStartCmdApp">
@@ -450,6 +456,9 @@
    </property>
    <property name="shortcut">
     <string notr="true">F4</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::PreferencesRole</enum>
    </property>
   </action>
   <action name="m_pActionShowLog">

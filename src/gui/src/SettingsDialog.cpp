@@ -23,8 +23,6 @@
 #include "AppLocale.h"
 #include "QUtility.h"
 #include "AppConfig.h"
-#include "SslCertificate.h"
-#include "MainWindow.h"
 
 #include <QtCore>
 #include <QtGui>

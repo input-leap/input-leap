@@ -39,6 +39,9 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 {
     ui_->setupUi(this);
 
+    connect(ui_->buttonBox, &QDialogButtonBox::accepted, this, &SettingsDialog::accept);
+    connect(ui_->buttonBox, &QDialogButtonBox::rejected, this, &SettingsDialog::reject);
+
     m_Locale.fillLanguageComboBox(ui_->m_pComboLanguage);
 
     ui_->m_pLineEditScreenName->setText(appConfig().screenName());

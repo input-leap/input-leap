@@ -145,7 +145,7 @@ int main(int argc, char* argv[])
 	{
 		mainWindow.open();
 	}
-
+    QObject::connect(&mainWindow, &MainWindow::requestLanguageChange, &app, &QInputLeapApplication::switchTranslator);
 	return app.exec();
 }
 

@@ -21,7 +21,6 @@
 #include "ui_SettingsDialog.h"
 
 #include "AppLocale.h"
-#include "QInputLeapApplication.h"
 #include "QUtility.h"
 #include "AppConfig.h"
 #include "SslCertificate.h"
@@ -93,7 +92,7 @@ void SettingsDialog::accept()
 void SettingsDialog::reject()
 {
     if (app_config_.language() != ui_->m_pComboLanguage->itemData(ui_->m_pComboLanguage->currentIndex()).toString()) {
-        QInputLeapApplication::getInstance()->switchTranslator(app_config_.language());
+        Q_EMIT requestLanguageChange(app_config_.language());
     }
     QDialog::reject();
 }
@@ -145,8 +144,7 @@ void SettingsDialog::browseLogClicked()
 
 void SettingsDialog::languageChanged(int index)
 {
-    QString ietfCode = ui_->m_pComboLanguage->itemData(index).toString();
-    QInputLeapApplication::getInstance()->switchTranslator(ietfCode);
+    Q_EMIT requestLanguageChange(ui_->m_pComboLanguage->itemData(index).toString());
 }
 
 SettingsDialog::~SettingsDialog() = default;

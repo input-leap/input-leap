@@ -39,6 +39,9 @@ class SettingsDialog : public QDialog
         SettingsDialog(QWidget* parent, AppConfig& config);
         ~SettingsDialog() override;
 
+    Q_SIGNALS:
+        void requestLanguageChange(QString newLang);
+
     protected:
         void accept() override;
         void reject() override;

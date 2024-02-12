@@ -70,7 +70,6 @@ class MainWindow : public QMainWindow
 
     friend class QInputLeapApplication;
     friend class SetupWizard;
-    friend class SettingsDialog;
 
     public:
         enum qLevel {
@@ -103,6 +102,9 @@ class MainWindow : public QMainWindow
         void autoAddScreen(const QString name);
         void updateZeroconfService();
         void serverDetected(const QString name);
+
+    Q_SIGNALS:
+        void requestLanguageChange(QString newLanguage);
 
 public slots:
         void appendLogRaw(const QString& text);

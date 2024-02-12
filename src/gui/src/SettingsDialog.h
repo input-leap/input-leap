@@ -22,8 +22,6 @@
 #include <QDialog>
 #include <memory>
 
-#include "AppLocale.h"
-
 class AppConfig;
 
 namespace Ui
@@ -54,6 +52,4 @@ class SettingsDialog : public QDialog
 
         std::unique_ptr<Ui::SettingsDialog> ui_;
         AppConfig& app_config_;
-        AppLocale m_Locale;
-
 };

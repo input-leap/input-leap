@@ -36,7 +36,7 @@
 SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
     ui_{std::make_unique<Ui::SettingsDialog>()},
-    m_appConfig(config)
+    app_config_(config)
 {
     ui_->setupUi(this);
 
@@ -45,21 +45,21 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 
     m_Locale.fillLanguageComboBox(ui_->m_pComboLanguage);
 
-    ui_->m_pLineEditScreenName->setText(appConfig().screenName());
-    ui_->m_pSpinBoxPort->setValue(appConfig().port());
-    ui_->m_pLineEditInterface->setText(appConfig().networkInterface());
-    ui_->m_pComboLogLevel->setCurrentIndex(appConfig().logLevel());
-    ui_->m_pCheckBoxLogToFile->setChecked(appConfig().logToFile());
-    ui_->m_pLineEditLogFilename->setText(appConfig().logFilename());
-    setIndexFromItemData(ui_->m_pComboLanguage, appConfig().language());
-    ui_->m_pCheckBoxAutoHide->setChecked(appConfig().getAutoHide());
-    ui_->m_pCheckBoxAutoStart->setChecked(appConfig().getAutoStart());
-    ui_->m_pCheckBoxMinimizeToTray->setChecked(appConfig().getMinimizeToTray());
-    ui_->m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
-    ui_->checkbox_require_client_certificate->setChecked(m_appConfig.getRequireClientCertificate());
+    ui_->m_pLineEditScreenName->setText(app_config_.screenName());
+    ui_->m_pSpinBoxPort->setValue(app_config_.port());
+    ui_->m_pLineEditInterface->setText(app_config_.networkInterface());
+    ui_->m_pComboLogLevel->setCurrentIndex(app_config_.logLevel());
+    ui_->m_pCheckBoxLogToFile->setChecked(app_config_.logToFile());
+    ui_->m_pLineEditLogFilename->setText(app_config_.logFilename());
+    setIndexFromItemData(ui_->m_pComboLanguage, app_config_.language());
+    ui_->m_pCheckBoxAutoHide->setChecked(app_config_.getAutoHide());
+    ui_->m_pCheckBoxAutoStart->setChecked(app_config_.getAutoStart());
+    ui_->m_pCheckBoxMinimizeToTray->setChecked(app_config_.getMinimizeToTray());
+    ui_->m_pCheckBoxEnableCrypto->setChecked(app_config_.getCryptoEnabled());
+    ui_->checkbox_require_client_certificate->setChecked(app_config_.getRequireClientCertificate());
 
 #if defined(Q_OS_WIN)
-    ui_->m_pComboElevate->setCurrentIndex(static_cast<int>(appConfig().elevateMode()));
+    ui_->m_pComboElevate->setCurrentIndex(static_cast<int>(app_config_.elevateMode()));
 #else
     // elevate checkbox is only useful on ms windows.
     ui_->m_pLabelElevate->hide();
@@ -73,27 +73,27 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 
 void SettingsDialog::accept()
 {
-    m_appConfig.setScreenName(ui_->m_pLineEditScreenName->text());
-    m_appConfig.setPort(ui_->m_pSpinBoxPort->value());
-    m_appConfig.setNetworkInterface(ui_->m_pLineEditInterface->text());
-    m_appConfig.setCryptoEnabled(ui_->m_pCheckBoxEnableCrypto->isChecked());
-    m_appConfig.setRequireClientCertificate(ui_->checkbox_require_client_certificate->isChecked());
-    m_appConfig.setLogLevel(ui_->m_pComboLogLevel->currentIndex());
-    m_appConfig.setLogToFile(ui_->m_pCheckBoxLogToFile->isChecked());
-    m_appConfig.setLogFilename(ui_->m_pLineEditLogFilename->text());
-    m_appConfig.setLanguage(ui_->m_pComboLanguage->itemData(ui_->m_pComboLanguage->currentIndex()).toString());
-    m_appConfig.setElevateMode(static_cast<ElevateMode>(ui_->m_pComboElevate->currentIndex()));
-    m_appConfig.setAutoHide(ui_->m_pCheckBoxAutoHide->isChecked());
-    m_appConfig.setAutoStart(ui_->m_pCheckBoxAutoStart->isChecked());
-    m_appConfig.setMinimizeToTray(ui_->m_pCheckBoxMinimizeToTray->isChecked());
-    m_appConfig.saveSettings();
+    app_config_.setScreenName(ui_->m_pLineEditScreenName->text());
+    app_config_.setPort(ui_->m_pSpinBoxPort->value());
+    app_config_.setNetworkInterface(ui_->m_pLineEditInterface->text());
+    app_config_.setCryptoEnabled(ui_->m_pCheckBoxEnableCrypto->isChecked());
+    app_config_.setRequireClientCertificate(ui_->checkbox_require_client_certificate->isChecked());
+    app_config_.setLogLevel(ui_->m_pComboLogLevel->currentIndex());
+    app_config_.setLogToFile(ui_->m_pCheckBoxLogToFile->isChecked());
+    app_config_.setLogFilename(ui_->m_pLineEditLogFilename->text());
+    app_config_.setLanguage(ui_->m_pComboLanguage->itemData(ui_->m_pComboLanguage->currentIndex()).toString());
+    app_config_.setElevateMode(static_cast<ElevateMode>(ui_->m_pComboElevate->currentIndex()));
+    app_config_.setAutoHide(ui_->m_pCheckBoxAutoHide->isChecked());
+    app_config_.setAutoStart(ui_->m_pCheckBoxAutoStart->isChecked());
+    app_config_.setMinimizeToTray(ui_->m_pCheckBoxMinimizeToTray->isChecked());
+    app_config_.saveSettings();
     QDialog::accept();
 }
 
 void SettingsDialog::reject()
 {
-    if (m_appConfig.language() != ui_->m_pComboLanguage->itemData(ui_->m_pComboLanguage->currentIndex()).toString()) {
-        QInputLeapApplication::getInstance()->switchTranslator(m_appConfig.language());
+    if (app_config_.language() != ui_->m_pComboLanguage->itemData(ui_->m_pComboLanguage->currentIndex()).toString()) {
+        QInputLeapApplication::getInstance()->switchTranslator(app_config_.language());
     }
     QDialog::reject();
 }

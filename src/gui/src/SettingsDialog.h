@@ -43,7 +43,6 @@ class SettingsDialog : public QDialog
         void accept() override;
         void reject() override;
         void changeEvent(QEvent* event) override;
-        AppConfig& appConfig() { return m_appConfig; }
 
     private:
         void languageChanged(int index);
@@ -51,7 +50,7 @@ class SettingsDialog : public QDialog
         void browseLogClicked();
 
         std::unique_ptr<Ui::SettingsDialog> ui_;
-        AppConfig& m_appConfig;
+        AppConfig& app_config_;
         AppLocale m_Locale;
 
 };

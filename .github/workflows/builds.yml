@@ -30,11 +30,6 @@ jobs:
       fail-fast: false
       matrix:
        include:
-         - name: ubuntu-18-04
-           os: "ubuntu:18.04"
-           cc: "gcc"
-           cxx: "g++"
-           wayland: false
          - name: ubuntu-20-04
            os: "ubuntu:20.04"
            cc: "gcc"
@@ -53,22 +48,6 @@ jobs:
     steps:
 
       # Preparation steps
-      - if: matrix.os == 'ubuntu:18.04'
-        name: Add repositories with newer git and cmake
-        run: |
-          apt-get update -y
-          # software-properties-common is needed for add-apt-repository
-          apt-get install -y software-properties-common gpg wget
-          # actions/checkout@v3 wants newer git than what's in default repositories
-          add-apt-repository ppa:git-core/ppa
-          # InputLeap requires at least CMake 3.12.
-          # This mirrors instructions at https://apt.kitware.com
-          wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
-            | gpg --dearmor - \
-            > /usr/share/keyrings/kitware-archive-keyring.gpg
-          echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ bionic main' \
-            > /etc/apt/sources.list.d/kitware.list
-
       - name: Update image and install pre-reqs
         run: |
           apt-get update -y
@@ -118,16 +97,7 @@ jobs:
 
       # Code checkout steps
       - name: Checkout input-leap
-        if: matrix.os != 'ubuntu:18.04'
         uses: actions/checkout@v4
-        with:
-          path: input-leap
-          submodules: recursive
-          set-safe-directory: ${{ github.workspace }}
-
-      - name: Checkout input-leap
-        if: matrix.os == 'ubuntu:18.04'
-        uses: actions/checkout@v3
         with:
           path: input-leap
           submodules: recursive
@@ -190,16 +160,7 @@ jobs:
         run: tar -cf input-leap-${{matrix.name}}.tar.gz input-leap-${{matrix.name}}
 
       - name: Upload Artifacts
-        if: matrix.os != 'ubuntu:18.04'
         uses: actions/upload-artifact@v4
-        with:
-          name: input-leap-${{matrix.name}}
-          path: input-leap-${{matrix.name}}.tar.gz
-          if-no-files-found: error
-
-      - name: Upload Artifacts
-        if: matrix.os == 'ubuntu:18.04'
-        uses: actions/upload-artifact@v3
         with:
           name: input-leap-${{matrix.name}}
           path: input-leap-${{matrix.name}}.tar.gz

@@ -99,6 +99,7 @@ protected:
     void remove_device(ei_device* device);
 
 private:
+    void cleanup_ei();
     void send_event(EventType type, EventDataBase* data);
     ButtonID map_button_from_evdev(ei_event* event) const;
     void on_key_event(ei_event *event);

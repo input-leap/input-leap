@@ -90,29 +90,7 @@ EiScreen::~EiScreen()
     events_->set_buffer(nullptr);
     events_->remove_handler(EventType::SYSTEM, events_->getSystemTarget());
 
-    if (ei_pointer_) {
-        free(ei_device_get_user_data(ei_pointer_));
-        ei_device_set_user_data(ei_pointer_, nullptr);
-        ei_device_unref(ei_pointer_);
-    }
-    if (ei_keyboard_) {
-        free(ei_device_get_user_data(ei_keyboard_));
-        ei_device_set_user_data(ei_keyboard_, nullptr);
-        ei_device_unref(ei_keyboard_);
-    }
-    if (ei_abs_) {
-        free(ei_device_get_user_data(ei_abs_));
-        ei_device_set_user_data(ei_abs_, nullptr);
-        ei_device_unref(ei_abs_);
-    }
-    ei_seat_unref(ei_seat_);
-    for (auto it = ei_devices_.begin(); it != ei_devices_.end(); it++) {
-        free(ei_device_get_user_data(*it));
-        ei_device_set_user_data(*it, nullptr);
-        ei_device_unref(*it);
-    }
-    ei_devices_.clear();
-    ei_unref(ei_);
+    cleanup_ei();
 
     delete key_state_;
 
@@ -144,6 +122,33 @@ void EiScreen::handle_ei_log_event(ei* ei,
             LOG_PRINT("ei: %s", message);
             break;
     }
+}
+
+void EiScreen::cleanup_ei()
+{
+    if (ei_pointer_) {
+            free(ei_device_get_user_data(ei_pointer_));
+            ei_device_set_user_data(ei_pointer_, nullptr);
+            ei_pointer_ = ei_device_unref(ei_pointer_);
+    }
+    if (ei_keyboard_) {
+            free(ei_device_get_user_data(ei_keyboard_));
+            ei_device_set_user_data(ei_keyboard_, nullptr);
+            ei_keyboard_ = ei_device_unref(ei_keyboard_);
+    }
+    if (ei_abs_) {
+            free(ei_device_get_user_data(ei_abs_));
+            ei_device_set_user_data(ei_abs_, nullptr);
+            ei_abs_ = ei_device_unref(ei_abs_);
+    }
+    ei_seat_unref(ei_seat_);
+    for (auto it = ei_devices_.begin(); it != ei_devices_.end(); it++) {
+            free(ei_device_get_user_data(*it));
+            ei_device_set_user_data(*it, nullptr);
+            ei_device_unref(*it);
+    }
+    ei_devices_.clear();
+    ei_ = ei_unref(ei_);
 }
 
 const EventTarget* EiScreen::get_event_target() const

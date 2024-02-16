@@ -112,6 +112,7 @@ void PortalRemoteDesktop::cb_session_started(GObject* object, GAsyncResult* res)
         LOG_ERR("Failed to start session");
         g_main_loop_quit(glib_main_loop_);
         events_->add_event(EventType::QUIT);
+        return;
     }
 
     // ConnectToEIS requires version 2 of the xdg-desktop-portal (and the same

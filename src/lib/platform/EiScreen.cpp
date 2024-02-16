@@ -114,6 +114,8 @@ EiScreen::~EiScreen()
     ei_devices_.clear();
     ei_unref(ei_);
 
+    delete key_state_;
+
     delete portal_remote_desktop_;
 #if HAVE_LIBPORTAL_INPUTCAPTURE
     delete portal_input_capture_;

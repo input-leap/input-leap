@@ -103,26 +103,26 @@ jobs:
           submodules: recursive
           set-safe-directory: ${{ github.workspace }}
 
-      - name: Get libei v1.0.0 from freedesktop
-        # Manual checkout of libinput/libei ref 1.0.0 from https://gitlab.freedesktop.org
+      - name: Get libei v1.2.1 from freedesktop
+        # Manual checkout of libinput/libei ref 1.2.1 from https://gitlab.freedesktop.org
         # because actions/checkout does not support gitlab
         if: matrix.wayland
         run: |
           git clone --depth=1 --branch="$ref" --recurse-submodules -- \
             "https://gitlab.freedesktop.org/libinput/libei" libei
         env:
-          ref: 1.0.0
+          ref: 1.2.1
 
-      - name: Get libportal from whot/libportal
+      - name: Get libportal from upstream
         uses: actions/checkout@v4
         if: matrix.wayland
         with:
-          repository: whot/libportal
-          ref: wip/inputcapture
+          repository: flatpak/libportal
+          ref: main
           path: libportal
 
       - if: matrix.wayland
-        name: build libei from git tag (1.0.0)
+        name: build libei from git tag
         run: |
             meson setup -Dprefix=/usr -Dtests=disabled -Dliboeffis=disabled -Ddocumentation=[] libei _libei_builddir
             ninja -C _libei_builddir install

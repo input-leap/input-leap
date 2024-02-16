@@ -317,18 +317,17 @@ void EiScreen::disable()
 
 void EiScreen::enter()
 {
-    static int sequence_number;
     is_on_screen_ = true;
     if (!is_primary_) {
-        ++sequence_number;
+        ++sequence_number_;
         if (ei_pointer_) {
-            ei_device_start_emulating(ei_pointer_, sequence_number);
+            ei_device_start_emulating(ei_pointer_, sequence_number_);
         }
         if (ei_keyboard_) {
-            ei_device_start_emulating(ei_keyboard_, sequence_number);
+            ei_device_start_emulating(ei_keyboard_, sequence_number_);
         }
         if (ei_abs_) {
-            ei_device_start_emulating(ei_abs_, sequence_number);
+            ei_device_start_emulating(ei_abs_, sequence_number_);
         }
     }
 #if HAVE_LIBPORTAL_INPUTCAPTURE
@@ -772,6 +771,9 @@ void EiScreen::handle_system_event(const Event& sysevent)
                 break;
             case EI_EVENT_DEVICE_RESUMED:
                 LOG_DEBUG("device %s is resumed", ei_device_get_name(device));
+                if (is_on_screen_) {
+                    ei_device_start_emulating(device, ++sequence_number_);
+                }
                 break;
             case EI_EVENT_KEYBOARD_MODIFIERS:
                 // FIXME

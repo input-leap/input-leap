@@ -143,6 +143,8 @@ private:
     ei_device* ei_keyboard_ = nullptr;
     ei_device* ei_abs_ = nullptr;
 
+    std::uint32_t sequence_number_ = 0;
+
     std::uint32_t x_ = 0;
     std::uint32_t y_ = 0;
     std::uint32_t w_ = 0;

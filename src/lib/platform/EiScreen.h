@@ -154,9 +154,9 @@ private:
 
     mutable std::mutex mutex_;
 
-    PortalRemoteDesktop* portal_remote_desktop_;
+    PortalRemoteDesktop* portal_remote_desktop_ = nullptr;
 #if HAVE_LIBPORTAL_INPUTCAPTURE
-    PortalInputCapture* portal_input_capture_;
+    PortalInputCapture* portal_input_capture_ = nullptr;
 #endif
 
     struct HotKeyItem {

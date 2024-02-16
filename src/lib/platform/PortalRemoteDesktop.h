@@ -58,12 +58,13 @@ private:
     IEventQueue* events_;
 
     Thread* glib_thread_;
-    GMainLoop* glib_main_loop_;
+    GMainLoop* glib_main_loop_ = nullptr;
 
-    XdpPortal* portal_;
-    XdpSession* session_;
+    XdpPortal* portal_ = nullptr;
+    XdpSession* session_ = nullptr;
+    char *session_restore_token_ = nullptr;
 
-    guint session_signal_id_;
+    guint session_signal_id_ = 0;
 };
 
 } // namespace inputleap

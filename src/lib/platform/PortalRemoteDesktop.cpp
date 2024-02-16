@@ -26,8 +26,7 @@ PortalRemoteDesktop::PortalRemoteDesktop(EiScreen *screen,
                                          IEventQueue* events) :
     screen_(screen),
     events_(events),
-    portal_(xdp_portal_new()),
-    session_(nullptr)
+    portal_(xdp_portal_new())
 {
     glib_main_loop_ = g_main_loop_new(nullptr, true);
     glib_thread_ = new Thread([this](){ glib_thread(); });

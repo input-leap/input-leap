@@ -67,33 +67,6 @@ gboolean PortalRemoteDesktop::timeout_handler()
     return true; // keep re-triggering
 }
 
-int PortalRemoteDesktop::fake_eis_fd()
-{
-    auto path = std::getenv("LIBEI_SOCKET");
-
-    if (!path) {
-        LOG_DEBUG("Cannot fake EIS socket, LIBEI_SOCKET environment variable is unset");
-        return -1;
-    }
-
-    auto sock = socket(AF_UNIX, SOCK_STREAM|SOCK_NONBLOCK, 0);
-
-    // Dealing with the socket directly because nothing in lib/... supports
-    // AF_UNIX and I'm too lazy to fix all this for a temporary hack
-    int fd = sock;
-    struct sockaddr_un addr = {
-        .sun_family = AF_UNIX,
-        .sun_path = {0},
-    };
-    std::snprintf(addr.sun_path, sizeof(addr.sun_path), "%s", path);
-
-    auto result = connect(fd, (struct sockaddr*)&addr, sizeof(addr));
-    if (result != 0)
-        LOG_DEBUG("Faked EIS fd failed: %s", strerror(errno));
-
-    return sock;
-}
-
 void PortalRemoteDesktop::cb_session_closed(XdpSession* session)
 {
     LOG_ERR("Our RemoteDesktop session was closed, exiting.");
@@ -123,17 +96,9 @@ void PortalRemoteDesktop::cb_session_started(GObject* object, GAsyncResult* res)
     fd = xdp_session_connect_to_eis(session, &error);
 #endif
     if (fd < 0) {
-        LOG_ERR("Failed to connect to EIS: %s", error->message);
-
-        // FIXME: Development hack to avoid having to assemble all parts just for
-        // testing this code.
-        fd = fake_eis_fd();
-
-        if (fd < 0) {
-            g_main_loop_quit(glib_main_loop_);
-            events_->add_event(EventType::QUIT);
-            return;
-        }
+        g_main_loop_quit(glib_main_loop_);
+        events_->add_event(EventType::QUIT);
+        return;
     }
 
     // Socket ownership is transferred to the EiScreen

@@ -28,21 +28,6 @@ finish-args:
     - --nosocket=wayland
 
 modules:
-    # Protobuf is required by libei, which is required by inputleap
-    - name: protobuf
-      buildsystem: autotools
-      sources:
-          - type: git
-            url: https://github.com/protocolbuffers/protobuf
-            tag: v3.19.4  # F36 as of writing this manifest
-
-    - name: libprotobuf-c
-      buildsystem: autotools
-      sources:
-          - type: git
-            url: https://github.com/protobuf-c/protobuf-c
-            tag: v1.4.0 # F36 as of writing this manifest
-
     - name: libei
       buildsystem: meson
       config-opts:

@@ -66,7 +66,6 @@ Log::Log()
 
     // other initialization
     m_maxPriority = g_defaultMaxPriority;
-    m_maxNewlineLength = 0;
     insert(new ConsoleLogOutputter);
 
     s_log = this;
@@ -136,9 +135,6 @@ Log::print(const char* file, int line, const char* fmt, ...)
     // compute prefix padding length
     char stack[1024];
 
-    // compute suffix padding length
-    int sPad = m_maxNewlineLength;
-
     // print to buffer, leaving space for a newline at the end and prefix
     // at the beginning.
     char* buffer = stack;
@@ -147,7 +143,7 @@ Log::print(const char* file, int line, const char* fmt, ...)
         // try printing into the buffer
         va_list args;
         va_start(args, fmt);
-        int n = std::vsnprintf(buffer, len - sPad, fmt, args);
+        int n = std::vsnprintf(buffer, len, fmt, args);
         va_end(args);
 
         // if the buffer wasn't big enough then make it bigger and try again

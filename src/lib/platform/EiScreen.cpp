@@ -29,6 +29,7 @@
 #include "base/Stopwatch.h"
 #include "base/IEventQueue.h"
 
+#include <cmath>
 #include <cstring>
 #include <cstdlib>
 #include <algorithm>
@@ -36,6 +37,10 @@
 #include <vector>
 
 #include <libei.h>
+
+struct ScrollRemainder {
+    double x, y; // scroll remainder in pixels
+};
 
 namespace inputleap {
 
@@ -85,11 +90,25 @@ EiScreen::~EiScreen()
     events_->set_buffer(nullptr);
     events_->remove_handler(EventType::SYSTEM, events_->getSystemTarget());
 
-    ei_device_unref(ei_pointer_);
-    ei_device_unref(ei_keyboard_);
-    ei_device_unref(ei_abs_);
+    if (ei_pointer_) {
+        free(ei_device_get_user_data(ei_pointer_));
+        ei_device_set_user_data(ei_pointer_, nullptr);
+        ei_device_unref(ei_pointer_);
+    }
+    if (ei_keyboard_) {
+        free(ei_device_get_user_data(ei_keyboard_));
+        ei_device_set_user_data(ei_keyboard_, nullptr);
+        ei_device_unref(ei_keyboard_);
+    }
+    if (ei_abs_) {
+        free(ei_device_get_user_data(ei_abs_));
+        ei_device_set_user_data(ei_abs_, nullptr);
+        ei_device_unref(ei_abs_);
+    }
     ei_seat_unref(ei_seat_);
     for (auto it = ei_devices_.begin(); it != ei_devices_.end(); it++) {
+        free(ei_device_get_user_data(*it));
+        ei_device_set_user_data(*it, nullptr);
         ei_device_unref(*it);
     }
     ei_devices_.clear();
@@ -491,38 +510,74 @@ void EiScreen::on_button_event(ei_event* event)
 
 void EiScreen::on_pointer_scroll_event(ei_event* event)
 {
-    LOG((CLOG_DEBUG "on_pointer_scroll_event"));
+    // Ratio of 10 pixels == one wheel click because that's what mutter/gtk
+    // use (for historical reasons).
+    const int PIXELS_PER_WHEEL_CLICK = 10;
+    // Our logical wheel clicks are multiples 120, so we
+    // convert between the two and keep the remainders because
+    // we will very likely get subpixel scroll events.
+    // This means a single pixel is 120/PIXEL_TO_WHEEL_RATIO in wheel values.
+    const int PIXEL_TO_WHEEL_RATIO = 120/PIXELS_PER_WHEEL_CLICK;
+
     assert(is_primary_);
 
     double dx = ei_event_scroll_get_dx(event);
     double dy = ei_event_scroll_get_dy(event);
+    struct ei_device *device = ei_event_get_device(event);
 
-    LOG((CLOG_DEBUG1 "event: Scroll (%.1f,%.1f)", dx, dy));
+    LOG((CLOG_DEBUG1 "event: Scroll (%.2f, %.2f)", dx, dy));
+
+    struct ScrollRemainder *remainder = static_cast<struct ScrollRemainder*>(ei_device_get_user_data(device));
+    if (!remainder) {
+        remainder = new ScrollRemainder();
+        ei_device_set_user_data(device, remainder);
+    }
+
+    dx += remainder->x;
+    dy += remainder->y;
+
+    LOG((CLOG_DEBUG1 "event: after remainder (%.2f, %.2f)", dx, dy));
+
+    double x, y;
+    double rx = modf(dx, &x);
+    double ry = modf(dy, &y);
+
+    assert(!std::isnan(x) && !std::isinf(x));
+    assert(!std::isnan(y) && !std::isinf(y));
+
+    LOG((CLOG_DEBUG1 "event: xy is (%d, %df)", x, y));
 
     // libEI and InputLeap seem to use opposite directions, so we have
     // to send the opposite of the value reported by EI if we want to
     // remain compatible with other platforms (including X11).
-    send_event(EventType::PRIMARY_SCREEN_WHEEL,
-               create_event_data<WheelInfo>(WheelInfo{static_cast<std::int32_t>(-dx),
-                                                      static_cast<std::int32_t>(-dy)}));
+    if (x != 0 || y != 0)
+        send_event(EventType::PRIMARY_SCREEN_WHEEL,
+                   create_event_data<WheelInfo>(WheelInfo{(int32_t)-x * PIXEL_TO_WHEEL_RATIO,
+                                                          (int32_t)-y * PIXEL_TO_WHEEL_RATIO}));
+
+    remainder->x = rx;
+    remainder->y = ry;
+    LOG((CLOG_DEBUG1 "event: remainder is (%.2f, %.2f)", x, y));
 }
 
 void EiScreen::on_pointer_scroll_discrete_event(ei_event* event)
 {
-    LOG((CLOG_DEBUG "on_pointer_scroll_discrete_event"));
+    // both libei and inputleap use multiples of 120 to represent
+    // one scroll wheel click event so we can just forward things
+    // as-is.
+
     assert(is_primary_);
 
-    double dx = ei_event_scroll_get_discrete_dx(event);
-    double dy = ei_event_scroll_get_discrete_dy(event);
+    std::int32_t dx = ei_event_scroll_get_discrete_dx(event);
+    std::int32_t dy = ei_event_scroll_get_discrete_dy(event);
 
-    LOG((CLOG_DEBUG1 "event: Scroll (%.1f,%.1f)", dx, dy));
+    LOG((CLOG_DEBUG1 "event: Scroll discrete (%d, %d)", dx, dy));
 
     // libEI and InputLeap seem to use opposite directions, so we have
     // to send the opposite of the value reported by EI if we want to
     // remain compatible with other platforms (including X11).
     send_event(EventType::PRIMARY_SCREEN_WHEEL,
-               create_event_data<WheelInfo>(WheelInfo{static_cast<std::int32_t>(-dx * 120),
-                                                      static_cast<std::int32_t>(-dy * 120)}));
+               create_event_data<WheelInfo>(WheelInfo{-dx, -dy}));
 }
 
 void EiScreen::on_motion_event(ei_event* event)

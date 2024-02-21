@@ -143,13 +143,11 @@ private:
 
 /*!
 \def LOG(arg)
-Write to the log.  Because macros cannot accept variable arguments, this
-should be invoked like so:
+Write to the log. This should be invoked like so:
 \code
-LOG((CLOG_XXX "%d and %d are %s", x, y, x == y ? "equal" : "not equal"));
+LOG(CLOG_XXX "%d and %d are %s", x, y, x == y ? "equal" : "not equal");
 \endcode
-In particular, notice the double open and close parentheses.  Also note
-that there is no comma after the \c CLOG_XXX.  The \c XXX should be
+Note that there is no comma after the \c CLOG_XXX.  The \c XXX should be
 replaced by one of enumerants in \c Log::ELevel without the leading
 \c k.  For example, \c CLOG_INFO.  The special \c CLOG_PRINT level will
 not be filtered and is never prefixed by the filename and line number.
@@ -162,13 +160,11 @@ which includes the filename and line number.
 
 /*!
 \def LOGC(expr, arg)
-Write to the log if and only if expr is true.  Because macros cannot accept
-variable arguments, this should be invoked like so:
+Write to the log if and only if expr is true. This should be invoked like so:
 \code
-LOGC(x == y, (CLOG_XXX "%d and %d are equal", x, y));
+LOGC(x == y, CLOG_XXX "%d and %d are equal", x, y);
 \endcode
-In particular, notice the parentheses around everything after the boolean
-expression.    Also note that there is no comma after the \c CLOG_XXX.
+Note that there is no comma after the \c CLOG_XXX.
 The \c XXX should be replaced by one of enumerants in \c Log::ELevel
 without the leading \c k.  For example, \c CLOG_INFO.  The special
 \c CLOG_PRINT level will not be filtered and is never prefixed by the
@@ -181,35 +177,32 @@ otherwise it expands to a call that doesn't.
 */
 
 #if defined(NOLOGGING)
-#define LOG(_a1)
-#define LOGC(_a1, _a2)
-#define CLOG_TRACE
+#define LOG(...)
+#define LOGC(_a1, ...)
 #elif defined(NDEBUG)
-#define LOG(_a1)        CLOG->print _a1
-#define LOGC(_a1, _a2)    if (_a1) CLOG->print _a2
-#define CLOG_TRACE        nullptr, 0,
+#define LOG(...)        CLOG->print(nullptr, 0, __VA_ARGS__)
+#define LOGC(_a1, ...)    if (_a1) CLOG->print(nullptr, 0, __VA_ARGS__)
 #else
-#define LOG(_a1)        CLOG->print _a1
-#define LOGC(_a1, _a2)    if (_a1) CLOG->print _a2
-#define CLOG_TRACE        __FILE__, __LINE__,
+#define LOG(...)        CLOG->print(__FILE__, __LINE__, __VA_ARGS__)
+#define LOGC(_a1, ...)    if (_a1) CLOG->print(__FILE__, __LINE__, __VA_ARGS__)
 #endif
 
-// the CLOG_* defines are line and file plus %z and an octal number (060=0,
-// 071=9), but the limitation is that once we run out of numbers at either
+// the CLOG_* defines %z and an octal number (060=0, 071=9),
+// but the limitation is that once we run out of numbers at either
 // end, then we resort to using non-numerical chars. this still works (since
 // to deduce the number we subtract octal \060, so '/' is -1, and ':' is 10
 
-#define CLOG_PRINT        CLOG_TRACE "@z\057" // char is '/'
-#define CLOG_CRIT        CLOG_TRACE "@z\060" // char is '0'
-#define CLOG_ERR        CLOG_TRACE "@z\061"
-#define CLOG_WARN        CLOG_TRACE "@z\062"
-#define CLOG_NOTE        CLOG_TRACE "@z\063"
-#define CLOG_INFO        CLOG_TRACE "@z\064"
-#define CLOG_DEBUG        CLOG_TRACE "@z\065"
-#define CLOG_DEBUG1        CLOG_TRACE "@z\066"
-#define CLOG_DEBUG2        CLOG_TRACE "@z\067"
-#define CLOG_DEBUG3        CLOG_TRACE "@z\070"
-#define CLOG_DEBUG4        CLOG_TRACE "@z\071" // char is '9'
-#define CLOG_DEBUG5        CLOG_TRACE "@z\072" // char is ':'
+#define CLOG_PRINT        "@z\057" // char is '/'
+#define CLOG_CRIT        "@z\060" // char is '0'
+#define CLOG_ERR        "@z\061"
+#define CLOG_WARN        "@z\062"
+#define CLOG_NOTE        "@z\063"
+#define CLOG_INFO        "@z\064"
+#define CLOG_DEBUG        "@z\065"
+#define CLOG_DEBUG1        "@z\066"
+#define CLOG_DEBUG2        "@z\067"
+#define CLOG_DEBUG3        "@z\070"
+#define CLOG_DEBUG4        "@z\071" // char is '9'
+#define CLOG_DEBUG5        "@z\072" // char is ':'
 
 } // namespace inputleap

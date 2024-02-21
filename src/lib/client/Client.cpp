@@ -398,7 +398,7 @@ Client::sendClipboard(ClipboardID id)
         std::string data = clipboard.marshall();
         if (data.size() >= m_maximumClipboardSize) {
             LOG((CLOG_NOTE "Skipping clipboard transfer because the clipboard"
-                " contents exceeds the %i MB size limit set by the server",
+                " contents exceeds the %zi MB size limit set by the server",
                 m_maximumClipboardSize));
             return;
         }

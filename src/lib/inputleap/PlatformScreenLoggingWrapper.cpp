@@ -359,7 +359,7 @@ std::int32_t PlatformScreenLoggingWrapper::pollActiveGroup() const
 void PlatformScreenLoggingWrapper::pollPressedKeys(KeyButtonSet& pressed_keys) const
 {
     screen_->pollPressedKeys(pressed_keys);
-    LOG((CLOG_DEBUG1 "PlatformScreen::pollPressedKeys() => pressed_keys.size()=%d",
+    LOG((CLOG_DEBUG1 "PlatformScreen::pollPressedKeys() => pressed_keys.size()=%zd",
          pressed_keys.size()));
 }
 

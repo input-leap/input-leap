@@ -336,7 +336,7 @@ void PortalInputCapture::cb_zones_changed(XdpInputCaptureSession* session, GVari
         y1 = y;
         x2 = x + w - 1;
         y2 = y;
-        LOG((CLOG_DEBUG "Barrier (top) %d at %d,%d-%d,%d", id, x1, y1, x2, y2));
+        LOG((CLOG_DEBUG "Barrier (top) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2));
         barriers_.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(
                             g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER,
                                          "id", id,
@@ -350,7 +350,7 @@ void PortalInputCapture::cb_zones_changed(XdpInputCaptureSession* session, GVari
         y1 = y;
         x2 = x + w;
         y2 = y + h - 1;
-        LOG((CLOG_DEBUG "Barrier (right) %d at %d,%d-%d,%d", id, x1, y1, x2, y2));
+        LOG((CLOG_DEBUG "Barrier (right) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2));
         barriers_.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(
                             g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER,
                                          "id", id,
@@ -364,7 +364,7 @@ void PortalInputCapture::cb_zones_changed(XdpInputCaptureSession* session, GVari
         y1 = y;
         x2 = x;
         y2 = y + h - 1;
-        LOG((CLOG_DEBUG "Barrier (left) %d at %d,%d-%d,%d", id, x1, y1, x2, y2));
+        LOG((CLOG_DEBUG "Barrier (left) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2));
         barriers_.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(
                             g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER,
                                          "id", id,
@@ -378,7 +378,7 @@ void PortalInputCapture::cb_zones_changed(XdpInputCaptureSession* session, GVari
         y1 = y + h;
         x2 = x + w - 1;
         y2 = y + h;
-        LOG((CLOG_DEBUG "Barrier (bottom) %d at %d,%d-%d,%d", id, x1, y1, x2, y2));
+        LOG((CLOG_DEBUG "Barrier (bottom) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2));
         barriers_.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(
                             g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER,
                                          "id", id,

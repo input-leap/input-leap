@@ -1411,11 +1411,11 @@ bool XWindowsUtil::getWindowProperty(Display* display, Window window, Atom prope
     }
 
     if (okay) {
-        LOG((CLOG_DEBUG2 "read property %d on window 0x%08x: bytes=%d", property, window, (data == nullptr) ? 0 : data->size()));
+        LOG((CLOG_DEBUG2 "read property %ld on window 0x%08lx: bytes=%zd", property, window, (data == nullptr) ? 0 : data->size()));
         return true;
     }
     else {
-        LOG((CLOG_DEBUG2 "can't read property %d on window 0x%08x", property, window));
+        LOG((CLOG_DEBUG2 "can't read property %ld on window 0x%08lx", property, window));
         return false;
     }
 }

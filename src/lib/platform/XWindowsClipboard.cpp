@@ -139,7 +139,7 @@ XWindowsClipboard::addRequest(Window owner, Window requestor,
     // at the given time.
     bool success = false;
     if (owner == m_window) {
-        LOG((CLOG_DEBUG1 "request for clipboard %d, target %s by 0x%08x (property=%s)", m_selection, XWindowsUtil::atomToString(m_display, target).c_str(), requestor, XWindowsUtil::atomToString(m_display, property).c_str()));
+        LOG((CLOG_DEBUG1 "request for clipboard %ld, target %s by 0x%08lx (property=%s)", m_selection, XWindowsUtil::atomToString(m_display, target).c_str(), requestor, XWindowsUtil::atomToString(m_display, property).c_str()));
         if (wasOwnedAtTime(time)) {
             if (target == m_atomMultiple) {
                 // add a multiple request.  property may not be None
@@ -156,7 +156,7 @@ XWindowsClipboard::addRequest(Window owner, Window requestor,
             }
         }
         else {
-            LOG((CLOG_DEBUG1 "failed, not owned at time %d", time));
+            LOG((CLOG_DEBUG1 "failed, not owned at time %ld", time));
         }
     }
 
@@ -232,7 +232,7 @@ XWindowsClipboard::processRequest(Window requestor,
         // unknown requestor window
         return false;
     }
-    LOG((CLOG_DEBUG1 "received property %s delete from 0x08%x", XWindowsUtil::atomToString(m_display, property).c_str(), requestor));
+    LOG((CLOG_DEBUG1 "received property %s delete from 0x08%lx", XWindowsUtil::atomToString(m_display, property).c_str(), requestor));
 
     // find the property in the known requests.  it should be the
     // first property but we'll check 'em all if we have to.
@@ -320,7 +320,7 @@ void XWindowsClipboard::add(EFormat format, const std::string& data)
     assert(m_open);
     assert(m_owner);
 
-    LOG((CLOG_DEBUG "add %d bytes to clipboard %d format: %d", data.size(), m_id, format));
+    LOG((CLOG_DEBUG "add %zd bytes to clipboard %d format: %d", data.size(), m_id, format));
 
     m_data[format]  = data;
     m_added[format] = true;
@@ -586,7 +586,7 @@ XWindowsClipboard::icccmFillCache()
             // add to clipboard and note we've done it
             m_data[format]  = converter->toIClipboard(targetData);
             m_added[format] = true;
-            LOG((CLOG_DEBUG "  added format %d for target %s (%u %s)", format, XWindowsUtil::atomToString(m_display, target).c_str(), targetData.size(), targetData.size() == 1 ? "byte" : "bytes"));
+            LOG((CLOG_DEBUG "  added format %d for target %s (%zu %s)", format, XWindowsUtil::atomToString(m_display, target).c_str(), targetData.size(), targetData.size() == 1 ? "byte" : "bytes"));
         } else {
             LOG((CLOG_DEBUG1 "  no clipboard data for target %s", XWindowsUtil::atomToString(m_display, target).c_str()));
             m_added[format] = false;
@@ -640,7 +640,7 @@ XWindowsClipboard::motifLockClipboard() const
     // fail if anybody owns the lock (even us, so this is non-recursive)
     Window lockOwner = m_impl->XGetSelectionOwner(m_display, m_atomMotifClipLock);
     if (lockOwner != None) {
-        LOG((CLOG_DEBUG1 "motif lock owner 0x%08x", lockOwner));
+        LOG((CLOG_DEBUG1 "motif lock owner 0x%08lx", lockOwner));
         return false;
     }
 
@@ -652,7 +652,7 @@ XWindowsClipboard::motifLockClipboard() const
     m_impl->XSetSelectionOwner(m_display, m_atomMotifClipLock, m_window, time);
     lockOwner = m_impl->XGetSelectionOwner(m_display, m_atomMotifClipLock);
     if (lockOwner != m_window) {
-        LOG((CLOG_DEBUG1 "motif lock owner 0x%08x", lockOwner));
+        LOG((CLOG_DEBUG1 "motif lock owner 0x%08lx", lockOwner));
         return false;
     }
 
@@ -848,7 +848,7 @@ XWindowsClipboard::motifFillCache()
             // add to clipboard and note we've done it
             m_data[format]  = converter->toIClipboard(targetData);
             m_added[format] = true;
-            LOG((CLOG_DEBUG "  added format %d for target %s (%u %s)", format, XWindowsUtil::atomToString(m_display, target).c_str(), targetData.size(), targetData.size() == 1 ? "byte" : "bytes"));
+            LOG((CLOG_DEBUG "  added format %d for target %s (%zu %s)", format, XWindowsUtil::atomToString(m_display, target).c_str(), targetData.size(), targetData.size() == 1 ? "byte" : "bytes"));
         } else {
             LOG((CLOG_DEBUG1 "  no clipboard data for target %s", XWindowsUtil::atomToString(m_display, target).c_str()));
             m_added[format] = false;
@@ -1044,14 +1044,14 @@ XWindowsClipboard::sendReply(Reply* reply)
 
     // bail out immediately if reply is done
     if (reply->m_done) {
-        LOG((CLOG_DEBUG1 "clipboard: finished reply to 0x%08x,%d,%d", reply->m_requestor, reply->m_target, reply->m_property));
+        LOG((CLOG_DEBUG1 "clipboard: finished reply to 0x%08lx,%ld,%ld", reply->m_requestor, reply->m_target, reply->m_property));
         return true;
     }
 
     // start in failed state if property is None
     bool failed = (reply->m_property == None);
     if (!failed) {
-        LOG((CLOG_DEBUG1 "clipboard: setting property on 0x%08x,%d,%d", reply->m_requestor, reply->m_target, reply->m_property));
+        LOG((CLOG_DEBUG1 "clipboard: setting property on 0x%08lx,%ld,%ld", reply->m_requestor, reply->m_target, reply->m_property));
 
         // send using INCR if already sending incrementally or if reply
         // is too large, otherwise just send it.
@@ -1100,7 +1100,7 @@ XWindowsClipboard::sendReply(Reply* reply)
     // the final zero-length property.
     // FIXME -- how do you gracefully cancel an incremental transfer?
     if (failed) {
-        LOG((CLOG_DEBUG1 "clipboard: sending failure to 0x%08x,%d,%d", reply->m_requestor, reply->m_target, reply->m_property));
+        LOG((CLOG_DEBUG1 "clipboard: sending failure to 0x%08lx,%ld,%ld", reply->m_requestor, reply->m_target, reply->m_property));
         reply->m_done = true;
         if (reply->m_property != None) {
             XWindowsUtil::ErrorLock lock(m_display);
@@ -1130,7 +1130,7 @@ XWindowsClipboard::sendReply(Reply* reply)
 
     // send notification if we haven't yet
     if (!reply->m_replied) {
-        LOG((CLOG_DEBUG1 "clipboard: sending notify to 0x%08x,%d,%d", reply->m_requestor, reply->m_target, reply->m_property));
+        LOG((CLOG_DEBUG1 "clipboard: sending notify to 0x%08lx,%ld,%ld", reply->m_requestor, reply->m_target, reply->m_property));
         reply->m_replied = true;
 
         // dump every property on the requestor window to the debug2
@@ -1142,7 +1142,7 @@ XWindowsClipboard::sendReply(Reply* reply)
             int n;
             Atom* props = m_impl->XListProperties(m_display, reply->m_requestor,
                                                   &n);
-            LOG((CLOG_DEBUG2 "properties of 0x%08x:", reply->m_requestor));
+            LOG((CLOG_DEBUG2 "properties of 0x%08lx:", reply->m_requestor));
             for (int i = 0; i < n; ++i) {
                 Atom target;
                 std::string data;
@@ -1331,7 +1331,7 @@ XWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
     assert(actualTarget != nullptr);
     assert(data != nullptr);
 
-    LOG((CLOG_DEBUG1 "request selection=%s, target=%s, window=%x", XWindowsUtil::atomToString(display, selection).c_str(), XWindowsUtil::atomToString(display, target).c_str(), m_requestor));
+    LOG((CLOG_DEBUG1 "request selection=%s, target=%s, window=%lx", XWindowsUtil::atomToString(display, selection).c_str(), XWindowsUtil::atomToString(display, target).c_str(), m_requestor));
 
     m_atomNone = XInternAtom(display, "NONE", False);
     m_atomIncr = XInternAtom(display, "INCR", False);
@@ -1518,7 +1518,7 @@ XWindowsClipboard::CICCCMGetClipboard::processEvent(
 
         // note if this is the final chunk
         if (m_data->size() == oldSize) {
-            LOG((CLOG_DEBUG1 "  INCR final chunk: %d bytes total", m_data->size()));
+            LOG((CLOG_DEBUG1 "  INCR final chunk: %zd bytes total", m_data->size()));
             m_done = true;
         }
     }
@@ -1531,7 +1531,7 @@ XWindowsClipboard::CICCCMGetClipboard::processEvent(
     }
 
     // this event has been processed
-    LOGC(!m_incr, (CLOG_DEBUG1 "  got data, %d bytes", m_data->size()));
+    LOGC(!m_incr, (CLOG_DEBUG1 "  got data, %zd bytes", m_data->size()));
     return true;
 }
 

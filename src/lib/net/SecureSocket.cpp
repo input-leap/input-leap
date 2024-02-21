@@ -692,7 +692,7 @@ bool SecureSocket::verify_peer_certificate(const inputleap::fs::path& fingerprin
     db.read(fingerprint_db_path);
 
     if (!db.fingerprints().empty()) {
-        LOG((CLOG_NOTE "Read %d fingerprints from: %s", db.fingerprints().size(),
+        LOG((CLOG_NOTE "Read %zd fingerprints from: %s", db.fingerprints().size(),
              fingerprint_db_path.u8string().c_str()));
     } else {
         LOG((CLOG_NOTE "Could not read fingerprints from: %s",

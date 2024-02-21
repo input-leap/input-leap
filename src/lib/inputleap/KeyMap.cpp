@@ -681,7 +681,7 @@ std::int32_t KeyMap::findBestKey(const KeyEntryList& entryList, KeyModifierMask 
         const KeyItem& item = entryList[i].back();
         if ((item.m_required & desiredState) == item.m_required &&
             (item.m_required & desiredState) == (item.m_sensitive & desiredState)) {
-            LOG((CLOG_DEBUG1 "best key index %d of %d (exact)", i + 1, entryList.size()));
+            LOG((CLOG_DEBUG1 "best key index %d of %zd (exact)", i + 1, entryList.size()));
             return i;
         }
     }
@@ -700,7 +700,7 @@ std::int32_t KeyMap::findBestKey(const KeyEntryList& entryList, KeyModifierMask 
         }
     }
     if (bestIndex != -1) {
-        LOG((CLOG_DEBUG1 "best key index %d of %d (%d modifiers)",
+        LOG((CLOG_DEBUG1 "best key index %d of %zd (%d modifiers)",
              bestIndex + 1, entryList.size(), bestCount));
     }
 

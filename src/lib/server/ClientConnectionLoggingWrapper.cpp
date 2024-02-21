@@ -120,7 +120,7 @@ void ClientConnectionLoggingWrapper::send_mouse_wheel_1_6(std::int32_t x_delta, 
 void ClientConnectionLoggingWrapper::send_drag_info_1_6(std::uint32_t file_count,
                                                         const std::string& data)
 {
-    LOG((CLOG_DEBUG2 "send drag info to \"%s\" %d, %d", name_.c_str(), file_count, data.size()));
+    LOG((CLOG_DEBUG2 "send drag info to \"%s\" %d, %zd", name_.c_str(), file_count, data.size()));
     conn_->send_drag_info_1_6(file_count, data);
 }
 
@@ -138,7 +138,7 @@ void ClientConnectionLoggingWrapper::send_reset_options_1_6()
 
 void ClientConnectionLoggingWrapper::send_set_options_1_6(const OptionsList& options)
 {
-    LOG((CLOG_DEBUG1 "send set options to \"%s\" size=%d", name_.c_str(), options.size()));
+    LOG((CLOG_DEBUG1 "send set options to \"%s\" size=%zd", name_.c_str(), options.size()));
     conn_->send_set_options_1_6(options);
 }
 
@@ -168,7 +168,7 @@ void ClientConnectionLoggingWrapper::send_clipboard_chunk_1_6(const ClipboardChu
         break;
 
     case kDataChunk:
-        LOG((CLOG_DEBUG2 "sending clipboard chunk data: size=%i", chunk.data_.size()));
+        LOG((CLOG_DEBUG2 "sending clipboard chunk data: size=%zi", chunk.data_.size()));
         break;
 
     case kDataEnd:
@@ -188,7 +188,7 @@ void ClientConnectionLoggingWrapper::send_file_chunk_1_6(const FileChunk& chunk)
         break;
 
     case kDataChunk:
-        LOG((CLOG_DEBUG2 "sending file chunk: size=%i", chunk.data_.size()));
+        LOG((CLOG_DEBUG2 "sending file chunk: size=%zi", chunk.data_.size()));
         break;
 
     case kDataEnd:

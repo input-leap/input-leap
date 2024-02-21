@@ -81,7 +81,7 @@ int FileChunk::assemble(inputleap::IStream* stream, std::string& dataReceived, s
     case kDataChunk:
         dataReceived.append(content);
         if (CLOG->getFilter() >= kDEBUG2) {
-                LOG((CLOG_DEBUG2 "recv file chunk size=%i", content.size()));
+                LOG((CLOG_DEBUG2 "recv file chunk size=%zi", content.size()));
                 double interval = stopwatch.getTime();
                 receivedDataSize += content.size();
                 LOG((CLOG_DEBUG2 "recv file interval=%f s", interval));
@@ -98,7 +98,7 @@ int FileChunk::assemble(inputleap::IStream* stream, std::string& dataReceived, s
 
     case kDataEnd:
         if (expectedSize != dataReceived.size()) {
-            LOG((CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d", expectedSize, dataReceived.size()));
+            LOG((CLOG_ERR "corrupted clipboard data, expected size=%zd actual size=%zd", expectedSize, dataReceived.size()));
             return kError;
         }
 
@@ -107,7 +107,7 @@ int FileChunk::assemble(inputleap::IStream* stream, std::string& dataReceived, s
             elapsedTime += stopwatch.getTime();
             double averageSpeed = expectedSize / elapsedTime / 1000;
             LOG((CLOG_DEBUG2 "file transfer finished: total time consumed=%f s", elapsedTime));
-            LOG((CLOG_DEBUG2 "file transfer finished: total data received=%i kb", expectedSize / 1000));
+            LOG((CLOG_DEBUG2 "file transfer finished: total data received=%zi kb", expectedSize / 1000));
             LOG((CLOG_DEBUG2 "file transfer finished: total average speed=%f kb/s", averageSpeed));
         }
         return kFinish;

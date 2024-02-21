@@ -117,7 +117,7 @@ XWindowsKeyState::mapModifiersFromX(unsigned int state) const
         if ((state & (1u << i)) != 0) {
             LOG((CLOG_DEBUG2 "|= modifier: %i", offset + i));
             if (offset + i >= m_modifierFromX.size()) {
-                LOG((CLOG_ERR "m_modifierFromX is too small (%d) for the "
+                LOG((CLOG_ERR "m_modifierFromX is too small (%zd) for the "
                     "requested offset (%d)", m_modifierFromX.size(), offset+i));
             } else {
                 mask |= m_modifierFromX[offset + i];

@@ -196,7 +196,7 @@ bool ClientProxy1_6::parseHandshakeMessage(const std::uint8_t* code)
 {
     if (memcmp(code, kMsgCNoop, 4) == 0) {
         // discard no-ops
-        LOG((CLOG_DEBUG2 "no-op from", getName().c_str()));
+        LOG((CLOG_DEBUG2 "no-op from %s", getName().c_str()));
         return true;
     }
     else if (memcmp(code, kMsgDInfo, 4) == 0) {
@@ -234,7 +234,7 @@ bool ClientProxy1_6::parseMessage(const std::uint8_t* code)
     }
     else if (memcmp(code, kMsgCNoop, 4) == 0) {
         // discard no-ops
-        LOG((CLOG_DEBUG2 "no-op from", getName().c_str()));
+        LOG((CLOG_DEBUG2 "no-op from %s", getName().c_str()));
         return true;
     }
     else if (memcmp(code, kMsgCClipboard, 4) == 0) {
@@ -462,9 +462,9 @@ bool ClientProxy1_6::recvClipboard()
 
     if (r == kStart) {
         size_t size = ClipboardChunk::getExpectedSize();
-        LOG((CLOG_DEBUG "receiving clipboard %d size=%d", id, size));
+        LOG((CLOG_DEBUG "receiving clipboard %d size=%zd", id, size));
     } else if (r == kFinish) {
-        LOG((CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%d",
+        LOG((CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%zd",
                 getName().c_str(), id, seq, dataCached.size()));
         // save clipboard
         m_clipboard[id].m_clipboard.unmarshall(dataCached, 0);

@@ -117,7 +117,7 @@ XWindowsScreen::XWindowsScreen(
         m_keyState    = new XWindowsKeyState(m_impl, m_display, m_xkb, events,
                                              m_keyMap);
 		LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_xinerama ? "(xinerama)" : ""));
-		LOG((CLOG_DEBUG "window is 0x%08x", m_window));
+		LOG((CLOG_DEBUG "window is 0x%08lx", m_window));
 	}
 	catch (...) {
         if (m_display != nullptr) {
@@ -1818,11 +1818,11 @@ XWindowsScreen::mapKeyFromX(XKeyEvent* event) const
         m_impl->XLookupString(event, dummy, 0, &keysym, nullptr);
 	}
 
-	LOG((CLOG_DEBUG2 "mapped code=%d to keysym=0x%04x", event->keycode, keysym));
+	LOG((CLOG_DEBUG2 "mapped code=%d to keysym=0x%04lx", event->keycode, keysym));
 
 	// convert key
 	KeyID result = XWindowsUtil::mapKeySymToKeyID(keysym);
-	LOG((CLOG_DEBUG2 "mapped keysym=0x%04x to keyID=%d", keysym, result));
+	LOG((CLOG_DEBUG2 "mapped keysym=0x%04lx to keyID=%d", keysym, result));
 	return result;
 }
 

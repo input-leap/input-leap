@@ -117,7 +117,7 @@ void IpcServer::handle_client_disconnected(const Event& e)
     m_clients.remove(proxy);
     deleteClient(proxy);
 
-    LOG((CLOG_DEBUG "ipc client proxy removed, connected=%d", m_clients.size()));
+    LOG((CLOG_DEBUG "ipc client proxy removed, connected=%zd", m_clients.size()));
 }
 
 void IpcServer::handle_message_received(const Event& e)

@@ -27,7 +27,7 @@ namespace inputleap {
 void
 DropHelper::writeToDir(const std::string& destination, DragFileList& fileList, std::string& data)
 {
-    LOG((CLOG_DEBUG "dropping file, files=%i target=%s", fileList.size(), destination.c_str()));
+    LOG((CLOG_DEBUG "dropping file, files=%zi target=%s", fileList.size(), destination.c_str()));
 
     if (!destination.empty() && fileList.size() > 0) {
         std::fstream file;

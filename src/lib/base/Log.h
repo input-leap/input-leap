@@ -127,7 +127,7 @@ public:
     //@}
 
 private:
-    void output(ELevel priority, char* msg);
+    void output(ELevel priority, const char* msg);
 
 private:
     typedef std::list<ILogOutputter*> OutputterList;

@@ -280,7 +280,7 @@ Log::getFilter() const
 }
 
 void
-Log::output(ELevel priority, char* msg)
+Log::output(ELevel priority, const char* msg)
 {
     assert(priority >= -1 && priority < g_numPriority);
     assert(msg != nullptr);

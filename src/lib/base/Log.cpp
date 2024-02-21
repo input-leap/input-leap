@@ -151,7 +151,7 @@ Log::print(const char* file, int line, const char* fmt, ...)
         va_end(args);
 
         // if the buffer wasn't big enough then make it bigger and try again
-        if (n < 0 || n > static_cast<int>(len)) {
+        if (n < 0 || n > len) {
             if (buffer != stack) {
                 delete[] buffer;
             }

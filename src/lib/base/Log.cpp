@@ -116,7 +116,7 @@ Log::print(const char* file, int line, const char* fmt, ...)
 {
     // check if fmt begins with a priority argument
     ELevel priority = kINFO;
-    if ((strlen(fmt) > 2) && (fmt[0] == '%' && fmt[1] == 'z')) {
+    if ((strlen(fmt) > 2) && (fmt[0] == '@' && fmt[1] == 'z')) {
 
         // 060 in octal is 0 (48 in decimal), so subtracting this converts ascii
         // number it a true number. we could use atoi instead, but this is how

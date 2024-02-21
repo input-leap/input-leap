@@ -101,7 +101,7 @@ ServerApp::parseArgs(int argc, const char* const* argv)
                 listen_address_->resolve();
             }
             catch (XSocketAddress& e) {
-                LOG(CLOG_PRINT "%s: %s" BYE,
+                LOG_PRINT("%s: %s" BYE,
                     args().m_exename.c_str(), e.what(), args().m_exename.c_str());
                 m_bye(kExitArgs);
             }
@@ -172,7 +172,7 @@ ServerApp::help()
            << "  " << usr_config_path << "\n"
            << "  " << sys_config_path << "\n";
 
-    LOG(CLOG_PRINT "%s", buffer.str().c_str());
+    LOG_PRINT("%s", buffer.str().c_str());
 }
 
 void
@@ -184,12 +184,12 @@ ServerApp::reloadSignalHandler(Arch::ESignal, void*)
 
 void ServerApp::reload_config()
 {
-    LOG(CLOG_DEBUG "reload configuration");
+    LOG_DEBUG("reload configuration");
     if (loadConfig(args().m_configFile)) {
         if (server_) {
             server_->setConfig(*args().m_config);
         }
-        LOG(CLOG_NOTE "reloaded configuration");
+        LOG_NOTE("reloaded configuration");
     }
 }
 
@@ -230,7 +230,7 @@ ServerApp::loadConfig()
     }
 
     if (!loaded) {
-        LOG(CLOG_PRINT "%s: no configuration available", args().m_exename.c_str());
+        LOG_PRINT("%s: no configuration available", args().m_exename.c_str());
         m_bye(kExitConfig);
     }
 }
@@ -239,23 +239,23 @@ bool ServerApp::loadConfig(const std::string& pathname)
 {
     try {
         // load configuration
-        LOG(CLOG_DEBUG "opening configuration \"%s\"", pathname.c_str());
+        LOG_DEBUG("opening configuration \"%s\"", pathname.c_str());
         std::ifstream configStream(pathname.c_str());
         if (!configStream.is_open()) {
             // report failure to open configuration as a debug message
             // since we try several paths and we expect some to be
             // missing.
-            LOG(CLOG_DEBUG "cannot open configuration \"%s\"",
+            LOG_DEBUG("cannot open configuration \"%s\"",
                 pathname.c_str());
             return false;
         }
         configStream >> *args().m_config;
-        LOG(CLOG_DEBUG "configuration read successfully");
+        LOG_DEBUG("configuration read successfully");
         return true;
     }
     catch (XConfigRead& e) {
         // report error in configuration file
-        LOG(CLOG_ERR "cannot read configuration \"%s\": %s",
+        LOG_ERR("cannot read configuration \"%s\": %s",
             pathname.c_str(), e.what());
     }
     return false;
@@ -398,7 +398,7 @@ void ServerApp::handle_retry()
         break;
 
     case kInitializing:
-        LOG(CLOG_DEBUG1 "retry server initialization");
+        LOG_DEBUG1("retry server initialization");
         m_serverState = kUninitialized;
         if (!initServer()) {
             m_events->add_event(EventType::QUIT);
@@ -406,13 +406,13 @@ void ServerApp::handle_retry()
         break;
 
     case kInitializingToStart:
-        LOG(CLOG_DEBUG1 "retry server initialization");
+        LOG_DEBUG1("retry server initialization");
         m_serverState = kUninitialized;
         if (!initServer()) {
             m_events->add_event(EventType::QUIT);
         }
         else if (m_serverState == kInitialized) {
-            LOG(CLOG_DEBUG1 "starting server");
+            LOG_DEBUG1("starting server");
             if (!startServer()) {
                 m_events->add_event(EventType::QUIT);
             }
@@ -420,7 +420,7 @@ void ServerApp::handle_retry()
         break;
 
     case kStarting:
-        LOG(CLOG_DEBUG1 "retry starting server");
+        LOG_DEBUG1("retry starting server");
         m_serverState = kInitialized;
         if (!startServer()) {
             m_events->add_event(EventType::QUIT);
@@ -451,18 +451,18 @@ bool ServerApp::initServer()
         return true;
     }
     catch (XScreenUnavailable& e) {
-        LOG(CLOG_WARN "primary screen unavailable: %s", e.what());
+        LOG_WARN("primary screen unavailable: %s", e.what());
         closePrimaryClient(primaryClient);
         updateStatus(std::string("primary screen unavailable: ") + e.what());
         retryTime = e.getRetryTime();
     }
     catch (XScreenOpenFailure& e) {
-        LOG(CLOG_CRIT "failed to start server: %s", e.what());
+        LOG_CRIT("failed to start server: %s", e.what());
         closePrimaryClient(primaryClient);
         return false;
     }
     catch (XBase& e) {
-        LOG(CLOG_CRIT "failed to start server: %s", e.what());
+        LOG_CRIT("failed to start server: %s", e.what());
         closePrimaryClient(primaryClient);
         return false;
     }
@@ -470,7 +470,7 @@ bool ServerApp::initServer()
     if (args().m_restartable) {
         // install a timer and handler to retry later
         assert(m_timer == nullptr);
-        LOG(CLOG_DEBUG "retry in %.0f seconds", retryTime);
+        LOG_DEBUG("retry in %.0f seconds", retryTime);
         m_timer = m_events->newOneShotTimer(retryTime, nullptr);
         m_events->add_handler(EventType::TIMER, m_timer,
                               [this](const auto& e){ handle_retry(); });
@@ -545,18 +545,18 @@ ServerApp::startServer()
 
         // using CLOG_PRINT here allows the GUI to see that the server is started
         // regardless of which log level is set
-        LOG(CLOG_PRINT "started server (%s), waiting for clients", family);
+        LOG_PRINT("started server (%s), waiting for clients", family);
         m_serverState = kStarted;
         return true;
     }
     catch (XSocketAddressInUse& e) {
-        LOG(CLOG_ERR "cannot listen for clients: %s", e.what());
+        LOG_ERR("cannot listen for clients: %s", e.what());
         closeClientListener(listener);
         updateStatus(std::string("cannot listen for clients: ") + e.what());
         retryTime = 1.0;
     }
     catch (XBase& e) {
-        LOG(CLOG_CRIT "failed to start server: %s", e.what());
+        LOG_CRIT("failed to start server: %s", e.what());
         closeClientListener(listener);
         return false;
     }
@@ -564,7 +564,7 @@ ServerApp::startServer()
     if (args().m_restartable) {
         // install a timer and handler to retry later
         assert(m_timer == nullptr);
-        LOG(CLOG_DEBUG "retry in %.0f seconds", retryTime);
+        LOG_DEBUG("retry in %.0f seconds", retryTime);
         m_timer = m_events->newOneShotTimer(retryTime, nullptr);
         m_events->add_handler(EventType::TIMER, m_timer,
                               [this](const auto& e){ handle_retry(); });
@@ -588,21 +588,21 @@ std::unique_ptr<Screen> ServerApp::create_screen()
 
 PrimaryClient* ServerApp::openPrimaryClient(const std::string& name, inputleap::Screen* screen)
 {
-    LOG(CLOG_DEBUG1 "creating primary screen");
+    LOG_DEBUG1("creating primary screen");
     return new PrimaryClient(name, screen);
 
 }
 
 void ServerApp::handle_screen_error()
 {
-    LOG(CLOG_CRIT "error on screen");
+    LOG_CRIT("error on screen");
     m_events->add_event(EventType::QUIT);
 }
 
 void ServerApp::handle_suspend()
 {
     if (!m_suspended) {
-        LOG(CLOG_INFO "suspend");
+        LOG_INFO("suspend");
         stopServer();
         m_suspended = true;
     }
@@ -611,7 +611,7 @@ void ServerApp::handle_suspend()
 void ServerApp::handle_resume()
 {
     if (m_suspended) {
-        LOG(CLOG_INFO "resume");
+        LOG_INFO("resume");
         startServer();
         m_suspended = false;
     }
@@ -663,7 +663,7 @@ void ServerApp::handle_screen_switched(const Event& e)
         const auto& info = e.get_data_as<Server::SwitchToScreenInfo>();
 
         if (!args().m_screenChangeScript.empty()) {
-            LOG(CLOG_INFO "Running shell script for screen \"%s\"", info.m_screen.c_str());
+            LOG_INFO("Running shell script for screen \"%s\"", info.m_screen.c_str());
 
             signal(SIGCHLD, SIG_IGN);
 
@@ -674,11 +674,11 @@ void ServerApp::handle_screen_switched(const Event& e)
                           info.m_screen.c_str(),nullptr);
                     exit(0);
                 } else if (pid < 0) {
-                    LOG(CLOG_ERR "Script forking error");
+                    LOG_ERR("Script forking error");
                     exit(1);
                 }
             } else {
-                LOG(CLOG_ERR "Script not accessible \"%s\"", args().m_screenChangeScript.c_str());
+                LOG_ERR("Script not accessible \"%s\"", args().m_screenChangeScript.c_str());
             }
         }
     #endif
@@ -710,7 +710,7 @@ ServerApp::mainLoop()
     // canonicalize the primary screen name
     std::string primaryName = args().m_config->getCanonicalName(args().m_name);
     if (primaryName.empty()) {
-        LOG(CLOG_CRIT "unknown screen name `%s'", args().m_name.c_str());
+        LOG_CRIT("unknown screen name `%s'", args().m_name.c_str());
         return kExitFailed;
     }
 
@@ -760,12 +760,12 @@ ServerApp::mainLoop()
     DAEMON_RUNNING(false);
 
     // close down
-    LOG(CLOG_DEBUG1 "stopping server");
+    LOG_DEBUG1("stopping server");
     m_events->remove_handler(EventType::SERVER_APP_FORCE_RECONNECT, m_events->getSystemTarget());
     m_events->remove_handler(EventType::SERVER_APP_RELOAD_CONFIG, m_events->getSystemTarget());
     cleanupServer();
     updateStatus();
-    LOG(CLOG_NOTE "stopped server");
+    LOG_NOTE("stopped server");
 
     if (argsBase().m_enableIpc) {
         cleanupIpcClient();
@@ -776,7 +776,7 @@ ServerApp::mainLoop()
 
 void ServerApp::reset_server()
 {
-    LOG(CLOG_DEBUG1 "resetting server");
+    LOG_DEBUG1("resetting server");
     stopServer();
     cleanupServer();
     startServer();
@@ -861,7 +861,7 @@ ServerApp::startNode()
 {
     // start the server.  if this return false then we've failed and
     // we shouldn't retry.
-    LOG(CLOG_DEBUG1 "starting server");
+    LOG_DEBUG1("starting server");
     if (!startServer()) {
         m_bye(kExitFailed);
     }

@@ -59,7 +59,7 @@ jobs:
           apt-get update -y
           # software-properties-common is needed for add-apt-repository
           apt-get install -y software-properties-common gpg wget
-          # actions/checkout@v3 wants newer git than what's in default repositories
+          # actions/checkout@v4 wants newer git than what's in default repositories
           add-apt-repository ppa:git-core/ppa
           # InputLeap requires at least CMake 3.12.
           # This mirrors instructions at https://apt.kitware.com
@@ -127,7 +127,7 @@ jobs:
 
       - name: Checkout input-leap
         if: matrix.os == 'ubuntu:18.04'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: input-leap
           submodules: recursive
@@ -199,7 +199,7 @@ jobs:
 
       - name: Upload Artifacts
         if: matrix.os == 'ubuntu:18.04'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: input-leap-${{matrix.name}}
           path: input-leap-${{matrix.name}}.tar.gz
@@ -252,7 +252,7 @@ jobs:
       - name: Cache OpenSSL Universal
         id: cache-openssl
         if: matrix.os == 'macos-12'
-        uses: actions/cache@v3.0.11
+        uses: actions/cache@v4.0.0
         with:
           path: ${{env.OpenSSL_Install_Path}}
           key: macOS-${{matrix.os}}-ssl-${{matrix.arch}}-${{env.OpenSSL_Version}}

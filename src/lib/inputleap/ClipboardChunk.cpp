@@ -85,7 +85,7 @@ int ClipboardChunk::assemble(inputleap::IStream* stream, std::string& dataCached
             return kError;
         }
         else if (s_expectedSize != dataCached.size()) {
-            LOG((CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d", s_expectedSize, dataCached.size()));
+            LOG((CLOG_ERR "corrupted clipboard data, expected size=%zd actual size=%zd", s_expectedSize, dataCached.size()));
             return kError;
         }
         return kFinish;

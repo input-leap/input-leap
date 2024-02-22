@@ -36,3 +36,12 @@ enum {
     kExitConfig       = 4, // cannot read configuration
     kExitSubscription = 5  // subscription error
 };
+
+// From XFuncproto.h
+/* Added in X11R6.9, so available in any version of modular xproto */
+#if __has_attribute(__format__) \
+  || defined(__GNUC__) && ((__GNUC__ * 100 + __GNUC_MINOR__) >= 203)
+# define _X_ATTRIBUTE_PRINTF(x,y) __attribute__((__format__(__printf__,x,y)))
+#else /* not gcc >= 2.3 */
+# define _X_ATTRIBUTE_PRINTF(x,y)
+#endif

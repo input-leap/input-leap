@@ -58,6 +58,11 @@ endif()
 
 set (libs)
 
+include(CheckCXXCompilerFlag)
+check_cxx_compiler_flag (-Wformat HAVE_WFORMAT)
+if (HAVE_WFORMAT)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat")
+endif()
 
 if (INPUTLEAP_BUILD_GUI)
     if (QT_DEFAULT_MAJOR_VERSION EQUAL 5)

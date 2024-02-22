@@ -1063,7 +1063,7 @@ OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 			 x + bogusZoneSize > m_x + m_w - m_xCenter ||
 			-y + bogusZoneSize > m_yCenter - m_y ||
 			 y + bogusZoneSize > m_y + m_h - m_yCenter) {
-			LOG((CLOG_DEBUG "dropped bogus motion %+d,%+d", x, y));
+			LOG((CLOG_DEBUG "dropped bogus motion %+.2f,%+.2f", x, y));
 		}
 		else {
 			// send motion
@@ -1829,7 +1829,7 @@ OSXScreen::handleCGInputEventSecondary(
 		CGPoint pos = CGEventGetLocation(event);
 		if (pos.x != screen->m_xCenter || pos.y != screen->m_yCenter) {
 
-			LOG((CLOG_DEBUG "show cursor on secondary, type=%d pos=%d,%d",
+			LOG((CLOG_DEBUG "show cursor on secondary, type=%d pos=%.2f,%.2f",
 					type, pos.x, pos.y));
 			screen->showCursor();
 		}

@@ -560,10 +560,10 @@ ServerProxy::setClipboard()
 
     if (r == kStart) {
         size_t size = ClipboardChunk::getExpectedSize();
-        LOG((CLOG_DEBUG "receiving clipboard %d size=%d", id, size));
+        LOG((CLOG_DEBUG "receiving clipboard %d size=%zd", id, size));
     }
     else if (r == kFinish) {
-        LOG((CLOG_DEBUG "received clipboard %d size=%d", id, dataCached.size()));
+        LOG((CLOG_DEBUG "received clipboard %d size=%zd", id, dataCached.size()));
 
         // forward
         Clipboard clipboard;
@@ -806,7 +806,7 @@ ServerProxy::setOptions()
     // parse
     OptionsList options;
     ProtocolUtil::readf(m_stream, kMsgDSetOptions + 4, &options);
-    LOG((CLOG_DEBUG1 "recv set options size=%d", options.size()));
+    LOG((CLOG_DEBUG1 "recv set options size=%zd", options.size()));
 
     // forward
     m_client->setOptions(options);

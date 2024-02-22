@@ -545,7 +545,7 @@ void EiScreen::on_pointer_scroll_event(ei_event* event)
     assert(!std::isnan(x) && !std::isinf(x));
     assert(!std::isnan(y) && !std::isinf(y));
 
-    LOG((CLOG_DEBUG1 "event: xy is (%d, %df)", x, y));
+    LOG((CLOG_DEBUG1 "event: xy is (%.2f, %.2f)", x, y));
 
     // libEI and InputLeap seem to use opposite directions, so we have
     // to send the opposite of the value reported by EI if we want to

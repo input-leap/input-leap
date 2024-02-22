@@ -42,7 +42,7 @@ OSXClipboard::OSXClipboard() :
     OSStatus createErr = PasteboardCreate(kPasteboardClipboard, &m_pboard);
     if (createErr != noErr) {
         LOG((CLOG_DEBUG "failed to create clipboard reference: error %i", createErr));
-        LOG((CLOG_ERR "unable to connect to pasteboard, clipboard sharing disabled", createErr));
+        LOG((CLOG_ERR "unable to connect to pasteboard, clipboard sharing disabled"));
         m_pboard = nullptr;
         return;
 
@@ -95,7 +95,7 @@ void OSXClipboard::add(EFormat format, const std::string& data)
     if (m_pboard == nullptr)
         return;
 
-    LOG((CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(), format));
+    LOG((CLOG_DEBUG "add %zd bytes to clipboard format: %d", data.size(), format));
     if (format == IClipboard::kText) {
         LOG((CLOG_DEBUG " format of data to be added to clipboard was kText"));
     }
@@ -126,7 +126,7 @@ void OSXClipboard::add(EFormat format, const std::string& data)
                 dataRef,
                 kPasteboardFlavorNoFlags);
 
-            LOG((CLOG_DEBUG "added %d bytes to clipboard format: %d", data.size(), format));
+            LOG((CLOG_DEBUG "added %zd bytes to clipboard format: %d", data.size(), format));
         }
 
     }

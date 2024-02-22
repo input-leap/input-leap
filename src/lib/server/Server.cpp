@@ -1477,7 +1477,7 @@ void Server::onClipboardChanged(BaseClientProxy* sender, ClipboardID id, std::ui
 	// ignore if data hasn't changed
     std::string data = clipboard.m_clipboard.marshall();
 	if (data.size() > m_maximumClipboardSize) {
-		LOG((CLOG_NOTE "not updating clipboard because it's over the size limit (%i KB) configured by the server",
+		LOG((CLOG_NOTE "not updating clipboard because it's over the size limit (%zi KB) configured by the server",
 			m_maximumClipboardSize));
 		return;
 	}
@@ -1806,7 +1806,7 @@ Server::sendDragInfo(BaseClientProxy* newScreen)
 
 		LOG((CLOG_DEBUG2 "sending drag information to client"));
 		LOG((CLOG_DEBUG3 "dragging file list: %s", info));
-		LOG((CLOG_DEBUG3 "dragging file list string size: %i", size));
+		LOG((CLOG_DEBUG3 "dragging file list string size: %zi", size));
 		newScreen->sendDragInfo(fileCount, info, size);
 	}
 }

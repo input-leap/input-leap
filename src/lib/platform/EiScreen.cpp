@@ -127,19 +127,19 @@ void EiScreen::handle_ei_log_event(ei* ei,
 {
     switch (priority) {
         case EI_LOG_PRIORITY_DEBUG:
-            LOG((CLOG_DEBUG "ei: %s", message));
+            LOG_DEBUG("ei: %s", message);
             break;
         case EI_LOG_PRIORITY_INFO:
-            LOG((CLOG_INFO "ei: %s", message));
+            LOG_INFO("ei: %s", message);
             break;
         case EI_LOG_PRIORITY_WARNING:
-            LOG((CLOG_WARN "ei: %s", message));
+            LOG_WARN("ei: %s", message);
             break;
         case EI_LOG_PRIORITY_ERROR:
-            LOG((CLOG_ERR "ei: %s", message));
+            LOG_ERR("ei: %s", message);
             break;
         default:
-            LOG((CLOG_PRINT "ei: %s", message));
+            LOG_PRINT("ei: %s", message);
             break;
     }
 }

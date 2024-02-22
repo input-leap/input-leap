@@ -44,6 +44,7 @@ private:
     void cb_init_remote_desktop_session(GObject* object, GAsyncResult* res);
     void cb_session_started(GObject* object, GAsyncResult* res);
     void cb_session_closed(XdpSession* session);
+    void reconnect(unsigned int timeout=1000);
 
     /// g_signal_connect callback wrapper
     static void cb_session_closed_cb(XdpSession* session, gpointer data)
@@ -58,12 +59,14 @@ private:
     IEventQueue* events_;
 
     Thread* glib_thread_;
-    GMainLoop* glib_main_loop_;
+    GMainLoop* glib_main_loop_ = nullptr;
 
-    XdpPortal* portal_;
-    XdpSession* session_;
+    XdpPortal* portal_ = nullptr;
+    XdpSession* session_ = nullptr;
+    char *session_restore_token_ = nullptr;
 
-    guint session_signal_id_;
+    guint session_signal_id_ = 0;
+    guint session_iteration_ = 0; /// The number of successful sessions we've had already
 };
 
 } // namespace inputleap

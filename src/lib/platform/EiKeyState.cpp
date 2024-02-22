@@ -42,14 +42,10 @@ EiKeyState::EiKeyState(EiScreen* screen, IEventQueue* events) :
 
 void EiKeyState::init_default_keymap()
 {
-    const struct xkb_rule_names names = {
-        nullptr, nullptr, nullptr, nullptr, nullptr // Use libxkbcommon compile-time defaults/env vars
-    };
-
     if (xkb_keymap_) {
         xkb_keymap_unref(xkb_keymap_);
     }
-    xkb_keymap_ = xkb_keymap_new_from_names(xkb_, &names, XKB_KEYMAP_COMPILE_NO_FLAGS);
+    xkb_keymap_ = xkb_keymap_new_from_names(xkb_, nullptr, XKB_KEYMAP_COMPILE_NO_FLAGS);
 
     if (xkb_state_) {
         xkb_state_unref(xkb_state_);

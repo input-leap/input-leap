@@ -127,6 +127,11 @@ enum class EventType : std::uint32_t {
     */
     EI_SCREEN_CONNECTED_TO_EIS,
 
+    /** This event is sent whenever the portal session managing our EIS connection
+        is closed.
+    */
+    EI_SESSION_CLOSED,
+
     /// This event is sent whenever a server accepts a client.
     CLIENT_LISTENER_ACCEPTED,
 

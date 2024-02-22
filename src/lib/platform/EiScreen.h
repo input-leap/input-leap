@@ -91,6 +91,7 @@ protected:
     // IPlatformScreen overrides
     void handle_system_event(const Event& event) override;
     void handle_connected_to_eis_event(const Event& event);
+    void handle_portal_session_closed(const Event &event);
     void updateButtons() override;
     IKeyState* getKeyState() const override;
 
@@ -99,6 +100,8 @@ protected:
     void remove_device(ei_device* device);
 
 private:
+    void init_ei();
+    void cleanup_ei();
     void send_event(EventType type, EventDataBase* data);
     ButtonID map_button_from_evdev(ei_event* event) const;
     void on_key_event(ei_event *event);
@@ -140,6 +143,8 @@ private:
     ei_device* ei_keyboard_ = nullptr;
     ei_device* ei_abs_ = nullptr;
 
+    std::uint32_t sequence_number_ = 0;
+
     std::uint32_t x_ = 0;
     std::uint32_t y_ = 0;
     std::uint32_t w_ = 0;
@@ -154,9 +159,9 @@ private:
 
     mutable std::mutex mutex_;
 
-    PortalRemoteDesktop* portal_remote_desktop_;
+    PortalRemoteDesktop* portal_remote_desktop_ = nullptr;
 #if HAVE_LIBPORTAL_INPUTCAPTURE
-    PortalInputCapture* portal_input_capture_;
+    PortalInputCapture* portal_input_capture_ = nullptr;
 #endif
 
     struct HotKeyItem {

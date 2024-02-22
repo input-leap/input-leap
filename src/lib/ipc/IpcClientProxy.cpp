@@ -60,13 +60,13 @@ IpcClientProxy::~IpcClientProxy()
 void IpcClientProxy::handle_disconnect()
 {
     disconnect();
-    LOG((CLOG_DEBUG "ipc client disconnected"));
+    LOG_DEBUG("ipc client disconnected");
 }
 
 void IpcClientProxy::handle_write_error()
 {
     disconnect();
-    LOG((CLOG_DEBUG "ipc client write error"));
+    LOG_DEBUG("ipc client write error");
 }
 
 void IpcClientProxy::handle_data()
@@ -74,14 +74,14 @@ void IpcClientProxy::handle_data()
     // don't allow the dtor to destroy the stream while we're using it.
     std::lock_guard<std::mutex> lock(m_readMutex);
 
-    LOG((CLOG_DEBUG "start ipc handle data"));
+    LOG_DEBUG("start ipc handle data");
 
     std::uint8_t code[4];
     std::uint32_t n = stream_->read(code, 4);
     while (n != 0) {
 
-        LOG((CLOG_DEBUG "ipc read: %c%c%c%c",
-            code[0], code[1], code[2], code[3]));
+        LOG_DEBUG("ipc read: %c%c%c%c",
+            code[0], code[1], code[2], code[3]);
 
         EventDataBase* event_data = nullptr;
         if (memcmp(code, kIpcMsgHello, 4) == 0) {
@@ -91,7 +91,7 @@ void IpcClientProxy::handle_data()
             event_data = create_event_data<IpcCommandMessage>(parseCommand());
         }
         else {
-            LOG((CLOG_ERR "invalid ipc message"));
+            LOG_ERR("invalid ipc message");
             disconnect();
         }
 
@@ -100,7 +100,7 @@ void IpcClientProxy::handle_data()
         n = stream_->read(code, 4);
     }
 
-    LOG((CLOG_DEBUG "finished ipc handle data"));
+    LOG_DEBUG("finished ipc handle data");
 }
 
 void
@@ -111,7 +111,7 @@ IpcClientProxy::send(const IpcMessage& message)
     // also, don't allow the dtor to destroy the stream while we're using it.
     std::lock_guard<std::mutex> lock(m_writeMutex);
 
-    LOG((CLOG_DEBUG4 "ipc write: %d", message.type()));
+    LOG_DEBUG4("ipc write: %d", message.type());
 
     switch (message.type()) {
     case kIpcLogLine: {
@@ -126,7 +126,7 @@ IpcClientProxy::send(const IpcMessage& message)
         break;
 
     default:
-        LOG((CLOG_ERR "ipc message not supported: %d", message.type()));
+        LOG_ERR("ipc message not supported: %d", message.type());
         break;
     }
 }
@@ -155,7 +155,7 @@ IpcCommandMessage IpcClientProxy::parseCommand()
 void
 IpcClientProxy::disconnect()
 {
-    LOG((CLOG_DEBUG "ipc disconnect, closing stream"));
+    LOG_DEBUG("ipc disconnect, closing stream");
     m_disconnecting = true;
     stream_->close();
     m_events->add_event(EventType::IPC_CLIENT_PROXY_DISCONNECTED, this);

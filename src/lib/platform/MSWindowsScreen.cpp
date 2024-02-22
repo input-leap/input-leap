@@ -138,8 +138,8 @@ MSWindowsScreen::MSWindowsScreen(
         m_class       = createWindowClass();
         m_window      = createWindow(m_class, "InputLeap");
         forceShowCursor();
-        LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : ""));
-        LOG((CLOG_DEBUG "window is 0x%08x", m_window));
+        LOG_DEBUG("screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : "");
+        LOG_DEBUG("window is 0x%08x", m_window);
 
         OleInitialize(0);
         m_dropWindow = createDropWindow(m_class, "DropWindow");
@@ -319,7 +319,7 @@ MSWindowsScreen::leave()
     if (m_isPrimary) {
 
         // warp to center
-        LOG((CLOG_DEBUG1 "warping cursor to center: %+d, %+d", m_xCenter, m_yCenter));
+        LOG_DEBUG1("warping cursor to center: %+d, %+d", m_xCenter, m_yCenter);
         warpCursor(m_xCenter, m_yCenter);
 
         // disable special key sequences on win95 family
@@ -338,7 +338,7 @@ MSWindowsScreen::leave()
         for (KeyButton i = 0; i < IKeyState::kNumButtons; ++i) {
             if (m_keyState->isKeyDown(i)) {
                 m_primaryKeyDownList.push_back(i);
-                LOG((CLOG_DEBUG1 "key button %d is down before leaving to another screen", i));
+                LOG_DEBUG1("key button %d is down before leaving to another screen", i);
             }
         }
     }
@@ -363,9 +363,9 @@ void MSWindowsScreen::send_drag_thread()
         ClientApp& app = ClientApp::instance();
         Client* client = app.getClientPtr();
         std::uint32_t fileCount = 1;
-        LOG((CLOG_DEBUG "send dragging info to server: %s", draggingFilename.c_str()));
+        LOG_DEBUG("send dragging info to server: %s", draggingFilename.c_str());
         client->sendDragInfo(fileCount, draggingFilename, size);
-        LOG((CLOG_DEBUG "send dragging file to server"));
+        LOG_DEBUG("send dragging file to server");
         client->sendFileToServer(draggingFilename.c_str());
     }
 
@@ -406,7 +406,7 @@ MSWindowsScreen::checkClipboards()
     // won't be reflected on other screens until we leave but at
     // least the clipboard itself will work.
     if (m_ownClipboard && !MSWindowsClipboard::is_owned_by_us()) {
-        LOG((CLOG_DEBUG "clipboard changed: lost ownership and no notification received"));
+        LOG_DEBUG("clipboard changed: lost ownership and no notification received");
         m_ownClipboard = false;
         sendClipboardEvent(EventType::CLIPBOARD_GRABBED, kClipboardClipboard);
         sendClipboardEvent(EventType::CLIPBOARD_GRABBED, kClipboardSelection);
@@ -511,7 +511,7 @@ void MSWindowsScreen::reconfigure(std::uint32_t activeSides)
 {
     assert(m_isPrimary);
 
-    LOG((CLOG_DEBUG "active sides: %x", activeSides));
+    LOG_DEBUG("active sides: %x", activeSides);
     m_hook.setSides(activeSides);
 }
 
@@ -535,7 +535,7 @@ void MSWindowsScreen::saveMousePosition(std::int32_t x, std::int32_t y) {
     m_xCursor = x;
     m_yCursor = y;
 
-    LOG((CLOG_DEBUG5 "saved mouse position for next delta: %+d,%+d", x,y));
+    LOG_DEBUG5("saved mouse position for next delta: %+d,%+d", x,y);
 }
 
 std::uint32_t MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
@@ -545,7 +545,7 @@ std::uint32_t MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
                   KeyModifierAlt   | KeyModifierSuper)) != 0) {
         // this should be a warning, but this can confuse users,
         // as this warning happens almost always.
-        LOG((CLOG_DEBUG "could not map hotkey id=%04x mask=%04x", key, mask));
+        LOG_DEBUG("could not map hotkey id=%04x mask=%04x", key, mask);
         return 0;
     }
 
@@ -573,7 +573,7 @@ std::uint32_t MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
         // can't map key
         // this should be a warning, but this can confuse users,
         // as this warning happens almost always.
-        LOG((CLOG_DEBUG "could not map hotkey id=%04x mask=%04x", key, mask));
+        LOG_DEBUG("could not map hotkey id=%04x mask=%04x", key, mask);
         return 0;
     }
 
@@ -606,11 +606,11 @@ std::uint32_t MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
     else {
         m_oldHotKeyIDs.push_back(id);
         m_hotKeys.erase(id);
-        LOG((CLOG_WARN "failed to register hotkey %s (id=%04x mask=%04x)", inputleap::KeyMap::formatKey(key, mask).c_str(), key, mask));
+        LOG_WARN("failed to register hotkey %s (id=%04x mask=%04x)", inputleap::KeyMap::formatKey(key, mask).c_str(), key, mask);
         return 0;
     }
 
-    LOG((CLOG_DEBUG "registered hotkey %s (id=%04x mask=%04x) as id=%d", inputleap::KeyMap::formatKey(key, mask).c_str(), key, mask, id));
+    LOG_DEBUG("registered hotkey %s (id=%04x mask=%04x) as id=%d", inputleap::KeyMap::formatKey(key, mask).c_str(), key, mask, id);
     return id;
 }
 
@@ -631,10 +631,10 @@ void MSWindowsScreen::unregisterHotKey(std::uint32_t id)
         err = false;
     }
     if (err) {
-        LOG((CLOG_WARN "failed to unregister hotkey id=%d", id));
+        LOG_WARN("failed to unregister hotkey id=%d", id);
     }
     else {
-        LOG((CLOG_DEBUG "unregistered hotkey id=%d", id));
+        LOG_DEBUG("unregistered hotkey id=%d", id);
     }
 
     // discard hot key from map and record old id for reuse
@@ -684,7 +684,7 @@ bool MSWindowsScreen::isAnyMouseButtonDown(std::uint32_t& buttonID) const
     for (std::uint32_t i = 1; i < sizeof(m_buttons) / sizeof(m_buttons[0]); ++i) {
         if (m_buttons[i]) {
             buttonID = i;
-            LOG((CLOG_DEBUG "locked by \"%s\"", buttonToName[i]));
+            LOG_DEBUG("locked by \"%s\"", buttonToName[i]);
             return true;
         }
     }
@@ -836,7 +836,7 @@ MSWindowsScreen::createWindow(ATOM windowClass, const char* name) const
                                 s_windowInstance,
                                 nullptr);
     if (window == nullptr) {
-        LOG((CLOG_ERR "failed to create window: %d", GetLastError()));
+        LOG_ERR("failed to create window: %d", GetLastError());
         throw XScreenOpenFailure();
     }
     return window;
@@ -855,7 +855,7 @@ MSWindowsScreen::createDropWindow(ATOM windowClass, const char* name) const
                                  nullptr);
 
     if (window == nullptr) {
-        LOG((CLOG_ERR "failed to create drop window: %d", GetLastError()));
+        LOG_ERR("failed to create drop window: %d", GetLastError());
         throw XScreenOpenFailure();
     }
 
@@ -928,7 +928,7 @@ MSWindowsScreen::onPreDispatch(HWND hwnd,
         return onScreensaver(wParam != 0);
 
     case INPUTLEAP_MSG_DEBUG:
-        LOG((CLOG_DEBUG1 "hook: 0x%08x 0x%08x", wParam, lParam));
+        LOG_DEBUG1("hook: 0x%08x 0x%08x", wParam, lParam);
         return true;
     }
 
@@ -943,7 +943,7 @@ bool
 MSWindowsScreen::onPreDispatchPrimary(HWND,
                 UINT message, WPARAM wParam, LPARAM lParam)
 {
-    LOG((CLOG_DEBUG5 "handling pre-dispatch primary"));
+    LOG_DEBUG5("handling pre-dispatch primary");
 
     // handle event
     switch (message) {
@@ -981,7 +981,7 @@ MSWindowsScreen::onPreDispatchPrimary(HWND,
         return true;
 
     case INPUTLEAP_MSG_POST_WARP:
-        LOG((CLOG_WARN "unmatched post warp"));
+        LOG_WARN("unmatched post warp");
         return true;
 
     case WM_HOTKEY:
@@ -1012,7 +1012,7 @@ MSWindowsScreen::onEvent(HWND, UINT msg,
     case WM_CHANGECBCHAIN:
         if (m_nextClipboardWindow == (HWND)wParam) {
             m_nextClipboardWindow = (HWND)lParam;
-            LOG((CLOG_DEBUG "clipboard chain: new next: 0x%08x", m_nextClipboardWindow));
+            LOG_DEBUG("clipboard chain: new next: 0x%08x", m_nextClipboardWindow);
         }
         else if (m_nextClipboardWindow != nullptr) {
             SendMessage(m_nextClipboardWindow, msg, wParam, lParam);
@@ -1065,7 +1065,7 @@ MSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
     static const KeyModifierMask s_ctrlAlt =
         KeyModifierControl | KeyModifierAlt;
 
-    LOG((CLOG_DEBUG1 "event: Key char=%d, vk=0x%02x, nagr=%d, lParam=0x%08x", wParam & 0xffffu, (wParam >> 16) & 0xffu, (wParam & 0x1000000u) ? 1 : 0, lParam));
+    LOG_DEBUG1("event: Key char=%d, vk=0x%02x, nagr=%d, lParam=0x%08x", wParam & 0xffffu, (wParam >> 16) & 0xffu, (wParam & 0x1000000u) ? 1 : 0, lParam);
 
     // get event info
     KeyButton button         = (KeyButton)((lParam & 0x01ff0000) >> 16);
@@ -1096,7 +1096,7 @@ MSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
     if (!down && m_isPrimary && !m_isOnScreen) {
         PrimaryKeyDownList::iterator find = std::find(m_primaryKeyDownList.begin(), m_primaryKeyDownList.end(), button);
         if (find != m_primaryKeyDownList.end()) {
-            LOG((CLOG_DEBUG1 "release key button %d on primary", *find));
+            LOG_DEBUG1("release key button %d on primary", *find);
             m_hook.setMode(kHOOK_WATCH_JUMP_ZONE);
             fakeLocalKey(*find, false);
             m_primaryKeyDownList.erase(find);
@@ -1151,14 +1151,14 @@ MSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
         // client.  the user can use ctrl+alt+pause to emulate it.
         UINT virtKey = (wParam >> 16) & 0xffu;
         if (virtKey == VK_DELETE && (state & s_ctrlAlt) == s_ctrlAlt) {
-            LOG((CLOG_DEBUG "discard ctrl+alt+del"));
+            LOG_DEBUG("discard ctrl+alt+del");
             return true;
         }
 
         // check for ctrl+alt+del emulation
         if ((virtKey == VK_PAUSE || virtKey == VK_CANCEL) &&
             (state & s_ctrlAlt) == s_ctrlAlt) {
-            LOG((CLOG_DEBUG "emulate ctrl+alt+del"));
+            LOG_DEBUG("emulate ctrl+alt+del");
             // switch wParam and lParam to be as if VK_DELETE was
             // pressed or released.  when mapping the key we require that
             // we not use AltGr (the 0x10000 flag in wParam) and we not
@@ -1181,7 +1181,7 @@ MSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
                             key, mask, (std::int32_t)(lParam & 0xffff), button);
         }
         else {
-            LOG((CLOG_DEBUG1 "cannot map key"));
+            LOG_DEBUG1("cannot map key");
         }
     }
 
@@ -1248,7 +1248,7 @@ MSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
             m_buttons[button] = true;
             if (button == kButtonLeft) {
                 m_draggingFilename.clear();
-                LOG((CLOG_DEBUG2 "dragging filename is cleared"));
+                LOG_DEBUG2("dragging filename is cleared");
             }
         }
         else {
@@ -1263,14 +1263,14 @@ MSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
     if (!ignore()) {
         KeyModifierMask mask = m_keyState->getActiveModifiers();
         if (pressed) {
-            LOG((CLOG_DEBUG1 "event: button press button=%d", button));
+            LOG_DEBUG1("event: button press button=%d", button);
             if (button != kButtonNone) {
                 sendEvent(EventType::PRIMARY_SCREEN_BUTTON_DOWN,
                           create_event_data<ButtonInfo>(ButtonInfo{button, mask}));
             }
         }
         else {
-            LOG((CLOG_DEBUG1 "event: button release button=%d", button));
+            LOG_DEBUG1("event: button release button=%d", button);
             if (button != kButtonNone) {
                 sendEvent(EventType::PRIMARY_SCREEN_BUTTON_UP,
                           create_event_data<ButtonInfo>(ButtonInfo{button, mask}));
@@ -1296,9 +1296,9 @@ bool MSWindowsScreen::onMouseMove(std::int32_t mx, std::int32_t my)
     std::int32_t x = mx - m_xCursor;
     std::int32_t y = my - m_yCursor;
 
-    LOG((CLOG_DEBUG3
+    LOG_DEBUG3(
         "mouse move - motion delta: %+d=(%+d - %+d),%+d=(%+d - %+d)",
-        x, mx, m_xCursor, y, my, m_yCursor));
+        x, mx, m_xCursor, y, my, m_yCursor);
 
     // ignore if the mouse didn't move or if message posted prior
     // to last mark change.
@@ -1325,7 +1325,7 @@ bool MSWindowsScreen::onMouseMove(std::int32_t mx, std::int32_t my)
         // center on the server screen. if we don't do this, then the mouse
         // will always try to return to the original entry point on the
         // secondary screen.
-        LOG((CLOG_DEBUG5 "warping server cursor to center: %+d,%+d", m_xCenter, m_yCenter));
+        LOG_DEBUG5("warping server cursor to center: %+d,%+d", m_xCenter, m_yCenter);
         warpCursorNoFlush(m_xCenter, m_yCenter);
 
         // examine the motion.  if it's about the distance
@@ -1339,7 +1339,7 @@ bool MSWindowsScreen::onMouseMove(std::int32_t mx, std::int32_t my)
             -y + bogusZoneSize > m_yCenter - m_y ||
              y + bogusZoneSize > m_y + m_h - m_yCenter) {
 
-            LOG((CLOG_DEBUG "dropped bogus delta motion: %+d,%+d", x, y));
+            LOG_DEBUG("dropped bogus delta motion: %+d,%+d", x, y);
         }
         else {
             // send motion
@@ -1355,7 +1355,7 @@ bool MSWindowsScreen::onMouseWheel(std::int32_t xDelta, std::int32_t yDelta)
 {
     // ignore message if posted prior to last mark change
     if (!ignore()) {
-        LOG((CLOG_DEBUG1 "event: button wheel delta=%+d,%+d", xDelta, yDelta));
+        LOG_DEBUG1("event: button wheel delta=%+d,%+d", xDelta, yDelta);
         sendEvent(EventType::PRIMARY_SCREEN_WHEEL,
                   create_event_data<WheelInfo>(WheelInfo{xDelta, yDelta}));
     }
@@ -1417,7 +1417,7 @@ MSWindowsScreen::onDisplayChange()
             // warp mouse to center if off screen
             if (!m_isOnScreen) {
 
-                LOG((CLOG_DEBUG1 "warping cursor to center: %+d, %+d", m_xCenter, m_yCenter));
+                LOG_DEBUG1("warping cursor to center: %+d, %+d", m_xCenter, m_yCenter);
                 warpCursor(m_xCenter, m_yCenter);
             }
 
@@ -1430,7 +1430,7 @@ MSWindowsScreen::onDisplayChange()
         // send new screen info
         sendEvent(EventType::SCREEN_SHAPE_CHANGED);
 
-        LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : ""));
+        LOG_DEBUG("screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : "");
     }
 
     return true;
@@ -1443,14 +1443,14 @@ MSWindowsScreen::onClipboardChange()
     // we're the owner).
     if (!MSWindowsClipboard::is_owned_by_us()) {
         if (m_ownClipboard) {
-            LOG((CLOG_DEBUG "clipboard changed: lost ownership"));
+            LOG_DEBUG("clipboard changed: lost ownership");
             m_ownClipboard = false;
             sendClipboardEvent(EventType::CLIPBOARD_GRABBED, kClipboardClipboard);
             sendClipboardEvent(EventType::CLIPBOARD_GRABBED, kClipboardSelection);
         }
     }
     else if (!m_ownClipboard) {
-        LOG((CLOG_DEBUG "clipboard changed: got ownership"));
+        LOG_DEBUG("clipboard changed: got ownership");
         m_ownClipboard = true;
     }
 
@@ -1475,8 +1475,8 @@ void MSWindowsScreen::warpCursorNoFlush(std::int32_t x, std::int32_t y)
     // since this feature is mainly for client, so only check on client.
     if (!isPrimary()) {
         if ((cursorPos.x != x) && (cursorPos.y != y)) {
-            LOG((CLOG_DEBUG "SetCursorPos did not work; using fakeMouseMove instead"));
-            LOG((CLOG_DEBUG "cursor pos %d, %d expected pos %d, %d", cursorPos.x, cursorPos.y, x, y));
+            LOG_DEBUG("SetCursorPos did not work; using fakeMouseMove instead");
+            LOG_DEBUG("cursor pos %d, %d expected pos %d, %d", cursorPos.x, cursorPos.y, x, y);
             // when at Vista/7 login screen, SetCursorPos does not work (which could be
             // an MS security feature). instead we can use fakeMouseMove, which calls
             // mouse_event.
@@ -1858,12 +1858,12 @@ std::string& MSWindowsScreen::getDraggingFilename()
                 m_draggingFilename = filename;
             }
             else {
-                LOG((CLOG_ERR "drag file name is invalid: %s", filename.c_str()));
+                LOG_ERR("drag file name is invalid: %s", filename.c_str());
             }
         }
 
         if (m_draggingFilename.empty()) {
-            LOG((CLOG_ERR "failed to get drag file name from OLE"));
+            LOG_ERR("failed to get drag file name from OLE");
         }
     }
 
@@ -1878,10 +1878,10 @@ MSWindowsScreen::getDropTarget() const
         char desktopPath[MAX_PATH];
         if (SUCCEEDED(SHGetFolderPath(nullptr, CSIDL_DESKTOP, nullptr, 0, desktopPath))) {
             m_dropTargetPath = std::string(desktopPath);
-            LOG((CLOG_INFO "using desktop for drop target: %s", m_dropTargetPath.c_str()));
+            LOG_INFO("using desktop for drop target: %s", m_dropTargetPath.c_str());
         }
         else {
-            LOG((CLOG_ERR "failed to get desktop path, no drop target available, error=%d", GetLastError()));
+            LOG_ERR("failed to get desktop path, no drop target available, error=%d", GetLastError());
         }
     }
     return m_dropTargetPath;

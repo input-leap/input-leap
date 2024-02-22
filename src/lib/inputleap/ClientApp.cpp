@@ -100,8 +100,8 @@ ClientApp::parseArgs(int argc, const char* const* argv)
                 // server.  a bad port will never get better.  patch by Brent
                 // Priddy.
                 if (!args().m_restartable || e.getError() == XSocketAddress::kBadPort) {
-                    LOG((CLOG_PRINT "%s: %s" BYE,
-                        args().m_exename.c_str(), e.what(), args().m_exename.c_str()));
+                    LOG_PRINT("%s: %s" BYE,
+                        args().m_exename.c_str(), e.what(), args().m_exename.c_str());
                     m_bye(kExitFailed);
                 }
             }
@@ -148,7 +148,7 @@ ClientApp::help()
            << "an IPv6 address is required when also specifying a port number and \n"
            << "optional otherwise. The default port number is " << kDefaultPort << ".\n";
 
-    LOG((CLOG_PRINT "%s", buffer.str().c_str()));
+    LOG_PRINT("%s", buffer.str().c_str());
 }
 
 const char*
@@ -229,7 +229,7 @@ ClientApp::nextRestartTimeout()
 
 void ClientApp::handle_screen_error()
 {
-    LOG((CLOG_CRIT "error on screen"));
+    LOG_CRIT("error on screen");
     m_events->add_event(EventType::QUIT);
 }
 
@@ -262,7 +262,7 @@ void
 ClientApp::scheduleClientRestart(double retryTime)
 {
     // install a timer and handler to retry later
-    LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
+    LOG_DEBUG("retry in %.0f seconds", retryTime);
     EventQueueTimer* timer = m_events->newOneShotTimer(retryTime, nullptr);
     m_events->add_handler(EventType::TIMER, timer,
                           [this, timer](const Event& event) { handle_client_restart(event, timer); });
@@ -273,7 +273,7 @@ void ClientApp::handle_client_connected()
 {
     // using CLOG_PRINT here allows the GUI to see that the client is connected
     // regardless of which log level is set
-    LOG((CLOG_PRINT "connected to server"));
+    LOG_PRINT("connected to server");
     resetRestartTimeout();
     updateStatus();
 }
@@ -285,11 +285,11 @@ void ClientApp::handle_client_failed(const Event& e)
 
     updateStatus(std::string("Failed to connect to server: ") + info.m_what);
     if (!args().m_restartable || !info.m_retry) {
-        LOG((CLOG_ERR "failed to connect to server: %s", info.m_what.c_str()));
+        LOG_ERR("failed to connect to server: %s", info.m_what.c_str());
         m_events->add_event(EventType::QUIT);
     }
     else {
-        LOG((CLOG_WARN "failed to connect to server: %s", info.m_what.c_str()));
+        LOG_WARN("failed to connect to server: %s", info.m_what.c_str());
         if (!m_suspended) {
             scheduleClientRestart(nextRestartTimeout());
         }
@@ -299,7 +299,7 @@ void ClientApp::handle_client_failed(const Event& e)
 
 void ClientApp::handle_client_disconnected()
 {
-    LOG((CLOG_NOTE "disconnected from server"));
+    LOG_NOTE("disconnected from server");
     if (!args().m_restartable) {
         m_events->add_event(EventType::QUIT);
     }
@@ -369,7 +369,7 @@ ClientApp::startClient()
             client_screen = open_client_screen();
             m_client = openClient(args().m_name, *m_serverAddress, client_screen.get());
             m_clientScreen = std::move(client_screen);
-            LOG((CLOG_NOTE "started client"));
+            LOG_NOTE("started client");
         }
 
         m_client->connect();
@@ -378,18 +378,18 @@ ClientApp::startClient()
         return true;
     }
     catch (XScreenUnavailable& e) {
-        LOG((CLOG_WARN "secondary screen unavailable: %s", e.what()));
+        LOG_WARN("secondary screen unavailable: %s", e.what());
         updateStatus(std::string("secondary screen unavailable: ") + e.what());
         m_clientScreen.reset();
         retryTime = e.getRetryTime();
     }
     catch (XScreenOpenFailure& e) {
-        LOG((CLOG_CRIT "failed to start client: %s", e.what()));
+        LOG_CRIT("failed to start client: %s", e.what());
         m_clientScreen.reset();
         return false;
     }
     catch (XBase& e) {
-        LOG((CLOG_CRIT "failed to start client: %s", e.what()));
+        LOG_CRIT("failed to start client: %s", e.what());
         m_clientScreen.reset();
         return false;
     }
@@ -452,10 +452,10 @@ ClientApp::mainLoop()
     DAEMON_RUNNING(false);
 
     // close down
-    LOG((CLOG_DEBUG1 "stopping client"));
+    LOG_DEBUG1("stopping client");
     stopClient();
     updateStatus();
-    LOG((CLOG_NOTE "stopped client"));
+    LOG_NOTE("stopped client");
 
     if (argsBase().m_enableIpc) {
         cleanupIpcClient();
@@ -524,7 +524,7 @@ ClientApp::startNode()
 {
     // start the client.  if this return false then we've failed and
     // we shouldn't retry.
-    LOG((CLOG_DEBUG1 "starting client"));
+    LOG_DEBUG1("starting client");
     if (!startClient()) {
         m_bye(kExitFailed);
     }

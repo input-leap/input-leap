@@ -186,7 +186,7 @@ KeyModifierMask OSXKeyState::mapModifiersFromOSX(std::uint32_t mask) const
         outMask |= KeyModifierNumLock;
     }
 
-    LOG((CLOG_DEBUG1 "mask=%04x outMask=%04x", mask, outMask));
+    LOG_DEBUG1("mask=%04x outMask=%04x", mask, outMask);
     return outMask;
 }
 
@@ -294,7 +294,7 @@ OSXKeyState::mapKeyFromEvent(KeyIDs& ids,
         // translate key
         UniCharCount count;
         UniChar chars[2];
-        LOG((CLOG_DEBUG2 "modifiers: %08x", modifiers & 0xffu));
+        LOG_DEBUG2("modifiers: %08x", modifiers & 0xffu);
         OSStatus status = UCKeyTranslate(layout,
                             vkCode & 0xffu, action,
                             (modifiers >> 8) & 0xffu,
@@ -387,7 +387,7 @@ OSXKeyState::pollActiveModifiers() const
         outMask |= KeyModifierNumLock;
     }
 
-    LOG((CLOG_DEBUG1 "mask=%04x outMask=%04x", mask, outMask));
+    LOG_DEBUG1("mask=%04x outMask=%04x", mask, outMask);
     return outMask;
 }
 
@@ -402,7 +402,7 @@ std::int32_t OSXKeyState::pollActiveGroup() const
         return i->second;
     }
 
-    LOG((CLOG_DEBUG "can't get the active group, use the first group instead"));
+    LOG_DEBUG("can't get the active group, use the first group instead");
 
     return 0;
 }
@@ -456,13 +456,13 @@ OSXKeyState::getKeyMap(inputleap::KeyMap& keyMap)
         if (layoutValid) {
             OSXUchrKeyResource uchr(resource, keyboardType);
             if (uchr.isValid()) {
-                LOG((CLOG_DEBUG1 "using uchr resource for group %d", g));
+                LOG_DEBUG1("using uchr resource for group %d", g);
                 getKeyMap(keyMap, g, uchr);
                 continue;
             }
         }
 
-        LOG((CLOG_DEBUG1 "no keyboard resource for group %d", g));
+        LOG_DEBUG1("no keyboard resource for group %d", g);
     }
 }
 
@@ -594,9 +594,9 @@ OSXKeyState::fakeKey(const Keystroke& keystroke)
         bool keyDown = keystroke.m_data.m_button.m_press;
         CGKeyCode virtualKey = mapKeyButtonToVirtualKey(button);
 
-        LOG((CLOG_DEBUG1
+        LOG_DEBUG1(
             "  button=0x%04x virtualKey=0x%04x keyDown=%s",
-            button, virtualKey, keyDown ? "down" : "up"));
+            button, virtualKey, keyDown ? "down" : "up");
 
         postHIDVirtualKey(virtualKey, keyDown);
 
@@ -606,11 +606,11 @@ OSXKeyState::fakeKey(const Keystroke& keystroke)
     case Keystroke::kGroup: {
         std::int32_t group = keystroke.m_data.m_group.m_group;
         if (keystroke.m_data.m_group.m_absolute) {
-            LOG((CLOG_DEBUG1 "  group %d", group));
+            LOG_DEBUG1("  group %d", group);
             setGroup(group);
         }
         else {
-            LOG((CLOG_DEBUG1 "  group %+d", group));
+            LOG_DEBUG1("  group %+d", group);
             setGroup(getEffectiveGroup(pollActiveGroup(), group));
         }
         break;
@@ -856,7 +856,7 @@ OSXKeyState::getGroups(GroupList& groups) const
     gotLayouts = (n != 0);
 
     if (!gotLayouts) {
-        LOG((CLOG_DEBUG1 "can't get keyboard layouts"));
+        LOG_DEBUG1("can't get keyboard layouts");
         return false;
     }
 

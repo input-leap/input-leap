@@ -63,7 +63,7 @@ void EiKeyState::init(int fd, size_t len)
     auto sz = read(fd, buffer.get(), len);
 
     if ((size_t)sz < len) {
-        LOG((CLOG_NOTE "Failed to create XKB context: %s", strerror(errno)));
+        LOG_NOTE("Failed to create XKB context: %s", strerror(errno));
         return;
     }
 
@@ -76,7 +76,7 @@ void EiKeyState::init(int fd, size_t len)
                                              XKB_KEYMAP_FORMAT_TEXT_V1,
                                              XKB_KEYMAP_COMPILE_NO_FLAGS);
     if (!keymap) {
-        LOG((CLOG_NOTE "Failed to compile keymap, falling back to defaults"));
+        LOG_NOTE("Failed to compile keymap, falling back to defaults");
         // Falling back to layout "us" is a lot more useful than segfaulting
         init_default_keymap();
         return;
@@ -207,7 +207,7 @@ void EiKeyState::getKeyMap(inputleap::KeyMap& keyMap)
                     continue;
 
                 if (nsyms > 1)
-                    LOG((CLOG_WARN " Multiple keysyms per keycode are not supported, keycode %d", keycode));
+                    LOG_WARN(" Multiple keysyms per keycode are not supported, keycode %d", keycode);
 
                 xkb_keysym_t keysym = syms[0];
                 KeySym sym = static_cast<KeyID>(keysym);
@@ -257,9 +257,9 @@ void EiKeyState::fakeKey(const Keystroke& keystroke)
 {
     switch (keystroke.m_type) {
     case Keystroke::kButton:
-        LOG((CLOG_DEBUG1 "  %03x (%08x) %s", keystroke.m_data.m_button.m_button,
+        LOG_DEBUG1("  %03x (%08x) %s", keystroke.m_data.m_button.m_button,
              keystroke.m_data.m_button.m_client,
-             keystroke.m_data.m_button.m_press ? "down" : "up"));
+             keystroke.m_data.m_button.m_press ? "down" : "up");
         screen_->fakeKey(keystroke.m_data.m_button.m_button,
                          keystroke.m_data.m_button.m_press);
         break;
@@ -270,22 +270,22 @@ void EiKeyState::fakeKey(const Keystroke& keystroke)
 
 KeyID EiKeyState::map_key_from_keyval(uint32_t keyval) const
 {
-    LOG((CLOG_DEBUG1 "map_key_from_keyval keyval=%d", keyval));
+    LOG_DEBUG1("map_key_from_keyval keyval=%d", keyval);
 
     // FIXME: That might be a bit crude...?
     xkb_keysym_t xkb_keysym = xkb_state_key_get_one_sym(xkb_state_, keyval);
     KeySym keysym = static_cast<KeySym>(xkb_keysym);
-    LOG((CLOG_DEBUG1 "mapped code=%d to keysym=0x%04lx", keyval, keysym));
+    LOG_DEBUG1("mapped code=%d to keysym=0x%04lx", keyval, keysym);
 
     KeyID keyid = XWindowsUtil::mapKeySymToKeyID(keysym);
-    LOG((CLOG_DEBUG1 "mapped keysym=0x%04lx to keyID=%d", keysym, keyid));
+    LOG_DEBUG1("mapped keysym=0x%04lx to keyID=%d", keysym, keyid);
 
     return keyid;
 }
 
 void EiKeyState::update_xkb_state(uint32_t keyval, bool is_pressed)
 {
-    LOG((CLOG_DEBUG1 "update_xkb_state keyval=%d pressed=%i", keyval, is_pressed));
+    LOG_DEBUG1("update_xkb_state keyval=%d pressed=%i", keyval, is_pressed);
     xkb_state_update_key(xkb_state_, keyval, is_pressed ? XKB_KEY_DOWN : XKB_KEY_UP);
 }
 

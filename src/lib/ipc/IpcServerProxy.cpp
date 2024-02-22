@@ -41,14 +41,14 @@ IpcServerProxy::~IpcServerProxy()
 
 void IpcServerProxy::handle_data()
 {
-    LOG((CLOG_DEBUG "start ipc handle data"));
+    LOG_DEBUG("start ipc handle data");
 
     std::uint8_t code[4];
     std::uint32_t n = m_stream.read(code, 4);
     while (n != 0) {
 
-        LOG((CLOG_DEBUG "ipc read: %c%c%c%c",
-            code[0], code[1], code[2], code[3]));
+        LOG_DEBUG("ipc read: %c%c%c%c",
+            code[0], code[1], code[2], code[3]);
 
         EventDataBase* event_data = nullptr;
         if (memcmp(code, kIpcMsgLogLine, 4) == 0) {
@@ -58,7 +58,7 @@ void IpcServerProxy::handle_data()
             event_data = create_event_data<IpcShutdownMessage>(IpcShutdownMessage{});
         }
         else {
-            LOG((CLOG_ERR "invalid ipc message"));
+            LOG_ERR("invalid ipc message");
             disconnect();
         }
 
@@ -67,13 +67,13 @@ void IpcServerProxy::handle_data()
         n = m_stream.read(code, 4);
     }
 
-    LOG((CLOG_DEBUG "finished ipc handle data"));
+    LOG_DEBUG("finished ipc handle data");
 }
 
 void
 IpcServerProxy::send(const IpcMessage& message)
 {
-    LOG((CLOG_DEBUG4 "ipc write: %d", message.type()));
+    LOG_DEBUG4("ipc write: %d", message.type());
 
     switch (message.type()) {
     case kIpcHello: {
@@ -90,7 +90,7 @@ IpcServerProxy::send(const IpcMessage& message)
     }
 
     default:
-        LOG((CLOG_ERR "ipc message not supported: %d", message.type()));
+        LOG_ERR("ipc message not supported: %d", message.type());
         break;
     }
 }
@@ -107,7 +107,7 @@ IpcLogLineMessage IpcServerProxy::parseLogLine()
 void
 IpcServerProxy::disconnect()
 {
-    LOG((CLOG_DEBUG "ipc disconnect, closing stream"));
+    LOG_DEBUG("ipc disconnect, closing stream");
     m_stream.close();
 }
 

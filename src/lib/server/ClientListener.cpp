@@ -48,7 +48,7 @@ ClientListener::ClientListener(const NetworkAddress& address,
                               [this](const auto& e){ handle_client_connecting(); });
 
         // bind listen address
-        LOG((CLOG_DEBUG1 "binding listen socket"));
+        LOG_DEBUG1("binding listen socket");
         listen_->bind(address);
     }
     catch (XSocketAddressInUse&) {
@@ -61,12 +61,12 @@ ClientListener::ClientListener(const NetworkAddress& address,
         socket_factory_.reset();
         throw;
     }
-    LOG((CLOG_DEBUG1 "listening for clients"));
+    LOG_DEBUG1("listening for clients");
 }
 
 ClientListener::~ClientListener()
 {
-    LOG((CLOG_DEBUG1 "stop listening for clients"));
+    LOG_DEBUG1("stop listening for clients");
 
     // discard already connected clients
     for (NewClients::iterator index = m_newClients.begin();
@@ -135,7 +135,7 @@ void ClientListener::handle_client_connecting()
 
 void ClientListener::handle_client_accepted(IDataSocket* socket_ptr)
 {
-    LOG((CLOG_NOTE "accepted client connection"));
+    LOG_NOTE("accepted client connection");
     auto socket = client_sockets_.erase(socket_ptr);
     if (!socket) {
         throw std::runtime_error("Got more than one CLIENT_LISTENER_ACCEPTED event");

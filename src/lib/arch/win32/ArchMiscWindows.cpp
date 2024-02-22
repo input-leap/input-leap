@@ -435,7 +435,7 @@ ArchMiscWindows::wasLaunchedAsService()
 {
     std::string name;
     if (!getParentProcessName(name)) {
-        LOG((CLOG_ERR "cannot determine if process was launched as service"));
+        LOG_ERR("cannot determine if process was launched as service");
         return false;
     }
 
@@ -446,7 +446,7 @@ bool ArchMiscWindows::getParentProcessName(std::string &name)
 {
     PROCESSENTRY32 parentEntry;
     if (!getParentProcessEntry(parentEntry)) {
-        LOG((CLOG_ERR "could not get entry for parent process"));
+        LOG_ERR("could not get entry for parent process");
         return false;
     }
 
@@ -480,8 +480,8 @@ ArchMiscWindows::getProcessEntry(PROCESSENTRY32& entry, DWORD processID)
     // first we need to take a snapshot of the running processes
     HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
     if (snapshot == INVALID_HANDLE_VALUE) {
-        LOG((CLOG_ERR "could not get process snapshot (error: %i)",
-            GetLastError()));
+        LOG_ERR("could not get process snapshot (error: %i)",
+            GetLastError());
         return FALSE;
     }
 
@@ -491,8 +491,8 @@ ArchMiscWindows::getProcessEntry(PROCESSENTRY32& entry, DWORD processID)
     // unlikely we can go any further
     BOOL gotEntry = Process32First(snapshot, &entry);
     if (!gotEntry) {
-        LOG((CLOG_ERR "could not get first process entry (error: %i)",
-            GetLastError()));
+        LOG_ERR("could not get first process entry (error: %i)",
+            GetLastError());
         return FALSE;
     }
 

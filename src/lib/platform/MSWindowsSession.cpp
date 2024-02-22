@@ -40,7 +40,7 @@ MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = nullptr
     // first we need to take a snapshot of the running processes
     HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
     if (snapshot == INVALID_HANDLE_VALUE) {
-        LOG((CLOG_ERR "could not get process snapshot"));
+        LOG_ERR("could not get process snapshot");
         throw std::runtime_error(error_code_to_string_windows(GetLastError()));
     }
 
@@ -51,7 +51,7 @@ MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = nullptr
     // unlikely we can go any further
     BOOL gotEntry = Process32First(snapshot, &entry);
     if (!gotEntry) {
-        LOG((CLOG_ERR "could not get first process entry"));
+        LOG_ERR("could not get first process entry");
         throw std::runtime_error(error_code_to_string_windows(GetLastError()));
     }
 
@@ -72,7 +72,7 @@ MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = nullptr
             if (!pidToSidRet) {
                 // if we can not acquire session associated with a specified process,
                 // simply ignore it
-                LOG((CLOG_ERR "could not get session id for process id %i", entry.th32ProcessID));
+                LOG_ERR("could not get session id for process id %i", entry.th32ProcessID);
                 gotEntry = nextProcessEntry(snapshot, &entry);
                 continue;
             }
@@ -102,21 +102,21 @@ MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = nullptr
             nameListJoin.append(", ");
     }
 
-    LOG((CLOG_DEBUG "processes in session %d: %s",
-        m_activeSessionId, nameListJoin.c_str()));
+    LOG_DEBUG("processes in session %d: %s",
+        m_activeSessionId, nameListJoin.c_str());
 
     CloseHandle(snapshot);
 
     if (pid) {
         if (process != nullptr) {
             // now get the process, which we'll use to get the process token.
-            LOG((CLOG_DEBUG "found %s in session %i", name, m_activeSessionId));
+            LOG_DEBUG("found %s in session %i", name, m_activeSessionId);
             *process = OpenProcess(MAXIMUM_ALLOWED, FALSE, pid);
         }
         return true;
     }
     else {
-        LOG((CLOG_DEBUG "did not find %s in session %i", name, m_activeSessionId));
+        LOG_DEBUG("did not find %s in session %i", name, m_activeSessionId);
         return false;
     }
 }
@@ -126,7 +126,7 @@ MSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security)
 {
     HANDLE sourceToken;
     if (!WTSQueryUserToken(m_activeSessionId, &sourceToken)) {
-        LOG((CLOG_ERR "could not get token from session %d", m_activeSessionId));
+        LOG_ERR("could not get token from session %d", m_activeSessionId);
         throw std::runtime_error(error_code_to_string_windows(GetLastError()));
     }
 
@@ -135,11 +135,11 @@ MSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security)
         sourceToken, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS, security,
         SecurityImpersonation, TokenPrimary, &newToken)) {
 
-        LOG((CLOG_ERR "could not duplicate token"));
+        LOG_ERR("could not duplicate token");
         throw std::runtime_error(error_code_to_string_windows(GetLastError()));
     }
 
-    LOG((CLOG_DEBUG "duplicated, new token: %i", newToken));
+    LOG_DEBUG("duplicated, new token: %i", newToken);
     return newToken;
 }
 
@@ -166,7 +166,7 @@ MSWindowsSession::nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry)
         if (err != ERROR_NO_MORE_FILES) {
 
             // only worry about error if it's not the end of the snapshot
-            LOG((CLOG_ERR "could not get next process entry"));
+            LOG_ERR("could not get next process entry");
             throw std::runtime_error(error_code_to_string_windows(GetLastError()));
         }
     }
@@ -189,7 +189,7 @@ std::string MSWindowsSession::getActiveDesktopName()
         }
     }
     catch (std::exception& error) {
-        LOG((CLOG_ERR "failed to get active desktop name: %s", error.what()));
+        LOG_ERR("failed to get active desktop name: %s", error.what());
     }
 
     return result;

@@ -148,7 +148,7 @@ ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
             }
         }
     } catch (XArgvParserError e) {
-        LOG((CLOG_PRINT "%s: %s" BYE, a.exename().c_str(), e.message.c_str(), a.exename().c_str()));
+        LOG_PRINT("%s: %s" BYE, a.exename().c_str(), e.message.c_str(), a.exename().c_str());
         return false;
     }
 
@@ -200,7 +200,7 @@ ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
             throw XArgvParserError("a server address or name is required");
 
     } catch (XArgvParserError e) {
-        LOG((CLOG_PRINT "%s: %s" BYE, a.exename().c_str(), e.message.c_str(), a.exename().c_str()));
+        LOG_PRINT("%s: %s" BYE, a.exename().c_str(), e.message.c_str(), a.exename().c_str());
         return false;
     }
 
@@ -215,7 +215,7 @@ bool
 ArgParser::parseMSWindowsArg(ArgsBase& argsBase, Argv& argv)
 {
     if (argv.shift("--service")) {
-        LOG((CLOG_WARN "obsolete argument --service, use input-leapd instead."));
+        LOG_WARN("obsolete argument --service, use input-leapd instead.");
         argsBase.m_shouldExit = true;
     }
     else if (argv.shift("--exit-pause")) {
@@ -255,7 +255,7 @@ ArgParser::parseXWindowsArg(ArgsBase& argsBase, Argv& argv)
         argsBase.m_display = optarg;
     }
     else if (argv.shift("--no-xinitthreads")) {
-        LOG((CLOG_NOTE "--no-xinitthreads is deprecated"));
+        LOG_NOTE("--no-xinitthreads is deprecated");
     } else {
         // option not supported here
         return false;
@@ -422,7 +422,7 @@ ArgParser::parseGenericArgs(Argv& argv)
 #ifdef WINAPI_XWINDOWS
 
         useDragDrop = false;
-        LOG((CLOG_INFO "ignoring --enable-drag-drop, not supported on linux."));
+        LOG_INFO("ignoring --enable-drag-drop, not supported on linux.");
 
 #endif
 
@@ -434,7 +434,7 @@ ArgParser::parseGenericArgs(Argv& argv)
         argsBase().m_dropTarget = argv.shift();
     }
     else if (argv.shift("--enable-crypto")) {
-        LOG((CLOG_INFO "--enable-crypto is used by default. The option is deprecated."));
+        LOG_INFO("--enable-crypto is used by default. The option is deprecated.");
     }
     else if (argv.shift("--disable-crypto")) {
         argsBase().m_enableCrypto = false;

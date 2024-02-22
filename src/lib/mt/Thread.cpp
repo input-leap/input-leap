@@ -134,24 +134,24 @@ void Thread::threadFunc(const std::function<void()>& func)
 
     try {
         // go
-        LOG((CLOG_DEBUG1 "thread 0x%08x entry", id));
+        LOG_DEBUG1("thread 0x%08x entry", id);
         func();
-        LOG((CLOG_DEBUG1 "thread 0x%08x exit", id));
+        LOG_DEBUG1("thread 0x%08x exit", id);
     }
     catch (XThreadCancel&) {
         // client called cancel()
-        LOG((CLOG_DEBUG1 "caught cancel on thread 0x%08x", id));
+        LOG_DEBUG1("caught cancel on thread 0x%08x", id);
         throw;
     }
     catch (XThreadExit&) {
-        LOG((CLOG_DEBUG1 "caught exit on thread 0x%08x", id));
+        LOG_DEBUG1("caught exit on thread 0x%08x", id);
     }
     catch (XBase& e) {
-        LOG((CLOG_ERR "exception on thread 0x%08x: %s", id, e.what()));
+        LOG_ERR("exception on thread 0x%08x: %s", id, e.what());
         throw;
     }
     catch (...) {
-        LOG((CLOG_ERR "exception on thread 0x%08x: <unknown>", id));
+        LOG_ERR("exception on thread 0x%08x: <unknown>", id);
         throw;
     }
 }

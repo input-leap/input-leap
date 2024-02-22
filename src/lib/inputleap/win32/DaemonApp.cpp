@@ -202,7 +202,7 @@ DaemonApp::mainLoop(bool daemonized)
         std::string command = ARCH->setting("Command");
         bool elevate = ARCH->setting("Elevate") == "1";
         if (command != "") {
-            LOG((CLOG_INFO "using last known command: %s", command.c_str()));
+            LOG_INFO("using last known command: %s", command.c_str());
             m_watchdog->setCommand(command, elevate);
         }
 
@@ -222,10 +222,10 @@ DaemonApp::mainLoop(bool daemonized)
         DAEMON_RUNNING(false);
     }
     catch (std::exception& e) {
-        LOG((CLOG_CRIT "An error occurred: %s", e.what()));
+        LOG_CRIT("An error occurred: %s", e.what());
     }
     catch (...) {
-        LOG((CLOG_CRIT "An unknown error occurred.\n"));
+        LOG_CRIT("An unknown error occurred.\n");
     }
 }
 
@@ -259,7 +259,7 @@ void DaemonApp::handle_ipc_message(const Event& e)
             }
 
             if (!command.empty()) {
-                LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm.elevate(), command.c_str()));
+                LOG_DEBUG("new command, elevate=%d command=%s", cm.elevate(), command.c_str());
 
                 std::vector<std::string> argsArray;
                 ArgParser::splitCommandString(command, argsArray);
@@ -291,7 +291,7 @@ void DaemonApp::handle_ipc_message(const Event& e)
                         CLOG->setFilter(logLevel.c_str());
                     }
                     catch (std::runtime_error& e) {
-                        LOG((CLOG_ERR "failed to save LogLevel setting, %s", e.what()));
+                        LOG_ERR("failed to save LogLevel setting, %s", e.what());
                     }
                 }
 
@@ -303,8 +303,8 @@ void DaemonApp::handle_ipc_message(const Event& e)
                         ARCH->setting("LogFilename", logFilename);
                         m_watchdog->setFileLogOutputter(m_fileLogOutputter);
                         command = ArgParser::assembleCommand(argsArray, "--log", 1);
-                        LOG((CLOG_DEBUG "removed log file argument and filename %s from command ", logFilename.c_str()));
-                        LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm.elevate(), command.c_str()));
+                        LOG_DEBUG("removed log file argument and filename %s from command ", logFilename.c_str());
+                        LOG_DEBUG("new command, elevate=%d command=%s", cm.elevate(), command.c_str());
                     } else {
                         m_watchdog->setFileLogOutputter(nullptr);
                     }
@@ -312,7 +312,7 @@ void DaemonApp::handle_ipc_message(const Event& e)
                 }
             }
             else {
-                LOG((CLOG_DEBUG "empty command, elevate=%d", cm.elevate()));
+                LOG_DEBUG("empty command, elevate=%d", cm.elevate());
             }
 
             try {
@@ -324,7 +324,7 @@ void DaemonApp::handle_ipc_message(const Event& e)
                 ARCH->setting("Elevate", std::string(cm.elevate() ? "1" : "0"));
             }
             catch (std::runtime_error& e) {
-                LOG((CLOG_ERR "failed to save settings, %s", e.what()));
+                LOG_ERR("failed to save settings, %s", e.what());
             }
 
             // tell the relauncher about the new command. this causes the
@@ -344,13 +344,13 @@ void DaemonApp::handle_ipc_message(const Event& e)
                 default: type = "unknown"; break;
             }
 
-            LOG((CLOG_DEBUG "ipc hello, type=%s", type.c_str()));
+            LOG_DEBUG("ipc hello, type=%s", type.c_str());
 
             const char * serverstatus = m_watchdog->isProcessActive() ? "active" : "not active";
 
             // using CLOG_PRINT here allows the GUI to see that the server status
             // regardless of which log level is set
-            LOG((CLOG_PRINT "server status: %s", serverstatus));
+            LOG_PRINT("server status: %s", serverstatus);
 
             m_ipcLogOutputter->notifyBuffer();
             break;

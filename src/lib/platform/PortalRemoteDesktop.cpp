@@ -72,7 +72,7 @@ int PortalRemoteDesktop::fake_eis_fd()
     auto path = std::getenv("LIBEI_SOCKET");
 
     if (!path) {
-        LOG((CLOG_DEBUG "Cannot fake EIS socket, LIBEI_SOCKET environment variable is unset"));
+        LOG_DEBUG("Cannot fake EIS socket, LIBEI_SOCKET environment variable is unset");
         return -1;
     }
 
@@ -89,14 +89,14 @@ int PortalRemoteDesktop::fake_eis_fd()
 
     auto result = connect(fd, (struct sockaddr*)&addr, sizeof(addr));
     if (result != 0)
-        LOG((CLOG_DEBUG "Faked EIS fd failed: %s", strerror(errno)));
+        LOG_DEBUG("Faked EIS fd failed: %s", strerror(errno));
 
     return sock;
 }
 
 void PortalRemoteDesktop::cb_session_closed(XdpSession* session)
 {
-    LOG((CLOG_ERR "Our RemoteDesktop session was closed, exiting."));
+    LOG_ERR("Our RemoteDesktop session was closed, exiting.");
     g_main_loop_quit(glib_main_loop_);
     events_->add_event(EventType::QUIT);
 
@@ -109,7 +109,7 @@ void PortalRemoteDesktop::cb_session_started(GObject* object, GAsyncResult* res)
     auto session = XDP_SESSION(object);
     auto success = xdp_session_start_finish(session, res, &error);
     if (!success) {
-        LOG((CLOG_ERR "Failed to start session"));
+        LOG_ERR("Failed to start session");
         g_main_loop_quit(glib_main_loop_);
         events_->add_event(EventType::QUIT);
     }
@@ -122,7 +122,7 @@ void PortalRemoteDesktop::cb_session_started(GObject* object, GAsyncResult* res)
     fd = xdp_session_connect_to_eis(session, &error);
 #endif
     if (fd < 0) {
-        LOG((CLOG_ERR "Failed to connect to EIS: %s", error->message));
+        LOG_ERR("Failed to connect to EIS: %s", error->message);
 
         // FIXME: Development hack to avoid having to assemble all parts just for
         // testing this code.
@@ -142,12 +142,12 @@ void PortalRemoteDesktop::cb_session_started(GObject* object, GAsyncResult* res)
 
 void PortalRemoteDesktop::cb_init_remote_desktop_session(GObject* object, GAsyncResult* res)
 {
-    LOG((CLOG_DEBUG "Session ready"));
+    LOG_DEBUG("Session ready");
     g_autoptr(GError) error = nullptr;
 
     auto session = xdp_portal_create_remote_desktop_session_finish(XDP_PORTAL(object), res, &error);
     if (!session) {
-        LOG((CLOG_ERR "Failed to initialize RemoteDesktop session, quitting: %s", error->message));
+        LOG_ERR("Failed to initialize RemoteDesktop session, quitting: %s", error->message);
         g_main_loop_quit(glib_main_loop_);
         events_->add_event(EventType::QUIT);
         return;
@@ -172,7 +172,7 @@ void PortalRemoteDesktop::cb_init_remote_desktop_session(GObject* object, GAsync
 
 gboolean PortalRemoteDesktop::init_remote_desktop_session()
 {
-    LOG((CLOG_DEBUG "Setting up the RemoteDesktop session"));
+    LOG_DEBUG("Setting up the RemoteDesktop session");
     xdp_portal_create_remote_desktop_session(
                 portal_,
                 static_cast<XdpDeviceType>(XDP_DEVICE_POINTER | XDP_DEVICE_KEYBOARD),

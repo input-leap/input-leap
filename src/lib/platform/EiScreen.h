@@ -24,6 +24,8 @@
 #include <mutex>
 #include <vector>
 
+#include <libei.h>
+
 struct ei;
 struct ei_event;
 struct ei_seat;
@@ -106,6 +108,20 @@ private:
     void on_pointer_scroll_discrete_event(ei_event* event);
     void on_motion_event(ei_event *event);
     void on_abs_motion_event(ei_event *event);
+
+    void handle_ei_log_event(ei* ei,
+                             ei_log_priority priority,
+                             const char* message,
+                             ei_log_context* context);
+
+    static void cb_handle_ei_log_event(ei* ei,
+                                       ei_log_priority priority,
+                                       const char* message,
+                                       ei_log_context* context)
+    {
+        auto screen = reinterpret_cast<EiScreen*>(ei_get_user_data(ei));
+        screen->handle_ei_log_event(ei, priority, message, context);
+    }
 
 private:
     // true if screen is being used as a primary screen, false otherwise

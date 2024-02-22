@@ -36,8 +36,6 @@
 #include <unistd.h>
 #include <vector>
 
-#include <libei.h>
-
 struct ScrollRemainder {
     double x, y; // scroll remainder in pixels
 };
@@ -53,7 +51,9 @@ EiScreen::EiScreen(bool is_primary, IEventQueue* events, bool use_portal) :
         ei_ = ei_new_receiver(nullptr); // we receive from the display server
     else
         ei_ = ei_new_sender(nullptr); // we send to the display server
+    ei_set_user_data(ei_, this);
     ei_log_set_priority(ei_, EI_LOG_PRIORITY_DEBUG);
+    ei_log_set_handler(ei_, cb_handle_ei_log_event);
     ei_configure_name(ei_, "InputLeap client");
 
     key_state_ = new EiKeyState(this, events);
@@ -118,6 +118,30 @@ EiScreen::~EiScreen()
 #if HAVE_LIBPORTAL_INPUTCAPTURE
     delete portal_input_capture_;
 #endif
+}
+
+void EiScreen::handle_ei_log_event(ei* ei,
+                                   ei_log_priority priority,
+                                   const char* message,
+                                   ei_log_context* context)
+{
+    switch (priority) {
+        case EI_LOG_PRIORITY_DEBUG:
+            LOG((CLOG_DEBUG "ei: %s", message));
+            break;
+        case EI_LOG_PRIORITY_INFO:
+            LOG((CLOG_INFO "ei: %s", message));
+            break;
+        case EI_LOG_PRIORITY_WARNING:
+            LOG((CLOG_WARN "ei: %s", message));
+            break;
+        case EI_LOG_PRIORITY_ERROR:
+            LOG((CLOG_ERR "ei: %s", message));
+            break;
+        default:
+            LOG((CLOG_PRINT "ei: %s", message));
+            break;
+    }
 }
 
 const EventTarget* EiScreen::get_event_target() const

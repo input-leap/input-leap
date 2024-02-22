@@ -108,6 +108,7 @@ private:
     void on_pointer_scroll_discrete_event(ei_event* event);
     void on_motion_event(ei_event *event);
     void on_abs_motion_event(ei_event *event);
+    bool on_hotkey(KeyID key, bool is_press, KeyModifierMask mask);
 
     void handle_ei_log_event(ei* ei,
                              ei_log_priority priority,
@@ -157,6 +158,33 @@ private:
 #if HAVE_LIBPORTAL_INPUTCAPTURE
     PortalInputCapture* portal_input_capture_;
 #endif
+
+    struct HotKeyItem {
+    public:
+        HotKeyItem(std::uint32_t mask, std::uint32_t id);
+        bool operator<(const HotKeyItem& other) const { return mask_ < other.mask_; };
+
+    public:
+        std::uint32_t mask_ = 0;
+        std::uint32_t id_ = 0;  // for registering the hotkey
+    };
+
+    class HotKeySet {
+    public:
+        HotKeySet(KeyID keyid);
+        KeyID keyid() const { return id_; };
+        bool remove_by_id(std::uint32_t id);
+        void add_item(HotKeyItem item);
+        std::uint32_t find_by_mask(std::uint32_t mask) const;
+
+    private:
+        KeyID id_ = 0;
+        std::vector<HotKeyItem> set_;
+    };
+
+    using HotKeyMap = std::map<KeyID, HotKeySet>;
+
+    HotKeyMap hotkeys_;
 };
 
 } // namespace inputleap

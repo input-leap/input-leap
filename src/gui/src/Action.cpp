@@ -90,9 +90,6 @@ QString Action::text() const
             text.append(command_template_.arg(switchScreenName()));
             break;
 
-        case toggleScreen:
-            break;
-
         case switchInDirection:
             text.append(command_template_.arg(switch_direction_names_[switch_direction_]));
             break;

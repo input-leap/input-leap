@@ -157,13 +157,28 @@ void EiScreen::warpCursor(int32_t x, int32_t y)
 
 std::uint32_t EiScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 {
-    // FIXME
-    return 0;
+    static std::uint32_t next_id;
+    std::uint32_t id = std::min(++next_id, 1u);
+
+    // Bug: id rollover means duplicate hotkey ids. Oh well.
+
+    auto set = hotkeys_.find(key);
+    if (set == hotkeys_.end()) {
+        hotkeys_.emplace(key, HotKeySet { key });
+        set = hotkeys_.find(key);
+    }
+    set->second.add_item(HotKeyItem(mask, id));
+
+    return id;
 }
 
 void EiScreen::unregisterHotKey(uint32_t id)
 {
-    // FIXME
+    for (auto& set : hotkeys_) {
+        if (set.second.remove_by_id(id)) {
+            break;
+        }
+    }
 }
 
 void EiScreen::fakeInputBegin()
@@ -468,6 +483,27 @@ ButtonID EiScreen::map_button_from_evdev(ei_event* event) const
     return kButtonNone;
 }
 
+bool EiScreen::on_hotkey(KeyID keyid, bool is_pressed, KeyModifierMask mask)
+{
+    auto it = hotkeys_.find(keyid);
+
+    if (it == hotkeys_.end()) {
+        return false;
+    }
+
+    // Note: our mask (see on_key_event) only contains some modifiers
+    // but we don't put a limitation on modifiers in the hotkeys. So some
+    // key combinations may not work correctly, more effort is needed here.
+    auto id = it->second.find_by_mask(mask);
+    if (id != 0) {
+        EventType type = is_pressed ? EventType::PRIMARY_SCREEN_HOTKEY_DOWN : EventType::PRIMARY_SCREEN_HOTKEY_UP;
+        events_->add_event(type, get_event_target(), create_event_data<HotKeyInfo>(id));
+        return true;
+    }
+
+    return false;
+}
+
 void EiScreen::on_key_event(ei_event* event)
 {
     uint32_t keycode = ei_event_keyboard_get_key(event);
@@ -480,6 +516,10 @@ void EiScreen::on_key_event(ei_event* event)
     KeyModifierMask mask = key_state_->pollActiveModifiers();
 
     LOG((CLOG_DEBUG1 "event: Key %s keycode=%d keyid=%d mask=0x%x", pressed ? "press" : "release", keycode, keyid, mask));
+
+    if (is_primary_ && on_hotkey(keyid, pressed, mask)) {
+        return;
+    }
 
     if (keyid != kKeyNone) {
         key_state_->sendKeyEvent(get_event_target(), pressed, false, keyid,
@@ -731,6 +771,43 @@ void EiScreen::updateButtons()
 IKeyState* EiScreen::getKeyState() const
 {
     return key_state_;
+}
+
+EiScreen::HotKeyItem::HotKeyItem(std::uint32_t mask, std::uint32_t id) :
+    mask_(mask),
+    id_(id)
+{
+}
+
+EiScreen::HotKeySet::HotKeySet(KeyID key) :
+    id_(key)
+{
+}
+
+bool EiScreen::HotKeySet::remove_by_id(std::uint32_t id)
+{
+    for (auto it = set_.begin(); it != set_.end(); ++it) {
+        if (it->id_ == id) {
+            set_.erase(it);
+            return true;
+        }
+    }
+    return false;
+}
+
+void EiScreen::HotKeySet::add_item(HotKeyItem item)
+{
+    set_.push_back(item);
+}
+
+std::uint32_t EiScreen::HotKeySet::find_by_mask(std::uint32_t mask) const
+{
+    for (const auto& item : set_) {
+        if (item.mask_ == mask) {
+            return item.id_;
+        }
+    }
+    return 0;
 }
 
 } // namespace inputleap

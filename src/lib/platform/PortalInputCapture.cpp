@@ -67,11 +67,12 @@ PortalInputCapture::~PortalInputCapture()
     }
 
     if (session_) {
-        for (auto sigid: signals_) {
-            if (sigid != 0) {
-                g_signal_handler_disconnect(session_, sigid);
-            }
-        }
+        XdpSession *parent_session = xdp_input_capture_session_get_session(session_);
+        g_signal_handler_disconnect(G_OBJECT(parent_session), signals_[SESSION_CLOSED]);
+        g_signal_handler_disconnect(session_, signals_[DISABLED]);
+        g_signal_handler_disconnect(session_, signals_[ACTIVATED]);
+        g_signal_handler_disconnect(session_, signals_[DEACTIVATED]);
+        g_signal_handler_disconnect(session_, signals_[ZONES_CHANGED]);
         g_object_unref(session_);
     }
 

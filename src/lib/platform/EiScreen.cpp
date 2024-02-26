@@ -101,7 +101,7 @@ void EiScreen::handle_ei_log_event(ei* ei,
 {
     switch (priority) {
         case EI_LOG_PRIORITY_DEBUG:
-            LOG_DEBUG("ei: %s", message);
+            LOG_DEBUG3("ei: %s", message);
             break;
         case EI_LOG_PRIORITY_INFO:
             LOG_INFO("ei: %s", message);

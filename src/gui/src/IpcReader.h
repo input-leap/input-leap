@@ -33,7 +33,7 @@ public:
     void start();
     void stop();
 
-signals:
+Q_SIGNALS:
     void readLogLine(const QString& text);
 
 private:

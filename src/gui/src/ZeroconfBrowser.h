@@ -39,7 +39,7 @@ public:
     inline QList<ZeroconfRecord> currentRecords() const { return m_Records; }
     inline QString serviceType() const { return m_BrowsingType; }
 
-signals:
+Q_SIGNALS:
     void currentRecordsChanged(const QList<ZeroconfRecord>& list);
     void error(DNSServiceErrorType err);
 

@@ -36,7 +36,7 @@ public:
     void download(QUrl url);
     bool isFinished() const { return m_IsFinished; }
 
-signals:
+Q_SIGNALS:
     void isComplete();
 
 private slots:

@@ -50,7 +50,7 @@ private slots:
     void error(QAbstractSocket::SocketError error);
     void handleReadLogLine(const QString& text);
 
-signals:
+Q_SIGNALS:
     void readLogLine(const QString& text);
     void infoMessage(const QString& text);
     void errorMessage(const QString& text);

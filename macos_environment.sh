@@ -16,8 +16,9 @@ if [ -z "$INPUTLEAP_BUILD_ENV" ]; then
 
     printf "Modifying environment for InputLeap build...\n"
 
-    if command -v port; then
-        printf "Detected Macports\n"
+    # Check if user preference is set for MacPorts
+    if [ "$LEAP__SYS_PKGMGR" = "macports" ]; then
+        printf "Using Macports as specified by user\n"
 
         check_dir_exists '/opt/local/lib/cmake/Qt5' 'qt5-qtbase port'
 
@@ -27,8 +28,9 @@ if [ -z "$INPUTLEAP_BUILD_ENV" ]; then
         export CPATH="/opt/local/include:$CPATH"
         export PKG_CONFIG_PATH="/opt/local/libexec/qt5/lib/pkgconfig:$PKG_CONFIG_PATH"
 
-    elif command -v brew; then
-        printf "Detected Homebrew\n"
+    # Check if user preference is set for Homebrew
+    elif [ "$LEAP__SYS_PKGMGR" = "homebrew" ]; then
+        printf "Using Homebrew as specified by user\n"
         QT_PATH=$(brew --prefix qt@5)
 
         check_dir_exists "$QT_PATH" 'qt5'
@@ -38,12 +40,21 @@ if [ -z "$INPUTLEAP_BUILD_ENV" ]; then
         export LD_LIBRARY_PATH="/opt/procursus/lib:$LD_LIBRARY_PATH"
         export CPATH="/opt/procursus/include:$CPATH"
         export PKG_CONFIG_PATH="/opt/procursus/lib/pkgconfig:$PKG_CONFIG_PATH"
+
+    # Default behavior if no user preference is set
     else
-        printf "Neither Homebrew nor Macports is installed. Can't get dependency paths\n"
-        exit 1
+        if command -v port; then
+            printf "Detected Macports\n"
+            # Set environment variables for MacPorts...
+        elif command -v brew; then
+            printf "Detected Homebrew\n"
+            # Set environment variables for Homebrew...
+        else
+            printf "Neither Homebrew nor Macports is installed. Can't get dependency paths\n"
+            exit 1
+        fi
     fi
 
     export INPUTLEAP_BUILD_ENV=1
-
     printf "done\n"
 fi

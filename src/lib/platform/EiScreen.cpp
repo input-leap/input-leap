@@ -45,6 +45,8 @@ namespace inputleap {
 EiScreen::EiScreen(bool is_primary, IEventQueue* events, bool use_portal) :
     is_primary_(is_primary),
     events_(events),
+    w_(1),
+    h_(1),
     is_on_screen_(is_primary)
 {
     init_ei();

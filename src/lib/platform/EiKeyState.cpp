@@ -169,8 +169,6 @@ void EiKeyState::assign_generated_modifiers(std::uint32_t keycode, inputleap::Ke
 
 void EiKeyState::getKeyMap(inputleap::KeyMap& keyMap)
 {
-    inputleap::KeyMap::KeyItem item;
-
     auto min_keycode = xkb_keymap_min_keycode(xkb_keymap_);
     auto max_keycode = xkb_keymap_max_keycode(xkb_keymap_);
 
@@ -182,8 +180,6 @@ void EiKeyState::getKeyMap(inputleap::KeyMap& keyMap)
             continue;
 
         for (auto group = 0U; group < xkb_keymap_num_layouts(xkb_keymap_); group++) {
-            item.m_group = group;
-
             for (auto level = 0U;
                  level < xkb_keymap_num_levels_for_key(xkb_keymap_, keycode, group);
                  level++) {
@@ -199,12 +195,12 @@ void EiKeyState::getKeyMap(inputleap::KeyMap& keyMap)
                 if (nsyms > 1)
                     LOG_WARN(" Multiple keysyms per keycode are not supported, keycode %d", keycode);
 
+                inputleap::KeyMap::KeyItem item{};
                 xkb_keysym_t keysym = syms[0];
                 KeySym sym = static_cast<KeyID>(keysym);
                 item.m_id = XWindowsUtil::mapKeySymToKeyID(sym);
                 item.m_button   = static_cast<KeyButton>(keycode) - 8; // X keycode offset
-                item.m_client   = 0;
-                item.m_sensitive = 0;
+                item.m_group = group;
 
                 // For debugging only
                 char keysym_name[128] = {0};

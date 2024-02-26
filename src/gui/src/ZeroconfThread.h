@@ -29,7 +29,7 @@ public:
 
     void run() override;
 
-signals:
+Q_SIGNALS:
     void error(QTcpSocket::SocketError socketError);
 
 private:

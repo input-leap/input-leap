@@ -31,7 +31,7 @@ public:
 public slots:
     void generateCertificate();
 
-signals:
+Q_SIGNALS:
     void error(QString e);
     void info(QString i);
     void generateFinished();

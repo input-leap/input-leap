@@ -1158,8 +1158,11 @@ void MainWindow::on_m_pActionAbout_triggered()
 
 void MainWindow::on_m_pActionSettings_triggered()
 {
-    if (SettingsDialog(this, appConfig()).exec() == QDialog::Accepted)
+    auto dialog = std::make_unique<SettingsDialog>(this, appConfig());
+    connect(dialog.get(), &SettingsDialog::requestLanguageChange, this, &MainWindow::requestLanguageChange);
+    if (dialog.get()->exec() == QDialog::Accepted)
         updateSSLFingerprint();
+    disconnect(dialog.get(), &SettingsDialog::requestLanguageChange, this, &MainWindow::requestLanguageChange);
 }
 
 void MainWindow::autoAddScreen(const QString name)

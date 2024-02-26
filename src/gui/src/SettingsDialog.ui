@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>616</width>
-    <height>580</height>
+    <width>400</width>
+    <height>0</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -112,24 +112,24 @@
         </item>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="3" column="0" colspan="2">
        <widget class="QCheckBox" name="m_pCheckBoxMinimizeToTray">
         <property name="text">
          <string>Minimize to System &amp;Tray</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
+      <item row="4" column="0" colspan="2">
        <widget class="QCheckBox" name="m_pCheckBoxAutoHide">
         <property name="text">
          <string>&amp;Hide on startup</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
+      <item row="5" column="0" colspan="2">
        <widget class="QCheckBox" name="m_pCheckBoxAutoStart">
         <property name="text">
-         <string>Start &amp;InputLeap on startup</string>
+         <string>Show Tray &amp;Icon upon App Start</string>
         </property>
        </widget>
       </item>
@@ -346,38 +346,5 @@
   <tabstop>m_pButtonBrowseLog</tabstop>
  </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>SettingsDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>266</x>
-     <y>340</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>SettingsDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>334</x>
-     <y>340</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

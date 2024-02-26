@@ -1,5 +1,6 @@
 /*
  * InputLeap -- mouse and keyboard sharing utility
+ * Copyright (C) 2023-2024 InputLeap Developers
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -25,9 +26,6 @@ namespace Ui
 {
     class AboutDialog;
 }
-
-class QWidget;
-class QString;
 
 class AboutDialog : public QDialog
 {

@@ -162,12 +162,6 @@ void EiKeyState::assign_generated_modifiers(std::uint32_t keycode, inputleap::Ke
         }
     }
     xkb_state_update_key(state, keycode, XKB_KEY_UP);
-
-    // If we locked a modifier, press again to hopefully unlock
-    if (changed & (XKB_STATE_MODS_LOCKED|XKB_STATE_MODS_LATCHED)) {
-        xkb_state_update_key(state, keycode, XKB_KEY_DOWN);
-        xkb_state_update_key(state, keycode, XKB_KEY_UP);
-    }
     xkb_state_unref(state);
 
     item.m_generates = convert_mod_mask(mods_generates);

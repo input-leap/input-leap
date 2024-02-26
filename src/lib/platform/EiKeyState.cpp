@@ -137,6 +137,8 @@ std::uint32_t EiKeyState::convert_mod_mask(std::uint32_t xkb_mask) const
             barrier_mask |= (1 << kKeyModifierBitControl);
         else if (strcmp(XKB_MOD_NAME_ALT, name) == 0)
             barrier_mask |= (1 << kKeyModifierBitAlt);
+        else if (strcmp(XKB_MOD_NAME_LOGO, name) == 0)
+            barrier_mask |= (1 << kKeyModifierBitSuper);
     }
 
     return barrier_mask;
@@ -162,12 +164,6 @@ void EiKeyState::assign_generated_modifiers(std::uint32_t keycode, inputleap::Ke
         }
     }
     xkb_state_update_key(state, keycode, XKB_KEY_UP);
-
-    // If we locked a modifier, press again to hopefully unlock
-    if (changed & (XKB_STATE_MODS_LOCKED|XKB_STATE_MODS_LATCHED)) {
-        xkb_state_update_key(state, keycode, XKB_KEY_DOWN);
-        xkb_state_update_key(state, keycode, XKB_KEY_UP);
-    }
     xkb_state_unref(state);
 
     item.m_generates = convert_mod_mask(mods_generates);
@@ -175,8 +171,6 @@ void EiKeyState::assign_generated_modifiers(std::uint32_t keycode, inputleap::Ke
 
 void EiKeyState::getKeyMap(inputleap::KeyMap& keyMap)
 {
-    inputleap::KeyMap::KeyItem item;
-
     auto min_keycode = xkb_keymap_min_keycode(xkb_keymap_);
     auto max_keycode = xkb_keymap_max_keycode(xkb_keymap_);
 
@@ -188,8 +182,6 @@ void EiKeyState::getKeyMap(inputleap::KeyMap& keyMap)
             continue;
 
         for (auto group = 0U; group < xkb_keymap_num_layouts(xkb_keymap_); group++) {
-            item.m_group = group;
-
             for (auto level = 0U;
                  level < xkb_keymap_num_levels_for_key(xkb_keymap_, keycode, group);
                  level++) {
@@ -205,12 +197,12 @@ void EiKeyState::getKeyMap(inputleap::KeyMap& keyMap)
                 if (nsyms > 1)
                     LOG_WARN(" Multiple keysyms per keycode are not supported, keycode %d", keycode);
 
+                inputleap::KeyMap::KeyItem item{};
                 xkb_keysym_t keysym = syms[0];
                 KeySym sym = static_cast<KeyID>(keysym);
                 item.m_id = XWindowsUtil::mapKeySymToKeyID(sym);
                 item.m_button   = static_cast<KeyButton>(keycode) - 8; // X keycode offset
-                item.m_client   = 0;
-                item.m_sensitive = 0;
+                item.m_group = group;
 
                 // For debugging only
                 char keysym_name[128] = {0};

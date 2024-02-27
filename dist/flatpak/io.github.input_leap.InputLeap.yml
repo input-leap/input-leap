@@ -9,35 +9,59 @@
 # Note: mDNS (foo.local) does NOT work, so server.name needs to be a FQDN or an ip address
 # https://gitlab.com/freedesktop-sdk/freedesktop-sdk/-/issues/1013
 
-app-id: com.github.inputleap.InputLeap
-runtime: org.gnome.Platform
-runtime-version: '42'
-sdk: org.gnome.Sdk
-command: input-leap-flatpak
+app-id: io.github.input_leap.InputLeap
+runtime: org.kde.Platform
+runtime-version: '6.7'
+sdk: org.kde.Sdk
+command: input-leap
 
 finish-args:
     # We want to talk to the network
     - --share=network
     # Need to read our config from somewhere
-    - --filesystem=xdg-config/input-leap
-    # HACK: so we can put our EIS socket somewhere accessible
-    # This won't be needed once the portal actually supports our interfaces
-    - --filesystem=xdg-run/eis-0
-    # Let's show off :)
-    - --nosocket=x11
-    - --nosocket=wayland
+    - --filesystem=xdg-config/InputLeap
+    - --socket=wayland
+    - --socket=fallback-x11 
+    - --device=dri
+    - --talk-name=org.kde.StatusNotifierWatcher
 
 modules:
+    - name: python3-attrs
+      buildsystem: simple
+      build-commands:
+        - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
+          --prefix=${FLATPAK_DEST} --no-build-isolation attrs
+      sources:
+        - type: file
+          url: https://files.pythonhosted.org/packages/e0/44/827b2a91a5816512fcaf3cc4ebc465ccd5d598c45cefa6703fcf4a79018f/attrs-23.2.0-py3-none-any.whl
+          sha256: 99b87a485a5820b23b879f04c2305b44b951b502fd64be915879d77a7e8fc6f1
+      cleanup:
+        - /lib/python*
+    - name: python3-Jinja2
+      buildsystem: simple
+      build-commands:
+        - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
+          --prefix=${FLATPAK_DEST} --no-build-isolation Jinja2
+      sources:
+        - type: file
+          url: https://files.pythonhosted.org/packages/30/6d/6de6be2d02603ab56e72997708809e8a5b0fbfee080735109b40a3564843/Jinja2-3.1.3-py3-none-any.whl
+          sha256: 7d6d50dd97d52cbc355597bd845fabfbac3f551e1f99619e39a35ce8c370b5fa
+        - type: file
+          url: https://files.pythonhosted.org/packages/87/5b/aae44c6655f3801e81aa3eef09dbbf012431987ba564d7231722f68df02d/MarkupSafe-2.1.5.tar.gz
+          sha256: d283d37a890ba4c1ae73ffadf8046435c76e7bc2247bbb63c00bd1a709c6544b
+      cleanup:
+        - /lib/python*
+  
     - name: libei
       buildsystem: meson
       config-opts:
-          - -Ddocumentation=false
-          - -Dtests=false
-          - -Dportal=false  # wrong portal for our use
+          - -Ddocumentation=[]
+          - -Dtests=disabled
+          - -Dliboeffis=disabled
       sources:
           - type: git
             url: https://gitlab.freedesktop.org/libinput/libei
-            branch: main
+            branch: 1.3.0
 
     # Required by avahi
     - name: libdaemon
@@ -85,24 +109,22 @@ modules:
           - -Dtests=false
           - -Dportal-tests=false
           - -Dvapi=false
-          - -Dbackends=gtk4
+          - -Dbackend-qt5=auto
+          - -Dbackend-qt6=auto
+          - -Dbackend-gtk4=auto
       sources:
           - type: git
-            url: https://github.com/whot/libportal
-            branch: wip/inputcapture
-
+            url: https://github.com/flatpak/libportal.git
+            branch: 0.8.1
     - name: input-leap
       buildsystem: cmake
       config-opts:
-          - -DQT_DEFAULT_MAJOR_VERSION=5
-          - -DINPUTLEAP_BUILD_GUI=OFF
+          - -DQT_DEFAULT_MAJOR_VERSION=6
+          - -DINPUTLEAP_BUILD_GUI=ON
           - -DINPUTLEAP_BUILD_TESTS=OFF
-          - -DINPUTLEAP_BUILD_INSTALLER=OFF
           - -DINPUTLEAP_BUILD_X11=ON  # FIXME: undefined reference to `XWindowsUtil::mapKeySymToKeyID otherwise
           - -DINPUTLEAP_BUILD_LIBEI=ON
       sources:
           - type: git
-            url: https://github.com/whot/input-leap
-            branch: wip/libei
-
-#
+            url: https://github.com/input-leap/input-leap
+            branch: master

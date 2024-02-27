@@ -46,6 +46,7 @@ parts:
     source-type: git
     plugin: cmake
     configflags:
+      - "-DQT_DEFAULT_MAJOR_VERSION=5"
       - "-DCMAKE_INSTALL_PREFIX=/usr"
       - "-DCMAKE_BUILD_TYPE=Release"
     build-packages:

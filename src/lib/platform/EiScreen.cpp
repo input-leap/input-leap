@@ -785,7 +785,7 @@ void EiScreen::handle_system_event(const Event& sysevent)
                 break;
             case EI_EVENT_DEVICE_RESUMED:
                 LOG_DEBUG("device %s is resumed", ei_device_get_name(device));
-                if (is_on_screen_) {
+                if (!is_primary_ && is_on_screen_) {
                     ei_device_start_emulating(device, ++sequence_number_);
                 }
                 break;

@@ -271,6 +271,13 @@ void EiScreen::fakeMouseButton(ButtonID button, bool press)
 
 void EiScreen::fakeMouseMove(int32_t x, int32_t y)
 {
+    // We get one motion event before enter() with the target position
+    if (!is_on_screen_) {
+        cursor_x_ = x;
+        cursor_y_ = y;
+        return;
+    }
+
     if (!ei_abs_)
         return;
 
@@ -331,6 +338,7 @@ void EiScreen::enter()
         }
         if (ei_abs_) {
             ei_device_start_emulating(ei_abs_, sequence_number_);
+            fakeMouseMove(cursor_x_, cursor_y_);
         }
     }
 #if HAVE_LIBPORTAL_INPUTCAPTURE

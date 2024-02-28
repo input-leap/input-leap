@@ -308,6 +308,9 @@ void EiScreen::fakeMouseWheel(int32_t xDelta, int32_t yDelta) const
 
 void EiScreen::fakeKey(uint32_t keycode, bool is_down) const
 {
+    if (!ei_keyboard_)
+        return;
+
     auto xkb_keycode = keycode + 8;
     key_state_->update_xkb_state(xkb_keycode, is_down);
     ei_device_keyboard_key(ei_keyboard_, keycode, is_down);

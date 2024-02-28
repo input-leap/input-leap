@@ -435,6 +435,8 @@ void EiScreen::update_shape()
     LOG_NOTE("Logical output size: %dx%d@%d.%d", w_, h_, x_, y_);
     cursor_x_ = x_ + w_ / 2;
     cursor_y_ = y_ + h_ / 2;
+
+    send_event(EventType::SCREEN_SHAPE_CHANGED, nullptr);
 }
 
 void EiScreen::add_device(struct ei_device *device)

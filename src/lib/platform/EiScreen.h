@@ -153,7 +153,8 @@ private:
     // true if mouse has entered the screen
     bool is_on_screen_;
 
-    // last pointer position
+    // server: last pointer position
+    // client: position sent before enter()
     std::int32_t cursor_x_ = 0;
     std::int32_t cursor_y_ = 0;
 

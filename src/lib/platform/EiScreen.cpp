@@ -271,6 +271,13 @@ void EiScreen::fakeMouseButton(ButtonID button, bool press)
 
 void EiScreen::fakeMouseMove(int32_t x, int32_t y)
 {
+    // We get one motion event before enter() with the target position
+    if (!is_on_screen_) {
+        cursor_x_ = x;
+        cursor_y_ = y;
+        return;
+    }
+
     if (!ei_abs_)
         return;
 
@@ -301,6 +308,9 @@ void EiScreen::fakeMouseWheel(int32_t xDelta, int32_t yDelta) const
 
 void EiScreen::fakeKey(uint32_t keycode, bool is_down) const
 {
+    if (!ei_keyboard_)
+        return;
+
     auto xkb_keycode = keycode + 8;
     key_state_->update_xkb_state(xkb_keycode, is_down);
     ei_device_keyboard_key(ei_keyboard_, keycode, is_down);
@@ -331,6 +341,7 @@ void EiScreen::enter()
         }
         if (ei_abs_) {
             ei_device_start_emulating(ei_abs_, sequence_number_);
+            fakeMouseMove(cursor_x_, cursor_y_);
         }
     }
 #if HAVE_LIBPORTAL_INPUTCAPTURE
@@ -424,6 +435,8 @@ void EiScreen::update_shape()
     LOG_NOTE("Logical output size: %dx%d@%d.%d", w_, h_, x_, y_);
     cursor_x_ = x_ + w_ / 2;
     cursor_y_ = y_ + h_ / 2;
+
+    send_event(EventType::SCREEN_SHAPE_CHANGED, nullptr);
 }
 
 void EiScreen::add_device(struct ei_device *device)
@@ -774,7 +787,7 @@ void EiScreen::handle_system_event(const Event& sysevent)
                 break;
             case EI_EVENT_DEVICE_RESUMED:
                 LOG_DEBUG("device %s is resumed", ei_device_get_name(device));
-                if (is_on_screen_) {
+                if (!is_primary_ && is_on_screen_) {
                     ei_device_start_emulating(device, ++sequence_number_);
                 }
                 break;

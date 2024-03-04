@@ -344,13 +344,14 @@ jobs:
           if-no-files-found: warn
 
       # Only build & upload installer for release builds on windows-2022
+      # test installer for debug build also :3
       - name: Build the Installer
-        if: matrix.os == 'windows-2022' && env.B_BUILD_TYPE == 'Release'
+        if: matrix.os == 'windows-2022' && ( env.B_BUILD_TYPE == 'Release' || env.B_BUILD_TYPE == 'Debug' )
         run: |
           & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" /Qp .\build\installer-inno\input-leap.iss
 
       - uses: actions/upload-artifact@v4
-        if: matrix.os == 'windows-2022' && env.B_BUILD_TYPE == 'Release'
+        if: matrix.os == 'windows-2022' && ( env.B_BUILD_TYPE == 'Release' || env.B_BUILD_TYPE == 'Debug' )
         with:
           name: windows-installer
           path: .\build\installer-inno\bin

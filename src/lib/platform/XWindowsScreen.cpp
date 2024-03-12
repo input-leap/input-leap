@@ -118,6 +118,8 @@ XWindowsScreen::XWindowsScreen(
                                              m_keyMap);
 		LOG_DEBUG("screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_xinerama ? "(xinerama)" : "");
 		LOG_DEBUG("window is 0x%08lx", m_window);
+        if (detectXwayland())
+            LOG_WARN("Running against Xwayland. InputLeap will not work as expected");
 	}
 	catch (...) {
         if (m_display != nullptr) {
@@ -2023,6 +2025,14 @@ XWindowsScreen::detectXI2()
 	int event, error;
     return m_impl->XQueryExtension(m_display,
 			"XInputExtension", &xi_opcode, &event, &error);
+}
+
+bool
+XWindowsScreen::detectXwayland()
+{
+    int opcode, event, error;
+    return m_impl->XQueryExtension(m_display, "XWAYLAND",
+                                   &opcode, &event, &error);
 }
 
 void

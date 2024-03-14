@@ -25,6 +25,8 @@ option(INPUTLEAP_USE_EXTERNAL_GTEST "Use external installation of Google Test fr
 option(INPUTLEAP_BUILD_X11 "Build with XWindows support" ON)
 option(INPUTLEAP_BUILD_LIBEI "Build with libei support" OFF)
 option(INPUTLEAP_DEPLOY_FLATPAK_SCRIPT "Deploy Flatpak script [Expermental]" OFF)
+option(INPUTLEAP_GIT_UNTAG_WARNING "Enable the untagged Git builds warning" ON)
+
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set (CMAKE_CXX_STANDARD 14)
 set (CMAKE_CXX_EXTENSIONS OFF)
@@ -39,6 +41,12 @@ endif()
 if(NOT QT_DEFAULT_MAJOR_VERSION)
     set(QT_DEFAULT_MAJOR_VERSION 5)
 endif()
+
+if (INPUTLEAP_GIT_UNTAG_WARNING)
+    message ("Enabling untagged Git builds warning!")
+    add_definitions (-DINPUTLEAP_GIT_UNTAG_WARNING=1)
+    set (INPUTLEAP_GIT_UNTAG_WARNING 1)
+endif ()
 
 include (cmake/Version.cmake)
 include (cmake/Package.cmake)

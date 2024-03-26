@@ -207,7 +207,7 @@ target_link_libraries(input-leap
 if (QT_DEFAULT_MAJOR_VERSION EQUAL 6)
     target_link_libraries(input-leap Qt::Core5Compat)
 endif()
-target_link_libraries(input-leap OpenSSL::SSL OpenSSL::Crypto)
+target_link_libraries(input-leap ${OPENSSL_LIBS})
 
 target_compile_definitions (input-leap PRIVATE -DINPUTLEAP_VERSION_STAGE="${INPUTLEAP_VERSION_STAGE}")
 target_compile_definitions (input-leap PRIVATE -DINPUTLEAP_REVISION="${INPUTLEAP_REVISION}")

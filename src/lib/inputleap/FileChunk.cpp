@@ -73,7 +73,7 @@ int FileChunk::assemble(inputleap::IStream* stream, std::string& dataReceived, s
         stopwatch.reset();
 
         if (CLOG->getFilter() >= kDEBUG2) {
-            LOG((CLOG_DEBUG2 "recv file size=%s", content.c_str()));
+            LOG_DEBUG2("recv file size=%s", content.c_str());
             stopwatch.start();
         }
         return kStart;
@@ -81,13 +81,13 @@ int FileChunk::assemble(inputleap::IStream* stream, std::string& dataReceived, s
     case kDataChunk:
         dataReceived.append(content);
         if (CLOG->getFilter() >= kDEBUG2) {
-                LOG((CLOG_DEBUG2 "recv file chunk size=%i", content.size()));
+                LOG_DEBUG2("recv file chunk size=%zi", content.size());
                 double interval = stopwatch.getTime();
                 receivedDataSize += content.size();
-                LOG((CLOG_DEBUG2 "recv file interval=%f s", interval));
+                LOG_DEBUG2("recv file interval=%f s", interval);
                 if (interval >= kIntervalThreshold) {
                     double averageSpeed = receivedDataSize / interval / 1000;
-                    LOG((CLOG_DEBUG2 "recv file average speed=%f kb/s", averageSpeed));
+                    LOG_DEBUG2("recv file average speed=%f kb/s", averageSpeed);
 
                     receivedDataSize = 0;
                     elapsedTime += interval;
@@ -98,17 +98,17 @@ int FileChunk::assemble(inputleap::IStream* stream, std::string& dataReceived, s
 
     case kDataEnd:
         if (expectedSize != dataReceived.size()) {
-            LOG((CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d", expectedSize, dataReceived.size()));
+            LOG_ERR("corrupted clipboard data, expected size=%zd actual size=%zd", expectedSize, dataReceived.size());
             return kError;
         }
 
         if (CLOG->getFilter() >= kDEBUG2) {
-            LOG((CLOG_DEBUG2 "file transfer finished"));
+            LOG_DEBUG2("file transfer finished");
             elapsedTime += stopwatch.getTime();
             double averageSpeed = expectedSize / elapsedTime / 1000;
-            LOG((CLOG_DEBUG2 "file transfer finished: total time consumed=%f s", elapsedTime));
-            LOG((CLOG_DEBUG2 "file transfer finished: total data received=%i kb", expectedSize / 1000));
-            LOG((CLOG_DEBUG2 "file transfer finished: total average speed=%f kb/s", averageSpeed));
+            LOG_DEBUG2("file transfer finished: total time consumed=%f s", elapsedTime);
+            LOG_DEBUG2("file transfer finished: total data received=%zi kb", expectedSize / 1000);
+            LOG_DEBUG2("file transfer finished: total average speed=%f kb/s", averageSpeed);
         }
         return kFinish;
         default:

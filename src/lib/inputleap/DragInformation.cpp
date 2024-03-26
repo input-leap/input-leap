@@ -73,13 +73,13 @@ void DragInformation::parseDragInfo(DragFileList& dragFileList, std::uint32_t fi
         ++index;
     }
 
-    LOG((CLOG_DEBUG "drag info received, total drag file number: %i",
-        dragFileList.size()));
+    LOG_DEBUG("drag info received, total drag file number: %zi",
+        dragFileList.size());
 
     for (size_t i = 0; i < dragFileList.size(); ++i) {
-        LOG((CLOG_DEBUG "dragging file %i name: %s",
+        LOG_DEBUG("dragging file %zi name: %s",
             i + 1,
-            dragFileList.at(i).getFilename().c_str()));
+            dragFileList.at(i).getFilename().c_str());
     }
 }
 

@@ -15,8 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTLEAP_TEST_GLOBAL_TEST_UTILS_H
-#define INPUTLEAP_TEST_GLOBAL_TEST_UTILS_H
+#pragma once
 
 #include <cstdint>
 #include <vector>
@@ -26,5 +25,3 @@ namespace inputleap {
 std::vector<std::uint8_t> generate_pseudo_random_bytes(std::size_t seed, std::size_t size);
 
 } // namespace inputleap
-
-#endif // INPUTLEAP_TEST_GLOBAL_TEST_UTILS_H

@@ -1411,11 +1411,11 @@ bool XWindowsUtil::getWindowProperty(Display* display, Window window, Atom prope
     }
 
     if (okay) {
-        LOG((CLOG_DEBUG2 "read property %d on window 0x%08x: bytes=%d", property, window, (data == nullptr) ? 0 : data->size()));
+        LOG_DEBUG2("read property %ld on window 0x%08lx: bytes=%zd", property, window, (data == nullptr) ? 0 : data->size());
         return true;
     }
     else {
-        LOG((CLOG_DEBUG2 "can't read property %d on window 0x%08x", property, window));
+        LOG_DEBUG2("can't read property %ld on window 0x%08lx", property, window);
         return false;
     }
 }
@@ -1815,7 +1815,7 @@ XWindowsUtil::ErrorLock::ignoreHandler(Display* display, XErrorEvent* e, void*)
 {
     char errtxt[1024];
     XGetErrorText(display, e->error_code, errtxt, 1023);
-    LOG((CLOG_DEBUG1 "ignoring X error: %d - %.1023s", e->error_code, errtxt));
+    LOG_DEBUG1("ignoring X error: %d - %.1023s", e->error_code, errtxt);
 }
 
 void
@@ -1823,7 +1823,7 @@ XWindowsUtil::ErrorLock::saveHandler(Display* display, XErrorEvent* e, void* fla
 {
     char errtxt[1024];
     XGetErrorText(display, e->error_code, errtxt, 1023);
-    LOG((CLOG_DEBUG1 "flagging X error: %d - %.1023s", e->error_code, errtxt));
+    LOG_DEBUG1("flagging X error: %d - %.1023s", e->error_code, errtxt);
     *static_cast<bool*>(flag) = true;
 }
 

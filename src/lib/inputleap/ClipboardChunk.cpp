@@ -71,7 +71,7 @@ int ClipboardChunk::assemble(inputleap::IStream* stream, std::string& dataCached
 
     if (mark == kDataStart) {
         s_expectedSize = inputleap::string::stringToSizeType(data);
-        LOG((CLOG_DEBUG "start receiving clipboard data"));
+        LOG_DEBUG("start receiving clipboard data");
         dataCached.clear();
         return kStart;
     }
@@ -85,13 +85,13 @@ int ClipboardChunk::assemble(inputleap::IStream* stream, std::string& dataCached
             return kError;
         }
         else if (s_expectedSize != dataCached.size()) {
-            LOG((CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d", s_expectedSize, dataCached.size()));
+            LOG_ERR("corrupted clipboard data, expected size=%zd actual size=%zd", s_expectedSize, dataCached.size());
             return kError;
         }
         return kFinish;
     }
 
-    LOG((CLOG_ERR "clipboard transmission failed: unknown error"));
+    LOG_ERR("clipboard transmission failed: unknown error");
     return kError;
 }
 

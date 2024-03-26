@@ -16,21 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(HOTKEYDIALOG_H)
+#pragma once
 
-#define HOTKEYDIALOG_H
-
-#include "ui_HotkeyDialogBase.h"
 #include "Hotkey.h"
 
 #include <QDialog>
+#include <memory>
 
-class HotkeyDialog : public QDialog, public Ui::HotkeyDialogBase
+class KeySequenceWidget;
+namespace Ui
+{
+    class HotkeyDialog;
+}
+
+class HotkeyDialog : public QDialog
 {
     Q_OBJECT
 
     public:
         HotkeyDialog(QWidget* parent, Hotkey& hotkey);
+        ~HotkeyDialog() override;
 
     public:
         const Hotkey& hotkey() const { return m_Hotkey; }
@@ -39,11 +44,10 @@ class HotkeyDialog : public QDialog, public Ui::HotkeyDialogBase
         void accept() override;
 
     protected:
-        const KeySequenceWidget* sequenceWidget() const { return m_pKeySequenceWidgetHotkey; }
+        const KeySequenceWidget* sequenceWidget() const;
         Hotkey& hotkey() { return m_Hotkey; }
 
     private:
+        std::unique_ptr<Ui::HotkeyDialog> ui_;
         Hotkey& m_Hotkey;
 };
-
-#endif

@@ -1,5 +1,6 @@
 /*
  * InputLeap -- mouse and keyboard sharing utility
+ * Copyright (C) 2023-2024 InputLeap Developers
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -16,37 +17,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(SETTINGSDIALOG_H)
-
-#define SETTINGSDIALOG_H
+#pragma once
 
 #include <QDialog>
-#include "ui_SettingsDialogBase.h"
-#include "AppLocale.h"
+#include <memory>
 
 class AppConfig;
 
-class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
+namespace Ui
+{
+    class SettingsDialog;
+}
+
+class SettingsDialog : public QDialog
 {
     Q_OBJECT
 
     public:
         SettingsDialog(QWidget* parent, AppConfig& config);
+        ~SettingsDialog() override;
+
+    Q_SIGNALS:
+        void requestLanguageChange(QString newLang);
 
     protected:
         void accept() override;
         void reject() override;
         void changeEvent(QEvent* event) override;
-        AppConfig& appConfig() { return m_appConfig; }
 
     private:
-        AppConfig& m_appConfig;
-        AppLocale m_Locale;
+        void languageChanged(int index);
+        void logToFileChanged(int i);
+        void browseLogClicked();
 
-    private slots:
-        void on_m_pComboLanguage_currentIndexChanged(int index);
-        void on_m_pCheckBoxLogToFile_stateChanged(int );
-        void on_m_pButtonBrowseLog_clicked();
+        std::unique_ptr<Ui::SettingsDialog> ui_;
+        AppConfig& app_config_;
 };
-
-#endif

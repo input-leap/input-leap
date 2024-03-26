@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(APPCONFIG_H)
-
-#define APPCONFIG_H
+#pragma once
 
 #include <QObject>
 #include <QString>
@@ -144,5 +142,3 @@ protected:
         static const char client_name_[];
         static const char log_dir_[];
 };
-
-#endif

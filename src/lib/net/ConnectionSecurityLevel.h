@@ -15,13 +15,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTLEAP_LIB_NET_CONNECTION_SECURITY_LEVEL_H
-#define INPUTLEAP_LIB_NET_CONNECTION_SECURITY_LEVEL_H
+#pragma once
 
 enum class ConnectionSecurityLevel {
     PLAINTEXT,
     ENCRYPTED,
     ENCRYPTED_AUTHENTICATED
 };
-
-#endif // INPUTLEAP_LIB_NET_CONNECTION_SECURITY_LEVEL_H

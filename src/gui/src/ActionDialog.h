@@ -1,5 +1,6 @@
 /*
  * InputLeap -- mouse and keyboard sharing utility
+ * Copyright (C) 2023-2024 InputLeap Developers
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -16,41 +17,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(ACTIONDIALOG_H)
-
-#define ACTIONDIALOG_H
+#pragma once
 
 #include <QDialog>
-
-#include "ui_ActionDialogBase.h"
+#include <memory>
 
 class Hotkey;
 class Action;
-class QRadioButton;
 class QButtonGroup;
 class ServerConfig;
 
-class ActionDialog : public QDialog, public Ui::ActionDialogBase
+namespace Ui
+{
+    class ActionDialog;
+}
+
+class ActionDialog : public QDialog
 {
     Q_OBJECT
 
     public:
-        ActionDialog(QWidget* parent, ServerConfig& config, Hotkey& hotkey, Action& action);
+        ActionDialog(QWidget* parent, const ServerConfig& config, Hotkey& hotkey, Action& action);
+        ~ActionDialog() override;
 
     protected slots:
         void accept() override;
-        void on_m_pKeySequenceWidgetHotkey_keySequenceChanged();
-
-    protected:
-        const KeySequenceWidget* sequenceWidget() const { return m_pKeySequenceWidgetHotkey; }
-        const ServerConfig& serverConfig() const { return m_ServerConfig; }
 
     private:
-        const ServerConfig& m_ServerConfig;
-        Hotkey& m_Hotkey;
-        Action& m_Action;
+        void key_sequence_changed();
 
-        QButtonGroup* m_pButtonGroupType;
+        std::unique_ptr<Ui::ActionDialog> ui_;
+        Hotkey& hotkey_;
+        Action& action_;
+        QButtonGroup* button_group_type_;
 };
-
-#endif

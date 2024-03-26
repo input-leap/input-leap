@@ -23,41 +23,31 @@ env:
 
 jobs:
   linux-build:
+    name: ${{ matrix.name }}
     runs-on: ubuntu-latest
     container: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu:18.04", "ubuntu:20.04", "ubuntu:22.04"]
-        cc: ["gcc"]
-        wayland: [false]
-        include:
-          - cc: "gcc"
-            cxx: "g++"
-          - os: "ubuntu:22.04"
-            cc: "clang"
-            cxx: "clang++"
-          - os: "ubuntu:22.04"
-            wayland: true
+       include:
+         - name: ubuntu-20-04
+           os: "ubuntu:20.04"
+           cc: "gcc"
+           cxx: "g++"
+           wayland: false
+         - name: ubuntu-22-04-clang
+           os: "ubuntu:22.04"
+           cc: "clang"
+           cxx: "clang++"
+           wayland: true
+         - name: ubuntu-22-04
+           os: "ubuntu:22.04"
+           cc: "gcc"
+           cxx: "g++"
+           wayland: true
     steps:
 
       # Preparation steps
-      - if: matrix.os == 'ubuntu:18.04'
-        name: Add repositories with newer git and cmake
-        run: |
-          apt-get update -y
-          # software-properties-common is needed for add-apt-repository
-          apt-get install -y software-properties-common gpg wget
-          # actions/checkout@v3 wants newer git than what's in default repositories
-          add-apt-repository ppa:git-core/ppa
-          # InputLeap requires at least CMake 3.12.
-          # This mirrors instructions at https://apt.kitware.com
-          wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
-            | gpg --dearmor - \
-            > /usr/share/keyrings/kitware-archive-keyring.gpg
-          echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ bionic main' \
-            > /etc/apt/sources.list.d/kitware.list
-
       - name: Update image and install pre-reqs
         run: |
           apt-get update -y
@@ -107,32 +97,32 @@ jobs:
 
       # Code checkout steps
       - name: Checkout input-leap
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: input-leap
           submodules: recursive
           set-safe-directory: ${{ github.workspace }}
 
-      - name: Get libei v1.0.0 from freedesktop
-        # Manual checkout of libinput/libei ref 1.0.0 from https://gitlab.freedesktop.org
+      - name: Get libei v1.2.1 from freedesktop
+        # Manual checkout of libinput/libei ref 1.2.1 from https://gitlab.freedesktop.org
         # because actions/checkout does not support gitlab
         if: matrix.wayland
         run: |
           git clone --depth=1 --branch="$ref" --recurse-submodules -- \
             "https://gitlab.freedesktop.org/libinput/libei" libei
         env:
-          ref: 1.0.0
+          ref: 1.2.1
 
-      - name: Get libportal from whot/libportal
-        uses: actions/checkout@v3
+      - name: Get libportal from upstream
+        uses: actions/checkout@v4
         if: matrix.wayland
         with:
-          repository: whot/libportal
-          ref: wip/inputcapture
+          repository: flatpak/libportal
+          ref: main
           path: libportal
 
       - if: matrix.wayland
-        name: build libei from git tag (1.0.0)
+        name: build libei from git tag
         run: |
             meson setup -Dprefix=/usr -Dtests=disabled -Dliboeffis=disabled -Ddocumentation=[] libei _libei_builddir
             ninja -C _libei_builddir install
@@ -148,7 +138,8 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build \
                 -DCMAKE_CXX_FLAGS:STRING="-Wall -Wextra -Wno-unused-parameter" \
                 -DCMAKE_CXX_FLAGS_DEBUG:STRING="-g -Werror" \
-                -DINPUTLEAP_BUILD_LIBEI:BOOL=${{ matrix.wayland }}
+                -DINPUTLEAP_BUILD_LIBEI:BOOL=${{ matrix.wayland }} \
+                -DCMAKE_INSTALL_PREFIX=input-leap-${{ matrix.name }}
         env:
             VERBOSE: 1
             CC: ${{ matrix.cc }}
@@ -156,7 +147,7 @@ jobs:
 
       - name: Run the build
         run: |
-          cmake --build build --parallel
+          cmake --build build --parallel --target install
         env:
             VERBOSE: 1
 
@@ -165,66 +156,145 @@ jobs:
         run: |
             ctest --test-dir build --verbose
 
-  mac-build:
-    runs-on: ${{ matrix.os }}
+      - name: Create Artifacts
+        run: tar -cf input-leap-${{matrix.name}}.tar.gz input-leap-${{matrix.name}}
 
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: input-leap-${{matrix.name}}
+          path: input-leap-${{matrix.name}}.tar.gz
+          if-no-files-found: error
+
+  mac-build:
+    name: ${{ matrix.name}}
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-11, macos-12]
+       include:
+         - name: macOS-x86_64
+           os: macos-11
+           qt-version: 5.15
+           min-macOS-version: 10.9
+           arch: 'x86_64'
+         - name: macOS-Universal
+           os: macos-12
+           qt-version: 6.6
+           min-macOS-version: 11
+           qt-modules: qt5compat
+           arch: 'arm64;x86_64'
+         - name: macOS-Apple_Silicon
+           os: macos-14
+           qt-version: 6.6
+           min-macOS-version: 14
+           qt-modules: qt5compat
+           arch: 'arm64'
 
     env:
       VERBOSE: 1
       TERM: xterm-256color
+      OpenSSL_Install_Path: "/Users/runner/openssl"
+      OpenSSL_Version: 3.2.0
 
     steps:
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: ${{matrix.qt-version}}
+          modules: ${{matrix.qt-modules}}
+          cache: true
+          cache-key-prefix: macOS-${{matrix.os}}-Qt${{matrix.qt-version}}
+
       - name: Setup the image
         run: |
-          brew install qt5
           brew install ninja
 
-      - uses: actions/checkout@v3
+      - name: Cache OpenSSL Universal
+        id: cache-openssl
+        if: matrix.os == 'macos-12'
+        uses: actions/cache@v4.0.2
+        with:
+          path: ${{env.OpenSSL_Install_Path}}
+          key: macOS-${{matrix.os}}-ssl-${{matrix.arch}}-${{env.OpenSSL_Version}}
+
+      - name: Build OpenSSL Universal
+        if: ((steps.cache-openssl.outputs.cache-hit != 'true') && (matrix.os == 'macos-12'))
+        run: |
+          wget https://github.com/openssl/openssl/releases/download/openssl-${{env.OpenSSL_Version}}/openssl-${{env.OpenSSL_Version}}.tar.gz
+          tar -xf openssl-${{env.OpenSSL_Version}}.tar.gz
+          echo "#!/bin/bash
+          if [[ \$* == *-arch\ x86_64* ]] && ! [[ \$* == *-arch\ arm64* ]]; then
+            cc -arch arm64 \$@
+          else
+            cc \$@
+          fi" >> /Users/runner/cc_override
+          chmod a+x /Users/runner/cc_override
+          cat /Users/runner/cc_override
+          export MACOSX_DEPLOYMENT_TARGET=${{matrix.min-macOS-version}}
+          export CC=/Users/runner/cc_override
+          cd openssl-${{env.OpenSSL_Version}}
+          ./configure no-asm darwin64-x86_64-cc --prefix=${{env.OpenSSL_Install_Path}}
+          make
+          make install
+
+      - uses: actions/checkout@v4
         with:
           path: input-leap
           submodules: recursive
 
       - name: Setup the build
         run: |
-          . input-leap/macos_environment.sh
-          cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build -G Ninja \
+          cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build -G Ninja -DOpenSSL_ROOT=${{env.OpenSSL_Install_Path}} \
                 -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk \
-                -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DCMAKE_UNITY_BUILD=1
+                -DCMAKE_OSX_DEPLOYMENT_TARGET=${{matrix.min-macOS-version}} -DCMAKE_UNITY_BUILD=1 -DQT_DEFAULT_MAJOR_VERSION=$(echo ${{matrix.qt-version}} | cut -c -1) \
+                -DCMAKE_OSX_ARCHITECTURES="${{matrix.arch}}"
 
       - name: Run the build
         run: |
           cmake --build build --parallel
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: env.B_BUILD_TYPE == 'Release'
         with:
           name: ${{ matrix.os }}-installer
           path: ./build/bundle/*.dmg
           if-no-files-found: error
 
+      - name: Archive debug app
+        if: env.B_BUILD_TYPE != 'Release'
+        run: tar -czf InputLeap-${{matrix.name}}.tar.gz -C build/bundle InputLeap.app
+
+      - uses: actions/upload-artifact@v4
+        if: env.B_BUILD_TYPE != 'Release'
+        with:
+          name: ${{ matrix.name }}-debug
+          path: ./InputLeap*.tar.gz
+          if-no-files-found: error
 
   win-build:
+    name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-2019, windows-2022]
+       include:
+         - name: Windows Qt5
+           os: windows-2019
+           qt-version: 5.15
+           qt-major: 5
+         - name: Windows Qt6
+           os: windows-2022
+           qt-version: 6.6
+           qt-major: 6
+           qt-modules: qt5compat
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           path: input-leap
           submodules: recursive
-
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.7'
-          architecture: 'x64'
 
       - name: Download Bonjour SDK-like
         id: bonjour
@@ -238,30 +308,13 @@ jobs:
 
           "path=$env:GITHUB_WORKSPACE\deps\BonjourSDKLike" >> $env:GITHUB_OUTPUT
 
-      - name: Installing QT
-        id: qt
-        run: |
-          $ErrorActionPreference = "Stop"
-          New-Item -Force -ItemType Directory -Path .\deps
-
-          $qli_install_version = '2019.05.26.1'
-          $qt_version = '5.15.2'
-          $qt_msvc = 'msvc2019_64'
-
-          Invoke-WebRequest "https://github.com/nelsonjchen/qli-installer/archive/v$qli_install_version.zip" -OutFile '.\deps\qli-installer.zip' ;
-          Expand-Archive deps\qli-installer.zip deps\
-          Move-Item .\deps\qli-installer-$qli_install_version\ .\deps\qli-installer
-
-          pip install -r .\deps\qli-installer\requirements.txt
-
-          $env:QLI_OUT_DIR = ".\deps\Qt\Qt$qt_version"
-          $env:QLI_BASE_URL = "https://download.qt.io/online/qtsdkrepository/"
-          python .\deps\qli-installer\qli-installer.py $qt_version windows desktop win64_$qt_msvc
-
-          "root=$env:GITHUB_WORKSPACE\deps\Qt" >> $env:GITHUB_OUTPUT
-          "version=Qt$qt_version\$qt_version" >> $env:GITHUB_OUTPUT
-          "msvc=$qt_msvc" >> $env:GITHUB_OUTPUT
-          "path=$env:GITHUB_WORKSPACE\deps\Qt\Qt$qt_version\$qt_version\$qt_msvc" >> $env:GITHUB_OUTPUT
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: ${{matrix.qt-version}}
+          modules: ${{matrix.qt-modules}}
+          cache: true
+          cache-key-prefix: windows-${{matrix.os}}-Qt${{matrix.qt-version}}
 
       - name: Configure build system
         # NB. use cmd here to set variables from VsDevCmd.bat
@@ -270,45 +323,21 @@ jobs:
           call "%VS_PATH%\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=amd64
 
           cmake -S input-leap -B build -G "%CMAKE_GEN%" -A x64 -D CMAKE_BUILD_TYPE=%B_BUILD_TYPE% ^
-            -DCMAKE_PREFIX_PATH="%B_QT_FULLPATH%" -DQT_VERSION="%B_QT_VER%" ^
-            -DDNSSD_LIB="%BONJOUR_SDK_HOME%\Lib\x64\dnssd.lib"
+            -DQT_DEFAULT_MAJOR_VERSION=${{matrix.qt-major}} ^
+            -DDNSSD_LIB="%BONJOUR_SDK_HOME%\Lib\x64\dnssd.lib" -D CMAKE_INSTALL_PREFIX=input-leap-install
         env:
           VS_PATH: ${{ matrix.os == 'windows-2019' && '%ProgramFiles(x86)%\Microsoft Visual Studio\2019' || '%ProgramFiles%\Microsoft Visual Studio\2022' }}
           CMAKE_GEN: ${{ matrix.os == 'windows-2019' && 'Visual Studio 16 2019' || 'Visual Studio 17 2022' }}
           BONJOUR_SDK_HOME: ${{ steps.bonjour.outputs.path }}
-          B_QT_ROOT: ${{ steps.qt.outputs.root }}
-          B_QT_VER: ${{ steps.qt.outputs.version }}
-          B_QT_MSVC: ${{ steps.qt.outputs.msvc }}
-          B_QT_FULLPATH: ${{ steps.qt.outputs.path }}
 
       - name: Run build system
         run: |
-          cmake --build build --config $env:B_BUILD_TYPE
+          cmake --build build --config $env:B_BUILD_TYPE --target install
 
-      - name: Copy supporting binaries
-        run: |
-          copy $env:B_QT_FULLPATH\bin\Qt5Core$env:LIB_SUFFIX.dll $env:BIN_PATH\
-          copy $env:B_QT_FULLPATH\bin\Qt5Gui$env:LIB_SUFFIX.dll $env:BIN_PATH\
-          copy $env:B_QT_FULLPATH\bin\Qt5Network$env:LIB_SUFFIX.dll $env:BIN_PATH\
-          copy $env:B_QT_FULLPATH\bin\Qt5Widgets$env:LIB_SUFFIX.dll $env:BIN_PATH\
+      - name: Create Archive
+        run: Compress-Archive -Path input-leap-install\* -DestinationPath ${{ env.B_BUILD_TYPE }}.zip
 
-          mkdir $env:BIN_PATH\platforms\
-          copy $env:B_QT_FULLPATH\plugins\platforms\qwindows$env:LIB_SUFFIX.dll $env:BIN_PATH\platforms\
-
-          copy input-leap\ext\openssl\windows\x64\bin\*.dll $env:BIN_PATH\
-        env:
-          # NB: don’t put '' before || as it is falsey
-          LIB_SUFFIX: ${{ env.B_BUILD_TYPE == 'Debug' && 'd' || '' }}
-          B_QT_FULLPATH: ${{ steps.qt.outputs.path }}
-          BIN_PATH: build\bin\${{ env.B_BUILD_TYPE }}
-
-      - name: Archive Completed Build Directory
-        uses: vimtor/action-zip@v1
-        with:
-          files: build\bin\${{ env.B_BUILD_TYPE }}
-          dest: ${{ env.B_BUILD_TYPE }}.zip
-
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}-${{ env.B_BUILD_TYPE }}
           path: ${{ env.B_BUILD_TYPE }}.zip
@@ -320,7 +349,7 @@ jobs:
         run: |
           & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" /Qp .\build\installer-inno\input-leap.iss
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: matrix.os == 'windows-2022' && env.B_BUILD_TYPE == 'Release'
         with:
           name: windows-installer

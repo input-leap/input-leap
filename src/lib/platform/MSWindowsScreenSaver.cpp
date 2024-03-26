@@ -98,7 +98,7 @@ MSWindowsScreenSaver::checkStarted(UINT msg, WPARAM wParam, LPARAM lParam)
     // we first check that the screen saver is indeed active
     // before watching for it to stop.
     if (!isActive()) {
-        LOG((CLOG_DEBUG2 "can't open screen saver desktop"));
+        LOG_DEBUG2("can't open screen saver desktop");
         return false;
     }
 
@@ -223,7 +223,7 @@ MSWindowsScreenSaver::watchDesktop()
     unwatchProcess();
 
     // watch desktop in another thread
-    LOG((CLOG_DEBUG "watching screen saver desktop"));
+    LOG_DEBUG("watching screen saver desktop");
     m_active = true;
     m_watch  = new Thread([this](){ watch_desktop_thread(); });
 }
@@ -236,7 +236,7 @@ MSWindowsScreenSaver::watchProcess(HANDLE process)
 
     // watch new process in another thread
     if (process != nullptr) {
-        LOG((CLOG_DEBUG "watching screen saver process"));
+        LOG_DEBUG("watching screen saver process");
         m_process = process;
         m_active  = true;
         m_watch   = new Thread([this](){ watch_process_thread(); });
@@ -247,7 +247,7 @@ void
 MSWindowsScreenSaver::unwatchProcess()
 {
     if (m_watch != nullptr) {
-        LOG((CLOG_DEBUG "stopped watching screen saver process/desktop"));
+        LOG_DEBUG("stopped watching screen saver process/desktop");
         m_watch->cancel();
         m_watch->wait();
         delete m_watch;
@@ -288,7 +288,7 @@ void MSWindowsScreenSaver::watch_process_thread()
         Thread::testCancel();
         if (WaitForSingleObject(m_process, 50) == WAIT_OBJECT_0) {
             // process terminated
-            LOG((CLOG_DEBUG "screen saver died"));
+            LOG_DEBUG("screen saver died");
 
             // send screen saver deactivation message
             m_active = false;

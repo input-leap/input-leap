@@ -46,7 +46,7 @@ ClientProxyUnknown::ClientProxyUnknown(std::unique_ptr<inputleap::IStream> strea
     m_timer = m_events->newOneShotTimer(timeout, this);
     addStreamHandlers();
 
-    LOG((CLOG_DEBUG1 "saying hello"));
+    LOG_DEBUG1("saying hello");
     ProtocolUtil::writef(stream_.get(), kMsgHello, kProtocolMajorVersion, kProtocolMinorVersion);
 }
 
@@ -144,14 +144,14 @@ ClientProxyUnknown::removeTimer()
 
 void ClientProxyUnknown::handle_data()
 {
-    LOG((CLOG_DEBUG1 "parsing hello reply"));
+    LOG_DEBUG1("parsing hello reply");
 
     std::string name("<unknown>");
     try {
         // limit the maximum length of the hello
         std::uint32_t n = stream_->getSize();
         if (n > kMaxHelloLength) {
-            LOG((CLOG_DEBUG1 "hello reply too long"));
+            LOG_DEBUG1("hello reply too long");
             throw XBadClient();
         }
 
@@ -196,7 +196,7 @@ void ClientProxyUnknown::handle_data()
             throw XIncompatibleClient(major, minor);
         }
 
-        LOG((CLOG_DEBUG1 "created proxy for client \"%s\" version %d.%d", name.c_str(), major, minor));
+        LOG_DEBUG1("created proxy for client \"%s\" version %d.%d", name.c_str(), major, minor);
 
         // wait until the proxy signals that it's ready or has disconnected
         addProxyHandlers();
@@ -204,37 +204,37 @@ void ClientProxyUnknown::handle_data()
     }
     catch (XIncompatibleClient& e) {
         // client is incompatible
-        LOG((CLOG_WARN "client \"%s\" has incompatible version %d.%d)", name.c_str(), e.getMajor(), e.getMinor()));
+        LOG_WARN("client \"%s\" has incompatible version %d.%d)", name.c_str(), e.getMajor(), e.getMinor());
         ProtocolUtil::writef(stream_.get(), kMsgEIncompatible,
                              kProtocolMajorVersion, kProtocolMinorVersion);
     }
     catch (XBadClient&) {
         // client not behaving
-        LOG((CLOG_WARN "protocol error from client \"%s\"", name.c_str()));
+        LOG_WARN("protocol error from client \"%s\"", name.c_str());
         ProtocolUtil::writef(stream_.get(), kMsgEBad);
     }
     catch (XBase& e) {
         // misc error
-        LOG((CLOG_WARN "error communicating with client \"%s\": %s", name.c_str(), e.what()));
+        LOG_WARN("error communicating with client \"%s\": %s", name.c_str(), e.what());
     }
     sendFailure();
 }
 
 void ClientProxyUnknown::handle_write_error()
 {
-    LOG((CLOG_NOTE "error communicating with new client"));
+    LOG_NOTE("error communicating with new client");
     sendFailure();
 }
 
 void ClientProxyUnknown::handle_timeout()
 {
-    LOG((CLOG_NOTE "new client is unresponsive"));
+    LOG_NOTE("new client is unresponsive");
     sendFailure();
 }
 
 void ClientProxyUnknown::handle_disconnect()
 {
-    LOG((CLOG_NOTE "new client disconnected"));
+    LOG_NOTE("new client disconnected");
     sendFailure();
 }
 

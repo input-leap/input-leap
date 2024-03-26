@@ -2,14 +2,14 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ja_JP" sourcelanguage="en">
 <context>
-    <name>AboutDialogBase</name>
+    <name>AboutDialog</name>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="38"/>
+        <location filename="res/AboutDialog.ui" line="38"/>
         <source>About InputLeap</source>
         <translation>InputLeap について</translation>
     </message>
     <message utf8="true">
-        <location filename="res/AboutDialogBase.ui" line="53"/>
+        <location filename="res/AboutDialog.ui" line="53"/>
         <source>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
 Copyright © 2018 Debauchee Open Source Group&lt;br /&gt;
@@ -30,125 +30,125 @@ InputLeap の GUI のベースは QSynergy で、これは Volker Lanz 開発で
 &lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="140"/>
+        <location filename="res/AboutDialog.ui" line="140"/>
         <source>Unknown</source>
         <translation>不明</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="124"/>
+        <location filename="res/AboutDialog.ui" line="124"/>
         <source>Version:</source>
         <translation>バージョン:</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="167"/>
+        <location filename="res/AboutDialog.ui" line="167"/>
         <source>Build Date: </source>
         <translation>ビルド日: </translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="163"/>
+        <location filename="res/AboutDialog.ui" line="163"/>
         <source>&amp;Ok</source>
         <translation>OK(&amp;O)</translation>
     </message>
 </context>
 <context>
-    <name>ActionDialogBase</name>
+    <name>ActionDialog</name>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="14"/>
+        <location filename="res/ActionDialog.ui" line="14"/>
         <source>Configure Action</source>
         <translation>アクションの設定</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="20"/>
+        <location filename="res/ActionDialog.ui" line="20"/>
         <source>Choose the action to perform</source>
         <translation>実行するアクションを選択</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="26"/>
+        <location filename="res/ActionDialog.ui" line="26"/>
         <source>Press a hotkey</source>
         <translation>ホットキーを押す</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="36"/>
+        <location filename="res/ActionDialog.ui" line="36"/>
         <source>Release a hotkey</source>
         <translation>ホットキーを離す</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="43"/>
+        <location filename="res/ActionDialog.ui" line="43"/>
         <source>Press and release a hotkey</source>
         <translation>ホットキーを押して離す</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="69"/>
+        <location filename="res/ActionDialog.ui" line="69"/>
         <source>only on these screens</source>
         <translation>これらのモニターのみにする</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="119"/>
+        <location filename="res/ActionDialog.ui" line="119"/>
         <source>Switch to screen</source>
         <translation>次のモニターに切り替え</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="150"/>
+        <location filename="res/ActionDialog.ui" line="150"/>
         <source>Switch in direction</source>
         <translation>切り替える方向</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="174"/>
+        <location filename="res/ActionDialog.ui" line="174"/>
         <source>left</source>
         <translation>左</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="179"/>
+        <location filename="res/ActionDialog.ui" line="179"/>
         <source>right</source>
         <translation>右</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="184"/>
+        <location filename="res/ActionDialog.ui" line="184"/>
         <source>up</source>
         <translation>上</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="189"/>
+        <location filename="res/ActionDialog.ui" line="189"/>
         <source>down</source>
         <translation>下</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="201"/>
+        <location filename="res/ActionDialog.ui" line="201"/>
         <source>Lock cursor to screen</source>
         <translation type="unfinished">カーソルを画面に限定</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="225"/>
+        <location filename="res/ActionDialog.ui" line="225"/>
         <source>toggle</source>
         <translation>切り替え</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="230"/>
+        <location filename="res/ActionDialog.ui" line="230"/>
         <source>on</source>
         <translation>オン</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="235"/>
+        <location filename="res/ActionDialog.ui" line="235"/>
         <source>off</source>
         <translation>オフ</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="248"/>
+        <location filename="res/ActionDialog.ui" line="248"/>
         <source>This action is performed when</source>
         <translation>このアクション実行のタイミング</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="254"/>
+        <location filename="res/ActionDialog.ui" line="254"/>
         <source>the hotkey is pressed</source>
         <translation>ホットキーを押したとき</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="264"/>
+        <location filename="res/ActionDialog.ui" line="264"/>
         <source>the hotkey is released</source>
         <translation>ホットキーを離したとき</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="148"/>
+        <location filename="res/ActionDialog.ui" line="148"/>
         <source>Toggle screen</source>
         <translation>モニターを切り替え</translation>
     </message>
@@ -156,17 +156,17 @@ InputLeap の GUI のベースは QSynergy で、これは Volker Lanz 開発で
 <context>
     <name>AddClientDialog</name>
     <message>
-        <location filename="res/AddClientDialogBase.ui" line="20"/>
+        <location filename="res/AddClientDialog.ui" line="20"/>
         <source>Dialog</source>
         <translation>ダイアログ</translation>
     </message>
     <message>
-        <location filename="res/AddClientDialogBase.ui" line="35"/>
+        <location filename="res/AddClientDialog.ui" line="35"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="res/AddClientDialogBase.ui" line="83"/>
+        <location filename="res/AddClientDialog.ui" line="83"/>
         <source>Ignore auto connect clients</source>
         <translation type="unfinished">クライアントの自動接続を無視</translation>
     </message>
@@ -733,173 +733,173 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
 </context>
 <context>
-    <name>ScreenSettingsDialogBase</name>
+    <name>ScreenSettingsDialog</name>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="14"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="14"/>
         <source>Screen Settings</source>
         <translation>モニターの設定</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="22"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="22"/>
         <source>Screen &amp;name:</source>
         <translation>モニター名(&amp;N):</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="42"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="42"/>
         <source>A&amp;liases</source>
         <translation>別名(&amp;L)</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="57"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="57"/>
         <source>&amp;Add</source>
         <translation>追加(&amp;A)</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="74"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="74"/>
         <source>&amp;Remove</source>
         <translation>除去(&amp;R)</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="97"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="97"/>
         <source>&amp;Modifier keys</source>
         <translation>修飾キー(&amp;M)</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="106"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="106"/>
         <source>&amp;Shift:</source>
         <translation>Shift(&amp;S):</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="117"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="164"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="211"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="258"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="305"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="117"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="164"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="211"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="258"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="305"/>
         <source>Shift</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="122"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="169"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="216"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="263"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="310"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="122"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="169"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="216"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="263"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="310"/>
         <source>Ctrl</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="127"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="174"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="221"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="268"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="315"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="127"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="174"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="221"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="268"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="315"/>
         <source>Alt</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="132"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="179"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="226"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="273"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="320"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="132"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="179"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="226"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="273"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="320"/>
         <source>Meta</source>
         <translation>メタ</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="137"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="184"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="231"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="278"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="325"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="137"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="184"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="231"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="278"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="325"/>
         <source>Super</source>
         <translation>スーパー</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="142"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="189"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="236"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="283"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="330"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="142"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="189"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="236"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="283"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="330"/>
         <source>None</source>
         <translation>なし</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="150"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="150"/>
         <source>&amp;Ctrl:</source>
         <translation>Ctrl (&amp;C):</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="197"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="197"/>
         <source>Al&amp;t:</source>
         <translation>Alt (&amp;T):</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="244"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="244"/>
         <source>M&amp;eta:</source>
         <translation>メタ (&amp;E):</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="291"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="291"/>
         <source>S&amp;uper:</source>
         <translation>スーパー (&amp;U):</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="358"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="358"/>
         <source>&amp;Dead corners</source>
         <translation>無効とする隅(&amp;D)</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="367"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="367"/>
         <source>Top-left</source>
         <translation>左上</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="374"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="374"/>
         <source>Top-right</source>
         <translation>右上</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="381"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="381"/>
         <source>Bottom-left</source>
         <translation>左下</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="388"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="388"/>
         <source>Bottom-right</source>
         <translation>右下</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="397"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="397"/>
         <source>Corner Si&amp;ze:</source>
         <translation>隅の大きさ(&amp;Z):</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="428"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="428"/>
         <source>&amp;Fixes</source>
         <translation>修正(&amp;F)</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="437"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="437"/>
         <source>Fix CAPS LOCK key</source>
         <translation>CAPS ロックキーを修正</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="444"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="444"/>
         <source>Fix NUM LOCK key</source>
         <translation>NUM ロックキーを修正</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="451"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="451"/>
         <source>Fix SCROLL LOCK key</source>
         <translation>SCROLL ロックキーを修正</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="458"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="458"/>
         <source>Fix XTest for Xinerama</source>
         <translation>Xinerama 向けに XTest を修正</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="468"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="468"/>
         <source>Fix Preserve Focus</source>
         <translation>フォーカスの維持を固定</translation>
     </message>

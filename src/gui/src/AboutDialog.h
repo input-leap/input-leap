@@ -1,5 +1,6 @@
 /*
  * InputLeap -- mouse and keyboard sharing utility
+ * Copyright (C) 2023-2024 InputLeap Developers
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -16,23 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(ABOUTDIALOG__H)
-
-#define ABOUTDIALOG__H
+#pragma once
 
 #include <QDialog>
+#include <memory>
 
-#include "ui_AboutDialogBase.h"
+namespace Ui
+{
+    class AboutDialog;
+}
 
-class QWidget;
-class QString;
-
-class AboutDialog : public QDialog, public Ui::AboutDialogBase
+class AboutDialog : public QDialog
 {
     Q_OBJECT
 
     public:
-        AboutDialog(QWidget* parent, const QString& app_name);
+        explicit AboutDialog(QWidget* parent, const QString& app_name);
+        ~AboutDialog() override;
+    private:
+        std::unique_ptr<Ui::AboutDialog> ui_;
 };
-
-#endif

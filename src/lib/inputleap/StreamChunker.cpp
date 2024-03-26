@@ -66,7 +66,7 @@ void StreamChunker::sendFile(const char* filename, IEventQueue* events,
     while (true) {
         if (s_interruptFile) {
             s_interruptFile = false;
-            LOG((CLOG_DEBUG "file transmission interrupted"));
+            LOG_DEBUG("file transmission interrupted");
             break;
         }
 
@@ -145,7 +145,7 @@ void StreamChunker::sendClipboard(std::string& data, std::size_t size, Clipboard
     events->add_event(EventType::CLIPBOARD_SENDING, event_target,
                       create_event_data<ClipboardChunk>(end));
 
-    LOG((CLOG_DEBUG "sent clipboard size=%d", sentLength));
+    LOG_DEBUG("sent clipboard size=%zd", sentLength);
 }
 
 void
@@ -153,7 +153,7 @@ StreamChunker::interruptFile()
 {
     if (s_isChunkingFile) {
         s_interruptFile = true;
-        LOG((CLOG_INFO "previous dragged file has become invalid"));
+        LOG_INFO("previous dragged file has become invalid");
     }
 }
 

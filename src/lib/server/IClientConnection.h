@@ -14,8 +14,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTLEAP_LIB_SERVER_ICLIENT_CONNECTION_H
-#define INPUTLEAP_LIB_SERVER_ICLIENT_CONNECTION_H
+#pragma once
 
 #include "base/Fwd.h"
 #include "inputleap/Fwd.h"
@@ -68,5 +67,3 @@ public:
 };
 
 } // namespace inputleap
-
-#endif // INPUTLEAP_LIB_SERVER_ICLIENT_CONNECTION_H

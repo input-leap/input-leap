@@ -15,8 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTLEAP_GUI_APP_STATE_H
-#define INPUTLEAP_GUI_APP_STATE_H
+#pragma once
 
 enum class AppConnectionState {
     DISCONNECTED,
@@ -24,5 +23,3 @@ enum class AppConnectionState {
     CONNECTED,
     TRANSFERRING
 };
-
-#endif // INPUTLEAP_GUI_APP_STATE_H

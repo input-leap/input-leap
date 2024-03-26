@@ -79,7 +79,7 @@ XWindowsScreenSaver::XWindowsScreenSaver(IXWindowsImpl* impl, Display* display,
                              m_rootEventMask | SubstructureNotifyMask);
     }
     if (error) {
-        LOG((CLOG_DEBUG "didn't set root event mask"));
+        LOG_DEBUG("didn't set root event mask");
         m_rootEventMask = 0;
     }
 
@@ -152,7 +152,7 @@ XWindowsScreenSaver::handleXEvent(const XEvent* xevent)
     case DestroyNotify:
         if (xevent->xdestroywindow.window == m_xscreensaver) {
             // xscreensaver is gone
-            LOG((CLOG_DEBUG "xscreensaver died"));
+            LOG_DEBUG("xscreensaver died");
             setXScreenSaver(None);
             return true;
         }
@@ -319,7 +319,7 @@ XWindowsScreenSaver::findXScreenSaver()
 void
 XWindowsScreenSaver::setXScreenSaver(Window window)
 {
-    LOG((CLOG_DEBUG "xscreensaver window: 0x%08x", window));
+    LOG_DEBUG("xscreensaver window: 0x%08lx", window);
 
     // save window
     m_xscreensaver = window;
@@ -362,7 +362,7 @@ void
 XWindowsScreenSaver::setXScreenSaverActive(bool activated)
 {
     if (m_xscreensaverActive != activated) {
-        LOG((CLOG_DEBUG "xscreensaver %s on window 0x%08x", activated ? "activated" : "deactivated", m_xscreensaver));
+        LOG_DEBUG("xscreensaver %s on window 0x%08lx", activated ? "activated" : "deactivated", m_xscreensaver);
         m_xscreensaverActive = activated;
 
         // if screen saver was activated forcefully (i.e. against
@@ -395,7 +395,7 @@ XWindowsScreenSaver::sendXScreenSaverCommand(Atom cmd, long arg1, long arg2)
     event.xclient.data.l[3]    = 0;
     event.xclient.data.l[4]    = 0;
 
-    LOG((CLOG_DEBUG "send xscreensaver command: %d %d %d", static_cast<long>(cmd), arg1, arg2));
+    LOG_DEBUG("send xscreensaver command: %ld %ld %ld", static_cast<long>(cmd), arg1, arg2);
     bool error = false;
     {
         XWindowsUtil::ErrorLock lock(m_display, &error);

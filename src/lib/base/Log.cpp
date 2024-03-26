@@ -26,6 +26,7 @@
 #include <cstring>
 #include <iostream>
 #include <ctime>
+#include <vector>
 
 namespace inputleap {
 
@@ -66,7 +67,6 @@ Log::Log()
 
     // other initialization
     m_maxPriority = g_defaultMaxPriority;
-    m_maxNewlineLength = 0;
     insert(new ConsoleLogOutputter);
 
     s_log = this;
@@ -113,97 +113,55 @@ Log::getFilterName(int level) const
 }
 
 void
-Log::print(const char* file, int line, const char* fmt, ...)
+Log::print(ELevel priority, const char* file, int line, const char* fmt, ...)
 {
-    // check if fmt begins with a priority argument
-    ELevel priority = kINFO;
-    if ((strlen(fmt) > 2) && (fmt[0] == '%' && fmt[1] == 'z')) {
-
-        // 060 in octal is 0 (48 in decimal), so subtracting this converts ascii
-        // number it a true number. we could use atoi instead, but this is how
-        // it was done originally.
-        priority = static_cast<ELevel>(fmt[2] - '\060');
-
-        // move the pointer on past the debug priority char
-        fmt += 3;
-    }
-
     // done if below priority threshold
     if (priority > getFilter()) {
         return;
     }
 
-    // compute prefix padding length
-    char stack[1024];
+    std::vector<char> buffer(2048);
+    int offset = 0;
+    size_t remaining = buffer.size();
+    int n;
 
-    // compute suffix padding length
-    int sPad = m_maxNewlineLength;
-
-    // print to buffer, leaving space for a newline at the end and prefix
-    // at the beginning.
-    char* buffer = stack;
-    int len = static_cast<int>(sizeof(stack) / sizeof(stack[0]));
-    while (true) {
-        // try printing into the buffer
-        va_list args;
-        va_start(args, fmt);
-        int n = std::vsnprintf(buffer, len - sPad, fmt, args);
-        va_end(args);
-
-        // if the buffer wasn't big enough then make it bigger and try again
-        if (n < 0 || n > static_cast<int>(len)) {
-            if (buffer != stack) {
-                delete[] buffer;
-            }
-            len     *= 2;
-            buffer = new char[len];
-        }
-
-        // if the buffer was big enough then continue
-        else {
-            break;
-        }
-    }
-
-    // print the prefix to the buffer.    leave space for priority label.
+    // print the prefix to the buffer
     // do not prefix time and file for kPRINT (CLOG_PRINT)
     if (priority != kPRINT) {
-
         struct tm *tm;
-        char timestamp[50];
         time_t t;
         time(&t);
         tm = localtime(&t);
-        sprintf(timestamp, "%04i-%02i-%02iT%02i:%02i:%02i", tm->tm_year + 1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
 
-        // square brackets, spaces, comma and null terminator take about 10
-        size_t size = 10;
-        size += strlen(timestamp);
-        size += strlen(g_priority[priority]);
-        size += strlen(buffer);
-#ifndef NDEBUG
-        size += strlen(file);
-        // assume there is no file contains over 100k lines of code
-        size += 6;
-#endif
-        char* message = new char[size];
+        offset = std::snprintf(buffer.data(), remaining, "[%04i-%02i-%02iT%02i:%02i:%02i] %s: ",
+                               tm->tm_year + 1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec,
+                               g_priority[priority]);
+        if (offset == -1) {
+            output(kERROR, "Failed to print to log");
+            return;
+        }
 
-#ifndef NDEBUG
-        sprintf(message, "[%s] %s: %s\n\t%s,%d", timestamp, g_priority[priority], buffer, file, line);
-#else
-        sprintf(message, "[%s] %s: %s", timestamp, g_priority[priority], buffer);
-#endif
-
-        output(priority, message);
-        delete[] message;
-    } else {
-        output(priority, buffer);
+        remaining -= offset;
     }
 
-    // clean up
-    if (buffer != stack) {
-        delete[] buffer;
+    // now print our actual message
+    va_list args;
+    va_start(args, fmt);
+    n = std::vsnprintf(buffer.data() + offset, remaining, fmt, args);
+    va_end(args);
+    if (n == -1) {
+        output(kERROR, "Failed to print to log (invalid arguments)");
+        return;
     }
+
+    remaining -= n;
+    offset += n;
+
+#ifndef NDEBUG
+    n = std::snprintf(buffer.data() + offset, remaining - offset, "\n\t%s,%d", file, line);
+#endif
+
+    output(priority, buffer.data());
 }
 
 void
@@ -280,7 +238,7 @@ Log::getFilter() const
 }
 
 void
-Log::output(ELevel priority, char* msg)
+Log::output(ELevel priority, const char* msg)
 {
     assert(priority >= -1 && priority < g_numPriority);
     assert(msg != nullptr);

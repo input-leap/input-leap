@@ -110,7 +110,7 @@ OSXKeyStateTests::isKeyPressed(const OSXKeyState& keyState, KeyButton button)
 
     IKeyState::KeyButtonSet::const_iterator it;
     for (it = pressed.begin(); it != pressed.end(); ++it) {
-        LOG((CLOG_DEBUG "checking key %d", *it));
+        LOG_DEBUG("checking key %d", *it);
         if (*it == button) {
             return true;
         }

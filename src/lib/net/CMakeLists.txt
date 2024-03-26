@@ -23,6 +23,8 @@ endif()
 
 add_library(net STATIC ${sources})
 
-if (UNIX)
-    target_link_libraries(net mt io ${OPENSSL_LIBS})
+target_link_libraries(net mt io OpenSSL::SSL OpenSSL::Crypto)
+
+if(WIN32)
+    target_link_libraries(net OpenSSL::applink)
 endif()

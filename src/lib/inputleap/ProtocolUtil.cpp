@@ -33,7 +33,7 @@ ProtocolUtil::writef(inputleap::IStream* stream, const char* fmt, ...)
 {
     assert(stream != nullptr);
     assert(fmt != nullptr);
-    LOG((CLOG_DEBUG2 "writef(%s)", fmt));
+    LOG_DEBUG5("writef(%s)", fmt);
 
     va_list args;
     va_start(args, fmt);
@@ -49,7 +49,7 @@ ProtocolUtil::readf(inputleap::IStream* stream, const char* fmt, ...)
 {
     assert(stream != nullptr);
     assert(fmt != nullptr);
-    LOG((CLOG_DEBUG2 "readf(%s)", fmt));
+    LOG_DEBUG5("readf(%s)", fmt);
 
     bool result;
     va_list args;
@@ -83,7 +83,7 @@ void ProtocolUtil::vwritef(inputleap::IStream* stream, const char* fmt, std::uin
     try {
         // write buffer
         stream->write(buffer, size);
-        LOG((CLOG_DEBUG2 "wrote %d bytes", size));
+        LOG_DEBUG5("wrote %d bytes", size);
 
         delete[] buffer;
     }
@@ -120,8 +120,8 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                 case 1:
                     // 1 byte integer
                     *static_cast<std::uint8_t*>(v) = buffer[0];
-                    LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len,
-                         *static_cast<std::uint8_t*>(v), *static_cast<std::uint8_t*>(v)));
+                    LOG_DEBUG5("readf: read %d byte integer: %d (0x%x)", len,
+                         *static_cast<std::uint8_t*>(v), *static_cast<std::uint8_t*>(v));
                     break;
 
                 case 2:
@@ -130,8 +130,8 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                         static_cast<std::uint16_t>(
                         (static_cast<std::uint16_t>(buffer[0]) << 8) |
                          static_cast<std::uint16_t>(buffer[1]));
-                    LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len,
-                         *static_cast<std::uint16_t*>(v), *static_cast<std::uint16_t*>(v)));
+                    LOG_DEBUG5("readf: read %d byte integer: %d (0x%x)", len,
+                         *static_cast<std::uint16_t*>(v), *static_cast<std::uint16_t*>(v));
                     break;
 
                 case 4:
@@ -141,8 +141,8 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                         (static_cast<std::uint32_t>(buffer[1]) << 16) |
                         (static_cast<std::uint32_t>(buffer[2]) <<  8) |
                          static_cast<std::uint32_t>(buffer[3]);
-                    LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len,
-                         *static_cast<std::uint32_t*>(v), *static_cast<std::uint32_t*>(v)));
+                    LOG_DEBUG5("readf: read %d byte integer: %d (0x%x)", len,
+                         *static_cast<std::uint32_t*>(v), *static_cast<std::uint32_t*>(v));
                     break;
                 default:
                     break;
@@ -175,9 +175,9 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                         read(stream, buffer, 1);
                         static_cast<std::vector<std::uint8_t>*>(v)->push_back(
                             buffer[0]);
-                        LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)", len, i,
+                        LOG_DEBUG5("readf: read %d byte integer[%d]: %d (0x%x)", len, i,
                              static_cast<std::vector<std::uint8_t>*>(v)->back(),
-                             static_cast<std::vector<std::uint8_t>*>(v)->back()));
+                             static_cast<std::vector<std::uint8_t>*>(v)->back());
                     }
                     break;
 
@@ -189,9 +189,9 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                             static_cast<std::uint16_t>(
                             (static_cast<std::uint16_t>(buffer[0]) << 8) |
                              static_cast<std::uint16_t>(buffer[1])));
-                        LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)", len, i,
+                        LOG_DEBUG5("readf: read %d byte integer[%d]: %d (0x%x)", len, i,
                              static_cast<std::vector<std::uint16_t>*>(v)->back(),
-                             static_cast<std::vector<std::uint16_t>*>(v)->back()));
+                             static_cast<std::vector<std::uint16_t>*>(v)->back());
                     }
                     break;
 
@@ -204,9 +204,9 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                             (static_cast<std::uint32_t>(buffer[1]) << 16) |
                             (static_cast<std::uint32_t>(buffer[2]) <<  8) |
                              static_cast<std::uint32_t>(buffer[3]));
-                        LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)", len, i,
+                        LOG_DEBUG5("readf: read %d byte integer[%d]: %d (0x%x)", len, i,
                              static_cast<std::vector<std::uint32_t>*>(v)->back(),
-                             static_cast<std::vector<std::uint32_t>*>(v)->back()));
+                             static_cast<std::vector<std::uint32_t>*>(v)->back());
                     }
                     break;
                 default:
@@ -250,7 +250,7 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                     throw;
                 }
 
-                LOG((CLOG_DEBUG2 "readf: read %d byte string", str_len));
+                LOG_DEBUG5("readf: read %d byte string", str_len);
 
                 // save the data
                 std::string* dst = va_arg(args, std::string*);
@@ -281,7 +281,7 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
 
             // verify match
             if (buffer[0] != *fmt) {
-                LOG((CLOG_DEBUG2 "readf: format mismatch: %c vs %c", *fmt, buffer[0]));
+                LOG_DEBUG2("readf: format mismatch: %c vs %c", *fmt, buffer[0]);
                 throw XIOReadMismatch();
             }
 
@@ -545,7 +545,7 @@ void ProtocolUtil::read(inputleap::IStream* stream, void* vbuffer, std::uint32_t
 
         // bail if stream has hungup
         if (n == 0) {
-            LOG((CLOG_DEBUG2 "unexpected disconnect in readf(), %d bytes left", count));
+            LOG_DEBUG2("unexpected disconnect in readf(), %d bytes left", count);
             throw XIOEndOfStream();
         }
 

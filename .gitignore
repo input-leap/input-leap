@@ -27,6 +27,7 @@ Makefile
 CMakeCache.txt
 CMakePresets.json
 CMakeUserPresets.json
+CMakeLists.txt.user
 /rpm
 # Visual Studio 2015/2017 cache/options directory
 .vs/

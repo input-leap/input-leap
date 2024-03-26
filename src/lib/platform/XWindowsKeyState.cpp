@@ -110,15 +110,15 @@ XWindowsKeyState::setAutoRepeat(const XKeyboardState& state)
 KeyModifierMask
 XWindowsKeyState::mapModifiersFromX(unsigned int state) const
 {
-    LOG((CLOG_DEBUG2 "mapping state: %i", state));
+    LOG_DEBUG2("mapping state: %i", state);
     std::uint32_t offset = 8 * getGroupFromState(state);
     KeyModifierMask mask = 0;
     for (int i = 0; i < 8; ++i) {
         if ((state & (1u << i)) != 0) {
-            LOG((CLOG_DEBUG2 "|= modifier: %i", offset + i));
+            LOG_DEBUG2("|= modifier: %i", offset + i);
             if (offset + i >= m_modifierFromX.size()) {
-                LOG((CLOG_ERR "m_modifierFromX is too small (%d) for the "
-                    "requested offset (%d)", m_modifierFromX.size(), offset+i));
+                LOG_ERR("m_modifierFromX is too small (%zd) for the "
+                    "requested offset (%d)", m_modifierFromX.size(), offset+i);
             } else {
                 mask |= m_modifierFromX[offset + i];
             }
@@ -238,14 +238,14 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
 {
     switch (keystroke.m_type) {
     case Keystroke::kButton:
-        LOG((CLOG_DEBUG1 "  %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client, keystroke.m_data.m_button.m_press ? "down" : "up"));
+        LOG_DEBUG1("  %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client, keystroke.m_data.m_button.m_press ? "down" : "up");
         if (keystroke.m_data.m_button.m_repeat) {
             int c = keystroke.m_data.m_button.m_button;
             int i = (c >> 3);
             int b = 1 << (c & 7);
             if (m_keyboardState.global_auto_repeat == AutoRepeatModeOff ||
                 (c!=113 && c!=116 && (m_keyboardState.auto_repeats[i] & b) == 0)) {
-                LOG((CLOG_DEBUG1 "  discard autorepeat"));
+                LOG_DEBUG1("  discard autorepeat");
                 break;
             }
         }
@@ -256,32 +256,32 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
 
     case Keystroke::kGroup:
         if (keystroke.m_data.m_group.m_absolute) {
-            LOG((CLOG_DEBUG1 "  group %d", keystroke.m_data.m_group.m_group));
+            LOG_DEBUG1("  group %d", keystroke.m_data.m_group.m_group);
             if (m_xkb != nullptr) {
                 if (m_impl->XkbLockGroup(m_display, XkbUseCoreKbd,
                                          keystroke.m_data.m_group.m_group
                                          ) == False) {
-                    LOG((CLOG_DEBUG1 "XkbLockGroup request not sent"));
+                    LOG_DEBUG1("XkbLockGroup request not sent");
                 }
             }
             else
             {
-                LOG((CLOG_DEBUG1 "  ignored"));
+                LOG_DEBUG1("  ignored");
             }
         }
         else {
-            LOG((CLOG_DEBUG1 "  group %+d", keystroke.m_data.m_group.m_group));
+            LOG_DEBUG1("  group %+d", keystroke.m_data.m_group.m_group);
             if (m_xkb != nullptr) {
                 if (m_impl->XkbLockGroup(m_display, XkbUseCoreKbd,
                                          getEffectiveGroup(pollActiveGroup(),
                                          keystroke.m_data.m_group.m_group)
                                          ) == False) {
-                    LOG((CLOG_DEBUG1 "XkbLockGroup request not sent"));
+                    LOG_DEBUG1("XkbLockGroup request not sent");
                 }
             }
             else
             {
-                LOG((CLOG_DEBUG1 "  ignored"));
+                LOG_DEBUG1("  ignored");
             }
         }
         break;
@@ -297,7 +297,7 @@ XWindowsKeyState::updateKeysymMap(inputleap::KeyMap& keyMap)
     // there are up to 4 keysyms per keycode
     static const int maxKeysyms = 4;
 
-    LOG((CLOG_DEBUG1 "non-XKB mapping"));
+    LOG_DEBUG1("non-XKB mapping");
 
     // prepare map from X modifier to KeyModifierMask.  certain bits
     // are predefined.
@@ -549,7 +549,7 @@ XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
         }
     };
 
-    LOG((CLOG_DEBUG1 "XKB mapping"));
+    LOG_DEBUG1("XKB mapping");
 
     // find the number of groups
     int maxNumGroups = 0;

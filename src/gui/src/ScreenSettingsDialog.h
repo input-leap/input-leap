@@ -16,25 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(SCREENSETTINGSDIALOG__H)
-
-#define SCREENSETTINGSDIALOG__H
+#pragma once
 
 #include <QDialog>
-
-#include "ui_ScreenSettingsDialogBase.h"
+#include <memory>
 
 class QWidget;
 class QString;
 
 class Screen;
+namespace Ui
+{
+    class ScreenSettingsDialog;
+}
 
-class ScreenSettingsDialog : public QDialog, public Ui::ScreenSettingsDialogBase
+class ScreenSettingsDialog : public QDialog
 {
     Q_OBJECT
 
     public:
         ScreenSettingsDialog(QWidget* parent, Screen* pScreen = nullptr);
+        ~ScreenSettingsDialog() override;
 
     public slots:
         void accept() override;
@@ -46,7 +48,6 @@ class ScreenSettingsDialog : public QDialog, public Ui::ScreenSettingsDialogBase
         void on_m_pListAliases_itemSelectionChanged();
 
     private:
+        std::unique_ptr<Ui::ScreenSettingsDialog> ui_;
         Screen* m_pScreen;
 };
-
-#endif

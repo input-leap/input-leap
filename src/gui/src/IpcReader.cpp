@@ -43,12 +43,12 @@ IpcReader::~IpcReader()
 
 void IpcReader::start()
 {
-    connect(m_Socket, SIGNAL(readyRead()), this, SLOT(read()));
+    connect(m_Socket, &QTcpSocket::readyRead, this, &IpcReader::read);
 }
 
 void IpcReader::stop()
 {
-    disconnect(m_Socket, SIGNAL(readyRead()), this, SLOT(read()));
+    disconnect(m_Socket, &QTcpSocket::readyRead, this, &IpcReader::read);
 }
 
 void IpcReader::read()
@@ -76,7 +76,7 @@ void IpcReader::read()
             QString line = QString::fromUtf8(data, len);
             delete[] data;
 
-            readLogLine(line);
+            Q_EMIT readLogLine(line);
         }
         else {
             IPC_LOG(std::cerr << "aborting, message invalid" << std::endl);

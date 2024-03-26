@@ -15,8 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTLEAP_LIB_BASE_TIME_H
-#define INPUTLEAP_LIB_BASE_TIME_H
+#pragma once
 
 namespace inputleap {
 
@@ -38,5 +37,3 @@ This should return as high a precision as reasonable.
 double current_time_seconds();
 
 } // namespace inputleap
-
-#endif // INPUTLEAP_LIB_NET_SECUREUTILS_H

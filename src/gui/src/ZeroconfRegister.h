@@ -43,7 +43,7 @@ public:
     void registerService(const ZeroconfRecord& record, quint16 servicePort);
     inline ZeroconfRecord registeredRecord() const { return finalRecord; }
 
-signals:
+Q_SIGNALS:
     void error(DNSServiceErrorType error);
     void serviceRegistered(const ZeroconfRecord& record);
 

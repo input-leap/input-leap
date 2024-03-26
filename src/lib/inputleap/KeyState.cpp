@@ -423,7 +423,7 @@ KeyState::onKey(KeyButton button, bool down, KeyModifierMask newState)
 {
     // update modifier state
     m_mask = newState;
-    LOG((CLOG_DEBUG1 "new mask: 0x%04x", m_mask));
+    LOG_DEBUG1("new mask: 0x%04x", m_mask);
 
     // ignore bogus buttons
     button &= kButtonMask;
@@ -513,7 +513,7 @@ KeyState::updateKeyState()
                                                 m_activeModifiers);
     m_keyMap.foreachKey(&KeyState::addActiveModifierCB, &addModifierContext);
 
-    LOG((CLOG_DEBUG1 "modifiers on update: 0x%04x", m_mask));
+    LOG_DEBUG1("modifiers on update: 0x%04x", m_mask);
 }
 
 void KeyState::addActiveModifierCB(KeyID, std::int32_t group, inputleap::KeyMap::KeyItem& keyItem,
@@ -556,7 +556,7 @@ KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
 
     // ignore certain keys
     if (isIgnoredKey(id, mask)) {
-        LOG((CLOG_DEBUG1 "ignored key %04x %04x", id, mask));
+        LOG_DEBUG1("ignored key %04x %04x", id, mask);
         return;
     }
 
@@ -574,7 +574,7 @@ KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
             id == kKeyAudioPrev || id == kKeyAudioNext ||
             id == kKeyBrightnessDown || id == kKeyBrightnessUp
             ) {
-            LOG((CLOG_DEBUG1 "emulating media key"));
+            LOG_DEBUG1("emulating media key");
             fakeMediaKey(id);
         }
 
@@ -686,7 +686,7 @@ KeyState::fakeKeyUp(KeyButton serverID)
             if (m_activeModifiers.count(mask) == 0) {
                 // no key for modifier is down so deactivate modifier
                 m_mask &= ~mask;
-                LOG((CLOG_DEBUG1 "new state %04x", m_mask));
+                LOG_DEBUG1("new state %04x", m_mask);
             }
         }
         else {
@@ -840,7 +840,7 @@ void KeyState::fakeKeys(const Keystrokes& keys, std::uint32_t count)
     }
 
     // generate key events
-    LOG((CLOG_DEBUG1 "keystrokes:"));
+    LOG_DEBUG1("keystrokes:");
     for (Keystrokes::const_iterator k = keys.begin(); k != keys.end(); ) {
         if (k->m_type == Keystroke::kButton && k->m_data.m_button.m_repeat) {
             // repeat from here up to but not including the next key

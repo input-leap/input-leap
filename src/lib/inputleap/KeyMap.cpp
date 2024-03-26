@@ -105,7 +105,7 @@ KeyMap::addKeyEntry(const KeyItem& item)
 
     // add item list
     entries.push_back(items);
-    LOG((CLOG_DEBUG5 "add key: %04x %d %03x %04x (%04x %04x %04x)%s", newItem.m_id, newItem.m_group, newItem.m_button, newItem.m_client, newItem.m_required, newItem.m_sensitive, newItem.m_generates, newItem.m_dead ? " dead" : ""));
+    LOG_DEBUG5("add key: %04x %d %03x %04x (%04x %04x %04x)%s", newItem.m_id, newItem.m_group, newItem.m_button, newItem.m_client, newItem.m_required, newItem.m_sensitive, newItem.m_generates, newItem.m_dead ? " dead" : "");
 }
 
 void KeyMap::addKeyAliasEntry(KeyID targetID, std::int32_t group, KeyModifierMask targetRequired,
@@ -257,7 +257,7 @@ const KeyMap::KeyItem* KeyMap::mapKey(Keystrokes& keys, KeyID id, std::int32_t g
                                       KeyModifierMask& currentState, KeyModifierMask desiredMask,
                                       bool isAutoRepeat) const
 {
-    LOG((CLOG_DEBUG1 "mapKey %04x (%d) with mask %04x, start state: %04x", id, id, desiredMask, currentState));
+    LOG_DEBUG1("mapKey %04x (%d) with mask %04x, start state: %04x", id, id, desiredMask, currentState);
 
     // handle group change
     if (id == kKeyNextGroup) {
@@ -292,7 +292,7 @@ const KeyMap::KeyItem* KeyMap::mapKey(Keystrokes& keys, KeyID id, std::int32_t g
     case kKeySetModifiers:
         if (!keysForModifierState(0, group, activeModifiers, currentState,
                                 desiredMask, desiredMask, 0, keys)) {
-            LOG((CLOG_DEBUG1 "unable to set modifiers %04x", desiredMask));
+            LOG_DEBUG1("unable to set modifiers %04x", desiredMask);
             return nullptr;
         }
         return &m_modifierKeyItem;
@@ -301,7 +301,7 @@ const KeyMap::KeyItem* KeyMap::mapKey(Keystrokes& keys, KeyID id, std::int32_t g
         if (!keysForModifierState(0, group, activeModifiers, currentState,
                                 currentState & ~desiredMask,
                                 desiredMask, 0, keys)) {
-            LOG((CLOG_DEBUG1 "unable to clear modifiers %04x", desiredMask));
+            LOG_DEBUG1("unable to clear modifiers %04x", desiredMask);
             return nullptr;
         }
         return &m_modifierKeyItem;
@@ -319,7 +319,7 @@ const KeyMap::KeyItem* KeyMap::mapKey(Keystrokes& keys, KeyID id, std::int32_t g
     }
 
     if (item != nullptr) {
-        LOG((CLOG_DEBUG1 "mapped to %03x, new state %04x", item->m_button, currentState));
+        LOG_DEBUG1("mapped to %03x, new state %04x", item->m_button, currentState);
     }
     return item;
 }
@@ -506,7 +506,7 @@ const KeyMap::KeyItem* KeyMap::mapCommandKey(Keystrokes& keys, KeyID id, std::in
     KeyIDMap::const_iterator it = m_keyIDMap.find(id);
     if (it == m_keyIDMap.end()) {
         // unknown key
-        LOG((CLOG_DEBUG1 "key %04x is not on keyboard", id));
+        LOG_DEBUG1("key %04x is not on keyboard", id);
         return nullptr;
     }
     const KeyGroupTable& keyGroupTable = it->second;
@@ -533,7 +533,7 @@ const KeyMap::KeyItem* KeyMap::mapCommandKey(Keystrokes& keys, KeyID id, std::in
             KeyModifierMask requiredIgnoreShiftMask = item.m_required & ~KeyModifierShift;
             if ((item.m_required & desiredShiftMask) == (item.m_sensitive & desiredShiftMask) &&
                 ((requiredIgnoreShiftMask & desiredMask) == requiredIgnoreShiftMask)) {
-                LOG((CLOG_INFO "found key in group %d", effectiveGroup));
+                LOG_INFO("found key in group %d", effectiveGroup);
                 keyItem = &item;
                 break;
             }
@@ -544,7 +544,7 @@ const KeyMap::KeyItem* KeyMap::mapCommandKey(Keystrokes& keys, KeyID id, std::in
     }
     if (keyItem == nullptr) {
         // no mapping for this keysym
-        LOG((CLOG_DEBUG1 "no mapping for key %04x", id));
+        LOG_DEBUG1("no mapping for key %04x", id);
         return nullptr;
     }
 
@@ -561,7 +561,7 @@ const KeyMap::KeyItem* KeyMap::mapCommandKey(Keystrokes& keys, KeyID id, std::in
     if (!keysForKeyItem(*keyItem, newGroup, newModifiers,
                             newState, desiredMask,
                             s_overrideModifiers, isAutoRepeat, keys)) {
-        LOG((CLOG_DEBUG1 "can't map key"));
+        LOG_DEBUG1("can't map key");
         keys.clear();
         return nullptr;
     }
@@ -569,7 +569,7 @@ const KeyMap::KeyItem* KeyMap::mapCommandKey(Keystrokes& keys, KeyID id, std::in
     // add keystrokes to restore modifier keys
     if (!keysToRestoreModifiers(*keyItem, group, newModifiers, newState,
                                 activeModifiers, keys)) {
-        LOG((CLOG_DEBUG1 "failed to restore modifiers"));
+        LOG_DEBUG1("failed to restore modifiers");
         keys.clear();
         return nullptr;
     }
@@ -595,7 +595,7 @@ const KeyMap::KeyItem* KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, std::
     KeyIDMap::const_iterator i = m_keyIDMap.find(id);
     if (i == m_keyIDMap.end()) {
         // unknown key
-        LOG((CLOG_DEBUG1 "key %04x is not on keyboard", id));
+        LOG_DEBUG1("key %04x is not on keyboard", id);
         return nullptr;
     }
     const KeyGroupTable& keyGroupTable = i->second;
@@ -604,19 +604,19 @@ const KeyMap::KeyItem* KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, std::
     std::int32_t keyIndex  = -1;
     std::int32_t numGroups = getNumGroups();
     std::int32_t groupOffset;
-    LOG((CLOG_DEBUG1 "find best:  %04x %04x", currentState, desiredMask));
+    LOG_DEBUG1("find best:  %04x %04x", currentState, desiredMask);
     for (groupOffset = 0; groupOffset < numGroups; ++groupOffset) {
         std::int32_t effectiveGroup = getEffectiveGroup(group, groupOffset);
         keyIndex = findBestKey(keyGroupTable[effectiveGroup],
                                 currentState, desiredMask);
         if (keyIndex != -1) {
-            LOG((CLOG_DEBUG1 "found key in group %d", effectiveGroup));
+            LOG_DEBUG1("found key in group %d", effectiveGroup);
             break;
         }
     }
     if (keyIndex == -1) {
         // no mapping for this keysym
-        LOG((CLOG_DEBUG1 "no mapping for key %04x", id));
+        LOG_DEBUG1("no mapping for key %04x", id);
         return nullptr;
     }
 
@@ -638,7 +638,7 @@ const KeyMap::KeyItem* KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, std::
         if (!keysForKeyItem(itemList[j], newGroup, newModifiers,
                             newState, desiredMask,
                             0, isAutoRepeat, keys)) {
-            LOG((CLOG_DEBUG1 "can't map key"));
+            LOG_DEBUG1("can't map key");
             keys.clear();
             return nullptr;
         }
@@ -647,7 +647,7 @@ const KeyMap::KeyItem* KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, std::
     // add keystrokes to restore modifier keys
     if (!keysToRestoreModifiers(keyItem, group, newModifiers, newState,
                                 activeModifiers, keys)) {
-        LOG((CLOG_DEBUG1 "failed to restore modifiers"));
+        LOG_DEBUG1("failed to restore modifiers");
         keys.clear();
         return nullptr;
     }
@@ -681,7 +681,7 @@ std::int32_t KeyMap::findBestKey(const KeyEntryList& entryList, KeyModifierMask 
         const KeyItem& item = entryList[i].back();
         if ((item.m_required & desiredState) == item.m_required &&
             (item.m_required & desiredState) == (item.m_sensitive & desiredState)) {
-            LOG((CLOG_DEBUG1 "best key index %d of %d (exact)", i + 1, entryList.size()));
+            LOG_DEBUG1("best key index %d of %zd (exact)", i + 1, entryList.size());
             return i;
         }
     }
@@ -700,8 +700,8 @@ std::int32_t KeyMap::findBestKey(const KeyEntryList& entryList, KeyModifierMask 
         }
     }
     if (bestIndex != -1) {
-        LOG((CLOG_DEBUG1 "best key index %d of %d (%d modifiers)",
-             bestIndex + 1, entryList.size(), bestCount));
+        LOG_DEBUG1("best key index %d of %zd (%d modifiers)",
+             bestIndex + 1, entryList.size(), bestCount);
     }
 
     return bestIndex;
@@ -751,7 +751,7 @@ bool KeyMap::keysForKeyItem(const KeyItem& keyItem, std::int32_t& group,
                                 activeModifiers, currentState,
                                 keyItem.m_required, keyItem.m_sensitive,
                                 0, keystrokes)) {
-            LOG((CLOG_DEBUG1 "unable to match modifier state for dead key %d", keyItem.m_button));
+            LOG_DEBUG1("unable to match modifier state for dead key %d", keyItem.m_button);
             return false;
         }
 
@@ -770,25 +770,25 @@ bool KeyMap::keysForKeyItem(const KeyItem& keyItem, std::int32_t& group,
         // button (any other button) mapped to the shift modifier and then
         // the Shift_L button.
         // match key's required state
-        LOG((CLOG_DEBUG1 "state: %04x,%04x,%04x", currentState, keyItem.m_required, sensitive));
+        LOG_DEBUG1("state: %04x,%04x,%04x", currentState, keyItem.m_required, sensitive);
         if (!keysForModifierState(keyItem.m_button, group,
                                 activeModifiers, currentState,
                                 keyItem.m_required, sensitive,
                                 0, keystrokes)) {
-            LOG((CLOG_DEBUG1 "unable to match modifier state (%04x,%04x) for key %d", keyItem.m_required, keyItem.m_sensitive, keyItem.m_button));
+            LOG_DEBUG1("unable to match modifier state (%04x,%04x) for key %d", keyItem.m_required, keyItem.m_sensitive, keyItem.m_button);
             return false;
         }
 
         // match desiredState as closely as possible.  we must not
         // change any modifiers in keyItem.m_sensitive.  and if the key
         // is a modifier, we don't want to change that modifier.
-        LOG((CLOG_DEBUG1 "desired state: %04x %04x,%04x,%04x", desiredState, currentState, keyItem.m_required, keyItem.m_sensitive));
+        LOG_DEBUG1("desired state: %04x %04x,%04x,%04x", desiredState, currentState, keyItem.m_required, keyItem.m_sensitive);
         if (!keysForModifierState(keyItem.m_button, group,
                                 activeModifiers, currentState,
                                 desiredState,
                                 ~(sensitive | keyItem.m_generates),
                                 s_notRequiredMask, keystrokes)) {
-            LOG((CLOG_DEBUG1 "unable to match desired modifier state (%04x,%04x) for key %d", desiredState, ~keyItem.m_sensitive & 0xffffu, keyItem.m_button));
+            LOG_DEBUG1("unable to match desired modifier state (%04x,%04x) for key %d", desiredState, ~keyItem.m_sensitive & 0xffffu, keyItem.m_button);
             return false;
         }
 
@@ -858,7 +858,7 @@ bool KeyMap::keysForModifierState(KeyButton button, std::int32_t group,
     // to work if the key itself is a modifier (the numlock toggle can
     // interfere) so we don't try to match at all.
     flipMask &= ~notRequiredMask;
-    LOG((CLOG_DEBUG1 "flip: %04x (%04x vs %04x in %04x - %04x)", flipMask, currentState, requiredState, sensitiveMask & 0xffffu, notRequiredMask & 0xffffu));
+    LOG_DEBUG1("flip: %04x (%04x vs %04x in %04x - %04x)", flipMask, currentState, requiredState, sensitiveMask & 0xffffu, notRequiredMask & 0xffffu);
     if (flipMask == 0) {
         return true;
     }
@@ -883,7 +883,7 @@ bool KeyMap::keysForModifierState(KeyButton button, std::int32_t group,
         const KeyItem* keyItem = keyForModifier(button, group, bit);
         if (keyItem == nullptr) {
             if ((mask & notRequiredMask) == 0) {
-                LOG((CLOG_DEBUG1 "no key for modifier %04x", mask));
+                LOG_DEBUG1("no key for modifier %04x", mask);
                 return false;
             }
             else {
@@ -898,13 +898,13 @@ bool KeyMap::keysForModifierState(KeyButton button, std::int32_t group,
         if ((sensitive & mask) != 0) {
             // modifier is sensitive to itself.  that makes no sense
             // so ignore it.
-            LOG((CLOG_DEBUG1 "modifier %04x modified by itself", mask));
+            LOG_DEBUG1("modifier %04x modified by itself", mask);
             sensitive &= ~mask;
         }
         if (sensitive != 0) {
             if (sensitive > mask) {
                 // our assumption is incorrect
-                LOG((CLOG_DEBUG1 "modifier %04x modified by %04x", mask, sensitive));
+                LOG_DEBUG1("modifier %04x modified by %04x", mask, sensitive);
                 return false;
             }
             if (active && !keysForModifierState(button, group,
@@ -924,7 +924,7 @@ bool KeyMap::keysForModifierState(KeyButton button, std::int32_t group,
 
         // current state should match required state
         if ((currentState & sensitive) != (keyItem->m_required & sensitive)) {
-            LOG((CLOG_DEBUG1 "unable to match modifier state for modifier %04x (%04x vs %04x in %04x)", mask, currentState, keyItem->m_required, sensitive));
+            LOG_DEBUG1("unable to match modifier state for modifier %04x (%04x vs %04x in %04x)", mask, currentState, keyItem->m_required, sensitive);
             return false;
         }
 

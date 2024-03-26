@@ -144,7 +144,7 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 
 		// create thread for monitoring system power state.
         is_pm_thread_ready_ = false;
-		LOG((CLOG_DEBUG "starting watchSystemPowerThread"));
+		LOG_DEBUG("starting watchSystemPowerThread");
         m_pmWatchThread = new Thread([this](){ watchSystemPowerThread(); });
 	}
 	catch (...) {
@@ -182,7 +182,7 @@ OSXScreen::~OSXScreen()
 		}
 
 		// now exit the thread's runloop and wait for it to exit
-		LOG((CLOG_DEBUG "stopping watchSystemPowerThread"));
+		LOG_DEBUG("stopping watchSystemPowerThread");
 		CFRunLoopStop(m_pmRunloop);
 		m_pmWatchThread->wait();
 		delete m_pmWatchThread;
@@ -289,7 +289,7 @@ std::uint32_t OSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
     // get mac virtual key and modifier mask matching InputLeap key and mask
 	std::uint32_t macKey, macMask;
     if (!m_keyState->map_hot_key_to_mac(key, mask, macKey, macMask)) {
-		LOG((CLOG_DEBUG "could not map hotkey id=%04x mask=%04x", key, mask));
+		LOG_DEBUG("could not map hotkey id=%04x mask=%04x", key, mask);
 		return 0;
 	}
 
@@ -328,13 +328,13 @@ std::uint32_t OSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 	if (!okay) {
 		m_oldHotKeyIDs.push_back(id);
 		m_hotKeyToIDMap.erase(HotKeyItem(macKey, macMask));
-		LOG((CLOG_WARN "failed to register hotkey %s (id=%04x mask=%04x)", inputleap::KeyMap::formatKey(key, mask).c_str(), key, mask));
+		LOG_WARN("failed to register hotkey %s (id=%04x mask=%04x)", inputleap::KeyMap::formatKey(key, mask).c_str(), key, mask);
 		return 0;
 	}
 
 	m_hotKeys.insert(std::make_pair(id, HotKeyItem(ref, macKey, macMask)));
 
-	LOG((CLOG_DEBUG "registered hotkey %s (id=%04x mask=%04x) as id=%d", inputleap::KeyMap::formatKey(key, mask).c_str(), key, mask, id));
+	LOG_DEBUG("registered hotkey %s (id=%04x mask=%04x) as id=%d", inputleap::KeyMap::formatKey(key, mask).c_str(), key, mask, id);
 	return id;
 }
 
@@ -364,10 +364,10 @@ void OSXScreen::unregisterHotKey(std::uint32_t id)
 		}
 	}
 	if (!okay) {
-		LOG((CLOG_WARN "failed to unregister hotkey id=%d", id));
+		LOG_WARN("failed to unregister hotkey id=%d", id);
 	}
 	else {
-		LOG((CLOG_DEBUG "unregistered hotkey id=%d", id));
+		LOG_DEBUG("unregistered hotkey id=%d", id);
 	}
 
 	// discard hot key from map and record old id for reuse
@@ -524,7 +524,7 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
 
     EMouseButtonState state = press ? kMouseButtonDown : kMouseButtonUp;
 
-    LOG((CLOG_DEBUG1 "faking mouse button id: %d press: %s", index, press ? "pressed" : "released"));
+    LOG_DEBUG1("faking mouse button id: %d press: %s", index, press ? "pressed" : "released");
 
     MouseButtonEventMapType thisButtonMap = MouseButtonEventMap[index];
     CGEventType type = thisButtonMap[state];
@@ -571,15 +571,15 @@ void OSXScreen::get_drop_target_thread()
 	}
 
     if (cstr != nullptr) {
-		LOG((CLOG_DEBUG "drop target: %s", cstr));
+		LOG_DEBUG("drop target: %s", cstr);
 		m_dropTarget = cstr;
 	}
 	else {
-		LOG((CLOG_ERR "failed to get drop target"));
+		LOG_ERR("failed to get drop target");
 		m_dropTarget.clear();
 	}
 #else
-	LOG((CLOG_WARN "drag drop not supported"));
+	LOG_WARN("drag drop not supported");
 #endif
 	m_fakeDraggingStarted = false;
 }
@@ -653,7 +653,7 @@ void OSXScreen::fakeMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const
 void
 OSXScreen::showCursor()
 {
-	LOG((CLOG_DEBUG "showing cursor"));
+	LOG_DEBUG("showing cursor");
 
     CFStringRef propertyString = CFStringCreateWithCString(nullptr, "SetsCursorInBackground",
                                                            kCFStringEncodingMacRoman);
@@ -666,7 +666,7 @@ OSXScreen::showCursor()
 
 	CGError error = CGDisplayShowCursor(m_displayID);
 	if (error != kCGErrorSuccess) {
-		LOG((CLOG_ERR "failed to show cursor, error=%d", error));
+		LOG_ERR("failed to show cursor, error=%d", error);
 	}
 
 	// appears to fix "mouse randomly not showing" bug
@@ -680,7 +680,7 @@ OSXScreen::showCursor()
 void
 OSXScreen::hideCursor()
 {
-	LOG((CLOG_DEBUG "hiding cursor"));
+	LOG_DEBUG("hiding cursor");
 
     CFStringRef propertyString = CFStringCreateWithCString(nullptr, "SetsCursorInBackground",
                                                            kCFStringEncodingMacRoman);
@@ -693,7 +693,7 @@ OSXScreen::hideCursor()
 
 	CGError error = CGDisplayHideCursor(m_displayID);
 	if (error != kCGErrorSuccess) {
-		LOG((CLOG_ERR "failed to hide cursor, error=%d", error));
+		LOG_ERR("failed to hide cursor, error=%d", error);
 	}
 
 	// appears to fix "mouse randomly not hiding" bug
@@ -741,12 +741,12 @@ OSXScreen::enable()
 	}
 
 	if (!m_eventTapPort) {
-		LOG((CLOG_ERR "failed to create quartz event tap"));
+		LOG_ERR("failed to create quartz event tap");
 	}
 
 	m_eventTapRLSR = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTapPort, 0);
 	if (!m_eventTapRLSR) {
-		LOG((CLOG_ERR "failed to create a CFRunLoopSourceRef for the quartz event tap"));
+		LOG_ERR("failed to create a CFRunLoopSourceRef for the quartz event tap");
 	}
 
 	CFRunLoopAddSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
@@ -842,7 +842,7 @@ OSXScreen::leave()
                 std::string info;
 				std::uint32_t fileCount = DragInformation::setupDragInfo(dragFileList, info);
 				client->sendDragInfo(fileCount, info, info.size());
-				LOG((CLOG_DEBUG "send dragging file to server"));
+				LOG_DEBUG("send dragging file to server");
 
 				// TODO: what to do with multiple file or even
 				// a folder
@@ -867,7 +867,7 @@ bool
 OSXScreen::setClipboard(ClipboardID, const IClipboard* src)
 {
     if (src != nullptr) {
-		LOG((CLOG_DEBUG "setting clipboard"));
+		LOG_DEBUG("setting clipboard");
 		Clipboard::copy(&m_pasteboard, src);
 	}
 	return true;
@@ -876,9 +876,9 @@ OSXScreen::setClipboard(ClipboardID, const IClipboard* src)
 void
 OSXScreen::checkClipboards()
 {
-	LOG((CLOG_DEBUG2 "checking clipboard"));
+	LOG_DEBUG2("checking clipboard");
 	if (m_pasteboard.synchronize()) {
-		LOG((CLOG_DEBUG "clipboard changed"));
+		LOG_DEBUG("clipboard changed");
         sendClipboardEvent(EventType::CLIPBOARD_GRABBED, kClipboardClipboard);
         sendClipboardEvent(EventType::CLIPBOARD_GRABBED, kClipboardSelection);
 	}
@@ -1001,19 +1001,19 @@ void OSXScreen::handle_system_event(const Event& event)
         SendEventToEventTarget(*carbonEvent, nullptr);
 		switch (GetEventKind(*carbonEvent)) {
 		case kEventWindowActivated:
-			LOG((CLOG_DEBUG1 "window activated"));
+			LOG_DEBUG1("window activated");
 			break;
 
 		case kEventWindowDeactivated:
-			LOG((CLOG_DEBUG1 "window deactivated"));
+			LOG_DEBUG1("window deactivated");
 			break;
 
 		case kEventWindowFocusAcquired:
-			LOG((CLOG_DEBUG1 "focus acquired"));
+			LOG_DEBUG1("focus acquired");
 			break;
 
 		case kEventWindowFocusRelinquish:
-			LOG((CLOG_DEBUG1 "focus released"));
+			LOG_DEBUG1("focus released");
 			break;
 		}
 		break;
@@ -1027,7 +1027,7 @@ void OSXScreen::handle_system_event(const Event& event)
 bool
 OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 {
-	LOG((CLOG_DEBUG2 "mouse move %+f,%+f", mx, my));
+	LOG_DEBUG2("mouse move %+f,%+f", mx, my);
 
 	CGFloat x = mx - m_xCursor;
 	CGFloat y = my - m_yCursor;
@@ -1063,7 +1063,7 @@ OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 			 x + bogusZoneSize > m_x + m_w - m_xCenter ||
 			-y + bogusZoneSize > m_yCenter - m_y ||
 			 y + bogusZoneSize > m_y + m_h - m_yCenter) {
-			LOG((CLOG_DEBUG "dropped bogus motion %+d,%+d", x, y));
+			LOG_DEBUG("dropped bogus motion %+.2f,%+.2f", x, y);
 		}
 		else {
 			// send motion
@@ -1095,7 +1095,7 @@ bool OSXScreen::onMouseButton(bool pressed, std::uint16_t macButton)
     ButtonID button = map_button_from_osx(macButton);
 
 	if (pressed) {
-		LOG((CLOG_DEBUG1 "event: button press button=%d", button));
+		LOG_DEBUG1("event: button press button=%d", button);
 		if (button != kButtonNone) {
 			KeyModifierMask mask = m_keyState->getActiveModifiers();
             sendEvent(EventType::PRIMARY_SCREEN_BUTTON_DOWN,
@@ -1103,7 +1103,7 @@ bool OSXScreen::onMouseButton(bool pressed, std::uint16_t macButton)
 		}
 	}
 	else {
-		LOG((CLOG_DEBUG1 "event: button release button=%d", button));
+		LOG_DEBUG1("event: button release button=%d", button);
 		if (button != kButtonNone) {
 			KeyModifierMask mask = m_keyState->getActiveModifiers();
             sendEvent(EventType::PRIMARY_SCREEN_BUTTON_UP,
@@ -1132,7 +1132,7 @@ bool OSXScreen::onMouseButton(bool pressed, std::uint16_t macButton)
 		m_buttonState.set(kButtonLeft - 1, state);
 		if (pressed) {
 			m_draggingFilename.clear();
-			LOG((CLOG_DEBUG2 "dragging file directory is cleared"));
+			LOG_DEBUG2("dragging file directory is cleared");
 		}
 		else {
 			if (m_fakeDraggingStarted) {
@@ -1148,7 +1148,7 @@ bool OSXScreen::onMouseButton(bool pressed, std::uint16_t macButton)
 
 bool OSXScreen::onMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const
 {
-	LOG((CLOG_DEBUG1 "event: button wheel delta=%+d,%+d", xDelta, yDelta));
+	LOG_DEBUG1("event: button wheel delta=%+d,%+d", xDelta, yDelta);
     sendEvent(EventType::PRIMARY_SCREEN_WHEEL,
               create_event_data<WheelInfo>(WheelInfo{xDelta, yDelta}));
 	return true;
@@ -1172,11 +1172,11 @@ OSXScreen::displayReconfigurationCallback(CGDirectDisplayID displayID, CGDisplay
 		kCGDisplayMirrorFlag | kCGDisplayUnMirrorFlag |
 		kCGDisplayDesktopShapeChangedFlag;
 
-	LOG((CLOG_DEBUG1 "event: display was reconfigured: %x %x %x", flags, mask, flags & mask));
+	LOG_DEBUG1("event: display was reconfigured: %x %x %x", flags, mask, flags & mask);
 
 	if (flags & mask) { /* Something actually did change */
 
-		LOG((CLOG_DEBUG1 "event: screen changed shape; refreshing dimensions"));
+		LOG_DEBUG1("event: screen changed shape; refreshing dimensions");
 		screen->updateScreenShape(displayID, flags);
 	}
 }
@@ -1189,7 +1189,7 @@ OSXScreen::onKey(CGEventRef event)
 	// get the key and active modifiers
 	std::uint32_t virtualKey = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
 	CGEventFlags macMask = CGEventGetFlags(event);
-	LOG((CLOG_DEBUG1 "event: Key event kind: %d, keycode=%d", eventKind, virtualKey));
+	LOG_DEBUG1("event: Key event kind: %d, keycode=%d", eventKind, virtualKey);
 
 	// Special handling to track state of modifiers
 	if (eventKind == kCGEventFlagsChanged) {
@@ -1295,13 +1295,13 @@ OSXScreen::onMediaKey(CGEventRef event)
 	bool isRepeat;
 
 	if (!getMediaKeyEventInfo (event, &keyID, &down, &isRepeat)) {
-		LOG ((CLOG_ERR "Failed to decode media key event"));
+		LOG_ERR("Failed to decode media key event");
 		return;
 	}
 
-	LOG ((CLOG_DEBUG2 "Media key event: keyID=0x%02x, %s, repeat=%s",
+	LOG_DEBUG2("Media key event: keyID=0x%02x, %s, repeat=%s",
 						keyID, (down ? "down": "up"),
-						(isRepeat ? "yes" : "no")));
+						(isRepeat ? "yes" : "no"));
 
 	KeyButton button = 0;
 	KeyModifierMask mask = m_keyState->getActiveModifiers();
@@ -1513,9 +1513,9 @@ OSXScreen::updateScreenShape()
 	// We want to notify the peer screen whether we are primary screen or not
     sendEvent(EventType::SCREEN_SHAPE_CHANGED);
 
-	LOG((CLOG_DEBUG "screen shape: center=%d,%d size=%dx%d on %u %s",
+	LOG_DEBUG("screen shape: center=%d,%d size=%dx%d on %u %s",
          m_x, m_y, m_w, m_h, displayCount,
-         (displayCount == 1) ? "display" : "displays"));
+         (displayCount == 1) ? "display" : "displays");
 }
 
 #pragma mark -
@@ -1538,11 +1538,11 @@ OSXScreen::userSwitchCallback(EventHandlerCallRef nextHandler,
 	IEventQueue* events = screen->getEvents();
 
 	if (kind == kEventSystemUserSessionDeactivated) {
-		LOG((CLOG_DEBUG "user session deactivated"));
+		LOG_DEBUG("user session deactivated");
         events->add_event(EventType::SCREEN_SUSPEND, screen->get_event_target());
 	}
 	else if (kind == kEventSystemUserSessionActivated) {
-		LOG((CLOG_DEBUG "user session activated"));
+		LOG_DEBUG("user session activated");
         events->add_event(EventType::SCREEN_RESUME, screen->get_event_target());
 	}
 	return (CallNextEventHandler(nextHandler, theEvent));
@@ -1569,7 +1569,7 @@ void OSXScreen::watchSystemPowerThread()
 	m_pmRootPort = IORegisterForSystemPower(this, &notificationPortRef,
 											powerChangeCallback, &notifier);
 	if (m_pmRootPort == 0) {
-		LOG((CLOG_WARN "IORegisterForSystemPower failed"));
+		LOG_WARN("IORegisterForSystemPower failed");
 	}
 	else {
 		runloopSourceRef =
@@ -1589,13 +1589,13 @@ void OSXScreen::watchSystemPowerThread()
     // setting is_pm_thread_ready_ to true otherwise the parent thread will
 	// block waiting for it.
 	if (m_pmRootPort == 0) {
-		LOG((CLOG_WARN "failed to init watchSystemPowerThread"));
+		LOG_WARN("failed to init watchSystemPowerThread");
 		return;
 	}
 
-	LOG((CLOG_DEBUG "started watchSystemPowerThread"));
+	LOG_DEBUG("started watchSystemPowerThread");
 
-	LOG((CLOG_DEBUG "waiting for event loop"));
+	LOG_DEBUG("waiting for event loop");
 	m_events->waitForReady();
 
 #if defined(MAC_OS_X_VERSION_10_7)
@@ -1605,7 +1605,7 @@ void OSXScreen::watchSystemPowerThread()
 
 			// we signalling carbon loop ready before starting
 			// unless we know how to do it within the loop
-			LOG((CLOG_DEBUG "signalling carbon loop ready"));
+			LOG_DEBUG("signalling carbon loop ready");
 
             is_carbon_loop_ready_ = true;
             cardon_loop_ready_cv_.notify_one();
@@ -1614,9 +1614,9 @@ void OSXScreen::watchSystemPowerThread()
 #endif
 
 	// start the run loop
-	LOG((CLOG_DEBUG "starting carbon loop"));
+	LOG_DEBUG("starting carbon loop");
 	CFRunLoopRun();
-	LOG((CLOG_DEBUG "carbon loop has stopped"));
+	LOG_DEBUG("carbon loop has stopped");
 
 	// cleanup
 	if (notificationPortRef) {
@@ -1629,7 +1629,7 @@ void OSXScreen::watchSystemPowerThread()
     std::lock_guard<std::mutex> lock(pm_mutex_);
 	IODeregisterForSystemPower(&notifier);
 	m_pmRootPort = 0;
-	LOG((CLOG_DEBUG "stopped watchSystemPowerThread"));
+	LOG_DEBUG("stopped watchSystemPowerThread");
 }
 
 void
@@ -1653,7 +1653,7 @@ OSXScreen::handlePowerChangeRequest(natural_t messageType, void* messageArg)
 		return;
 
 	case kIOMessageSystemHasPoweredOn:
-		LOG((CLOG_DEBUG "system wakeup"));
+		LOG_DEBUG("system wakeup");
         m_events->add_event(EventType::SCREEN_RESUME, get_event_target());
 		break;
 
@@ -1677,7 +1677,7 @@ void OSXScreen::handle_confirm_sleep(const Event& event)
             m_events->add_event(EventType::SCREEN_SUSPEND, get_event_target(),
                                 nullptr, Event::kDeliverImmediately);
 
-			LOG((CLOG_DEBUG "system will sleep"));
+			LOG_DEBUG("system will sleep");
 			IOAllowPowerChange(m_pmRootPort, messageArg);
 		}
 	}
@@ -1829,8 +1829,8 @@ OSXScreen::handleCGInputEventSecondary(
 		CGPoint pos = CGEventGetLocation(event);
 		if (pos.x != screen->m_xCenter || pos.y != screen->m_yCenter) {
 
-			LOG((CLOG_DEBUG "show cursor on secondary, type=%d pos=%d,%d",
-					type, pos.x, pos.y));
+			LOG_DEBUG("show cursor on secondary, type=%d pos=%.2f,%.2f",
+					type, pos.x, pos.y);
 			screen->showCursor();
 		}
 	}
@@ -1885,26 +1885,26 @@ OSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 		case kCGEventTapDisabledByTimeout:
 			// Re-enable our event-tap
 			CGEventTapEnable(screen->m_eventTapPort, true);
-			LOG((CLOG_INFO "quartz event tap was disabled by timeout, re-enabling"));
+			LOG_INFO("quartz event tap was disabled by timeout, re-enabling");
 			break;
 		case kCGEventTapDisabledByUserInput:
-			LOG((CLOG_ERR "quartz event tap was disabled by user input"));
+			LOG_ERR("quartz event tap was disabled by user input");
 			break;
 		case NX_NULLEVENT:
 			break;
 		default:
 			if (type == NX_SYSDEFINED) {
 			if (isMediaKeyEvent (event)) {
-				LOG((CLOG_DEBUG2 "detected media key event"));
+				LOG_DEBUG2("detected media key event");
 				screen->onMediaKey (event);
 			} else {
-				LOG((CLOG_DEBUG2 "ignoring unknown system defined event"));
+				LOG_DEBUG2("ignoring unknown system defined event");
 				return event;
 			}
 			break;
 			}
 
-			LOG((CLOG_DEBUG3 "unknown quartz event type: 0x%02x", type));
+			LOG_DEBUG3("unknown quartz event type: 0x%02x", type);
 	}
 
 	if (screen->m_isOnScreen) {
@@ -1985,7 +1985,7 @@ OSXScreen::fakeDraggingFiles(DragFileList fileList)
 #if defined(MAC_OS_X_VERSION_10_7)
 	fakeDragging(fileExt.c_str(), m_xCursor, m_yCursor);
 #else
-	LOG((CLOG_WARN "drag drop not supported"));
+	LOG_WARN("drag drop not supported");
 #endif
 }
 
@@ -1999,7 +1999,7 @@ std::string& OSXScreen::getDraggingFilename()
 			m_draggingFilename.clear();
 		}
 		else {
-			LOG((CLOG_DEBUG "drag info: %s", info));
+			LOG_DEBUG("drag info: %s", info);
 			CFRelease(dragInfo);
             std::string fileList = info;
 			m_draggingFilename = fileList;
@@ -2018,20 +2018,20 @@ OSXScreen::waitForCarbonLoop() const
 {
 #if defined(MAC_OS_X_VERSION_10_7)
     if (is_carbon_loop_ready_) {
-		LOG((CLOG_DEBUG "carbon loop already ready"));
+		LOG_DEBUG("carbon loop already ready");
 		return;
 	}
 
     std::unique_lock<std::mutex> lock(carbon_loop_mutex_);
 
-	LOG((CLOG_DEBUG "waiting for carbon loop"));
+	LOG_DEBUG("waiting for carbon loop");
 
     while (!cardon_loop_ready_cv_.wait_for(lock, std::chrono::seconds{kCarbonLoopWaitTimeout},
                                            [this](){ return is_carbon_loop_ready_; })) {
-        LOG((CLOG_DEBUG "carbon loop not ready, waiting again"));
+        LOG_DEBUG("carbon loop not ready, waiting again");
     }
 
-	LOG((CLOG_DEBUG "carbon loop ready"));
+	LOG_DEBUG("carbon loop ready");
 #endif
 
 }
@@ -2063,7 +2063,7 @@ logCursorVisibility()
 {
 	// CGCursorIsVisible is probably deprecated because its unreliable.
 	if (!CGCursorIsVisible()) {
-		LOG((CLOG_WARN "cursor may not be visible"));
+		LOG_WARN("cursor may not be visible");
 	}
 }
 

@@ -155,10 +155,10 @@ void IpcLogOutputter::buffer_thread()
         }
     }
     catch (std::runtime_error& e) {
-        LOG((CLOG_ERR "ipc log buffer thread error, %s", e.what()));
+        LOG_ERR("ipc log buffer thread error, %s", e.what());
     }
 
-    LOG((CLOG_DEBUG "ipc log buffer thread finished"));
+    LOG_DEBUG("ipc log buffer thread finished");
 }
 
 void

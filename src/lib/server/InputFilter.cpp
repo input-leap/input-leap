@@ -759,19 +759,19 @@ InputFilter::Rule::handleEvent(const Event& event)
 
     case kActivate:
         actions = &m_activateActions;
-        LOG((CLOG_DEBUG1 "activate actions"));
+        LOG_DEBUG1("activate actions");
         break;
 
     case kDeactivate:
         actions = &m_deactivateActions;
-        LOG((CLOG_DEBUG1 "deactivate actions"));
+        LOG_DEBUG1("deactivate actions");
         break;
     }
 
     // perform actions
     for (ActionList::const_iterator i = actions->begin();
                                 i != actions->end(); ++i) {
-        LOG((CLOG_DEBUG1 "hotkey: %s", (*i)->format().c_str()));
+        LOG_DEBUG1("hotkey: %s", (*i)->format().c_str());
         (*i)->perform(event);
     }
 

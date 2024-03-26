@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(SCREENSETUPMODEL__H)
-
-#define SCREENSETUPMODEL__H
+#pragma once
 
 #include <QAbstractTableModel>
 #include <QList>
@@ -66,5 +64,3 @@ class ScreenSetupModel : public QAbstractTableModel
 
         static const QString m_MimeType;
 };
-
-#endif

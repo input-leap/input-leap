@@ -53,7 +53,11 @@ static void silence_avahi_warning()
     const char *name  = "AVAHI_COMPAT_NOWARN";
     const char *value = "1";
 #ifdef _WIN32
+#if QT_VERSION_MAJOR < 6
     SetEnvironmentVariable(name, value);
+#else
+    SetEnvironmentVariable(reinterpret_cast<LPCWSTR>(name), reinterpret_cast<LPCWSTR>(value));
+#endif
 #else
     setenv(name, value, 1);
 #endif
@@ -67,29 +71,24 @@ ZeroconfService::ZeroconfService(MainWindow* mainWindow) :
     if (m_pMainWindow->app_role() == AppRole::Server) {
         if (registerService(true)) {
             zeroconf_browser_ = std::make_unique<ZeroconfBrowser>(this);
-            connect(zeroconf_browser_.get(), SIGNAL(
-                currentRecordsChanged(const QList<ZeroconfRecord>&)),
-                this, SLOT(clientDetected(const QList<ZeroconfRecord>&)));
+            connect(zeroconf_browser_.get(), &ZeroconfBrowser::currentRecordsChanged, this, &ZeroconfService::clientDetected);
             zeroconf_browser_->browseForType(QLatin1String(m_ClientServiceName));
         }
     }
     else {
         zeroconf_browser_ = std::make_unique<ZeroconfBrowser>(this);
-        connect(zeroconf_browser_.get(), SIGNAL(
-            currentRecordsChanged(const QList<ZeroconfRecord>&)),
-            this, SLOT(serverDetected(const QList<ZeroconfRecord>&)));
+        connect(zeroconf_browser_.get(), &ZeroconfBrowser::currentRecordsChanged, this, &ZeroconfService::serverDetected);
         zeroconf_browser_->browseForType(QLatin1String(m_ServerServiceName));
     }
 
-    connect(zeroconf_browser_.get(), SIGNAL(error(DNSServiceErrorType)),
-        this, SLOT(errorHandle(DNSServiceErrorType)));
+    connect(zeroconf_browser_.get(), &ZeroconfBrowser::error, this, &ZeroconfService::errorHandle);
 }
 
 ZeroconfService::~ZeroconfService() = default;
 
 void ZeroconfService::serverDetected(const QList<ZeroconfRecord>& list)
 {
-    for (ZeroconfRecord record : list) {
+    for (const ZeroconfRecord& record : list) {
         registerService(false);
         m_pMainWindow->appendLogInfo(tr("zeroconf server detected: %1").arg(
             record.serviceName));
@@ -99,7 +98,7 @@ void ZeroconfService::serverDetected(const QList<ZeroconfRecord>& list)
 
 void ZeroconfService::clientDetected(const QList<ZeroconfRecord>& list)
 {
-    for (ZeroconfRecord record : list) {
+    for (const ZeroconfRecord& record : list) {
         m_pMainWindow->appendLogInfo(tr("zeroconf client detected: %1").arg(
             record.serviceName));
         m_pMainWindow->autoAddScreen(record.serviceName);

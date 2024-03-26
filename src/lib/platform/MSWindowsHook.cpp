@@ -65,7 +65,7 @@ static std::vector<DWORD> immune_keys_list()
     std::vector<DWORD> keys;
     std::string badLine;
     if (!ImmuneKeysReader::get_list(g_immuneKeysPath.c_str(), keys, badLine))
-        LOG((CLOG_ERR "Reading immune keys stopped at: %s", badLine.c_str()));
+        LOG_ERR("Reading immune keys stopped at: %s", badLine.c_str());
     return keys;
 }
 
@@ -575,7 +575,7 @@ MSWindowsHook::install()
     // setup immune keys
     g_immuneKeysPath = (inputleap::DataDirectories::profile() / "ImmuneKeys.txt").u8string();
     g_immuneKeys = immune_keys_list();
-    LOG((CLOG_DEBUG "Found %u immune keys in %s", g_immuneKeys.size(), g_immuneKeysPath.c_str()));
+    LOG_DEBUG("Found %u immune keys in %s", g_immuneKeys.size(), g_immuneKeysPath.c_str());
 
 #if NO_GRAB_KEYBOARD
     // we only need the mouse hook

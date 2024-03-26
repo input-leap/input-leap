@@ -47,7 +47,7 @@ TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, 
         throw XSocketCreate(e.what());
     }
 
-    LOG((CLOG_DEBUG "Opening new socket: %08X", m_socket));
+    LOG_DEBUG("Opening new socket: %p", m_socket);
 
     init();
 }
@@ -60,7 +60,7 @@ TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, 
 {
     assert(m_socket != nullptr);
 
-    LOG((CLOG_DEBUG "Opening new socket: %08X", m_socket));
+    LOG_DEBUG("Opening new socket: %p", m_socket);
 
     // socket starts in connected state
     init();
@@ -95,7 +95,7 @@ TCPSocket::bind(const NetworkAddress& addr)
 void
 TCPSocket::close()
 {
-    LOG((CLOG_DEBUG "Closing socket: %08X", m_socket));
+    LOG_DEBUG("Closing socket: %p", m_socket);
 
     // remove ourself from the multiplexer
     setJob(nullptr);
@@ -117,7 +117,7 @@ TCPSocket::close()
         }
         catch (XArchNetwork& e) {
             // ignore, there's not much we can do
-            LOG((CLOG_WARN "error closing socket: %s", e.what()));
+            LOG_WARN("error closing socket: %s", e.what());
         }
     }
 }
@@ -252,7 +252,7 @@ bool
 TCPSocket::isFatal() const
 {
     // TCP sockets aren't ever left in a fatal state.
-    LOG((CLOG_ERR "isFatal() not valid for non-secure connections"));
+    LOG_ERR("isFatal() not valid for non-secure connections");
     return false;
 }
 
@@ -574,7 +574,7 @@ MultiplexerJobStatus TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
         }
         catch (XArchNetwork& e) {
             // other write error
-            LOG((CLOG_WARN "error writing socket: %s", e.what()));
+            LOG_WARN("error writing socket: %s", e.what());
             onDisconnected();
             sendEvent(EventType::STREAM_OUTPUT_ERROR);
             sendEvent(EventType::SOCKET_DISCONNECTED);
@@ -594,7 +594,7 @@ MultiplexerJobStatus TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
         }
         catch (XArchNetwork& e) {
             // ignore other read error
-            LOG((CLOG_WARN "error reading socket: %s", e.what()));
+            LOG_WARN("error reading socket: %s", e.what());
         }
     }
 

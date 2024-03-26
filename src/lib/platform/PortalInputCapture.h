@@ -14,8 +14,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTLEAP_LIB_PLATFORM_PORTAL_INPUT_CAPTURE_H
-#define INPUTLEAP_LIB_PLATFORM_PORTAL_INPUT_CAPTURE_H
+#pragma once
 
 #include "config.h"
 
@@ -104,4 +103,3 @@ private:
 } // namespace inputleap
 
 #endif // HAVE_LIBPORTAL_INPUTCAPTURE
-#endif // INPUTLEAP_LIB_PLATFORM_PORTAL_INPUT_CAPTURE_H

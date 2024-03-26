@@ -2,14 +2,14 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="de" sourcelanguage="en">
 <context>
-    <name>AboutDialogBase</name>
+    <name>AboutDialog</name>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="38"/>
+        <location filename="res/AboutDialog.ui" line="38"/>
         <source>About InputLeap</source>
         <translation>Über InputLeap</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="53"/>
+        <location filename="res/AboutDialog.ui" line="53"/>
         <source>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
@@ -39,115 +39,115 @@ Besuchen Sie unsere Website für Hilfe und Info (symless.com).
 &lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="140"/>
+        <location filename="res/AboutDialog.ui" line="140"/>
         <source>Unknown</source>
         <translation>Unbekannt</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="124"/>
+        <location filename="res/AboutDialog.ui" line="124"/>
         <source>Version:</source>
         <translation>Version:</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="163"/>
+        <location filename="res/AboutDialog.ui" line="163"/>
         <source>&amp;Ok</source>
         <translation>&amp;Ok</translation>
     </message>
 </context>
 <context>
-    <name>ActionDialogBase</name>
+    <name>ActionDialog</name>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="14"/>
+        <location filename="res/ActionDialog.ui" line="14"/>
         <source>Configure Action</source>
         <translation>Aktion konfigurieren</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="20"/>
+        <location filename="res/ActionDialog.ui" line="20"/>
         <source>Choose the action to perform</source>
         <translation>Wähle eine Aktion, die ausgeführt werden soll</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="26"/>
+        <location filename="res/ActionDialog.ui" line="26"/>
         <source>Press a hotkey</source>
         <translation>Hotkey drücken</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="36"/>
+        <location filename="res/ActionDialog.ui" line="36"/>
         <source>Release a hotkey</source>
         <translation>Hotkey loslassen</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="43"/>
+        <location filename="res/ActionDialog.ui" line="43"/>
         <source>Press and release a hotkey</source>
         <translation>Hotkey drücken und loslassen</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="69"/>
+        <location filename="res/ActionDialog.ui" line="69"/>
         <source>only on these screens</source>
         <translation>nur auf diesen Bildschirmen</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="119"/>
+        <location filename="res/ActionDialog.ui" line="119"/>
         <source>Switch to screen</source>
         <translation>Zum Bildschirm wechseln</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="150"/>
+        <location filename="res/ActionDialog.ui" line="150"/>
         <source>Switch in direction</source>
         <translation>In Richtung wechseln</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="174"/>
+        <location filename="res/ActionDialog.ui" line="174"/>
         <source>left</source>
         <translation>links</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="179"/>
+        <location filename="res/ActionDialog.ui" line="179"/>
         <source>right</source>
         <translation>rechts</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="184"/>
+        <location filename="res/ActionDialog.ui" line="184"/>
         <source>up</source>
         <translation>hoch</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="189"/>
+        <location filename="res/ActionDialog.ui" line="189"/>
         <source>down</source>
         <translation>runter</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="201"/>
+        <location filename="res/ActionDialog.ui" line="201"/>
         <source>Lock cursor to screen</source>
         <translation>Cursor auf Bildschirm beschränken</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="225"/>
+        <location filename="res/ActionDialog.ui" line="225"/>
         <source>toggle</source>
         <translation>umschalten</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="230"/>
+        <location filename="res/ActionDialog.ui" line="230"/>
         <source>on</source>
         <translation>ein</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="235"/>
+        <location filename="res/ActionDialog.ui" line="235"/>
         <source>off</source>
         <translation>aus</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="248"/>
+        <location filename="res/ActionDialog.ui" line="248"/>
         <source>This action is performed when</source>
         <translation>Diese Aktion wird ausgeführt, wenn</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="254"/>
+        <location filename="res/ActionDialog.ui" line="254"/>
         <source>the hotkey is pressed</source>
         <translation>wenn der Hotkey gedrückt wird</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="264"/>
+        <location filename="res/ActionDialog.ui" line="264"/>
         <source>the hotkey is released</source>
         <translation>wenn der Hotkey losgelassen wird</translation>
     </message>
@@ -155,17 +155,17 @@ Besuchen Sie unsere Website für Hilfe und Info (symless.com).
 <context>
     <name>AddClientDialog</name>
     <message>
-        <location filename="res/AddClientDialogBase.ui" line="20"/>
+        <location filename="res/AddClientDialog.ui" line="20"/>
         <source>Dialog</source>
         <translation>Dialog</translation>
     </message>
     <message>
-        <location filename="res/AddClientDialogBase.ui" line="35"/>
+        <location filename="res/AddClientDialog.ui" line="35"/>
         <source>TextLabel</source>
         <translation>TextLabel</translation>
     </message>
     <message>
-        <location filename="res/AddClientDialogBase.ui" line="83"/>
+        <location filename="res/AddClientDialog.ui" line="83"/>
         <source>Ignore auto connect clients</source>
         <translation>Autoconnect-Clients ignorieren</translation>
     </message>
@@ -712,168 +712,168 @@ Um diesem Fingerabdruck bei zukünftigen Verbindeungen automatisch zu vertrauen,
     </message>
 </context>
 <context>
-    <name>ScreenSettingsDialogBase</name>
+    <name>ScreenSettingsDialog</name>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="14"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="14"/>
         <source>Screen Settings</source>
         <translation>Bildschirmeinstellungen</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="22"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="22"/>
         <source>Screen &amp;name:</source>
         <translation>Bildschirm&amp;name:</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="42"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="42"/>
         <source>A&amp;liases</source>
         <translation>A&amp;liase</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="57"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="57"/>
         <source>&amp;Add</source>
         <translation>&amp;Hinzufügen</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="74"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="74"/>
         <source>&amp;Remove</source>
         <translation>&amp;Entfernen</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="97"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="97"/>
         <source>&amp;Modifier keys</source>
         <translation>&amp;Zusatztasten</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="106"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="106"/>
         <source>&amp;Shift:</source>
         <translation>Um&amp;schalt:</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="117"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="164"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="211"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="258"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="305"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="117"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="164"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="211"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="258"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="305"/>
         <source>Shift</source>
         <translation>Umschalt</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="122"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="169"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="216"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="263"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="310"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="122"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="169"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="216"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="263"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="310"/>
         <source>Ctrl</source>
         <translation>Strg</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="127"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="174"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="221"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="268"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="315"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="127"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="174"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="221"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="268"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="315"/>
         <source>Alt</source>
         <translation>Alt</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="132"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="179"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="226"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="273"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="320"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="132"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="179"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="226"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="273"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="320"/>
         <source>Meta</source>
         <translation>Meta</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="137"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="184"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="231"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="278"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="325"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="137"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="184"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="231"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="278"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="325"/>
         <source>Super</source>
         <translation>Windows</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="142"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="189"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="236"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="283"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="330"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="142"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="189"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="236"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="283"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="330"/>
         <source>None</source>
         <translation>Keine</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="150"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="150"/>
         <source>&amp;Ctrl:</source>
         <translation>&amp;Strg:</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="197"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="197"/>
         <source>Al&amp;t:</source>
         <translation>Al&amp;t:</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="244"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="244"/>
         <source>M&amp;eta:</source>
         <translation>M&amp;eta:</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="291"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="291"/>
         <source>S&amp;uper:</source>
         <translation>S&amp;uper:</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="358"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="358"/>
         <source>&amp;Dead corners</source>
         <translation>&quot;&amp;Tote&quot; Ecken</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="367"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="367"/>
         <source>Top-left</source>
         <translation>Oben links</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="374"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="374"/>
         <source>Top-right</source>
         <translation>Oben rechts</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="381"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="381"/>
         <source>Bottom-left</source>
         <translation>Unten links</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="388"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="388"/>
         <source>Bottom-right</source>
         <translation>Unten rechts</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="397"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="397"/>
         <source>Corner Si&amp;ze:</source>
         <translation>Ecken&amp;größe:</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="428"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="428"/>
         <source>&amp;Fixes</source>
         <translation>&amp;Korrekturen</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="437"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="437"/>
         <source>Fix CAPS LOCK key</source>
         <translation>Korrektur für Feststelltaste</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="444"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="444"/>
         <source>Fix NUM LOCK key</source>
         <translation>Korrektur für Num-Lock-Taste</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="451"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="451"/>
         <source>Fix SCROLL LOCK key</source>
         <translation>Korrektur für Rollen-Taste</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="458"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="458"/>
         <source>Fix XTest for Xinerama</source>
         <translation>Korrektur für XTest für Xinerama</translation>
     </message>

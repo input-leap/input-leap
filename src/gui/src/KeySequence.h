@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(KEYSEQUENCE_H)
-
-#define KEYSEQUENCE_H
+#pragma once
 
 #include <QList>
 #include <QString>
@@ -52,5 +50,3 @@ class KeySequence
 
         static QString keyToString(int key);
 };
-
-#endif

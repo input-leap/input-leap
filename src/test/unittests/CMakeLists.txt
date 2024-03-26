@@ -67,7 +67,7 @@ endif()
 
 add_executable(unittests ${sources})
 target_link_libraries(unittests
-    base client server common io net platform server synlib mt arch ipc ${GTEST_LIBRARIES} ${GMOCK_LIBRARIES} ${libs} ${OPENSSL_LIBS})
+    base client server common io net platform server synlib mt arch ipc ${GTEST_LIBRARIES} ${GMOCK_LIBRARIES} ${libs} OpenSSL::SSL OpenSSL::Crypto)
 
 add_test(NAME unittests
          COMMAND unittests

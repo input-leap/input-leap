@@ -112,10 +112,10 @@ App::run(int argc, char** argv)
         result = e.getCode();
     }
     catch (std::exception& e) {
-        LOG((CLOG_CRIT "An error occurred: %s\n", e.what()));
+        LOG_CRIT("An error occurred: %s\n", e.what());
     }
     catch (...) {
-        LOG((CLOG_CRIT "An unknown error occurred.\n"));
+        LOG_CRIT("An unknown error occurred.\n");
     }
 
     appUtil().beforeAppExit();
@@ -140,7 +140,7 @@ App::setupFileLogging()
     if (argsBase().m_logFile != nullptr) {
         m_fileLog = new FileLogOutputter(argsBase().m_logFile);
         CLOG->insert(m_fileLog);
-        LOG((CLOG_DEBUG1 "logging to file (%s) enabled", argsBase().m_logFile));
+        LOG_DEBUG1("logging to file (%s) enabled", argsBase().m_logFile);
     }
 }
 
@@ -149,8 +149,8 @@ App::loggingFilterWarning()
 {
     if (CLOG->getFilter() > CLOG->getConsoleMaxLevel()) {
         if (argsBase().m_logFile == nullptr) {
-            LOG((CLOG_WARN "log messages above %s are NOT sent to console (use file logging)",
-                CLOG->getFilterName(CLOG->getConsoleMaxLevel())));
+            LOG_WARN("log messages above %s are NOT sent to console (use file logging)",
+                CLOG->getFilterName(CLOG->getConsoleMaxLevel()));
         }
     }
 }
@@ -165,16 +165,16 @@ App::initApp(int argc, const char** argv)
 
     // set log filter
     if (!CLOG->setFilter(argsBase().m_logFilter)) {
-        LOG((CLOG_PRINT "%s: unrecognized log level `%s'" BYE,
-            argsBase().m_exename.c_str(), argsBase().m_logFilter, argsBase().m_exename.c_str()));
+        LOG_PRINT("%s: unrecognized log level `%s'" BYE,
+            argsBase().m_exename.c_str(), argsBase().m_logFilter, argsBase().m_exename.c_str());
         m_bye(kExitArgs);
     }
     loggingFilterWarning();
 
     if (argsBase().m_enableDragDrop) {
-        LOG((CLOG_INFO "drag and drop enabled"));
+        LOG_INFO("drag and drop enabled");
         if (!argsBase().m_dropTarget.empty()) {
-            LOG((CLOG_INFO "drop target: %s", argsBase().m_dropTarget.c_str()));
+            LOG_INFO("drop target: %s", argsBase().m_dropTarget.c_str());
         }
     }
 
@@ -220,7 +220,7 @@ void App::handle_ipc_message(const Event& e)
 {
     const auto& m = e.get_data_as<IpcMessage>();
     if (m.type() == kIpcShutdown) {
-        LOG((CLOG_INFO "got ipc shutdown message"));
+        LOG_INFO("got ipc shutdown message");
         m_events->add_event(EventType::QUIT);
     }
 }

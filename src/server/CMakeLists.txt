@@ -24,7 +24,7 @@ if (BUILD_MSWINDOWS)
     list(APPEND sources
         input-leaps.exe.manifest
         input-leaps.rc
-    )        
+    )
     set_property(SOURCE input-leaps.rc PROPERTY COMPILE_FLAGS /nologo)
 endif()
 if (BUILD_CARBON)
@@ -49,10 +49,12 @@ endif()
 
 add_executable(input-leaps ${sources})
 target_link_libraries(input-leaps
-    arch base client common io mt net ipc platform server synlib ${libs} ${OPENSSL_LIBS})
+    arch base client common io mt net ipc platform server synlib ${libs} OpenSSL::SSL OpenSSL::Crypto)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     install(TARGETS input-leaps DESTINATION ${INPUTLEAP_BUNDLE_BINARY_DIR})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     install (TARGETS input-leaps DESTINATION bin)
+else()
+    install (TARGETS input-leaps DESTINATION .)
 endif()

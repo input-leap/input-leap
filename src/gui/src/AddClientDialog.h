@@ -15,12 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ADDCLIENTDIALOG_H
-#define ADDCLIENTDIALOG_H
-
-#include "ui_AddClientDialogBase.h"
+#pragma once
 
 #include <QDialog>
+#include <memory>
 
 class QPushButton;
 class QLabel;
@@ -33,8 +31,12 @@ enum {
     kAddClientOther,
     kAddClientIgnore
 };
+namespace Ui
+{
+    class AddClientDialog;
+}
 
-class AddClientDialog : public QDialog, public Ui::AddClientDialog
+class AddClientDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -56,6 +58,7 @@ private slots:
     void handleButtonAdvanced();
 
 private:
+    std::unique_ptr<Ui::AddClientDialog> ui_;
     QPushButton* m_pButtonLeft;
     QPushButton* m_pButtonUp;
     QPushButton* m_pButtonRight;
@@ -64,5 +67,3 @@ private:
     int m_AddResult;
     bool m_IgnoreAutoConfigClient;
 };
-
-#endif // ADDCLIENTDIALOG_H

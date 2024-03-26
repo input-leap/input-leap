@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(HOTKEY_H)
-
-#define HOTKEY_H
+#pragma once
 
 #include <QString>
 #include <QList>
@@ -57,5 +55,3 @@ class Hotkey
 };
 
 QTextStream& operator<<(QTextStream& outStream, const Hotkey& hotkey);
-
-#endif

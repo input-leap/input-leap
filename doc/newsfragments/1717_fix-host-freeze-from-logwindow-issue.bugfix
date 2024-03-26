@@ -1,0 +1,1 @@
+Use a buffer to dramatically lower CPU use of log window.  Limit log window to 10,000 lines to prevent RAM use from constantly increasing.

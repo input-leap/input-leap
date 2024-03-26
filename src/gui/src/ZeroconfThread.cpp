@@ -29,7 +29,7 @@ void ZeroconfThread::run()
 {
     QTcpSocket tcpSocket;
     if (!tcpSocket.setSocketDescriptor(m_SocketDescriptor)) {
-        emit error(tcpSocket.error());
+        Q_EMIT error(tcpSocket.error());
         return;
     }
 

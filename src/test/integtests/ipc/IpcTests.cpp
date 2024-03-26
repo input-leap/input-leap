@@ -174,13 +174,13 @@ void IpcTests::sendMessageToServer_serverHandleMessageReceived(const Event& e)
 {
     const auto& m = e.get_data_as<IpcMessage>();
     if (m.type() == kIpcHello) {
-        LOG((CLOG_DEBUG "client said hello, sending test to server"));
+        LOG_DEBUG("client said hello, sending test to server");
         IpcCommandMessage cm("test", true);
         m_sendMessageToServer_client->send(cm);
     }
     else if (m.type() == kIpcCommand) {
         const auto& cm = static_cast<const IpcCommandMessage&>(m);
-        LOG((CLOG_DEBUG "got ipc command message, %d", cm.command().c_str()));
+        LOG_DEBUG("got ipc command message, %s", cm.command().c_str());
         m_sendMessageToServer_receivedString = cm.command();
         m_events.raiseQuitEvent();
     }
@@ -190,7 +190,7 @@ void IpcTests::sendMessageToClient_server_handle_client_connected(const Event& e
 {
     const auto& m = e.get_data_as<IpcMessage>();
     if (m.type() == kIpcHello) {
-        LOG((CLOG_DEBUG "client said hello, sending test to client"));
+        LOG_DEBUG("client said hello, sending test to client");
         IpcLogLineMessage msg("test");
         m_sendMessageToClient_server->send(msg, kIpcClientNode);
     }
@@ -201,7 +201,7 @@ void IpcTests::sendMessageToClient_client_handle_message_received(const Event& e
     const auto& m = e.get_data_as<IpcMessage>();
     if (m.type() == kIpcLogLine) {
         const auto& llm = static_cast<const IpcLogLineMessage&>(m);
-        LOG((CLOG_DEBUG "got ipc log message, %d", llm.logLine().c_str()));
+        LOG_DEBUG("got ipc log message, %s", llm.logLine().c_str());
         m_sendMessageToClient_receivedString = llm.logLine();
         m_events.raiseQuitEvent();
     }

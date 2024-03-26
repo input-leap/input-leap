@@ -34,7 +34,6 @@ set(GUI_SOURCE_FILES
     src/BaseConfig.cpp
     src/CommandProcess.cpp
     src/DataDownloader.cpp
-    src/DisplayIsValid.cpp
     src/FingerprintAcceptDialog.cpp
     src/HotkeyDialog.cpp
     src/IpcClient.cpp
@@ -74,7 +73,6 @@ set(GUI_HEADER_FILES
     src/BaseConfig.h
     src/CommandProcess.h
     src/DataDownloader.h
-    src/DisplayIsValid.h
     src/ElevateMode.h
     src/HotkeyDialog.h
     src/IpcClient.h
@@ -106,17 +104,17 @@ set(GUI_HEADER_FILES
 )
 
 set(GUI_UI_FILES
-    src/AboutDialogBase.ui
-    src/ActionDialogBase.ui
-    src/AddClientDialogBase.ui
+    src/AboutDialog.ui
+    src/ActionDialog.ui
+    src/AddClientDialog.ui
     src/FingerprintAcceptDialog.ui
-    src/HotkeyDialogBase.ui
-    src/LogWindowBase.ui
-    src/MainWindowBase.ui
-    src/ScreenSettingsDialogBase.ui
-    src/ServerConfigDialogBase.ui
-    src/SettingsDialogBase.ui
-    src/SetupWizardBase.ui
+    src/HotkeyDialog.ui
+    src/LogWindow.ui
+    src/MainWindow.ui
+    src/ScreenSettingsDialog.ui
+    src/ServerConfigDialog.ui
+    src/SettingsDialog.ui
+    src/SetupWizard.ui
 )
 
 set(TS_FILES
@@ -209,7 +207,7 @@ target_link_libraries(input-leap
 if (QT_DEFAULT_MAJOR_VERSION EQUAL 6)
     target_link_libraries(input-leap Qt::Core5Compat)
 endif()
-target_link_libraries(input-leap ${OPENSSL_LIBS})
+target_link_libraries(input-leap OpenSSL::SSL OpenSSL::Crypto)
 
 target_compile_definitions (input-leap PRIVATE -DINPUTLEAP_VERSION_STAGE="${INPUTLEAP_VERSION_STAGE}")
 target_compile_definitions (input-leap PRIVATE -DINPUTLEAP_REVISION="${INPUTLEAP_REVISION}")
@@ -236,6 +234,25 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     install(TARGETS input-leap DESTINATION ${INPUTLEAP_BUNDLE_BINARY_DIR})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "BSD")
     install (TARGETS input-leap DESTINATION bin)
+elseif(WIN32)
+    set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION .)
+    if(${CMAKE_BUILD_TYPE} MATCHES "Debug")
+        set(CMAKE_INSTALL_DEBUG_LIBRARIES TRUE)
+    endif()
+    set(CMAKE_INSTALL_UCRT_LIBRARIES TRUE)
+    include(InstallRequiredSystemLibraries)
+    add_custom_command(
+        TARGET input-leap POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/qtDeploy"
+        COMMAND ${QT_DEPLOY_TOOL} --no-compiler-runtime --no-system-d3d-compiler
+            --dir "${CMAKE_BINARY_DIR}/qtDeploy" $<TARGET_FILE:input-leap>
+    )
+    install(TARGETS input-leap DESTINATION .)
+    install(
+        DIRECTORY ${CMAKE_BINARY_DIR}/qtDeploy/
+        DESTINATION .
+        FILES_MATCHING PATTERN "*.*"
+    )
 endif()
 
 if(INPUTLEAP_BUILD_TESTS)

@@ -15,8 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTLEAP_LIB_NET_FINGERPRINT_DATABASE_H
-#define INPUTLEAP_LIB_NET_FINGERPRINT_DATABASE_H
+#pragma once
 
 #include "FingerprintData.h"
 #include "io/filesystem.h"
@@ -49,5 +48,3 @@ private:
 };
 
 } // namespace inputleap
-
-#endif // INPUTLEAP_LIB_NET_FINGERPRINT_DATABASE_H

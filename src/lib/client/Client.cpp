@@ -133,10 +133,10 @@ Client::connect()
         // m_serverAddress will be null if the hostname address is not reolved
         if (m_serverAddress.getAddress() != nullptr) {
           // to help users troubleshoot, show server host name (issue: 60)
-          LOG((CLOG_NOTE "connecting to '%s': %s:%i",
+          LOG_NOTE("connecting to '%s': %s:%i",
           m_serverAddress.getHostname().c_str(),
           ARCH->addrToString(m_serverAddress.getAddress()).c_str(),
-          m_serverAddress.getPort()));
+          m_serverAddress.getPort());
         }
 
         // create the socket
@@ -147,7 +147,7 @@ Client::connect()
         m_stream = new PacketStreamFilter(m_events, std::move(socket));
 
         // connect
-        LOG((CLOG_DEBUG1 "connecting to server"));
+        LOG_DEBUG1("connecting to server");
         setupConnecting();
         setupTimer();
         socket_ptr->connect(m_serverAddress);
@@ -156,7 +156,7 @@ Client::connect()
         cleanupTimer();
         cleanupConnecting();
         cleanupStream();
-        LOG((CLOG_DEBUG1 "connection failed"));
+        LOG_DEBUG1("connection failed");
         sendConnectionFailedEvent(e.what());
         return;
     }
@@ -343,7 +343,7 @@ Client::setOptions(const OptionsList& options)
         if (id == kOptionClipboardSharing) {
             index++;
             if (*index == static_cast<OptionValue>(false)) {
-                LOG((CLOG_NOTE "clipboard sharing is disabled"));
+                LOG_NOTE("clipboard sharing is disabled");
             }
             m_enableClipboard = *index;
 
@@ -358,8 +358,8 @@ Client::setOptions(const OptionsList& options)
 
     if (m_enableClipboard && !m_maximumClipboardSize) {
         m_enableClipboard = false;
-        LOG((CLOG_NOTE "clipboard sharing is disabled because the server "
-                       "set the maximum clipboard size to 0"));
+        LOG_NOTE("clipboard sharing is disabled because the server "
+                       "set the maximum clipboard size to 0");
     }
 
     m_screen->setOptions(options);
@@ -397,9 +397,9 @@ Client::sendClipboard(ClipboardID id)
         // marshall the data
         std::string data = clipboard.marshall();
         if (data.size() >= m_maximumClipboardSize) {
-            LOG((CLOG_NOTE "Skipping clipboard transfer because the clipboard"
-                " contents exceeds the %i MB size limit set by the server",
-                m_maximumClipboardSize));
+            LOG_NOTE("Skipping clipboard transfer because the clipboard"
+                " contents exceeds the %zi MB size limit set by the server",
+                m_maximumClipboardSize);
             return;
         }
 
@@ -428,7 +428,7 @@ Client::sendConnectionFailedEvent(const char* msg)
 
 void Client::send_file_chunk(const FileChunk& chunk)
 {
-    LOG((CLOG_DEBUG1 "send file chunk"));
+    LOG_DEBUG1("send file chunk");
     assert(m_server != nullptr);
 
     m_server->file_chunk_sending(chunk);
@@ -552,7 +552,7 @@ Client::cleanupStream()
 void
 Client::handle_connected()
 {
-    LOG((CLOG_DEBUG1 "connected;  wait for hello"));
+    LOG_DEBUG1("connected;  wait for hello");
     cleanupConnecting();
     setupConnection();
 
@@ -571,7 +571,7 @@ void Client::handle_connection_failed(const Event& event)
     cleanupTimer();
     cleanupConnecting();
     cleanupStream();
-    LOG((CLOG_DEBUG1 "connection failed"));
+    LOG_DEBUG1("connection failed");
     sendConnectionFailedEvent(info.m_what.c_str());
 }
 
@@ -581,7 +581,7 @@ void Client::handle_connect_timeout()
     cleanupConnecting();
     cleanupConnection();
     cleanupStream();
-    LOG((CLOG_DEBUG1 "connection timed out"));
+    LOG_DEBUG1("connection timed out");
     sendConnectionFailedEvent("Timed out");
 }
 
@@ -590,7 +590,7 @@ void Client::handle_output_error()
     cleanupTimer();
     cleanupScreen();
     cleanupConnection();
-    LOG((CLOG_WARN "error sending to server"));
+    LOG_WARN("error sending to server");
     send_event(EventType::CLIENT_DISCONNECTED);
 }
 
@@ -599,13 +599,13 @@ void Client::handle_disconnected()
     cleanupTimer();
     cleanupScreen();
     cleanupConnection();
-    LOG((CLOG_DEBUG1 "disconnected"));
+    LOG_DEBUG1("disconnected");
     send_event(EventType::CLIENT_DISCONNECTED);
 }
 
 void Client::handle_shape_changed()
 {
-    LOG((CLOG_DEBUG "resolution changed"));
+    LOG_DEBUG("resolution changed");
     m_server->onInfoChanged();
 }
 
@@ -643,7 +643,7 @@ void Client::handle_hello()
     }
 
     // check versions
-    LOG((CLOG_DEBUG1 "got hello version %d.%d", major, minor));
+    LOG_DEBUG1("got hello version %d.%d", major, minor);
     if (major < kProtocolMajorVersion ||
         (major == kProtocolMajorVersion && minor < kProtocolMinorVersion)) {
         sendConnectionFailedEvent(XIncompatibleClient(major, minor).what());
@@ -653,7 +653,7 @@ void Client::handle_hello()
     }
 
     // say hello back
-    LOG((CLOG_DEBUG1 "say hello version %d.%d", kProtocolMajorVersion, kProtocolMinorVersion));
+    LOG_DEBUG1("say hello version %d.%d", kProtocolMajorVersion, kProtocolMinorVersion);
     ProtocolUtil::writef(m_stream, kMsgHelloBack,
                             kProtocolMajorVersion,
                             kProtocolMinorVersion, &m_name);
@@ -672,7 +672,7 @@ void Client::handle_hello()
 
 void Client::handle_suspend()
 {
-    LOG((CLOG_INFO "suspend"));
+    LOG_INFO("suspend");
     m_suspended       = true;
     bool wasConnected = isConnected();
     disconnect(nullptr);
@@ -681,7 +681,7 @@ void Client::handle_suspend()
 
 void Client::handle_resume()
 {
-    LOG((CLOG_INFO "resume"));
+    LOG_INFO("resume");
     m_suspended = false;
     if (m_connectOnResume) {
         m_connectOnResume = false;
@@ -716,7 +716,7 @@ void Client::handle_stop_retry()
 
 void Client::write_to_drop_dir_thread()
 {
-    LOG((CLOG_DEBUG "starting write to drop dir thread"));
+    LOG_DEBUG("starting write to drop dir thread");
 
     while (m_screen->isFakeDraggingStarted()) {
         inputleap::this_thread_sleep(.1f);
@@ -730,7 +730,7 @@ void Client::dragInfoReceived(std::uint32_t fileNum, std::string data)
 {
     // TODO: fix duplicate function from CServer
     if (!m_args.m_enableDragDrop) {
-        LOG((CLOG_DEBUG "drag drop not enabled, ignoring drag info."));
+        LOG_DEBUG("drag drop not enabled, ignoring drag info.");
         return;
     }
 
@@ -761,7 +761,7 @@ void Client::send_file_thread(const char* filename)
         StreamChunker::sendFile(filename, m_events, this);
     }
     catch (std::runtime_error& error) {
-        LOG((CLOG_ERR "failed sending file chunks: %s", error.what()));
+        LOG_ERR("failed sending file chunks: %s", error.what());
     }
 
     m_sendFileThread = nullptr;

@@ -162,16 +162,16 @@ void ClientProxy1_6::handle_data()
     while (n != 0) {
         // verify we got an entire code
         if (n != 4) {
-            LOG((CLOG_ERR "incomplete message from \"%s\": %d bytes", getName().c_str(), n));
+            LOG_ERR("incomplete message from \"%s\": %d bytes", getName().c_str(), n);
             disconnect();
             return;
         }
 
         // parse message
         try {
-            LOG((CLOG_DEBUG2 "msg from \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]));
+            LOG_DEBUG2("msg from \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]);
             if (!(this->*m_parser)(code)) {
-                LOG((CLOG_ERR "invalid message from client \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]));
+                LOG_ERR("invalid message from client \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]);
                 disconnect();
                 return;
             }
@@ -179,7 +179,7 @@ void ClientProxy1_6::handle_data()
             // TODO: disconnect handling is currently dispersed across both parseMessage() and
             // handleData() functions, we should collect that to a single place
 
-            LOG((CLOG_ERR "protocol error from client: %s", e.what()));
+            LOG_ERR("protocol error from client: %s", e.what());
             disconnect();
             return;
         }
@@ -196,7 +196,7 @@ bool ClientProxy1_6::parseHandshakeMessage(const std::uint8_t* code)
 {
     if (memcmp(code, kMsgCNoop, 4) == 0) {
         // discard no-ops
-        LOG((CLOG_DEBUG2 "no-op from", getName().c_str()));
+        LOG_DEBUG2("no-op from %s", getName().c_str());
         return true;
     }
     else if (memcmp(code, kMsgDInfo, 4) == 0) {
@@ -234,7 +234,7 @@ bool ClientProxy1_6::parseMessage(const std::uint8_t* code)
     }
     else if (memcmp(code, kMsgCNoop, 4) == 0) {
         // discard no-ops
-        LOG((CLOG_DEBUG2 "no-op from", getName().c_str()));
+        LOG_DEBUG2("no-op from %s", getName().c_str());
         return true;
     }
     else if (memcmp(code, kMsgCClipboard, 4) == 0) {
@@ -248,20 +248,20 @@ bool ClientProxy1_6::parseMessage(const std::uint8_t* code)
 
 void ClientProxy1_6::handle_disconnect()
 {
-    LOG((CLOG_NOTE "client \"%s\" has disconnected", getName().c_str()));
+    LOG_NOTE("client \"%s\" has disconnected", getName().c_str());
     disconnect();
 }
 
 void ClientProxy1_6::handle_write_error()
 {
-    LOG((CLOG_WARN "error writing to client \"%s\"", getName().c_str()));
+    LOG_WARN("error writing to client \"%s\"", getName().c_str());
     disconnect();
 }
 
 void ClientProxy1_6::handle_flatline()
 {
     // didn't get a heartbeat fast enough.  assume client is dead.
-    LOG((CLOG_NOTE "client \"%s\" is dead", getName().c_str()));
+    LOG_NOTE("client \"%s\" is dead", getName().c_str());
     disconnect();
 }
 
@@ -316,7 +316,7 @@ void ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard* clipboard)
         std::string data = m_clipboard[id].m_clipboard.marshall();
 
         size_t size = data.size();
-        LOG((CLOG_DEBUG "sending clipboard %d to \"%s\"", id, getName().c_str()));
+        LOG_DEBUG("sending clipboard %d to \"%s\"", id, getName().c_str());
 
         StreamChunker::sendClipboard(data, size, id, 0, m_events, this);
     }
@@ -427,7 +427,7 @@ bool ClientProxy1_6::recvInfo()
                             &x, &y, &w, &h, &dummy1, &mx, &my)) {
         return false;
     }
-    LOG((CLOG_DEBUG "received client \"%s\" info shape=%d,%d %dx%d at %d,%d", getName().c_str(), x, y, w, h, mx, my));
+    LOG_DEBUG("received client \"%s\" info shape=%d,%d %dx%d at %d,%d", getName().c_str(), x, y, w, h, mx, my);
 
     // validate
     if (w <= 0 || h <= 0) {
@@ -462,10 +462,10 @@ bool ClientProxy1_6::recvClipboard()
 
     if (r == kStart) {
         size_t size = ClipboardChunk::getExpectedSize();
-        LOG((CLOG_DEBUG "receiving clipboard %d size=%d", id, size));
+        LOG_DEBUG("receiving clipboard %d size=%zd", id, size);
     } else if (r == kFinish) {
-        LOG((CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%d",
-                getName().c_str(), id, seq, dataCached.size()));
+        LOG_DEBUG("received client \"%s\" clipboard %d seqnum=%d, size=%zd",
+                getName().c_str(), id, seq, dataCached.size());
         // save clipboard
         m_clipboard[id].m_clipboard.unmarshall(dataCached, 0);
         m_clipboard[id].m_sequenceNumber = seq;
@@ -489,7 +489,7 @@ bool ClientProxy1_6::recvGrabClipboard()
     if (!ProtocolUtil::readf(getStream(), kMsgCClipboard + 4, &id, &seqNum)) {
         return false;
     }
-    LOG((CLOG_DEBUG "received client \"%s\" grabbed clipboard %d seqnum=%d", getName().c_str(), id, seqNum));
+    LOG_DEBUG("received client \"%s\" grabbed clipboard %d seqnum=%d", getName().c_str(), id, seqNum);
 
     // validate
     if (id >= kClipboardEnd) {
@@ -522,7 +522,7 @@ void ClientProxy1_6::fileChunkReceived()
     } else if (result == kStart) {
         if (server->getFakeDragFileList().size() > 0) {
             std::string filename = server->getFakeDragFileList().at(0).getFilename();
-            LOG((CLOG_DEBUG "start receiving %s", filename.c_str()));
+            LOG_DEBUG("start receiving %s", filename.c_str());
         }
     }
 }

@@ -1,5 +1,6 @@
 /*
  * InputLeap -- mouse and keyboard sharing utility
+ * Copyright (C) 2023-2024 InputLeap Developers
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -17,35 +18,27 @@
  */
 
 #include "AboutDialog.h"
+#include "ui_AboutDialog.h"
 
-#include <QtCore>
-#include <QtGui>
 #include "common/Version.h"
 
 AboutDialog::AboutDialog(QWidget* parent, const QString& app_name) :
-	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-	Ui::AboutDialogBase()
+    QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
+    ui_{std::make_unique<Ui::AboutDialog>()}
 {
-	setupUi(this);
-
-    QString version = kVersion;
-	version = version + '-' + INPUTLEAP_VERSION_STAGE;
+    ui_->setupUi(this);
+    QString version = QStringLiteral("%1-%2").arg(kVersion, INPUTLEAP_VERSION_STAGE);
 #ifdef INPUTLEAP_REVISION
-    version +=  '-';
-    version += INPUTLEAP_REVISION;
+    version.append(QStringLiteral("-%1").arg(INPUTLEAP_REVISION));
 #endif
-    m_pLabelAppVersion->setText(version);
-
-	// change default size based on os
-#if defined(Q_OS_MAC)
-	QSize size(600, 380);
-	setMaximumSize(size);
-	setMinimumSize(size);
-	resize(size);
-#elif defined(Q_OS_LINUX)
-	QSize size(600, 330);
-	setMaximumSize(size);
-	setMinimumSize(size);
-	resize(size);
-#endif
+    ui_->m_pLabelAppVersion->setText(version);
+    const int scaled_logo_height = sizeHint().width() <= 300 ? 45 : 90;
+    const QPixmap scaled_logo = QPixmap(":/res/image/about.png")
+                 .scaled(QSize(sizeHint().width(), scaled_logo_height),
+                         Qt::KeepAspectRatio, Qt::SmoothTransformation
+    );
+    ui_->logoLabel->setPixmap(scaled_logo);
+    setFixedSize(sizeHint());
 }
+
+AboutDialog::~AboutDialog() = default;

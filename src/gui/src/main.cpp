@@ -23,7 +23,6 @@
 #include "MainWindow.h"
 #include "AppConfig.h"
 #include "SetupWizard.h"
-#include "DisplayIsValid.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -55,7 +54,7 @@ bool checkMacAssistiveDevices();
 
 void copy_qsettings(const QSettings &src, QSettings &dst)
 {
-    auto keys = src.allKeys();
+    const auto keys = src.allKeys();
     for (const auto& key : keys) {
         dst.setValue(key, src.value(key));
     }
@@ -63,14 +62,22 @@ void copy_qsettings(const QSettings &src, QSettings &dst)
 
 int main(int argc, char* argv[])
 {
-#ifdef WINAPI_XWINDOWS
-    // QApplication's constructor will call a fscking abort() if
-    // DISPLAY is bad. Let's check it first and handle it gracefully
-    if (!display_is_valid()) {
-        fprintf(stderr, "The InputLeap GUI requires the DISPLAY environment variable to be set. Quitting...\n");
-        return 1;
+#if (defined(WINAPI_XWINDOWS) || \
+    (defined(HAVE_LIBPORTAL_INPUTCAPTURE) || \
+    defined(HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS)))
+    const auto platformType = QGuiApplication::platformName();
+
+    if (platformType == "xcb") {
+        // We're running on X11, all good.
+        // Continue running.
+    } else if (platformType == "wayland") {
+        QMessageBox::information(nullptr, "Input Leap",
+                                 "You are using Wayland. Input Leap supports Wayland via `libei` "
+                                 "but not all desktop environment/window managers support our "
+                                 "implementation at this time. Therefore, your mileage may vary.");
     }
 #endif
+
 #ifdef Q_OS_DARWIN
     /* Workaround for QTBUG-40332 - "High ping when QNetworkAccessManager is instantiated" */
     ::setenv ("QT_BEARER_POLL_TIMEOUT", "-1", 1);
@@ -109,13 +116,6 @@ int main(int argc, char* argv[])
 
 	QApplication::setQuitOnLastWindowClosed(false);
 
-    // TODO: Remove once Wayland support is stabilised.
-    if (QGuiApplication::platformName() == "wayland") {
-        QMessageBox::warning(
-        nullptr, "InputLeap",
-        "You are using wayland session, which is currently not fully supported by InputLeap.");
-    }
-
 	QSettings settings;
     if (settings.allKeys().empty()) {
         // if there are no settings, attempt to copy from old Barrier settings location
@@ -145,7 +145,7 @@ int main(int argc, char* argv[])
 	{
 		mainWindow.open();
 	}
-
+    QObject::connect(&mainWindow, &MainWindow::requestLanguageChange, &app, &QInputLeapApplication::switchTranslator);
 	return app.exec();
 }
 

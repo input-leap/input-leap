@@ -15,8 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COMMANDTHREAD_H
-#define COMMANDTHREAD_H
+#pragma once
 
 #include <QObject>
 #include <QStringList>
@@ -28,7 +27,7 @@ class CommandProcess : public QObject
 public:
     CommandProcess(QString cmd, QStringList arguments, QString input = "");
 
-signals:
+Q_SIGNALS:
     void finished();
 
 public slots:
@@ -39,5 +38,3 @@ private:
     QStringList m_Arguments;
     QString m_Input;
 };
-
-#endif // COMMANDTHREAD_H

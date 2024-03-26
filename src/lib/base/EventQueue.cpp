@@ -63,9 +63,9 @@ EventQueue::loop()
         is_ready_ = true;
         ready_cv_.notify_one();
     }
-    LOG((CLOG_DEBUG "event queue is ready"));
+    LOG_DEBUG("event queue is ready");
     while (!m_pending.empty()) {
-        LOG((CLOG_DEBUG "add pending events to buffer"));
+        LOG_DEBUG("add pending events to buffer");
         Event& event = m_pending.front();
         add_event_to_buffer(std::move(event));
         m_pending.pop();
@@ -84,12 +84,12 @@ void EventQueue::set_buffer(std::unique_ptr<IEventQueueBuffer> buffer)
 {
     std::lock_guard<std::mutex> lock(mutex_);
 
-    LOG((CLOG_DEBUG "adopting new buffer"));
+    LOG_DEBUG("adopting new buffer");
 
     if (m_events.size() != 0) {
         // this can come as a nasty surprise to programmers expecting
         // their events to be raised, only to have them deleted.
-        LOG((CLOG_DEBUG "discarding %d event(s)", m_events.size()));
+        LOG_DEBUG("discarding %zd event(s)", m_events.size());
     }
 
     // discard old buffer and old events

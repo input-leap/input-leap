@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(KEYSEQUENCEWIDGET__H)
-
-#define KEYSEQUENCEWIDGET__H
+#pragma once
 
 #include <QPushButton>
 
@@ -31,7 +29,7 @@ class KeySequenceWidget : public QPushButton
     public:
         KeySequenceWidget(QWidget* parent, const KeySequence& seq = KeySequence());
 
-    signals:
+    Q_SIGNALS:
         void keySequenceChanged();
 
     public:
@@ -59,8 +57,6 @@ class KeySequenceWidget : public QPushButton
         void updateOutput();
         void startRecording();
         void stopRecording();
-        KeySequence& keySequence() { return m_KeySequence; }
-        KeySequence& backupSequence() { return m_BackupSequence; }
 
     private:
         enum Status { Stopped, Recording };
@@ -76,5 +72,3 @@ class KeySequenceWidget : public QPushButton
         QString m_KeyPrefix;
         QString m_KeyPostfix;
 };
-
-#endif

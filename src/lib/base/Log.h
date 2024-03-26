@@ -38,8 +38,8 @@ class Thread;
 /*!
 The logging class;  all console output should go through this class.
 It supports multithread safe operation, several message priority levels,
-filtering by priority, and output redirection.  The macros LOG() and
-LOGC() provide convenient access.
+filtering by priority, and output redirection.  The macros LOG_DEBUG(),
+LOG_INFO() etc. provide convenient access.
 */
 class Log {
 public:
@@ -106,8 +106,10 @@ public:
     preceded by the filename and line number.  If \c file is nullptr then
     neither the file nor the line are printed.
     */
-    void print(const char* file, int line,
-                            const char* format, ...);
+    _X_ATTRIBUTE_PRINTF(5, 6)
+    void print(ELevel priority,
+               const char* file, int line,
+               const char* format, ...);
 
     //! Get the minimum priority level.
     int getFilter() const;
@@ -127,7 +129,7 @@ public:
     //@}
 
 private:
-    void output(ELevel priority, char* msg);
+    void output(ELevel priority, const char* msg);
 
 private:
     typedef std::list<ILogOutputter*> OutputterList;
@@ -137,19 +139,16 @@ private:
     mutable std::mutex m_mutex;
     OutputterList m_outputters;
     OutputterList m_alwaysOutputters;
-    int m_maxNewlineLength;
     int m_maxPriority;
 };
 
 /*!
 \def LOG(arg)
-Write to the log.  Because macros cannot accept variable arguments, this
-should be invoked like so:
+Write to the log. This should be invoked like so:
 \code
-LOG((CLOG_XXX "%d and %d are %s", x, y, x == y ? "equal" : "not equal"));
+LOG(CLOG_XXX "%d and %d are %s", x, y, x == y ? "equal" : "not equal");
 \endcode
-In particular, notice the double open and close parentheses.  Also note
-that there is no comma after the \c CLOG_XXX.  The \c XXX should be
+Note that there is no comma after the \c CLOG_XXX.  The \c XXX should be
 replaced by one of enumerants in \c Log::ELevel without the leading
 \c k.  For example, \c CLOG_INFO.  The special \c CLOG_PRINT level will
 not be filtered and is never prefixed by the filename and line number.
@@ -160,56 +159,30 @@ call to Log::print.  Otherwise it expands to a call to Log::printt,
 which includes the filename and line number.
 */
 
-/*!
-\def LOGC(expr, arg)
-Write to the log if and only if expr is true.  Because macros cannot accept
-variable arguments, this should be invoked like so:
-\code
-LOGC(x == y, (CLOG_XXX "%d and %d are equal", x, y));
-\endcode
-In particular, notice the parentheses around everything after the boolean
-expression.    Also note that there is no comma after the \c CLOG_XXX.
-The \c XXX should be replaced by one of enumerants in \c Log::ELevel
-without the leading \c k.  For example, \c CLOG_INFO.  The special
-\c CLOG_PRINT level will not be filtered and is never prefixed by the
-filename and line number.
-
-If \c NOLOGGING is defined during the build then this macro expands to
-nothing.  If \c NDEBUG is not defined during the build then it expands
-to a call to Log::print that prints the filename and line number,
-otherwise it expands to a call that doesn't.
-*/
-
 #if defined(NOLOGGING)
-#define LOG(_a1)
-#define LOGC(_a1, _a2)
-#define CLOG_TRACE
+#define LOG(...) do { } while(0)
 #elif defined(NDEBUG)
-#define LOG(_a1)        CLOG->print _a1
-#define LOGC(_a1, _a2)    if (_a1) CLOG->print _a2
-#define CLOG_TRACE        nullptr, 0,
+#define LOG(pri_, ...) CLOG->print(pri_, nullptr, 0, __VA_ARGS__)
 #else
-#define LOG(_a1)        CLOG->print _a1
-#define LOGC(_a1, _a2)    if (_a1) CLOG->print _a2
-#define CLOG_TRACE        __FILE__, __LINE__,
+#define LOG(pri_, ...) CLOG->print(pri_, __FILE__, __LINE__, __VA_ARGS__)
 #endif
 
-// the CLOG_* defines are line and file plus %z and an octal number (060=0,
-// 071=9), but the limitation is that once we run out of numbers at either
+// the CLOG_* defines %z and an octal number (060=0, 071=9),
+// but the limitation is that once we run out of numbers at either
 // end, then we resort to using non-numerical chars. this still works (since
 // to deduce the number we subtract octal \060, so '/' is -1, and ':' is 10
 
-#define CLOG_PRINT        CLOG_TRACE "%z\057" // char is '/'
-#define CLOG_CRIT        CLOG_TRACE "%z\060" // char is '0'
-#define CLOG_ERR        CLOG_TRACE "%z\061"
-#define CLOG_WARN        CLOG_TRACE "%z\062"
-#define CLOG_NOTE        CLOG_TRACE "%z\063"
-#define CLOG_INFO        CLOG_TRACE "%z\064"
-#define CLOG_DEBUG        CLOG_TRACE "%z\065"
-#define CLOG_DEBUG1        CLOG_TRACE "%z\066"
-#define CLOG_DEBUG2        CLOG_TRACE "%z\067"
-#define CLOG_DEBUG3        CLOG_TRACE "%z\070"
-#define CLOG_DEBUG4        CLOG_TRACE "%z\071" // char is '9'
-#define CLOG_DEBUG5        CLOG_TRACE "%z\072" // char is ':'
+#define LOG_PRINT(...)  LOG(kPRINT, __VA_ARGS__)
+#define LOG_CRIT(...)   LOG(kFATAL, __VA_ARGS__)
+#define LOG_ERR(...)    LOG(kERROR, __VA_ARGS__)
+#define LOG_WARN(...)   LOG(kWARNING, __VA_ARGS__)
+#define LOG_NOTE(...)   LOG(kNOTE, __VA_ARGS__)
+#define LOG_INFO(...)   LOG(kINFO, __VA_ARGS__)
+#define LOG_DEBUG(...)  LOG(kDEBUG, __VA_ARGS__)
+#define LOG_DEBUG1(...) LOG(kDEBUG1, __VA_ARGS__)
+#define LOG_DEBUG2(...) LOG(kDEBUG2, __VA_ARGS__)
+#define LOG_DEBUG3(...) LOG(kDEBUG3, __VA_ARGS__)
+#define LOG_DEBUG4(...) LOG(kDEBUG4, __VA_ARGS__)
+#define LOG_DEBUG5(...) LOG(kDEBUG5, __VA_ARGS__)
 
 } // namespace inputleap

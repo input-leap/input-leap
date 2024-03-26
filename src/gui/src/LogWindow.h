@@ -15,20 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(LOGWINDOW__H)
-
-#define LOGWINDOW__H
+#pragma once
 
 #include <QDialog>
+#include <memory>
 
-#include "ui_LogWindowBase.h"
+namespace Ui
+{
+    class LogWindow;
+}
 
-class LogWindow : public QDialog, public Ui::LogWindowBase
+class LogWindow : public QDialog
 {
     Q_OBJECT
 
     public:
         LogWindow(QWidget *parent);
+        ~LogWindow() override;
 
         void startNewInstance();
 
@@ -41,6 +44,8 @@ class LogWindow : public QDialog, public Ui::LogWindowBase
         void on_m_pButtonHide_clicked();
         void on_m_pButtonClearLog_clicked();
 
+    private:
+        std::unique_ptr<Ui::LogWindow> ui_;
+        QString buffer_;
+        void flushBuffer();
 };
-
-#endif // LOGWINDOW__H

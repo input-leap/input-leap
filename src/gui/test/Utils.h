@@ -14,8 +14,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTLEAP_GUI_TEST_UTILS_H
-#define INPUTLEAP_GUI_TEST_UTILS_H
+#pragma once
 
 #include <QtCore/QFile>
 #include <QtCore/QTemporaryFile>
@@ -34,5 +33,3 @@ inline QString getTemporaryFilename()
     temp_file.open();
     return temp_file.fileName();
 }
-
-#endif // INPUTLEAP_GUI_TEST_UTILS_H

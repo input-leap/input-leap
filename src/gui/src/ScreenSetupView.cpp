@@ -84,7 +84,7 @@ void ScreenSetupView::remove(const QModelIndex& index)
     Screen& screen = model()->screen(index);
     if (!screen.isNull()) {
         screen = Screen();
-        emit dataChanged(index, index);
+        dataChanged(index, index);
     }
 }
 

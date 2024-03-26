@@ -14,8 +14,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTLEAP_LIB_INPUTLEAP_PLATFORM_SCREEN_LOGGING_WRAPPER_H
-#define INPUTLEAP_LIB_INPUTLEAP_PLATFORM_SCREEN_LOGGING_WRAPPER_H
+#pragma once
 
 #include "IPlatformScreen.h"
 #include <memory>
@@ -103,5 +102,3 @@ private:
 };
 
 } // namespace inputleap
-
-#endif // INPUTLEAP_LIB_INPUTLEAP_PLATFORM_SCREEN_LOGGING_WRAPPER_H

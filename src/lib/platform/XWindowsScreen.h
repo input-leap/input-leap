@@ -143,6 +143,7 @@ private:
     int y_accumulateMouseScroll(std::int32_t yDelta) const;
 
     bool detectXI2();
+    bool detectXwayland();
     void selectXIRawMotion();
     void selectEvents(Window) const;
     void doSelectEvents(Window) const;

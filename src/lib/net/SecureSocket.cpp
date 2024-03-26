@@ -254,7 +254,7 @@ SecureSocket::secureRead(void* buffer, int size, int& read)
     std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
 
     if (m_ssl->m_ssl != nullptr) {
-        LOG((CLOG_DEBUG2 "reading secure socket"));
+        LOG_DEBUG2("reading secure socket");
         read = SSL_read(m_ssl->m_ssl, buffer, size);
 
         // Check result will cleanup the connection in the case of a fatal
@@ -280,7 +280,7 @@ SecureSocket::secureWrite(const void* buffer, int size, int& wrote)
     std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
 
     if (m_ssl->m_ssl != nullptr) {
-        LOG((CLOG_DEBUG2 "writing secure socket:%p", this));
+        LOG_DEBUG2("writing secure socket:%p", this);
 
         wrote = SSL_write(m_ssl->m_ssl, buffer, size);
 
@@ -428,15 +428,15 @@ SecureSocket::secureAccept(int socket)
     // set connection socket to SSL state
     SSL_set_fd(m_ssl->m_ssl, socket);
 
-    LOG((CLOG_DEBUG2 "accepting secure socket"));
+    LOG_DEBUG2("accepting secure socket");
     int r = SSL_accept(m_ssl->m_ssl);
 
     checkResult(r, secure_accept_retry_);
 
     if (isFatal()) {
         // tell user and sleep so the socket isn't hammered.
-        LOG((CLOG_ERR "failed to accept secure socket"));
-        LOG((CLOG_INFO "client connection may not be secure"));
+        LOG_ERR("failed to accept secure socket");
+        LOG_INFO("client connection may not be secure");
         m_secureReady = false;
         inputleap::this_thread_sleep(1);
         secure_accept_retry_ = 0;
@@ -448,10 +448,10 @@ SecureSocket::secureAccept(int socket)
         if (security_level_ == ConnectionSecurityLevel::ENCRYPTED_AUTHENTICATED) {
             if (verify_peer_certificate(
                         inputleap::DataDirectories::trusted_clients_ssl_fingerprints_path())) {
-                LOG((CLOG_INFO "accepted secure socket"));
+                LOG_INFO("accepted secure socket");
             }
             else {
-                LOG((CLOG_ERR "failed to verify client certificate fingerprint"));
+                LOG_ERR("failed to verify client certificate fingerprint");
                 secure_accept_retry_ = 0;
                 disconnect();
                 return -1; // Fingerprint failed, error
@@ -459,7 +459,7 @@ SecureSocket::secureAccept(int socket)
         }
 
         m_secureReady = true;
-        LOG((CLOG_INFO "accepted secure socket"));
+        LOG_INFO("accepted secure socket");
         if (CLOG->getFilter() >= kDEBUG1) {
             showSecureCipherInfo();
         }
@@ -469,14 +469,14 @@ SecureSocket::secureAccept(int socket)
 
     // If not fatal and retry is set, not ready, and return retry
     if (secure_accept_retry_ > 0) {
-        LOG((CLOG_DEBUG2 "retry accepting secure socket"));
+        LOG_DEBUG2("retry accepting secure socket");
         m_secureReady = false;
         inputleap::this_thread_sleep(s_retryDelay);
         return 0;
     }
 
     // no good state exists here
-    LOG((CLOG_ERR "unexpected state attempting to accept connection"));
+    LOG_ERR("unexpected state attempting to accept connection");
     return -1;
 }
 
@@ -485,7 +485,7 @@ SecureSocket::secureConnect(int socket)
 {
     // note that load_certificates acquires ssl_mutex_
     if (!load_certificates(inputleap::DataDirectories::ssl_certificate_path())) {
-        LOG((CLOG_ERR "could not load client certificates"));
+        LOG_ERR("could not load client certificates");
         // FIXME: this is fatal error, but we current don't disconnect because whole logic in this
         // function needs to be cleaned up
     }
@@ -497,20 +497,20 @@ SecureSocket::secureConnect(int socket)
     // attach the socket descriptor
     SSL_set_fd(m_ssl->m_ssl, socket);
 
-    LOG((CLOG_DEBUG2 "connecting secure socket"));
+    LOG_DEBUG2("connecting secure socket");
     int r = SSL_connect(m_ssl->m_ssl);
 
     checkResult(r, secure_connect_retry_);
 
     if (isFatal()) {
-        LOG((CLOG_ERR "failed to connect secure socket"));
+        LOG_ERR("failed to connect secure socket");
         secure_connect_retry_ = 0;
         return -1;
     }
 
     // If we should retry, not ready and return 0
     if (secure_connect_retry_ > 0) {
-        LOG((CLOG_DEBUG2 "retry connect secure socket"));
+        LOG_DEBUG2("retry connect secure socket");
         m_secureReady = false;
         inputleap::this_thread_sleep(s_retryDelay);
         return 0;
@@ -520,14 +520,14 @@ SecureSocket::secureConnect(int socket)
     // No error, set ready, process and return ok
     m_secureReady = true;
     if (verify_peer_certificate(inputleap::DataDirectories::trusted_servers_ssl_fingerprints_path())) {
-        LOG((CLOG_INFO "connected to secure socket"));
+        LOG_INFO("connected to secure socket");
     }
     else {
-        LOG((CLOG_ERR "failed to verify server certificate fingerprint"));
+        LOG_ERR("failed to verify server certificate fingerprint");
         disconnect();
         return -1; // Fingerprint failed, error
     }
-    LOG((CLOG_DEBUG2 "connected secure socket"));
+    LOG_DEBUG2("connected secure socket");
     if (CLOG->getFilter() >= kDEBUG1) {
         showSecureCipherInfo();
     }
@@ -554,12 +554,12 @@ SecureSocket::checkResult(int status, int& retry)
     case SSL_ERROR_ZERO_RETURN:
         // connection closed
         isFatal(true);
-        LOG((CLOG_DEBUG "ssl connection closed"));
+        LOG_DEBUG("ssl connection closed");
         break;
 
     case SSL_ERROR_WANT_READ:
         retry++;
-        LOG((CLOG_DEBUG2 "want to read, error=%d, attempt=%d", errorCode, retry));
+        LOG_DEBUG2("want to read, error=%d, attempt=%d", errorCode, retry);
         break;
 
     case SSL_ERROR_WANT_WRITE:
@@ -568,24 +568,24 @@ SecureSocket::checkResult(int status, int& retry)
         // m_readable because the socket logic is always readable
         m_writable = true;
         retry++;
-        LOG((CLOG_DEBUG2 "want to write, error=%d, attempt=%d", errorCode, retry));
+        LOG_DEBUG2("want to write, error=%d, attempt=%d", errorCode, retry);
         break;
 
     case SSL_ERROR_WANT_CONNECT:
         retry++;
-        LOG((CLOG_DEBUG2 "want to connect, error=%d, attempt=%d", errorCode, retry));
+        LOG_DEBUG2("want to connect, error=%d, attempt=%d", errorCode, retry);
         break;
 
     case SSL_ERROR_WANT_ACCEPT:
         retry++;
-        LOG((CLOG_DEBUG2 "want to accept, error=%d, attempt=%d", errorCode, retry));
+        LOG_DEBUG2("want to accept, error=%d, attempt=%d", errorCode, retry);
         break;
 
     case SSL_ERROR_SYSCALL:
-        LOG((CLOG_ERR "ssl error occurred (system call failure)"));
+        LOG_ERR("ssl error occurred (system call failure)");
         if (ERR_peek_error() == 0) {
             if (status == 0) {
-                LOG((CLOG_ERR "eof violates ssl protocol"));
+                LOG_ERR("eof violates ssl protocol");
             }
             else if (status == -1) {
                 // underlying socket I/O reproted an error
@@ -593,7 +593,7 @@ SecureSocket::checkResult(int status, int& retry)
                     ARCH->throwErrorOnSocket(getSocket());
                 }
                 catch (XArchNetwork& e) {
-                    LOG((CLOG_ERR "%s", e.what()));
+                    LOG_ERR("%s", e.what());
                 }
             }
         }
@@ -602,12 +602,12 @@ SecureSocket::checkResult(int status, int& retry)
         break;
 
     case SSL_ERROR_SSL:
-        LOG((CLOG_ERR "ssl error occurred (generic failure)"));
+        LOG_ERR("ssl error occurred (generic failure)");
         isFatal(true);
         break;
 
     default:
-        LOG((CLOG_ERR "ssl error occurred (unknown failure)"));
+        LOG_ERR("ssl error occurred (unknown failure)");
         isFatal(true);
         break;
     }
@@ -622,12 +622,12 @@ SecureSocket::checkResult(int status, int& retry)
 void SecureSocket::showError(const std::string& reason)
 {
     if (!reason.empty()) {
-        LOG((CLOG_ERR "%s", reason.c_str()));
+        LOG_ERR("%s", reason.c_str());
     }
 
     std::string error = getError();
     if (!error.empty()) {
-        LOG((CLOG_ERR "%s", error.c_str()));
+        LOG_ERR("%s", error.c_str());
     }
 }
 
@@ -665,7 +665,7 @@ bool SecureSocket::verify_peer_certificate(const inputleap::fs::path& fingerprin
     }
     auto cert_free = inputleap::finally([cert]() { X509_free(cert); });
     char* line = X509_NAME_oneline(X509_get_subject_name(cert), nullptr, 0);
-    LOG((CLOG_INFO "peer ssl certificate info: %s", line));
+    LOG_INFO("peer ssl certificate info: %s", line);
     OPENSSL_free(line);
 
     // calculate received certificate fingerprint
@@ -676,34 +676,34 @@ bool SecureSocket::verify_peer_certificate(const inputleap::fs::path& fingerprin
         fingerprint_sha256 = inputleap::get_ssl_cert_fingerprint(cert,
                                                                inputleap::FingerprintType::SHA256);
     } catch (const std::exception& e) {
-        LOG((CLOG_ERR "%s", e.what()));
+        LOG_ERR("%s", e.what());
         return false;
     }
 
     // note: the GUI parses the following two lines of logs, don't change unnecessarily
-    LOG((CLOG_NOTE "peer fingerprint (SHA1): %s (SHA256): %s",
+    LOG_NOTE("peer fingerprint (SHA1): %s (SHA256): %s",
          inputleap::format_ssl_fingerprint(fingerprint_sha1.data).c_str(),
-         inputleap::format_ssl_fingerprint(fingerprint_sha256.data).c_str()));
+         inputleap::format_ssl_fingerprint(fingerprint_sha256.data).c_str());
 
     // Provide debug hint as to what file is being used to verify fingerprint trust
-    LOG((CLOG_NOTE "fingerprint_db_path: %s", fingerprint_db_path.u8string().c_str()));
+    LOG_NOTE("fingerprint_db_path: %s", fingerprint_db_path.u8string().c_str());
 
     inputleap::FingerprintDatabase db;
     db.read(fingerprint_db_path);
 
     if (!db.fingerprints().empty()) {
-        LOG((CLOG_NOTE "Read %d fingerprints from: %s", db.fingerprints().size(),
-             fingerprint_db_path.u8string().c_str()));
+        LOG_NOTE("Read %zd fingerprints from: %s", db.fingerprints().size(),
+             fingerprint_db_path.u8string().c_str());
     } else {
-        LOG((CLOG_NOTE "Could not read fingerprints from: %s",
-             fingerprint_db_path.u8string().c_str()));
+        LOG_NOTE("Could not read fingerprints from: %s",
+             fingerprint_db_path.u8string().c_str());
     }
 
     if (db.is_trusted(fingerprint_sha256)) {
-        LOG((CLOG_NOTE "Fingerprint matches trusted fingerprint"));
+        LOG_NOTE("Fingerprint matches trusted fingerprint");
         return true;
     } else {
-        LOG((CLOG_NOTE "Fingerprint does not match trusted fingerprint"));
+        LOG_NOTE("Fingerprint does not match trusted fingerprint");
         return false;
     }
 }
@@ -796,7 +796,7 @@ showCipherStackDesc(STACK_OF(SSL_CIPHER) * stack) {
             msg[pos] = '\0';
         }
 
-        LOG((CLOG_DEBUG1 "%s",msg));
+        LOG_DEBUG1("%s",msg);
     }
 }
 
@@ -808,10 +808,10 @@ SecureSocket::showSecureCipherInfo()
     STACK_OF(SSL_CIPHER) * sStack = SSL_get_ciphers(m_ssl->m_ssl);
 
     if (sStack == nullptr) {
-        LOG((CLOG_DEBUG1 "local cipher list not available"));
+        LOG_DEBUG1("local cipher list not available");
     }
     else {
-        LOG((CLOG_DEBUG1 "available local ciphers:"));
+        LOG_DEBUG1("available local ciphers:");
         showCipherStackDesc(sStack);
     }
 
@@ -824,10 +824,10 @@ SecureSocket::showSecureCipherInfo()
 	STACK_OF(SSL_CIPHER) * cStack = SSL_get_client_ciphers(m_ssl->m_ssl);
 #endif
 	if (cStack == nullptr) {
-        LOG((CLOG_DEBUG1 "remote cipher list not available"));
+        LOG_DEBUG1("remote cipher list not available");
     }
     else {
-        LOG((CLOG_DEBUG1 "available remote ciphers:"));
+        LOG_DEBUG1("available remote ciphers:");
         showCipherStackDesc(cStack);
     }
     return;
@@ -836,11 +836,11 @@ SecureSocket::showSecureCipherInfo()
 void
 SecureSocket::showSecureLibInfo()
 {
-    LOG((CLOG_INFO "%s",SSLeay_version(SSLEAY_VERSION)));
-    LOG((CLOG_DEBUG1 "openSSL : %s",SSLeay_version(SSLEAY_CFLAGS)));
-    LOG((CLOG_DEBUG1 "openSSL : %s",SSLeay_version(SSLEAY_BUILT_ON)));
-    LOG((CLOG_DEBUG1 "openSSL : %s",SSLeay_version(SSLEAY_PLATFORM)));
-    LOG((CLOG_DEBUG1 "%s",SSLeay_version(SSLEAY_DIR)));
+    LOG_INFO("%s",SSLeay_version(SSLEAY_VERSION));
+    LOG_DEBUG1("openSSL : %s",SSLeay_version(SSLEAY_CFLAGS));
+    LOG_DEBUG1("openSSL : %s",SSLeay_version(SSLEAY_BUILT_ON));
+    LOG_DEBUG1("openSSL : %s",SSLeay_version(SSLEAY_PLATFORM));
+    LOG_DEBUG1("%s",SSLeay_version(SSLEAY_DIR));
     return;
 }
 
@@ -854,7 +854,7 @@ SecureSocket::showSecureConnectInfo()
     if (cipher != nullptr) {
         char msg[kMsgSize];
         SSL_CIPHER_description(cipher, msg, kMsgSize);
-        LOG((CLOG_INFO "%s", msg));
+        LOG_INFO("%s", msg);
         }
     return;
 }
@@ -864,7 +864,7 @@ void SecureSocket::handle_tcp_connected(const Event& event)
     (void) event;
 
     if (getSocket() == nullptr) {
-        LOG((CLOG_DEBUG "disregarding stale connect event"));
+        LOG_DEBUG("disregarding stale connect event");
         return;
     }
     secureConnect();

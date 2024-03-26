@@ -64,13 +64,13 @@ MSWindowsClipboard::setFacade(IMSWindowsClipboardFacade& facade)
 bool
 MSWindowsClipboard::emptyUnowned()
 {
-    LOG((CLOG_DEBUG "empty clipboard"));
+    LOG_DEBUG("empty clipboard");
 
     // empty the clipboard (and take ownership)
     if (!EmptyClipboard()) {
         // unable to cause this in integ tests, but this error has never
         // actually been reported by users.
-        LOG((CLOG_DEBUG "failed to grab clipboard"));
+        LOG_DEBUG("failed to grab clipboard");
         return false;
     }
 
@@ -87,7 +87,7 @@ MSWindowsClipboard::empty()
     // mark clipboard as being owned by InputLeap
     HGLOBAL data = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, 1);
     if (nullptr == SetClipboardData(getOwnershipFormat(), data)) {
-        LOG((CLOG_DEBUG "failed to set clipboard data"));
+        LOG_DEBUG("failed to set clipboard data");
         GlobalFree(data);
         return false;
     }
@@ -98,7 +98,7 @@ MSWindowsClipboard::empty()
 void
 MSWindowsClipboard::add(EFormat format, const std::string& data)
 {
-    LOG((CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(), format));
+    LOG_DEBUG("add %d bytes to clipboard format: %d", data.size(), format);
 
     // convert data to win32 form
     for (ConverterList::const_iterator index = m_converters.begin();
@@ -119,14 +119,14 @@ MSWindowsClipboard::add(EFormat format, const std::string& data)
 bool
 MSWindowsClipboard::open(Time time) const
 {
-    LOG((CLOG_DEBUG "open clipboard"));
+    LOG_DEBUG("open clipboard");
 
     if (!OpenClipboard(m_window)) {
         // unable to cause this in integ tests; but this can happen!
         // * http://symless.com/pm/issues/86
         // * http://symless.com/pm/issues/1256
         // logging improved to see if we can catch more info next time.
-        LOG((CLOG_WARN "failed to open clipboard: %d", GetLastError()));
+        LOG_WARN("failed to open clipboard: %d", GetLastError());
         return false;
     }
 
@@ -138,7 +138,7 @@ MSWindowsClipboard::open(Time time) const
 void
 MSWindowsClipboard::close() const
 {
-    LOG((CLOG_DEBUG "close clipboard"));
+    LOG_DEBUG("close clipboard");
     CloseClipboard();
 }
 
@@ -179,7 +179,7 @@ std::string MSWindowsClipboard::get(EFormat format) const
 
     // if no converter then we don't recognize any formats
     if (converter == nullptr) {
-        LOG((CLOG_WARN "no converter for format %d", format));
+        LOG_WARN("no converter for format %d", format);
         return {};
     }
 

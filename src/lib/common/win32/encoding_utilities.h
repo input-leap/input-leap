@@ -15,8 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTLEAP_LIB_COMMON_WIN32_ENCODING_UTILITIES_H
-#define INPUTLEAP_LIB_COMMON_WIN32_ENCODING_UTILITIES_H
+#pragma once
 
 #include "winapi.h"
 #include <string>
@@ -24,5 +23,3 @@
 
 std::string win_wchar_to_utf8(const WCHAR* utfStr);
 std::vector<WCHAR> utf8_to_win_char(const std::string& str);
-
-#endif

@@ -48,7 +48,7 @@ protected:
     ~XWindowsKeyStateTests() override
     {
         if (m_display != nullptr) {
-            LOG((CLOG_DEBUG "closing display"));
+            LOG_DEBUG("closing display");
             XCloseDisplay(m_display);
         }
     }
@@ -58,7 +58,7 @@ protected:
     {
         // open the display only once for the entire test suite
         if (this->m_display == nullptr) {
-            LOG((CLOG_DEBUG "opening display"));
+            LOG_DEBUG("opening display");
             this->m_display = XOpenDisplay(nullptr);
 
             // failed to open the display and DISPLAY is null? probably

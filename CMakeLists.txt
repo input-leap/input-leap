@@ -24,7 +24,7 @@ option(INPUTLEAP_BUILD_TESTS "Build the tests" ON)
 option(INPUTLEAP_USE_EXTERNAL_GTEST "Use external installation of Google Test framework" OFF)
 option(INPUTLEAP_BUILD_X11 "Build with XWindows support" ON)
 option(INPUTLEAP_BUILD_LIBEI "Build with libei support" OFF)
-
+option(INPUTLEAP_DEPLOY_FLATPAK_SCRIPT "Deploy Flatpak script [Expermental]" OFF)
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set (CMAKE_CXX_STANDARD 14)
 set (CMAKE_CXX_EXTENSIONS OFF)
@@ -58,12 +58,30 @@ endif()
 
 set (libs)
 
+include(CheckCXXCompilerFlag)
+check_cxx_compiler_flag (-Wformat HAVE_WFORMAT)
+if (HAVE_WFORMAT)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat")
+endif()
 
 if (INPUTLEAP_BUILD_GUI)
     if (QT_DEFAULT_MAJOR_VERSION EQUAL 5)
         set(REQUIRED_QT_VERSION 5.9)
     elseif (QT_DEFAULT_MAJOR_VERSION EQUAL 6)
         set(REQUIRED_QT_VERSION 6.2)
+    endif()
+
+    find_package(Qt${QT_DEFAULT_MAJOR_VERSION} COMPONENTS Core REQUIRED)
+    get_target_property(qmake_executable Qt${QT_DEFAULT_MAJOR_VERSION}::qmake IMPORTED_LOCATION)
+    get_filename_component(_qt_bin_dir "${qmake_executable}" DIRECTORY)
+    if(WIN32 OR APPLE)
+        if(WIN32)
+            set(deployqtapp windeployqt)
+        elseif(APPLE)
+            set(deployqtapp macdeployqt)
+            find_library(QT_PLATFORM_PLUGIN libqcocoa.dylib HINTS "${_qt_bin_dir}../plugins/platforms")
+        endif()
+        find_program(QT_DEPLOY_TOOL ${deployqtapp} HINTS "${_qt_bin_dir}")
     endif()
 endif()
 if (UNIX)
@@ -162,8 +180,9 @@ if (UNIX)
             pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
             pkg_check_modules(GLIB2 REQUIRED glib-2.0 gio-2.0)
             pkg_check_modules(LIBPORTAL REQUIRED libportal)
-            include_directories(${LIBEI_INCLUDE_DIRS} ${LIBXKBCOMMON_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS} ${LIBPORTAL_INCLUDE_DIRS})
-            list(APPEND libs ${LIBEI_LINK_LIBRARIES} ${LIBXKBCOMMON_LINK_LIBRARIES} ${GLIB2_LINK_LIBRARIES} ${LIBPORTAL_LINK_LIBRARIES})
+            find_library(LIBM m)
+            include_directories(${LIBEI_INCLUDE_DIRS} ${LIBXKBCOMMON_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS} ${LIBPORTAL_INCLUDE_DIRS} ${LIBM_INCLUDE_DIRS})
+            list(APPEND libs ${LIBEI_LINK_LIBRARIES} ${LIBXKBCOMMON_LINK_LIBRARIES} ${GLIB2_LINK_LIBRARIES} ${LIBPORTAL_LINK_LIBRARIES} ${LIBM_LIBRARIES})
 
             # no libportal release has xdp_session_connect_to_eis, so let's check for that
             # and enable the hackaround in the code
@@ -180,10 +199,13 @@ if (UNIX)
             " HAVE_LIBPORTAL_OUTPUT_NONE)
             cmake_pop_check_state()
 
-            # Flatpak bits
-            install(FILES "dist/flatpak/input-leap-flatpak"
-                    DESTINATION bin
-                    PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+            if(INPUTLEAP_DEPLOY_FLATPAK_SCRIPT)
+                # Flatpak bits
+                install(FILES "dist/flatpak/input-leap-flatpak"
+                        DESTINATION bin
+                        PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+                )
+            endif()
         endif()
 
         check_include_files ("dns_sd.h" HAVE_DNSSD)
@@ -245,78 +267,11 @@ include_directories(SYSTEM "${CMAKE_SOURCE_DIR}/ext/gulrak-filesystem/include")
 #
 # OpenSSL
 #
-if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    set (OPENSSL_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/ext/openssl/windows)
-    if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-        set (OPENSSL_ROOT "${OPENSSL_ROOT}/x64")
-    else()
-        set (OPENSSL_ROOT "${OPENSSL_ROOT}/x86")
-    endif()
-
-    include_directories (BEFORE SYSTEM ${OPENSSL_ROOT}/include)
-    set (OPENSSL_LIBS
-        ${OPENSSL_ROOT}/lib/libeay32.lib
-        ${OPENSSL_ROOT}/lib/ssleay32.lib
-    )
-elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    find_program(APT_PROGRAM "apt")
-    find_program(BREW_PROGRAM "brew")
-    find_program(PORT_PROGRAM "port")
-
-    if (IS_DIRECTORY /opt/procursus AND APT_PROGRAM)
-        # procursus/apt
-        set (OPENSSL_ROOT /opt/procursus)
-
-        include_directories (BEFORE SYSTEM ${OPENSSL_ROOT}/include)
-
-        set (OPENSSL_LIBS
-            ${OPENSSL_ROOT}/lib/libssl.a
-            ${OPENSSL_ROOT}/lib/libcrypto.a
-        )
-    elseif (IS_DIRECTORY /opt/local AND PORT_PROGRAM)
-        # macports
-        set (OPENSSL_ROOT /opt/local)
-
-        set (OPENSSL_LIBS
-            ${OPENSSL_ROOT}/lib/libssl.a
-            ${OPENSSL_ROOT}/lib/libcrypto.a
-            z
-        )
-    elseif (IS_DIRECTORY /usr/local/opt/openssl AND BREW_PROGRAM)
-        # brew
-        set (OPENSSL_ROOT /usr/local/opt/openssl)
-
-        include_directories (BEFORE SYSTEM ${OPENSSL_ROOT}/include)
-
-        set (OPENSSL_LIBS
-            ${OPENSSL_ROOT}/lib/libssl.a
-            ${OPENSSL_ROOT}/lib/libcrypto.a
-        )
-    elseif (IS_DIRECTORY /opt/homebrew/opt/openssl AND BREW_PROGRAM)
-        # brew
-        set (OPENSSL_ROOT /opt/homebrew/opt/openssl)
-
-        include_directories (BEFORE SYSTEM ${OPENSSL_ROOT}/include)
-
-        set (OPENSSL_LIBS
-            ${OPENSSL_ROOT}/lib/libssl.a
-            ${OPENSSL_ROOT}/lib/libcrypto.a
-        )
-    endif()
-
-elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    set (OPENSSL_LIBS ssl crypto)
-else()
-    find_library (lib_ssl ssl)
-    find_library (lib_crypto crypto)
-    if (NOT lib_ssl)
-        message(FATAL_ERROR "openssl library not found")
-    elseif (NOT lib_crypto)
-        message(FATAL_ERROR "crypto library not found")
-    endif()
-    set (OPENSSL_LIBS ${lib_ssl} ${lib_crypto})
+# Find Static Libs on mac OS and windows
+if (APPLE OR WIN32)
+    set(OPENSSL_USE_STATIC_LIBS TRUE)
 endif()
-
+find_package(OpenSSL 1.1.1 REQUIRED COMPONENTS SSL Crypto)
 #
 # Configure_file... but for directories, recursively.
 #

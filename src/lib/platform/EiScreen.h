@@ -14,8 +14,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTLEAP_LIB_PLATFORM_EI_SCREEN_H
-#define INPUTLEAP_LIB_PLATFORM_EI_SCREEN_H
+#pragma once
 
 #include "config.h"
 
@@ -24,6 +23,8 @@
 #include <set>
 #include <mutex>
 #include <vector>
+
+#include <libei.h>
 
 struct ei;
 struct ei_event;
@@ -90,6 +91,7 @@ protected:
     // IPlatformScreen overrides
     void handle_system_event(const Event& event) override;
     void handle_connected_to_eis_event(const Event& event);
+    void handle_portal_session_closed(const Event &event);
     void updateButtons() override;
     IKeyState* getKeyState() const override;
 
@@ -98,14 +100,32 @@ protected:
     void remove_device(ei_device* device);
 
 private:
+    void init_ei();
+    void cleanup_ei();
     void send_event(EventType type, EventDataBase* data);
     ButtonID map_button_from_evdev(ei_event* event) const;
     void on_key_event(ei_event *event);
     void on_button_event(ei_event *event);
+    void send_wheel_events(ei_device *device, const int threshold, double dx, double dy, bool is_discrete);
     void on_pointer_scroll_event(ei_event* event);
     void on_pointer_scroll_discrete_event(ei_event* event);
     void on_motion_event(ei_event *event);
     void on_abs_motion_event(ei_event *event);
+    bool on_hotkey(KeyID key, bool is_press, KeyModifierMask mask);
+
+    void handle_ei_log_event(ei* ei,
+                             ei_log_priority priority,
+                             const char* message,
+                             ei_log_context* context);
+
+    static void cb_handle_ei_log_event(ei* ei,
+                                       ei_log_priority priority,
+                                       const char* message,
+                                       ei_log_context* context)
+    {
+        auto screen = reinterpret_cast<EiScreen*>(ei_get_user_data(ei));
+        screen->handle_ei_log_event(ei, priority, message, context);
+    }
 
 private:
     // true if screen is being used as a primary screen, false otherwise
@@ -123,6 +143,8 @@ private:
     ei_device* ei_keyboard_ = nullptr;
     ei_device* ei_abs_ = nullptr;
 
+    std::uint32_t sequence_number_ = 0;
+
     std::uint32_t x_ = 0;
     std::uint32_t y_ = 0;
     std::uint32_t w_ = 0;
@@ -131,18 +153,44 @@ private:
     // true if mouse has entered the screen
     bool is_on_screen_;
 
-    // last pointer position
+    // server: last pointer position
+    // client: position sent before enter()
     std::int32_t cursor_x_ = 0;
     std::int32_t cursor_y_ = 0;
 
     mutable std::mutex mutex_;
 
-    PortalRemoteDesktop* portal_remote_desktop_;
+    PortalRemoteDesktop* portal_remote_desktop_ = nullptr;
 #if HAVE_LIBPORTAL_INPUTCAPTURE
-    PortalInputCapture* portal_input_capture_;
+    PortalInputCapture* portal_input_capture_ = nullptr;
 #endif
+
+    struct HotKeyItem {
+    public:
+        HotKeyItem(std::uint32_t mask, std::uint32_t id);
+        bool operator<(const HotKeyItem& other) const { return mask_ < other.mask_; };
+
+    public:
+        std::uint32_t mask_ = 0;
+        std::uint32_t id_ = 0;  // for registering the hotkey
+    };
+
+    class HotKeySet {
+    public:
+        HotKeySet(KeyID keyid);
+        KeyID keyid() const { return id_; };
+        bool remove_by_id(std::uint32_t id);
+        void add_item(HotKeyItem item);
+        std::uint32_t find_by_mask(std::uint32_t mask) const;
+
+    private:
+        KeyID id_ = 0;
+        std::vector<HotKeyItem> set_;
+    };
+
+    using HotKeyMap = std::map<KeyID, HotKeySet>;
+
+    HotKeyMap hotkeys_;
 };
 
 } // namespace inputleap
-
-#endif // INPUTLEAP_LIB_PLATFORM_EI_SCREEN_H

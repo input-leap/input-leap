@@ -2,14 +2,14 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="hu" sourcelanguage="en">
 <context>
-    <name>AboutDialogBase</name>
+    <name>AboutDialog</name>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="38"/>
+        <location filename="res/AboutDialog.ui" line="38"/>
         <source>About InputLeap</source>
         <translation>Névjegy</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="53"/>
+        <location filename="res/AboutDialog.ui" line="53"/>
         <source>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
 Copyright © 2018 Debauchee Open Source Group&lt;br /&gt;
@@ -39,115 +39,115 @@ A grafikus felületet Volker Lanz QSynergy alkalmazása alapján készült.
 &lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="140"/>
+        <location filename="res/AboutDialog.ui" line="140"/>
         <source>Unknown</source>
         <translation>Ismeretlen</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="124"/>
+        <location filename="res/AboutDialog.ui" line="124"/>
         <source>Version:</source>
         <translation>Verzió:</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="163"/>
+        <location filename="res/AboutDialog.ui" line="163"/>
         <source>&amp;Ok</source>
         <translation>&amp;Rendben</translation>
     </message>
 </context>
 <context>
-    <name>ActionDialogBase</name>
+    <name>ActionDialog</name>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="14"/>
+        <location filename="res/ActionDialog.ui" line="14"/>
         <source>Configure Action</source>
         <translation>Művelet beállítása</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="20"/>
+        <location filename="res/ActionDialog.ui" line="20"/>
         <source>Choose the action to perform</source>
         <translation>Válasszon egy műveletet</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="26"/>
+        <location filename="res/ActionDialog.ui" line="26"/>
         <source>Press a hotkey</source>
         <translation>Gyorsbillentyű lenyomása</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="36"/>
+        <location filename="res/ActionDialog.ui" line="36"/>
         <source>Release a hotkey</source>
         <translation>Gyorsbillentyű felengedése</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="43"/>
+        <location filename="res/ActionDialog.ui" line="43"/>
         <source>Press and release a hotkey</source>
         <translation>Gyorsbillentyű lenyomása és felengedése</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="69"/>
+        <location filename="res/ActionDialog.ui" line="69"/>
         <source>only on these screens</source>
         <translation>alkalmazás csak eze(ke)n a gépe(ke)n</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="119"/>
+        <location filename="res/ActionDialog.ui" line="119"/>
         <source>Switch to screen</source>
         <translation>Váltás másik gépre</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="150"/>
+        <location filename="res/ActionDialog.ui" line="150"/>
         <source>Switch in direction</source>
         <translation>Irányváltás</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="174"/>
+        <location filename="res/ActionDialog.ui" line="174"/>
         <source>left</source>
         <translation>bal</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="179"/>
+        <location filename="res/ActionDialog.ui" line="179"/>
         <source>right</source>
         <translation>jobb</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="184"/>
+        <location filename="res/ActionDialog.ui" line="184"/>
         <source>up</source>
         <translation>fel</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="189"/>
+        <location filename="res/ActionDialog.ui" line="189"/>
         <source>down</source>
         <translation>le</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="201"/>
+        <location filename="res/ActionDialog.ui" line="201"/>
         <source>Lock cursor to screen</source>
         <translation>Kurzor zárolása adott gépen</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="225"/>
+        <location filename="res/ActionDialog.ui" line="225"/>
         <source>toggle</source>
         <translation>váltás</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="230"/>
+        <location filename="res/ActionDialog.ui" line="230"/>
         <source>on</source>
         <translation>be</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="235"/>
+        <location filename="res/ActionDialog.ui" line="235"/>
         <source>off</source>
         <translation>ki</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="248"/>
+        <location filename="res/ActionDialog.ui" line="248"/>
         <source>This action is performed when</source>
         <translation>Művelet végrehajtása a gyorsbillentyű...</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="254"/>
+        <location filename="res/ActionDialog.ui" line="254"/>
         <source>the hotkey is pressed</source>
         <translation>lenyomása esetén</translation>
     </message>
     <message>
-        <location filename="res/ActionDialogBase.ui" line="264"/>
+        <location filename="res/ActionDialog.ui" line="264"/>
         <source>the hotkey is released</source>
         <translation>felengedése esetén</translation>
     </message>
@@ -155,17 +155,17 @@ A grafikus felületet Volker Lanz QSynergy alkalmazása alapján készült.
 <context>
     <name>AddClientDialog</name>
     <message>
-        <location filename="res/AddClientDialogBase.ui" line="20"/>
+        <location filename="res/AddClientDialog.ui" line="20"/>
         <source>Dialog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/AddClientDialogBase.ui" line="35"/>
+        <location filename="res/AddClientDialog.ui" line="35"/>
         <source>TextLabel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/AddClientDialogBase.ui" line="83"/>
+        <location filename="res/AddClientDialog.ui" line="83"/>
         <source>Ignore auto connect clients</source>
         <translation>Automatikus konfigurációt használó gépek elutasítása</translation>
     </message>
@@ -712,168 +712,168 @@ A jövőbeni kapcsolódási kísérletek automatikus jóváhagyáshoz kattintson
     </message>
 </context>
 <context>
-    <name>ScreenSettingsDialogBase</name>
+    <name>ScreenSettingsDialog</name>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="14"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="14"/>
         <source>Screen Settings</source>
         <translation>Gép beállításai</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="22"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="22"/>
         <source>Screen &amp;name:</source>
         <translation>Meg&amp;nevezés:</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="42"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="42"/>
         <source>A&amp;liases</source>
         <translation>&amp;Álnevek</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="57"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="57"/>
         <source>&amp;Add</source>
         <translation>&amp;Hozzáadás</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="74"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="74"/>
         <source>&amp;Remove</source>
         <translation>&amp;Eltávolítás</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="97"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="97"/>
         <source>&amp;Modifier keys</source>
         <translation>&amp;Módosító billentyűk</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="106"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="106"/>
         <source>&amp;Shift:</source>
         <translation>&amp;Shift:</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="117"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="164"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="211"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="258"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="305"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="117"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="164"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="211"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="258"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="305"/>
         <source>Shift</source>
         <translation>Shift</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="122"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="169"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="216"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="263"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="310"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="122"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="169"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="216"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="263"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="310"/>
         <source>Ctrl</source>
         <translation>Ctrl</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="127"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="174"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="221"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="268"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="315"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="127"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="174"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="221"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="268"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="315"/>
         <source>Alt</source>
         <translation>Alt</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="132"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="179"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="226"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="273"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="320"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="132"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="179"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="226"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="273"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="320"/>
         <source>Meta</source>
         <translation>Meta</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="137"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="184"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="231"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="278"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="325"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="137"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="184"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="231"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="278"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="325"/>
         <source>Super</source>
         <translation>Super</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="142"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="189"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="236"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="283"/>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="330"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="142"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="189"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="236"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="283"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="330"/>
         <source>None</source>
         <translation>None</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="150"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="150"/>
         <source>&amp;Ctrl:</source>
         <translation>&amp;Ctrl:</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="197"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="197"/>
         <source>Al&amp;t:</source>
         <translation>&amp;Alt:</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="244"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="244"/>
         <source>M&amp;eta:</source>
         <translation>Me&amp;ta:</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="291"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="291"/>
         <source>S&amp;uper:</source>
         <translation>S&amp;uper:</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="358"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="358"/>
         <source>&amp;Dead corners</source>
         <translation>H&amp;olt sarkok</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="367"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="367"/>
         <source>Top-left</source>
         <translation>Bal felső</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="374"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="374"/>
         <source>Top-right</source>
         <translation>Jobb felső</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="381"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="381"/>
         <source>Bottom-left</source>
         <translation>Bal alsó</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="388"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="388"/>
         <source>Bottom-right</source>
         <translation>Jobb alsó</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="397"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="397"/>
         <source>Corner Si&amp;ze:</source>
         <translation>Sarkok m&amp;érete:</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="428"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="428"/>
         <source>&amp;Fixes</source>
         <translation>Rögzít</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="437"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="437"/>
         <source>Fix CAPS LOCK key</source>
         <translation>Rögzíti a CAPS LOCK-ot</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="444"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="444"/>
         <source>Fix NUM LOCK key</source>
         <translation>Rögzíti a NUM LOCK-ot</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="451"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="451"/>
         <source>Fix SCROLL LOCK key</source>
         <translation>Rögzíti a SCROLL LOCK-ot</translation>
     </message>
     <message>
-        <location filename="res/ScreenSettingsDialogBase.ui" line="458"/>
+        <location filename="res/ScreenSettingsDialog.ui" line="458"/>
         <source>Fix XTest for Xinerama</source>
         <translation>Fix XTest for Xinerama</translation>
     </message>

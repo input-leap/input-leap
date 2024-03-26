@@ -1,5 +1,6 @@
 /*
  * InputLeap -- mouse and keyboard sharing utility
+ * Copyright (C) 2023-2024 InputLeap Developers
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -17,13 +18,11 @@
  */
 
 #include "SettingsDialog.h"
+#include "ui_SettingsDialog.h"
 
 #include "AppLocale.h"
-#include "QInputLeapApplication.h"
 #include "QUtility.h"
 #include "AppConfig.h"
-#include "SslCertificate.h"
-#include "MainWindow.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -33,58 +32,66 @@
 
 SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-    Ui::SettingsDialogBase(),
-       m_appConfig(config)
+    ui_{std::make_unique<Ui::SettingsDialog>()},
+    app_config_(config)
 {
-    setupUi(this);
+    ui_->setupUi(this);
 
-    m_Locale.fillLanguageComboBox(m_pComboLanguage);
+    connect(ui_->buttonBox, &QDialogButtonBox::accepted, this, &SettingsDialog::accept);
+    connect(ui_->buttonBox, &QDialogButtonBox::rejected, this, &SettingsDialog::reject);
 
-    m_pLineEditScreenName->setText(appConfig().screenName());
-    m_pSpinBoxPort->setValue(appConfig().port());
-    m_pLineEditInterface->setText(appConfig().networkInterface());
-    m_pComboLogLevel->setCurrentIndex(appConfig().logLevel());
-    m_pCheckBoxLogToFile->setChecked(appConfig().logToFile());
-    m_pLineEditLogFilename->setText(appConfig().logFilename());
-    setIndexFromItemData(m_pComboLanguage, appConfig().language());
-    m_pCheckBoxAutoHide->setChecked(appConfig().getAutoHide());
-    m_pCheckBoxAutoStart->setChecked(appConfig().getAutoStart());
-    m_pCheckBoxMinimizeToTray->setChecked(appConfig().getMinimizeToTray());
-    m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
-    checkbox_require_client_certificate->setChecked(m_appConfig.getRequireClientCertificate());
+    AppLocale locale;
+    locale.fillLanguageComboBox(ui_->m_pComboLanguage);
+
+    ui_->m_pLineEditScreenName->setText(app_config_.screenName());
+    ui_->m_pSpinBoxPort->setValue(app_config_.port());
+    ui_->m_pLineEditInterface->setText(app_config_.networkInterface());
+    ui_->m_pComboLogLevel->setCurrentIndex(app_config_.logLevel());
+    ui_->m_pCheckBoxLogToFile->setChecked(app_config_.logToFile());
+    ui_->m_pLineEditLogFilename->setText(app_config_.logFilename());
+    setIndexFromItemData(ui_->m_pComboLanguage, app_config_.language());
+    ui_->m_pCheckBoxAutoHide->setChecked(app_config_.getAutoHide());
+    ui_->m_pCheckBoxAutoStart->setChecked(app_config_.getAutoStart());
+    ui_->m_pCheckBoxMinimizeToTray->setChecked(app_config_.getMinimizeToTray());
+    ui_->m_pCheckBoxEnableCrypto->setChecked(app_config_.getCryptoEnabled());
+    ui_->checkbox_require_client_certificate->setChecked(app_config_.getRequireClientCertificate());
 
 #if defined(Q_OS_WIN)
-    m_pComboElevate->setCurrentIndex(static_cast<int>(appConfig().elevateMode()));
+    ui_->m_pComboElevate->setCurrentIndex(static_cast<int>(app_config_.elevateMode()));
 #else
     // elevate checkbox is only useful on ms windows.
-    m_pLabelElevate->hide();
-    m_pComboElevate->hide();
+    ui_->m_pLabelElevate->hide();
+    ui_->m_pComboElevate->hide();
 #endif
+
+    connect(ui_->m_pCheckBoxLogToFile, &QCheckBox::stateChanged, this, &SettingsDialog::logToFileChanged);
+    connect(ui_->m_pButtonBrowseLog, &QPushButton::clicked, this, &SettingsDialog::browseLogClicked);
+    connect(ui_->m_pComboLanguage, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &SettingsDialog::languageChanged);
 }
 
 void SettingsDialog::accept()
 {
-    m_appConfig.setScreenName(m_pLineEditScreenName->text());
-    m_appConfig.setPort(m_pSpinBoxPort->value());
-    m_appConfig.setNetworkInterface(m_pLineEditInterface->text());
-    m_appConfig.setCryptoEnabled(m_pCheckBoxEnableCrypto->isChecked());
-    m_appConfig.setRequireClientCertificate(checkbox_require_client_certificate->isChecked());
-    m_appConfig.setLogLevel(m_pComboLogLevel->currentIndex());
-    m_appConfig.setLogToFile(m_pCheckBoxLogToFile->isChecked());
-    m_appConfig.setLogFilename(m_pLineEditLogFilename->text());
-    m_appConfig.setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
-    m_appConfig.setElevateMode(static_cast<ElevateMode>(m_pComboElevate->currentIndex()));
-    m_appConfig.setAutoHide(m_pCheckBoxAutoHide->isChecked());
-    m_appConfig.setAutoStart(m_pCheckBoxAutoStart->isChecked());
-    m_appConfig.setMinimizeToTray(m_pCheckBoxMinimizeToTray->isChecked());
-    m_appConfig.saveSettings();
+    app_config_.setScreenName(ui_->m_pLineEditScreenName->text());
+    app_config_.setPort(ui_->m_pSpinBoxPort->value());
+    app_config_.setNetworkInterface(ui_->m_pLineEditInterface->text());
+    app_config_.setCryptoEnabled(ui_->m_pCheckBoxEnableCrypto->isChecked());
+    app_config_.setRequireClientCertificate(ui_->checkbox_require_client_certificate->isChecked());
+    app_config_.setLogLevel(ui_->m_pComboLogLevel->currentIndex());
+    app_config_.setLogToFile(ui_->m_pCheckBoxLogToFile->isChecked());
+    app_config_.setLogFilename(ui_->m_pLineEditLogFilename->text());
+    app_config_.setLanguage(ui_->m_pComboLanguage->itemData(ui_->m_pComboLanguage->currentIndex()).toString());
+    app_config_.setElevateMode(static_cast<ElevateMode>(ui_->m_pComboElevate->currentIndex()));
+    app_config_.setAutoHide(ui_->m_pCheckBoxAutoHide->isChecked());
+    app_config_.setAutoStart(ui_->m_pCheckBoxAutoStart->isChecked());
+    app_config_.setMinimizeToTray(ui_->m_pCheckBoxMinimizeToTray->isChecked());
+    app_config_.saveSettings();
     QDialog::accept();
 }
 
 void SettingsDialog::reject()
 {
-    if (m_appConfig.language() != m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString()) {
-        QInputLeapApplication::getInstance()->switchTranslator(m_appConfig.language());
+    if (app_config_.language() != ui_->m_pComboLanguage->itemData(ui_->m_pComboLanguage->currentIndex()).toString()) {
+        Q_EMIT requestLanguageChange(app_config_.language());
     }
     QDialog::reject();
 }
@@ -97,13 +104,13 @@ void SettingsDialog::changeEvent(QEvent* event)
         {
         case QEvent::LanguageChange:
             {
-                int logLevelIndex = m_pComboLogLevel->currentIndex();
+                int logLevelIndex = ui_->m_pComboLogLevel->currentIndex();
 
-                m_pComboLanguage->blockSignals(true);
-                retranslateUi(this);
-                m_pComboLanguage->blockSignals(false);
+                ui_->m_pComboLanguage->blockSignals(true);
+                ui_->retranslateUi(this);
+                ui_->m_pComboLanguage->blockSignals(false);
 
-                m_pComboLogLevel->setCurrentIndex(logLevelIndex);
+                ui_->m_pComboLogLevel->setCurrentIndex(logLevelIndex);
                 break;
             }
 
@@ -113,29 +120,30 @@ void SettingsDialog::changeEvent(QEvent* event)
     }
 }
 
-void SettingsDialog::on_m_pCheckBoxLogToFile_stateChanged(int i)
+void SettingsDialog::logToFileChanged(int i)
 {
     bool checked = i == 2;
 
-    m_pLineEditLogFilename->setEnabled(checked);
-    m_pButtonBrowseLog->setEnabled(checked);
+    ui_->m_pLineEditLogFilename->setEnabled(checked);
+    ui_->m_pButtonBrowseLog->setEnabled(checked);
 }
 
-void SettingsDialog::on_m_pButtonBrowseLog_clicked()
+void SettingsDialog::browseLogClicked()
 {
     QString fileName = QFileDialog::getSaveFileName(
         this, tr("Save log file to..."),
-        m_pLineEditLogFilename->text(),
+        ui_->m_pLineEditLogFilename->text(),
         "Logs (*.log *.txt)");
 
     if (!fileName.isEmpty())
     {
-        m_pLineEditLogFilename->setText(fileName);
+        ui_->m_pLineEditLogFilename->setText(fileName);
     }
 }
 
-void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(int index)
+void SettingsDialog::languageChanged(int index)
 {
-    QString ietfCode = m_pComboLanguage->itemData(index).toString();
-    QInputLeapApplication::getInstance()->switchTranslator(ietfCode);
+    Q_EMIT requestLanguageChange(ui_->m_pComboLanguage->itemData(index).toString());
 }
+
+SettingsDialog::~SettingsDialog() = default;

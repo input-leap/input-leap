@@ -37,7 +37,7 @@ if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 
 if(NOT QT_DEFAULT_MAJOR_VERSION)
-    set(QT_DEFAULT_MAJOR_VERSION 5)
+    set(QT_DEFAULT_MAJOR_VERSION 6)
 endif()
 
 include (cmake/Version.cmake)

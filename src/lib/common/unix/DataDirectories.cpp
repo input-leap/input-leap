@@ -65,10 +65,10 @@ static fs::path profile_basedir()
 #if defined(WINAPI_XWINDOWS) || defined(WINAPI_LIBEI)
     // linux/bsd adheres to freedesktop standards
     // https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
-    const char* dir = std::getenv("XDG_DATA_HOME");
+    const char* dir = std::getenv("XDG_CONFIG_HOME");
     if (dir != nullptr)
         return fs::u8path(dir);
-    return unix_home() / ".local/share";
+    return unix_home() / ".config/";
 #else
     // macos has its own standards
     // https://developer.apple.com/library/content/documentation/General/Conceptual/MOSXAppProgrammingGuide/AppRuntime/AppRuntime.html

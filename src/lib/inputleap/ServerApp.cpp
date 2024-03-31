@@ -118,9 +118,9 @@ ServerApp::help()
         profile_path = inputleap::DataDirectories::profile();
     }
 
-    auto usr_config_path = (profile_path / inputleap::fs::u8path(USR_CONFIG_NAME)).u8string();
+    auto usr_config_path = (profile_path / inputleap::fs::u8path(CONFIG_NAME)).u8string();
     auto sys_config_path = (inputleap::DataDirectories::systemconfig() /
-                            inputleap::fs::u8path(SYS_CONFIG_NAME)).u8string();
+                            inputleap::fs::u8path(CONFIG_NAME)).u8string();
 
     std::ostringstream buffer;
     buffer << "Start the InputLeap server component. The server shares the keyboard &\n"
@@ -208,7 +208,7 @@ ServerApp::loadConfig()
         auto path = inputleap::DataDirectories::profile();
         if (!path.empty()) {
             // complete path
-            path /= inputleap::fs::u8path(USR_CONFIG_NAME);
+            path /= inputleap::fs::u8path(CONFIG_NAME);
 
             // now try loading the user's configuration
             if (loadConfig(path.u8string())) {
@@ -220,7 +220,7 @@ ServerApp::loadConfig()
             // try the system-wide config file
             path = inputleap::DataDirectories::systemconfig();
             if (!path.empty()) {
-                path /= inputleap::fs::u8path(SYS_CONFIG_NAME);
+                path /= inputleap::fs::u8path(CONFIG_NAME);
                 if (loadConfig(path.u8string())) {
                     loaded            = true;
                     args().m_configFile = path.u8string();

@@ -199,7 +199,7 @@ jobs:
 
     steps:
       - name: Install Qt
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{matrix.qt-version}}
           modules: ${{matrix.qt-modules}}
@@ -309,7 +309,7 @@ jobs:
           "path=$env:GITHUB_WORKSPACE\deps\BonjourSDKLike" >> $env:GITHUB_OUTPUT
 
       - name: Install Qt
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{matrix.qt-version}}
           modules: ${{matrix.qt-modules}}

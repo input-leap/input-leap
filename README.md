@@ -57,6 +57,13 @@ and how the issue gets resolved.
 
 ### Usage
 
+> [!WARNING]
+> Currently, there are no stable builds (binary releases) for Input Leap yet.
+> 
+> However, **test** builds _(also called debug build artifacts)_ are available
+> via [GitHub Actions](https://github.com/input-leap/input-leap/actions?query=branch%3Amaster),
+> as described in [this discussions post](https://github.com/input-leap/input-leap/discussions/1793#discussioncomment-8577620).
+
 1. Install and run Input Leap on each machine that will be sharing.
 2. On the machine with the keyboard and mouse, make it the server.
 3. Click the "Configure server" button and drag a new screen onto the grid for

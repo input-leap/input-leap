@@ -331,7 +331,7 @@ void PortalInputCapture::cb_zones_changed(XdpInputCaptureSession* session, GVari
         // place, we can just install barriers everywhere and let EIS figure it out.
         // Also a lot easier to implement for now though it doesn't cover
         // differently-sized screens...
-        auto id = barriers_.size();
+        auto id = barriers_.size() + 1;
         x1 = x;
         y1 = y;
         x2 = x + w - 1;
@@ -345,7 +345,7 @@ void PortalInputCapture::cb_zones_changed(XdpInputCaptureSession* session, GVari
                                          "x2", x2,
                                          "y2", y2,
                                          nullptr)));
-        id = barriers_.size();
+        id = barriers_.size() + 1;
         x1 = x + w;
         y1 = y;
         x2 = x + w;
@@ -359,7 +359,7 @@ void PortalInputCapture::cb_zones_changed(XdpInputCaptureSession* session, GVari
                                          "x2", x2,
                                          "y2", y2,
                                          nullptr)));
-        id = barriers_.size();
+        id = barriers_.size() + 1;
         x1 = x;
         y1 = y;
         x2 = x;
@@ -373,7 +373,7 @@ void PortalInputCapture::cb_zones_changed(XdpInputCaptureSession* session, GVari
                                          "x2", x2,
                                          "y2", y2,
                                          nullptr)));
-        id = barriers_.size();
+        id = barriers_.size() + 1;
         x1 = x;
         y1 = y + h;
         x2 = x + w - 1;
@@ -383,7 +383,7 @@ void PortalInputCapture::cb_zones_changed(XdpInputCaptureSession* session, GVari
                             g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER,
                                          "id", id,
                                          "x1", x1,
-                                         "y1", y2,
+                                         "y1", y1,
                                          "x2", x2,
                                          "y2", y2,
                                          nullptr)));

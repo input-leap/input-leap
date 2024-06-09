@@ -198,7 +198,7 @@ public slots:
 
 private slots:
     void on_m_pCheckBoxAutoConfig_toggled(bool checked);
-    void on_m_pComboServerList_currentIndexChanged(QString );
+    void comboServerList_currentIndexChanged(QString );
     void on_m_pButtonReload_clicked();
     void installBonjour();
 

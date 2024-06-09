@@ -315,6 +315,7 @@ void MainWindow::loadSettings()
 void MainWindow::initConnections()
 {
     connect(ui_->m_pActionMinimize, &QAction::triggered, this, &MainWindow::hide);
+    connect(ui_->m_pComboServerList, &QComboBox::currentTextChanged, this, &MainWindow::comboServerList_currentIndexChanged);
     connect(ui_->m_pActionRestore, &QAction::triggered, this, &MainWindow::showNormal);
     connect(ui_->m_pActionStartCmdApp, &QAction::triggered, this, &MainWindow::start_cmd_app);
     connect(ui_->m_pActionStopCmdApp, &QAction::triggered, this, &MainWindow::stop_cmd_app);
@@ -1380,7 +1381,7 @@ void MainWindow::promptAutoConfig()
     m_AppConfig->setAutoConfigPrompted(true);
 }
 
-void MainWindow::on_m_pComboServerList_currentIndexChanged(QString )
+void MainWindow::comboServerList_currentIndexChanged(QString )
 {
     if (ui_->m_pComboServerList->count() != 0) {
         restart_cmd_app();

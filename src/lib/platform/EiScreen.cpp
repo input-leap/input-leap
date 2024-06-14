@@ -695,10 +695,18 @@ void EiScreen::on_motion_event(ei_event* event)
          }
 #endif
     } else {
-        LOG_DEBUG("on_motion_event on secondary at (dx,dy)=(%.2f,%.2f)", dx, dy);
-        send_event(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY,
-                   create_event_data<MotionInfo>(MotionInfo{static_cast<std::int32_t>(dx),
-                                                            static_cast<std::int32_t>(dy)}));
+        buffer_dx += dx;
+        buffer_dy += dy;
+        auto pixel_dx = static_cast<std::int32_t>(buffer_dx);
+        auto pixel_dy = static_cast<std::int32_t>(buffer_dy);
+        LOG_DEBUG2("on_motion_event(buffer) on secondary at (dx,dy)=(%0.2f,%0.2f)", buffer_dx, buffer_dy);
+        if (pixel_dx || pixel_dy) {
+            LOG_DEBUG("on_motion_event on secondary at (dx,dy)=(%d,%d)", pixel_dx, pixel_dy);
+            send_event(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY,
+                       create_event_data<MotionInfo>(MotionInfo{pixel_dx, pixel_dy}));
+            buffer_dx -= pixel_dx;
+            buffer_dy -= pixel_dy;
+        }
     }
 }
 

@@ -158,6 +158,26 @@ void PortalRemoteDesktop::cb_init_remote_desktop_session(GObject* object, GAsync
                       this);
 }
 
+#if !defined(HAVE_LIBPORTAL_CREATE_REMOTE_DESKTOP_SESSION_FULL)
+static inline void
+xdp_portal_create_remote_desktop_session_full(XdpPortal              *portal,
+                                              XdpDeviceType           devices,
+                                              XdpOutputType           outputs,
+                                              XdpRemoteDesktopFlags   flags,
+                                              XdpCursorMode           cursor_mode,
+                                              XdpPersistMode          _unused1,
+                                              const char             *_unused2,
+                                              GCancellable           *cancellable,
+                                              GAsyncReadyCallback     callback,
+                                              gpointer                data)
+{
+    xdp_portal_create_remote_desktop_session(portal, devices, outputs,
+                                             flags, cursor_mode, cancellable,
+                                             callback, data);
+}
+#endif
+
+
 gboolean PortalRemoteDesktop::init_remote_desktop_session()
 {
     LOG_DEBUG("Setting up the RemoteDesktop session with restore token %s", session_restore_token_);

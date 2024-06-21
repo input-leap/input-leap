@@ -158,6 +158,9 @@ private:
     std::int32_t cursor_x_ = 0;
     std::int32_t cursor_y_ = 0;
 
+    double buffer_dx = 0;
+    double buffer_dy = 0;
+
     mutable std::mutex mutex_;
 
     PortalRemoteDesktop* portal_remote_desktop_ = nullptr;

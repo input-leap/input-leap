@@ -27,23 +27,17 @@ section: screens
 end
 
 section: links
-	# larry is to the right of moe and curly is above moe
-	moe:
-		right = larry
-		up    = curly
+	desktop1:
+		top = desktop2 (0, 50)
+		right = desktop2 (50, 100)
+		left = laptop
 
-	# moe is to the left of larry and curly is above larry.
-	# note that curly is above both moe and larry and moe
-	# and larry have a symmetric connection (they're in
-	# opposite directions of each other).
-	larry:
-		left  = moe
-		up    = curly
+	desktop2:
+		bottom (0, 50) = desktop1
+		left (50, 100) = desktop1
 
-	# larry is below curly.  if you move up from moe and then
-	# down, you'll end up on larry.
-	curly:
-		down  = larry
+	laptop:
+		right = desktop1
 end
 
 # The aliases section is to map the full names of the computers to their logical names used in the screens section
@@ -51,5 +45,5 @@ end
 section: aliases
 	# Laptop is actually known as John-Smiths-MacBook-3.local
 	John-Smiths-MacBook-3.local:
-		desktop2
+		laptop
 end

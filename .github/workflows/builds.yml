@@ -174,7 +174,7 @@ jobs:
       matrix:
        include:
          - name: macOS-x86_64
-           os: macos-11
+           os: macos-12
            qt-version: 5.15
            min-macOS-version: 10.9
            arch: 'x86_64'

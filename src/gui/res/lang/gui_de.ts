@@ -428,8 +428,8 @@ Um diesem Fingerabdruck bei zukünftigen Verbindeungen automatisch zu vertrauen,
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="257"/>
-        <source>&amp;Server IP:</source>
-        <translation>&amp;Server IP:</translation>
+        <source>Server I&amp;P:</source>
+        <translation>Server I&amp;P:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="380"/>

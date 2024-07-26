@@ -429,8 +429,8 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="257"/>
-        <source>&amp;Server IP:</source>
-        <translation type="unfinished">サーバー IP (&amp;S):</translation>
+        <source>Server I&amp;P:</source>
+        <translation type="unfinished">サーバー I&amp;P:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="380"/>

@@ -428,8 +428,8 @@ Ak chcete automaticky dôverovať tomuto otlačku pri ďalších spojeniach, kli
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="257"/>
-        <source>&amp;Server IP:</source>
-        <translation>&amp;IP servera:</translation>
+        <source>Server I&amp;P:</source>
+        <translation>I&amp;P servera:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="380"/>

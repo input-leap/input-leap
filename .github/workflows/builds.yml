@@ -48,6 +48,34 @@ jobs:
     steps:
 
       # Preparation steps
+      - name: preinstall depends
+        run: |
+          apt-get update -y
+          # software-properties-common is needed for add-apt-repository
+          apt-get install -y software-properties-common gpg wget
+
+      - if: matrix.os == 'ubuntu:20.04'
+        name: Add repositories with newer git and cmake
+        run: |
+          # InputLeap requires at least CMake 3.21.
+          # This mirrors instructions at https://apt.kitware.com
+          wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
+            | gpg --dearmor - \
+            > /usr/share/keyrings/kitware-archive-keyring.gpg
+          echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ focal main' \
+            > /etc/apt/sources.list.d/kitware.list
+
+      - if: matrix.os == 'ubuntu:22.04'
+        name: Add repositories with newer git and cmake
+        run: |
+          # InputLeap requires at least CMake 3.21.
+          # This mirrors instructions at https://apt.kitware.com
+          wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
+            | gpg --dearmor - \
+            > /usr/share/keyrings/kitware-archive-keyring.gpg
+          echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' \
+            > /etc/apt/sources.list.d/kitware.list
+
       - name: Update image and install pre-reqs
         run: |
           apt-get update -y

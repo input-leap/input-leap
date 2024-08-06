@@ -1,10 +1,10 @@
 @echo off
 
 REM defaults - override them by creating a build_env.bat file
-set B_BUILD_TYPE=Release
-set B_QT_ROOT=E:\Libs\Qt
-set B_QT_VER=5.15.2
-set B_QT_MSVC=msvc2019_64
+set B_BUILD_TYPE=Debug
+set B_QT_ROOT=C:\Qt
+set B_QT_VER=5.11.1
+set B_QT_MSVC=msvc2017_64
 set B_BONJOUR=C:\Program Files\Bonjour SDK
 
 set savedir=%cd%
@@ -46,21 +46,21 @@ if ERRORLEVEL 1 goto failed
 cmake --build . --config %B_BUILD_TYPE%
 if ERRORLEVEL 1 goto failed
 if exist bin\Debug (
-    copy %B_QT_FULLPATH%\bin\Qt5Cored.dll bin\Debug\ > NUL
-    copy %B_QT_FULLPATH%\bin\Qt5Guid.dll bin\Debug\ > NUL
-    copy %B_QT_FULLPATH%\bin\Qt5Networkd.dll bin\Debug\ > NUL
-    copy %B_QT_FULLPATH%\bin\Qt5Widgetsd.dll bin\Debug\ > NUL
-    copy %B_QT_FULLPATH%\bin\Qt5Cored.dll bin\Debug\ > NUL
+    copy %B_QT_FULLPATH%\bin\Qt6Cored.dll bin\Debug\ > NUL
+    copy %B_QT_FULLPATH%\bin\Qt6Guid.dll bin\Debug\ > NUL
+    copy %B_QT_FULLPATH%\bin\Qt6Networkd.dll bin\Debug\ > NUL
+    copy %B_QT_FULLPATH%\bin\Qt6Widgetsd.dll bin\Debug\ > NUL
+    copy %B_QT_FULLPATH%\bin\Qt6Cored.dll bin\Debug\ > NUL
     copy ..\ext\openssl\windows\x64\bin\* bin\Debug\ > NUL
     copy ..\res\openssl\input-leap.conf bin\Debug\ > NUL
     mkdir bin\Debug\platforms
     copy %B_QT_FULLPATH%\plugins\platforms\qwindowsd.dll bin\Debug\platforms\ > NUL
 ) else if exist bin\Release (
-    copy %B_QT_FULLPATH%\bin\Qt5Core.dll bin\Release\ > NUL
-    copy %B_QT_FULLPATH%\bin\Qt5Gui.dll bin\Release\ > NUL
-    copy %B_QT_FULLPATH%\bin\Qt5Network.dll bin\Release\ > NUL
-    copy %B_QT_FULLPATH%\bin\Qt5Widgets.dll bin\Release\ > NUL
-    copy %B_QT_FULLPATH%\bin\Qt5Core.dll bin\Release\ > NUL
+    copy %B_QT_FULLPATH%\bin\Qt6Core.dll bin\Release\ > NUL
+    copy %B_QT_FULLPATH%\bin\Qt6Gui.dll bin\Release\ > NUL
+    copy %B_QT_FULLPATH%\bin\Qt6Network.dll bin\Release\ > NUL
+    copy %B_QT_FULLPATH%\bin\Qt6Widgets.dll bin\Release\ > NUL
+    copy %B_QT_FULLPATH%\bin\Qt6Core.dll bin\Release\ > NUL
     copy ..\ext\openssl\windows\x64\bin\* bin\Release\ > NUL
     copy ..\res\openssl\input-leap.conf bin\Release\ > NUL
     mkdir bin\Release\platforms

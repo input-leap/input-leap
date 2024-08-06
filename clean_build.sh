@@ -15,19 +15,19 @@ B_BUILD_DIR="${B_BUILD_DIR:-build}"
 B_BUILD_TYPE="${B_BUILD_TYPE:-Debug}"
 B_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=${B_BUILD_TYPE} ${B_CMAKE_FLAGS:-}"
 
+# allow local customizations to build environment
+[ -r ./build_env.sh ] && . ./build_env.sh
+
 if [ "$(uname)" = "Darwin" ]; then
     # macOS needs a little help, so we source this environment script to fix paths.
     [ -e ./macos_environment.sh ] && . ./macos_environment.sh
-    B_CMAKE_FLAGS="${B_CMAKE_FLAGS} -DCMAKE_OSX_SYSROOT=$(xcrun --sdk macosx --show-sdk-path) -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9"
+    B_CMAKE_FLAGS="${B_CMAKE_FLAGS} -DCMAKE_OSX_SYSROOT=$(xcrun --sdk macosx --show-sdk-path) -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15"
 fi
 
 # Prefer ninja if available
 if command -v ninja 2>/dev/null; then
     B_CMAKE_FLAGS="-GNinja ${B_CMAKE_FLAGS}"
 fi
-
-# allow local customizations to build environment
-[ -r ./build_env.sh ] && . ./build_env.sh
 
 set -e
 

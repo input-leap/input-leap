@@ -94,6 +94,7 @@ modules:
     - name: input-leap
       buildsystem: cmake
       config-opts:
+          - -DQT_DEFAULT_MAJOR_VERSION=5
           - -DINPUTLEAP_BUILD_GUI=OFF
           - -DINPUTLEAP_BUILD_TESTS=OFF
           - -DINPUTLEAP_BUILD_INSTALLER=OFF

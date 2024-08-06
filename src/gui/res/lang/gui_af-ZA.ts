@@ -408,7 +408,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
     <message>
         <location filename="res/MainWindow.ui" line="257"/>
-        <source>&amp;Server IP:</source>
+        <source>Server I&amp;P:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

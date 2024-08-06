@@ -428,8 +428,8 @@ Klicka &quot;Ja&quot; för att automatiskt lita på fingeravtrycket i framtida a
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="257"/>
-        <source>&amp;Server IP:</source>
-        <translation>&amp;Serverns IP:</translation>
+        <source>Server I&amp;P:</source>
+        <translation>Serverns I&amp;P:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="380"/>

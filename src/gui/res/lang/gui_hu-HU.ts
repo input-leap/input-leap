@@ -428,8 +428,8 @@ A jövőbeni kapcsolódási kísérletek automatikus jóváhagyáshoz kattintson
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="257"/>
-        <source>&amp;Server IP:</source>
-        <translation>Kiszolgáló IP-&amp;címe:</translation>
+        <source>Server I&amp;P:</source>
+        <translation>Kiszolgáló I&amp;P-címe:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="380"/>

@@ -36,3 +36,5 @@ CMakeLists.txt.user
 # Transient in-project-directory dependencies
 /deps/
 /out/build/x64-Debug
+bundle
+compile_commands.json

@@ -422,7 +422,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="206"/>
-        <source>&amp;Server IP:</source>
+        <source>Server I&amp;P:</source>
         <translation>服务端IP：</translation>
     </message>
     <message>

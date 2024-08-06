@@ -24,7 +24,7 @@ option(INPUTLEAP_BUILD_TESTS "Build the tests" ON)
 option(INPUTLEAP_USE_EXTERNAL_GTEST "Use external installation of Google Test framework" OFF)
 option(INPUTLEAP_BUILD_X11 "Build with XWindows support" ON)
 option(INPUTLEAP_BUILD_LIBEI "Build with libei support" OFF)
-option(INPUTLEAP_DEPLOY_FLATPAK_SCRIPT "Deploy Flatpak script [Expermental]" OFF)
+option(INPUTLEAP_DEPLOY_FLATPAK_SCRIPT "Deploy Flatpak script [Experimental]" OFF)
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set (CMAKE_CXX_STANDARD 14)
 set (CMAKE_CXX_EXTENSIONS OFF)
@@ -37,7 +37,7 @@ if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 
 if(NOT QT_DEFAULT_MAJOR_VERSION)
-    set(QT_DEFAULT_MAJOR_VERSION 5)
+    set(QT_DEFAULT_MAJOR_VERSION 6)
 endif()
 
 include (cmake/Version.cmake)
@@ -184,14 +184,15 @@ if (UNIX)
             include_directories(${LIBEI_INCLUDE_DIRS} ${LIBXKBCOMMON_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS} ${LIBPORTAL_INCLUDE_DIRS} ${LIBM_INCLUDE_DIRS})
             list(APPEND libs ${LIBEI_LINK_LIBRARIES} ${LIBXKBCOMMON_LINK_LIBRARIES} ${GLIB2_LINK_LIBRARIES} ${LIBPORTAL_LINK_LIBRARIES} ${LIBM_LIBRARIES})
 
-            # no libportal release has xdp_session_connect_to_eis, so let's check for that
-            # and enable the hackaround in the code
+            # libportal 0.7 has xdp_session_connect_to_eis but it doesn't have remote desktop session restore or
+            # the inputcapture code, so let's check for explicit functions that bits depending on what we have
             include(CMakePushCheckState)
             include(CheckCXXSourceCompiles)
             cmake_push_check_state(RESET)
             set(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${LIBPORTAL_INCLUDE_DIRS};${GLIB2_INCLUDE_DIRS}")
             set(CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES};${LIBPORTAL_LINK_LIBRARIES};${GLIB2_LINK_LIBRARIES}")
             check_symbol_exists(xdp_session_connect_to_eis "libportal/portal.h" HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS)
+            check_symbol_exists(xdp_portal_create_remote_desktop_session_full "libportal/portal.h" HAVE_LIBPORTAL_CREATE_REMOTE_DESKTOP_SESSION_FULL)
             check_symbol_exists(xdp_input_capture_session_connect_to_eis "libportal/inputcapture.h" HAVE_LIBPORTAL_INPUTCAPTURE)
             # check_symbol_exists can’t check for enum values
             check_cxx_source_compiles("#include <libportal/portal.h>
@@ -416,6 +417,21 @@ endif()
 
 else()
     message (STATUS "NOT configuring the installer")
+endif()
+
+#
+# Uninstall target
+#
+
+# uninstall target
+if(NOT TARGET uninstall)
+  configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+    IMMEDIATE @ONLY)
+
+  add_custom_target(uninstall
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_BINARY_DIR}/cmake_uninstall.cmake)
 endif()
 
 enable_testing()

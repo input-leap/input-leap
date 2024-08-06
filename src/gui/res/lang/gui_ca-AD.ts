@@ -408,8 +408,8 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="257"/>
-        <source>&amp;Server IP:</source>
-        <translation type="finished">IP del Servidor:</translation>
+        <source>Server I&amp;P:</source>
+        <translation type="finished">I&amp;P del Servidor:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="380"/>

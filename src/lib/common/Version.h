@@ -20,11 +20,6 @@
 
 #include "common/common.h"
 
-// set version macro if not set yet
-#if !defined(INPUTLEAP_VERSION)
-#error Version was not set (should be passed to compiler).
-#endif
-
 // important strings
 extern const char* kApplication;
 extern const char* kCopyright;

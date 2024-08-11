@@ -27,10 +27,7 @@ AboutDialog::AboutDialog(QWidget* parent, const QString& app_name) :
     ui_{std::make_unique<Ui::AboutDialog>()}
 {
     ui_->setupUi(this);
-    QString version = QStringLiteral("%1-%2").arg(kVersion, INPUTLEAP_VERSION_STAGE);
-#ifdef INPUTLEAP_REVISION
-    version.append(QStringLiteral("-%1").arg(INPUTLEAP_REVISION));
-#endif
+    QString version = QStringLiteral("%1").arg(kVersion);
     ui_->m_pLabelAppVersion->setText(version);
     const int scaled_logo_height = sizeHint().width() <= 300 ? 45 : 90;
     const QPixmap scaled_logo = QPixmap(":/res/image/about.png")

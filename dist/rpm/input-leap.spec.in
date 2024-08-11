@@ -1,6 +1,6 @@
-%global package_version @INPUTLEAP_VERSION_MAJOR@.@INPUTLEAP_VERSION_MINOR@.@INPUTLEAP_VERSION_PATCH@
-%global tarname InputLeap-%{version}-Source
-%global input_leap_revision @INPUTLEAP_REVISION@
+%global package_version @CMAKE_PROJECT_VERSION@
+%global tarname InputLeap-@CMAKE_PROJECT_VERSION@-Source
+%global input_leap_revision @INPUTLEAP_BUILD_NUMBER@
 %global timestamp @INPUTLEAP_BUILD_DATE@@INPUTLEAP_BUILD_TIME@
 
 Summary: Keyboard and mouse sharing solution
@@ -67,9 +67,7 @@ Work seamlessly across Windows, macOS and Linux.
 
 
 %build
-%{cmake3} . \
-    -DINPUTLEAP_VERSION_STAGE:STRING=@INPUTLEAP_VERSION_STAGE@ \
-    -DINPUTLEAP_REVISION:STRING=%{input_leap_revision}
+%{cmake3} .
 %{cmake_build}
 
 

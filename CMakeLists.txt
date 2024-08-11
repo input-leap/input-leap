@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 cmake_minimum_required(VERSION 3.12)
-project(InputLeap C CXX)
 
 option(INPUTLEAP_BUILD_GUI "Build the GUI" ON)
 option(INPUTLEAP_BUILD_INSTALLER "Build the installer" ON)
@@ -25,6 +24,30 @@ option(INPUTLEAP_USE_EXTERNAL_GTEST "Use external installation of Google Test fr
 option(INPUTLEAP_BUILD_X11 "Build with XWindows support" ON)
 option(INPUTLEAP_BUILD_LIBEI "Build with libei support" OFF)
 option(INPUTLEAP_DEPLOY_FLATPAK_SCRIPT "Deploy Flatpak script [Experimental]" OFF)
+
+include (cmake/Version.cmake)
+
+# TODO: Find out why we need these, and remove them
+if (COMMAND cmake_policy)
+    cmake_policy (SET CMP0003 NEW)
+    cmake_policy (SET CMP0005 NEW)
+endif()
+
+#Generate Version info
+git_version_from_tag(
+    OUTPUT INPUTLEAP_VERSION
+    MAJOR 2
+    MINOR 4
+    PATCH 0
+)
+
+project(InputLeap VERSION ${INPUTLEAP_VERSION} LANGUAGES C CXX)
+message(STATUS "Building ${CMAKE_PROJECT_NAME} version ${CMAKE_PROJECT_VERSION}")
+
+# Must include Package Only after a version has been set.
+##TODO: Better Packaging
+include (cmake/Package.cmake)
+
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set (CMAKE_CXX_STANDARD 14)
 set (CMAKE_CXX_EXTENSIONS OFF)
@@ -40,14 +63,6 @@ if(NOT QT_DEFAULT_MAJOR_VERSION)
     set(QT_DEFAULT_MAJOR_VERSION 6)
 endif()
 
-include (cmake/Version.cmake)
-include (cmake/Package.cmake)
-
-# TODO: Find out why we need these, and remove them
-if (COMMAND cmake_policy)
-    cmake_policy (SET CMP0003 NEW)
-    cmake_policy (SET CMP0005 NEW)
-endif()
 
 # Add headers to source list
 if (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
@@ -326,7 +341,7 @@ endif()
 # Windows installer
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-        set(INPUTLEAP_WIX_VERSION "${INPUTLEAP_VERSION_MAJOR}.${INPUTLEAP_VERSION_MINOR}.${INPUTLEAP_VERSION_PATCH}")
+        set(INPUTLEAP_WIX_VERSION "${CMAKE_PROJECT_VERSION}")
         message (STATUS "Configuring the wix installer")
         configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer-wix)
         message (STATUS "Configuring the inno installer")

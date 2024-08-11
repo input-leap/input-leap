@@ -17,8 +17,9 @@
 file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 if (WIN32)
-    list(APPEND sources input-leapd.rc)
-    set_property(SOURCE input-leapd.rc PROPERTY COMPILE_FLAGS /nologo)
+    configure_file(input-leapd.rc.in ${CMAKE_CURRENT_BINARY_DIR}/input-leapd.rc @ONLY)
+    list(APPEND sources ${CMAKE_CURRENT_BINARY_DIR}/input-leapd.rc)
+    set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/input-leapd.rc PROPERTY COMPILE_FLAGS /nologo)
 endif()
 
 if (WIN32)

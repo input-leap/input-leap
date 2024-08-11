@@ -25,7 +25,7 @@
   </provides>
 
   <releases>
-    <release version="${INPUTLEAP_VERSION}" date="${INPUTLEAP_BUILD_DATE_ISO}" />
+    <release version="${CMAKE_PROJECT_VERSION}" date="${INPUTLEAP_BUILD_DATE_ISO}" />
   </releases>
 </component>
 

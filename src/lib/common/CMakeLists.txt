@@ -14,27 +14,45 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-file(GLOB headers "*.h")
-file(GLOB sources "*.cpp")
+#Write our Verison info to a file
+configure_file(Version.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/Version.cpp @ONLY)
+
+set(common_HEADERS
+    common.h
+    DataDirectories.h
+    Version.h
+)
+
+set(common_SOURCES
+    DataDirectories_static.cpp
+    DataDirectoriesCommon.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/Version.cpp
+)
 
 if (WIN32)
-    file(GLOB arch_headers "win32/*.h")
-    file(GLOB arch_sources "win32/*.cpp")
-elseif (UNIX)
-    file(GLOB arch_headers "unix/*.h")
-    file(GLOB arch_sources "unix/*.cpp")
-endif()
+    list(APPEND common_HEADERS
+        win32/encoding_utilities.h
+        win32/winapi.h
+    )
 
-list(APPEND headers ${arch_headers})
-list(APPEND sources ${arch_sources})
+    list(APPEND common_SOURCES
+        win32/encoding_utilities.cpp
+        win32/DataDirectories.cpp
+    )
+elseif (UNIX)
+    list(APPEND common_SOURCES
+        unix/DataDirectories.cpp
+    )
+endif()
 
 if(INPUTLEAP_ADD_HEADERS)
-    list(APPEND sources ${headers})
+    list(APPEND sources ${common_HEADERS})
 endif()
 
-add_library(common STATIC ${sources})
+add_library(common STATIC ${common_SOURCES})
 
 if (HAVE_GETPWUID_R)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHAVE_GETPWUID_R=1")
 endif()
+
 

@@ -19,13 +19,14 @@ set(sources
 )
 
 if (BUILD_MSWINDOWS)
+    configure_file(input-leaps.rc.in ${CMAKE_CURRENT_SOURCE_DIR}/input-leaps.rc @ONLY)
     file(GLOB mswin_headers "MSWindows*.h")
     file(GLOB mswin_sources "MSWindows*.cpp")
     list(APPEND sources
         input-leaps.exe.manifest
-        input-leaps.rc
+        ${CMAKE_CURRENT_SOURCE_DIR}/input-leaps.rc
     )
-    set_property(SOURCE input-leaps.rc PROPERTY COMPILE_FLAGS /nologo)
+    set_property(SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/input-leaps.rc PROPERTY COMPILE_FLAGS /nologo)
 endif()
 if (BUILD_CARBON)
     file(GLOB carbon_headers "OSX*.h")

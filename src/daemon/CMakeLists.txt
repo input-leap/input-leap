@@ -17,8 +17,9 @@
 
 set(sources input-leapd.cpp)
 if (WIN32)
-    list(APPEND sources input-leapd.rc)
-    set_property(SOURCE input-leapd.rc PROPERTY COMPILE_FLAGS /nologo)
+    configure_file(input-leapd.rc.in ${CMAKE_CURRENT_SOURCE_DIR}/input-leapd.rc @ONLY)
+    list(APPEND sources ${CMAKE_CURRENT_SOURCE_DIR}/input-leapd.rc)
+    set_property(SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/input-leapd.rc PROPERTY COMPILE_FLAGS /nologo)
 endif()
 
 add_executable (input-leapd WIN32 ${sources})

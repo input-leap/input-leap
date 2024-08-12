@@ -51,8 +51,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION INPUTLEAP_VERSION_MAJOR, INPUTLEAP_VERSION_MINOR, INPUTLEAP_VERSION_PATCH, INPUTLEAP_VERSION_TWEAK
- PRODUCTVERSION INPUTLEAP_VERSION_MAJOR, INPUTLEAP_VERSION_MINOR, INPUTLEAP_VERSION_PATCH, INPUTLEAP_VERSION_TWEAK
+ FILEVERSION @INPUTLEAP_VERSION_MAJOR@, @INPUTLEAP_VERSION_MINOR@, @INPUTLEAP_VERSION_PATCH@, @INPUTLEAP_VERSION_TWEAK@
+ PRODUCTVERSION @INPUTLEAP_VERSION_MAJOR@, @INPUTLEAP_VERSION_MINOR@, @INPUTLEAP_VERSION_PATCH@, @INPUTLEAP_VERSION_TWEAK@
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -69,10 +69,10 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "The InputLeap Developers"
             VALUE "CompanyWeb", "https://github.com/input-leap/input-leap/"
-            VALUE "FileVersion", INPUTLEAP_VERSION
-            VALUE "LegalCopyright", "Copyright (C) 2021-2023 InputLeap contributors\nCopyright (C) 2018 Debauchee Open Source Group\nCopyright (C) 2012-2016 Symless Ltd.\nCopyright (C) 2008-2014 Nick Bolton\nCopyright (C) 2002-2014 Chris Schoeneman"
+            VALUE "FileVersion", "@INPUTLEAP_VERSION@"
+            VALUE "LegalCopyright", "Copyright (C) 2021-2024 InputLeap contributors\nCopyright (C) 2018 Debauchee Open Source Group\nCopyright (C) 2012-2016 Symless Ltd.\nCopyright (C) 2008-2014 Nick Bolton\nCopyright (C) 2002-2014 Chris Schoeneman"
             VALUE "ProductName", "InputLeap"
-            VALUE "ProductVersion", INPUTLEAP_VERSION
+            VALUE "ProductVersion", "@INPUTLEAP_VERSION@"
             VALUE "OriginalFilename", "input-leap.exe"
             VALUE "FileDescription", "Open source KVM software"
             VALUE "InternalName", "input-leap"
@@ -92,7 +92,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_INPUTLEAP             ICON                    "../../../../res/input-leap.ico"
+IDI_INPUTLEAP             ICON                    "@CMAKE_SOURCE_DIR@/res/input-leap.ico"
 
 
 #endif    // English (U.S.) resources

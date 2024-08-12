@@ -27,7 +27,7 @@ AboutDialog::AboutDialog(QWidget* parent, const QString& app_name) :
     ui_{std::make_unique<Ui::AboutDialog>()}
 {
     ui_->setupUi(this);
-    QString version = QStringLiteral("%1-%2").arg(kVersion, INPUTLEAP_VERSION_STAGE);
+    QString version = QStringLiteral("%1").arg(kVersion);
 #ifdef INPUTLEAP_REVISION
     version.append(QStringLiteral("-%1").arg(INPUTLEAP_REVISION));
 #endif

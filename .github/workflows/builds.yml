@@ -102,6 +102,13 @@ jobs:
           path: input-leap
           submodules: recursive
           set-safe-directory: ${{ github.workspace }}
+          fetch-depth: 0
+
+      - name: Force Tag update
+        run: |
+          cd input-leap
+          git fetch --tags --force
+          cd ..
 
       - name: Get libei v1.2.1 from freedesktop
         # Manual checkout of libinput/libei ref 1.2.1 from https://gitlab.freedesktop.org
@@ -243,6 +250,13 @@ jobs:
         with:
           path: input-leap
           submodules: recursive
+          fetch-depth: 0
+
+      - name: Force Tag update
+        run: |
+          cd input-leap
+          git fetch --tags --force
+          cd ..
 
       - name: Setup the build
         run: |
@@ -296,6 +310,13 @@ jobs:
         with:
           path: input-leap
           submodules: recursive
+          fetch-depth: 0
+
+      - name: Force Tag update
+        run: |
+          cd input-leap
+          git fetch --tags --force
+          cd ..
 
       - name: Download Bonjour SDK-like
         id: bonjour

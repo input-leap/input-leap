@@ -3,6 +3,8 @@
 %global input_leap_revision @INPUTLEAP_REVISION@
 %global timestamp @INPUTLEAP_BUILD_DATE@@INPUTLEAP_BUILD_TIME@
 
+%global rdnn_name io.github.input_leap.InputLeap
+
 Summary: Keyboard and mouse sharing solution
 Name: input-leap
 Version: %{package_version}
@@ -13,46 +15,23 @@ URL: https://github.com/input-leap/input-leap
 # Run cmake package_source to get this tarball
 Source0: %{tarname}.tar.xz
 
-%if 0%{?fedora}
-BuildRequires: avahi-compat-libdns_sd-devel
-BuildRequires: cmake3
-BuildRequires: desktop-file-utils
-BuildRequires: gcc-c++
-BuildRequires: gmock-devel
-BuildRequires: gtest-devel
-BuildRequires: gulrak-filesystem-devel
-BuildRequires: libX11-devel
-BuildRequires: libXtst-devel libXinerama-devel libXrandr-devel
-BuildRequires: libICE-devel libSM-devel
-BuildRequires: openssl-devel
-BuildRequires: qt6-qtbase-devel
-BuildRequires: qt6-qttools-devel
-BuildRequires: make
-%endif
-
-%if 0%{?suse_version}
-BuildRequires: avahi-compat-mDNSResponder-devel
+BuildRequires: pkgconfig(avahi-compat-libdns_sd)
 BuildRequires: cmake >= 3
 BuildRequires: desktop-file-utils
 BuildRequires: gcc-c++
-BuildRequires: gmock
-BuildRequires: gtest
-BuildRequires: libX11-devel
-BuildRequires: libXtst-devel libXinerama-devel libXrandr-devel
-BuildRequires: libICE-devel libSM-devel
-BuildRequires: libopenssl-devel
-BuildRequires: qt6-base-devel
-BuildRequires: qt6-linguist-devel
+BuildRequires: pkgconfig(gmock)
+BuildRequires: pkgconfig(gtest)
+BuildRequires: pkgconfig(x11)
+BuildRequires: pkgconfig(xtst) pkgconfig(xinerama) pkgconfig(xrandr)
+BuildRequires: pkgconfig(ice) pkgconfig(sm)
+BuildRequires: pkgconfig(openssl)
+BuildRequires: pkgconfig(Qt6Core)
+BuildRequires: pkgconfig(Qt6Widgets)
+BuildRequires: pkgconfig(Qt6Network)
+BuildRequires: pkgconfig(Qt6Linguist)
 BuildRequires: make
-
-Requires: libc libstdc++ libgcc_s1
-Requires: libdns_sd
-Requires: libQt5Core6 libQt5Gui6 libQt5Network6 libQt5Widgets6
-Requires: libopenssl3
-Requires: libX11-6 libXext6 libXinerama1 libXrandr2 libXtst6
-
-%{?!cmake3:%define cmake3 %cmake}
-%endif
+BuildRequires: pkgconfig(libei-1.0)
+BuildRequires: pkgconfig(libportal) >= 0.8
 
 %description
 InputLeap allows you to share one mouse and keyboard between multiple computers.
@@ -63,9 +42,12 @@ Work seamlessly across Windows, macOS and Linux.
 
 
 %build
-%{cmake3} . \
-    -DINPUTLEAP_VERSION_STAGE:STRING=@INPUTLEAP_VERSION_STAGE@ \
-    -DINPUTLEAP_REVISION:STRING=%{input_leap_revision}
+%{cmake} . \
+    -DINPUTLEAP_REVISION:STRING=%{input_leap_revision} \
+    -DINPUTLEAP_BUILD_LIBEI=ON \
+    -DINPUTLEAP_BUILD_TESTS=ON \
+    -DINPUTLEAP_USE_EXTERNAL_GTEST=True \
+    -DINPUTLEAP_VERSION_STAGE:STRING=@INPUTLEAP_VERSION_STAGE@
 %{cmake_build}
 
 
@@ -74,23 +56,25 @@ Work seamlessly across Windows, macOS and Linux.
 
 desktop-file-install --delete-original \
   --dir %{buildroot}%{_datadir}/applications \
-  --set-icon=%{_datadir}/icons/hicolor/scalable/apps/io.github.input_leap.InputLeap.svg \
-  %{buildroot}%{_datadir}/applications/io.github.input_leap.InputLeap.desktop
+  --set-icon=%{_datadir}/icons/hicolor/scalable/apps/%{rdnn_name}.svg \
+  %{buildroot}%{_datadir}/applications/%{rdnn_name}.desktop
 
-desktop-file-validate %{buildroot}/%{_datadir}/applications/io.github.input_leap.InputLeap.desktop
+%check
+%ctest
+desktop-file-validate %{buildroot}/%{_datadir}/applications/%{rdnn_name}.desktop
 
 %files
 # None of the documentation files are actually useful here, they all point to
 # the online website, so include just one, the README
-%doc LICENSE ChangeLog res/Readme.txt doc/input-leap.conf.example*
-%{_bindir}/input-leap
-%{_bindir}/input-leapc
-%{_bindir}/input-leaps
-%{_datadir}/icons/hicolor/scalable/apps/io.github.input_leap.InputLeap.svg
-%{_datadir}/applications/io.github.input_leap.InputLeap.desktop
-%{_datadir}/metainfo/io.github.input_leap.InputLeap.appdata.xml
-%{_mandir}/man1/input-leapc.1*
-%{_mandir}/man1/input-leaps.1*
+%doc LICENSE ChangeLog res/Readme.txt doc/%{name}.conf.example*
+%{_bindir}/%{name}c
+%{_bindir}/%{name}s
+%{_bindir}/%{name}
+%{_datadir}/icons/hicolor/scalable/apps/%{rdnn_name}.svg
+%{_datadir}/applications/%{rdnn_name}.desktop
+%{_datadir}/metainfo/%{rdnn_name}.appdata.xml
+%{_mandir}/man1/%{name}c.1*
+%{_mandir}/man1/%{name}s.1*
 
 %changelog
 * Thu Mar 21 2019 wendall911 <wendallc@83864.com>

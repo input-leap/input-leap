@@ -5,5 +5,5 @@ Comment=Keyboard and mouse sharing solution
 Exec=input-leap
 Icon=io.github.input_leap.InputLeap
 Terminal=false
-Categories=Utility;Network;
+Categories=Network
 Keywords=keyboard;mouse;sharing;network;share;

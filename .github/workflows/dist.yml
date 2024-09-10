@@ -61,3 +61,60 @@ jobs:
           name: input-leap-rpms-${{ matrix.rpm_tag }}
           path: |
             rpms/**/*.rpm
+
+  flatpak:
+    runs-on: ubuntu-latest
+    container: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["fedora:39", "opensuse/tumbleweed"]
+        include:
+          - installer: dnf install -y
+            rpm_tag: fedora
+          - os: opensuse/tumbleweed
+            installer: zypper install -y
+            rpm_tag: suse_version
+
+    steps:
+      # submodules require git to be installed
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          path: input-leap
+          submodules: recursive
+          set-safe-directory: ${{ github.workspace }}
+
+      - name: cd into input-leap
+        run: cd input-leap
+      
+      - run: pwd
+      - run: ls -al
+
+      - name: Install flatpak and flatpak builder
+        run: apt-get install flatpak flatpak-builder
+
+      - name: add flatpak remote
+        run: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+      - name: make the build dir
+        run: mkdir build-dir
+
+      - name: build the flatpak
+        run: flatpak-builder --force-clean build-dir dist/flatpak/com.github.input-leap.input-leaps.yml
+
+      - name: test
+        run: flatpak-builder --run build-dir dist/flatpak/com.github.input-leap.input-leaps.yml
+
+      - name: build bundle
+        run: flatpak-builder build-bundle build-dir dist/flatpak/com.github.input-leap.input-leaps.yml
+
+      - run: cd build-dir
+      - run: ls -al
+
+      - name: Archive flatpak package
+        uses: actions/upload-artifact@v4
+        with:
+          name: input-leap-flatpak
+          path: |
+            .

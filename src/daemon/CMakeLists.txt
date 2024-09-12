@@ -14,18 +14,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-file(GLOB headers "*.h")
-file(GLOB sources "*.cpp")
+
+set(sources input-leapd.cpp)
 if (WIN32)
     list(APPEND sources input-leapd.rc)
     set_property(SOURCE input-leapd.rc PROPERTY COMPILE_FLAGS /nologo)
 endif()
 
-if (WIN32)
-  add_executable (input-leapd WIN32 ${sources})
-else()
-  add_executable (input-leapd ${sources})
-endif()
+add_executable (input-leapd WIN32 ${sources})
 
 target_link_libraries (input-leapd
     arch base common io ipc mt net platform synlib ${libs} ${OPENSSL_LIBS})
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    install(TARGETS input-leapd DESTINATION ${INPUTLEAP_BUNDLE_BINARY_DIR})
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    install (TARGETS input-leapd DESTINATION bin)
+else()
+    install (TARGETS input-leapd DESTINATION .)
+endif()

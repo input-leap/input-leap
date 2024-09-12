@@ -38,14 +38,8 @@ EiEventQueueBuffer::EiEventQueueBuffer(EiScreen* screen, ei *ei, IEventQueue* ev
 {
     // We need a pipe to signal ourselves when addEvent() is called
     int pipefd[2];
-    int result = pipe(pipefd);
+    int result = pipe2(pipefd, O_NONBLOCK);
     assert(result == 0);
-
-    int pipeflags;
-    pipeflags = fcntl(pipefd[0], F_GETFL);
-    fcntl(pipefd[0], F_SETFL, pipeflags | O_NONBLOCK);
-    pipeflags = fcntl(pipefd[1], F_GETFL);
-    fcntl(pipefd[1], F_SETFL, pipeflags | O_NONBLOCK);
 
     pipe_r_ = pipefd[0];
     pipe_w_ = pipefd[1];

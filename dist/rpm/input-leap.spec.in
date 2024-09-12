@@ -28,7 +28,6 @@ BuildRequires: libcurl-devel
 BuildRequires: openssl-devel
 BuildRequires: qt6-qtbase-devel
 BuildRequires: qt6-qttools-devel
-BuildRequires: qt6-qt5compat-devel
 BuildRequires: make
 %endif
 
@@ -45,13 +44,12 @@ BuildRequires: libICE-devel libSM-devel
 BuildRequires: libcurl-devel
 BuildRequires: libopenssl-devel
 BuildRequires: qt6-base-devel
-BuildRequires: qt6-qt5compat-devel
 BuildRequires: qt6-linguist-devel
 BuildRequires: make
 
 Requires: libc libstdc++ libgcc_s1
 Requires: libdns_sd
-Requires: libQt5Core6 libQt5Gui6 libQt5Network6 libQt5Widgets6 libQt6Core5Compat6
+Requires: libQt5Core6 libQt5Gui6 libQt5Network6 libQt5Widgets6
 Requires: libopenssl3
 Requires: libX11-6 libXext6 libXinerama1 libXrandr2 libXtst6
 

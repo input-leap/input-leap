@@ -1,10 +1,6 @@
 
 find_package (Qt${QT_DEFAULT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} COMPONENTS Core Widgets Network LinguistTools REQUIRED)
 
-if (QT_DEFAULT_MAJOR_VERSION EQUAL 6)
-    find_package (Qt6 REQUIRED COMPONENTS Core5Compat)
-endif()
-
 message(STATUS "Using Qt ${QT_DEFAULT_MAJOR_VERSION}")
 
 set (CMAKE_AUTOMOC ON)
@@ -204,9 +200,6 @@ target_link_libraries(input-leap
     Qt${QT_DEFAULT_MAJOR_VERSION}::Network
 )
 
-if (QT_DEFAULT_MAJOR_VERSION EQUAL 6)
-    target_link_libraries(input-leap Qt::Core5Compat)
-endif()
 target_link_libraries(input-leap OpenSSL::SSL OpenSSL::Crypto)
 
 target_compile_definitions (input-leap PRIVATE -DINPUTLEAP_VERSION_STAGE="${INPUTLEAP_VERSION_STAGE}")
@@ -274,7 +267,4 @@ if(INPUTLEAP_BUILD_TESTS)
 
     target_include_directories(guiunittests PUBLIC ../../ext)
     target_link_libraries(guiunittests gtest gmock Qt${QT_DEFAULT_MAJOR_VERSION}::Core Qt${QT_DEFAULT_MAJOR_VERSION}::Widgets Qt${QT_DEFAULT_MAJOR_VERSION}::Network ${libs})
-    if (QT_DEFAULT_MAJOR_VERSION EQUAL 6)
-        target_link_libraries(guiunittests Qt::Core5Compat)
-    endif()
 endif()

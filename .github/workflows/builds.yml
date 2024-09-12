@@ -183,13 +183,11 @@ jobs:
            os: macos-12
            qt-version: 6.6
            min-macOS-version: 11
-           qt-modules: qt5compat
            arch: 'arm64;x86_64'
          - name: macOS-Apple_Silicon
            os: macos-14
            qt-version: 6.6
            min-macOS-version: 14
-           qt-modules: qt5compat
            arch: 'arm64'
 
     env:
@@ -289,7 +287,6 @@ jobs:
            os: windows-2022
            qt-version: 6.6
            qt-major: 6
-           qt-modules: qt5compat
 
     steps:
       - uses: actions/checkout@v4

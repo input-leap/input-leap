@@ -4,7 +4,6 @@
         <file>icons/16x16/input-leap-disconnected.png</file>
         <file>icons/64x64/video-display.png</file>
         <file>icons/64x64/user-trash.png</file>
-        <file>icons/16x16/warning.png</file>
         <file>icons/256x256/input-leap.ico</file>
         <file>image/about.png</file>
         <file>lang/gui_ar.qm</file>
@@ -50,7 +49,6 @@
         <file>lang/gui_zh-CN.qm</file>
         <file>lang/gui_zh-TW.qm</file>
         <file>lang/Languages.xml</file>
-        <file>icons/16x16/money.png</file>
         <file>image/spinning-wheel.gif</file>
         <file>icons/16x16/padlock.png</file>
         <file>icons/16x16/input-leap-transfering.png</file>

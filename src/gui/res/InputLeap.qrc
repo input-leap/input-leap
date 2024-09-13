@@ -50,7 +50,7 @@
         <file>lang/gui_zh-TW.qm</file>
         <file>lang/Languages.xml</file>
         <file>image/spinning-wheel.gif</file>
-        <file>icons/16x16/padlock.png</file>
+        <file>icons/64x64/padlock.png</file>
         <file>icons/128x128/input-leap-transfering.png</file>
         <file>icons/128x128/input-leap-connected-mask.png</file>
         <file>icons/128x128/input-leap-disconnected-mask.png</file>

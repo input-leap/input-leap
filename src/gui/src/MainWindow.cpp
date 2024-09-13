@@ -172,6 +172,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 
     ui_->m_pComboServerList->hide();
     ui_->m_pLabelPadlock->hide();
+    ui_->m_pLabelPadlock->setPixmap(QPixmap(":/res/icons/64x64/padlock.png").scaledToHeight(fontMetrics().height() * 1.5, Qt::SmoothTransformation));
     ui_->frame_fingerprint_details->hide();
 
     updateSSLFingerprint();

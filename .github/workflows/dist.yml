@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ["fedora:39", "opensuse/tumbleweed"]
+        os: ["fedora:40", "opensuse/tumbleweed"]
         include:
           - installer: dnf install -y
             rpm_tag: fedora

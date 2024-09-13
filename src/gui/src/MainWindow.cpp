@@ -78,18 +78,18 @@ const char* icon_file_for_connection_state(AppConnectionState state)
 #if defined(Q_OS_MAC)
     switch (state) {
         default:
-        case AppConnectionState::DISCONNECTED: return ":/res/icons/32x32/input-leap-disconnected-mask.png";
-        case AppConnectionState::CONNECTING:   return ":/res/icons/32x32/input-leap-disconnected-mask.png";
-        case AppConnectionState::CONNECTED:    return ":/res/icons/32x32/input-leap-connected-mask.png";
-        case AppConnectionState::TRANSFERRING: return ":/res/icons/32x32/input-leap-transfering-mask.png";
+        case AppConnectionState::DISCONNECTED: return ":/res/icons/128x128/input-leap-disconnected-mask.png";
+        case AppConnectionState::CONNECTING:   return ":/res/icons/128x128/input-leap-disconnected-mask.png";
+        case AppConnectionState::CONNECTED:    return ":/res/icons/128x128/input-leap-connected-mask.png";
+        case AppConnectionState::TRANSFERRING: return ":/res/icons/128x128/input-leap-transfering-mask.png";
     }
 #else
     switch (state) {
         default:
-        case AppConnectionState::DISCONNECTED: return ":/res/icons/16x16/input-leap-disconnected.png";
-        case AppConnectionState::CONNECTING:   return ":/res/icons/16x16/input-leap-disconnected.png";
-        case AppConnectionState::CONNECTED:    return ":/res/icons/16x16/input-leap-connected.png";
-        case AppConnectionState::TRANSFERRING: return ":/res/icons/16x16/input-leap-transfering.png";
+        case AppConnectionState::DISCONNECTED: return ":/res/icons/128x128/input-leap-disconnected.png";
+        case AppConnectionState::CONNECTING:   return ":/res/icons/128x128/input-leap-disconnected.png";
+        case AppConnectionState::CONNECTED:    return ":/res/icons/128x128/input-leap-connected.png";
+        case AppConnectionState::TRANSFERRING: return ":/res/icons/128x128/input-leap-transfering.png";
     }
 #endif
 }

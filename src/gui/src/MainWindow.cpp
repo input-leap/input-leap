@@ -105,7 +105,7 @@ const char* icon_name_for_connection_state(AppConnectionState state)
     }
 }
 
-static const char* APP_LARGE_ICON = ":/res/icons/256x256/input-leap.ico";
+static const char* APP_LARGE_ICON = ":/res/icons/256x256/input-leap.png";
 
 } // namespace
 

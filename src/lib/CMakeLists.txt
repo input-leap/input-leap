@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # For config.h, save the results based on a template (config.h.in).
-configure_file(config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+configure_file(config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
 
 add_subdirectory(arch)
 add_subdirectory(base)

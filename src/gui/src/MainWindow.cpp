@@ -78,18 +78,18 @@ const char* icon_file_for_connection_state(AppConnectionState state)
 #if defined(Q_OS_MAC)
     switch (state) {
         default:
-        case AppConnectionState::DISCONNECTED: return ":/res/icons/32x32/input-leap-disconnected-mask.png";
-        case AppConnectionState::CONNECTING:   return ":/res/icons/32x32/input-leap-disconnected-mask.png";
-        case AppConnectionState::CONNECTED:    return ":/res/icons/32x32/input-leap-connected-mask.png";
-        case AppConnectionState::TRANSFERRING: return ":/res/icons/32x32/input-leap-transfering-mask.png";
+        case AppConnectionState::DISCONNECTED: return ":/res/icons/128x128/input-leap-disconnected-mask.png";
+        case AppConnectionState::CONNECTING:   return ":/res/icons/128x128/input-leap-disconnected-mask.png";
+        case AppConnectionState::CONNECTED:    return ":/res/icons/128x128/input-leap-connected-mask.png";
+        case AppConnectionState::TRANSFERRING: return ":/res/icons/128x128/input-leap-transfering-mask.png";
     }
 #else
     switch (state) {
         default:
-        case AppConnectionState::DISCONNECTED: return ":/res/icons/16x16/input-leap-disconnected.png";
-        case AppConnectionState::CONNECTING:   return ":/res/icons/16x16/input-leap-disconnected.png";
-        case AppConnectionState::CONNECTED:    return ":/res/icons/16x16/input-leap-connected.png";
-        case AppConnectionState::TRANSFERRING: return ":/res/icons/16x16/input-leap-transfering.png";
+        case AppConnectionState::DISCONNECTED: return ":/res/icons/128x128/input-leap-disconnected.png";
+        case AppConnectionState::CONNECTING:   return ":/res/icons/128x128/input-leap-disconnected.png";
+        case AppConnectionState::CONNECTED:    return ":/res/icons/128x128/input-leap-connected.png";
+        case AppConnectionState::TRANSFERRING: return ":/res/icons/128x128/input-leap-transfering.png";
     }
 #endif
 }
@@ -105,7 +105,7 @@ const char* icon_name_for_connection_state(AppConnectionState state)
     }
 }
 
-static const char* APP_LARGE_ICON = ":/res/icons/256x256/input-leap.ico";
+static const char* APP_LARGE_ICON = ":/res/icons/256x256/input-leap.png";
 
 } // namespace
 
@@ -172,6 +172,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 
     ui_->m_pComboServerList->hide();
     ui_->m_pLabelPadlock->hide();
+    ui_->m_pLabelPadlock->setPixmap(QPixmap(":/res/icons/64x64/padlock.png").scaledToHeight(fontMetrics().height() * 1.5, Qt::SmoothTransformation));
     ui_->frame_fingerprint_details->hide();
 
     updateSSLFingerprint();

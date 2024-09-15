@@ -318,9 +318,6 @@
         <property name="text">
          <string/>
         </property>
-        <property name="pixmap">
-         <pixmap resource="../res/InputLeap.qrc">:/res/icons/16x16/padlock.png</pixmap>
-        </property>
        </widget>
       </item>
       <item>

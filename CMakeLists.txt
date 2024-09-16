@@ -319,9 +319,7 @@ if (APPLE)
 elseif (UNIX AND NOT APPLE)
     install(FILES doc/input-leapc.1 doc/input-leaps.1 DESTINATION share/man/man1)
 
-    configure_file(res/io.github.input_leap.InputLeap.appdata.xml.in
-        ${CMAKE_CURRENT_BINARY_DIR}/res/io.github.input_leap.InputLeap.appdata.xml)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/res/io.github.input_leap.InputLeap.appdata.xml DESTINATION share/metainfo)
+    install(FILES res/io.github.input_leap.InputLeap.appdata.xml DESTINATION share/metainfo)
 
     configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/rpm ${CMAKE_BINARY_DIR}/rpm)
     install(FILES res/io.github.input_leap.InputLeap.svg DESTINATION share/icons/hicolor/scalable/apps)

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2021 - 2024 Input Leap Developers -->
+<!-- Copyright 2018 Ding-Yi Chen <dchen@redhat.com> -->
+
+<component type="desktop-application">
+  <id>io.github.input_leap.InputLeap</id>
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>GPLv2</project_license>
+  <name>InputLeap</name>
+  <summary>Share mouse and keyboard between multiple computers over the network</summary>
+  <developer_name>Input Leap Team</developer_name>
+  <content_rating type="oars-1.0" />
+
+  <description>
+    <p>
+      InputLeap allows you to share one mouse and keyboard between multiple computers.
+      Work seamlessly across Windows, macOS and Linux.
+    </p>
+  </description>
+
+  <launchable type="desktop-id">io.github.input_leap.InputLeap.desktop</launchable>
+
+  <url type="homepage">https://github.com/input-leap/input-leap</url>
+  <url type="bugtracker">https://github.com/input-leap/input-leap/issues</url>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://github.com/user-attachments/assets/73fb76b6-da03-458c-96b2-38bf642168d8</image>
+    </screenshot>
+  </screenshots>
+
+  <categories>
+    <category>Network</category>
+  </categories>
+
+  <keywords>
+    <keyword translate="no">KVM</keyword>
+    <keyword translate="no">Input</keyword>
+    <keyword translate="no">Leap</keyword>
+  </keywords>
+
+  <!-- TODO Review branding colors -->
+  <branding>
+    <color type="primary" scheme_preference="light">#deddda</color>
+    <color type="primary" scheme_preference="dark">#5e5c64</color>
+  </branding>
+
+  <provides>
+    <id>io.github.input_leap.InputLeap.desktop</id>
+    <binary>input-leap</binary>
+    <binary>input-leapc</binary>
+    <binary>input-leaps</binary>
+  </provides>
+
+
+  <releases>
+    <!-- TODO THIS SECTION MUST HAVE A HISTORY OF ALL OUR STABLE RELEASES -->
+    <release version="3.0.0" date="YYYY-MM-DD" urgency="high">
+      <description>
+        <p> This is the first stable release of Input Leap </p>
+      </description>
+      <url>https://github.com/input-leap/input-leap/releases/tag/v3.0.0</url>
+    </release>
+  </releases>
+</component>
+

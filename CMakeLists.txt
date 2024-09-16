@@ -19,7 +19,6 @@ cmake_minimum_required(VERSION 3.12)
 project(InputLeap C CXX)
 
 option(INPUTLEAP_BUILD_GUI "Build the GUI" ON)
-option(INPUTLEAP_BUILD_INSTALLER "Build the installer" ON)
 option(INPUTLEAP_BUILD_TESTS "Build the tests" ON)
 option(INPUTLEAP_USE_EXTERNAL_GTEST "Use external installation of Google Test framework" OFF)
 option(INPUTLEAP_BUILD_X11 "Build with XWindows support" ON)
@@ -303,11 +302,8 @@ macro (configure_files srcDir destDir)
     endforeach (templateFile)
 endmacro (configure_files)
 
-if (${INPUTLEAP_BUILD_INSTALLER})
-#
-# macOS app Bundle
-#
-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+# Make a bundle for mac os
+if (APPLE)
     set (CMAKE_INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks")
     set(INPUTLEAP_BUNDLE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dist/macos/bundle)
     set(INPUTLEAP_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
@@ -320,23 +316,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
                       bash build_dist.sh
                       DEPENDS input-leap input-leaps input-leapc
                       WORKING_DIRECTORY ${INPUTLEAP_BUNDLE_DIR})
-endif()
-
-#
-# Windows installer
-#
-if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-        set(INPUTLEAP_WIX_VERSION "${INPUTLEAP_VERSION_MAJOR}.${INPUTLEAP_VERSION_MINOR}.${INPUTLEAP_VERSION_PATCH}")
-        message (STATUS "Configuring the wix installer")
-        configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer-wix)
-        message (STATUS "Configuring the inno installer")
-        configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/inno ${CMAKE_BINARY_DIR}/installer-inno)
-endif()
-
-#
-# Linux installation
-#
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+elseif (UNIX AND NOT APPLE)
     install(FILES doc/input-leapc.1 doc/input-leaps.1 DESTINATION share/man/man1)
 
     configure_file(res/io.github.input_leap.InputLeap.appdata.xml.in
@@ -348,8 +328,15 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     install(FILES res/io.github.input_leap.InputLeap.desktop DESTINATION share/applications)
 endif()
 
-else()
-    message (STATUS "NOT configuring the installer")
+#
+# Windows Installer
+#
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+        set(INPUTLEAP_WIX_VERSION "${INPUTLEAP_VERSION_MAJOR}.${INPUTLEAP_VERSION_MINOR}.${INPUTLEAP_VERSION_PATCH}")
+        message (STATUS "Configuring the wix installer")
+        configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer-wix)
+        message (STATUS "Configuring the inno installer")
+        configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/inno ${CMAKE_BINARY_DIR}/installer-inno)
 endif()
 
 #

@@ -303,10 +303,7 @@ macro (configure_files srcDir destDir)
     endforeach (templateFile)
 endmacro (configure_files)
 
-if (${INPUTLEAP_BUILD_INSTALLER})
-#
-# macOS app Bundle
-#
+# Make a bundle for mac os
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set (CMAKE_INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks")
     set(INPUTLEAP_BUNDLE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dist/macos/bundle)
@@ -322,20 +319,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
                       WORKING_DIRECTORY ${INPUTLEAP_BUNDLE_DIR})
 endif()
 
-#
-# Windows installer
-#
-if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-        set(INPUTLEAP_WIX_VERSION "${INPUTLEAP_VERSION_MAJOR}.${INPUTLEAP_VERSION_MINOR}.${INPUTLEAP_VERSION_PATCH}")
-        message (STATUS "Configuring the wix installer")
-        configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer-wix)
-        message (STATUS "Configuring the inno installer")
-        configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/inno ${CMAKE_BINARY_DIR}/installer-inno)
-endif()
-
-#
-# Linux installation
-#
+# Install extra linux items
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     install(FILES doc/input-leapc.1 doc/input-leaps.1 DESTINATION share/man/man1)
 
@@ -348,8 +332,20 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     install(FILES res/io.github.input_leap.InputLeap.desktop DESTINATION share/applications)
 endif()
 
-else()
-    message (STATUS "NOT configuring the installer")
+#
+# Windows Installer
+#
+if (${INPUTLEAP_BUILD_INSTALLER})
+    #
+    # Windows installer
+    #
+    if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+            set(INPUTLEAP_WIX_VERSION "${INPUTLEAP_VERSION_MAJOR}.${INPUTLEAP_VERSION_MINOR}.${INPUTLEAP_VERSION_PATCH}")
+            message (STATUS "Configuring the wix installer")
+            configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer-wix)
+            message (STATUS "Configuring the inno installer")
+            configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/inno ${CMAKE_BINARY_DIR}/installer-inno)
+    endif()
 endif()
 
 #

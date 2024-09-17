@@ -30,7 +30,8 @@ public:
     void enable() override;
     void disable() override;
     void enter() override;
-    bool leave() override;
+    bool canLeave() override;
+    void leave() override;
     bool setClipboard(ClipboardID id, const IClipboard* clipboard) override;
     void checkClipboards() override;
     void openScreensaver(bool notify) override;

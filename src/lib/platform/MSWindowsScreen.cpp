@@ -301,8 +301,19 @@ MSWindowsScreen::enter()
     forceShowCursor();
 }
 
-bool
-MSWindowsScreen::leave()
+bool MSWindowsScreen::canLeave() {
+  POINT pos;
+  if (!GetCursorPos(&pos)) {
+    LOG_DEBUG ("unable to leave screen as windows security has disabled critical functions");
+    // unable to get position this means inputleap will break if the cursor
+    // leaves the screen
+    return false;
+  }
+
+  return true;
+}
+
+void MSWindowsScreen::leave()
 {
     // get keyboard layout of foreground window.  we'll use this
     // keyboard layout for translating keys sent to clients.
@@ -350,8 +361,6 @@ MSWindowsScreen::leave()
     if (isDraggingStarted() && !m_isPrimary) {
         m_sendDragThread = new Thread([this](){ send_drag_thread(); });
     }
-
-    return true;
 }
 
 void MSWindowsScreen::send_drag_thread()

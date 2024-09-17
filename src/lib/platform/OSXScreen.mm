@@ -823,6 +823,12 @@ OSXScreen::enter()
 }
 
 bool
+OSXScreen::canLeave()
+{
+    return true;
+}
+
+void
 OSXScreen::leave()
 {
     hideCursor();
@@ -859,8 +865,6 @@ OSXScreen::leave()
 
 	// now off screen
 	m_isOnScreen = false;
-
-	return true;
 }
 
 bool

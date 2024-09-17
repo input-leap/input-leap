@@ -122,9 +122,10 @@ Screen::leave()
     assert(m_entered == true);
     LOG_INFO("leaving screen");
 
-    if (!m_screen->leave()) {
+    if (!m_screen->canLeave()) {
         return false;
     }
+
     if (m_isPrimary) {
         leavePrimary();
     }
@@ -132,6 +133,7 @@ Screen::leave()
         leaveSecondary();
     }
 
+    m_screen->leave();
     // make sure our idea of clipboard ownership is correct
     m_screen->checkClipboards();
 

@@ -408,3 +408,43 @@ jobs:
           name: windows-installer
           path: .\build\installer-inno\bin
           if-no-files-found: error
+
+  freebsd-build:
+    name: freebsd-14-1
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build on FreeBSD 14.1
+      id: test
+      uses: vmactions/freebsd-vm@v1
+      with:
+        usesh: true
+        prepare: |
+          pkg install -y \
+              cmake-core \
+              pkgconf \
+              git \
+              avahi-libdns \
+              curl \
+              libsm \
+              libxinerama \
+              libxrandr \
+              libxtst \
+              libxkbcommon \
+              glib \
+              ninja \
+              qt6-base \
+              qt6-tools \
+              qt6-declarative
+
+        run: |
+          git config --global --add safe.directory /home/runner/work/input-leap/input-leap
+          git submodule update --init --recursive
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Debug -DINPUTLEAP_BUILD_INSTALLER=OFF ..
+          cmake --build .

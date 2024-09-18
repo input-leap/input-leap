@@ -56,6 +56,8 @@
 #include <Windows.h>
 #endif
 
+#include <signal.h>
+
 namespace {
 
 static const QString allFilesFilter(QObject::tr("All files (*.*)"));

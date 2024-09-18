@@ -273,8 +273,14 @@ void MainWindow::createTrayIcon()
 
 void MainWindow::retranslateMenuBar()
 {
+#ifndef Q_OS_DARWIN
     main_menu_->setTitle(tr("&InputLeap"));
     m_pMenuHelp->setTitle(tr("&Help"));
+#else
+    m_pMenuHelp->setTitle(tr("&File"));
+    main_menu_->setTitle(tr("&Window"));
+#endif
+
 }
 
 void MainWindow::createMenuBar()
@@ -284,17 +290,29 @@ void MainWindow::createMenuBar()
     m_pMenuHelp = new QMenu("", m_pMenuBar);
     retranslateMenuBar();
 
+#ifndef Q_OS_DARWIN
     m_pMenuBar->addAction(main_menu_->menuAction());
     m_pMenuBar->addAction(m_pMenuHelp->menuAction());
+#else
+    m_pMenuBar->addAction(m_pMenuHelp->menuAction());
+    m_pMenuBar->addAction(main_menu_->menuAction());
+#endif
 
     main_menu_->addAction(ui_->m_pActionShowLog);
     main_menu_->addAction(ui_->m_pActionSettings);
     main_menu_->addAction(ui_->m_pActionMinimize);
     main_menu_->addSeparator();
+
+#ifndef Q_OS_DARWIN
     main_menu_->addAction(ui_->m_pActionSave);
+#endif
     main_menu_->addSeparator();
     main_menu_->addAction(ui_->m_pActionQuit);
     m_pMenuHelp->addAction(ui_->m_pActionAbout);
+
+#ifdef Q_OS_DARWIN
+    m_pMenuHelp->addAction(ui_->m_pActionSave);
+#endif
 
     setMenuBar(m_pMenuBar);
 }

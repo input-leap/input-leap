@@ -1,0 +1,1 @@
+Fixed per-display scaling on Windows (https://github.com/input-leap/input-leap/issues/1952, https://github.com/input-leap/input-leap/issues/94, https://github.com/input-leap/input-leap/issues/206)

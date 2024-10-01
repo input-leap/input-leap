@@ -109,16 +109,6 @@ if (UNIX)
     find_package (Threads REQUIRED)
     list (APPEND libs Threads::Threads)
 
-    # curl is used on both Linux and Mac
-    find_package (CURL)
-    if (CURL_FOUND)
-        include_directories(${CURL_INCLUDE_DIRS})
-        list (APPEND libs ${CURL_LIBRARIES})
-
-    else()
-        message (FATAL_ERROR "Missing library: curl")
-    endif()
-
     if (APPLE)
         set (CMAKE_CXX_FLAGS "--sysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CXX_FLAGS} -DGTEST_USE_OWN_TR1_TUPLE=1")
 

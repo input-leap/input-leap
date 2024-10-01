@@ -41,11 +41,16 @@ void PlatformScreenLoggingWrapper::enter()
     screen_->enter();
 }
 
-bool PlatformScreenLoggingWrapper::leave()
+bool PlatformScreenLoggingWrapper::canLeave()
 {
-    auto result = screen_->leave();
-    LOG_DEBUG1("PlatformScreen::leave() => %d", result);
+    auto result = screen_->canLeave();
+    LOG_DEBUG1("PlatformScreen::canLeave() => %d", result);
     return result;
+}
+
+void PlatformScreenLoggingWrapper::leave()
+{
+    LOG_DEBUG1("PlatformScreen::leave()");
 }
 
 bool PlatformScreenLoggingWrapper::setClipboard(ClipboardID id, const IClipboard* clipboard)

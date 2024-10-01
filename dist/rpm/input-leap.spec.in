@@ -24,7 +24,6 @@ BuildRequires: gulrak-filesystem-devel
 BuildRequires: libX11-devel
 BuildRequires: libXtst-devel libXinerama-devel libXrandr-devel
 BuildRequires: libICE-devel libSM-devel
-BuildRequires: libcurl-devel
 BuildRequires: openssl-devel
 BuildRequires: qt6-qtbase-devel
 BuildRequires: qt6-qttools-devel
@@ -41,7 +40,6 @@ BuildRequires: gtest
 BuildRequires: libX11-devel
 BuildRequires: libXtst-devel libXinerama-devel libXrandr-devel
 BuildRequires: libICE-devel libSM-devel
-BuildRequires: libcurl-devel
 BuildRequires: libopenssl-devel
 BuildRequires: qt6-base-devel
 BuildRequires: qt6-linguist-devel

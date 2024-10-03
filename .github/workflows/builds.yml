@@ -212,12 +212,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          # Print only what follows ^BuildRequires in the range of lines between %if 0%{?xxxx} and %endif where xxxx is the rpm_tag
-          sed -n '/^%if 0%{?${{ matrix.rpm_tag }}}$/,/^%endif$/{s/^BuildRequires: //p}' input-leap/dist/rpm/input-leap.spec.in | xargs ${{ matrix.installer }}
+          # Replace foo >= x with "foo >= x", print only what follows ^BuildRequires
+          sed -n 's/\(\S\+ [<>=]\+ [0-9]\+.\?[0-9]\?\)/"\1"/;{s/^BuildRequires: //p}' input-leap/dist/rpm/input-leap.spec.in | xargs ${{ matrix.installer }}
 
       - name: prep tree
         run: |
-          cmake -S input-leap -B build
+          cmake -S input-leap -B build -DINPUTLEAP_USE_EXTERNAL_GTEST=True
           make -C build package_source
 
       - name: create target directory

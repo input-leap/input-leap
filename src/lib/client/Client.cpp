@@ -41,6 +41,7 @@
 
 
 #include <cstring>
+#include <climits>
 #include <cstdlib>
 #include <sstream>
 #include <stdexcept>

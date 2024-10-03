@@ -37,11 +37,7 @@ if(NOT QT_DEFAULT_MAJOR_VERSION)
     set(QT_DEFAULT_MAJOR_VERSION 6)
 endif()
 
-if(QT_DEFAULT_MAJOR_VERSION EQUAL 6)
-    set(CMAKE_CXX_STANDARD 17)
-else()
-    set(CMAKE_CXX_STANDARD 14)
-endif()
+set(CMAKE_CXX_STANDARD 17)
 
 include (cmake/Version.cmake)
 include (cmake/Package.cmake)

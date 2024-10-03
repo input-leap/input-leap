@@ -20,7 +20,6 @@ project(InputLeap C CXX)
 
 option(INPUTLEAP_BUILD_GUI "Build the GUI" ON)
 option(INPUTLEAP_BUILD_TESTS "Build the tests" ON)
-option(INPUTLEAP_USE_EXTERNAL_GTEST "Use external installation of Google Test framework" OFF)
 option(INPUTLEAP_BUILD_X11 "Build with XWindows support" ON)
 option(INPUTLEAP_BUILD_LIBEI "Build with libei support" OFF)
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)

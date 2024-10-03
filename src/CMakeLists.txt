@@ -27,7 +27,15 @@ if (WIN32)
 endif()
 
 if(INPUTLEAP_BUILD_TESTS)
-    include(../cmake/gtest.cmake)
+    include(FetchContent)
+    set(INSTALL_GTEST OFF)
+    FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG        b514bdc898e2951020cbdca1304b75f5950d1f59 # release-1.15.2
+        FIND_PACKAGE_ARGS NAMES GTest
+    )
+    FetchContent_MakeAvailable(googletest)
     add_subdirectory(test/integtests)
     add_subdirectory(test/unittests)
 endif()

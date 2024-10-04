@@ -34,10 +34,6 @@ if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions (-DNDEBUG)
 endif()
 
-if(NOT QT_DEFAULT_MAJOR_VERSION)
-    set(QT_DEFAULT_MAJOR_VERSION 6)
-endif()
-
 include (cmake/Version.cmake)
 include (cmake/Package.cmake)
 
@@ -63,14 +59,9 @@ if (HAVE_WFORMAT)
 endif()
 
 if (INPUTLEAP_BUILD_GUI)
-    if (QT_DEFAULT_MAJOR_VERSION EQUAL 5)
-        set(REQUIRED_QT_VERSION 5.9)
-    elseif (QT_DEFAULT_MAJOR_VERSION EQUAL 6)
-        set(REQUIRED_QT_VERSION 6.2)
-    endif()
 
-    find_package(Qt${QT_DEFAULT_MAJOR_VERSION} COMPONENTS Core REQUIRED)
-    get_target_property(qmake_executable Qt${QT_DEFAULT_MAJOR_VERSION}::qmake IMPORTED_LOCATION)
+    find_package(Qt6 COMPONENTS Core REQUIRED)
+    get_target_property(qmake_executable Qt6::qmake IMPORTED_LOCATION)
     get_filename_component(_qt_bin_dir "${qmake_executable}" DIRECTORY)
     if(WIN32 OR APPLE)
         if(WIN32)

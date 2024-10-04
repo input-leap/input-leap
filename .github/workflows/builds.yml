@@ -30,11 +30,6 @@ jobs:
       fail-fast: false
       matrix:
        include:
-         - name: ubuntu-20-04
-           os: "ubuntu:20.04"
-           cc: "gcc"
-           cxx: "g++"
-           wayland: false
          - name: ubuntu-22-04-clang
            os: "ubuntu:22.04"
            cc: "clang"
@@ -42,6 +37,11 @@ jobs:
            wayland: true
          - name: ubuntu-22-04
            os: "ubuntu:22.04"
+           cc: "gcc"
+           cxx: "g++"
+           wayland: true
+         - name: ubuntu-24-04
+           os: "ubuntu:24.04"
            cc: "gcc"
            cxx: "g++"
            wayland: true
@@ -53,17 +53,6 @@ jobs:
           apt-get update -y
           # software-properties-common is needed for add-apt-repository
           apt-get install -y software-properties-common gpg wget
-
-      - if: matrix.os == 'ubuntu:20.04'
-        name: Add repositories with newer git and cmake
-        run: |
-          # InputLeap requires at least CMake 3.21.
-          # This mirrors instructions at https://apt.kitware.com
-          wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
-            | gpg --dearmor - \
-            > /usr/share/keyrings/kitware-archive-keyring.gpg
-          echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ focal main' \
-            > /etc/apt/sources.list.d/kitware.list
 
       - name: Update image and install pre-reqs
         run: |
@@ -84,8 +73,11 @@ jobs:
                   libxkbcommon-dev \
                   libglib2.0-dev \
                   ninja-build \
-                  qtdeclarative5-dev \
-                  qttools5-dev
+                  qt6-declarative-dev \
+                  qt6-base-dev-tools \
+                  qt6-l10n-tools \
+                  qt6-tools-dev-tools \
+                  qt6-tools-dev
 
       - if: matrix.wayland
         name: Install libei and libportal pre-reqs
@@ -151,8 +143,7 @@ jobs:
 
       - name: Configure the build
         run: |
-          cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build \
-                -DQT_DEFAULT_MAJOR_VERSION=5 \
+          cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build -G Ninja \
                 -DCMAKE_CXX_FLAGS:STRING="-Wall -Wextra -Wno-unused-parameter" \
                 -DCMAKE_CXX_FLAGS_DEBUG:STRING="-g -Werror" \
                 -DINPUTLEAP_BUILD_LIBEI:BOOL=${{ matrix.wayland }} \
@@ -247,8 +238,8 @@ jobs:
        include:
          - name: macOS-x86_64
            os: macos-12
-           qt-version: 5.15
-           min-macOS-version: 10.9
+           qt-version: 6.6
+           min-macOS-version: 10.15
            arch: 'x86_64'
          - name: macOS-Universal
            os: macos-12
@@ -317,7 +308,7 @@ jobs:
         run: |
           cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build -G Ninja -DOpenSSL_ROOT=${{env.OpenSSL_Install_Path}} \
                 -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk \
-                -DCMAKE_OSX_DEPLOYMENT_TARGET=${{matrix.min-macOS-version}} -DCMAKE_UNITY_BUILD=1 -DQT_DEFAULT_MAJOR_VERSION=$(echo ${{matrix.qt-version}} | cut -c -1) \
+                -DCMAKE_OSX_DEPLOYMENT_TARGET=${{matrix.min-macOS-version}} -DCMAKE_UNITY_BUILD=1 \
                 -DCMAKE_OSX_ARCHITECTURES="${{matrix.arch}}"
 
       - name: Run the build
@@ -350,14 +341,9 @@ jobs:
       fail-fast: false
       matrix:
        include:
-         - name: Windows Qt5
-           os: windows-2019
-           qt-version: 5.15
-           qt-major: 5
          - name: Windows Qt6
            os: windows-2022
            qt-version: 6.6
-           qt-major: 6
 
     steps:
       - uses: actions/checkout@v4
@@ -392,7 +378,6 @@ jobs:
           call "%VS_PATH%\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=amd64
 
           cmake -S input-leap -B build -G "%CMAKE_GEN%" -A x64 -D CMAKE_BUILD_TYPE=%B_BUILD_TYPE% ^
-            -DQT_DEFAULT_MAJOR_VERSION=${{matrix.qt-major}} ^
             -DDNSSD_LIB="%BONJOUR_SDK_HOME%\Lib\x64\dnssd.lib" -D CMAKE_INSTALL_PREFIX=input-leap-install
         env:
           VS_PATH: ${{ matrix.os == 'windows-2019' && '%ProgramFiles(x86)%\Microsoft Visual Studio\2019' || '%ProgramFiles%\Microsoft Visual Studio\2022' }}

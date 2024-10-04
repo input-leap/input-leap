@@ -54,11 +54,7 @@ $build_type = 'Release';
 if ($env:B_BUILD_TYPE -ne $null) {
     $build_type = $env:B_BUILD_TYPE;
 }
-$qt_major_version = '6';
-if ($env:B_QT_MAJOR_VERSION -ne $null) {
-    $qt_major_version = $env:B_QT_MAJOR_VERSION;
-}
-$qt_root = (Resolve-Path C:\Qt\$qt_major_version*\* 2>$null).Path;
+$qt_root = (Resolve-Path C:\Qt\6*\* 2>$null).Path;
 if ($env:B_QT_ROOT -ne $null) {
     $qt_root = $env:B_QT_ROOT;
 } elseif ($qt_root -eq $null) {
@@ -79,7 +75,6 @@ try {
     cmake .. -G "$vs_version" -A x64 `
         "-DCMAKE_BUILD_TYPE=$build_type" `
         "-DCMAKE_PREFIX_PATH=$qt_root" `
-        "-DQT_DEFAULT_MAJOR_VERSION=$qt_major_version" `
         -DDNSSD_LIB="$bonjour_path\Lib\x64\dnssd.lib" `
         -DCMAKE_INSTALL_PREFIX=input-leap-install
 

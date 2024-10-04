@@ -15,7 +15,6 @@ ifneq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 else ifeq (,$(filter amd64 i386,$(DEB_HOST_ARCH)))
 	CONFIGURE_FLAGS += -DINPUTLEAP_BUILD_TESTS=no
 endif
-CONFIGURE_FLAGS += -DQT_DEFAULT_MAJOR_VERSION=6
 
 %:
 	dh $@ --builddirectory=builddir

@@ -174,8 +174,9 @@ endif()
 set_source_files_properties("src/DisplayIsValid.cpp" PROPERTIES SKIP_UNITY_BUILD_INCLUSION TRUE)
 
 if (WIN32)
-    set (GUI_RC_FILES res/win/InputLeap.rc)
-    set_property(SOURCE res/win/InputLeap.rc PROPERTY COMPILE_FLAGS /nologo)
+    configure_file(res/win/InputLeap.rc.in ${CMAKE_CURRENT_SOURCE_DIR}/InputLeap.rc @ONLY)
+    set (GUI_RC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/InputLeap.rc)
+    set_property(SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/res/win/InputLeap.rc PROPERTY COMPILE_FLAGS /nologo)
 endif()
 
 add_executable (input-leap WIN32
@@ -201,9 +202,6 @@ target_link_libraries(input-leap
 )
 
 target_link_libraries(input-leap OpenSSL::SSL OpenSSL::Crypto)
-
-target_compile_definitions (input-leap PRIVATE -DINPUTLEAP_VERSION_STAGE="${INPUTLEAP_VERSION_STAGE}")
-target_compile_definitions (input-leap PRIVATE -DINPUTLEAP_REVISION="${INPUTLEAP_REVISION}")
 
 if (BUILD_MSWINDOWS)
     include_directories ($ENV{BONJOUR_SDK_HOME}/Include)

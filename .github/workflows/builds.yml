@@ -118,6 +118,13 @@ jobs:
           path: input-leap
           submodules: recursive
           set-safe-directory: ${{ github.workspace }}
+          fetch-depth: 0
+
+      - name: Force Tag update
+        run: |
+          cd input-leap
+          git fetch --tags --force
+          cd ..
 
       - name: Get libei v1.3.0 from freedesktop
         # Manual checkout of libinput/libei ref 1.3.0 from https://gitlab.freedesktop.org
@@ -209,6 +216,13 @@ jobs:
           path: input-leap
           submodules: recursive
           set-safe-directory: ${{ github.workspace }}
+          fetch-depth: 0
+
+      - name: Force Tag update
+        run: |
+          cd input-leap
+          git fetch --tags --force
+          cd ..
 
       - name: Install dependencies
         run: |
@@ -312,6 +326,13 @@ jobs:
         with:
           path: input-leap
           submodules: recursive
+          fetch-depth: 0
+
+      - name: Force Tag update
+        run: |
+          cd input-leap
+          git fetch --tags --force
+          cd ..
 
       - name: Setup the build
         run: |
@@ -364,6 +385,13 @@ jobs:
         with:
           path: input-leap
           submodules: recursive
+          fetch-depth: 0
+
+      - name: Force Tag update
+        run: |
+          cd input-leap
+          git fetch --tags --force
+          cd ..
 
       - name: Download Bonjour SDK-like
         id: bonjour
@@ -459,10 +487,9 @@ jobs:
         run: |
           git config --global --add safe.directory /home/runner/work/input-leap/input-leap
           git submodule update --init --recursive
-          mkdir build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=Debug -DINPUTLEAP_BUILD_INSTALLER=OFF ..
-          cmake --build .
+          git fetch --tags --force
+          cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Debug -DINPUTLEAP_BUILD_INSTALLER=OFF ..
+          cmake --build build
 
   flatpak:
     runs-on: ubuntu-latest

@@ -19,13 +19,14 @@ set(sources
 )
 
 if (BUILD_MSWINDOWS)
+    configure_file(input-leapc.rc.in ${CMAKE_CURRENT_BINARY_DIR}/input-leapc.rc @ONLY)
     file(GLOB mswin_headers "MSWindows*.h")
     file(GLOB mswin_sources "MSWindows*.cpp")
     list(APPEND sources
         input-leapc.exe.manifest
-        input-leapc.rc
+        ${CMAKE_CURRENT_BINARY_DIR}/input-leapc.rc
     )
-    set_property(SOURCE input-leapc.rc PROPERTY COMPILE_FLAGS /nologo)
+    set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/input-leapc.rc PROPERTY COMPILE_FLAGS /nologo)
 endif()
 if (BUILD_CARBON)
     file(GLOB carbon_headers "OSX*.h")

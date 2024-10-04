@@ -1,1 +1,0 @@
-Corrected macOS packaging to provide a better error message when a user attempts to launch InputLeap on an incompatible macOS version. (https://github.com/input-leap/input-leap/issues/1260).

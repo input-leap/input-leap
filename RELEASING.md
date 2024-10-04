@@ -16,7 +16,7 @@ Step 2: Release notes PR
 
 Open a new branch (e.g. `release`) and run the following:
 
-    towncrier --version ${VERSION} --date `date -u  +%F`
+    towncrier build --version ${VERSION} --date `date -u  +%F`
 
 This collects the release notes using the `towncrier` tool. Please commit the collected release
 notes afterwards.

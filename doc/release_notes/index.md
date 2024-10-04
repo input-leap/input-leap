@@ -3,6 +3,87 @@ Release notes
 
 [comment]: <> (towncrier release notes start)
 
+InputLeap `3.0.0` ( `2024-10-04` )
+==================================
+
+Features
+--------
+
+- Added Wayland support. Note that XWayland won't work properly and warning is printed.
+- Create an `uninstall` target for Makefiles
+
+  This allows for developers (or users who are testing) to remove Input Leap from
+  their system, based on `$PREFIX`.
+- Added a new clipboard sharing size limiter to prevent transferring clipboards past a default
+  value in bytes.
+- Allow Qt version to be selected via CMake
+
+  CMake now uses a sane default of Qt 5, but allows for a CMake option of
+  `QT_DEFAULT_MAJOR_VERSION`, for overriding of the Qt library used during build.
+
+  For example, setting `QT_DEFAULT_MAJOR_VERSION` to `6` uses Qt 6, and setting to
+  `5` uses Qt 5. Older versions are not supported.
+- Added new converters for X11 to support copy pasting png/tiff/jpg/webp formats.
+- Added support for building against Qt 6 in addition to Qt 5.
+
+Bug fixes
+---------
+
+- Corrected macOS packaging to provide a better error message when a user attempts to launch
+  InputLeap on an incompatible macOS version. (https://github.com/input-leap/input-leap/issues/1260).
+- Removed limitation in Corner Size GUI to allow higher value than 99
+  (https://github.com/input-leap/input-leap/issues/159)
+- Fixed a dead lock entered when a server screen is suspended, so that screen-resume message will
+  work as expected.
+- Fixed spacing for max clipboard input on in the advanced server settings
+  (https://github.com/input-leap/input-leap/issues/1644).
+- Added a log limit to 10,000 lines to prevent RAM use from constantly increasing.
+- Reduced CPU usage of log window.
+- Fixed clipboard sharing toggle in GUI (https://github.com/input-leap/input-leap/issues/1789)
+- Fixed generation of new certificates.
+- The source distribution tarball no longer contains ``debian`` folder which previously clashed
+  with data provided by the Debian packaging.
+- Fixed support for debugging commpand line apps on Linux. Previously they would exit whenever debugger
+  tries to interrupt them which makes debugging useless.
+- Fixed out of bounds write which sometimes causes crash when switching screens.
+- Fixed per-display scaling on Windows (https://github.com/input-leap/input-leap/issues/1952,
+  https://github.com/input-leap/input-leap/issues/94, https://github.com/input-leap/input-leap/issues/206)
+- Fixed wrong encoding for text copied between Linux and Windows
+  (https://github.com/input-leap/input-leap/issues/1037,
+  https://github.com/input-leap/input-leap/issues/1137).
+- Fixed issue with X11 clipboard sharing images as text targets or in other targets than the one it
+  should have.
+- Fixed build on GCC 11.2 or newer (https://github.com/input-leap/input-leap/issues/1366).
+- Fixed potential crash during app shutdown.
+- Updated Japanese translation.
+- Fixed "Fix preserve Focus" option on Linux servers (https://github.com/input-leap/input-leap/issues/1066).
+- Fixed a potential memory leak that may cause server memory usage to grow during repeated reconnection attempts.
+- Renamed references to InputLeap in translations.
+- Fixed InputLeap code to produce reproducible build artifacts.
+- Fixed potential crashes during server shutdown due to a stale pointer to freed memory.
+- Updated Server IP shortcut to not conflict with Start/Stop button.
+
+Improved Documentation
+----------------------
+
+- Updated FAQs in project README.md with more detail on OS support and links to issues for infrequent users. (https://github.com/input-leap/input-leap/issues/1260).
+- Added a note in README.md on how to obtain test builds.
+- Fixed `input-leap.conf.example-advanced` to accurately include the advanced configuration described in/intended by the comment within it.
+- Update LICENSE file in repository to reflect fork from Barrier organisation.
+- Fixed FAQ link to Linux drag and drop issue.
+- Minor grammatical updates in newsfragments README.md.
+
+Changes
+-------
+
+- Changed server configuration dialog initial tab to "Screens".
+
+Deprecations and Removals
+-------------------------
+
+- The --no-xinitthreads commandline option has been deprecated and no longer has any effect.
+
+
 Barrier `2.4.0` ( `2021-11-01` )
 ================================
 

@@ -1,2 +1,0 @@
-Fix support for debugging commpand line apps on Linux. Previously they would exit whenever debugger
-tries to interrupt them which makes debugging useless.

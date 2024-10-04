@@ -229,11 +229,6 @@ jobs:
            qt-version: 6.6
            min-macOS-version: 10.15
            arch: 'x86_64'
-         - name: macOS-Universal
-           os: macos-12
-           qt-version: 6.6
-           min-macOS-version: 11
-           arch: 'arm64;x86_64'
          - name: macOS-Apple_Silicon
            os: macos-14
            qt-version: 6.6
@@ -258,34 +253,6 @@ jobs:
       - name: Setup the image
         run: |
           brew install ninja
-
-      - name: Cache OpenSSL Universal
-        id: cache-openssl
-        if: matrix.os == 'macos-12'
-        uses: actions/cache@v4.0.2
-        with:
-          path: ${{env.OpenSSL_Install_Path}}
-          key: macOS-${{matrix.os}}-ssl-${{matrix.arch}}-${{env.OpenSSL_Version}}
-
-      - name: Build OpenSSL Universal
-        if: ((steps.cache-openssl.outputs.cache-hit != 'true') && (matrix.os == 'macos-12'))
-        run: |
-          wget https://github.com/openssl/openssl/releases/download/openssl-${{env.OpenSSL_Version}}/openssl-${{env.OpenSSL_Version}}.tar.gz
-          tar -xf openssl-${{env.OpenSSL_Version}}.tar.gz
-          echo "#!/bin/bash
-          if [[ \$* == *-arch\ x86_64* ]] && ! [[ \$* == *-arch\ arm64* ]]; then
-            cc -arch arm64 \$@
-          else
-            cc \$@
-          fi" >> /Users/runner/cc_override
-          chmod a+x /Users/runner/cc_override
-          cat /Users/runner/cc_override
-          export MACOSX_DEPLOYMENT_TARGET=${{matrix.min-macOS-version}}
-          export CC=/Users/runner/cc_override
-          cd openssl-${{env.OpenSSL_Version}}
-          ./configure no-asm darwin64-x86_64-cc --prefix=${{env.OpenSSL_Install_Path}}
-          make
-          make install
 
       - uses: actions/checkout@v4
         with:

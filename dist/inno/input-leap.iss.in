@@ -1,5 +1,5 @@
 #define MyAppName "InputLeap"
-#define MyAppVersion "@INPUTLEAP_VERSION_MAJOR@.@INPUTLEAP_VERSION_MINOR@.@INPUTLEAP_VERSION_PATCH@.@INPUTLEAP_BUILD_NUMBER@"
+#define MyAppVersion "@INPUTLEAP_VERSION@"
 #define MyAppTextVersion "@INPUTLEAP_VERSION@"
 #define MyAppPublisher "InputLeap contributors"
 #define MyAppURL "https://github.com/input-leap/input-leap/wiki"

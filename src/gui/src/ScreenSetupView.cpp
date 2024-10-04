@@ -171,13 +171,8 @@ void ScreenSetupView::dragMoveEvent(QDragMoveEvent* event)
         }
         else
         {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
             int col = columnAt(event->position().x());
             int row = rowAt(event->position().y());
-#else
-            int col = columnAt(event->pos().x());
-            int row = rowAt(event->pos().y());
-#endif
             // a drop from outside is not allowed if there's a screen already there.
             if (!model()->screen(col, row).isNull())
                 event->ignore();
@@ -220,7 +215,6 @@ void ScreenSetupView::startDrag(Qt::DropActions)
     }
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 void ScreenSetupView::initViewItemOption(QStyleOptionViewItem *option) const
 {
     option->showDecorationSelected = true;
@@ -228,14 +222,3 @@ void ScreenSetupView::initViewItemOption(QStyleOptionViewItem *option) const
     option->displayAlignment = Qt::AlignCenter;
     option->textElideMode = Qt::ElideMiddle;
 }
-#else
-QStyleOptionViewItem ScreenSetupView::viewOptions() const
-{
-    QStyleOptionViewItem option = QTableView::viewOptions();
-    option.showDecorationSelected = true;
-    option.decorationPosition = QStyleOptionViewItem::Top;
-    option.displayAlignment = Qt::AlignCenter;
-    option.textElideMode = Qt::ElideMiddle;
-    return option;
-}
-#endif

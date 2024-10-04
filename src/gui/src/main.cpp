@@ -88,9 +88,7 @@ int main(int argc, char* argv[])
 
     QInputLeapApplication app(argc, argv);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
     app.setDesktopFileName(QStringLiteral("io.github.input_leap.InputLeap"));
-#endif
 
 #if defined(Q_OS_MAC)
 	if (app.applicationDirPath().startsWith("/Volumes/")) {

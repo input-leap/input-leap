@@ -163,11 +163,7 @@ QDataStream& operator>>(QDataStream& inStream, Screen& screen)
         ;
 
     screen.m_Modifiers.clear();
-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
     auto const mods = std::as_const(modifiers);
-#else
-    auto const mods = qAsConst(modifiers);
-#endif
     for (auto mod : mods) {
         screen.m_Modifiers.push_back(static_cast<Screen::Modifier>(mod));
     }

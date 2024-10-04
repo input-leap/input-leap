@@ -43,10 +43,8 @@ void NewScreenWidget::mousePressEvent(QMouseEvent* event)
     pDrag->setPixmap(
 #if QT_VERSION >= QT_VERSION_CHECK(6,6,0)
         pixmap()
-#elif QT_VERSION >= QT_VERSION_CHECK(5,15,0)
-        pixmap(Qt::ReturnByValue)
 #else
-        *pixmap()
+        pixmap(Qt::ReturnByValue)
 #endif
     );
     pDrag->setHotSpot(event->pos());

@@ -390,11 +390,7 @@ void MainWindow::logOutput()
     if (cmd_app_process_)
     {
         QString text(cmd_app_process_->readAllStandardOutput());
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         const auto results = text.split(QRegularExpression("\r|\n|\r\n"));
-#else
-        const auto results = text.split(QRegExp("\r|\n|\r\n"));
-#endif
         for (const auto& line : results) {
             if (!line.isEmpty())
             {
@@ -1245,11 +1241,7 @@ bool MainWindow::isServiceRunning(QString name)
 
     auto array = name.toLocal8Bit();
 
-#if QT_VERSION_MAJOR < 6
-    SC_HANDLE hService = OpenService(hSCManager, array.data(), SERVICE_QUERY_STATUS);
-#else
     SC_HANDLE hService = OpenService(hSCManager, reinterpret_cast<LPCWSTR>(array.data()), SERVICE_QUERY_STATUS);
-#endif
     if (hService == nullptr) {
         appendLogDebug("failed to open service: " + name);
         return false;
@@ -1335,12 +1327,7 @@ void MainWindow::downloadBonjour()
 void MainWindow::installBonjour()
 {
 #if defined(Q_OS_WIN)
-#if QT_VERSION >= 0x050000
     QString tempLocation = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
-#else
-    QString tempLocation = QDesktopServices::storageLocation(
-                                QDesktopServices::TempLocation);
-#endif
     QString filename = tempLocation;
     filename.append("\\").append(bonjourTargetFilename);
     QFile file(filename);

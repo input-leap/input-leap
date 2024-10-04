@@ -463,3 +463,24 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=Debug -DINPUTLEAP_BUILD_INSTALLER=OFF ..
           cmake --build .
+
+  flatpak:
+    runs-on: ubuntu-latest
+    container:
+      image: bilelmoussaoui/flatpak-github-actions:kde-6.7
+      options: --privileged
+    steps:
+      # submodules require git to be installed
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - run: git config --global protocol.file.allow always
+
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        name: "Build"
+        with:
+          bundle: input-leap.flatpak
+          manifest-path: dist/flatpak/io.github.input_leap.InputLeap.yml
+          cache-key: flatpak-builder-${{ github.sha }}

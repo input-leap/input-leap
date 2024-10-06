@@ -84,6 +84,7 @@ try {
         -DCMAKE_INSTALL_PREFIX=input-leap-install
 
     cmake --build . --parallel --config $build_type --target install
+    ISCC /Qp installer-inno\input-leap.iss
 } finally {
     popd
 }

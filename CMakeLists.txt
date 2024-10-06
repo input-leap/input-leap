@@ -24,7 +24,6 @@ option(INPUTLEAP_USE_EXTERNAL_GTEST "Use external installation of Google Test fr
 option(INPUTLEAP_BUILD_X11 "Build with XWindows support" ON)
 option(INPUTLEAP_BUILD_LIBEI "Build with libei support" OFF)
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set (CMAKE_CXX_STANDARD 14)
 set (CMAKE_CXX_EXTENSIONS OFF)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
@@ -36,6 +35,12 @@ endif()
 
 if(NOT QT_DEFAULT_MAJOR_VERSION)
     set(QT_DEFAULT_MAJOR_VERSION 6)
+endif()
+
+if(QT_DEFAULT_MAJOR_VERSION EQUAL 6)
+    set(CMAKE_CXX_STANDARD 17)
+else()
+    set(CMAKE_CXX_STANDARD 14)
 endif()
 
 include (cmake/Version.cmake)

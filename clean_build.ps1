@@ -10,6 +10,10 @@ Invoke-WebRequest 'https://github.com/nelsonjchen/mDNSResponder/releases/downloa
 if (Test-Path -LiteralPath $bonjour_path) {
     Remove-Item -LiteralPath $bonjour_path -Recurse
 }
+
+# CMake configuration expects this to be absolute path
+$bonjour_path = -join((Get-Location).Path, '\', $bonjour_path);
+
 Expand-Archive .\deps\BonjourSDKLike.zip -DestinationPath .\deps\BonjourSDKLike
 Remove-Item deps\BonjourSDKLike.zip
 
@@ -65,6 +69,7 @@ mkdir build | Out-Null
 pushd build
 
 try {
+    $env:BONJOUR_SDK_HOME="$bonjour_path"
     cmake .. -G "$vs_version" -A x64 `
         "-DCMAKE_BUILD_TYPE=$build_type" `
         "-DCMAKE_PREFIX_PATH=$qt_root" `

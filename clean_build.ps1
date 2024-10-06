@@ -83,7 +83,7 @@ try {
         -DDNSSD_LIB="$bonjour_path\Lib\x64\dnssd.lib" `
         -DCMAKE_INSTALL_PREFIX=input-leap-install
 
-    cmake --build . --config $build_type --target install
+    cmake --build . --parallel --config $build_type --target install
 } finally {
     popd
 }

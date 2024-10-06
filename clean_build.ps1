@@ -64,8 +64,10 @@ if ($env:B_QT_ROOT -ne $null) {
 
 Write-Output "Using Qt at $qt_root";
 
-rm -r build
-mkdir build | Out-Null
+if (Test-Path -LiteralPath build) {
+    Remove-Item -LiteralPath build -Recurse;
+}
+New-Item -Force -ItemType Directory -Path .\build | Out-Null
 pushd build
 
 try {

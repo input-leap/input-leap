@@ -22,7 +22,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DisableProgramGroupPage=yes
 LicenseFile=@CMAKE_CURRENT_SOURCE_DIR@/res/License.rtf
-OutputDir=@CMAKE_RUNTIME_OUTPUT_DIRECTORY@/../installer-inno/bin
+OutputDir=@CMAKE_INSTALL_PREFIX@/../installer-inno/bin
 OutputBaseFilename=InputLeapSetup-{#MyAppTextVersion}
 SetupIconFile=@CMAKE_CURRENT_SOURCE_DIR@/res/input-leap.ico
 VersionInfoProductTextVersion={#MyAppTextVersion}
@@ -33,7 +33,7 @@ VersionInfoCopyright={#MyAppCopyright}
 
 Compression=lzma
 SolidCompression=yes
-ArchitecturesInstallIn64BitMode=x64 ia64
+ArchitecturesInstallIn64BitMode=x64
 UninstallDisplayIcon={app}\{#MyAppExeName}
 
 #include "scripts\lang\english.iss"
@@ -42,7 +42,7 @@ UninstallDisplayIcon={app}\{#MyAppExeName}
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "@CMAKE_RUNTIME_OUTPUT_DIRECTORY@/Release/*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "@CMAKE_INSTALL_PREFIX@/*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

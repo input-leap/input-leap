@@ -1,6 +1,10 @@
 
 # The following packets need to be installed via Chocolatey in order to run this script:
-# cmake, openssl, qt6-base-dev, InnoSetup
+# cmake, openssl, aqt (version 3.1.17), InnoSetup
+# Qt needs to be installed either manually or by running:
+# aqt install-qt windows desktop 6.4.2 win64_msvc2019_64 -O C:\Qt
+# or
+# aqt install-qt windows desktop 5.15.2 win64_msvc2019_64 -O C:\Qt
 # Note that Powershell may need to be restarted in order to changes to take effect.
 
 $bonjour_path = '.\deps\BonjourSDKLike'
@@ -10,6 +14,10 @@ Invoke-WebRequest 'https://github.com/nelsonjchen/mDNSResponder/releases/downloa
 if (Test-Path -LiteralPath $bonjour_path) {
     Remove-Item -LiteralPath $bonjour_path -Recurse
 }
+
+# CMake configuration expects this to be absolute path
+$bonjour_path = -join((Get-Location).Path, '\', $bonjour_path);
+
 Expand-Archive .\deps\BonjourSDKLike.zip -DestinationPath .\deps\BonjourSDKLike
 Remove-Item deps\BonjourSDKLike.zip
 
@@ -60,11 +68,14 @@ if ($env:B_QT_ROOT -ne $null) {
 
 Write-Output "Using Qt at $qt_root";
 
-rm -r build
-mkdir build | Out-Null
+if (Test-Path -LiteralPath build) {
+    Remove-Item -LiteralPath build -Recurse;
+}
+New-Item -Force -ItemType Directory -Path .\build | Out-Null
 pushd build
 
 try {
+    $env:BONJOUR_SDK_HOME="$bonjour_path"
     cmake .. -G "$vs_version" -A x64 `
         "-DCMAKE_BUILD_TYPE=$build_type" `
         "-DCMAKE_PREFIX_PATH=$qt_root" `
@@ -72,7 +83,8 @@ try {
         -DDNSSD_LIB="$bonjour_path\Lib\x64\dnssd.lib" `
         -DCMAKE_INSTALL_PREFIX=input-leap-install
 
-    cmake --build . --config $build_type --target install
+    cmake --build . --parallel --config $build_type --target install
+    ISCC /Qp installer-inno\input-leap.iss
 } finally {
     popd
 }

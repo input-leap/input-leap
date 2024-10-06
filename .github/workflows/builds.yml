@@ -327,7 +327,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: env.B_BUILD_TYPE == 'Release'
         with:
-          name: ${{ matrix.os }}-installer
+          name: ${{ matrix.name }}-installer
           path: ./build/bundle/*.dmg
           if-no-files-found: error
 
@@ -421,7 +421,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: matrix.os == 'windows-2022' && env.B_BUILD_TYPE == 'Release'
         with:
-          name: windows-installer
+          name: windows-installer-${{ matrix.name }}
           path: .\build\installer-inno\bin
           if-no-files-found: error
 

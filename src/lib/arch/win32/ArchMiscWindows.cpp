@@ -140,7 +140,7 @@ ArchMiscWindows::openKey(HKEY key, const TCHAR* keyName, bool create)
                                 KEY_WRITE | KEY_QUERY_VALUE, &newKey);
     if (result != ERROR_SUCCESS && create) {
         DWORD disp;
-        result = RegCreateKeyEx(key, keyName, 0, TEXT(""),
+        result = RegCreateKeyEx(key, keyName, 0, TEXT(const_cast<char*>("")),
                                 0, KEY_WRITE | KEY_QUERY_VALUE,
                                 nullptr, &newKey, &disp);
     }

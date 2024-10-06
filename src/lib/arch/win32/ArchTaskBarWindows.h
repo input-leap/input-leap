@@ -68,7 +68,6 @@ private:
     typedef std::map<IArchTaskBarReceiver*, ReceiverInfo> ReceiverToInfoMap;
     typedef std::map<UINT, ReceiverToInfoMap::iterator> CIDToReceiverMap;
     typedef std::vector<UINT> CIDStack;
-    typedef std::map<HWND, bool> Dialogs;
 
     UINT getNextID();
     void recycleID(UINT);
@@ -110,10 +109,6 @@ private:
     CIDToReceiverMap m_idTable;
     CIDStack m_oldIDs;
     UINT m_nextID;
-
-    // dialogs
-    Dialogs m_dialogs;
-    Dialogs m_addedDialogs;
 };
 
 } // namespace inputleap

@@ -37,11 +37,16 @@ enum {
     kExitSubscription = 5  // subscription error
 };
 
-// From XFuncproto.h
-/* Added in X11R6.9, so available in any version of modular xproto */
-#if __has_attribute(__format__) \
-  || defined(__GNUC__) && ((__GNUC__ * 100 + __GNUC_MINOR__) >= 203)
-# define _X_ATTRIBUTE_PRINTF(x,y) __attribute__((__format__(__printf__,x,y)))
-#else /* not gcc >= 2.3 */
-# define _X_ATTRIBUTE_PRINTF(x,y)
+#if defined(__GNUC__)
+    #define INPUTLEAP_DEFINE_ATTRIBUTE_PRINTF 1
+#elif defined(__has_attribute)
+    #if __has_attribute(__format__)
+        #define INPUTLEAP_DEFINE_ATTRIBUTE_PRINTF 1
+    #endif
+#endif
+
+#ifdef INPUTLEAP_DEFINE_ATTRIBUTE_PRINTF
+    #define INPUTLEAP_ATTRIBUTE_PRINTF(x,y) __attribute__((__format__(__printf__,x,y)))
+#else
+    #define INPUTLEAP_ATTRIBUTE_PRINTF(x,y)
 #endif

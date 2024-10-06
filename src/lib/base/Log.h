@@ -106,7 +106,7 @@ public:
     preceded by the filename and line number.  If \c file is nullptr then
     neither the file nor the line are printed.
     */
-    _X_ATTRIBUTE_PRINTF(5, 6)
+    INPUTLEAP_ATTRIBUTE_PRINTF(5, 6)
     void print(ELevel priority,
                const char* file, int line,
                const char* format, ...);

@@ -309,40 +309,6 @@ ArchTaskBarWindows::handleIconMessage(
 bool
 ArchTaskBarWindows::processDialogs(MSG* msg)
 {
-    // only one thread can be in this method on any particular object
-    // at any given time.  that's not a problem since only our event
-    // loop calls this method and there's just one of those.
-
-    std::unique_lock<std::mutex> lock(mutex_);
-
-    // remove removed dialogs
-    m_dialogs.erase(false);
-
-    // merge added dialogs into the dialog list
-    for (Dialogs::const_iterator index = m_addedDialogs.begin();
-                            index != m_addedDialogs.end(); ++index) {
-        m_dialogs.insert(std::make_pair(index->first, index->second));
-    }
-    m_addedDialogs.clear();
-
-
-    // check message against all dialogs until one handles it.
-    // note that we don't hold a lock while checking because
-    // the message is processed and may make calls to this
-    // object.  that's okay because addDialog() and
-    // removeDialog() don't change the map itself (just the
-    // values of some elements).
-    for (Dialogs::const_iterator index = m_dialogs.begin();
-                            index != m_dialogs.end(); ++index) {
-        if (index->second) {
-            lock.unlock();
-            if (IsDialogMessage(index->first, msg)) {
-                return true;
-            }
-            lock.lock();
-        }
-    }
-
     return false;
 }
 

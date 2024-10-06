@@ -1,6 +1,10 @@
 
 # The following packets need to be installed via Chocolatey in order to run this script:
-# cmake, openssl, qt6-base-dev, InnoSetup
+# cmake, openssl, aqt (version 3.1.17), InnoSetup
+# Qt needs to be installed either manually or by running:
+# aqt install-qt windows desktop 6.4.2 win64_msvc2019_64 -O C:\Qt
+# or
+# aqt install-qt windows desktop 5.15.2 win64_msvc2019_64 -O C:\Qt
 # Note that Powershell may need to be restarted in order to changes to take effect.
 
 $bonjour_path = '.\deps\BonjourSDKLike'

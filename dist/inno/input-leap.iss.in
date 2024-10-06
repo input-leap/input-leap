@@ -33,7 +33,7 @@ VersionInfoCopyright={#MyAppCopyright}
 
 Compression=lzma
 SolidCompression=yes
-ArchitecturesInstallIn64BitMode=x64 ia64
+ArchitecturesInstallIn64BitMode=x64
 UninstallDisplayIcon={app}\{#MyAppExeName}
 
 #include "scripts\lang\english.iss"

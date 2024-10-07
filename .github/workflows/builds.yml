@@ -45,6 +45,11 @@ jobs:
            cc: "gcc"
            cxx: "g++"
            wayland: true
+         - name: debian-12
+           os: "debian:bookworm"
+           cc: "gcc"
+           cxx: "g++"
+           wayland: true
     steps:
 
       # Preparation steps

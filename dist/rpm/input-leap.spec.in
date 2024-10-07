@@ -46,7 +46,6 @@ Work seamlessly across Windows, macOS and Linux.
     -DINPUTLEAP_REVISION:STRING=%{input_leap_revision} \
     -DINPUTLEAP_BUILD_LIBEI=ON \
     -DINPUTLEAP_BUILD_TESTS=ON \
-    -DINPUTLEAP_USE_EXTERNAL_GTEST=True \
     -DINPUTLEAP_VERSION_STAGE:STRING=@INPUTLEAP_VERSION_STAGE@
 %{cmake_build}
 

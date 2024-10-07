@@ -20,7 +20,7 @@ endif
 	dh $@ --builddirectory=builddir
 
 override_dh_auto_configure:
-	dh_auto_configure --builddirectory=builddir -- -DINPUTLEAP_USE_EXTERNAL_GTEST=ON $(CONFIGURE_FLAGS)
+	dh_auto_configure --builddirectory=builddir -- $(CONFIGURE_FLAGS)
 
 override_dh_auto_test:
 ifneq (,$(filter amd64 i386,$(DEB_HOST_ARCH)))

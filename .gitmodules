@@ -1,6 +1,0 @@
-[submodule "ext/gtest"]
-	path = ext/gtest
-	url = https://github.com/google/googletest.git
-[submodule "ext/gulrak-filesystem"]
-	path = ext/gulrak-filesystem
-	url = https://github.com/gulrak/filesystem

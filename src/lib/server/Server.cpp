@@ -49,6 +49,7 @@
 #include <sstream>
 #include <fstream>
 #include <ctime>
+#include <climits>
 #include <stdexcept>
 
 namespace inputleap {

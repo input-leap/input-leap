@@ -44,6 +44,7 @@
 #include "base/Log.h"
 #include "base/Time.h"
 
+#include <climits>
 #include <cstring>
 #include <cstdlib>
 #include <sstream>

@@ -50,10 +50,6 @@ def main():
             "input-leap_.*_amd64.deb",
             f"InputLeap_{version}_debian12_amd64.deb",
         ),
-        "input-leap-deb-ubuntu-20-04": (
-            "input-leap_.*_amd64.deb",
-            f"InputLeap_{version}_ubuntu_20-04_amd64.deb",
-        ),
         "input-leap-deb-ubuntu-22-04": (
             "input-leap_.*_amd64.deb",
             f"InputLeap_{version}_ubuntu_22-04_amd64.deb",

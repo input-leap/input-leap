@@ -18,21 +18,45 @@
 
 namespace inputleap {
 
-void DataDirectories::maybe_copy_old_profile(const fs::path& old_profile_path,
-                                             const fs::path& curr_profile_path)
+void maybe_copy_old_profile_cert(const fs::path& old_profile_path,
+                                 const fs::path& curr_profile_path)
 {
-    if (fs::exists(curr_profile_path)) {
-        return;
-    }
-    if (!fs::is_directory(old_profile_path)) {
-        return;
-    }
-    fs::copy(old_profile_path, curr_profile_path, fs::copy_options::recursive);
     auto old_cert_path = curr_profile_path / "SSL" / "Barrier.pem";
     auto new_cert_path = curr_profile_path / "SSL" / "InputLeap.pem";
     if (fs::is_regular_file(old_cert_path) && !fs::exists(new_cert_path)) {
         fs::rename(old_cert_path, new_cert_path);
     }
+}
+
+void maybe_copy_old_profile_ssl(const fs::path& old_profile_path,
+                                const fs::path& curr_profile_path)
+{
+    if (fs::exists(curr_profile_path / "SSL")) {
+        return;
+    }
+    if (!fs::exists(old_profile_path / "SSL")) {
+        return;
+    }
+    if (!fs::is_directory(old_profile_path / "SSL")) {
+        return;
+    }
+    fs::copy(old_profile_path / "SSL", curr_profile_path / "SSL", fs::copy_options::recursive);
+    maybe_copy_old_profile_cert(old_profile_path, curr_profile_path);
+}
+
+void DataDirectories::maybe_copy_old_profile(const fs::path& old_profile_path,
+                                             const fs::path& curr_profile_path)
+{
+    if (fs::exists(curr_profile_path)) {
+        maybe_copy_old_profile_ssl(old_profile_path, curr_profile_path);
+        return;
+    }
+
+    if (!fs::is_directory(old_profile_path)) {
+        return;
+    }
+    fs::copy(old_profile_path, curr_profile_path, fs::copy_options::recursive);
+    maybe_copy_old_profile_cert(old_profile_path, curr_profile_path);
 }
 
 } // namespace inputleap

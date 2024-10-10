@@ -78,6 +78,7 @@ Changes
 -------
 
 - Changed server configuration dialog initial tab to "Screens".
+- Changed user configuration location on Linux from ~/.local/share to ~/.config.
 
 Deprecations and Removals
 -------------------------

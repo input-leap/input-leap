@@ -52,13 +52,6 @@ jobs:
            wayland: true
     steps:
 
-      # Preparation steps
-      - name: preinstall depends
-        run: |
-          apt-get update -y
-          # software-properties-common is needed for add-apt-repository
-          apt-get install -y software-properties-common gpg wget
-
       - name: Update and install packages
         run: |
           apt-get update -y
@@ -80,8 +73,10 @@ jobs:
                   libxkbcommon-dev \
                   libglib2.0-dev \
                   ninja-build \
-                  qtdeclarative5-dev \
-                  qttools5-dev
+                  qt6-base-dev \
+                  qt6-l10n-tools \
+                  qt6-tools-dev-tools \
+                  qt6-tools-dev
 
       - if: env.B_BUILD_TYPE == 'Release'
         name: Install release installer build packages
@@ -156,8 +151,7 @@ jobs:
       - name: Run build
         if: env.B_BUILD_TYPE != 'Release'
         run: |
-          cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build \
-                -DQT_DEFAULT_MAJOR_VERSION=5 \
+          cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build -G Ninja \
                 -DCMAKE_CXX_FLAGS:STRING="-Wall -Wextra -Wno-unused-parameter" \
                 -DCMAKE_CXX_FLAGS_DEBUG:STRING="-g -Werror" \
                 -DINPUTLEAP_BUILD_LIBEI:BOOL=${{ matrix.wayland }} \
@@ -261,8 +255,8 @@ jobs:
        include:
          - name: macOS-x86_64
            os: macos-12
-           qt-version: 5.15
-           min-macOS-version: 10.9
+           qt-version: 6.6
+           min-macOS-version: 10.15
            arch: 'x86_64'
          - name: macOS-Universal
            os: macos-12
@@ -331,7 +325,7 @@ jobs:
         run: |
           cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build -G Ninja -DOpenSSL_ROOT=${{env.OpenSSL_Install_Path}} \
                 -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk \
-                -DCMAKE_OSX_DEPLOYMENT_TARGET=${{matrix.min-macOS-version}} -DCMAKE_UNITY_BUILD=1 -DQT_DEFAULT_MAJOR_VERSION=$(echo ${{matrix.qt-version}} | cut -c -1) \
+                -DCMAKE_OSX_DEPLOYMENT_TARGET=${{matrix.min-macOS-version}} -DCMAKE_UNITY_BUILD=1 \
                 -DCMAKE_OSX_ARCHITECTURES="${{matrix.arch}}"
 
       - name: Run the build
@@ -364,14 +358,9 @@ jobs:
       fail-fast: false
       matrix:
        include:
-         - name: Windows Qt5
-           os: windows-2019
-           qt-version: 5.15
-           qt-major: 5
          - name: Windows Qt6
            os: windows-2022
            qt-version: 6.6
-           qt-major: 6
 
     steps:
       - uses: actions/checkout@v4
@@ -406,7 +395,6 @@ jobs:
           cd build
 
           cmake -S ..\input-leap -G "$env:CMAKE_GEN" -A x64 -D CMAKE_BUILD_TYPE=$B_BUILD_TYPE `
-            -DQT_DEFAULT_MAJOR_VERSION=${{matrix.qt-major}} `
             -DDNSSD_LIB="$env:BONJOUR_SDK_HOME\Lib\x64\dnssd.lib" -D CMAKE_INSTALL_PREFIX=input-leap-install
         env:
           VS_PATH: ${{ matrix.os == 'windows-2019' && '%ProgramFiles(x86)%\Microsoft Visual Studio\2019' || '%ProgramFiles%\Microsoft Visual Studio\2022' }}

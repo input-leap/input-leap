@@ -61,7 +61,7 @@ Push the tag:
 Step 6: Draft a new release on Github
 -------------------------------------
 
-Go to https://github.com/buildbot/buildbot/releases and draft a new release.
+Go to https://github.com/input-leap/input-leap/releases and draft a new release.
 
 Use git tag as the title of the release: `vX.Y.Z`.
 

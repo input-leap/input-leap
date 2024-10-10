@@ -40,6 +40,7 @@ body:
         - v2.3.4
         - v2.4.0
         - v3.0.0
+        - v3.0.1
         - From Git HEAD or commit (specify below)
     validations:
       required: true

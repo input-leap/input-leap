@@ -76,11 +76,25 @@ static fs::path profile_basedir()
 #endif
 }
 
+#if defined(WINAPI_XWINDOWS) || defined(WINAPI_LIBEI)
+static fs::path old_profile_basedir()
+{
+    // The following was used before 3.0.0
+    const char* dir = std::getenv("XDG_DATA_HOME");
+    if (dir != nullptr)
+        return fs::u8path(dir);
+    return unix_home() / ".local/share";
+}
+#endif
+
 const fs::path& DataDirectories::profile()
 {
     if (_profile.empty()) {
         _profile = profile_basedir() / "InputLeap";
         maybe_copy_old_profile(profile_basedir() / "barrier", _profile);
+#if defined(WINAPI_XWINDOWS) || defined(WINAPI_LIBEI)
+        maybe_copy_old_profile(old_profile_basedir() / "InputLeap", _profile);
+#endif
     }
     return _profile;
 }

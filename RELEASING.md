@@ -55,7 +55,7 @@ Create a tag:
 
 Push the tag:
 
-    git push origin master --tags
+    git push v${VERSION}
 
 
 Step 6: Draft a new release on Github

@@ -3,6 +3,16 @@ Release notes
 
 [comment]: <> (towncrier release notes start)
 
+InputLeap `3.0.1` ( `2024-10-10` )
+==================================
+
+Bug fixes
+---------
+
+- Added automatic user config migration from old config location on Linux.
+- Fixed generation of Windows, Ubuntu, Debian and flatpak installers.
+
+
 InputLeap `3.0.0` ( `2024-10-04` )
 ==================================
 

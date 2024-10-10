@@ -25,14 +25,20 @@ public:
             return;
         }
 
-        LOG_DEBUG("opening display");
+        for (unsigned i = 0; i < 100 && display_ == nullptr; ++i) {
+            LOG_DEBUG("opening display");
 
-        display_ = XOpenDisplay(nullptr);
+            display_ = XOpenDisplay(nullptr);
 
-        // failed to open the display and DISPLAY is null? probably
-        // running in a CI, let's skip
-        if (display_ == nullptr && std::getenv("DISPLAY") == nullptr)
-            GTEST_SKIP() << "DISPLAY environment variable not set, skipping test";
+            // failed to open the display and DISPLAY is null? probably
+            // running in a CI, let's skip
+            if (display_ == nullptr && std::getenv("DISPLAY") == nullptr)
+                GTEST_SKIP() << "DISPLAY environment variable not set, skipping test";
+
+            if (display_) {
+                return;
+            }
+        }
 
         ASSERT_TRUE(display_ != nullptr) << "unable to open display: " << errno;
     }

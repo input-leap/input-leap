@@ -190,13 +190,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ["fedora:40", "opensuse/tumbleweed"]
+        os: ["fedora:40"]
         include:
           - installer: dnf install -y
             rpm_tag: fedora
-          - os: opensuse/tumbleweed
-            installer: zypper install -y
-            rpm_tag: suse_version
 
     steps:
       - name: Install extra build dependencies

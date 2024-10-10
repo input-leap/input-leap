@@ -520,3 +520,11 @@ jobs:
           bundle: input-leap.flatpak
           manifest-path: dist/flatpak/io.github.input_leap.InputLeap.yml
           cache-key: flatpak-builder-${{ github.sha }}
+          upload-artifact: false
+
+      - uses: actions/upload-artifact@v4
+        if: env.B_BUILD_TYPE == 'Release'
+        with:
+          name: input-leap-flatpak-x86_64
+          path: input-leap.flatpak
+          if-no-files-found: error

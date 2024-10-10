@@ -205,25 +205,45 @@ ServerApp::loadConfig()
 
     // load the default configuration if no explicit file given
     else {
-        auto path = inputleap::DataDirectories::profile();
-        if (!path.empty()) {
-            // complete path
-            path /= inputleap::fs::u8path(CONFIG_NAME);
+        struct PathConfig
+        {
+            fs::path root;
+            std::string filename;
+            bool deprecated = false;
+        };
 
-            // now try loading the user's configuration
-            if (loadConfig(path.u8string())) {
-                loaded            = true;
-                args().m_configFile = path.u8string();
+        std::vector<PathConfig> path_configs = {
+            {
+                inputleap::DataDirectories::profile(),
+                CONFIG_NAME,
+                false
+            },
+            {
+                inputleap::DataDirectories::profile(),
+                ".input-leap.conf", // used before 3.0.0
+                true
+            },
+            {
+                inputleap::DataDirectories::systemconfig(),
+                CONFIG_NAME,
+                false
             }
-        }
-        if (!loaded) {
-            // try the system-wide config file
-            path = inputleap::DataDirectories::systemconfig();
+        };
+
+        for (const auto& path_config : path_configs) {
+            auto path = path_config.root;
             if (!path.empty()) {
-                path /= inputleap::fs::u8path(CONFIG_NAME);
+                path /= inputleap::fs::u8path(path_config.filename);
                 if (loadConfig(path.u8string())) {
-                    loaded            = true;
+                    if (path_config.deprecated) {
+                        LOG_PRINT("%s: Loading config from deprecated path %s, please use %s",
+                                  args().m_exename.c_str(),
+                                  path.u8string().c_str(),
+                                  (path_configs[0].root / path_configs[0].filename).u8string().c_str());
+                    }
+                    loaded = true;
                     args().m_configFile = path.u8string();
+                    break;
                 }
             }
         }

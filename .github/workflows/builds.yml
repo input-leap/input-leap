@@ -52,13 +52,6 @@ jobs:
            wayland: true
     steps:
 
-      # Preparation steps
-      - name: preinstall depends
-        run: |
-          apt-get update -y
-          # software-properties-common is needed for add-apt-repository
-          apt-get install -y software-properties-common gpg wget
-
       - name: Update and install packages
         run: |
           apt-get update -y

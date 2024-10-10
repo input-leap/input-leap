@@ -388,14 +388,14 @@ jobs:
           cache-key-prefix: windows-${{matrix.os}}-Qt${{matrix.qt-version}}
 
       - name: Configure build system
-        # NB. use cmd here to set variables from VsDevCmd.bat
-        shell: cmd
         run: |
-          call "%VS_PATH%\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=amd64
+          New-Item -Force -ItemType Directory -Path .\build | Out-Null
 
-          cmake -S input-leap -B build -G "%CMAKE_GEN%" -A x64 -D CMAKE_BUILD_TYPE=%B_BUILD_TYPE% ^
-            -DQT_DEFAULT_MAJOR_VERSION=${{matrix.qt-major}} ^
-            -DDNSSD_LIB="%BONJOUR_SDK_HOME%\Lib\x64\dnssd.lib" -D CMAKE_INSTALL_PREFIX=input-leap-install
+          cd build
+
+          cmake -S ..\input-leap -G "$env:CMAKE_GEN" -A x64 -D CMAKE_BUILD_TYPE=$B_BUILD_TYPE `
+            -DQT_DEFAULT_MAJOR_VERSION=${{matrix.qt-major}} `
+            -DDNSSD_LIB="$env:BONJOUR_SDK_HOME\Lib\x64\dnssd.lib" -D CMAKE_INSTALL_PREFIX=input-leap-install
         env:
           VS_PATH: ${{ matrix.os == 'windows-2019' && '%ProgramFiles(x86)%\Microsoft Visual Studio\2019' || '%ProgramFiles%\Microsoft Visual Studio\2022' }}
           CMAKE_GEN: ${{ matrix.os == 'windows-2019' && 'Visual Studio 16 2019' || 'Visual Studio 17 2022' }}
@@ -406,7 +406,7 @@ jobs:
           cmake --build build --config $env:B_BUILD_TYPE --target install
 
       - name: Create Archive
-        run: Compress-Archive -Path input-leap-install\* -DestinationPath ${{ env.B_BUILD_TYPE }}.zip
+        run: Compress-Archive -Path build\input-leap-install\* -DestinationPath ${{ env.B_BUILD_TYPE }}.zip
 
       - uses: actions/upload-artifact@v4
         with:

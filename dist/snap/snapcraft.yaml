@@ -15,7 +15,7 @@ apps:
       # Fallback to XWayland if running in a Wayland session.
       DISABLE_WAYLAND: 1
     desktop: usr/share/applications/input-leap.desktop
-    common-id: com.github.input-leap.input-leap
+    common-id: io.github.input_leap.InputLeap
     plugs: &plugs
       - desktop
       - desktop-legacy
@@ -87,4 +87,4 @@ parts:
   appstream-flathub:
     plugin: dump
     source: https://github.com/flathub/com.github.input-leap.input-leap.git
-    parse-info: [com.github.input-leap.input-leap.appdata.xml]
+    parse-info: [io.github.input_leap.InputLeap.appdata.xml]

@@ -244,9 +244,6 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     set (BUILD_MSWINDOWS 1)
 endif()
 
-# For config.h, save the results based on a template (config.h.in).
-configure_file(res/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/src/lib/config.h)
-
 include_directories(SYSTEM "${CMAKE_SOURCE_DIR}/ext/gulrak-filesystem/include")
 
 #

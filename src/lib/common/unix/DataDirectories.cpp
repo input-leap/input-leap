@@ -68,7 +68,7 @@ static fs::path profile_basedir()
     const char* dir = std::getenv("XDG_CONFIG_HOME");
     if (dir != nullptr)
         return fs::u8path(dir);
-    return unix_home() / ".config/";
+    return unix_home() / ".config";
 #else
     // macos has its own standards
     // https://developer.apple.com/library/content/documentation/General/Conceptual/MOSXAppProgrammingGuide/AppRuntime/AppRuntime.html

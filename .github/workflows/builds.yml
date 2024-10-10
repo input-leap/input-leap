@@ -453,8 +453,8 @@ jobs:
           git submodule update --init --recursive
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Debug -DINPUTLEAP_BUILD_INSTALLER=OFF ..
-          cmake --build .
+          cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug -DINPUTLEAP_BUILD_INSTALLER=OFF ..
+          cmake --build . --parallel
 
   flatpak:
     runs-on: ubuntu-latest

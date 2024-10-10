@@ -19,6 +19,7 @@
 #define INPUTLEAP_TEST_ENV
 
 #include "config.h"
+#include "XWindowsTestsCommon.h"
 
 #include "test/mock/inputleap/MockKeyMap.h"
 #include "test/mock/inputleap/MockEventQueue.h"
@@ -40,50 +41,21 @@ namespace inputleap {
 class XWindowsKeyStateTests : public ::testing::Test
 {
 protected:
-    XWindowsKeyStateTests() :
-        m_display(nullptr)
+
+    void SetUp() override
     {
+        display_util_.open();
     }
 
-    ~XWindowsKeyStateTests() override
-    {
-        if (m_display != nullptr) {
-            LOG_DEBUG("closing display");
-            XCloseDisplay(m_display);
-        }
-    }
-
-    void
-    SetUp() override
-    {
-        // open the display only once for the entire test suite
-        if (this->m_display == nullptr) {
-            LOG_DEBUG("opening display");
-            this->m_display = XOpenDisplay(nullptr);
-
-            // failed to open the display and DISPLAY is null? probably
-            // running in a CI, let's skip
-            if (this->m_display == nullptr && std::getenv("DISPLAY") == nullptr)
-                GTEST_SKIP() << "DISPLAY environment variable not set, skipping test";
-
-            ASSERT_TRUE(this->m_display != nullptr)
-                << "unable to open display: " << errno;
-        }
-    }
-
-    void
-    TearDown() override
-    {
-    }
-
-    Display* m_display;
+    XDisplayOpenUtil display_util_;
 };
 
 TEST_F(XWindowsKeyStateTests, setActiveGroup_pollAndSet_groupIsZero)
 {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), display_util_.display(), true, &eventQueue,
+                              keyMap);
 
     keyState.setActiveGroup(XWindowsKeyState::kGroupPollAndSet);
 
@@ -94,7 +66,8 @@ TEST_F(XWindowsKeyStateTests, setActiveGroup_poll_groupIsNotSet)
 {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), display_util_.display(), true, &eventQueue,
+                              keyMap);
 
     keyState.setActiveGroup(XWindowsKeyState::kGroupPoll);
 
@@ -105,7 +78,8 @@ TEST_F(XWindowsKeyStateTests, setActiveGroup_customGroup_groupWasSet)
 {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), display_util_.display(), true, &eventQueue,
+                              keyMap);
 
     keyState.setActiveGroup(1);
 
@@ -116,7 +90,8 @@ TEST_F(XWindowsKeyStateTests, mapModifiersFromX_zeroState_zeroMask)
 {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), display_util_.display(), true, &eventQueue,
+                              keyMap);
 
     int mask = keyState.mapModifiersFromX(0);
 
@@ -127,7 +102,8 @@ TEST_F(XWindowsKeyStateTests, mapModifiersToX_zeroMask_resultIsTrue)
 {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), display_util_.display(), true, &eventQueue,
+                              keyMap);
 
     unsigned int modifiers = 0;
     bool result = keyState.mapModifiersToX(0, modifiers);
@@ -139,7 +115,8 @@ TEST_F(XWindowsKeyStateTests, fakeCtrlAltDel_default_returnsFalse)
 {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), display_util_.display(), true, &eventQueue,
+                              keyMap);
 
     bool result = keyState.fakeCtrlAltDel();
 
@@ -150,7 +127,8 @@ TEST_F(XWindowsKeyStateTests, pollActiveModifiers_defaultState_returnsZero)
 {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), display_util_.display(), true, &eventQueue,
+                              keyMap);
 
     KeyModifierMask actual = keyState.pollActiveModifiers();
 
@@ -161,22 +139,23 @@ TEST_F(XWindowsKeyStateTests, pollActiveModifiers_shiftKeyDownThenUp_masksAreCor
 {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), display_util_.display(), true, &eventQueue,
+                              keyMap);
 
     // set mock modifier mapping
     std::fill(keyState.modifierFromX().begin(), keyState.modifierFromX().end(), 0);
     keyState.modifierFromX()[ShiftMapIndex] = KeyModifierShift;
 
-    KeyCode key = XKeysymToKeycode(m_display, XK_Shift_L);
+    KeyCode key = XKeysymToKeycode(display_util_.display(), XK_Shift_L);
 
     // fake shift key down (without using InputLeap)
-    XTestFakeKeyEvent(m_display, key, true, CurrentTime);
+    XTestFakeKeyEvent(display_util_.display(), key, true, CurrentTime);
 
     // function under test (1st call)
     KeyModifierMask modDown = keyState.pollActiveModifiers();
 
     // fake shift key up (without using InputLeap)
-    XTestFakeKeyEvent(m_display, key, false, CurrentTime);
+    XTestFakeKeyEvent(display_util_.display(), key, false, CurrentTime);
 
     // function under test (2nd call)
     KeyModifierMask modUp = keyState.pollActiveModifiers();
@@ -192,7 +171,8 @@ TEST_F(XWindowsKeyStateTests, pollActiveGroup_defaultState_returnsZero)
 {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), display_util_.display(), true, &eventQueue,
+                              keyMap);
 
     std::int32_t actual = keyState.pollActiveGroup();
 
@@ -203,7 +183,8 @@ TEST_F(XWindowsKeyStateTests, pollActiveGroup_positiveGroup_returnsGroup)
 {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), display_util_.display(), true, &eventQueue,
+                              keyMap);
 
     keyState.group(3);
 
@@ -216,7 +197,8 @@ TEST_F(XWindowsKeyStateTests, pollActiveGroup_xkb_areEqual)
 {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), display_util_.display(), true, &eventQueue,
+                              keyMap);
 
     // reset the group
     keyState.group(-1);
@@ -224,7 +206,7 @@ TEST_F(XWindowsKeyStateTests, pollActiveGroup_xkb_areEqual)
     XkbStateRec state;
 
     // compare pollActiveGroup() with XkbGetState()
-    if (XkbGetState(m_display, XkbUseCoreKbd, &state) == Success) {
+    if (XkbGetState(display_util_.display(), XkbUseCoreKbd, &state) == Success) {
         std::int32_t actual = keyState.pollActiveGroup();
 
         ASSERT_EQ(state.group, actual);

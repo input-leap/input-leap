@@ -58,6 +58,10 @@ def main():
             "input-leap_.*_amd64.deb",
             f"InputLeap_{version}_ubuntu_22-04_amd64.deb",
         ),
+        "input-leap-deb-ubuntu-24-04": (
+            "input-leap_.*_amd64.deb",
+            f"InputLeap_{version}_ubuntu_24-04_amd64.deb",
+        ),
         "input-leap-rpms-fedora": (
             "x86_64/input-leap-.*.fc40.x86_64.rpm",
             f"InputLeap_{version}_fedora_fc40_x86_64.rpm",

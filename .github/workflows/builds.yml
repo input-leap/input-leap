@@ -45,6 +45,11 @@ jobs:
            cc: "gcc"
            cxx: "g++"
            wayland: true
+         - name: ubuntu-24-04
+           os: "ubuntu:24.04"
+           cc: "gcc"
+           cxx: "g++"
+           wayland: true
          - name: debian-12
            os: "debian:bookworm"
            cc: "gcc"

@@ -30,11 +30,6 @@ jobs:
       fail-fast: false
       matrix:
        include:
-         - name: ubuntu-20-04
-           os: "ubuntu:20.04"
-           cc: "gcc"
-           cxx: "g++"
-           wayland: false
          - name: ubuntu-22-04-clang
            os: "ubuntu:22.04"
            cc: "clang"
@@ -63,17 +58,6 @@ jobs:
           apt-get update -y
           # software-properties-common is needed for add-apt-repository
           apt-get install -y software-properties-common gpg wget
-
-      - if: matrix.os == 'ubuntu:20.04'
-        name: Add repositories with newer git and cmake
-        run: |
-          # InputLeap requires at least CMake 3.21.
-          # This mirrors instructions at https://apt.kitware.com
-          wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
-            | gpg --dearmor - \
-            > /usr/share/keyrings/kitware-archive-keyring.gpg
-          echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ focal main' \
-            > /etc/apt/sources.list.d/kitware.list
 
       - name: Update and install packages
         run: |
@@ -106,15 +90,6 @@ jobs:
                   debhelper \
                   devscripts \
                   xvfb
-
-      - if: matrix.os != 'ubuntu:20.04'
-        name: Install Qt6 packages
-        run: |
-          apt-get install -y \
-                  qt6-base-dev \
-                  qt6-l10n-tools \
-                  qt6-tools-dev-tools \
-                  qt6-tools-dev
 
       - if: matrix.wayland
         name: Install libei and libportal pre-reqs
@@ -215,9 +190,6 @@ jobs:
         run: |
           cd input-leap
           cp -r dist/debian debian
-          if [ "${{ matrix.name }}" = "ubuntu-20-04" ]; then
-            sed -i -e 's/QT_DEFAULT_MAJOR_VERSION=6/QT_DEFAULT_MAJOR_VERSION=5/g' debian/rules
-          fi
           debuild -us -uc
 
       - name: Upload Artifacts

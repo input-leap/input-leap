@@ -62,6 +62,7 @@ Bug fixes
 - Fixed InputLeap code to produce reproducible build artifacts.
 - Fixed potential crashes during server shutdown due to a stale pointer to freed memory.
 - Updated Server IP shortcut to not conflict with Start/Stop button.
+- Fixed bug that caused tilde (~) and grave (`) to stop being sendable.
 
 Improved Documentation
 ----------------------

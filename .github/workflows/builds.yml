@@ -45,6 +45,11 @@ jobs:
            cc: "gcc"
            cxx: "g++"
            wayland: true
+         - name: debian-12
+           os: "debian:bookworm"
+           cc: "gcc"
+           cxx: "g++"
+           wayland: true
     steps:
 
       # Preparation steps
@@ -65,7 +70,7 @@ jobs:
           echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ focal main' \
             > /etc/apt/sources.list.d/kitware.list
 
-      - name: Update image and install pre-reqs
+      - name: Update and install packages
         run: |
           apt-get update -y
           apt-get dist-upgrade -y
@@ -75,6 +80,8 @@ jobs:
                   clang \
                   git \
                   libavahi-compat-libdnssd-dev \
+                  libgtest-dev \
+                  libgmock-dev \
                   libice-dev \
                   libsm-dev \
                   libssl-dev \
@@ -86,6 +93,23 @@ jobs:
                   ninja-build \
                   qtdeclarative5-dev \
                   qttools5-dev
+
+      - if: env.B_BUILD_TYPE == 'Release'
+        name: Install release installer build packages
+        run: |
+          apt-get install -y \
+                  debhelper \
+                  devscripts \
+                  xvfb
+
+      - if: matrix.os != 'ubuntu:20.04'
+        name: Install Qt6 packages
+        run: |
+          apt-get install -y \
+                  qt6-base-dev \
+                  qt6-l10n-tools \
+                  qt6-tools-dev-tools \
+                  qt6-tools-dev
 
       - if: matrix.wayland
         name: Install libei and libportal pre-reqs
@@ -149,7 +173,8 @@ jobs:
             meson setup --prefix=/usr -Dbackend-gtk3=enabled -Ddocs=false libportal _libportal_builddir
             ninja -C _libportal_builddir install
 
-      - name: Configure the build
+      - name: Run build
+        if: env.B_BUILD_TYPE != 'Release'
         run: |
           cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build \
                 -DQT_DEFAULT_MAJOR_VERSION=5 \
@@ -157,30 +182,45 @@ jobs:
                 -DCMAKE_CXX_FLAGS_DEBUG:STRING="-g -Werror" \
                 -DINPUTLEAP_BUILD_LIBEI:BOOL=${{ matrix.wayland }} \
                 -DCMAKE_INSTALL_PREFIX=input-leap-${{ matrix.name }}
+          cmake --build build --parallel --target install
         env:
             VERBOSE: 1
             CC: ${{ matrix.cc }}
             CXX: ${{ matrix.cxx }}
 
-      - name: Run the build
-        run: |
-          cmake --build build --parallel --target install
-        env:
-            VERBOSE: 1
-
-      # Finally, test step!
       - name: Run the tests
+        if: env.B_BUILD_TYPE != 'Release'
         run: |
             ctest --test-dir build --verbose
 
       - name: Create Artifacts
+        if: env.B_BUILD_TYPE != 'Release'
         run: tar -cf input-leap-${{matrix.name}}.tar.gz input-leap-${{matrix.name}}
 
       - name: Upload Artifacts
+        if: env.B_BUILD_TYPE != 'Release'
         uses: actions/upload-artifact@v4
         with:
           name: input-leap-${{matrix.name}}
           path: input-leap-${{matrix.name}}.tar.gz
+          if-no-files-found: error
+
+      - name: Build Debian package
+        if: env.B_BUILD_TYPE == 'Release'
+        run: |
+          cd input-leap
+          cp -r dist/debian debian
+          if [ "${{ matrix.name }}" = "ubuntu-20-04" ]; then
+            sed -i -e 's/QT_DEFAULT_MAJOR_VERSION=6/QT_DEFAULT_MAJOR_VERSION=5/g' debian/rules
+          fi
+          debuild -us -uc
+
+      - name: Upload Artifacts
+        if: env.B_BUILD_TYPE == 'Release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: input-leap-deb-${{matrix.name}}
+          path: input-leap_*.deb
           if-no-files-found: error
 
   linux-rpm:
@@ -383,14 +423,14 @@ jobs:
           cache-key-prefix: windows-${{matrix.os}}-Qt${{matrix.qt-version}}
 
       - name: Configure build system
-        # NB. use cmd here to set variables from VsDevCmd.bat
-        shell: cmd
         run: |
-          call "%VS_PATH%\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=amd64
+          New-Item -Force -ItemType Directory -Path .\build | Out-Null
 
-          cmake -S input-leap -B build -G "%CMAKE_GEN%" -A x64 -D CMAKE_BUILD_TYPE=%B_BUILD_TYPE% ^
-            -DQT_DEFAULT_MAJOR_VERSION=${{matrix.qt-major}} ^
-            -DDNSSD_LIB="%BONJOUR_SDK_HOME%\Lib\x64\dnssd.lib" -D CMAKE_INSTALL_PREFIX=input-leap-install
+          cd build
+
+          cmake -S ..\input-leap -G "$env:CMAKE_GEN" -A x64 -D CMAKE_BUILD_TYPE=$B_BUILD_TYPE `
+            -DQT_DEFAULT_MAJOR_VERSION=${{matrix.qt-major}} `
+            -DDNSSD_LIB="$env:BONJOUR_SDK_HOME\Lib\x64\dnssd.lib" -D CMAKE_INSTALL_PREFIX=input-leap-install
         env:
           VS_PATH: ${{ matrix.os == 'windows-2019' && '%ProgramFiles(x86)%\Microsoft Visual Studio\2019' || '%ProgramFiles%\Microsoft Visual Studio\2022' }}
           CMAKE_GEN: ${{ matrix.os == 'windows-2019' && 'Visual Studio 16 2019' || 'Visual Studio 17 2022' }}
@@ -401,7 +441,7 @@ jobs:
           cmake --build build --config $env:B_BUILD_TYPE --target install
 
       - name: Create Archive
-        run: Compress-Archive -Path input-leap-install\* -DestinationPath ${{ env.B_BUILD_TYPE }}.zip
+        run: Compress-Archive -Path build\input-leap-install\* -DestinationPath ${{ env.B_BUILD_TYPE }}.zip
 
       - uses: actions/upload-artifact@v4
         with:
@@ -480,3 +520,11 @@ jobs:
           bundle: input-leap.flatpak
           manifest-path: dist/flatpak/io.github.input_leap.InputLeap.yml
           cache-key: flatpak-builder-${{ github.sha }}
+          upload-artifact: false
+
+      - uses: actions/upload-artifact@v4
+        if: env.B_BUILD_TYPE == 'Release'
+        with:
+          name: input-leap-flatpak-x86_64
+          path: input-leap.flatpak
+          if-no-files-found: error

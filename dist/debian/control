@@ -1,7 +1,9 @@
 Source: input-leap
 Section: utils
 Priority: optional
-Standards-Version: 3.9.7
+Build-Depends:
+ debhelper-compat (=12)
+Standards-Version: 4.4.0
 Homepage: https://github.com/input-leap/input-leap
 Maintainer: Povilas Kanapickas <povilas@radix.lt>
 

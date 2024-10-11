@@ -16,6 +16,8 @@ else ifeq (,$(filter amd64 i386,$(DEB_HOST_ARCH)))
 	CONFIGURE_FLAGS += -DINPUTLEAP_BUILD_TESTS=no
 endif
 
+CONFIGURE_FLAGS += -DINPUTLEAP_BUILD_LIBEI=0
+
 %:
 	dh $@ --builddirectory=builddir
 

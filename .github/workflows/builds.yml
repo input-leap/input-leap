@@ -42,6 +42,10 @@ jobs:
            os: "ubuntu:24.04"
            cc: "gcc"
            cxx: "g++"
+         - name: ubuntu-24-10
+           os: "ubuntu:24.10"
+           cc: "gcc"
+           cxx: "g++"
          - name: debian-12
            os: "debian:bookworm"
            cc: "gcc"

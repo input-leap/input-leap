@@ -63,6 +63,7 @@ jobs:
                   git \
                   libavahi-compat-libdnssd-dev \
                   libgtest-dev \
+                  libgl-dev \
                   libgmock-dev \
                   libice-dev \
                   libsm-dev \

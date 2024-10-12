@@ -428,12 +428,7 @@ void MainWindow::appendLogError(const QString& text)
 
 void MainWindow::appendLogRaw(const QString& text)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    const auto lines = text.split(QRegularExpression("\r|\n|\r\n"));
-#else
-    const auto lines = text.split(QRegExp("\r|\n|\r\n"));
-#endif
-    for (const auto& line : lines) {
+    for (const auto& line : text.split(QRegularExpression("\r|\n|\r\n"))) {
         if (!line.isEmpty()) {
             m_pLogWindow->appendRaw(line);
             updateFromLogLine(line);
@@ -472,7 +467,6 @@ void MainWindow::checkConnected(const QString& line)
 
 void MainWindow::checkFingerprint(const QString& line)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     QRegularExpression fingerprintRegex("peer fingerprint \\(SHA1\\): ([A-F0-9:]+) \\(SHA256\\): ([A-F0-9:]+)$");
     QRegularExpressionMatch match = fingerprintRegex.match(line);
     if (!match.hasMatch()) {
@@ -481,15 +475,6 @@ void MainWindow::checkFingerprint(const QString& line)
 
     auto match1 = match.captured(1).toStdString();
     auto match2 = match.captured(2).toStdString();
-#else
-    QRegExp fingerprintRegex(".*peer fingerprint \\(SHA1\\): ([A-F0-9:]+) \\(SHA256\\): ([A-F0-9:]+)");
-    if (!fingerprintRegex.exactMatch(line)) {
-        return;
-    }
-
-    auto match1 = fingerprintRegex.cap(1).toStdString();
-    auto match2 = fingerprintRegex.cap(2).toStdString();
-#endif
 
     inputleap::FingerprintData fingerprint_sha1 = {
         inputleap::fingerprint_type_to_string(inputleap::FingerprintType::SHA1),
@@ -1308,11 +1293,7 @@ void MainWindow::downloadBonjour()
         m_DownloadMessageBox->setWindowTitle("InputLeap");
         m_DownloadMessageBox->setIcon(QMessageBox::Information);
         m_DownloadMessageBox->setText("Installing Bonjour, please wait...");
-#if QT_VERSION_MAJOR < 6
-        m_DownloadMessageBox->setStandardButtons(0);
-#else
-        m_DownloadMessageBox->setStandardButtons(QMessageBox::NoButton);
-#endif
+        m_DownloadMessageBox->setStandardButtons(QMessageBox::NoButton);        
         m_pCancelButton = m_DownloadMessageBox->addButton(
             tr("Cancel"), QMessageBox::RejectRole);
     }

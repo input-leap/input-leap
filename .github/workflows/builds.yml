@@ -172,6 +172,7 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build -G Ninja \
                 -DCMAKE_CXX_FLAGS:STRING="-Wall -Wextra -Wno-unused-parameter" \
                 -DCMAKE_CXX_FLAGS_DEBUG:STRING="-g -Werror" \
+                -DCMAKE_UNITY_BUILD=1 \
                 -DINPUTLEAP_BUILD_LIBEI:BOOL=${{ (matrix.wayland != 'none') && '1' || '0' }} \
                 -DCMAKE_INSTALL_PREFIX=input-leap-${{ matrix.name }}
           cmake --build build --parallel --target install
@@ -246,7 +247,7 @@ jobs:
 
       - name: prep tree
         run: |
-          cmake -S input-leap -GNinja -B build -DINPUTLEAP_USE_EXTERNAL_GTEST=True
+          cmake -S input-leap -GNinja -B build -DCMAKE_UNITY_BUILD=1 -DINPUTLEAP_USE_EXTERNAL_GTEST=True
           ninja -C build package_source
 
       - name: create target directory
@@ -344,7 +345,9 @@ jobs:
 
       - name: Setup the build
         run: |
-          cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build -G Ninja -DOpenSSL_ROOT=${{env.OpenSSL_Install_Path}} \
+          cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build -G Ninja \
+                -DCMAKE_UNITY_BUILD=1 \
+                -DOpenSSL_ROOT=${{env.OpenSSL_Install_Path}} \
                 -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk \
                 -DCMAKE_OSX_DEPLOYMENT_TARGET=${{matrix.min-macOS-version}} -DCMAKE_UNITY_BUILD=1 \
                 -DCMAKE_OSX_ARCHITECTURES="${{matrix.arch}}"
@@ -483,7 +486,7 @@ jobs:
           git submodule update --init --recursive
           mkdir build
           cd build
-          cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug -DINPUTLEAP_BUILD_INSTALLER=OFF ..
+          cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_UNITY_BUILD=1 -DINPUTLEAP_BUILD_INSTALLER=OFF ..
           cmake --build . --parallel
 
   flatpak:

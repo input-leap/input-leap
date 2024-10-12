@@ -25,7 +25,7 @@
 #include <QtGui>
 #include <QMessageBox>
 
-static const QRegularExpression ValidScreenName("[a-z0-9\\._-]{,255}",
+static const QRegularExpression ValidScreenName("[a-z0-9\\._-]{0,255}",
                                                 QRegularExpression::CaseInsensitiveOption);
 
 static QString check_name_param(QString name)

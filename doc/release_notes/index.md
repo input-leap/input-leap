@@ -3,6 +3,30 @@ Release notes
 
 [comment]: <> (towncrier release notes start)
 
+InputLeap `3.0.2` ( `2024-10-12` )
+==================================
+
+Bug fixes
+---------
+
+- Fixed broken screen name entry in screen settings dialog.
+- Released deb packages support Wayland on Ubuntu 24.04 and 24.10.
+
+Features
+--------
+
+- Added a Debian package for Ubuntu 24.04 and 24.10 to the set of released packages.
+
+Deprecations and Removals
+-------------------------
+
+- Minimum MacOS version has been increased to 10.15.
+- Packages for Ubuntu 20.04 are no longer distributed.
+
+Please open a Github issue you're still using these versions and can't upgrade.  Depending on
+popular demand removal of old OS support may be reverted.
+
+
 InputLeap `3.0.1` ( `2024-10-10` )
 ==================================
 

@@ -39,6 +39,7 @@ Edit the following files and update the version numbers:
  - `doc/input-leapc.1`
  - `doc/input-leaps.1`
  - `.github/ISSUE_TEMPLATE/bug_report.yml`
+ - `dist/debian/changelog`
 
 Commit to the release branch with the following message `InputLeap x.y.z`.
 

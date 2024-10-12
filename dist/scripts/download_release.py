@@ -78,10 +78,6 @@ def main():
             "InputLeap-.*-release.dmg",
             f"InputLeap_{version}_macos_x86_64.dmg",
         ),
-        "windows-installer-Windows Qt5": (
-            "InputLeapSetup-.*-release.exe",
-            f"InputLeap_{version}_windows_qt5.exe",
-        ),
         "windows-installer-Windows": (
             "InputLeapSetup-.*-release.exe",
             f"InputLeap_{version}_windows_qt6.exe",

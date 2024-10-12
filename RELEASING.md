@@ -43,23 +43,15 @@ Edit the following files and update the version numbers:
 
 Commit to the release branch with the following message `InputLeap x.y.z`.
 
-Push the commit:
-
-    git push origin master
-
-Step 5: Push git tag
---------------------
-
 Create a tag:
 
     git tag -s v${VERSION} -m v${VERSION}
 
-Push the tag:
+Push the commit:
 
-    git push v${VERSION}
+    git push origin master v${VERSION}
 
-
-Step 6: Draft a new release on Github
+Step 5: Draft a new release on Github
 -------------------------------------
 
 Go to https://github.com/input-leap/input-leap/releases and draft a new release.

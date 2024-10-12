@@ -34,18 +34,32 @@ jobs:
            os: "ubuntu:22.04"
            cc: "clang"
            cxx: "clang++"
+           wayland: none
          - name: ubuntu-22-04
            os: "ubuntu:22.04"
            cc: "gcc"
            cxx: "g++"
+           wayland: none
          - name: ubuntu-24-04
            os: "ubuntu:24.04"
            cc: "gcc"
            cxx: "g++"
+           wayland: dist
+         - name: ubuntu-24-10
+           os: "ubuntu:24.10"
+           cc: "gcc"
+           cxx: "g++"
+           wayland: dist
          - name: debian-12
            os: "debian:bookworm"
            cc: "gcc"
            cxx: "g++"
+           wayland: none
+         - name: debian-12-latest-libei
+           os: "debian:bookworm"
+           cc: "gcc"
+           cxx: "g++"
+           wayland: latest
     steps:
 
       - name: Update and install packages
@@ -59,6 +73,7 @@ jobs:
                   git \
                   libavahi-compat-libdnssd-dev \
                   libgtest-dev \
+                  libgl-dev \
                   libgmock-dev \
                   libice-dev \
                   libsm-dev \
@@ -82,7 +97,8 @@ jobs:
                   devscripts \
                   xvfb
 
-      - name: Install libei and libportal pre-reqs
+      - if: matrix.wayland == 'latest'
+        name: Install libei and libportal pre-reqs
         run: |
           apt-get install -y \
                   ca-certificates \
@@ -105,6 +121,13 @@ jobs:
                   python3-jinja2 \
                   valac
 
+      - if: matrix.wayland == 'dist'
+        name: Install libei and libportal distribution packages
+        run: |
+          apt-get install -y \
+                libei-dev \
+                libportal-dev
+
       # Code checkout steps
       - name: Checkout input-leap
         uses: actions/checkout@v4
@@ -113,7 +136,8 @@ jobs:
           submodules: recursive
           set-safe-directory: ${{ github.workspace }}
 
-      - name: Get libei v1.3.0 from freedesktop
+      - if: matrix.wayland == 'latest'
+        name: Get libei v1.3.0 from freedesktop
         # Manual checkout of libinput/libei ref 1.3.0 from https://gitlab.freedesktop.org
         # because actions/checkout does not support gitlab
         run: |
@@ -122,19 +146,22 @@ jobs:
         env:
           ref: 1.3.0
 
-      - name: Get libportal from upstream
+      - if: matrix.wayland == 'latest'
+        name: Get libportal from upstream
         uses: actions/checkout@v4
         with:
           repository: flatpak/libportal
           ref: main
           path: libportal
 
-      - name: build libei from git tag
+      - if: matrix.wayland == 'latest'
+        name: build libei from git tag
         run: |
             meson setup -Dprefix=/usr -Dtests=disabled -Dliboeffis=disabled -Ddocumentation=[] libei _libei_builddir
             ninja -C _libei_builddir install
 
-      - name: build libportal
+      - if: matrix.wayland == 'latest'
+        name: build libportal
         run: |
             meson setup --prefix=/usr -Dbackend-gtk3=enabled -Ddocs=false libportal _libportal_builddir
             ninja -C _libportal_builddir install
@@ -145,7 +172,7 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build -G Ninja \
                 -DCMAKE_CXX_FLAGS:STRING="-Wall -Wextra -Wno-unused-parameter" \
                 -DCMAKE_CXX_FLAGS_DEBUG:STRING="-g -Werror" \
-                -DINPUTLEAP_BUILD_LIBEI:BOOL=1 \
+                -DINPUTLEAP_BUILD_LIBEI:BOOL=${{ (matrix.wayland != 'none') && '1' || '0' }} \
                 -DCMAKE_INSTALL_PREFIX=input-leap-${{ matrix.name }}
           cmake --build build --parallel --target install
         env:
@@ -175,6 +202,9 @@ jobs:
         run: |
           cd input-leap
           cp -r dist/debian debian
+          if [ "${{ matrix.wayland }}" = "dist" ]; then
+            sed -i -e 's/-DINPUTLEAP_BUILD_LIBEI=0/-DINPUTLEAP_BUILD_LIBEI=1/g' debian/rules
+          fi
           debuild -us -uc
 
       - name: Upload Artifacts

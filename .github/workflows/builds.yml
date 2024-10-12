@@ -229,7 +229,7 @@ jobs:
 
     steps:
       - name: Install extra build dependencies
-        run: ${{ matrix.installer }} git rpm-build
+        run: ${{ matrix.installer }} git rpm-build ninja-build
 
       # submodules require git to be installed
       - name: Check out repository
@@ -246,8 +246,8 @@ jobs:
 
       - name: prep tree
         run: |
-          cmake -S input-leap -B build -DINPUTLEAP_USE_EXTERNAL_GTEST=True
-          make -C build package_source
+          cmake -S input-leap -GNinja -B build -DINPUTLEAP_USE_EXTERNAL_GTEST=True
+          ninja -C build package_source
 
       - name: create target directory
         run: mkdir rpms

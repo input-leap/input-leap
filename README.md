@@ -38,8 +38,7 @@ solve the issues we had with Synergy and then share these fixes with other
 users.
 
 Compatibility. We use more than one operating system and you probably do, too.
-Windows, macOS, Linux, FreeBSD... Input Leap should "just work". We will also
-have our eye on Wayland when the time comes.
+Windows, macOS, Linux, FreeBSD... Input Leap should "just work".
 
 Communication. Everything we do is in the open. Our issue tracker will let you
 see if others are having the same problem you're having and will allow you to

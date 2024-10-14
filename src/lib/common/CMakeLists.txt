@@ -34,6 +34,14 @@ endif()
 
 add_library(common STATIC ${sources})
 
+include(FetchContent)
+FetchContent_Declare(cmake_git_version_tracking
+        GIT_REPOSITORY https://github.com/andrew-hardin/cmake-git-version-tracking.git
+        GIT_TAG 9b5fc5088b4089ff2adc20d607976b9923e3d737
+)
+FetchContent_MakeAvailable(cmake_git_version_tracking)
+target_link_libraries(common cmake_git_version_tracking)
+
 if (HAVE_GETPWUID_R)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHAVE_GETPWUID_R=1")
 endif()

@@ -22,7 +22,6 @@
 #include "inputleap/KeyMap.h"
 #include "inputleap/key_types.h"
 #include "net/XSocket.h"
-#include "base/IEventQueue.h"
 
 #include <cstdlib>
 
@@ -30,10 +29,8 @@ namespace inputleap {
 
 using namespace inputleap::string;
 
-Config::Config(IEventQueue* events) :
-	m_inputFilter(events),
-	m_hasLockToScreenAction(false),
-	m_events(events)
+Config::Config() :
+    m_hasLockToScreenAction(false)
 {
 	// do nothing
 }
@@ -568,7 +565,7 @@ Config::operator==(const Config& x) const
 	}
 
 	// compare input filters
-	if (m_inputFilter != x.m_inputFilter) {
+    if (!are_rules_equal(input_filter_rules_, x.input_filter_rules_)) {
 		return false;
 	}
 
@@ -584,7 +581,7 @@ Config::operator!=(const Config& x) const
 void
 Config::read(ConfigReadContext& context)
 {
-	Config tmp(m_events);
+    Config tmp;
 	while (context.getStream()) {
 		tmp.readSection(context);
 	}
@@ -599,12 +596,6 @@ Config::dirName(EDirection dir)
 	assert(dir >= kFirstDirection && dir <= kLastDirection);
 
 	return s_name[dir - kFirstDirection];
-}
-
-InputFilter*
-Config::getInputFilter()
-{
-	return &m_inputFilter;
 }
 
 std::string Config::formatInterval(const Interval& x)
@@ -782,8 +773,7 @@ Config::readSectionOptions(ConfigReadContext& s)
 				}
 			}
 
-			// add rule
-			m_inputFilter.addFilterRule(rule);
+            input_filter_rules_.push_back(rule);
 		}
 	}
 	throw XConfigRead(s, "unexpected end of options section");
@@ -1026,7 +1016,7 @@ InputFilter::Condition* Config::parseCondition(ConfigReadContext& s, const std::
 
         IPlatformScreen::KeyInfo keyInfo = s.parseKeystroke(args[0]);
 
-		return new InputFilter::KeystrokeCondition(m_events, keyInfo);
+        return new InputFilter::KeystrokeCondition(keyInfo);
 	}
 
 	if (name == "mousebutton") {
@@ -1034,7 +1024,7 @@ InputFilter::Condition* Config::parseCondition(ConfigReadContext& s, const std::
 			throw XConfigRead(s, "syntax for condition: mousebutton(modifiers+button)");
 		}
 
-        return new InputFilter::MouseButtonCondition(m_events, s.parseMouse(args[0]));
+        return new InputFilter::MouseButtonCondition(s.parseMouse(args[0]));
 	}
 
 	if (name == "connect") {
@@ -1050,7 +1040,7 @@ InputFilter::Condition* Config::parseCondition(ConfigReadContext& s, const std::
 			throw XConfigRead(s, "unknown screen name \"%{1}\" in connect", screen);
 		}
 
-		return new InputFilter::ScreenConnectedCondition(m_events, screen);
+        return new InputFilter::ScreenConnectedCondition(screen);
 	}
 
 	throw XConfigRead(s, "unknown argument \"%{1}\"", name);
@@ -1078,16 +1068,16 @@ void Config::parseAction(ConfigReadContext& s, const std::string& name,
 		}
 
 		if (name == "keystroke") {
-            action = new InputFilter::KeystrokeAction(m_events, keyInfo, true);
+            action = new InputFilter::KeystrokeAction(keyInfo, true);
 			rule.adoptAction(action, true);
-			action   = new InputFilter::KeystrokeAction(m_events, keyInfo, false);
+            action   = new InputFilter::KeystrokeAction(keyInfo, false);
 			activate = false;
 		}
 		else if (name == "keyDown") {
-			action = new InputFilter::KeystrokeAction(m_events, keyInfo, true);
+            action = new InputFilter::KeystrokeAction(keyInfo, true);
 		}
 		else {
-			action = new InputFilter::KeystrokeAction(m_events, keyInfo, false);
+            action = new InputFilter::KeystrokeAction(keyInfo, false);
 		}
 	}
 
@@ -1100,16 +1090,16 @@ void Config::parseAction(ConfigReadContext& s, const std::string& name,
         auto mouseInfo = s.parseMouse(args[0]);
 
 		if (name == "mousebutton") {
-            action = new InputFilter::MouseButtonAction(m_events, mouseInfo, true);
+            action = new InputFilter::MouseButtonAction(mouseInfo, true);
 			rule.adoptAction(action, true);
-			action   = new InputFilter::MouseButtonAction(m_events, mouseInfo, false);
+            action   = new InputFilter::MouseButtonAction(mouseInfo, false);
 			activate = false;
 		}
 		else if (name == "mouseDown") {
-			action = new InputFilter::MouseButtonAction(m_events, mouseInfo, true);
+            action = new InputFilter::MouseButtonAction(mouseInfo, true);
 		}
 		else {
-			action = new InputFilter::MouseButtonAction(m_events, mouseInfo, false);
+            action = new InputFilter::MouseButtonAction(mouseInfo, false);
 		}
 	}
 
@@ -1138,11 +1128,11 @@ void Config::parseAction(ConfigReadContext& s, const std::string& name,
 			throw XConfigRead(s, "unknown screen name in switchToScreen");
 		}
 
-		action = new InputFilter::SwitchToScreenAction(m_events, screen);
+        action = new InputFilter::SwitchToScreenAction(screen);
 	}
 
   else if (name == "toggleScreen") {
-    action = new InputFilter::ToggleScreenAction(m_events);
+    action = new InputFilter::ToggleScreenAction();
   }
 
 	else if (name == "switchInDirection") {
@@ -1167,7 +1157,7 @@ void Config::parseAction(ConfigReadContext& s, const std::string& name,
 			throw XConfigRead(s, "unknown direction \"%{1}\" in switchToScreen", args[0]);
 		}
 
-		action = new InputFilter::SwitchInDirectionAction(m_events, direction);
+        action = new InputFilter::SwitchInDirectionAction(direction);
 	}
 
 	else if (name == "lockCursorToScreen") {
@@ -1196,7 +1186,7 @@ void Config::parseAction(ConfigReadContext& s, const std::string& name,
 			m_hasLockToScreenAction = true;
 		}
 
-		action = new InputFilter::LockCursorToScreenAction(m_events, mode);
+        action = new InputFilter::LockCursorToScreenAction(mode);
 	}
 
 	else if (name == "keyboardBroadcast") {
@@ -1226,7 +1216,7 @@ void Config::parseAction(ConfigReadContext& s, const std::string& name,
 			parseScreens(s, args[1], screens);
 		}
 
-		action = new InputFilter::KeyboardBroadcastAction(m_events, mode, screens);
+        action = new InputFilter::KeyboardBroadcastAction(mode, screens);
 	}
 
 	else {
@@ -1808,7 +1798,7 @@ operator<<(std::ostream& s, const Config& config)
 		s << "\taddress = " <<
             config.listen_address_.getHostname().c_str() << "\n";
 	}
-	s << config.m_inputFilter.format("\t");
+    s << format_rules(config.input_filter_rules_, "\t");
     s << "end\n";
 
 	return s;

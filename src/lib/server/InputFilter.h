@@ -60,8 +60,8 @@ public:
     // KeystrokeCondition
     class KeystrokeCondition : public Condition {
     public:
-        KeystrokeCondition(IEventQueue* events, const IPlatformScreen::KeyInfo& info);
-        KeystrokeCondition(IEventQueue* events, KeyID key, KeyModifierMask mask);
+        KeystrokeCondition(const IPlatformScreen::KeyInfo& info);
+        KeystrokeCondition(KeyID key, KeyModifierMask mask);
         ~KeystrokeCondition() override;
 
         KeyID getKey() const;
@@ -78,14 +78,13 @@ public:
         std::uint32_t m_id;
         KeyID m_key;
         KeyModifierMask m_mask;
-        IEventQueue* m_events;
     };
 
     // MouseButtonCondition
     class MouseButtonCondition : public Condition {
     public:
-        MouseButtonCondition(IEventQueue* events, const IPlatformScreen::ButtonInfo& info);
-        MouseButtonCondition(IEventQueue* events, ButtonID, KeyModifierMask mask);
+        MouseButtonCondition(const IPlatformScreen::ButtonInfo& info);
+        MouseButtonCondition(ButtonID, KeyModifierMask mask);
         ~MouseButtonCondition() override;
 
         ButtonID getButton() const;
@@ -99,13 +98,12 @@ public:
     private:
         ButtonID m_button;
         KeyModifierMask m_mask;
-        IEventQueue* m_events;
     };
 
     // ScreenConnectedCondition
     class ScreenConnectedCondition : public Condition {
     public:
-        ScreenConnectedCondition(IEventQueue* events, const std::string& screen);
+        ScreenConnectedCondition(const std::string& screen);
         ~ScreenConnectedCondition() override;
 
         // Condition overrides
@@ -115,7 +113,6 @@ public:
 
     private:
         std::string m_screen;
-        IEventQueue* m_events;
     };
 
     // -------------------------------------------------------------------------
@@ -130,7 +127,7 @@ public:
         virtual Action* clone() const = 0;
         virtual std::string format() const = 0;
 
-        virtual void perform(const Event&) = 0;
+        virtual void perform(IEventQueue* queue, const Event& event) = 0;
     };
 
     // LockCursorToScreenAction
@@ -138,66 +135,58 @@ public:
     public:
         enum Mode { kOff, kOn, kToggle };
 
-        LockCursorToScreenAction(IEventQueue* events, Mode = kToggle);
+        LockCursorToScreenAction(Mode = kToggle);
 
         Mode getMode() const;
 
         // Action overrides
         Action* clone() const override;
         std::string format() const override;
-        void perform(const Event&) override;
+        void perform(IEventQueue* queue, const Event& event) override;
 
     private:
         Mode m_mode;
-        IEventQueue* m_events;
     };
 
     // SwitchToScreenAction
     class SwitchToScreenAction : public Action {
     public:
-        SwitchToScreenAction(IEventQueue* events, const std::string& screen);
+        SwitchToScreenAction(const std::string& screen);
 
         std::string getScreen() const;
 
         // Action overrides
         Action* clone() const override;
         std::string format() const override;
-        void perform(const Event&) override;
+        void perform(IEventQueue* queue, const Event& event) override;
 
     private:
         std::string m_screen;
-        IEventQueue* m_events;
     };
 
     // ToggleScreenAction
     class ToggleScreenAction : public Action {
     public:
-        ToggleScreenAction(IEventQueue* events);
-
         // Action overrides
         Action* clone() const override;
         std::string format() const override;
-        void perform(const Event&) override;
-
-    private:
-        IEventQueue* m_events;
+        void perform(IEventQueue* queue, const Event&) override;
     };
 
     // SwitchInDirectionAction
     class SwitchInDirectionAction : public Action {
     public:
-        SwitchInDirectionAction(IEventQueue* events, EDirection);
+        SwitchInDirectionAction(EDirection);
 
         EDirection getDirection() const;
 
         // Action overrides
         Action* clone() const override;
         std::string format() const override;
-        void perform(const Event&) override;
+        void perform(IEventQueue* queue, const Event&) override;
 
     private:
         EDirection m_direction;
-        IEventQueue* m_events;
     };
 
     // KeyboardBroadcastAction
@@ -205,8 +194,8 @@ public:
     public:
         enum Mode { kOff, kOn, kToggle };
 
-        KeyboardBroadcastAction(IEventQueue* events, Mode = kToggle);
-        KeyboardBroadcastAction(IEventQueue* events, Mode, const std::set<std::string>& screens);
+        KeyboardBroadcastAction(Mode = kToggle);
+        KeyboardBroadcastAction(Mode, const std::set<std::string>& screens);
 
         Mode getMode() const;
         std::set<std::string> getScreens() const;
@@ -214,18 +203,17 @@ public:
         // Action overrides
         Action* clone() const override;
         std::string format() const override;
-        void perform(const Event&) override;
+        void perform(IEventQueue* queue, const Event&) override;
 
     private:
         Mode m_mode;
         std::string m_screens;
-        IEventQueue* m_events;
     };
 
     // KeystrokeAction
     class KeystrokeAction : public Action {
     public:
-        KeystrokeAction(IEventQueue* events, const IPlatformScreen::KeyInfo& info, bool press);
+        KeystrokeAction(const IPlatformScreen::KeyInfo& info, bool press);
         ~KeystrokeAction();
 
         void set_info(const IPlatformScreen::KeyInfo& info) { info_ = info; }
@@ -235,7 +223,7 @@ public:
         // Action overrides
         Action* clone() const override;
         std::string format() const override;
-        void perform(const Event&) override;
+        void perform(IEventQueue* queue, const Event& event) override;
 
     protected:
         virtual const char* formatName() const;
@@ -243,13 +231,12 @@ public:
     private:
         IPlatformScreen::KeyInfo info_;
         bool m_press;
-        IEventQueue* m_events;
     };
 
     // MouseButtonAction -- modifier combinations not implemented yet
     class MouseButtonAction : public Action {
     public:
-        MouseButtonAction(IEventQueue* events, const IPlatformScreen::ButtonInfo& info, bool press);
+        MouseButtonAction(const IPlatformScreen::ButtonInfo& info, bool press);
         ~MouseButtonAction();
 
         const IPlatformScreen::ButtonInfo& getInfo() const { return button_info_; }
@@ -258,7 +245,7 @@ public:
         // Action overrides
         Action* clone() const override;
         std::string format() const override;
-        void perform(const Event&) override;
+        void perform(IEventQueue* queue, const Event& event) override;
 
     protected:
         virtual const char* formatName() const;
@@ -266,7 +253,6 @@ public:
     private:
         IPlatformScreen::ButtonInfo button_info_;
         bool m_press;
-        IEventQueue* m_events;
     };
 
     class Rule {
@@ -295,7 +281,7 @@ public:
         void disable(PrimaryClient*);
 
         // event handling
-        bool handleEvent(const Event&);
+        bool handle_event(IEventQueue* queue, const Event&);
 
         // convert rule to a string
         std::string format() const;
@@ -338,27 +324,13 @@ public:
 
     // add rule, adopting the condition and the actions
     void addFilterRule(const Rule& rule);
-
-    // remove a rule
-    void removeFilterRule(std::uint32_t index);
-
-    // get rule by index
-    Rule& getRule(std::uint32_t index);
+    void add_rules(const std::vector<Rule>& rules);
 
     // enable event filtering using the given primary client.  disable
     // if client is nullptr.
     virtual void setPrimaryClient(PrimaryClient* client);
 
-    // convert rules to a string
-    std::string format(const std::string& linePrefix) const;
-
-    // get number of rules
-    std::uint32_t getNumRules() const;
-
-    //! Compare filters
-    bool                operator==(const InputFilter&) const;
-    //! Compare filters
-    bool                operator!=(const InputFilter&) const;
+    const std::vector<Rule>& get_rules() const { return m_ruleList; }
 
 private:
     // event handling
@@ -369,5 +341,11 @@ private:
     PrimaryClient* m_primaryClient;
     IEventQueue* m_events;
 };
+
+std::string format_rules(const std::vector<InputFilter::Rule>& rules,
+                         const std::string& line_prefix);
+
+bool are_rules_equal(const std::vector<InputFilter::Rule>& rules1,
+                     const std::vector<InputFilter::Rule>& rules2);
 
 } // namespace inputleap

@@ -94,7 +94,7 @@ void EventQueue::set_buffer(std::unique_ptr<IEventQueueBuffer> buffer)
 
     // discard old buffer and old events
     buffer_.reset();
-    for (EventTable::iterator i = m_events.begin(); i != m_events.end(); ++i) {
+    for (auto i = m_events.begin(); i != m_events.end(); ++i) {
         Event::deleteData(i->second);
     }
     m_events.clear();
@@ -265,14 +265,13 @@ EventQueue::deleteTimer(EventQueueTimer* timer)
 {
     {
         std::lock_guard<std::mutex> lock(mutex_);
-        for (TimerQueue::iterator index = m_timerQueue.begin();
-                                index != m_timerQueue.end(); ++index) {
+        for (auto index = m_timerQueue.begin(); index != m_timerQueue.end(); ++index) {
             if (index->getTimer() == timer) {
                 m_timerQueue.erase(index);
                 break;
             }
         }
-        Timers::iterator index = m_timers.find(timer);
+        auto index = m_timers.find(timer);
         if (index != m_timers.end()) {
             m_timers.erase(index);
         }
@@ -299,10 +298,10 @@ void EventQueue::remove_handler(EventType type, const EventTarget* target)
     }
 
     std::lock_guard<std::mutex> lock(mutex_);
-    HandlerTable::iterator index = m_handlers.find(target);
+    auto index = m_handlers.find(target);
     if (index != m_handlers.end()) {
         TypeHandlerTable& typeHandlers = index->second;
-        TypeHandlerTable::iterator index2 = typeHandlers.find(type);
+        auto index2 = typeHandlers.find(type);
         if (index2 != typeHandlers.end()) {
             typeHandlers.erase(index2);
         }
@@ -324,7 +323,7 @@ void EventQueue::remove_handlers(const EventTarget* target)
         throw std::invalid_argument("EventTarget sent to wrong EventQueue");
     }
 
-    HandlerTable::iterator index = m_handlers.find(target);
+    auto index = m_handlers.find(target);
     if (index != m_handlers.end()) {
         m_handlers.erase(index);
     }
@@ -335,10 +334,10 @@ std::shared_ptr<EventQueue::EventHandler>
     EventQueue::get_handler(EventType type, const EventTarget* target) const
 {
     std::lock_guard<std::mutex> lock(mutex_);
-    HandlerTable::const_iterator index = m_handlers.find(target);
+    auto index = m_handlers.find(target);
     if (index != m_handlers.end()) {
         const TypeHandlerTable& typeHandlers = index->second;
-        TypeHandlerTable::const_iterator index2 = typeHandlers.find(type);
+        auto index2 = typeHandlers.find(type);
         if (index2 != typeHandlers.end()) {
             return index2->second;
         }
@@ -368,7 +367,7 @@ std::uint32_t EventQueue::save_event(Event&& event)
 Event EventQueue::removeEvent(std::uint32_t eventID)
 {
     // look up id
-    EventTable::iterator index = m_events.find(eventID);
+    auto index = m_events.find(eventID);
     if (index == m_events.end()) {
         return Event();
     }
@@ -398,8 +397,7 @@ EventQueue::hasTimerExpired(Event& event)
     m_time.reset();
 
     // countdown elapsed time
-    for (TimerQueue::iterator index = m_timerQueue.begin();
-                            index != m_timerQueue.end(); ++index) {
+    for (auto index = m_timerQueue.begin(); index != m_timerQueue.end(); ++index) {
         (*index) -= time;
     }
 

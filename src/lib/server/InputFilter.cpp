@@ -648,12 +648,10 @@ void
 InputFilter::Rule::clear()
 {
     delete m_condition;
-    for (ActionList::iterator i = m_activateActions.begin();
-                                i != m_activateActions.end(); ++i) {
+    for (auto i = m_activateActions.begin(); i != m_activateActions.end(); ++i) {
         delete *i;
     }
-    for (ActionList::iterator i = m_deactivateActions.begin();
-                                i != m_deactivateActions.end(); ++i) {
+    for (auto i = m_deactivateActions.begin(); i != m_deactivateActions.end(); ++i) {
         delete *i;
     }
 
@@ -669,12 +667,10 @@ InputFilter::Rule::copy(const Rule& rule)
     if (rule.m_condition != nullptr) {
         m_condition = rule.m_condition->clone();
     }
-    for (ActionList::const_iterator i = rule.m_activateActions.begin();
-                                i != rule.m_activateActions.end(); ++i) {
+    for (auto i = rule.m_activateActions.begin(); i != rule.m_activateActions.end(); ++i) {
         m_activateActions.push_back((*i)->clone());
     }
-    for (ActionList::const_iterator i = rule.m_deactivateActions.begin();
-                                i != rule.m_deactivateActions.end(); ++i) {
+    for (auto i = rule.m_deactivateActions.begin(); i != rule.m_deactivateActions.end(); ++i) {
         m_deactivateActions.push_back((*i)->clone());
     }
 }
@@ -769,8 +765,7 @@ InputFilter::Rule::handleEvent(const Event& event)
     }
 
     // perform actions
-    for (ActionList::const_iterator i = actions->begin();
-                                i != actions->end(); ++i) {
+    for (auto i = actions->begin(); i != actions->end(); ++i) {
         LOG_DEBUG1("hotkey: %s", (*i)->format().c_str());
         (*i)->perform(event);
     }
@@ -787,7 +782,7 @@ std::string InputFilter::Rule::format() const
         s += " = ";
 
         // activate actions
-        ActionList::const_iterator i = m_activateActions.begin();
+        auto i = m_activateActions.begin();
         if (i != m_activateActions.end()) {
             s += (*i)->format();
             while (++i != m_activateActions.end()) {
@@ -908,8 +903,7 @@ InputFilter::setPrimaryClient(PrimaryClient* client)
     }
 
     if (m_primaryClient != nullptr) {
-        for (RuleList::iterator rule  = m_ruleList.begin();
-                                 rule != m_ruleList.end(); ++rule) {
+        for (auto rule  = m_ruleList.begin(); rule != m_ruleList.end(); ++rule) {
             rule->disable(m_primaryClient);
         }
 
@@ -944,8 +938,7 @@ InputFilter::setPrimaryClient(PrimaryClient* client)
         m_events->add_handler(EventType::SERVER_CONNECTED, event_target,
                               [this](const auto& e){ handle_event(e); });
 
-        for (RuleList::iterator rule  = m_ruleList.begin();
-                                 rule != m_ruleList.end(); ++rule) {
+        for (auto rule = m_ruleList.begin(); rule != m_ruleList.end(); ++rule) {
             rule->enable(m_primaryClient);
         }
     }
@@ -954,8 +947,7 @@ InputFilter::setPrimaryClient(PrimaryClient* client)
 std::string InputFilter::format(const std::string& linePrefix) const
 {
     std::string s;
-    for (RuleList::const_iterator i = m_ruleList.begin();
-                                i != m_ruleList.end(); ++i) {
+    for (auto i = m_ruleList.begin(); i != m_ruleList.end(); ++i) {
         s += linePrefix;
         s += i->format();
         s += "\n";
@@ -979,12 +971,10 @@ InputFilter::operator==(const InputFilter& x) const
     // compare rule lists.  the easiest way to do that is to format each
     // rule into a string, sort the strings, then compare the results.
     std::vector<std::string> aList, bList;
-    for (RuleList::const_iterator i = m_ruleList.begin();
-                                i != m_ruleList.end(); ++i) {
+    for (auto i = m_ruleList.begin(); i != m_ruleList.end(); ++i) {
         aList.push_back(i->format());
     }
-    for (RuleList::const_iterator i = x.m_ruleList.begin();
-                                i != x.m_ruleList.end(); ++i) {
+    for (auto i = x.m_ruleList.begin(); i != x.m_ruleList.end(); ++i) {
         bList.push_back(i->format());
     }
     std::partial_sort(aList.begin(), aList.end(), aList.end());
@@ -1005,8 +995,7 @@ void InputFilter::handle_event(const Event& event)
     myEvent.clone_data_from(event);
 
     // let each rule try to match the event until one does
-    for (RuleList::iterator rule  = m_ruleList.begin();
-                             rule != m_ruleList.end(); ++rule) {
+    for (auto rule = m_ruleList.begin(); rule != m_ruleList.end(); ++rule) {
         if (rule->handleEvent(myEvent)) {
             // handled
             return;

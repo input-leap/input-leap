@@ -59,8 +59,7 @@ void AppLocale::addLanguage(const QString& ietfCode, const QString& name)
 void AppLocale::fillLanguageComboBox(QComboBox* comboBox)
 {
     comboBox->blockSignals(true);
-    QVector<AppLocale::Language>::iterator it;
-    for (it = m_Languages.begin(); it != m_Languages.end(); ++it)
+    for (auto it = m_Languages.begin(); it != m_Languages.end(); ++it)
     {
         comboBox->addItem((*it).m_Name, (*it).m_IetfCode);
     }

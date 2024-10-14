@@ -745,8 +745,7 @@ MSWindowsDesks::Desk* MSWindowsDesks::addDesk(const std::string& name, HDESK hde
 void
 MSWindowsDesks::removeDesks()
 {
-    for (Desks::iterator index = m_desks.begin();
-                            index != m_desks.end(); ++index) {
+    for (auto index = m_desks.begin(); index != m_desks.end(); ++index) {
         Desk* desk = index->second;
         PostThreadMessage(desk->m_threadID, WM_QUIT, 0, 0);
         desk->m_thread->wait();
@@ -765,7 +764,7 @@ MSWindowsDesks::checkDesk()
     Desk* desk;
     HDESK hdesk  = openInputDesktop();
     std::string name = getDesktopName(hdesk);
-    Desks::const_iterator index = m_desks.find(name);
+    auto index = m_desks.find(name);
     if (index == m_desks.end()) {
         desk = addDesk(name, hdesk);
         // hold on to hdesk until thread exits so the desk can't

@@ -69,8 +69,7 @@ ClientListener::~ClientListener()
     LOG_DEBUG1("stop listening for clients");
 
     // discard already connected clients
-    for (NewClients::iterator index = m_newClients.begin();
-                                index != m_newClients.end(); ++index) {
+    for (auto index = m_newClients.begin(); index != m_newClients.end(); ++index) {
         ClientProxyUnknown* client = *index;
         m_events->remove_handler(EventType::CLIENT_PROXY_UNKNOWN_SUCCESS, client);
         m_events->remove_handler(EventType::CLIENT_PROXY_UNKNOWN_FAILURE, client);
@@ -192,8 +191,7 @@ void ClientListener::handle_unknown_client(ClientProxyUnknown* unknownClient)
 void ClientListener::handle_client_disconnected(ClientProxy* client)
 {
     // find client in waiting clients queue
-    for (WaitingClients::iterator i = m_waitingClients.begin(),
-                            n = m_waitingClients.end(); i != n; ++i) {
+    for (auto i = m_waitingClients.begin(), n = m_waitingClients.end(); i != n; ++i) {
         if (*i == client) {
             m_waitingClients.erase(i);
             m_events->remove_handler(EventType::CLIENT_PROXY_DISCONNECTED, client);

@@ -64,7 +64,7 @@ bool Config::renameScreen(const std::string& oldName, const std::string& newName
 {
 	// get canonical name and find cell
     std::string oldCanonical = getCanonicalName(oldName);
-	CellMap::iterator index = m_map.find(oldCanonical);
+    auto index = m_map.find(oldCanonical);
 	if (index == m_map.end()) {
 		return false;
 	}
@@ -93,8 +93,7 @@ bool Config::renameScreen(const std::string& oldName, const std::string& newName
 
 	// update alias targets
 	if (CaselessCmp::equal(oldName, oldCanonical)) {
-		for (NameMap::iterator iter = m_nameToCanonicalName.begin();
-							iter != m_nameToCanonicalName.end(); ++iter) {
+        for (auto iter = m_nameToCanonicalName.begin(); iter != m_nameToCanonicalName.end(); ++iter) {
 			if (CaselessCmp::equal(
 							iter->second, oldCanonical)) {
 				iter->second = newName;
@@ -109,7 +108,7 @@ void Config::removeScreen(const std::string& name)
 {
 	// get canonical name and find cell
     std::string canonical = getCanonicalName(name);
-	CellMap::iterator index = m_map.find(canonical);
+    auto index = m_map.find(canonical);
 	if (index == m_map.end()) {
 		return;
 	}
@@ -124,8 +123,7 @@ void Config::removeScreen(const std::string& name)
 	}
 
 	// remove aliases (and canonical name)
-	for (NameMap::iterator iter = m_nameToCanonicalName.begin();
-								iter != m_nameToCanonicalName.end(); ) {
+    for (auto iter = m_nameToCanonicalName.begin(); iter != m_nameToCanonicalName.end(); ) {
 		if (iter->second == canonical) {
 			m_nameToCanonicalName.erase(iter++);
 		}
@@ -168,7 +166,7 @@ bool Config::removeAlias(const std::string& alias)
 	}
 
 	// find alias
-	NameMap::iterator index = m_nameToCanonicalName.find(alias);
+    auto index = m_nameToCanonicalName.find(alias);
 	if (index == m_nameToCanonicalName.end()) {
 		return false;
 	}
@@ -187,8 +185,7 @@ bool Config::removeAliases(const std::string& canonical)
 	}
 
 	// find and removing matching aliases
-	for (NameMap::iterator index = m_nameToCanonicalName.begin();
-							index != m_nameToCanonicalName.end(); ) {
+    for (auto index = m_nameToCanonicalName.begin(); index != m_nameToCanonicalName.end(); ) {
 		if (index->second == canonical && index->first != canonical) {
 			m_nameToCanonicalName.erase(index++);
 		}
@@ -207,8 +204,7 @@ Config::removeAllAliases()
 	m_nameToCanonicalName.clear();
 
 	// put the canonical names back in
-	for (CellMap::iterator index = m_map.begin();
-								index != m_map.end(); ++index) {
+    for (auto index = m_map.begin(); index != m_map.end(); ++index) {
 		m_nameToCanonicalName.insert(
 								std::make_pair(index->first, index->first));
 	}
@@ -221,7 +217,7 @@ bool Config::connect(const std::string& srcName, EDirection srcSide,
 	assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
 
 	// find source cell
-	CellMap::iterator index = m_map.find(getCanonicalName(srcName));
+    auto index = m_map.find(getCanonicalName(srcName));
 	if (index == m_map.end()) {
 		return false;
 	}
@@ -237,7 +233,7 @@ bool Config::disconnect(const std::string& srcName, EDirection srcSide)
 	assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
 
 	// find source cell
-	CellMap::iterator index = m_map.find(srcName);
+    auto index = m_map.find(srcName);
 	if (index == m_map.end()) {
 		return false;
 	}
@@ -253,7 +249,7 @@ bool Config::disconnect(const std::string& srcName, EDirection srcSide, float po
 	assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
 
 	// find source cell
-	CellMap::iterator index = m_map.find(srcName);
+    auto index = m_map.find(srcName);
 	if (index == m_map.end()) {
 		return false;
 	}
@@ -278,7 +274,7 @@ bool Config::addOption(const std::string& name, OptionID option, OptionValue val
 		options = &m_globalOptions;
 	}
 	else {
-		CellMap::iterator index = m_map.find(name);
+        auto index = m_map.find(name);
 		if (index != m_map.end()) {
 			options = &index->second.m_options;
 		}
@@ -300,7 +296,7 @@ bool Config::removeOption(const std::string& name, OptionID option)
 		options = &m_globalOptions;
 	}
 	else {
-		CellMap::iterator index = m_map.find(name);
+        auto index = m_map.find(name);
 		if (index != m_map.end()) {
 			options = &index->second.m_options;
 		}
@@ -322,7 +318,7 @@ bool Config::removeOptions(const std::string& name)
 		options = &m_globalOptions;
 	}
 	else {
-		CellMap::iterator index = m_map.find(name);
+        auto index = m_map.find(name);
 		if (index != m_map.end()) {
 			options = &index->second.m_options;
 		}
@@ -432,7 +428,7 @@ Config::isCanonicalName(const std::string& name) const
 
 std::string Config::getCanonicalName(const std::string& name) const
 {
-	NameMap::const_iterator index = m_nameToCanonicalName.find(name);
+    auto index = m_nameToCanonicalName.find(name);
 	if (index == m_nameToCanonicalName.end()) {
         return std::string();
 	}
@@ -447,7 +443,7 @@ std::string Config::getNeighbor(const std::string& srcName, EDirection srcSide,
 	assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
 
 	// find source cell
-	CellMap::const_iterator index = m_map.find(getCanonicalName(srcName));
+    auto index = m_map.find(getCanonicalName(srcName));
 	if (index == m_map.end()) {
         return std::string();
 	}
@@ -481,7 +477,7 @@ bool Config::hasNeighbor(const std::string& srcName, EDirection srcSide,
 	assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
 
 	// find source cell
-	CellMap::const_iterator index = m_map.find(getCanonicalName(srcName));
+    auto index = m_map.find(getCanonicalName(srcName));
 	if (index == m_map.end()) {
 		return false;
 	}
@@ -491,14 +487,14 @@ bool Config::hasNeighbor(const std::string& srcName, EDirection srcSide,
 
 Config::link_const_iterator Config::beginNeighbor(const std::string& srcName) const
 {
-	CellMap::const_iterator index = m_map.find(getCanonicalName(srcName));
+    auto index = m_map.find(getCanonicalName(srcName));
 	assert(index != m_map.end());
 	return index->second.begin();
 }
 
 Config::link_const_iterator Config::endNeighbor(const std::string& srcName) const
 {
-	CellMap::const_iterator index = m_map.find(getCanonicalName(srcName));
+    auto index = m_map.find(getCanonicalName(srcName));
 	assert(index != m_map.end());
 	return index->second.end();
 }
@@ -516,7 +512,7 @@ const Config::ScreenOptions* Config::getOptions(const std::string& name) const
 		options = &m_globalOptions;
 	}
 	else {
-		CellMap::const_iterator index = m_map.find(name);
+        auto index = m_map.find(name);
 		if (index != m_map.end()) {
 			options = &index->second.m_options;
 		}
@@ -550,9 +546,8 @@ Config::operator==(const Config& x) const
 		return false;
 	}
 
-	for (CellMap::const_iterator index1 = m_map.begin(),
-								index2 = x.m_map.begin();
-								index1 != m_map.end(); ++index1, ++index2) {
+    for (auto index1 = m_map.begin(), index2 = x.m_map.begin();
+         index1 != m_map.end(); ++index1, ++index2) {
 		// compare names
 		if (!CaselessCmp::equal(index1->first, index2->first)) {
 			return false;
@@ -564,10 +559,8 @@ Config::operator==(const Config& x) const
 		}
 	}
 
-	for (NameMap::const_iterator index1 = m_nameToCanonicalName.begin(),
-								index2 = x.m_nameToCanonicalName.begin();
-								index1 != m_nameToCanonicalName.end();
-								++index1, ++index2) {
+    for (auto index1 = m_nameToCanonicalName.begin(), index2 = x.m_nameToCanonicalName.begin();
+         index1 != m_nameToCanonicalName.end(); ++index1, ++index2) {
 		if (!CaselessCmp::equal(index1->first,  index2->first) ||
 			!CaselessCmp::equal(index1->second, index2->second)) {
 			return false;
@@ -1592,8 +1585,7 @@ Config::Cell::add(const CellEdge& src, const CellEdge& dst)
 void
 Config::Cell::remove(EDirection side)
 {
-	for (EdgeLinks::iterator j = m_neighbors.begin();
-							j != m_neighbors.end(); ) {
+    for (auto j = m_neighbors.begin(); j != m_neighbors.end(); ) {
 		if (j->first.getSide() == side) {
 			m_neighbors.erase(j++);
 		}
@@ -1606,8 +1598,7 @@ Config::Cell::remove(EDirection side)
 void
 Config::Cell::remove(EDirection side, float position)
 {
-	for (EdgeLinks::iterator j = m_neighbors.begin();
-							j != m_neighbors.end(); ++j) {
+    for (auto j = m_neighbors.begin(); j != m_neighbors.end(); ++j) {
 		if (j->first.getSide() == side && j->first.isInside(position)) {
 			m_neighbors.erase(j);
 			break;
@@ -1617,8 +1608,7 @@ Config::Cell::remove(EDirection side, float position)
 void
 Config::Cell::remove(const Name& name)
 {
-	for (EdgeLinks::iterator j = m_neighbors.begin();
-							j != m_neighbors.end(); ) {
+    for (auto j = m_neighbors.begin(); j != m_neighbors.end(); ) {
 		if (name == j->second.getName()) {
 			m_neighbors.erase(j++);
 		}
@@ -1630,8 +1620,7 @@ Config::Cell::remove(const Name& name)
 
 void Config::Cell::rename(const Name& oldName, const std::string& newName)
 {
-	for (EdgeLinks::iterator j = m_neighbors.begin();
-							j != m_neighbors.end(); ++j) {
+    for (auto j = m_neighbors.begin(); j != m_neighbors.end(); ++j) {
 		if (oldName == j->second.getName()) {
 			j->second.setName(newName);
 		}
@@ -1641,14 +1630,14 @@ void Config::Cell::rename(const Name& oldName, const std::string& newName)
 bool
 Config::Cell::hasEdge(const CellEdge& edge) const
 {
-	EdgeLinks::const_iterator i = m_neighbors.find(edge);
+    auto i = m_neighbors.find(edge);
 	return (i != m_neighbors.end() && i->first == edge);
 }
 
 bool
 Config::Cell::overlaps(const CellEdge& edge) const
 {
-	EdgeLinks::const_iterator i = m_neighbors.upper_bound(edge);
+    auto i = m_neighbors.upper_bound(edge);
 	if (i != m_neighbors.end() && i->first.overlaps(edge)) {
 		return true;
 	}
@@ -1663,7 +1652,7 @@ Config::Cell::getLink(EDirection side, float position,
 				const CellEdge*& src, const CellEdge*& dst) const
 {
 	CellEdge edge(side, position);
-	EdgeLinks::const_iterator i = m_neighbors.upper_bound(edge);
+    auto i = m_neighbors.upper_bound(edge);
 	if (i == m_neighbors.begin()) {
 		return false;
 	}
@@ -1688,10 +1677,8 @@ Config::Cell::operator==(const Cell& x) const
 	if (m_neighbors.size() != x.m_neighbors.size()) {
 		return false;
 	}
-	for (EdgeLinks::const_iterator index1 = m_neighbors.begin(),
-								index2 = x.m_neighbors.begin();
-								index1 != m_neighbors.end();
-								++index1, ++index2) {
+    for (auto index1 = m_neighbors.begin(), index2 = x.m_neighbors.begin();
+         index1 != m_neighbors.end(); ++index1, ++index2) {
 		if (index1->first != index2->first) {
 			return false;
 		}
@@ -1745,14 +1732,11 @@ operator<<(std::ostream& s, const Config& config)
 {
 	// screens section
     s << "section: screens\n";
-	for (Config::const_iterator screen = config.begin();
-								screen != config.end(); ++screen) {
+    for (auto screen = config.begin(); screen != config.end(); ++screen) {
         s << "\t" << screen->c_str() << ":\n";
 		const Config::ScreenOptions* options = config.getOptions(*screen);
 		if (options != nullptr && options->size() > 0) {
-			for (Config::ScreenOptions::const_iterator
-								option  = options->begin();
-								option != options->end(); ++option) {
+            for (auto option = options->begin(); option != options->end(); ++option) {
 				const char* name = Config::getOptionName(option->first);
                 std::string value = Config::getOptionValue(option->first, option->second);
 				if (name != nullptr && !value.empty()) {
@@ -1766,13 +1750,11 @@ operator<<(std::ostream& s, const Config& config)
 	// links section
     std::string neighbor;
     s << "section: links\n";
-	for (Config::const_iterator screen = config.begin();
-								screen != config.end(); ++screen) {
+    for (auto screen = config.begin(); screen != config.end(); ++screen) {
         s << "\t" << screen->c_str() << ":\n";
 
-		for (Config::link_const_iterator
-				link = config.beginNeighbor(*screen),
-				nend = config.endNeighbor(*screen); link != nend; ++link) {
+        for (auto link = config.beginNeighbor(*screen), nend = config.endNeighbor(*screen);
+             link != nend; ++link) {
 			s << "\t\t" << Config::dirName(link->first.getSide()) <<
 				Config::formatInterval(link->first.getInterval()) <<
 				" = " << link->second.getName().c_str() <<
@@ -1787,10 +1769,9 @@ operator<<(std::ostream& s, const Config& config)
 		// map canonical to alias
         typedef std::multimap<std::string, std::string, CaselessCmp> CMNameMap;
 		CMNameMap aliases;
-		for (Config::NameMap::const_iterator
-								index = config.m_nameToCanonicalName.begin();
-								index != config.m_nameToCanonicalName.end();
-								++index) {
+        for (auto index = config.m_nameToCanonicalName.begin();
+             index != config.m_nameToCanonicalName.end();
+             ++index) {
 			if (index->first != index->second) {
 				aliases.insert(std::make_pair(index->second, index->first));
 			}
@@ -1799,8 +1780,7 @@ operator<<(std::ostream& s, const Config& config)
 		// dump it
         std::string screen;
         s << "section: aliases\n";
-		for (CMNameMap::const_iterator index = aliases.begin();
-								index != aliases.end(); ++index) {
+        for (auto index = aliases.begin(); index != aliases.end(); ++index) {
 			if (index->first != screen) {
 				screen = index->first;
                 s << "\t" << screen.c_str() << ":\n";

@@ -552,7 +552,7 @@ std::string ArgParser::assembleCommand(std::vector<std::string>& argsArray,
 {
     std::string result;
 
-    for (std::vector<std::string>::iterator it = argsArray.begin(); it != argsArray.end(); ++it) {
+    for (auto it = argsArray.begin(); it != argsArray.end(); ++it) {
         if (it->compare(ignoreArg) == 0) {
             it = it + parametersRequired;
             continue;

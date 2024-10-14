@@ -340,11 +340,6 @@ public:
     // get number of rules
     std::uint32_t getNumRules() const;
 
-    //! Compare filters
-    bool                operator==(const InputFilter&) const;
-    //! Compare filters
-    bool                operator!=(const InputFilter&) const;
-
 private:
     // event handling
     void handle_event(const Event&);
@@ -357,5 +352,8 @@ private:
 
 std::string format_rules(const std::vector<InputFilter::Rule>& rules,
                          const std::string& line_prefix);
+
+bool are_rules_equal(const std::vector<InputFilter::Rule>& rules1,
+                     const std::vector<InputFilter::Rule>& rules2);
 
 } // namespace inputleap

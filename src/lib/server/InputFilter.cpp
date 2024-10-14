@@ -911,34 +911,6 @@ std::uint32_t InputFilter::getNumRules() const
     return static_cast<std::uint32_t>(m_ruleList.size());
 }
 
-bool
-InputFilter::operator==(const InputFilter& x) const
-{
-    // if there are different numbers of rules then we can't be equal
-    if (m_ruleList.size() != x.m_ruleList.size()) {
-        return false;
-    }
-
-    // compare rule lists.  the easiest way to do that is to format each
-    // rule into a string, sort the strings, then compare the results.
-    std::vector<std::string> aList, bList;
-    for (auto i = m_ruleList.begin(); i != m_ruleList.end(); ++i) {
-        aList.push_back(i->format());
-    }
-    for (auto i = x.m_ruleList.begin(); i != x.m_ruleList.end(); ++i) {
-        bList.push_back(i->format());
-    }
-    std::partial_sort(aList.begin(), aList.end(), aList.end());
-    std::partial_sort(bList.begin(), bList.end(), bList.end());
-    return (aList == bList);
-}
-
-bool
-InputFilter::operator!=(const InputFilter& x) const
-{
-    return !operator==(x);
-}
-
 void InputFilter::handle_event(const Event& event)
 {
     // copy event and adjust target
@@ -968,6 +940,28 @@ std::string format_rules(const std::vector<InputFilter::Rule>& rules,
         s += "\n";
     }
     return s;
+}
+
+bool are_rules_equal(const std::vector<InputFilter::Rule>& rules1,
+                     const std::vector<InputFilter::Rule>& rules2)
+{
+    // if there are different numbers of rules then we can't be equal
+    if (rules1.size() != rules2.size()) {
+        return false;
+    }
+
+    // compare rule lists.  the easiest way to do that is to format each
+    // rule into a string, sort the strings, then compare the results.
+    std::vector<std::string> list1, list2;
+    for (const auto& rule : rules1) {
+        list1.push_back(rule.format());
+    }
+    for (const auto& rule : rules2) {
+        list2.push_back(rule.format());
+    }
+    std::partial_sort(list1.begin(), list1.end(), list1.end());
+    std::partial_sort(list2.begin(), list2.end(), list2.end());
+    return list1 == list2;
 }
 
 } // namespace inputleap

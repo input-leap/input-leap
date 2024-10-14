@@ -568,7 +568,7 @@ Config::operator==(const Config& x) const
 	}
 
 	// compare input filters
-	if (m_inputFilter != x.m_inputFilter) {
+    if (!are_rules_equal(m_inputFilter.get_rules(), x.m_inputFilter.get_rules())) {
 		return false;
 	}
 

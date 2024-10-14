@@ -247,8 +247,8 @@ Server::setConfig(const Config& config)
 	// ScrollLock as a hotkey.
 	if (!m_config->hasLockToScreenAction()) {
         IPlatformScreen::KeyInfo key{kKeyScrollLock, 0, 0, 0};
-		InputFilter::Rule rule(new InputFilter::KeystrokeCondition(m_events, key));
-		rule.adoptAction(new InputFilter::LockCursorToScreenAction(m_events), true);
+        InputFilter::Rule rule(new InputFilter::KeystrokeCondition(key));
+        rule.adoptAction(new InputFilter::LockCursorToScreenAction(), true);
 		m_inputFilter->addFilterRule(rule);
 	}
 

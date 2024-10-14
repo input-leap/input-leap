@@ -1026,7 +1026,7 @@ InputFilter::Condition* Config::parseCondition(ConfigReadContext& s, const std::
 
         IPlatformScreen::KeyInfo keyInfo = s.parseKeystroke(args[0]);
 
-		return new InputFilter::KeystrokeCondition(m_events, keyInfo);
+        return new InputFilter::KeystrokeCondition(keyInfo);
 	}
 
 	if (name == "mousebutton") {
@@ -1034,7 +1034,7 @@ InputFilter::Condition* Config::parseCondition(ConfigReadContext& s, const std::
 			throw XConfigRead(s, "syntax for condition: mousebutton(modifiers+button)");
 		}
 
-        return new InputFilter::MouseButtonCondition(m_events, s.parseMouse(args[0]));
+        return new InputFilter::MouseButtonCondition(s.parseMouse(args[0]));
 	}
 
 	if (name == "connect") {
@@ -1050,7 +1050,7 @@ InputFilter::Condition* Config::parseCondition(ConfigReadContext& s, const std::
 			throw XConfigRead(s, "unknown screen name \"%{1}\" in connect", screen);
 		}
 
-		return new InputFilter::ScreenConnectedCondition(m_events, screen);
+        return new InputFilter::ScreenConnectedCondition(screen);
 	}
 
 	throw XConfigRead(s, "unknown argument \"%{1}\"", name);
@@ -1078,16 +1078,16 @@ void Config::parseAction(ConfigReadContext& s, const std::string& name,
 		}
 
 		if (name == "keystroke") {
-            action = new InputFilter::KeystrokeAction(m_events, keyInfo, true);
+            action = new InputFilter::KeystrokeAction(keyInfo, true);
 			rule.adoptAction(action, true);
-			action   = new InputFilter::KeystrokeAction(m_events, keyInfo, false);
+            action   = new InputFilter::KeystrokeAction(keyInfo, false);
 			activate = false;
 		}
 		else if (name == "keyDown") {
-			action = new InputFilter::KeystrokeAction(m_events, keyInfo, true);
+            action = new InputFilter::KeystrokeAction(keyInfo, true);
 		}
 		else {
-			action = new InputFilter::KeystrokeAction(m_events, keyInfo, false);
+            action = new InputFilter::KeystrokeAction(keyInfo, false);
 		}
 	}
 
@@ -1100,16 +1100,16 @@ void Config::parseAction(ConfigReadContext& s, const std::string& name,
         auto mouseInfo = s.parseMouse(args[0]);
 
 		if (name == "mousebutton") {
-            action = new InputFilter::MouseButtonAction(m_events, mouseInfo, true);
+            action = new InputFilter::MouseButtonAction(mouseInfo, true);
 			rule.adoptAction(action, true);
-			action   = new InputFilter::MouseButtonAction(m_events, mouseInfo, false);
+            action   = new InputFilter::MouseButtonAction(mouseInfo, false);
 			activate = false;
 		}
 		else if (name == "mouseDown") {
-			action = new InputFilter::MouseButtonAction(m_events, mouseInfo, true);
+            action = new InputFilter::MouseButtonAction(mouseInfo, true);
 		}
 		else {
-			action = new InputFilter::MouseButtonAction(m_events, mouseInfo, false);
+            action = new InputFilter::MouseButtonAction(mouseInfo, false);
 		}
 	}
 
@@ -1138,11 +1138,11 @@ void Config::parseAction(ConfigReadContext& s, const std::string& name,
 			throw XConfigRead(s, "unknown screen name in switchToScreen");
 		}
 
-		action = new InputFilter::SwitchToScreenAction(m_events, screen);
+        action = new InputFilter::SwitchToScreenAction(screen);
 	}
 
   else if (name == "toggleScreen") {
-    action = new InputFilter::ToggleScreenAction(m_events);
+    action = new InputFilter::ToggleScreenAction();
   }
 
 	else if (name == "switchInDirection") {
@@ -1167,7 +1167,7 @@ void Config::parseAction(ConfigReadContext& s, const std::string& name,
 			throw XConfigRead(s, "unknown direction \"%{1}\" in switchToScreen", args[0]);
 		}
 
-		action = new InputFilter::SwitchInDirectionAction(m_events, direction);
+        action = new InputFilter::SwitchInDirectionAction(direction);
 	}
 
 	else if (name == "lockCursorToScreen") {
@@ -1196,7 +1196,7 @@ void Config::parseAction(ConfigReadContext& s, const std::string& name,
 			m_hasLockToScreenAction = true;
 		}
 
-		action = new InputFilter::LockCursorToScreenAction(m_events, mode);
+        action = new InputFilter::LockCursorToScreenAction(mode);
 	}
 
 	else if (name == "keyboardBroadcast") {
@@ -1226,7 +1226,7 @@ void Config::parseAction(ConfigReadContext& s, const std::string& name,
 			parseScreens(s, args[1], screens);
 		}
 
-		action = new InputFilter::KeyboardBroadcastAction(m_events, mode, screens);
+        action = new InputFilter::KeyboardBroadcastAction(mode, screens);
 	}
 
 	else {

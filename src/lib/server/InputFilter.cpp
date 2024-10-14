@@ -53,23 +53,18 @@ InputFilter::Condition::disablePrimary(PrimaryClient*)
     // do nothing
 }
 
-InputFilter::KeystrokeCondition::KeystrokeCondition(IEventQueue* events,
-                                                    const IPlatformScreen::KeyInfo& info) :
+InputFilter::KeystrokeCondition::KeystrokeCondition(const IPlatformScreen::KeyInfo& info) :
     m_id(0),
     m_key(info.m_key),
-    m_mask(info.m_mask),
-    m_events(events)
+    m_mask(info.m_mask)
 {
 }
 
-InputFilter::KeystrokeCondition::KeystrokeCondition(
-        IEventQueue* events, KeyID key, KeyModifierMask mask) :
+InputFilter::KeystrokeCondition::KeystrokeCondition(KeyID key, KeyModifierMask mask) :
     m_id(0),
     m_key(key),
-    m_mask(mask),
-    m_events(events)
+    m_mask(mask)
 {
-    // do nothing
 }
 
 InputFilter::KeystrokeCondition::~KeystrokeCondition()
@@ -92,7 +87,7 @@ InputFilter::KeystrokeCondition::getMask() const
 InputFilter::Condition*
 InputFilter::KeystrokeCondition::clone() const
 {
-    return new KeystrokeCondition(m_events, m_key, m_mask);
+    return new KeystrokeCondition(m_key, m_mask);
 }
 
 std::string InputFilter::KeystrokeCondition::format() const
@@ -139,21 +134,16 @@ InputFilter::KeystrokeCondition::disablePrimary(PrimaryClient* primary)
     m_id = 0;
 }
 
-InputFilter::MouseButtonCondition::MouseButtonCondition(IEventQueue* events,
-                                                        const IPrimaryScreen::ButtonInfo& info) :
+InputFilter::MouseButtonCondition::MouseButtonCondition(const IPrimaryScreen::ButtonInfo& info) :
     m_button(info.m_button),
-    m_mask(info.m_mask),
-    m_events(events)
+    m_mask(info.m_mask)
 {
 }
 
-InputFilter::MouseButtonCondition::MouseButtonCondition(
-        IEventQueue* events, ButtonID button, KeyModifierMask mask) :
+InputFilter::MouseButtonCondition::MouseButtonCondition(ButtonID button, KeyModifierMask mask) :
     m_button(button),
-    m_mask(mask),
-    m_events(events)
+    m_mask(mask)
 {
-    // do nothing
 }
 
 InputFilter::MouseButtonCondition::~MouseButtonCondition()
@@ -176,7 +166,7 @@ InputFilter::MouseButtonCondition::getMask() const
 InputFilter::Condition*
 InputFilter::MouseButtonCondition::clone() const
 {
-    return new MouseButtonCondition(m_events, m_button, m_mask);
+    return new MouseButtonCondition(m_button, m_mask);
 }
 
 std::string InputFilter::MouseButtonCondition::format() const
@@ -218,10 +208,8 @@ InputFilter::MouseButtonCondition::match(const Event& event)
     return status;
 }
 
-InputFilter::ScreenConnectedCondition::ScreenConnectedCondition(IEventQueue* events,
-                                                                const std::string& screen) :
-    m_screen(screen),
-    m_events(events)
+InputFilter::ScreenConnectedCondition::ScreenConnectedCondition(const std::string& screen) :
+    m_screen(screen)
 {
     // do nothing
 }
@@ -234,7 +222,7 @@ InputFilter::ScreenConnectedCondition::~ScreenConnectedCondition()
 InputFilter::Condition*
 InputFilter::ScreenConnectedCondition::clone() const
 {
-    return new ScreenConnectedCondition(m_events, m_screen);
+    return new ScreenConnectedCondition(m_screen);
 }
 
 std::string InputFilter::ScreenConnectedCondition::format() const
@@ -268,12 +256,9 @@ InputFilter::Action::~Action()
     // do nothing
 }
 
-InputFilter::LockCursorToScreenAction::LockCursorToScreenAction(
-        IEventQueue* events, Mode mode) :
-    m_mode(mode),
-    m_events(events)
+InputFilter::LockCursorToScreenAction::LockCursorToScreenAction(Mode mode) :
+    m_mode(mode)
 {
-    // do nothing
 }
 
 InputFilter::LockCursorToScreenAction::Mode
@@ -296,7 +281,7 @@ std::string InputFilter::LockCursorToScreenAction::format() const
 }
 
 void
-InputFilter::LockCursorToScreenAction::perform(const Event& event)
+InputFilter::LockCursorToScreenAction::perform(IEventQueue* queue, const Event& event)
 {
     static const Server::LockCursorToScreenInfo::State s_state[] = {
         Server::LockCursorToScreenInfo::kOff,
@@ -306,17 +291,14 @@ InputFilter::LockCursorToScreenAction::perform(const Event& event)
 
     // send event
     Server::LockCursorToScreenInfo info(s_state[m_mode]);
-    m_events->add_event(EventType::SERVER_LOCK_CURSOR_TO_SCREEN, event.getTarget(),
-                        create_event_data<Server::LockCursorToScreenInfo>(info),
-                        Event::kDeliverImmediately);
+    queue->add_event(EventType::SERVER_LOCK_CURSOR_TO_SCREEN, event.getTarget(),
+                     create_event_data<Server::LockCursorToScreenInfo>(info),
+                     Event::kDeliverImmediately);
 }
 
-InputFilter::SwitchToScreenAction::SwitchToScreenAction(IEventQueue* events,
-                                                        const std::string& screen) :
-    m_screen(screen),
-    m_events(events)
+InputFilter::SwitchToScreenAction::SwitchToScreenAction(const std::string& screen) :
+    m_screen(screen)
 {
-    // do nothing
 }
 
 std::string InputFilter::SwitchToScreenAction::getScreen() const
@@ -336,7 +318,7 @@ std::string InputFilter::SwitchToScreenAction::format() const
 }
 
 void
-InputFilter::SwitchToScreenAction::perform(const Event& event)
+InputFilter::SwitchToScreenAction::perform(IEventQueue* queue, const Event& event)
 {
     // pick screen name.  if m_screen is empty then use the screen from
     // event if it has one.
@@ -348,15 +330,9 @@ InputFilter::SwitchToScreenAction::perform(const Event& event)
 
     // send event
     Server::SwitchToScreenInfo info{screen};
-    m_events->add_event(EventType::SERVER_SWITCH_TO_SCREEN, event.getTarget(),
+    queue->add_event(EventType::SERVER_SWITCH_TO_SCREEN, event.getTarget(),
                         create_event_data<Server::SwitchToScreenInfo>(info),
                         Event::kDeliverImmediately);
-}
-
-InputFilter::ToggleScreenAction::ToggleScreenAction(IEventQueue* events) :
-    m_events(events)
-{
-    // do nothing
 }
 
 InputFilter::Action*
@@ -371,18 +347,15 @@ std::string InputFilter::ToggleScreenAction::format() const
 }
 
 void
-InputFilter::ToggleScreenAction::perform(const Event& event)
+InputFilter::ToggleScreenAction::perform(IEventQueue* queue, const Event& event)
 {
-    m_events->add_event(EventType::SERVER_TOGGLE_SCREEN, event.getTarget(), nullptr,
-                        Event::kDeliverImmediately);
+    queue->add_event(EventType::SERVER_TOGGLE_SCREEN, event.getTarget(), nullptr,
+                     Event::kDeliverImmediately);
 }
 
-InputFilter::SwitchInDirectionAction::SwitchInDirectionAction(
-        IEventQueue* events, EDirection direction) :
-    m_direction(direction),
-    m_events(events)
+InputFilter::SwitchInDirectionAction::SwitchInDirectionAction(EDirection direction) :
+    m_direction(direction)
 {
-    // do nothing
 }
 
 EDirection
@@ -411,29 +384,24 @@ std::string InputFilter::SwitchInDirectionAction::format() const
 }
 
 void
-InputFilter::SwitchInDirectionAction::perform(const Event& event)
+InputFilter::SwitchInDirectionAction::perform(IEventQueue* queue, const Event& event)
 {
     Server::SwitchInDirectionInfo info{m_direction};
-    m_events->add_event(EventType::SERVER_SWITCH_INDIRECTION, event.getTarget(),
-                        create_event_data<Server::SwitchInDirectionInfo>(info),
-                        Event::kDeliverImmediately);
+    queue->add_event(EventType::SERVER_SWITCH_INDIRECTION, event.getTarget(),
+                     create_event_data<Server::SwitchInDirectionInfo>(info),
+                     Event::kDeliverImmediately);
 }
 
-InputFilter::KeyboardBroadcastAction::KeyboardBroadcastAction(
-        IEventQueue* events, Mode mode) :
-    m_mode(mode),
-    m_events(events)
+InputFilter::KeyboardBroadcastAction::KeyboardBroadcastAction(Mode mode) :
+    m_mode(mode)
 {
-    // do nothing
 }
 
-InputFilter::KeyboardBroadcastAction::KeyboardBroadcastAction(IEventQueue* events, Mode mode,
+InputFilter::KeyboardBroadcastAction::KeyboardBroadcastAction(Mode mode,
                                                               const std::set<std::string>& screens) :
     m_mode(mode),
-    m_screens(IKeyState::KeyInfo::join(screens)),
-    m_events(events)
+    m_screens(IKeyState::KeyInfo::join(screens))
 {
-    // do nothing
 }
 
 InputFilter::KeyboardBroadcastAction::Mode
@@ -471,7 +439,7 @@ std::string InputFilter::KeyboardBroadcastAction::format() const
 }
 
 void
-InputFilter::KeyboardBroadcastAction::perform(const Event& event)
+InputFilter::KeyboardBroadcastAction::perform(IEventQueue* queue, const Event& event)
 {
     static const Server::KeyboardBroadcastInfo::State s_state[] = {
         Server::KeyboardBroadcastInfo::kOff,
@@ -481,17 +449,15 @@ InputFilter::KeyboardBroadcastAction::perform(const Event& event)
 
     // send event
     Server::KeyboardBroadcastInfo info{s_state[m_mode], m_screens};
-    m_events->add_event(EventType::SERVER_KEYBOARD_BROADCAST, event.getTarget(),
-                        create_event_data<Server::KeyboardBroadcastInfo>(info),
-                        Event::kDeliverImmediately);
+    queue->add_event(EventType::SERVER_KEYBOARD_BROADCAST, event.getTarget(),
+                     create_event_data<Server::KeyboardBroadcastInfo>(info),
+                     Event::kDeliverImmediately);
 }
 
-InputFilter::KeystrokeAction::KeystrokeAction(IEventQueue* events, const IKeyState::KeyInfo& info, bool press) :
+InputFilter::KeystrokeAction::KeystrokeAction(const IKeyState::KeyInfo& info, bool press) :
     info_(info),
-    m_press(press),
-    m_events(events)
+    m_press(press)
 {
-    // do nothing
 }
 
 InputFilter::KeystrokeAction::~KeystrokeAction() = default;
@@ -505,7 +471,7 @@ InputFilter::KeystrokeAction::isOnPress() const
 InputFilter::Action*
 InputFilter::KeystrokeAction::clone() const
 {
-    return new KeystrokeAction(m_events, info_, m_press);
+    return new KeystrokeAction(info_, m_press);
 }
 
 std::string InputFilter::KeystrokeAction::format() const
@@ -528,17 +494,17 @@ std::string InputFilter::KeystrokeAction::format() const
 }
 
 void
-InputFilter::KeystrokeAction::perform(const Event& event)
+InputFilter::KeystrokeAction::perform(IEventQueue* queue, const Event& event)
 {
     EventType type = m_press ? EventType::KEY_STATE_KEY_DOWN : EventType::KEY_STATE_KEY_UP;
 
-    m_events->add_event(EventType::PRIMARY_SCREEN_FAKE_INPUT_BEGIN, event.getTarget(), nullptr,
-                        Event::kDeliverImmediately);
-    m_events->add_event(type, event.getTarget(),
-                        create_event_data<IPlatformScreen::KeyInfo>(info_),
-                        Event::kDeliverImmediately);
-    m_events->add_event(EventType::PRIMARY_SCREEN_FAKE_INPUT_END, event.getTarget(), nullptr,
-                        Event::kDeliverImmediately);
+    queue->add_event(EventType::PRIMARY_SCREEN_FAKE_INPUT_BEGIN, event.getTarget(), nullptr,
+                     Event::kDeliverImmediately);
+    queue->add_event(type, event.getTarget(),
+                     create_event_data<IPlatformScreen::KeyInfo>(info_),
+                     Event::kDeliverImmediately);
+    queue->add_event(EventType::PRIMARY_SCREEN_FAKE_INPUT_END, event.getTarget(), nullptr,
+                     Event::kDeliverImmediately);
 }
 
 const char*
@@ -547,14 +513,11 @@ InputFilter::KeystrokeAction::formatName() const
     return (m_press ? "keyDown" : "keyUp");
 }
 
-InputFilter::MouseButtonAction::MouseButtonAction(IEventQueue* events,
-                                                  const IPlatformScreen::ButtonInfo& info,
+InputFilter::MouseButtonAction::MouseButtonAction(const IPlatformScreen::ButtonInfo& info,
                                                   bool press) :
     button_info_(info),
-    m_press(press),
-    m_events(events)
+    m_press(press)
 {
-    // do nothing
 }
 
 InputFilter::MouseButtonAction::~MouseButtonAction() = default;
@@ -568,7 +531,7 @@ InputFilter::MouseButtonAction::isOnPress() const
 InputFilter::Action*
 InputFilter::MouseButtonAction::clone() const
 {
-    return new MouseButtonAction(m_events, button_info_, m_press);
+    return new MouseButtonAction(button_info_, m_press);
 }
 
 std::string InputFilter::MouseButtonAction::format() const
@@ -582,24 +545,24 @@ std::string InputFilter::MouseButtonAction::format() const
 }
 
 void
-InputFilter::MouseButtonAction::perform(const Event& event)
+InputFilter::MouseButtonAction::perform(IEventQueue* queue, const Event& event)
 
 {
     // send modifiers
     if (button_info_.m_mask != 0) {
         KeyID key = m_press ? kKeySetModifiers : kKeyClearModifiers;
-        m_events->add_event(EventType::KEY_STATE_KEY_DOWN, event.getTarget(),
-                            create_event_data<IPlatformScreen::KeyInfo>(
+        queue->add_event(EventType::KEY_STATE_KEY_DOWN, event.getTarget(),
+                         create_event_data<IPlatformScreen::KeyInfo>(
                                 IPlatformScreen::KeyInfo{key, button_info_.m_mask, 0, 1}),
-                            Event::kDeliverImmediately);
+                         Event::kDeliverImmediately);
     }
 
     // send button
     EventType type = m_press ? EventType::PRIMARY_SCREEN_BUTTON_DOWN :
                                EventType::PRIMARY_SCREEN_BUTTON_UP;
-    m_events->add_event(type, event.getTarget(),
-                        create_event_data<IPlatformScreen::ButtonInfo>(button_info_),
-                        Event::kDeliverImmediately);
+    queue->add_event(type, event.getTarget(),
+                     create_event_data<IPlatformScreen::ButtonInfo>(button_info_),
+                     Event::kDeliverImmediately);
 }
 
 const char*
@@ -738,8 +701,7 @@ InputFilter::Rule::disable(PrimaryClient* primaryClient)
     }
 }
 
-bool
-InputFilter::Rule::handleEvent(const Event& event)
+bool InputFilter::Rule::handle_event(IEventQueue* queue, const Event& event)
 {
     // nullptr condition never matches
     if (m_condition == nullptr) {
@@ -767,7 +729,7 @@ InputFilter::Rule::handleEvent(const Event& event)
     // perform actions
     for (auto i = actions->begin(); i != actions->end(); ++i) {
         LOG_DEBUG1("hotkey: %s", (*i)->format().c_str());
-        (*i)->perform(event);
+        (*i)->perform(queue, event);
     }
 
     return true;
@@ -996,7 +958,7 @@ void InputFilter::handle_event(const Event& event)
 
     // let each rule try to match the event until one does
     for (auto rule = m_ruleList.begin(); rule != m_ruleList.end(); ++rule) {
-        if (rule->handleEvent(myEvent)) {
+        if (rule->handle_event(m_events, myEvent)) {
             // handled
             return;
         }

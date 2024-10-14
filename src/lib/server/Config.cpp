@@ -22,7 +22,6 @@
 #include "inputleap/KeyMap.h"
 #include "inputleap/key_types.h"
 #include "net/XSocket.h"
-#include "base/IEventQueue.h"
 
 #include <cstdlib>
 
@@ -30,10 +29,8 @@ namespace inputleap {
 
 using namespace inputleap::string;
 
-Config::Config(IEventQueue* events) :
-	m_inputFilter(events),
-	m_hasLockToScreenAction(false),
-	m_events(events)
+Config::Config() :
+    m_hasLockToScreenAction(false)
 {
 	// do nothing
 }
@@ -568,7 +565,7 @@ Config::operator==(const Config& x) const
 	}
 
 	// compare input filters
-    if (!are_rules_equal(m_inputFilter.get_rules(), x.m_inputFilter.get_rules())) {
+    if (!are_rules_equal(input_filter_rules_, x.input_filter_rules_)) {
 		return false;
 	}
 
@@ -584,7 +581,7 @@ Config::operator!=(const Config& x) const
 void
 Config::read(ConfigReadContext& context)
 {
-	Config tmp(m_events);
+    Config tmp;
 	while (context.getStream()) {
 		tmp.readSection(context);
 	}
@@ -599,12 +596,6 @@ Config::dirName(EDirection dir)
 	assert(dir >= kFirstDirection && dir <= kLastDirection);
 
 	return s_name[dir - kFirstDirection];
-}
-
-InputFilter*
-Config::getInputFilter()
-{
-	return &m_inputFilter;
 }
 
 std::string Config::formatInterval(const Interval& x)
@@ -782,8 +773,7 @@ Config::readSectionOptions(ConfigReadContext& s)
 				}
 			}
 
-			// add rule
-			m_inputFilter.addFilterRule(rule);
+            input_filter_rules_.push_back(rule);
 		}
 	}
 	throw XConfigRead(s, "unexpected end of options section");
@@ -1808,7 +1798,7 @@ operator<<(std::ostream& s, const Config& config)
 		s << "\taddress = " <<
             config.listen_address_.getHostname().c_str() << "\n";
 	}
-    s << format_rules(config.m_inputFilter.get_rules(), "\t");
+    s << format_rules(config.input_filter_rules_, "\t");
     s << "end\n";
 
 	return s;

@@ -419,7 +419,7 @@ private:
     Config* m_config;
 
     // input filter (from m_config);
-    InputFilter* m_inputFilter;
+    InputFilter input_filter_;
 
     // clipboard cache
     ClipboardInfo m_clipboards[kClipboardEnd];

@@ -807,7 +807,7 @@ ServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc
 {
     // general initialization
     listen_address_ = new NetworkAddress;
-    args().m_config         = new Config(m_events);
+    args().m_config = new Config();
     args().m_exename = ArgParser::parse_exename(argv[0]);
 
     // install caller's output filter

@@ -324,6 +324,7 @@ public:
 
     // add rule, adopting the condition and the actions
     void addFilterRule(const Rule& rule);
+    void add_rules(const std::vector<Rule>& rules);
 
     // enable event filtering using the given primary client.  disable
     // if client is nullptr.

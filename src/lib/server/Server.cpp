@@ -69,7 +69,7 @@ Server::Server(
 	m_xDelta2(0),
 	m_yDelta2(0),
 	m_config(&config),
-	m_inputFilter(config.getInputFilter()),
+    input_filter_(events),
 	m_activeSaver(nullptr),
 	m_switchDir(kNoDirection),
 	m_switchScreen(nullptr),
@@ -96,6 +96,8 @@ Server::Server(
 	m_waitDragInfoThread(true),
 	m_args(args)
 {
+    input_filter_.add_rules(config.get_input_filter_rules());
+
 	// must have a primary client and it must have a canonical name
 	assert(m_primaryClient != nullptr);
 	assert(config.isScreen(primaryClient->getName()));
@@ -118,15 +120,15 @@ Server::Server(
     // install event handlers
     m_events->add_handler(EventType::TIMER, this,
                           [this](const auto& e){ handle_switch_wait_event(); });
-    m_events->add_handler(EventType::KEY_STATE_KEY_DOWN, m_inputFilter,
+    m_events->add_handler(EventType::KEY_STATE_KEY_DOWN, &input_filter_,
                           [this](const auto& e){ handle_key_down_event(e); });
-    m_events->add_handler(EventType::KEY_STATE_KEY_UP, m_inputFilter,
+    m_events->add_handler(EventType::KEY_STATE_KEY_UP, &input_filter_,
                           [this](const auto& e){ handle_key_up_event(e); });
-    m_events->add_handler(EventType::KEY_STATE_KEY_REPEAT, m_inputFilter,
+    m_events->add_handler(EventType::KEY_STATE_KEY_REPEAT, &input_filter_,
                           [this](const auto& e){ handle_key_repeat_event(e); });
-    m_events->add_handler(EventType::PRIMARY_SCREEN_BUTTON_DOWN, m_inputFilter,
+    m_events->add_handler(EventType::PRIMARY_SCREEN_BUTTON_DOWN, &input_filter_,
                           [this](const auto& e){ handle_button_down_event(e); });
-    m_events->add_handler(EventType::PRIMARY_SCREEN_BUTTON_UP, m_inputFilter,
+    m_events->add_handler(EventType::PRIMARY_SCREEN_BUTTON_UP, &input_filter_,
                           [this](const auto& e){ handle_button_up_event(e); });
     m_events->add_handler(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY,
                           m_primaryClient->get_event_target(),
@@ -143,19 +145,19 @@ Server::Server(
     m_events->add_handler(EventType::PRIMARY_SCREEN_SAVER_DEACTIVATED,
                           m_primaryClient->get_event_target(),
                           [this](const auto& e){ handle_screensaver_deactivated_event(); });
-    m_events->add_handler(EventType::SERVER_SWITCH_TO_SCREEN, m_inputFilter,
+    m_events->add_handler(EventType::SERVER_SWITCH_TO_SCREEN, &input_filter_,
                           [this](const auto& e){ handle_switch_to_screen_event(e); });
-    m_events->add_handler(EventType::SERVER_TOGGLE_SCREEN, m_inputFilter,
+    m_events->add_handler(EventType::SERVER_TOGGLE_SCREEN, &input_filter_,
                           [this](const auto& e){ handle_toggle_screen_event(e); });
-    m_events->add_handler(EventType::SERVER_SWITCH_INDIRECTION, m_inputFilter,
+    m_events->add_handler(EventType::SERVER_SWITCH_INDIRECTION, &input_filter_,
                           [this](const auto& e){ handle_switch_in_direction_event(e); });
-    m_events->add_handler(EventType::SERVER_KEYBOARD_BROADCAST, m_inputFilter,
+    m_events->add_handler(EventType::SERVER_KEYBOARD_BROADCAST, &input_filter_,
                           [this](const auto& e){ handle_keyboard_broadcast_event(e); });
-    m_events->add_handler(EventType::SERVER_LOCK_CURSOR_TO_SCREEN, m_inputFilter,
+    m_events->add_handler(EventType::SERVER_LOCK_CURSOR_TO_SCREEN, &input_filter_,
                           [this](const auto& e){ handle_lock_cursor_to_screen_event(e); });
-    m_events->add_handler(EventType::PRIMARY_SCREEN_FAKE_INPUT_BEGIN, m_inputFilter,
+    m_events->add_handler(EventType::PRIMARY_SCREEN_FAKE_INPUT_BEGIN, &input_filter_,
                           [this](const auto& e){ handle_fake_input_begin_event(); });
-    m_events->add_handler(EventType::PRIMARY_SCREEN_FAKE_INPUT_END, m_inputFilter,
+    m_events->add_handler(EventType::PRIMARY_SCREEN_FAKE_INPUT_END, &input_filter_,
                           [this](const auto& e){ handle_fake_input_end_event(); });
 
     if (m_args.m_enableDragDrop) {
@@ -173,7 +175,7 @@ Server::Server(
 
 	// enable primary client
 	m_primaryClient->enable();
-	m_inputFilter->setPrimaryClient(m_primaryClient);
+    input_filter_.setPrimaryClient(m_primaryClient);
 
 	// Determine if scroll lock is already set. If so, lock the cursor to the primary screen
 	if (m_primaryClient->getToggleMask() & KeyModifierScrollLock) {
@@ -190,18 +192,18 @@ Server::~Server()
 	}
 
 	// remove event handlers and timers
-    m_events->remove_handler(EventType::KEY_STATE_KEY_DOWN, m_inputFilter);
-    m_events->remove_handler(EventType::KEY_STATE_KEY_UP, m_inputFilter);
-    m_events->remove_handler(EventType::KEY_STATE_KEY_REPEAT, m_inputFilter);
-    m_events->remove_handler(EventType::PRIMARY_SCREEN_BUTTON_DOWN, m_inputFilter);
-    m_events->remove_handler(EventType::PRIMARY_SCREEN_BUTTON_UP, m_inputFilter);
+    m_events->remove_handler(EventType::KEY_STATE_KEY_DOWN, &input_filter_);
+    m_events->remove_handler(EventType::KEY_STATE_KEY_UP, &input_filter_);
+    m_events->remove_handler(EventType::KEY_STATE_KEY_REPEAT, &input_filter_);
+    m_events->remove_handler(EventType::PRIMARY_SCREEN_BUTTON_DOWN, &input_filter_);
+    m_events->remove_handler(EventType::PRIMARY_SCREEN_BUTTON_UP, &input_filter_);
     m_events->remove_handler(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY, m_primaryClient->get_event_target());
     m_events->remove_handler(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY, m_primaryClient->get_event_target());
     m_events->remove_handler(EventType::PRIMARY_SCREEN_WHEEL, m_primaryClient->get_event_target());
     m_events->remove_handler(EventType::PRIMARY_SCREEN_SAVER_ACTIVATED, m_primaryClient->get_event_target());
     m_events->remove_handler(EventType::PRIMARY_SCREEN_SAVER_DEACTIVATED, m_primaryClient->get_event_target());
-    m_events->remove_handler(EventType::PRIMARY_SCREEN_FAKE_INPUT_BEGIN, m_inputFilter);
-    m_events->remove_handler(EventType::PRIMARY_SCREEN_FAKE_INPUT_END, m_inputFilter);
+    m_events->remove_handler(EventType::PRIMARY_SCREEN_FAKE_INPUT_BEGIN, &input_filter_);
+    m_events->remove_handler(EventType::PRIMARY_SCREEN_FAKE_INPUT_END, &input_filter_);
     m_events->remove_handler(EventType::TIMER, this);
 	stopSwitch();
 
@@ -216,7 +218,7 @@ Server::~Server()
 	}
 
 	// remove input filter
-	m_inputFilter->setPrimaryClient(nullptr);
+    input_filter_.setPrimaryClient(nullptr);
 
 	// disable and disconnect primary client
 	m_primaryClient->disable();
@@ -249,7 +251,8 @@ Server::setConfig(const Config& config)
         IPlatformScreen::KeyInfo key{kKeyScrollLock, 0, 0, 0};
         InputFilter::Rule rule(new InputFilter::KeystrokeCondition(key));
         rule.adoptAction(new InputFilter::LockCursorToScreenAction(), true);
-		m_inputFilter->addFilterRule(rule);
+        m_config->get_input_filter_rules().push_back(rule);
+        input_filter_.addFilterRule(rule);
 	}
 
 	// tell primary screen about reconfiguration
@@ -308,7 +311,7 @@ Server::disconnect()
 {
 	// close all secondary clients
 	if (m_clients.size() > 1 || !m_oldClients.empty()) {
-		Config emptyConfig(m_events);
+        Config emptyConfig;
 		closeClients(emptyConfig);
 	}
 	else {

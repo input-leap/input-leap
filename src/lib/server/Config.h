@@ -178,12 +178,8 @@ public:
         internal_const_iterator m_i;
     };
 
-    Config(IEventQueue* events);
+    Config();
     virtual ~Config();
-
-#ifdef INPUTLEAP_TEST_ENV
-    Config() : m_inputFilter(nullptr) { }
-#endif
 
     //! @name manipulators
     //@{
@@ -309,12 +305,11 @@ public:
     */
     bool removeOptions(const std::string& name);
 
-    //! Get the hot key input filter
-    /*!
-    Returns the hot key input filter.  Clients can modify hotkeys using
-    that object.
-    */
-    virtual InputFilter* getInputFilter();
+    // Note, that the list of rules may be modified
+    virtual std::vector<InputFilter::Rule>& get_input_filter_rules()
+    {
+        return input_filter_rules_;
+    }
 
     //@}
     //! @name accessors
@@ -466,9 +461,8 @@ private:
     NameMap m_nameToCanonicalName;
     NetworkAddress listen_address_;
     ScreenOptions m_globalOptions;
-    InputFilter m_inputFilter;
+    std::vector<InputFilter::Rule> input_filter_rules_;
     bool m_hasLockToScreenAction;
-    IEventQueue* m_events;
 };
 
 //! Configuration read context

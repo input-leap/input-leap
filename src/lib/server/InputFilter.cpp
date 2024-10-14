@@ -844,6 +844,13 @@ InputFilter::addFilterRule(const Rule& rule)
     }
 }
 
+void InputFilter::add_rules(const std::vector<Rule>& rules)
+{
+    for (const auto& rule : rules) {
+        addFilterRule(rule);
+    }
+}
+
 void
 InputFilter::setPrimaryClient(PrimaryClient* client)
 {

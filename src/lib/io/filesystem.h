@@ -20,11 +20,11 @@
 #include <cstdio>
 #include <iosfwd>
 #include <ios>
-#include <filesystem>
+#include <ghc/fs_fwd.hpp>
 
 namespace inputleap {
 
-namespace fs = std::filesystem;
+namespace fs = ghc::filesystem;
 
 void open_utf8_path(std::ifstream& stream, const fs::path& path,
                     std::ios_base::openmode mode = std::ios_base::in);

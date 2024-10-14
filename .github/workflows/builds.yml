@@ -200,6 +200,7 @@ jobs:
                 -DCMAKE_CXX_FLAGS_DEBUG:STRING="-g -Werror" \
                 -DCMAKE_UNITY_BUILD=1 \
                 -DINPUTLEAP_BUILD_LIBEI:BOOL=${{ (matrix.wayland != 'none') && '1' || '0' }} \
+                -DINPUTLEAP_BUILD_GULRAK_FILESYSTEM=${{ (matrix.os == 'ubuntu:20.04') && '1' || '0' }} \
                 -DCMAKE_INSTALL_PREFIX=input-leap-${{ matrix.name }}
           cmake --build build --parallel --target install
         env:
@@ -378,7 +379,9 @@ jobs:
                 -DCMAKE_UNITY_BUILD=1 \
                 -DOpenSSL_ROOT=${{env.OpenSSL_Install_Path}} \
                 -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk \
-                -DCMAKE_OSX_DEPLOYMENT_TARGET=${{matrix.min-macOS-version}} -DCMAKE_UNITY_BUILD=1 -DQT_DEFAULT_MAJOR_VERSION=$(echo ${{matrix.qt-version}} | cut -c -1) \
+                -DCMAKE_OSX_DEPLOYMENT_TARGET=${{matrix.min-macOS-version}} -DCMAKE_UNITY_BUILD=1 \
+                -DQT_DEFAULT_MAJOR_VERSION=$(echo ${{matrix.qt-version}} | cut -c -1) \
+                -DINPUTLEAP_BUILD_GULRAK_FILESYSTEM=${{ matrix.qt-version == '5.15' && '1' || '0' }} \
                 -DCMAKE_OSX_ARCHITECTURES="${{matrix.arch}}"
 
       - name: Run the build
@@ -454,6 +457,7 @@ jobs:
 
           cmake -S ..\input-leap -G "$env:CMAKE_GEN" -A x64 -D CMAKE_BUILD_TYPE=$B_BUILD_TYPE `
             -DQT_DEFAULT_MAJOR_VERSION=${{matrix.qt-major}} `
+            -DINPUTLEAP_BUILD_GULRAK_FILESYSTEM=${{ matrix.qt-major == '5' && '1' || '0' }} `
             -DDNSSD_LIB="$env:BONJOUR_SDK_HOME\Lib\x64\dnssd.lib" -D CMAKE_INSTALL_PREFIX=input-leap-install
         env:
           VS_PATH: ${{ matrix.os == 'windows-2019' && '%ProgramFiles(x86)%\Microsoft Visual Studio\2019' || '%ProgramFiles%\Microsoft Visual Studio\2022' }}

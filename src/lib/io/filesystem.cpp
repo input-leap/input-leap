@@ -15,8 +15,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#if INPUTLEAP_USE_GULRAK_FILESYSTEM
 // this header must come first so that it picks up the filesystem implementation
 #include <ghc/fs_impl.hpp>
+#endif
 
 #include "filesystem.h"
 #if SYSAPI_WIN32

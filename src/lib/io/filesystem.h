@@ -20,11 +20,19 @@
 #include <cstdio>
 #include <iosfwd>
 #include <ios>
+#if INPUTLEAP_USE_GULRAK_FILESYSTEM
 #include <ghc/fs_fwd.hpp>
+#else
+#include <filesystem>
+#endif
 
 namespace inputleap {
 
+#if INPUTLEAP_USE_GULRAK_FILESYSTEM
 namespace fs = ghc::filesystem;
+#else
+namespace fs = std::filesystem;
+#endif
 
 void open_utf8_path(std::ifstream& stream, const fs::path& path,
                     std::ios_base::openmode mode = std::ios_base::in);

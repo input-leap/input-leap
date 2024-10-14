@@ -194,6 +194,11 @@ jobs:
       - name: Run build
         if: env.B_BUILD_TYPE != 'Release'
         run: |
+          if [ "${{ env.B_BUILD_TYPE }}" = "Release" ]; then
+            VERSION_DESC=release
+          else
+            VERSION_DESC=$(git -C input-leap log --pretty=format:'git-%cs-%h' -1)
+          fi
           cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build \
                 -DQT_DEFAULT_MAJOR_VERSION=${{ (matrix.os == 'ubuntu:20.04') && '5' || '6' }} \
                 -DCMAKE_CXX_FLAGS:STRING="-Wall -Wextra -Wno-unused-parameter" \
@@ -201,6 +206,7 @@ jobs:
                 -DCMAKE_UNITY_BUILD=1 \
                 -DINPUTLEAP_BUILD_LIBEI:BOOL=${{ (matrix.wayland != 'none') && '1' || '0' }} \
                 -DINPUTLEAP_BUILD_GULRAK_FILESYSTEM=${{ (matrix.os == 'ubuntu:20.04') && '1' || '0' }} \
+                -DINPUTLEAP_VERSION_DESC="$VERSION_DESC" \
                 -DCMAKE_INSTALL_PREFIX=input-leap-${{ matrix.name }}
           cmake --build build --parallel --target install
         env:
@@ -236,6 +242,10 @@ jobs:
           if [ "${{ matrix.name }}" = "ubuntu-20-04" ]; then
             sed -i -e 's/QT_DEFAULT_MAJOR_VERSION=6/QT_DEFAULT_MAJOR_VERSION=5/g' debian/rules
           fi
+          if [ "${{ env.B_BUILD_TYPE }}" = "Release" ]; then
+            sed -i -e 's/INPUTLEAP_VERSION_DESC=git/INPUTLEAP_VERSION_DESC=release/g' debian/rules
+          fi
+
           debuild -us -uc
 
       - name: Upload Artifacts
@@ -381,6 +391,7 @@ jobs:
                 -DCMAKE_OSX_SYSROOT=$(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk \
                 -DCMAKE_OSX_DEPLOYMENT_TARGET=${{matrix.min-macOS-version}} -DCMAKE_UNITY_BUILD=1 \
                 -DQT_DEFAULT_MAJOR_VERSION=$(echo ${{matrix.qt-version}} | cut -c -1) \
+                -DINPUTLEAP_VERSION_DESC=${{ (env.B_BUILD_TYPE == 'Release') && 'release' || 'git' }} \
                 -DINPUTLEAP_BUILD_GULRAK_FILESYSTEM=${{ matrix.qt-version == '5.15' && '1' || '0' }} \
                 -DCMAKE_OSX_ARCHITECTURES="${{matrix.arch}}"
 
@@ -457,6 +468,7 @@ jobs:
 
           cmake -S ..\input-leap -G "$env:CMAKE_GEN" -A x64 -D CMAKE_BUILD_TYPE=$B_BUILD_TYPE `
             -DQT_DEFAULT_MAJOR_VERSION=${{matrix.qt-major}} `
+            -DINPUTLEAP_VERSION_DESC=${{ (env.B_BUILD_TYPE == 'Release') && 'release' || 'git' }} `
             -DINPUTLEAP_BUILD_GULRAK_FILESYSTEM=${{ matrix.qt-major == '5' && '1' || '0' }} `
             -DDNSSD_LIB="$env:BONJOUR_SDK_HOME\Lib\x64\dnssd.lib" -D CMAKE_INSTALL_PREFIX=input-leap-install
         env:

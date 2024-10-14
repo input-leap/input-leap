@@ -34,7 +34,6 @@ Pull the merge commit created on the `master` branch during the step 2.
 
 Edit the following files and update the version numbers:
 
- - `Build.properties`
  - `cmake/Version.cmake`
  - `doc/input-leapc.1`
  - `doc/input-leaps.1`

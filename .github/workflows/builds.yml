@@ -30,6 +30,11 @@ jobs:
       fail-fast: false
       matrix:
        include:
+         - name: ubuntu-20-04
+           os: "ubuntu:20.04"
+           cc: "gcc"
+           cxx: "g++"
+           wayland: none
          - name: ubuntu-22-04-clang
            os: "ubuntu:22.04"
            cc: "clang"
@@ -61,6 +66,19 @@ jobs:
            cxx: "g++"
            wayland: latest
     steps:
+
+      - if: matrix.os == 'ubuntu:20.04'
+        name: Add repositories with newer cmake
+        run: |
+          apt-get update -y
+          apt-get install -y gpg wget
+          # InputLeap requires at least CMake 3.21.
+          # This mirrors instructions at https://apt.kitware.com
+          wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
+            | gpg --dearmor - \
+            > /usr/share/keyrings/kitware-archive-keyring.gpg
+          echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ focal main' \
+            > /etc/apt/sources.list.d/kitware.list
 
       - name: Update and install packages
         run: |
@@ -94,6 +112,15 @@ jobs:
                   debhelper \
                   devscripts \
                   xvfb
+
+      - if: matrix.os != 'ubuntu:20.04'
+        name: Install Qt6 packages
+        run: |
+          apt-get install -y \
+                  qt6-base-dev \
+                  qt6-l10n-tools \
+                  qt6-tools-dev-tools \
+                  qt6-tools-dev
 
       - if: matrix.wayland == 'latest'
         name: Install libei and libportal pre-reqs
@@ -168,7 +195,7 @@ jobs:
         if: env.B_BUILD_TYPE != 'Release'
         run: |
           cmake -DCMAKE_BUILD_TYPE="${B_BUILD_TYPE}" -S input-leap -B build \
-                -DQT_DEFAULT_MAJOR_VERSION=5 \
+                -DQT_DEFAULT_MAJOR_VERSION=${{ (matrix.os == 'ubuntu:20.04') && '5' || '6' }} \
                 -DCMAKE_CXX_FLAGS:STRING="-Wall -Wextra -Wno-unused-parameter" \
                 -DCMAKE_CXX_FLAGS_DEBUG:STRING="-g -Werror" \
                 -DCMAKE_UNITY_BUILD=1 \
@@ -204,6 +231,9 @@ jobs:
           cp -r dist/debian debian
           if [ "${{ matrix.wayland }}" = "dist" ]; then
             sed -i -e 's/-DINPUTLEAP_BUILD_LIBEI=0/-DINPUTLEAP_BUILD_LIBEI=1/g' debian/rules
+          fi
+          if [ "${{ matrix.name }}" = "ubuntu-20-04" ]; then
+            sed -i -e 's/QT_DEFAULT_MAJOR_VERSION=6/QT_DEFAULT_MAJOR_VERSION=5/g' debian/rules
           fi
           debuild -us -uc
 

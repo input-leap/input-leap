@@ -88,7 +88,7 @@ public:
     Atom getSelection() const;
 
     // IClipboard overrides
-    bool empty() override;
+    bool clear() override;
     void add(EFormat, const std::string& data) override;
     bool open(Time) const override;
     void close() const override;

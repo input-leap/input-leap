@@ -371,7 +371,7 @@ XWindowsScreen::setClipboard(ClipboardID id, const IClipboard* clipboard)
 		if (!m_clipboard[id]->open(timestamp)) {
 			return false;
 		}
-		m_clipboard[id]->empty();
+        m_clipboard[id]->clear();
 		m_clipboard[id]->close();
 		return true;
 	}

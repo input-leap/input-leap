@@ -35,7 +35,7 @@ public:
     virtual ~OSXClipboard();
 
     // IClipboard overrides
-    virtual bool empty();
+    virtual bool clear();
     virtual void add(EFormat, const std::string& data);
     virtual bool open(Time) const;
     virtual void close() const;

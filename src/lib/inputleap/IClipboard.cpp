@@ -30,7 +30,7 @@ void IClipboard::unmarshall(IClipboard* clipboard, const std::string& data, Time
 
     if (clipboard->open(time)) {
         // clear existing data
-        clipboard->empty();
+        clipboard->clear();
 
         // read the number of formats
         const std::uint32_t numFormats = readUInt32(index);
@@ -127,7 +127,7 @@ IClipboard::copy(IClipboard* dst, const IClipboard* src, Time time)
     bool success = false;
     if (src->open(time)) {
         if (dst->open(time)) {
-            if (dst->empty()) {
+            if (dst->clear()) {
                 for (std::int32_t format = 0;
                                 format != IClipboard::kNumFormats; ++format) {
                     IClipboard::EFormat eFormat = static_cast<IClipboard::EFormat>(format);

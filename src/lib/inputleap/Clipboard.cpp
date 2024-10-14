@@ -26,7 +26,7 @@ Clipboard::Clipboard() :
     m_owner(false)
 {
     open(0);
-    empty();
+    clear();
     close();
 }
 
@@ -36,7 +36,7 @@ Clipboard::~Clipboard()
 }
 
 bool
-Clipboard::empty()
+Clipboard::clear()
 {
     assert(m_open);
 

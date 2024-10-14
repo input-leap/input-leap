@@ -394,7 +394,7 @@ MSWindowsScreen::setClipboard(ClipboardID, const IClipboard* src)
         if (!dst.open(0)) {
             return false;
         }
-        dst.empty();
+        dst.clear();
         dst.close();
         return true;
     }

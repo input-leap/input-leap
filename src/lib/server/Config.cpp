@@ -1808,7 +1808,7 @@ operator<<(std::ostream& s, const Config& config)
 		s << "\taddress = " <<
             config.listen_address_.getHostname().c_str() << "\n";
 	}
-	s << config.m_inputFilter.format("\t");
+    s << format_rules(config.m_inputFilter.get_rules(), "\t");
     s << "end\n";
 
 	return s;

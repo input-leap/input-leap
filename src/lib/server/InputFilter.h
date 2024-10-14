@@ -335,8 +335,7 @@ public:
     // if client is nullptr.
     virtual void setPrimaryClient(PrimaryClient* client);
 
-    // convert rules to a string
-    std::string format(const std::string& linePrefix) const;
+    const std::vector<Rule>& get_rules() const { return m_ruleList; }
 
     // get number of rules
     std::uint32_t getNumRules() const;
@@ -355,5 +354,8 @@ private:
     PrimaryClient* m_primaryClient;
     IEventQueue* m_events;
 };
+
+std::string format_rules(const std::vector<InputFilter::Rule>& rules,
+                         const std::string& line_prefix);
 
 } // namespace inputleap

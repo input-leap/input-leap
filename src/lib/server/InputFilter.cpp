@@ -906,17 +906,6 @@ InputFilter::setPrimaryClient(PrimaryClient* client)
     }
 }
 
-std::string InputFilter::format(const std::string& linePrefix) const
-{
-    std::string s;
-    for (auto i = m_ruleList.begin(); i != m_ruleList.end(); ++i) {
-        s += linePrefix;
-        s += i->format();
-        s += "\n";
-    }
-    return s;
-}
-
 std::uint32_t InputFilter::getNumRules() const
 {
     return static_cast<std::uint32_t>(m_ruleList.size());
@@ -966,6 +955,19 @@ void InputFilter::handle_event(const Event& event)
 
     // not handled so pass through
     m_events->add_event(std::move(myEvent));
+}
+
+
+std::string format_rules(const std::vector<InputFilter::Rule>& rules,
+                         const std::string& line_prefix)
+{
+    std::string s;
+    for (const auto& rule : rules) {
+        s += line_prefix;
+        s += rule.format();
+        s += "\n";
+    }
+    return s;
 }
 
 } // namespace inputleap

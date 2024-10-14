@@ -31,7 +31,11 @@ m_Enabled(false)
 {
     m_Socket = new QTcpSocket(this);
     connect(m_Socket, &QTcpSocket::connected, this, &IpcClient::connected);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
     connect(m_Socket, &QTcpSocket::errorOccurred, this, &IpcClient::error);
+#else
+    connect(m_Socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
+#endif
 
     m_Reader = new IpcReader(m_Socket);
     connect(m_Reader, &IpcReader::readLogLine, this, &IpcClient::handleReadLogLine);

@@ -390,7 +390,11 @@ void MainWindow::logOutput()
     if (cmd_app_process_)
     {
         QString text(cmd_app_process_->readAllStandardOutput());
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         const auto results = text.split(QRegularExpression("\r|\n|\r\n"));
+#else
+        const auto results = text.split(QRegExp("\r|\n|\r\n"));
+#endif
         for (const auto& line : results) {
             if (!line.isEmpty())
             {
@@ -428,7 +432,12 @@ void MainWindow::appendLogError(const QString& text)
 
 void MainWindow::appendLogRaw(const QString& text)
 {
-    for (const auto& line : text.split(QRegularExpression("\r|\n|\r\n"))) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    const auto lines = text.split(QRegularExpression("\r|\n|\r\n"));
+#else
+    const auto lines = text.split(QRegExp("\r|\n|\r\n"));
+#endif
+    for (const auto& line : lines) {
         if (!line.isEmpty()) {
             m_pLogWindow->appendRaw(line);
             updateFromLogLine(line);
@@ -467,6 +476,7 @@ void MainWindow::checkConnected(const QString& line)
 
 void MainWindow::checkFingerprint(const QString& line)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     QRegularExpression fingerprintRegex("peer fingerprint \\(SHA1\\): ([A-F0-9:]+) \\(SHA256\\): ([A-F0-9:]+)$");
     QRegularExpressionMatch match = fingerprintRegex.match(line);
     if (!match.hasMatch()) {
@@ -475,6 +485,15 @@ void MainWindow::checkFingerprint(const QString& line)
 
     auto match1 = match.captured(1).toStdString();
     auto match2 = match.captured(2).toStdString();
+#else
+    QRegExp fingerprintRegex(".*peer fingerprint \\(SHA1\\): ([A-F0-9:]+) \\(SHA256\\): ([A-F0-9:]+)");
+    if (!fingerprintRegex.exactMatch(line)) {
+        return;
+    }
+
+    auto match1 = fingerprintRegex.cap(1).toStdString();
+    auto match2 = fingerprintRegex.cap(2).toStdString();
+#endif
 
     inputleap::FingerprintData fingerprint_sha1 = {
         inputleap::fingerprint_type_to_string(inputleap::FingerprintType::SHA1),
@@ -1226,7 +1245,11 @@ bool MainWindow::isServiceRunning(QString name)
 
     auto array = name.toLocal8Bit();
 
+#if QT_VERSION_MAJOR < 6
+    SC_HANDLE hService = OpenService(hSCManager, array.data(), SERVICE_QUERY_STATUS);
+#else
     SC_HANDLE hService = OpenService(hSCManager, reinterpret_cast<LPCWSTR>(array.data()), SERVICE_QUERY_STATUS);
+#endif
     if (hService == nullptr) {
         appendLogDebug("failed to open service: " + name);
         return false;
@@ -1293,7 +1316,11 @@ void MainWindow::downloadBonjour()
         m_DownloadMessageBox->setWindowTitle("InputLeap");
         m_DownloadMessageBox->setIcon(QMessageBox::Information);
         m_DownloadMessageBox->setText("Installing Bonjour, please wait...");
-        m_DownloadMessageBox->setStandardButtons(QMessageBox::NoButton);        
+#if QT_VERSION_MAJOR < 6
+        m_DownloadMessageBox->setStandardButtons(0);
+#else
+        m_DownloadMessageBox->setStandardButtons(QMessageBox::NoButton);
+#endif
         m_pCancelButton = m_DownloadMessageBox->addButton(
             tr("Cancel"), QMessageBox::RejectRole);
     }
@@ -1308,7 +1335,12 @@ void MainWindow::downloadBonjour()
 void MainWindow::installBonjour()
 {
 #if defined(Q_OS_WIN)
+#if QT_VERSION >= 0x050000
     QString tempLocation = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
+#else
+    QString tempLocation = QDesktopServices::storageLocation(
+                                QDesktopServices::TempLocation);
+#endif
     QString filename = tempLocation;
     filename.append("\\").append(bonjourTargetFilename);
     QFile file(filename);

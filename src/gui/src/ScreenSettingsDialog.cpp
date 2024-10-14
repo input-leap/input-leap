@@ -25,8 +25,12 @@
 #include <QtGui>
 #include <QMessageBox>
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 static const QRegularExpression ValidScreenName("[a-z0-9\\._-]{0,255}",
                                                 QRegularExpression::CaseInsensitiveOption);
+#else
+static const QRegExp ValidScreenName("[a-z0-9\\._-]{,255}", Qt::CaseInsensitive);
+#endif
 
 static QString check_name_param(QString name)
 {
@@ -34,7 +38,11 @@ static QString check_name_param(QString name)
     // be translated with spaces (or other chars). let's replace the spaces
     // with dashes and just give up if that doesn't pass the regexp
     name.replace(' ', '-');
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     if (ValidScreenName.match(name).isValid())
+#else
+    if (ValidScreenName.exactMatch(name))
+#endif
         return name;
     return "";
 }
@@ -47,10 +55,18 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen) :
     ui_->setupUi(this);
 
     ui_->m_pLineEditName->setText(check_name_param(m_pScreen->name()));
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     ui_->m_pLineEditName->setValidator(new QRegularExpressionValidator(ValidScreenName, ui_->m_pLineEditName));
+#else
+    ui_->m_pLineEditName->setValidator(new QRegExpValidator(ValidScreenName, ui_->m_pLineEditName));
+#endif
     ui_->m_pLineEditName->selectAll();
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     ui_->m_pLineEditAlias->setValidator(new QRegularExpressionValidator(ValidScreenName, ui_->m_pLineEditName));
+#else
+    ui_->m_pLineEditAlias->setValidator(new QRegExpValidator(ValidScreenName, ui_->m_pLineEditName));
+#endif
 
     for (int i = 0; i < m_pScreen->aliases().count(); i++)
         new QListWidgetItem(m_pScreen->aliases()[i], ui_->m_pListAliases);

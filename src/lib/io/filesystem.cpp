@@ -15,6 +15,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#if INPUTLEAP_USE_GULRAK_FILESYSTEM
+// this header must come first so that it picks up the filesystem implementation
+#include <ghc/fs_impl.hpp>
+#endif
+
 #include "filesystem.h"
 #if SYSAPI_WIN32
 #include "common/win32/encoding_utilities.h"
@@ -28,7 +33,13 @@ namespace {
 template<class Stream>
 void open_utf8_path_impl(Stream& stream, const fs::path& path, std::ios_base::openmode mode)
 {
+#if SYSAPI_WIN32
+    // on Windows we need to use a non-standard constructor from wchar_t* string
+    // which fs::path::native() returns
     stream.open(path.native().c_str(), mode);
+#else
+    stream.open(path.native().c_str(), mode);
+#endif
 }
 
 } // namespace

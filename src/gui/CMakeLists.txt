@@ -1,5 +1,7 @@
 
-find_package (Qt6 ${REQUIRED_QT_VERSION} COMPONENTS Core Widgets Network LinguistTools REQUIRED)
+find_package (Qt${QT_DEFAULT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} COMPONENTS Core Widgets Network LinguistTools REQUIRED)
+
+message(STATUS "Using Qt ${QT_DEFAULT_MAJOR_VERSION}")
 
 set (CMAKE_AUTOMOC ON)
 set (CMAKE_AUTORCC ON)
@@ -162,7 +164,11 @@ set(TS_FILES
 )
 
 set_source_files_properties(${TS_FILES} PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/res/lang")
-qt_add_translation(QM_FILES ${TS_FILES} OPTIONS -silent)
+if (QT_DEFAULT_MAJOR_VERSION EQUAL 5)
+    qt5_add_translation(QM_FILES ${TS_FILES} OPTIONS -silent)
+else()
+    qt_add_translation(QM_FILES ${TS_FILES} OPTIONS -silent)
+endif()
 
 # The following file includes X11 headers that later break Qt headers.
 set_source_files_properties("src/DisplayIsValid.cpp" PROPERTIES SKIP_UNITY_BUILD_INCLUSION TRUE)
@@ -189,9 +195,9 @@ target_link_libraries(input-leap
     arch
     base
     io
-    Qt6::Core
-    Qt6::Widgets
-    Qt6::Network
+    Qt${QT_DEFAULT_MAJOR_VERSION}::Core
+    Qt${QT_DEFAULT_MAJOR_VERSION}::Widgets
+    Qt${QT_DEFAULT_MAJOR_VERSION}::Network
 )
 
 target_link_libraries(input-leap OpenSSL::SSL OpenSSL::Crypto)
@@ -260,5 +266,5 @@ if(INPUTLEAP_BUILD_TESTS)
              WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
     target_include_directories(guiunittests PUBLIC ../../ext)
-    target_link_libraries(guiunittests gtest gmock Qt6::Core Qt6::Widgets Qt6::Network ${libs})
+    target_link_libraries(guiunittests gtest gmock Qt${QT_DEFAULT_MAJOR_VERSION}::Core Qt${QT_DEFAULT_MAJOR_VERSION}::Widgets Qt${QT_DEFAULT_MAJOR_VERSION}::Network ${libs})
 endif()

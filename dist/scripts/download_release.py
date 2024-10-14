@@ -50,6 +50,10 @@ def main():
             "input-leap_.*_amd64.deb",
             f"InputLeap_{version}_debian12_amd64.deb",
         ),
+        "input-leap-deb-ubuntu-20-04": (
+            "input-leap_.*_amd64.deb",
+            f"InputLeap_{version}_ubuntu_20-04_amd64.deb",
+        ),
         "input-leap-deb-ubuntu-22-04": (
             "input-leap_.*_amd64.deb",
             f"InputLeap_{version}_ubuntu_22-04_amd64.deb",
@@ -78,7 +82,11 @@ def main():
             "InputLeap-.*-release.dmg",
             f"InputLeap_{version}_macos_x86_64.dmg",
         ),
-        "windows-installer-Windows": (
+        "windows-installer-Windows Qt5": (
+            "InputLeapSetup-.*-release.exe",
+            f"InputLeap_{version}_windows_qt5.exe",
+        ),
+        "windows-installer-Windows Qt6": (
             "InputLeapSetup-.*-release.exe",
             f"InputLeap_{version}_windows_qt6.exe",
         ),

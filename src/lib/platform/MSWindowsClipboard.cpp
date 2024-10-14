@@ -78,7 +78,7 @@ MSWindowsClipboard::emptyUnowned()
 }
 
 bool
-MSWindowsClipboard::empty()
+MSWindowsClipboard::clear()
 {
     if (!emptyUnowned()) {
         return false;

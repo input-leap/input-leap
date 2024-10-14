@@ -283,7 +283,7 @@ XWindowsClipboard::getSelection() const
 }
 
 bool
-XWindowsClipboard::empty()
+XWindowsClipboard::clear()
 {
     assert(m_open);
 

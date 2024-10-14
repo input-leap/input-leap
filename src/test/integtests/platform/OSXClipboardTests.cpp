@@ -28,7 +28,7 @@ TEST(OSXClipboardTests, empty_openCalled_returnsTrue)
     OSXClipboard clipboard;
     clipboard.open(0);
 
-    bool actual = clipboard.empty();
+    bool actual = clipboard.clear();
 
     EXPECT_EQ(true, actual);
 }
@@ -39,7 +39,7 @@ TEST(OSXClipboardTests, empty_singleFormat_hasReturnsFalse)
     clipboard.open(0);
     clipboard.add(OSXClipboard::kText, "test string!");
 
-    clipboard.empty();
+    clipboard.clear();
 
     bool actual = clipboard.has(OSXClipboard::kText);
     EXPECT_EQ(false, actual);
@@ -112,7 +112,7 @@ TEST(OSXClipboardTests, getTime_openAndEmpty_returnsOne)
 {
     OSXClipboard clipboard;
     clipboard.open(1);
-    clipboard.empty();
+    clipboard.clear();
 
     OSXClipboard::Time actual = clipboard.getTime();
 
@@ -123,7 +123,7 @@ TEST(OSXClipboardTests, has_withFormatAdded_returnsTrue)
 {
     OSXClipboard clipboard;
     clipboard.open(0);
-    clipboard.empty();
+    clipboard.clear();
     clipboard.add(IClipboard::kText, "test string!");
 
     bool actual = clipboard.has(IClipboard::kText);
@@ -135,7 +135,7 @@ TEST(OSXClipboardTests, has_withNoFormats_returnsFalse)
 {
     OSXClipboard clipboard;
     clipboard.open(0);
-    clipboard.empty();
+    clipboard.clear();
 
     bool actual = clipboard.has(IClipboard::kText);
 
@@ -146,7 +146,7 @@ TEST(OSXClipboardTests, get_withNoFormats_returnsEmpty)
 {
     OSXClipboard clipboard;
     clipboard.open(0);
-    clipboard.empty();
+    clipboard.clear();
 
     std::string actual = clipboard.get(IClipboard::kText);
 
@@ -157,7 +157,7 @@ TEST(OSXClipboardTests, get_withFormatAdded_returnsExpected)
 {
     OSXClipboard clipboard;
     clipboard.open(0);
-    clipboard.empty();
+    clipboard.clear();
     clipboard.add(IClipboard::kText, "test string!");
 
     std::string actual = clipboard.get(IClipboard::kText);

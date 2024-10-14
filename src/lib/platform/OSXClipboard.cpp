@@ -60,7 +60,7 @@ OSXClipboard::~OSXClipboard()
 }
 
     bool
-OSXClipboard::empty()
+OSXClipboard::clear()
 {
     LOG_DEBUG("emptying clipboard");
     if (m_pboard == nullptr)

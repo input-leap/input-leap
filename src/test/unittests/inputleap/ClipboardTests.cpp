@@ -27,7 +27,7 @@ TEST(ClipboardTests, empty_openCalled_returnsTrue)
     Clipboard clipboard;
     clipboard.open(0);
 
-    bool actual = clipboard.empty();
+    bool actual = clipboard.clear();
 
     EXPECT_EQ(true, actual);
 }
@@ -38,7 +38,7 @@ TEST(ClipboardTests, empty_singleFormat_hasReturnsFalse)
     clipboard.open(0);
     clipboard.add(Clipboard::kText, "test string!");
 
-    clipboard.empty();
+    clipboard.clear();
 
     bool actual = clipboard.has(Clipboard::kText);
     EXPECT_FALSE(actual);
@@ -109,7 +109,7 @@ TEST(ClipboardTests, getTime_openAndEmpty_returnsOne)
 {
     Clipboard clipboard;
     clipboard.open(1);
-    clipboard.empty();
+    clipboard.clear();
 
     Clipboard::Time actual = clipboard.getTime();
 

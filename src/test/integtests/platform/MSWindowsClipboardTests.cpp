@@ -42,7 +42,7 @@ private:
     {
         MSWindowsClipboard clipboard(nullptr);
         clipboard.open(0);
-        clipboard.empty();
+        clipboard.clear();
     }
 };
 
@@ -67,7 +67,7 @@ TEST_F(MSWindowsClipboardTests, empty_openCalled_returnsTrue)
     MSWindowsClipboard clipboard(nullptr);
     clipboard.open(0);
 
-    bool actual = clipboard.empty();
+    bool actual = clipboard.clear();
 
     EXPECT_EQ(true, actual);
 }
@@ -78,7 +78,7 @@ TEST_F(MSWindowsClipboardTests, empty_singleFormat_hasReturnsFalse)
     clipboard.open(0);
     clipboard.add(MSWindowsClipboard::kText, "test string!");
 
-    clipboard.empty();
+    clipboard.clear();
 
     bool actual = clipboard.has(MSWindowsClipboard::kText);
     EXPECT_EQ(false, actual);
@@ -178,7 +178,7 @@ TEST_F(MSWindowsClipboardTests, has_withFormatAdded_returnsTrue)
 {
     MSWindowsClipboard clipboard(nullptr);
     clipboard.open(0);
-    clipboard.empty();
+    clipboard.clear();
     clipboard.add(IClipboard::kText, "test string!");
 
     bool actual = clipboard.has(IClipboard::kText);
@@ -190,7 +190,7 @@ TEST_F(MSWindowsClipboardTests, has_withNoFormats_returnsFalse)
 {
     MSWindowsClipboard clipboard(nullptr);
     clipboard.open(0);
-    clipboard.empty();
+    clipboard.clear();
 
     bool actual = clipboard.has(IClipboard::kText);
 
@@ -201,7 +201,7 @@ TEST_F(MSWindowsClipboardTests, get_withNoFormats_returnsEmpty)
 {
     MSWindowsClipboard clipboard(nullptr);
     clipboard.open(0);
-    clipboard.empty();
+    clipboard.clear();
 
     std::string actual = clipboard.get(IClipboard::kText);
 
@@ -212,7 +212,7 @@ TEST_F(MSWindowsClipboardTests, get_withFormatAdded_returnsExpected)
 {
     MSWindowsClipboard clipboard(nullptr);
     clipboard.open(0);
-    clipboard.empty();
+    clipboard.clear();
     clipboard.add(IClipboard::kText, "test string!");
 
     std::string actual = clipboard.get(IClipboard::kText);

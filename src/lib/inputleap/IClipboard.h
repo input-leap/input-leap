@@ -79,7 +79,7 @@ public:
     Return false if the clipboard ownership could not be taken;
     the clipboard should not be emptied in this case.
     */
-    virtual bool empty() = 0;
+    virtual bool clear() = 0;
 
     //! Add data
     /*!

@@ -84,10 +84,8 @@ jobs:
                   libxkbcommon-dev \
                   libglib2.0-dev \
                   ninja-build \
-                  qt6-base-dev \
-                  qt6-l10n-tools \
-                  qt6-tools-dev-tools \
-                  qt6-tools-dev
+                  qtdeclarative5-dev \
+                  qttools5-dev
 
       - if: env.B_BUILD_TYPE == 'Release'
         name: Install release installer build packages

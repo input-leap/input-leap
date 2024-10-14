@@ -1,6 +1,6 @@
 %global package_version @INPUTLEAP_VERSION_MAJOR@.@INPUTLEAP_VERSION_MINOR@.@INPUTLEAP_VERSION_PATCH@
 %global tarname InputLeap-%{version}-Source
-%global input_leap_revision @INPUTLEAP_REVISION@
+%global input_leap_version_desc @INPUTLEAP_VERSION_DESC@
 %global timestamp @INPUTLEAP_BUILD_DATE@@INPUTLEAP_BUILD_TIME@
 
 %global rdnn_name io.github.input_leap.InputLeap
@@ -43,7 +43,7 @@ Work seamlessly across Windows, macOS and Linux.
 
 %build
 %{cmake} . \
-    -DINPUTLEAP_REVISION:STRING=%{input_leap_revision} \
+    -DINPUTLEAP_VERSION_DESC:STRING=%{input_leap_version_desc} \
     -DINPUTLEAP_BUILD_LIBEI=ON \
     -DINPUTLEAP_BUILD_TESTS=ON \
     -DINPUTLEAP_USE_EXTERNAL_GTEST=True \

@@ -104,7 +104,7 @@ ArchTaskBarWindows::addReceiver(IArchTaskBarReceiver* receiver)
     }
 
     // add receiver if necessary
-    ReceiverToInfoMap::iterator index = m_receivers.find(receiver);
+    auto index = m_receivers.find(receiver);
     if (index == m_receivers.end()) {
         // add it, creating a new message ID for it
         ReceiverInfo info;
@@ -123,7 +123,7 @@ void
 ArchTaskBarWindows::removeReceiver(IArchTaskBarReceiver* receiver)
 {
     // find receiver
-    ReceiverToInfoMap::iterator index = m_receivers.find(receiver);
+    auto index = m_receivers.find(receiver);
     if (index == m_receivers.end()) {
         return;
     }
@@ -143,7 +143,7 @@ void
 ArchTaskBarWindows::updateReceiver(IArchTaskBarReceiver* receiver)
 {
     // find receiver
-    ReceiverToInfoMap::const_iterator index = m_receivers.find(receiver);
+    auto index = m_receivers.find(receiver);
     if (index == m_receivers.end()) {
         return;
     }
@@ -173,7 +173,7 @@ void
 ArchTaskBarWindows::addIcon(UINT id)
 {
     std::lock_guard<std::mutex> lock(mutex_);
-    CIDToReceiverMap::const_iterator index = m_idTable.find(id);
+    auto index = m_idTable.find(id);
     if (index != m_idTable.end()) {
         modifyIconNoLock(index->second, NIM_ADD);
     }
@@ -190,7 +190,7 @@ void
 ArchTaskBarWindows::updateIcon(UINT id)
 {
     std::lock_guard<std::mutex> lock(mutex_);
-    CIDToReceiverMap::const_iterator index = m_idTable.find(id);
+    auto index = m_idTable.find(id);
     if (index != m_idTable.end()) {
         modifyIconNoLock(index->second, NIM_MODIFY);
     }
@@ -200,8 +200,7 @@ void
 ArchTaskBarWindows::addAllIcons()
 {
     std::lock_guard<std::mutex> lock(mutex_);
-    for (ReceiverToInfoMap::const_iterator index = m_receivers.begin();
-                                    index != m_receivers.end(); ++index) {
+    for (auto index = m_receivers.begin(); index != m_receivers.end(); ++index) {
         modifyIconNoLock(index, NIM_ADD);
     }
 }
@@ -210,8 +209,7 @@ void
 ArchTaskBarWindows::removeAllIcons()
 {
     std::lock_guard<std::mutex> lock(mutex_);
-    for (ReceiverToInfoMap::const_iterator index = m_receivers.begin();
-                                    index != m_receivers.end(); ++index) {
+    for (auto index = m_receivers.begin(); index != m_receivers.end(); ++index) {
         removeIconNoLock(index->second.m_id);
     }
 }
@@ -319,7 +317,7 @@ ArchTaskBarWindows::wndProc(HWND hwnd,
     switch (msg) {
     case kNotifyReceiver: {
         // lookup receiver
-        CIDToReceiverMap::const_iterator index = m_idTable.find((UINT)wParam);
+        auto index = m_idTable.find((UINT)wParam);
         if (index != m_idTable.end()) {
             IArchTaskBarReceiver* receiver = index->second->first;
             handleIconMessage(receiver, lParam);

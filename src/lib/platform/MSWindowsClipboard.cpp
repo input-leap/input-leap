@@ -101,8 +101,7 @@ MSWindowsClipboard::add(EFormat format, const std::string& data)
     LOG_DEBUG("add %d bytes to clipboard format: %d", data.size(), format);
 
     // convert data to win32 form
-    for (ConverterList::const_iterator index = m_converters.begin();
-                                index != m_converters.end(); ++index) {
+    for (auto index = m_converters.begin(); index != m_converters.end(); ++index) {
         IMSWindowsClipboardConverter* converter = *index;
 
         // skip converters for other formats
@@ -151,8 +150,7 @@ MSWindowsClipboard::getTime() const
 bool
 MSWindowsClipboard::has(EFormat format) const
 {
-    for (ConverterList::const_iterator index = m_converters.begin();
-                                index != m_converters.end(); ++index) {
+    for (auto index = m_converters.begin(); index != m_converters.end(); ++index) {
         IMSWindowsClipboardConverter* converter = *index;
         if (converter->getFormat() == format) {
             if (IsClipboardFormatAvailable(converter->getWin32Format())) {
@@ -167,8 +165,7 @@ std::string MSWindowsClipboard::get(EFormat format) const
 {
     // find the converter for the first clipboard format we can handle
     IMSWindowsClipboardConverter* converter = nullptr;
-    for (ConverterList::const_iterator index = m_converters.begin();
-        index != m_converters.end(); ++index) {
+    for (auto index = m_converters.begin(); index != m_converters.end(); ++index) {
 
         converter = *index;
         if (converter->getFormat() == format) {
@@ -199,8 +196,7 @@ std::string MSWindowsClipboard::get(EFormat format) const
 void
 MSWindowsClipboard::clearConverters()
 {
-    for (ConverterList::iterator index = m_converters.begin();
-                                index != m_converters.end(); ++index) {
+    for (auto index = m_converters.begin(); index != m_converters.end(); ++index) {
         delete *index;
     }
     m_converters.clear();

@@ -112,8 +112,7 @@ ArchNetworkWinsock::~ArchNetworkWinsock()
         s_networkModule = nullptr;
     }
 
-    EventList::iterator it;
-    for (it = m_unblockEvents.begin(); it != m_unblockEvents.end(); it++) {
+    for (auto it = m_unblockEvents.begin(); it != m_unblockEvents.end(); it++) {
         delete *it;
     }
 }

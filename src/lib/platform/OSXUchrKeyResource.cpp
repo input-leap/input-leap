@@ -189,7 +189,7 @@ bool OSXUchrKeyResource::getDeadKey(KeySequence& keys, std::uint16_t index) cons
     }
 
     // convert keys to their dead counterparts
-    for (KeySequence::iterator i = keys.begin(); i != keys.end(); ++i) {
+    for (auto i = keys.begin(); i != keys.end(); ++i) {
         *i = inputleap::KeyMap::getDeadKey(*i);
     }
 

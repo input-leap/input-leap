@@ -226,8 +226,7 @@ MSWindowsClientTaskBarReceiver::copyLog() const
     if (m_logBuffer != nullptr) {
         // collect log buffer
         std::string data;
-        for (BufferedLogOutputter::const_iterator index = m_logBuffer->begin();
-                                index != m_logBuffer->end(); ++index) {
+        for (auto index = m_logBuffer->begin(); index != m_logBuffer->end(); ++index) {
             data += *index;
             data += "\n";
         }

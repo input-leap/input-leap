@@ -341,7 +341,7 @@ std::uint32_t OSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 void OSXScreen::unregisterHotKey(std::uint32_t id)
 {
 	// look up hotkey
-	HotKeyMap::iterator i = m_hotKeys.find(id);
+        auto i = m_hotKeys.find(id);
 	if (i == m_hotKeys.end()) {
 		return;
 	}
@@ -354,8 +354,7 @@ void OSXScreen::unregisterHotKey(std::uint32_t id)
 	else {
 		okay = false;
 		// XXX -- this is inefficient
-		for (ModifierHotKeyMap::iterator j = m_modifierHotKeys.begin();
-								j != m_modifierHotKeys.end(); ++j) {
+                for (auto j = m_modifierHotKeys.begin(); j != m_modifierHotKeys.end(); ++j) {
 			if (j->second == id) {
 				m_modifierHotKeys.erase(j);
 				okay = true;
@@ -1228,7 +1227,7 @@ OSXScreen::onKey(CGEventRef event)
 		return true;
 	}
 
-	HotKeyToIDMap::const_iterator i = m_hotKeyToIDMap.find(HotKeyItem(virtualKey, m_keyState->mapModifiersToCarbon(macMask) & 0xff00u));
+        auto i = m_hotKeyToIDMap.find(HotKeyItem(virtualKey, m_keyState->mapModifiersToCarbon(macMask) & 0xff00u));
 	if (i != m_hotKeyToIDMap.end()) {
 		std::uint32_t id = i->second;
 		// determine event type
@@ -1282,8 +1281,7 @@ OSXScreen::onKey(CGEventRef event)
 	}
 
 	// send key events
-	for (OSXKeyState::KeyIDs::const_iterator i = keys.begin();
-							i != keys.end(); ++i) {
+        for (auto i = keys.begin(); i != keys.end(); ++i) {
         m_keyState->sendKeyEvent(get_event_target(), down, isRepeat,
 							*i, sendMask, 1, button);
 	}

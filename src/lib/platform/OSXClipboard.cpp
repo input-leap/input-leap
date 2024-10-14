@@ -106,8 +106,7 @@ void OSXClipboard::add(EFormat format, const std::string& data)
         LOG_DEBUG(" format of data to be added to clipboard was kHTML");
     }
 
-    for (ConverterList::const_iterator index = m_converters.begin();
-            index != m_converters.end(); ++index) {
+    for (auto index = m_converters.begin(); index != m_converters.end(); ++index) {
 
         IOSXClipboardConverter* converter = *index;
 
@@ -165,8 +164,7 @@ OSXClipboard::has(EFormat format) const
     PasteboardItemID item;
     PasteboardGetItemIdentifier(m_pboard, (CFIndex) 1, &item);
 
-    for (ConverterList::const_iterator index = m_converters.begin();
-            index != m_converters.end(); ++index) {
+    for (auto index = m_converters.begin(); index != m_converters.end(); ++index) {
         IOSXClipboardConverter* converter = *index;
         if (converter->getFormat() == format) {
             PasteboardFlavorFlags flags;
@@ -197,8 +195,7 @@ std::string OSXClipboard::get(EFormat format) const
 
     // find the converter for the first clipboard format we can handle
     IOSXClipboardConverter* converter = nullptr;
-    for (ConverterList::const_iterator index = m_converters.begin();
-            index != m_converters.end(); ++index) {
+    for (auto index = m_converters.begin(); index != m_converters.end(); ++index) {
         converter = *index;
 
         PasteboardFlavorFlags flags;
@@ -248,8 +245,7 @@ OSXClipboard::clearConverters()
     if (m_pboard == nullptr)
         return;
 
-    for (ConverterList::iterator index = m_converters.begin();
-            index != m_converters.end(); ++index) {
+    for (auto index = m_converters.begin(); index != m_converters.end(); ++index) {
         delete *index;
     }
     m_converters.clear();

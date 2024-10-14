@@ -346,8 +346,7 @@ ArchMiscWindows::removeDialog(HWND hwnd)
 bool
 ArchMiscWindows::processDialog(MSG* msg)
 {
-    for (Dialogs::const_iterator index = s_dialogs->begin();
-                            index != s_dialogs->end(); ++index) {
+    for (auto index = s_dialogs->begin(); index != s_dialogs->end(); ++index) {
         if (IsDialogMessage(*index, msg)) {
             return true;
         }

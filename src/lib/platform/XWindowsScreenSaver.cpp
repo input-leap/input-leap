@@ -436,8 +436,7 @@ XWindowsScreenSaver::clearWatchForXScreenSaver()
 {
     // stop watching all windows
     XWindowsUtil::ErrorLock lock(m_display);
-    for (WatchList::iterator index = m_watchWindows.begin();
-                                index != m_watchWindows.end(); ++index) {
+    for (auto index = m_watchWindows.begin(); index != m_watchWindows.end(); ++index) {
         m_impl->XSelectInput(m_display, index->first, index->second);
     }
     m_watchWindows.clear();

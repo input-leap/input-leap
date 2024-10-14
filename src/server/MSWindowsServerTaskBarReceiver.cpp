@@ -101,8 +101,7 @@ MSWindowsServerTaskBarReceiver::showStatus()
     SendMessage(child, WM_SETTEXT, 0, (LPARAM)status.c_str());
     child = GetDlgItem(m_window, IDC_TASKBAR_STATUS_CLIENTS);
     SendMessage(child, LB_RESETCONTENT, 0, 0);
-    for (Clients::const_iterator index = clients.begin();
-                            index != clients.end(); ) {
+    for (auto index = clients.begin(); index != clients.end(); ) {
         const char* client = index->c_str();
         if (++index == clients.end()) {
             SendMessage(child, LB_ADDSTRING, 0, (LPARAM)client);
@@ -254,8 +253,7 @@ MSWindowsServerTaskBarReceiver::copyLog() const
     if (m_logBuffer != nullptr) {
         // collect log buffer
         std::string data;
-        for (BufferedLogOutputter::const_iterator index = m_logBuffer->begin();
-                                index != m_logBuffer->end(); ++index) {
+        for (auto index = m_logBuffer->begin(); index != m_logBuffer->end(); ++index) {
             data += *index;
             data += "\n";
         }

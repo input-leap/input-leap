@@ -136,7 +136,7 @@ XWindowsKeyState::mapModifiersToX(KeyModifierMask mask,
     for (std::int32_t i = 0; i < kKeyModifierNumBits; ++i) {
         KeyModifierMask bit = (1u << i);
         if ((mask & bit) != 0) {
-            KeyModifierToXMask::const_iterator j = m_modifierToX.find(bit);
+            auto j = m_modifierToX.find(bit);
             if (j == m_modifierToX.end()) {
                 return false;
             }
@@ -153,11 +153,8 @@ void
 XWindowsKeyState::mapKeyToKeycodes(KeyID key, KeycodeList& keycodes) const
 {
     keycodes.clear();
-    std::pair<KeyToKeyCodeMap::const_iterator,
-        KeyToKeyCodeMap::const_iterator> range =
-            m_keyCodeFromKey.equal_range(key);
-    for (KeyToKeyCodeMap::const_iterator i = range.first;
-                                i != range.second; ++i) {
+    auto range = m_keyCodeFromKey.equal_range(key);
+    for (auto i = range.first; i != range.second; ++i) {
         keycodes.push_back(i->second);
     }
 }
@@ -671,8 +668,7 @@ XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
 
                 // VMware modifier hack
                 if (useLastGoodModifiers) {
-                    XKBModifierMap::const_iterator k =
-                        m_lastGoodXKBModifiers.find(eGroup * 256 + keycode);
+                    auto k = m_lastGoodXKBModifiers.find(eGroup * 256 + keycode);
                     if (k != m_lastGoodXKBModifiers.end()) {
                         // Use last known good modifier
                         isModifier   = true;

@@ -626,7 +626,7 @@ std::uint32_t MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 void MSWindowsScreen::unregisterHotKey(std::uint32_t id)
 {
     // look up hotkey
-    HotKeyMap::iterator i = m_hotKeys.find(id);
+    auto i = m_hotKeys.find(id);
     if (i == m_hotKeys.end()) {
         return;
     }
@@ -1103,7 +1103,7 @@ MSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
     m_keyState->onKey(button, down, oldState);
 
     if (!down && m_isPrimary && !m_isOnScreen) {
-        PrimaryKeyDownList::iterator find = std::find(m_primaryKeyDownList.begin(), m_primaryKeyDownList.end(), button);
+        auto find = std::find(m_primaryKeyDownList.begin(), m_primaryKeyDownList.end(), button);
         if (find != m_primaryKeyDownList.end()) {
             LOG_DEBUG1("release key button %d on primary", *find);
             m_hook.setMode(kHOOK_WATCH_JUMP_ZONE);
@@ -1218,8 +1218,7 @@ MSWindowsScreen::onHotKey(WPARAM wParam, LPARAM lParam)
     }
 
     // find the hot key id
-    HotKeyToIDMap::const_iterator i =
-        m_hotKeyToIDMap.find(HotKeyItem(virtKey, modifiers));
+    auto i = m_hotKeyToIDMap.find(HotKeyItem(virtKey, modifiers));
     if (i == m_hotKeyToIDMap.end()) {
         return false;
     }

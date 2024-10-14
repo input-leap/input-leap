@@ -452,8 +452,7 @@ ArchThreadImpl*
 ArchMultithreadPosix::findNoRef(pthread_t thread)
 {
     // linear search
-    for (ThreadList::const_iterator index  = m_threadList.begin();
-                                     index != m_threadList.end(); ++index) {
+    for (auto index  = m_threadList.begin(); index != m_threadList.end(); ++index) {
         if ((*index)->m_thread == thread) {
             return *index;
         }

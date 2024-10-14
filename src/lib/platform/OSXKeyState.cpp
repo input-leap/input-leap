@@ -242,7 +242,7 @@ OSXKeyState::mapKeyFromEvent(KeyIDs& ids,
     }
 
     // check for special keys
-    VirtualKeyMap::const_iterator i = m_virtualKeyMap.find(vkCode);
+    auto i = m_virtualKeyMap.find(vkCode);
     if (i != m_virtualKeyMap.end()) {
         m_deadKeyState = 0;
         ids.push_back(i->second);
@@ -397,7 +397,7 @@ std::int32_t OSXKeyState::pollActiveGroup() const
     CFDataRef id = (CFDataRef)TISGetInputSourceProperty(
                         keyboardLayout, kTISPropertyInputSourceID);
 
-    GroupMap::const_iterator i = m_groupMap.find(id);
+    auto i = m_groupMap.find(id);
     if (i != m_groupMap.end()) {
         return i->second;
     }
@@ -754,8 +754,7 @@ bool OSXKeyState::getKeyMap(inputleap::KeyMap& keyMap, std::int32_t group,
 
             // now add a key entry for each key/required modifier pair.
             item.m_sensitive = mapModifiersFromOSX(sensitive << 16);
-            for (std::set<std::uint32_t>::iterator k = required.begin();
-                                            k != required.end(); ++k) {
+            for (auto k = required.begin(); k != required.end(); ++k) {
                 item.m_required = mapModifiersFromOSX(*k << 16);
                 keyMap.addKeyEntry(item);
             }
@@ -895,7 +894,7 @@ OSXKeyState::adjustAltGrModifier(const KeyIDs& ids,
                 KeyModifierMask* mask, bool isCommand) const
 {
     if (!isCommand) {
-        for (KeyIDs::const_iterator i = ids.begin(); i != ids.end(); ++i) {
+        for (auto i = ids.begin(); i != ids.end(); ++i) {
             KeyID id = *i;
             if (id != kKeyNone &&
                 ((id < 0xe000u || id > 0xefffu) ||

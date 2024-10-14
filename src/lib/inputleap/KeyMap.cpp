@@ -158,7 +158,7 @@ bool KeyMap::addKeyCombinationEntry(KeyID id, std::int32_t group, const KeyID* k
     // convert to buttons
     KeyItemList items;
     for (std::uint32_t i = 0; i < numKeys; ++i) {
-        KeyIDMap::const_iterator gtIndex = m_keyIDMap.find(keys[i]);
+        auto gtIndex = m_keyIDMap.find(keys[i]);
         if (gtIndex == m_keyIDMap.end()) {
             return false;
         }
@@ -224,8 +224,7 @@ KeyMap::finish()
     m_numGroups = findNumGroups();
 
     // make sure every key has the same number of groups
-    for (KeyIDMap::iterator i = m_keyIDMap.begin();
-                                i != m_keyIDMap.end(); ++i) {
+    for (auto i = m_keyIDMap.begin(); i != m_keyIDMap.end(); ++i) {
         i->second.resize(m_numGroups);
     }
 
@@ -236,8 +235,7 @@ KeyMap::finish()
 void
 KeyMap::foreachKey(ForeachKeyCallback cb, void* userData)
 {
-    for (KeyIDMap::iterator i = m_keyIDMap.begin();
-                                i != m_keyIDMap.end(); ++i) {
+    for (auto i = m_keyIDMap.begin(); i != m_keyIDMap.end(); ++i) {
         KeyGroupTable& groupTable = i->second;
         for (size_t group = 0; group < groupTable.size(); ++group) {
             KeyEntryList& entryList = groupTable[group];
@@ -340,7 +338,7 @@ const KeyMap::KeyItemList* KeyMap::findCompatibleKey(KeyID id, std::int32_t grou
 {
     assert(group >= 0 && group < getNumGroups());
 
-    KeyIDMap::const_iterator i = m_keyIDMap.find(id);
+    auto i = m_keyIDMap.find(id);
     if (i == m_keyIDMap.end()) {
         return nullptr;
     }
@@ -386,8 +384,7 @@ void
 KeyMap::collectButtons(const ModifierToKeys& mods, ButtonToKeyMap& keys)
 {
     keys.clear();
-    for (ModifierToKeys::const_iterator i = mods.begin();
-                                i != mods.end(); ++i) {
+    for (auto i = mods.begin(); i != mods.end(); ++i) {
         keys.insert(std::make_pair(i->second.m_button, &i->second));
     }
 }
@@ -451,8 +448,7 @@ KeyMap::initModifierKey(KeyItem& item)
 std::int32_t KeyMap::findNumGroups() const
 {
     size_t max = 0;
-    for (KeyIDMap::const_iterator i = m_keyIDMap.begin();
-                                i != m_keyIDMap.end(); ++i) {
+    for (auto i = m_keyIDMap.begin(); i != m_keyIDMap.end(); ++i) {
         if (i->second.size() > max) {
             max = i->second.size();
         }
@@ -465,8 +461,7 @@ KeyMap::setModifierKeys()
 {
     m_modifierKeys.clear();
     m_modifierKeys.resize(kKeyModifierNumBits * getNumGroups());
-    for (KeyIDMap::const_iterator i = m_keyIDMap.begin();
-                                i != m_keyIDMap.end(); ++i) {
+    for (auto i = m_keyIDMap.begin(); i != m_keyIDMap.end(); ++i) {
         const KeyGroupTable& groupTable = i->second;
         for (size_t g = 0; g < groupTable.size(); ++g) {
             const KeyEntryList& entries = groupTable[g];
@@ -503,7 +498,7 @@ const KeyMap::KeyItem* KeyMap::mapCommandKey(Keystrokes& keys, KeyID id, std::in
     static const KeyModifierMask s_overrideModifiers = 0xffffu;
 
     // find KeySym in table
-    KeyIDMap::const_iterator it = m_keyIDMap.find(id);
+    auto it = m_keyIDMap.find(id);
     if (it == m_keyIDMap.end()) {
         // unknown key
         LOG_DEBUG1("key %04x is not on keyboard", id);
@@ -592,7 +587,7 @@ const KeyMap::KeyItem* KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, std::
                                                KeyModifierMask desiredMask, bool isAutoRepeat) const
 {
     // find KeySym in table
-    KeyIDMap::const_iterator i = m_keyIDMap.find(id);
+    auto i = m_keyIDMap.find(id);
     if (i == m_keyIDMap.end()) {
         // unknown key
         LOG_DEBUG1("key %04x is not on keyboard", id);
@@ -721,8 +716,7 @@ const KeyMap::KeyItem* KeyMap::keyForModifier(KeyButton button, std::int32_t gro
     // must use the other shift button to do the shifting.
     const ModifierKeyItemList& items =
         m_modifierKeys[group * kKeyModifierNumBits + modifierBit];
-    for (ModifierKeyItemList::const_iterator i = items.begin();
-                                i != items.end(); ++i) {
+    for (auto i = items.begin(); i != items.end(); ++i) {
         if ((*i)->m_button != button) {
             return (*i);
         }
@@ -815,8 +809,7 @@ bool KeyMap::keysToRestoreModifiers(const KeyItem& keyItem, std::int32_t,
     collectButtons(desiredModifiers, newKeys);
 
     // release unwanted keys
-    for (ModifierToKeys::const_iterator i = oldModifiers.begin();
-                                i != oldModifiers.end(); ++i) {
+    for (auto i = oldModifiers.begin(); i != oldModifiers.end(); ++i) {
         KeyButton button = i->second.m_button;
         if (button != keyItem.m_button && newKeys.count(button) == 0) {
             EKeystroke type = kKeystrokeRelease;
@@ -829,8 +822,7 @@ bool KeyMap::keysToRestoreModifiers(const KeyItem& keyItem, std::int32_t,
     }
 
     // press wanted keys
-    for (ModifierToKeys::const_iterator i = desiredModifiers.begin();
-                                i != desiredModifiers.end(); ++i) {
+    for (auto i = desiredModifiers.begin(); i != desiredModifiers.end(); ++i) {
         KeyButton button = i->second.m_button;
         if (button != keyItem.m_button && oldKeys.count(button) == 0) {
             EKeystroke type = kKeystrokePress;
@@ -967,11 +959,8 @@ KeyMap::addKeystrokes(EKeystroke type, const KeyItem& keyItem,
         keystrokes.push_back(Keystroke(button, false, false, data));
         if (keyItem.m_generates != 0 && !keyItem.m_lock) {
             // remove key from active modifiers
-            std::pair<ModifierToKeys::iterator,
-                        ModifierToKeys::iterator> range =
-                activeModifiers.equal_range(keyItem.m_generates);
-            for (ModifierToKeys::iterator i = range.first;
-                                i != range.second; ++i) {
+            auto range = activeModifiers.equal_range(keyItem.m_generates);
+            for (auto i = range.first; i != range.second; ++i) {
                 if (i->second.m_button == button) {
                     activeModifiers.erase(i);
                     break;
@@ -1024,11 +1013,8 @@ KeyMap::addKeystrokes(EKeystroke type, const KeyItem& keyItem,
         else {
             // release all the keys that generate the modifier that are
             // currently down
-            std::pair<ModifierToKeys::const_iterator,
-                        ModifierToKeys::const_iterator> range =
-                activeModifiers.equal_range(keyItem.m_generates);
-            for (ModifierToKeys::const_iterator i = range.first;
-                                i != range.second; ++i) {
+            auto range = activeModifiers.equal_range(keyItem.m_generates);
+            for (auto i = range.first; i != range.second; ++i) {
                 keystrokes.push_back(Keystroke(i->second.m_button,
                                 false, false, i->second.m_client));
             }

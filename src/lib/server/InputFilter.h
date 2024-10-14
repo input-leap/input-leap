@@ -325,20 +325,11 @@ public:
     // add rule, adopting the condition and the actions
     void addFilterRule(const Rule& rule);
 
-    // remove a rule
-    void removeFilterRule(std::uint32_t index);
-
-    // get rule by index
-    Rule& getRule(std::uint32_t index);
-
     // enable event filtering using the given primary client.  disable
     // if client is nullptr.
     virtual void setPrimaryClient(PrimaryClient* client);
 
     const std::vector<Rule>& get_rules() const { return m_ruleList; }
-
-    // get number of rules
-    std::uint32_t getNumRules() const;
 
 private:
     // event handling

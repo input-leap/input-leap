@@ -844,19 +844,6 @@ InputFilter::addFilterRule(const Rule& rule)
     }
 }
 
-void InputFilter::removeFilterRule(std::uint32_t index)
-{
-    if (m_primaryClient != nullptr) {
-        m_ruleList[index].disable(m_primaryClient);
-    }
-    m_ruleList.erase(m_ruleList.begin() + index);
-}
-
-InputFilter::Rule& InputFilter::getRule(std::uint32_t index)
-{
-    return m_ruleList[index];
-}
-
 void
 InputFilter::setPrimaryClient(PrimaryClient* client)
 {
@@ -904,11 +891,6 @@ InputFilter::setPrimaryClient(PrimaryClient* client)
             rule->enable(m_primaryClient);
         }
     }
-}
-
-std::uint32_t InputFilter::getNumRules() const
-{
-    return static_cast<std::uint32_t>(m_ruleList.size());
 }
 
 void InputFilter::handle_event(const Event& event)

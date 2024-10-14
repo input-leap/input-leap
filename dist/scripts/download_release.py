@@ -82,7 +82,7 @@ def main():
             "InputLeapSetup-.*-release.exe",
             f"InputLeap_{version}_windows_qt5.exe",
         ),
-        "windows-installer-Windows": (
+        "windows-installer-Windows Qt6": (
             "InputLeapSetup-.*-release.exe",
             f"InputLeap_{version}_windows_qt6.exe",
         ),

@@ -74,19 +74,6 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, co
         model().screen(serverConfig().numColumns() / 2, serverConfig().numRows() / 2) = Screen(defaultScreenName);
 }
 
-void ServerConfigDialog::showEvent(QShowEvent* event)
-{
-    (void) event;
-
-    QDialog::show();
-
-    if (!m_Message.isEmpty())
-    {
-        // TODO: ideally this message box should pop up after the dialog is shown
-        QMessageBox::information(this, tr("Configure server"), m_Message);
-    }
-}
-
 void ServerConfigDialog::accept()
 {
     serverConfig().haveHeartbeat(ui_->m_pCheckBoxHeartbeat->isChecked());

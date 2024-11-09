@@ -89,7 +89,7 @@ possibly merge it.
 
 Most pull requests will need to include a release note.
 
-See `docs/newsfragments/README.md` for documentation of how to do that.
+See `doc/newsfragments/README.md` for documentation of how to do that.
 
 ## Distro specific packages
 

@@ -39,7 +39,6 @@ class ServerConfigDialog : public QDialog
 
     public slots:
         void accept() override;
-        void showEvent(QShowEvent* event) override;
         void message(const QString& message) { m_Message = message; }
 
     protected slots:

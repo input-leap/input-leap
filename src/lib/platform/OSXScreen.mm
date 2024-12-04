@@ -790,6 +790,10 @@ OSXScreen::disable()
 void
 OSXScreen::enter()
 {
+    // Mark as on screen so other events like are handled as on screen.
+    // Mitigates https://github.com/input-leap/input-leap/issues/1043 from the bogus movement check
+	m_isOnScreen = true;
+
 	showCursor();
 
 	if (m_isPrimary) {

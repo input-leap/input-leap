@@ -1,0 +1,1 @@
+Fixed a problem with UTF-16 surrogate pairs that caused broken characters (especially emojis) when copying to the clipboard from a Windows machine

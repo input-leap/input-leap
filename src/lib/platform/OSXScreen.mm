@@ -790,7 +790,7 @@ OSXScreen::disable()
 void
 OSXScreen::enter()
 {
-    // Mark as on screen so other events like are handled as on screen.
+    // Mark as on screen so other events are handled as on screen.
     // Mitigates https://github.com/input-leap/input-leap/issues/1043 from the bogus movement check
 	m_isOnScreen = true;
 
@@ -820,9 +820,6 @@ OSXScreen::enter()
 
 		avoidSupression();
 	}
-
-	// now on screen
-	m_isOnScreen = true;
 }
 
 bool

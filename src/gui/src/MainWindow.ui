@@ -469,6 +469,17 @@
     <string notr="true">F2</string>
    </property>
   </action>
+  <action name="m_pActionReload">
+   <property name="text">
+    <string>&amp;Reload</string>
+   </property>
+   <property name="toolTip">
+    <string>Reload app</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true"/>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="../res/InputLeap.qrc"/>

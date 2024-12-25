@@ -563,9 +563,9 @@ std::string Unicode::doUTF16ToUTF8(const std::uint8_t* data, std::size_t n, bool
             toUTF8(dst, s_replacement, nullptr);
         }
         else if (c >= 0x0000d800 && c <= 0x0000dbff) {
-            std::uint32_t c2 = decode16(data, byteSwapped);
             data += 2;
             --n;
+            std::uint32_t c2 = decode16(data, byteSwapped);
             if (c2 < 0x0000dc00 || c2 > 0x0000dfff) {
                 // error -- [d800,dbff] not followed by [dc00,dfff]
                 setError(errors);

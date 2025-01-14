@@ -3,7 +3,7 @@
 <!-- Copyright 2018 Ding-Yi Chen <dchen@redhat.com> -->
 
 <component type="desktop-application">
-  <id>io.github.input_leap.InputLeap</id>
+  <id>io.github.input_leap.input-leap</id>
   <metadata_license>FSFAP</metadata_license>
   <project_license>GPL-2.0</project_license>
   <name>InputLeap</name>
@@ -20,7 +20,7 @@
     </p>
   </description>
 
-  <launchable type="desktop-id">io.github.input_leap.InputLeap.desktop</launchable>
+  <launchable type="desktop-id">io.github.input_leap.input-leap.desktop</launchable>
 
   <url type="homepage">https://github.com/input-leap/input-leap</url>
   <url type="bugtracker">https://github.com/input-leap/input-leap/issues</url>
@@ -53,7 +53,7 @@
   </branding>
 
   <provides>
-    <id>io.github.input_leap.InputLeap.desktop</id>
+    <id>io.github.input_leap.input-leap.desktop</id>
     <binary>input-leap</binary>
     <binary>input-leapc</binary>
     <binary>input-leaps</binary>

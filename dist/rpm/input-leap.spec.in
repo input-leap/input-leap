@@ -3,7 +3,7 @@
 %global input_leap_version_desc @INPUTLEAP_VERSION_DESC@
 %global timestamp @INPUTLEAP_BUILD_DATE@@INPUTLEAP_BUILD_TIME@
 
-%global rdnn_name io.github.input_leap.InputLeap
+%global rdnn_name io.github.input_leap.input-leap
 
 Summary: Keyboard and mouse sharing solution
 Name: input-leap

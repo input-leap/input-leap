@@ -9,7 +9,7 @@
 # Note: mDNS (foo.local) does NOT work, so server.name needs to be a FQDN or an ip address
 # https://gitlab.com/freedesktop-sdk/freedesktop-sdk/-/issues/1013
 
-app-id: io.github.input_leap.InputLeap
+app-id: io.github.input_leap.input-leap
 runtime: org.kde.Platform
 runtime-version: '6.7'
 sdk: org.kde.Sdk

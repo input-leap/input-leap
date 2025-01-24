@@ -255,6 +255,7 @@ void MainWindow::createTrayIcon()
     m_pTrayIconMenu->addAction(ui_->m_pActionStartCmdApp);
     m_pTrayIconMenu->addAction(ui_->m_pActionStopCmdApp);
     m_pTrayIconMenu->addAction(ui_->m_pActionShowLog);
+    m_pTrayIconMenu->addAction(ui_->m_pActionReload);
     m_pTrayIconMenu->addSeparator();
 
     m_pTrayIconMenu->addAction(ui_->m_pActionMinimize);
@@ -341,6 +342,7 @@ void MainWindow::initConnections()
     connect(ui_->m_pActionStartCmdApp, &QAction::triggered, this, &MainWindow::start_cmd_app);
     connect(ui_->m_pActionStopCmdApp, &QAction::triggered, this, &MainWindow::stop_cmd_app);
     connect(ui_->m_pActionShowLog, &QAction::triggered, this, &MainWindow::showLogWindow);
+    connect(ui_->m_pActionReload, &QAction::triggered, this, &MainWindow::restart_cmd_app);
     connect(ui_->m_pActionQuit, &QAction::triggered, qApp, &QCoreApplication::quit);
 }
 

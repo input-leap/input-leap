@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
     QInputLeapApplication app(argc, argv);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
-    app.setDesktopFileName(QStringLiteral("io.github.input_leap.InputLeap"));
+    app.setDesktopFileName(QStringLiteral("io.github.input_leap.input-leap"));
 #endif
 
 #if defined(Q_OS_MAC)

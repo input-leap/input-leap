@@ -116,7 +116,7 @@ specific packages.
 > A: The [most recent release](https://github.com/input-leap/input-leap/releases/latest) of Input Leap is known to work on:
 >  - Windows 10, and 11
 >  - macOS *(previously known as OS X or Mac OS X)*
->    - 10.12 and newer
+>    - 10.15 and newer
 >  - Linux
 >  - FreeBSD
 >  - OpenBSD
@@ -125,7 +125,7 @@ specific packages.
 
 > A: No
 
-__Q: Is it possible to use Input Leap on Mac OS X / OS X versions prior to 10.12?__
+__Q: Is it possible to use Input Leap on Mac OS X / OS X versions prior to 10.15?__
 
 > A: No
 

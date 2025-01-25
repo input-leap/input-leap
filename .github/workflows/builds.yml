@@ -558,7 +558,7 @@ jobs:
         name: "Build"
         with:
           bundle: input-leap.flatpak
-          manifest-path: dist/flatpak/io.github.input_leap.InputLeap.yml
+          manifest-path: dist/flatpak/io.github.input_leap.input-leap.yaml
           cache-key: flatpak-builder-${{ github.sha }}
           upload-artifact: false
 

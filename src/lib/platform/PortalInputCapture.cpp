@@ -261,7 +261,7 @@ void PortalInputCapture::release(double x, double y)
     is_active_ = false;
 }
 
-void PortalInputCapture::cb_disabled(XdpInputCaptureSession* session)
+void PortalInputCapture::cb_disabled(XdpInputCaptureSession* session, GVariant* options)
 {
     LOG_DEBUG("PortalInputCapture::cb_disabled");
 

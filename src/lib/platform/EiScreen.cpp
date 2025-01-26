@@ -423,7 +423,10 @@ bool EiScreen::isPrimary() const
 
 void EiScreen::update_shape()
 {
-
+    w_ = 1;
+    h_ = 1;
+    x_ = std::numeric_limits<uint32_t>::max();
+    y_ = std::numeric_limits<uint32_t>::max();
     for (auto it = ei_devices_.begin(); it != ei_devices_.end(); it++) {
         auto idx = 0;
         struct ei_region *r;

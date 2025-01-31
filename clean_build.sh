@@ -18,7 +18,7 @@ B_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=${B_BUILD_TYPE} ${B_CMAKE_FLAGS:-}"
 if [ "$(uname)" = "Darwin" ]; then
     # macOS needs a little help, so we source this environment script to fix paths.
     [ -e ./macos_environment.sh ] && . ./macos_environment.sh
-    B_CMAKE_FLAGS="${B_CMAKE_FLAGS} -DCMAKE_OSX_SYSROOT=$(xcrun --sdk macosx --show-sdk-path) -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9"
+    B_CMAKE_FLAGS="${B_CMAKE_FLAGS} -DCMAKE_OSX_SYSROOT=$(xcrun --sdk macosx --show-sdk-path) -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15"
 fi
 
 # Prefer ninja if available

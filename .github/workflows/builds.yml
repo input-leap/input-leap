@@ -318,7 +318,7 @@ jobs:
          - name: macOS-x86_64
            os: macos-12
            qt-version: 5.15
-           min-macOS-version: 10.9
+           min-macOS-version: 10.15
            arch: 'x86_64'
          - name: macOS-Universal
            os: macos-12

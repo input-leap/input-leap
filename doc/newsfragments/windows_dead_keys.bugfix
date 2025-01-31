@@ -1,0 +1,1 @@
+Fixed a long standing bug with modifiers and dead keys on Windows because their state was not being reset.

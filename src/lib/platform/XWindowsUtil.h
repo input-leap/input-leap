@@ -22,17 +22,13 @@
 
 #include <X11/Xlib.h>
 
-#include <map>
 #include <string>
-#include <vector>
 
 namespace inputleap {
 
 //! X11 utility functions
 class XWindowsUtil {
 public:
-    typedef std::vector<KeySym> KeySyms;
-
     //! Get property
     /*!
     Gets property \c property on \c window.  \b Appends the data to
@@ -58,20 +54,6 @@ public:
     Returns the current X server time.
     */
     static Time getCurrentTime(Display*, Window);
-
-    //! Convert KeySym to KeyID
-    /*!
-    Converts a KeySym to the equivalent KeyID.  Returns kKeyNone if the
-    KeySym cannot be mapped.
-    */
-    static std::uint32_t mapKeySymToKeyID(KeySym);
-
-    //! Convert KeySym to corresponding KeyModifierMask
-    /*!
-    Converts a KeySym to the corresponding KeyModifierMask, or 0 if the
-    KeySym is not a modifier.
-    */
-    static std::uint32_t getModifierBitForKeySym(KeySym keysym);
 
     //! Convert Atom to its string
     /*!
@@ -171,13 +153,6 @@ private:
 
     static Bool propertyNotifyPredicate(Display*,
                             XEvent* xevent, XPointer arg);
-
-    static void initKeyMaps();
-
-private:
-    typedef std::map<KeySym, std::uint32_t> KeySymMap;
-
-    static KeySymMap    s_keySymToUCS4;
 };
 
 } // namespace inputleap

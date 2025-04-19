@@ -18,7 +18,7 @@
 
 #include "platform/XWindowsKeyState.h"
 
-#include "platform/XWindowsUtil.h"
+#include "platform/XKBUtil.h"
 #include "base/Log.h"
 
 #include <X11/X.h>
@@ -454,16 +454,16 @@ XWindowsKeyState::updateKeysymMap(inputleap::KeyMap& keyMap)
 
         // do each keysym (shift level)
         for (int j = 0; j < maxKeysyms; ++j) {
-            item.m_id = XWindowsUtil::mapKeySymToKeyID(keysyms[j]);
+            item.m_id = XKBUtil::mapKeySymToKeyID(keysyms[j]);
             if (item.m_id == kKeyNone) {
                 if (j != 0 && modifierButtons.count(keycode) > 0) {
                     // pretend the modifier works in other shift levels
                     // because it probably does.
                     if (keysyms[1] == NoSymbol || j != 3) {
-                        item.m_id = XWindowsUtil::mapKeySymToKeyID(keysyms[0]);
+                        item.m_id = XKBUtil::mapKeySymToKeyID(keysyms[0]);
                     }
                     else {
-                        item.m_id = XWindowsUtil::mapKeySymToKeyID(keysyms[1]);
+                        item.m_id = XKBUtil::mapKeySymToKeyID(keysyms[1]);
                     }
                 }
                 if (item.m_id == kKeyNone) {
@@ -690,7 +690,7 @@ XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
                 // for keys that change the group.
                 item.m_generates = 0;
                 std::uint32_t modifierBit =
-                    XWindowsUtil::getModifierBitForKeySym(keysym);
+                    XKBUtil::getModifierBitForKeySym(keysym);
                 if (isModifier && modifierBit != kKeyModifierBitNone) {
                     item.m_generates = (1u << modifierBit);
                     for (std::int32_t k = 0; k < 8; ++k) {
@@ -730,8 +730,8 @@ XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
 
                         item.m_sensitive |= ShiftMask | LockMask;
 
-                        KeyID lKeyID = XWindowsUtil::mapKeySymToKeyID(lKeysym);
-                        KeyID uKeyID = XWindowsUtil::mapKeySymToKeyID(uKeysym);
+                        KeyID lKeyID = XKBUtil::mapKeySymToKeyID(lKeysym);
+                        KeyID uKeyID = XKBUtil::mapKeySymToKeyID(uKeysym);
                         if (lKeyID == kKeyNone || uKeyID == kKeyNone) {
                             continue;
                         }
@@ -757,7 +757,7 @@ XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
                 }
 
                 // add entry
-                item.m_id = XWindowsUtil::mapKeySymToKeyID(keysym);
+                item.m_id = XKBUtil::mapKeySymToKeyID(keysym);
                 keyMap.addKeyEntry(item);
                 if (group == 0) {
                     m_keyCodeFromKey.insert(std::make_pair(item.m_id, keycode));

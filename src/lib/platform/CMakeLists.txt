@@ -30,6 +30,10 @@ if (BUILD_LIBEI)
     file(GLOB ei_headers "Ei*.h" "Portal*.h")
     file(GLOB ei_sources "Ei*.cpp" "Portal*.cpp")
 endif()
+if (BUILD_XWINDOWS OR BUILD_LIBEI)
+    file(GLOB xkb_headers "XKB*.h")
+    file(GLOB xkb_sources "XKB*.cpp")
+endif()
 
 # CMake does not understand that .mm files should not go together with .cpp files into an Unity
 # build that is compiled in C++ mode
@@ -42,8 +46,8 @@ set_source_files_properties(
     "OSXScreenSaverUtil.mm"
     PROPERTIES SKIP_UNITY_BUILD_INCLUSION TRUE)
 
-list(APPEND sources ${mswin_sources} ${carbon_sources} ${xwin_sources} ${ei_sources})
-list(APPEND headers ${mswin_headers} ${carbon_headers} ${xwin_headers} ${ei_headers})
+list(APPEND sources ${mswin_sources} ${carbon_sources} ${xwin_sources} ${ei_sources} ${xkb_sources})
+list(APPEND headers ${mswin_headers} ${carbon_headers} ${xwin_headers} ${ei_headers} ${xkb_headers})
 
 if(INPUTLEAP_ADD_HEADERS)
     list(APPEND sources ${headers})

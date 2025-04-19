@@ -18,6 +18,7 @@
 
 #include "platform/XWindowsScreen.h"
 
+#include "platform/XKBUtil.h"
 #include "platform/XWindowsClipboard.h"
 #include "platform/XWindowsEventQueueBuffer.h"
 #include "platform/XWindowsKeyState.h"
@@ -1822,7 +1823,7 @@ XWindowsScreen::mapKeyFromX(XKeyEvent* event) const
 	LOG_DEBUG2("mapped code=%d to keysym=0x%04lx", event->keycode, keysym);
 
 	// convert key
-	KeyID result = XWindowsUtil::mapKeySymToKeyID(keysym);
+	KeyID result = XKBUtil::mapKeySymToKeyID(keysym);
 	LOG_DEBUG2("mapped keysym=0x%04lx to keyID=%d", keysym, result);
 	return result;
 }

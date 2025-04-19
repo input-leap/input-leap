@@ -122,7 +122,7 @@ modules:
           - -DQT_DEFAULT_MAJOR_VERSION=6
           - -DINPUTLEAP_BUILD_GUI=ON
           - -DINPUTLEAP_BUILD_TESTS=OFF
-          - -DINPUTLEAP_BUILD_X11=ON  # FIXME: undefined reference to `XWindowsUtil::mapKeySymToKeyID otherwise
+          - -DINPUTLEAP_BUILD_X11=ON
           - -DINPUTLEAP_BUILD_LIBEI=ON
       sources:
           - type: git

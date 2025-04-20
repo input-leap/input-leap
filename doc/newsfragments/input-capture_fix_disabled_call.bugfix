@@ -1,1 +1,0 @@
-Fixed input capture Disabled signal, Enable method is now properly called after Disable.

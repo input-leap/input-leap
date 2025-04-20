@@ -1,1 +1,0 @@
-Fixed a segmentation fault that would occur when configuring servers on certain platforms. This solution was proposed by sithlord48 and they used it to fix the issue for deskflow.

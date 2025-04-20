@@ -1,1 +1,0 @@
-EI screen shape is now properly reset on update, shape x and y are not bound to 0 0 anymore.

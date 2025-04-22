@@ -236,8 +236,14 @@ QString KeySequence::keyToString(int key)
         return QString::fromUtf8("F%1").arg(key - Qt::Key_F1 + 1);
 
     // representable in ucs2?
-    if (key < 0x10000)
-        return QString("\\u%1").arg(QChar(key).toLower().unicode(), 4, 16, QChar('0'));
+    if (key < 0x10000) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
+    const uint16_t keyHex = QChar(key).toLower().unicode();
+    return QString("\\u%1").arg(keyHex, kStrSize, kBase, kFillChar);
+#else
+    return QString("\\u%1").arg(QChar(key).toLower().unicode(), kStrSize, kBase, kFillChar);
+#endif
+    }
 
     // give up, InputLeap probably won't handle this
     return "";

@@ -1,1 +1,0 @@
-Fixed cursor jumping to center of primary display when entering macOS screen by moving isOnScreen flag

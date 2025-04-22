@@ -3,6 +3,30 @@ Release notes
 
 [comment]: <> (towncrier release notes start)
 
+InputLeap `3.0.3` ( `2025-04-20` )
+================================
+
+=====================================================================
+
+Bug fixes
+---------
+
+- Fixed cursor jumping to center of primary display when entering macOS screen by moving isOnScreen flag
+- Flatpak appid has been changed to `io.github.input_leap.input-leap` to resolve to Github repository correctly.
+- Fixed a segmentation fault that would occur when configuring servers on certain platforms. This solution was proposed by sithlord48 and they used it to fix the issue for deskflow.
+- EI screen shape is now properly reset on update, shape x and y are not bound to 0 0 anymore.
+- Fixed missing keymap configs on wayland as the XKB keymap from Ei was not properly loading. The respective keymap file was not seeked to the start on some systems.
+- Fixed a problem with UTF-16 surrogate pairs that caused broken characters (especially emojis) when copying to the clipboard from a Windows machine
+- Fixed input capture Disabled signal, Enable method is now properly called after Disable.
+- Fixed a long standing bug with modifiers and dead keys on Windows because their state was not being reset.
+- Fixed an issue with mapping keys in OSX clients introduced in #1635, where keys like the equals sign "=" or the back tick "`" wouldn't be mapped correctly.
+
+Features
+--------
+
+- Add a reload action to the tray icon menu.
+  Sometimes the clipboard copy function does not work. In this case, when the input-leap is reloaded, the function works normally again.
+  To make reload easier, add a reload action to the tray icon.
 InputLeap `3.0.2` ( `2024-10-12` )
 ==================================
 

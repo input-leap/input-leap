@@ -1,1 +1,0 @@
-Fixed missing keymap configs on wayland as the XKB keymap from Ei was not properly loading. The respective keymap file was not seeked to the start on some systems.

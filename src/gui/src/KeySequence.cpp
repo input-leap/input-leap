@@ -237,8 +237,11 @@ QString KeySequence::keyToString(int key)
 
     // representable in ucs2?
     if (key < 0x10000)
+#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
+        return QString("\\u%1").arg((uint16_t) QChar(key).toLower().unicode(), 4, 16, QChar('0'));
+#else
         return QString("\\u%1").arg(QChar(key).toLower().unicode(), 4, 16, QChar('0'));
-
+#endif
     // give up, InputLeap probably won't handle this
     return "";
 }

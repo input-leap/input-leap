@@ -316,12 +316,12 @@ jobs:
       matrix:
        include:
          - name: macOS-x86_64
-           os: macos-12
+           os: macos-14
            qt-version: 5.15
            min-macOS-version: 10.9
            arch: 'x86_64'
          - name: macOS-Universal
-           os: macos-12
+           os: macos-14
            qt-version: 6.6
            min-macOS-version: 11
            arch: 'arm64;x86_64'
@@ -352,14 +352,14 @@ jobs:
 
       - name: Cache OpenSSL Universal
         id: cache-openssl
-        if: matrix.os == 'macos-12'
+        if: matrix.os == 'macos-14'
         uses: actions/cache@v4.2.1
         with:
           path: ${{env.OpenSSL_Install_Path}}
           key: macOS-${{matrix.os}}-ssl-${{matrix.arch}}-${{env.OpenSSL_Version}}
 
       - name: Build OpenSSL Universal
-        if: ((steps.cache-openssl.outputs.cache-hit != 'true') && (matrix.os == 'macos-12'))
+        if: ((steps.cache-openssl.outputs.cache-hit != 'true') && (matrix.os == 'macos-14'))
         run: |
           wget https://github.com/openssl/openssl/releases/download/openssl-${{env.OpenSSL_Version}}/openssl-${{env.OpenSSL_Version}}.tar.gz
           tar -xf openssl-${{env.OpenSSL_Version}}.tar.gz

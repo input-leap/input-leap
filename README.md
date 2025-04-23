@@ -27,7 +27,7 @@ Whereas Synergy has moved beyond its goals from the 1.x era, Input Leap aims to
 maintain that simplicity. Input Leap will let you use your keyboard and mouse
 from one computer to control one or more other computers.
 
-Clipboard sharing is supported.
+Clipboard sharing is supported (**Note:** Not currently supported on Linux/Wayland).
 
 That's it.
 
@@ -150,5 +150,6 @@ __Q: Is it possible to use Input Leap on Mac OS X / OS X versions prior to 10.12
 > A: Currently:
 >    - Input Leap currently has limited UTF-8 support; issues have been reported with processing various languages.
 >      - *(see [#860](https://github.com/input-leap/input-leap/issues/860))*
+>    - Clipboard sharing is not currently supported on Linux/Wayland.
 >
 > The complete list of open issues can be found in the ['Issues' tab on GitHub](https://github.com/input-leap/input-leap/issues?q=is%3Aissue+is%3Aopen). Help is always appreciated.

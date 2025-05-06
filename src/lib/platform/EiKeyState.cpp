@@ -15,7 +15,7 @@
 */
 
 #include "platform/EiKeyState.h"
-#include "platform/XWindowsUtil.h"
+#include "platform/XKBUtil.h"
 
 #include "base/Log.h"
 
@@ -201,7 +201,7 @@ void EiKeyState::getKeyMap(inputleap::KeyMap& keyMap)
                 inputleap::KeyMap::KeyItem item{};
                 xkb_keysym_t keysym = syms[0];
                 KeySym sym = static_cast<KeyID>(keysym);
-                item.m_id = XWindowsUtil::mapKeySymToKeyID(sym);
+                item.m_id = XKBUtil::mapKeySymToKeyID(sym);
                 item.m_button   = static_cast<KeyButton>(keycode) - 8; // X keycode offset
                 item.m_group = group;
 
@@ -266,7 +266,7 @@ KeyID EiKeyState::map_key_from_keyval(uint32_t keyval) const
     KeySym keysym = static_cast<KeySym>(xkb_keysym);
     LOG_DEBUG1("mapped code=%d to keysym=0x%04lx", keyval, keysym);
 
-    KeyID keyid = XWindowsUtil::mapKeySymToKeyID(keysym);
+    KeyID keyid = XKBUtil::mapKeySymToKeyID(keysym);
     LOG_DEBUG1("mapped keysym=0x%04lx to keyID=%d", keysym, keyid);
 
     return keyid;

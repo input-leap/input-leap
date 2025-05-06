@@ -1186,10 +1186,6 @@ MSWindowsKeyState::getKeyMap(inputleap::KeyMap& keyMap)
 
 					case VK_SNAPSHOT:
 						item.m_sensitive |= KeyModifierAlt;
-						if ((i & 0x100u) == 0) {
-							// non-extended snapshot key requires alt
-							item.m_required |= KeyModifierAlt;
-						}
 						break;
 					}
 					addKeyEntry(keyMap, item);

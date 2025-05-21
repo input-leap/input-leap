@@ -228,8 +228,19 @@ if (UNIX)
     endif()
 
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /Zi")
-    set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD /O2 /Ob2")
+    if (CMAKE_SYSTEM_PROCESSOR MATCHES "ARM64" OR CMAKE_SYSTEM_PROCESSOR MATCHES "AArch64")
+        message(STATUS "Configuring for Windows ARM64")
+        # Common flags, ensure they are appropriate for ARM64
+        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /Zi")
+        set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD /O2 /Ob2")
+        # Potentially add /arch:armv8 or similar if required, but often the toolchain handles this.
+        # For now, relying on the toolchain selected by -A ARM64 in the workflow.
+    else()
+        message(STATUS "Configuring for Windows x64/x86")
+        # Existing flags for x86/x64
+        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /Zi")
+        set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD /O2 /Ob2")
+    endif()
 
     list (APPEND libs Wtsapi32 Userenv Wininet comsuppw Shlwapi)
 

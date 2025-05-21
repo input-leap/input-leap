@@ -436,6 +436,12 @@ jobs:
            os: windows-2022
            qt-version: 6.6
            qt-major: 6
+           arch: x64 # Existing builds are x64
+         - name: Windows ARM64 Qt6
+           os: windows-2022
+           qt-version: 6.6
+           qt-major: 6
+           arch: ARM64
 
     steps:
       - uses: actions/checkout@v4
@@ -469,7 +475,7 @@ jobs:
 
           cd build
 
-          cmake -S ..\input-leap -G "$env:CMAKE_GEN" -A x64 -D CMAKE_BUILD_TYPE=$B_BUILD_TYPE `
+          cmake -S ..\input-leap -G "$env:CMAKE_GEN" -A ${{ matrix.arch }} -D CMAKE_BUILD_TYPE=$B_BUILD_TYPE `
             -DQT_DEFAULT_MAJOR_VERSION=${{matrix.qt-major}} `
             -DINPUTLEAP_VERSION_DESC=${{ (env.B_BUILD_TYPE == 'Release') && 'release' || 'git' }} `
             -DINPUTLEAP_BUILD_GULRAK_FILESYSTEM=${{ matrix.qt-major == '5' && '1' || '0' }} `
@@ -488,7 +494,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.os }}-${{ env.B_BUILD_TYPE }}
+          name: ${{ matrix.os }}-${{ matrix.arch }}-${{ env.B_BUILD_TYPE }}
           path: ${{ env.B_BUILD_TYPE }}.zip
           if-no-files-found: warn
 
@@ -500,7 +506,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: env.B_BUILD_TYPE == 'Release'
         with:
-          name: windows-installer-${{ matrix.name }}
+          name: windows-installer-${{ matrix.arch }}-${{ matrix.name }}
           path: .\build\installer-inno\bin
           if-no-files-found: error
 

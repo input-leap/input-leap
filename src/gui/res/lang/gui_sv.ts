@@ -171,14 +171,14 @@ Besök vår webbplats för hjälp och information (symless.com).
     </message>
 </context>
 <context>
-    <name>HotkeyDialogBase</name>
+    <name>HotkeyDialog</name>
     <message>
-        <location filename="res/HotkeyDialogBase.ui" line="14"/>
+        <location filename="res/HotkeyDialog.ui" line="14"/>
         <source>Hotkey</source>
         <translation>Snabbtangent</translation>
     </message>
     <message>
-        <location filename="res/HotkeyDialogBase.ui" line="20"/>
+        <location filename="res/HotkeyDialog.ui" line="20"/>
         <source>Enter the specification for the hotkey:</source>
         <translation>Beskriv snabbtangenten:</translation>
     </message>
@@ -410,170 +410,170 @@ Klicka &quot;Ja&quot; för att automatiskt lita på fingeravtrycket i framtida a
     </message>
 </context>
 <context>
-    <name>MainWindowBase</name>
+    <name>MainWindow</name>
     <message>
-        <location filename="res/MainWindowBase.ui" line="26"/>
+        <location filename="res/MainWindow.ui" line="26"/>
         <source>InputLeap</source>
         <translation>InputLeap</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="90"/>
+        <location filename="res/MainWindow.ui" line="90"/>
         <source>Ser&amp;ver (share this computer&apos;s mouse and keyboard):</source>
         <translation>Ser&amp;ver (dela den här datorns mus och tangentbord):</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="243"/>
+        <location filename="res/MainWindow.ui" line="243"/>
         <source>Screen name:</source>
         <translation>Skärmnamn:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="257"/>
+        <location filename="res/MainWindow.ui" line="257"/>
         <source>Server I&amp;P:</source>
         <translation>Serverns I&amp;P:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="380"/>
-        <location filename="res/MainWindowBase.ui" line="409"/>
+        <location filename="res/MainWindow.ui" line="380"/>
+        <location filename="res/MainWindow.ui" line="409"/>
         <source>&amp;Start</source>
         <translation>&amp;Starta</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="181"/>
+        <location filename="res/MainWindow.ui" line="181"/>
         <source>Use existing configuration:</source>
         <translation>Använd befintlig konfiguration:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="190"/>
+        <location filename="res/MainWindow.ui" line="190"/>
         <source>&amp;Configuration file:</source>
         <translation>&amp;Konfigurationsfil:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="210"/>
+        <location filename="res/MainWindow.ui" line="210"/>
         <source>&amp;Browse...</source>
         <translation>&amp;Bläddra...</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="147"/>
+        <location filename="res/MainWindow.ui" line="147"/>
         <source>Configure interactively:</source>
         <translation>Konfigurera interaktivt:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="159"/>
+        <location filename="res/MainWindow.ui" line="159"/>
         <source>&amp;Configure Server...</source>
         <translation>&amp;Konfigurera server...</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="350"/>
+        <location filename="res/MainWindow.ui" line="350"/>
         <source>Ready</source>
         <translation>Klar</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="296"/>
+        <location filename="res/MainWindow.ui" line="296"/>
         <source>Log</source>
         <translation>Logg</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="373"/>
+        <location filename="res/MainWindow.ui" line="373"/>
         <source>&amp;Reload</source>
         <translation>&amp;Uppdatera</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="107"/>
+        <location filename="res/MainWindow.ui" line="107"/>
         <source>IP addresses:</source>
         <translation>IP-adresser:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="131"/>
+        <location filename="res/MainWindow.ui" line="131"/>
         <source>Fingerprint:</source>
         <translation>Fingeravtryck:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="228"/>
+        <location filename="res/MainWindow.ui" line="228"/>
         <source>&amp;Client (use another computer&apos;s mouse and keyboard):</source>
         <translation>&amp;Klient (använd en annan dators mus och tangenbord):</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="270"/>
+        <location filename="res/MainWindow.ui" line="270"/>
         <source>Auto config</source>
         <translation>Konfigurera automatiskt</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="390"/>
+        <location filename="res/MainWindow.ui" line="390"/>
         <source>&amp;About InputLeap...</source>
         <translation>&amp;Om InputLeap...</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="398"/>
+        <location filename="res/MainWindow.ui" line="398"/>
         <source>&amp;Quit</source>
         <translation>A&amp;vsluta</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="401"/>
+        <location filename="res/MainWindow.ui" line="401"/>
         <source>Quit</source>
         <translation>Avsluta</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="412"/>
+        <location filename="res/MainWindow.ui" line="412"/>
         <source>Run</source>
         <translation>Kör</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="423"/>
+        <location filename="res/MainWindow.ui" line="423"/>
         <source>S&amp;top</source>
         <translation>S&amp;topp</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="426"/>
+        <location filename="res/MainWindow.ui" line="426"/>
         <source>Stop</source>
         <translation>Stopp</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="434"/>
+        <location filename="res/MainWindow.ui" line="434"/>
         <source>S&amp;how Status</source>
         <translation>V&amp;isa status</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="442"/>
+        <location filename="res/MainWindow.ui" line="442"/>
         <source>&amp;Hide</source>
         <translation>&amp;Dölj</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="445"/>
+        <location filename="res/MainWindow.ui" line="445"/>
         <source>Hide</source>
         <translation>Dölj</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="453"/>
+        <location filename="res/MainWindow.ui" line="453"/>
         <source>&amp;Show</source>
         <translation>&amp;Visa</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="456"/>
+        <location filename="res/MainWindow.ui" line="456"/>
         <source>Show</source>
         <translation>Visa</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="464"/>
+        <location filename="res/MainWindow.ui" line="464"/>
         <source>Save configuration &amp;as...</source>
         <translation>S&amp;para konfigurationen som...</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="467"/>
+        <location filename="res/MainWindow.ui" line="467"/>
         <source>Save the interactively generated server configuration to a file.</source>
         <translation>Spara den interaktivt skapade serverkonfigurationen till en fil.</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="475"/>
+        <location filename="res/MainWindow.ui" line="475"/>
         <source>Settings</source>
         <translation>Inställningar</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="478"/>
+        <location filename="res/MainWindow.ui" line="478"/>
         <source>Edit settings</source>
         <translation>Ändra inställningar</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="486"/>
+        <location filename="res/MainWindow.ui" line="486"/>
         <source>Run Wizard</source>
         <translation>Kör guiden</translation>
     </message>
@@ -619,12 +619,12 @@ Klicka &quot;Ja&quot; för att automatiskt lita på fingeravtrycket i framtida a
 <context>
     <name>PluginWizardPage</name>
     <message>
-        <location filename="res/PluginWizardPageBase.ui" line="14"/>
+        <location filename="res/PluginWizardPage.ui" line="14"/>
         <source>Setup InputLeap</source>
         <translation>Ställ in InputLeap</translation>
     </message>
     <message>
-        <location filename="res/PluginWizardPageBase.ui" line="101"/>
+        <location filename="res/PluginWizardPage.ui" line="101"/>
         <source>Please wait...</source>
         <translation>Vänta...</translation>
     </message>
@@ -895,34 +895,34 @@ Klicka &quot;Ja&quot; för att automatiskt lita på fingeravtrycket i framtida a
     </message>
 </context>
 <context>
-    <name>ServerConfigDialogBase</name>
+    <name>ServerConfigDialog</name>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="14"/>
+        <location filename="res/ServerConfigDialog.ui" line="14"/>
         <source>Server Configuration</source>
         <translation>Serverkonfiguration</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="24"/>
+        <location filename="res/ServerConfigDialog.ui" line="24"/>
         <source>Screens and links</source>
         <translation>Skärmar och länkar</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="35"/>
+        <location filename="res/ServerConfigDialog.ui" line="35"/>
         <source>Drag a screen from the grid to the trashcan to remove it.</source>
         <translation>Dra en skärm från rutfältet till papperskorgen för att ta bort den.</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="60"/>
+        <location filename="res/ServerConfigDialog.ui" line="60"/>
         <source>Configure the layout of your InputLeap server configuration.</source>
         <translation>Konfigurera layouten på din InputLeap serverkonfiguration.</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="73"/>
+        <location filename="res/ServerConfigDialog.ui" line="73"/>
         <source>Drag this button to the grid to add a new screen.</source>
         <translation>Dra den här knappen till rutfältet för att lägga till en ny skärm.</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="128"/>
+        <location filename="res/ServerConfigDialog.ui" line="128"/>
         <source>Drag new screens to the grid or move existing ones around.
 Drag a screen to the trashcan to delete it.
 Double click on a screen to edit its settings.</source>
@@ -931,134 +931,134 @@ Dra en skärm till papperskorgen för att ta bort den.
 Dubbelklicka på en skärm för att ändra dess inställningar.</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="157"/>
+        <location filename="res/ServerConfigDialog.ui" line="157"/>
         <source>Hotkeys</source>
         <translation>Snabbtangenter</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="163"/>
+        <location filename="res/ServerConfigDialog.ui" line="163"/>
         <source>&amp;Hotkeys</source>
         <translation>&amp;Snabbtangenter</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="175"/>
+        <location filename="res/ServerConfigDialog.ui" line="175"/>
         <source>&amp;New</source>
         <translation>&amp;Nytt</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="185"/>
+        <location filename="res/ServerConfigDialog.ui" line="185"/>
         <source>&amp;Edit</source>
         <translation>&amp;Redigera</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="195"/>
+        <location filename="res/ServerConfigDialog.ui" line="195"/>
         <source>&amp;Remove</source>
         <translation>&amp;Ta bort</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="218"/>
+        <location filename="res/ServerConfigDialog.ui" line="218"/>
         <source>A&amp;ctions</source>
         <translation>&amp;Åtgärder</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="230"/>
+        <location filename="res/ServerConfigDialog.ui" line="230"/>
         <source>Ne&amp;w</source>
         <translation>N&amp;ytt</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="240"/>
+        <location filename="res/ServerConfigDialog.ui" line="240"/>
         <source>E&amp;dit</source>
         <translation>Re&amp;digera</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="250"/>
+        <location filename="res/ServerConfigDialog.ui" line="250"/>
         <source>Re&amp;move</source>
         <translation>Ta &amp;bort</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="274"/>
+        <location filename="res/ServerConfigDialog.ui" line="274"/>
         <source>Advanced server settings</source>
         <translation>Avancerade serverinställningar</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="280"/>
+        <location filename="res/ServerConfigDialog.ui" line="280"/>
         <source>&amp;Switch</source>
         <translation>&amp;Växla</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="291"/>
+        <location filename="res/ServerConfigDialog.ui" line="291"/>
         <source>Switch &amp;after waiting</source>
         <translation>V&amp;äxla efter väntan</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="330"/>
-        <location filename="res/ServerConfigDialogBase.ui" line="383"/>
-        <location filename="res/ServerConfigDialogBase.ui" line="458"/>
+        <location filename="res/ServerConfigDialog.ui" line="330"/>
+        <location filename="res/ServerConfigDialog.ui" line="383"/>
+        <location filename="res/ServerConfigDialog.ui" line="458"/>
         <source>ms</source>
         <translation>ms</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="344"/>
+        <location filename="res/ServerConfigDialog.ui" line="344"/>
         <source>Switch on double &amp;tap within</source>
         <translation>Växla vid &amp;dubbelklick inom</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="408"/>
+        <location filename="res/ServerConfigDialog.ui" line="408"/>
         <source>&amp;Options</source>
         <translation>&amp;Alternativ</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="419"/>
+        <location filename="res/ServerConfigDialog.ui" line="419"/>
         <source>&amp;Check clients every</source>
         <translation>&amp;Kontrollera klienter varje</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="470"/>
+        <location filename="res/ServerConfigDialog.ui" line="470"/>
         <source>Use &amp;relative mouse moves</source>
         <translation>Använd &amp;relativa musrörelser</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="480"/>
+        <location filename="res/ServerConfigDialog.ui" line="480"/>
         <source>S&amp;ynchronize screen savers</source>
         <translation>Synkr&amp;onisera skärmsläckare</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="490"/>
+        <location filename="res/ServerConfigDialog.ui" line="490"/>
         <source>Don&apos;t take &amp;foreground window on Windows servers</source>
         <translation>Använd inte &amp;förgrundsfönster på Windowsservrar</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="510"/>
+        <location filename="res/ServerConfigDialog.ui" line="510"/>
         <source>Ignore auto config clients</source>
         <translation>Ignorera automatiskt konfigurerade klienter</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="520"/>
+        <location filename="res/ServerConfigDialog.ui" line="520"/>
         <source>&amp;Dead corners</source>
         <translation>&amp;Döda hörn</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="529"/>
+        <location filename="res/ServerConfigDialog.ui" line="529"/>
         <source>To&amp;p-left</source>
         <translation>V&amp;änster överkant</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="536"/>
+        <location filename="res/ServerConfigDialog.ui" line="536"/>
         <source>Top-rig&amp;ht</source>
         <translation>H&amp;öger överkant</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="543"/>
+        <location filename="res/ServerConfigDialog.ui" line="543"/>
         <source>&amp;Bottom-left</source>
         <translation>Vänster &amp;underkant</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="550"/>
+        <location filename="res/ServerConfigDialog.ui" line="550"/>
         <source>Bottom-ri&amp;ght</source>
         <translation>Höger u&amp;nderkant</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="572"/>
+        <location filename="res/ServerConfigDialog.ui" line="572"/>
         <source>Cor&amp;ner Size:</source>
         <translation>Hö&amp;rnstorlek:</translation>
     </message>
@@ -1085,109 +1085,109 @@ Detta låter InputLeap interagera med förhöjda processer och UAC-dialogen, men
     </message>
 </context>
 <context>
-    <name>SettingsDialogBase</name>
+    <name>SettingsDialog</name>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="14"/>
+        <location filename="res/SettingsDialog.ui" line="14"/>
         <source>Settings</source>
         <translation>Inställningar</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="32"/>
+        <location filename="res/SettingsDialog.ui" line="32"/>
         <source>Sc&amp;reen name:</source>
         <translation>Sk&amp;ärmnamn:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="49"/>
+        <location filename="res/SettingsDialog.ui" line="49"/>
         <source>P&amp;ort:</source>
         <translation>P&amp;ort:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="78"/>
+        <location filename="res/SettingsDialog.ui" line="78"/>
         <source>&amp;Interface:</source>
         <translation>G&amp;ränssnitt:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="120"/>
+        <location filename="res/SettingsDialog.ui" line="120"/>
         <source>Elevate mode</source>
         <translation>Rättighetsläge</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="127"/>
+        <location filename="res/SettingsDialog.ui" line="127"/>
         <source>&amp;Hide on startup</source>
         <translation>&amp;Dölj vid programstart</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="146"/>
+        <location filename="res/SettingsDialog.ui" line="146"/>
         <source>&amp;Network Security</source>
         <translation>&amp;Nätverkssäkerhet</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="155"/>
+        <location filename="res/SettingsDialog.ui" line="155"/>
         <source>Use &amp;SSL encryption (unique certificate)</source>
         <translation>Använd &amp;SSL-kryptering (unikt certifikat)</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="184"/>
+        <location filename="res/SettingsDialog.ui" line="184"/>
         <source>Logging</source>
         <translation>Loggning</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="202"/>
+        <location filename="res/SettingsDialog.ui" line="202"/>
         <source>&amp;Logging level:</source>
         <translation>&amp;Loggningsnivå:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="251"/>
+        <location filename="res/SettingsDialog.ui" line="251"/>
         <source>Log to file:</source>
         <translation>Logga till fil:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="268"/>
+        <location filename="res/SettingsDialog.ui" line="268"/>
         <source>Browse...</source>
         <translation>Bläddra...</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="213"/>
+        <location filename="res/SettingsDialog.ui" line="213"/>
         <source>Error</source>
         <translation>Fel</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="107"/>
+        <location filename="res/SettingsDialog.ui" line="107"/>
         <source>&amp;Language:</source>
         <translation>&amp;Språk:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="20"/>
+        <location filename="res/SettingsDialog.ui" line="20"/>
         <source>&amp;Miscellaneous</source>
         <translation>&amp;Diverse</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="218"/>
+        <location filename="res/SettingsDialog.ui" line="218"/>
         <source>Warning</source>
         <translation>Varning</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="223"/>
+        <location filename="res/SettingsDialog.ui" line="223"/>
         <source>Note</source>
         <translation>Anteckning</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="228"/>
+        <location filename="res/SettingsDialog.ui" line="228"/>
         <source>Info</source>
         <translation>Information</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="233"/>
+        <location filename="res/SettingsDialog.ui" line="233"/>
         <source>Debug</source>
         <translation>Felsök</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="238"/>
+        <location filename="res/SettingsDialog.ui" line="238"/>
         <source>Debug1</source>
         <translation>Felsök1</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="243"/>
+        <location filename="res/SettingsDialog.ui" line="243"/>
         <source>Debug2</source>
         <translation>Felsök2</translation>
     </message>
@@ -1211,64 +1211,64 @@ Detta låter InputLeap interagera med förhöjda processer och UAC-dialogen, men
     </message>
 </context>
 <context>
-    <name>SetupWizardBase</name>
+    <name>SetupWizard</name>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="26"/>
+        <location filename="res/SetupWizard.ui" line="26"/>
         <source>Setup InputLeap</source>
         <translation>Installera InputLeap</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="30"/>
+        <location filename="res/SetupWizard.ui" line="30"/>
         <source>Welcome</source>
         <translation>Välkommen</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="39"/>
+        <location filename="res/SetupWizard.ui" line="39"/>
         <source>Thanks for installing InputLeap!</source>
         <translation>Tack för att du installerar InputLeap!</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="114"/>
+        <location filename="res/SetupWizard.ui" line="114"/>
         <source>InputLeap lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. InputLeap is cross-platform (works on Windows, Mac OS X and Linux).</source>
         <translation>Med InputLeap kan du enkelt dela din mus och ditt tangentbord mellan flera datorer på ditt skrivbord, och det är fri och öppen källkod. För bara muspekaren över kanten på en datorskärm till en annan. Du kan till och med dela urklipp. Allt du behöver är en nätverksanslutning. InputLeap är multiplattform (fungerar på både Windows, OSX och Linux).</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="125"/>
+        <location filename="res/SetupWizard.ui" line="125"/>
         <source>Activate</source>
         <translation>Aktivera</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="131"/>
+        <location filename="res/SetupWizard.ui" line="131"/>
         <source>&amp;Activate now...</source>
         <translation>&amp;Aktivera nu...</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="152"/>
+        <location filename="res/SetupWizard.ui" line="152"/>
         <source>Email:</source>
         <translation>E-post:</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="178"/>
+        <location filename="res/SetupWizard.ui" line="178"/>
         <source>Password:</source>
         <translation>Lösenord:</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="204"/>
+        <location filename="res/SetupWizard.ui" line="204"/>
         <source>&lt;a href=&quot;https://symless.com/account/reset/&quot;&gt;Forgot password&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;https://symless.com/account/reset/&quot;&gt;Glömt lösenord&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="232"/>
+        <location filename="res/SetupWizard.ui" line="232"/>
         <source>&amp;Skip activation</source>
         <translation>&amp;Skippa aktivering</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="277"/>
+        <location filename="res/SetupWizard.ui" line="277"/>
         <source>&amp;Server (share this computer&apos;s mouse and keyboard)</source>
         <translation>&amp;Server (dela denna dators mus och tangentbord)</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="290"/>
+        <location filename="res/SetupWizard.ui" line="290"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -1281,12 +1281,12 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Min primära mus och tangentbord är anslutna till den här datorn. Detta låter dig flytta musen över till en annan dators skärm. Det kan bara finnas en server i din installation.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="326"/>
+        <location filename="res/SetupWizard.ui" line="326"/>
         <source>&amp;Client (use another computer&apos;s mouse and keyboard)</source>
         <translation>&amp;Klient (använd en annan dators mus och tangentbord)</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="339"/>
+        <location filename="res/SetupWizard.ui" line="339"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -1299,7 +1299,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Du har redan installerat en server. Den här datorn styrs med hjälp av serverns mus och tangentbord. Det kan finnas många klienter i din installation.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="262"/>
+        <location filename="res/SetupWizard.ui" line="262"/>
         <source>Server or Client?</source>
         <translation>Server eller klient?</translation>
     </message>

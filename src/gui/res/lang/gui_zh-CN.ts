@@ -173,32 +173,32 @@ InputLeap GUI 基于 Volker Lanz 制作的 QSynergy.
     </message>
 </context>
 <context>
-    <name>HotkeyDialogBase</name>
+    <name>HotkeyDialog</name>
     <message>
-        <location filename="../../src/HotkeyDialogBase.ui" line="14"/>
+        <location filename="../../src/HotkeyDialog.ui" line="14"/>
         <source>Hotkey</source>
         <translation>热键</translation>
     </message>
     <message>
-        <location filename="../../src/HotkeyDialogBase.ui" line="20"/>
+        <location filename="../../src/HotkeyDialog.ui" line="20"/>
         <source>Enter the specification for the hotkey:</source>
         <translation>指定热键：</translation>
     </message>
 </context>
 <context>
-    <name>LogWindowBase</name>
+    <name>LogWindow</name>
     <message>
-        <location filename="../../src/LogWindowBase.ui" line="26"/>
+        <location filename="../../src/LogWindow.ui" line="26"/>
         <source>Log - InputLeap</source>
         <translation>日志 - InputLeap</translation>
     </message>
     <message>
-        <location filename="../../src/LogWindowBase.ui" line="71"/>
+        <location filename="../../src/LogWindow.ui" line="71"/>
         <source>&amp;Clear Log</source>
         <translation>清空(&amp;C)</translation>
     </message>
     <message>
-        <location filename="../../src/LogWindowBase.ui" line="78"/>
+        <location filename="../../src/LogWindow.ui" line="78"/>
         <source>&amp;Hide</source>
         <translation>隐藏(&amp;H)</translation>
     </message>
@@ -404,165 +404,165 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
 </context>
 <context>
-    <name>MainWindowBase</name>
+    <name>MainWindow</name>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="26"/>
+        <location filename="../../src/MainWindow.ui" line="26"/>
         <source>InputLeap</source>
         <translation>InputLeap</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="39"/>
+        <location filename="../../src/MainWindow.ui" line="39"/>
         <source>Ser&amp;ver (share this computer&apos;s mouse and keyboard):</source>
         <translation>服务端 - 共享此电脑的鼠标和键盘</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="192"/>
+        <location filename="../../src/MainWindow.ui" line="192"/>
         <source>Screen name:</source>
         <translation>屏幕名：</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="206"/>
+        <location filename="../../src/MainWindow.ui" line="206"/>
         <source>Server I&amp;P:</source>
         <translation>服务端IP：</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="293"/>
-        <location filename="../../src/MainWindowBase.ui" line="322"/>
+        <location filename="../../src/MainWindow.ui" line="293"/>
+        <location filename="../../src/MainWindow.ui" line="322"/>
         <source>&amp;Start</source>
         <translation>开始(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="130"/>
+        <location filename="../../src/MainWindow.ui" line="130"/>
         <source>Use existing configuration:</source>
         <translation>使用已有的配置：</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="139"/>
+        <location filename="../../src/MainWindow.ui" line="139"/>
         <source>&amp;Configuration file:</source>
         <translation>配置文件：</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="159"/>
+        <location filename="../../src/MainWindow.ui" line="159"/>
         <source>&amp;Browse...</source>
         <translation>浏览(&amp;B)…</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="96"/>
+        <location filename="../../src/MainWindow.ui" line="96"/>
         <source>Configure interactively:</source>
         <translation>交互配置：</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="108"/>
+        <location filename="../../src/MainWindow.ui" line="108"/>
         <source>&amp;Configure Server...</source>
         <translation>设置服务端(&amp;C)…</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="263"/>
+        <location filename="../../src/MainWindow.ui" line="263"/>
         <source>Ready</source>
         <translation>准备完毕</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="286"/>
+        <location filename="../../src/MainWindow.ui" line="286"/>
         <source>&amp;Reload</source>
         <translation>应用(&amp;R)</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="56"/>
+        <location filename="../../src/MainWindow.ui" line="56"/>
         <source>IP addresses:</source>
         <translation>IP地址：</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="177"/>
+        <location filename="../../src/MainWindow.ui" line="177"/>
         <source>&amp;Client (use another computer&apos;s mouse and keyboard):</source>
         <translation>客户端 - 使用另一电脑的鼠标和键盘</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="219"/>
+        <location filename="../../src/MainWindow.ui" line="219"/>
         <source>Auto config</source>
         <translation>自动配置</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="303"/>
+        <location filename="../../src/MainWindow.ui" line="303"/>
         <source>&amp;About InputLeap...</source>
         <translation>关于InputLeap(&amp;A)…</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="311"/>
+        <location filename="../../src/MainWindow.ui" line="311"/>
         <source>&amp;Quit</source>
         <translation>退出(&amp;Q)</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="314"/>
+        <location filename="../../src/MainWindow.ui" line="314"/>
         <source>Quit</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="325"/>
+        <location filename="../../src/MainWindow.ui" line="325"/>
         <source>Run</source>
         <translation>运行</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="336"/>
+        <location filename="../../src/MainWindow.ui" line="336"/>
         <source>S&amp;top</source>
         <translation>停止(&amp;t)</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="339"/>
+        <location filename="../../src/MainWindow.ui" line="339"/>
         <source>Stop</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="347"/>
+        <location filename="../../src/MainWindow.ui" line="347"/>
         <source>&amp;Hide</source>
         <translation>隐藏(&amp;H)</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="350"/>
+        <location filename="../../src/MainWindow.ui" line="350"/>
         <source>Hide</source>
         <translation>隐藏</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="358"/>
+        <location filename="../../src/MainWindow.ui" line="358"/>
         <source>&amp;Show</source>
         <translation>显示(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="361"/>
+        <location filename="../../src/MainWindow.ui" line="361"/>
         <source>Show</source>
         <translation>显示</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="372"/>
+        <location filename="../../src/MainWindow.ui" line="372"/>
         <source>Save the interactively generated server configuration to a file.</source>
         <translation>保存交互生成的配置到文件。</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="383"/>
+        <location filename="../../src/MainWindow.ui" line="383"/>
         <source>Edit settings</source>
         <translation>编辑设置</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="80"/>
+        <location filename="../../src/MainWindow.ui" line="80"/>
         <source>SSL Fingerprint:</source>
         <translation>SSL指纹：</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="369"/>
+        <location filename="../../src/MainWindow.ui" line="369"/>
         <source>S&amp;ave configuration</source>
         <translation>保存配置(&amp;a)</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="380"/>
+        <location filename="../../src/MainWindow.ui" line="380"/>
         <source>Change &amp;Settings</source>
         <translation>更改设置(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="391"/>
+        <location filename="../../src/MainWindow.ui" line="391"/>
         <source>Show &amp;Log</source>
         <translation>显示日志(&amp;L)</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="394"/>
+        <location filename="../../src/MainWindow.ui" line="394"/>
         <source>Show Log</source>
         <translation>显示日志</translation>
     </message>
@@ -813,34 +813,34 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
 </context>
 <context>
-    <name>ServerConfigDialogBase</name>
+    <name>ServerConfigDialog</name>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="14"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="14"/>
         <source>Server Configuration</source>
         <translation>服务端配置</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="24"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="24"/>
         <source>Screens and links</source>
         <translation>屏幕和联接</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="35"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="35"/>
         <source>Drag a screen from the grid to the trashcan to remove it.</source>
         <translation>从网格中拖动屏幕到垃圾桶进行删除。</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="60"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="60"/>
         <source>Configure the layout of your InputLeap server configuration.</source>
         <translation>配置InputLeap服务端的屏幕布局。</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="73"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="73"/>
         <source>Drag this button to the grid to add a new screen.</source>
         <translation>拖动此按钮到网格以添加屏幕。</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="128"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="128"/>
         <source>Drag new screens to the grid or move existing ones around.
 Drag a screen to the trashcan to delete it.
 Double click on a screen to edit its settings.</source>
@@ -849,149 +849,149 @@ Double click on a screen to edit its settings.</source>
 双击屏幕编辑其设置。</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="157"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="157"/>
         <source>Hotkeys</source>
         <translation>热键</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="163"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="163"/>
         <source>&amp;Hotkeys</source>
         <translation>热键(&amp;H)</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="175"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="175"/>
         <source>&amp;New</source>
         <translation>新建(&amp;N)</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="185"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="185"/>
         <source>&amp;Edit</source>
         <translation>编辑(&amp;E)</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="195"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="195"/>
         <source>&amp;Remove</source>
         <translation>删除(&amp;R)</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="218"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="218"/>
         <source>A&amp;ctions</source>
         <translation>动作</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="230"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="230"/>
         <source>Ne&amp;w</source>
         <translation>新建(&amp;w)</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="240"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="240"/>
         <source>E&amp;dit</source>
         <translation>编辑(&amp;d)</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="250"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="250"/>
         <source>Re&amp;move</source>
         <translation>删除(&amp;m)</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="274"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="274"/>
         <source>Advanced server settings</source>
         <translation>服务端高级设置</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="280"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="280"/>
         <source>&amp;Switch</source>
         <translation>触边切换</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="291"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="291"/>
         <source>Switch &amp;after waiting</source>
         <translation>延时</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="330"/>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="385"/>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="502"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="330"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="385"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="502"/>
         <source>ms</source>
         <translation>毫秒</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="346"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="346"/>
         <source>Switch on double &amp;tap within</source>
         <translation>二次触边</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="422"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="422"/>
         <source>&amp;Options</source>
         <translation>选项</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="463"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="463"/>
         <source>&amp;Check clients every</source>
         <translation>客户端检查周期</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="441"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="441"/>
         <source>Use &amp;relative mouse moves</source>
         <translation>使用相对的鼠标动作</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="451"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="451"/>
         <source>S&amp;ynchronize screen savers</source>
         <translation>同步屏幕保护</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="431"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="431"/>
         <source>Don&apos;t take &amp;foreground window on Windows servers</source>
         <translation>不要在Windows服务端获取前台窗口</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="531"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="531"/>
         <source>Ignore auto config clients</source>
         <translation>忽略自动配置的客户端</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="551"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="551"/>
         <source>&amp;Dead corners</source>
         <translation>死角</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="560"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="560"/>
         <source>To&amp;p-left</source>
         <translation>左上角</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="567"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="567"/>
         <source>Top-rig&amp;ht</source>
         <translation>右上角</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="574"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="574"/>
         <source>&amp;Bottom-left</source>
         <translation>左下角</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="581"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="581"/>
         <source>Bottom-ri&amp;ght</source>
         <translation>右下角</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="603"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="603"/>
         <source>Cor&amp;ner Size:</source>
         <translation>死角大小</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="394"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="394"/>
         <source>Bump against the screen edge with the mouse pointer twice in quick succession.</source>
         <translation>要触发二次触边，快速并连续地滑动指针到屏幕边缘。</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="524"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="524"/>
         <source>Enable drag and drop file transfers</source>
         <translation>启用拖放文件传输</translation>
     </message>
     <message>
-        <location filename="../../src/ServerConfigDialogBase.ui" line="538"/>
+        <location filename="../../src/ServerConfigDialog.ui" line="538"/>
         <source>Enable clipboard sharing</source>
         <translation>启用剪切板共享</translation>
     </message>
@@ -1005,139 +1005,139 @@ Double click on a screen to edit its settings.</source>
     </message>
 </context>
 <context>
-    <name>SettingsDialogBase</name>
+    <name>SettingsDialog</name>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="14"/>
+        <location filename="../../src/SettingsDialog.ui" line="14"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="69"/>
+        <location filename="../../src/SettingsDialog.ui" line="69"/>
         <source>Sc&amp;reen name:</source>
         <translation>屏幕名称:</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="148"/>
+        <location filename="../../src/SettingsDialog.ui" line="148"/>
         <source>P&amp;ort:</source>
         <translation>端口：</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="125"/>
+        <location filename="../../src/SettingsDialog.ui" line="125"/>
         <source>&amp;Hide on startup</source>
         <translation>最小化启动</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="210"/>
+        <location filename="../../src/SettingsDialog.ui" line="210"/>
         <source>Logging</source>
         <translation>日志</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="228"/>
+        <location filename="../../src/SettingsDialog.ui" line="228"/>
         <source>&amp;Logging level:</source>
         <translation>日志等级</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="277"/>
+        <location filename="../../src/SettingsDialog.ui" line="277"/>
         <source>Log to file:</source>
         <translation>记录到文件</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="294"/>
+        <location filename="../../src/SettingsDialog.ui" line="294"/>
         <source>Browse...</source>
         <translation>浏览…</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="239"/>
+        <location filename="../../src/SettingsDialog.ui" line="239"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="50"/>
+        <location filename="../../src/SettingsDialog.ui" line="50"/>
         <source>&amp;Language:</source>
         <translation>语言：</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="244"/>
+        <location filename="../../src/SettingsDialog.ui" line="244"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="249"/>
+        <location filename="../../src/SettingsDialog.ui" line="249"/>
         <source>Note</source>
         <translation>注意</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="254"/>
+        <location filename="../../src/SettingsDialog.ui" line="254"/>
         <source>Info</source>
         <translation>信息</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="259"/>
+        <location filename="../../src/SettingsDialog.ui" line="259"/>
         <source>Debug</source>
         <translation>调试</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="264"/>
+        <location filename="../../src/SettingsDialog.ui" line="264"/>
         <source>Debug1</source>
         <translation>调试1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="269"/>
+        <location filename="../../src/SettingsDialog.ui" line="269"/>
         <source>Debug2</source>
         <translation>调试2</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="29"/>
+        <location filename="../../src/SettingsDialog.ui" line="29"/>
         <source>General</source>
         <translation>通用</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="86"/>
+        <location filename="../../src/SettingsDialog.ui" line="86"/>
         <source>Elevate</source>
         <translation>提权</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="93"/>
+        <location filename="../../src/SettingsDialog.ui" line="93"/>
         <source>Specify when the InputLeap service should run at an elevated privilege level</source>
         <translation>设置InputLeap服务何时应该提权运行</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="100"/>
+        <location filename="../../src/SettingsDialog.ui" line="100"/>
         <source>As Needed</source>
         <translation>按需</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="105"/>
+        <location filename="../../src/SettingsDialog.ui" line="105"/>
         <source>Always</source>
         <translation>总是</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="110"/>
+        <location filename="../../src/SettingsDialog.ui" line="110"/>
         <source>Never</source>
         <translation>从不</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="118"/>
+        <location filename="../../src/SettingsDialog.ui" line="118"/>
         <source>Minimize to System &amp;Tray</source>
         <translation>最小化到系统托盘</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="132"/>
+        <location filename="../../src/SettingsDialog.ui" line="132"/>
         <source>Start &amp;InputLeap on startup</source>
         <translation>自动启动</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="142"/>
+        <location filename="../../src/SettingsDialog.ui" line="142"/>
         <source>Networking</source>
         <translation>网络</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="177"/>
+        <location filename="../../src/SettingsDialog.ui" line="177"/>
         <source>&amp;Address:</source>
         <translation>地址：</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="194"/>
+        <location filename="../../src/SettingsDialog.ui" line="194"/>
         <source>Enable &amp;SSL</source>
         <translation>开启SSL</translation>
     </message>
@@ -1156,34 +1156,34 @@ Double click on a screen to edit its settings.</source>
     </message>
 </context>
 <context>
-    <name>SetupWizardBase</name>
+    <name>SetupWizard</name>
     <message>
-        <location filename="../../src/SetupWizardBase.ui" line="26"/>
+        <location filename="../../src/SetupWizard.ui" line="26"/>
         <source>Setup InputLeap</source>
         <translation>设置InputLeap</translation>
     </message>
     <message>
-        <location filename="../../src/SetupWizardBase.ui" line="30"/>
+        <location filename="../../src/SetupWizard.ui" line="30"/>
         <source>Welcome</source>
         <translation>欢迎</translation>
     </message>
     <message>
-        <location filename="../../src/SetupWizardBase.ui" line="39"/>
+        <location filename="../../src/SetupWizard.ui" line="39"/>
         <source>Thanks for installing InputLeap!</source>
         <translation>感谢您安装InputLeap！</translation>
     </message>
     <message>
-        <location filename="../../src/SetupWizardBase.ui" line="114"/>
+        <location filename="../../src/SetupWizard.ui" line="114"/>
         <source>InputLeap lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. InputLeap is cross-platform (works on Windows, Mac OS X and Linux).</source>
         <translation>InputLeap可以在多台计算机间轻松共享你的鼠标和键盘，它还是自由开源软件。将鼠标指针从计算机的屏幕边缘移出到另一个屏幕，并同时共享剪贴板，只要你有一个网络连接。InputLeap是跨平台的（可以运行于Windows，Mac OS X和Linux）。</translation>
     </message>
     <message>
-        <location filename="../../src/SetupWizardBase.ui" line="146"/>
+        <location filename="../../src/SetupWizard.ui" line="146"/>
         <source>&amp;Server (share this computer&apos;s mouse and keyboard)</source>
         <translation>服务端 - 共享此电脑的鼠标和键盘</translation>
     </message>
     <message>
-        <location filename="../../src/SetupWizardBase.ui" line="159"/>
+        <location filename="../../src/SetupWizard.ui" line="159"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -1196,12 +1196,12 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;这台电脑连接了鼠标和键盘，需要共享给其他电脑。一套配置只能有一个服务端。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/SetupWizardBase.ui" line="195"/>
+        <location filename="../../src/SetupWizard.ui" line="195"/>
         <source>&amp;Client (use another computer&apos;s mouse and keyboard)</source>
         <translation>客户端 - 使用另一电脑的鼠标和键盘</translation>
     </message>
     <message>
-        <location filename="../../src/SetupWizardBase.ui" line="208"/>
+        <location filename="../../src/SetupWizard.ui" line="208"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -1214,7 +1214,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;已经配置了服务端，此电脑将由服务端的鼠标和键盘进行控制。可以配置多个客户端。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/SetupWizardBase.ui" line="131"/>
+        <location filename="../../src/SetupWizard.ui" line="131"/>
         <source>Server or Client?</source>
         <translation>服务端还是客户端？</translation>
     </message>

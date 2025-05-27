@@ -161,14 +161,14 @@ Visit our website for help and info (symless.com).
     </message>
 </context>
 <context>
-    <name>HotkeyDialogBase</name>
+    <name>HotkeyDialog</name>
     <message>
-        <location filename="res/HotkeyDialogBase.ui" line="14"/>
+        <location filename="res/HotkeyDialog.ui" line="14"/>
         <source>Hotkey</source>
         <translation type="finished">Hotkey</translation>
     </message>
     <message>
-        <location filename="res/HotkeyDialogBase.ui" line="20"/>
+        <location filename="res/HotkeyDialog.ui" line="20"/>
         <source>Enter the specification for the hotkey:</source>
         <translation type="finished">Specifica la hotkey da utilizzare:</translation>
     </message>
@@ -390,170 +390,170 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
 </context>
 <context>
-    <name>MainWindowBase</name>
+    <name>MainWindow</name>
     <message>
-        <location filename="res/MainWindowBase.ui" line="26"/>
+        <location filename="res/MainWindow.ui" line="26"/>
         <source>InputLeap</source>
         <translation type="finished">InputLeap</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="90"/>
+        <location filename="res/MainWindow.ui" line="90"/>
         <source>Ser&amp;ver (share this computer's mouse and keyboard):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="243"/>
+        <location filename="res/MainWindow.ui" line="243"/>
         <source>Screen name:</source>
         <translation type="finished">Nome schermo:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="257"/>
+        <location filename="res/MainWindow.ui" line="257"/>
         <source>Server I&amp;P:</source>
         <translation type="finished">Server I&amp;P:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="380"/>
-        <location filename="res/MainWindowBase.ui" line="409"/>
+        <location filename="res/MainWindow.ui" line="380"/>
+        <location filename="res/MainWindow.ui" line="409"/>
         <source>&amp;Start</source>
         <translation type="finished">Avvia</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="181"/>
+        <location filename="res/MainWindow.ui" line="181"/>
         <source>Use existing configuration:</source>
         <translation type="finished">Utilizza una configurazione esistente:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="190"/>
+        <location filename="res/MainWindow.ui" line="190"/>
         <source>&amp;Configuration file:</source>
         <translation type="finished">File di configurazione:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="210"/>
+        <location filename="res/MainWindow.ui" line="210"/>
         <source>&amp;Browse...</source>
         <translation type="finished">Sfoglia...</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="147"/>
+        <location filename="res/MainWindow.ui" line="147"/>
         <source>Configure interactively:</source>
         <translation type="finished">Configurazione interattiva:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="159"/>
+        <location filename="res/MainWindow.ui" line="159"/>
         <source>&amp;Configure Server...</source>
         <translation type="finished">Configura il Server...</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="350"/>
+        <location filename="res/MainWindow.ui" line="350"/>
         <source>Ready</source>
         <translation type="finished">Pronto</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="296"/>
+        <location filename="res/MainWindow.ui" line="296"/>
         <source>Log</source>
         <translation type="finished">Eventi</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="373"/>
+        <location filename="res/MainWindow.ui" line="373"/>
         <source>&amp;Reload</source>
         <translation type="finished">Applica</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="107"/>
+        <location filename="res/MainWindow.ui" line="107"/>
         <source>IP addresses:</source>
         <translation type="finished">Indirizzi IP:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="131"/>
+        <location filename="res/MainWindow.ui" line="131"/>
         <source>Fingerprint:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="228"/>
+        <location filename="res/MainWindow.ui" line="228"/>
         <source>&amp;Client (use another computer's mouse and keyboard):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="270"/>
+        <location filename="res/MainWindow.ui" line="270"/>
         <source>Auto config</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="390"/>
+        <location filename="res/MainWindow.ui" line="390"/>
         <source>&amp;About InputLeap...</source>
         <translation type="finished">Riguardo a InputLeap...</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="398"/>
+        <location filename="res/MainWindow.ui" line="398"/>
         <source>&amp;Quit</source>
         <translation type="finished">Chiudi</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="401"/>
+        <location filename="res/MainWindow.ui" line="401"/>
         <source>Quit</source>
         <translation type="finished">Chiudi</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="412"/>
+        <location filename="res/MainWindow.ui" line="412"/>
         <source>Run</source>
         <translation type="finished">Esegui</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="423"/>
+        <location filename="res/MainWindow.ui" line="423"/>
         <source>S&amp;top</source>
         <translation type="finished">Ferma</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="426"/>
+        <location filename="res/MainWindow.ui" line="426"/>
         <source>Stop</source>
         <translation type="finished">Ferma</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="434"/>
+        <location filename="res/MainWindow.ui" line="434"/>
         <source>S&amp;how Status</source>
         <translation type="finished">Visualizza stato</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="442"/>
+        <location filename="res/MainWindow.ui" line="442"/>
         <source>&amp;Hide</source>
         <translation type="finished">Nascondi</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="445"/>
+        <location filename="res/MainWindow.ui" line="445"/>
         <source>Hide</source>
         <translation type="finished">Nascondi</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="453"/>
+        <location filename="res/MainWindow.ui" line="453"/>
         <source>&amp;Show</source>
         <translation type="finished">Mostra</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="456"/>
+        <location filename="res/MainWindow.ui" line="456"/>
         <source>Show</source>
         <translation type="finished">Mostra</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="464"/>
+        <location filename="res/MainWindow.ui" line="464"/>
         <source>Save configuration &amp;as...</source>
         <translation type="finished">Salva configurazione come...</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="467"/>
+        <location filename="res/MainWindow.ui" line="467"/>
         <source>Save the interactively generated server configuration to a file.</source>
         <translation type="finished">Salva la configurazione interattiva del server in un file.</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="475"/>
+        <location filename="res/MainWindow.ui" line="475"/>
         <source>Settings</source>
         <translation type="finished">Impostazioni</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="478"/>
+        <location filename="res/MainWindow.ui" line="478"/>
         <source>Edit settings</source>
         <translation type="finished">Modifica impostazioni</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="486"/>
+        <location filename="res/MainWindow.ui" line="486"/>
         <source>Run Wizard</source>
         <translation type="finished">Esegui il Wizard</translation>
     </message>
@@ -598,12 +598,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
 <context>
     <name>PluginWizardPage</name>
     <message>
-        <location filename="res/PluginWizardPageBase.ui" line="14"/>
+        <location filename="res/PluginWizardPage.ui" line="14"/>
         <source>Setup InputLeap</source>
         <translation type="finished">Configura InputLeap</translation>
     </message>
     <message>
-        <location filename="res/PluginWizardPageBase.ui" line="101"/>
+        <location filename="res/PluginWizardPage.ui" line="101"/>
         <source>Please wait...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -874,34 +874,34 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
 </context>
 <context>
-    <name>ServerConfigDialogBase</name>
+    <name>ServerConfigDialog</name>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="14"/>
+        <location filename="res/ServerConfigDialog.ui" line="14"/>
         <source>Server Configuration</source>
         <translation type="finished">Configurazione del Server</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="24"/>
+        <location filename="res/ServerConfigDialog.ui" line="24"/>
         <source>Screens and links</source>
         <translation type="finished">Schermi e collegamenti</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="35"/>
+        <location filename="res/ServerConfigDialog.ui" line="35"/>
         <source>Drag a screen from the grid to the trashcan to remove it.</source>
         <translation type="finished">Trascina uno schermo dalla griglia al cestino per rimuoverlo</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="60"/>
+        <location filename="res/ServerConfigDialog.ui" line="60"/>
         <source>Configure the layout of your InputLeap server configuration.</source>
         <translation type="finished">Configura il layout del server InputLeap</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="73"/>
+        <location filename="res/ServerConfigDialog.ui" line="73"/>
         <source>Drag this button to the grid to add a new screen.</source>
         <translation type="finished">Trascina questo pulsante sulla griglia per aggiungere un nuovo schermo.</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="128"/>
+        <location filename="res/ServerConfigDialog.ui" line="128"/>
         <source>Drag new screens to the grid or move existing ones around.
 Drag a screen to the trashcan to delete it.
 Double click on a screen to edit its settings.</source>
@@ -910,134 +910,134 @@ Trascina uno schermo sul cestino per rimuoverlo.
 Doppio click su uno schermo per modificarne le impostazioni.</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="157"/>
+        <location filename="res/ServerConfigDialog.ui" line="157"/>
         <source>Hotkeys</source>
         <translation type="finished">Hotkeys</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="163"/>
+        <location filename="res/ServerConfigDialog.ui" line="163"/>
         <source>&amp;Hotkeys</source>
         <translation type="finished">Hotkeys</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="175"/>
+        <location filename="res/ServerConfigDialog.ui" line="175"/>
         <source>&amp;New</source>
         <translation type="finished">Nuovo</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="185"/>
+        <location filename="res/ServerConfigDialog.ui" line="185"/>
         <source>&amp;Edit</source>
         <translation type="finished">Modifica</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="195"/>
+        <location filename="res/ServerConfigDialog.ui" line="195"/>
         <source>&amp;Remove</source>
         <translation type="finished">Rimuovi</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="218"/>
+        <location filename="res/ServerConfigDialog.ui" line="218"/>
         <source>A&amp;ctions</source>
         <translation type="finished">Operazioni</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="230"/>
+        <location filename="res/ServerConfigDialog.ui" line="230"/>
         <source>Ne&amp;w</source>
         <translation type="finished">Nuovo</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="240"/>
+        <location filename="res/ServerConfigDialog.ui" line="240"/>
         <source>E&amp;dit</source>
         <translation type="finished">Modifica</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="250"/>
+        <location filename="res/ServerConfigDialog.ui" line="250"/>
         <source>Re&amp;move</source>
         <translation type="finished">Rimuovi</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="274"/>
+        <location filename="res/ServerConfigDialog.ui" line="274"/>
         <source>Advanced server settings</source>
         <translation type="finished">Configurazioni avanzate del server</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="280"/>
+        <location filename="res/ServerConfigDialog.ui" line="280"/>
         <source>&amp;Switch</source>
         <translation type="finished">Scambia</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="291"/>
+        <location filename="res/ServerConfigDialog.ui" line="291"/>
         <source>Switch &amp;after waiting</source>
         <translation type="finished">Scambia al termine dell'attesa</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="330"/>
-        <location filename="res/ServerConfigDialogBase.ui" line="383"/>
-        <location filename="res/ServerConfigDialogBase.ui" line="458"/>
+        <location filename="res/ServerConfigDialog.ui" line="330"/>
+        <location filename="res/ServerConfigDialog.ui" line="383"/>
+        <location filename="res/ServerConfigDialog.ui" line="458"/>
         <source>ms</source>
         <translation type="finished">millisecondi</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="344"/>
+        <location filename="res/ServerConfigDialog.ui" line="344"/>
         <source>Switch on double &amp;tap within</source>
         <translation type="finished">Scambia con doppio tocco</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="408"/>
+        <location filename="res/ServerConfigDialog.ui" line="408"/>
         <source>&amp;Options</source>
         <translation type="finished">Opzioni</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="419"/>
+        <location filename="res/ServerConfigDialog.ui" line="419"/>
         <source>&amp;Check clients every</source>
         <translation type="finished">Controlla il client ogni</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="470"/>
+        <location filename="res/ServerConfigDialog.ui" line="470"/>
         <source>Use &amp;relative mouse moves</source>
         <translation type="finished">Utilizza i movimenti del mouse relativi</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="480"/>
+        <location filename="res/ServerConfigDialog.ui" line="480"/>
         <source>S&amp;ynchronize screen savers</source>
         <translation type="finished">Sincronizza gli screen savers</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="490"/>
+        <location filename="res/ServerConfigDialog.ui" line="490"/>
         <source>Don't take &amp;foreground window on Windows servers</source>
         <translation type="finished">Non prendere la finestra in primo piano sui servers Windows</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="510"/>
+        <location filename="res/ServerConfigDialog.ui" line="510"/>
         <source>Ignore auto config clients</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="520"/>
+        <location filename="res/ServerConfigDialog.ui" line="520"/>
         <source>&amp;Dead corners</source>
         <translation type="finished">Angoli morti</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="529"/>
+        <location filename="res/ServerConfigDialog.ui" line="529"/>
         <source>To&amp;p-left</source>
         <translation type="finished">In alto a sinistra</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="536"/>
+        <location filename="res/ServerConfigDialog.ui" line="536"/>
         <source>Top-rig&amp;ht</source>
         <translation type="finished">In alto a destra</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="543"/>
+        <location filename="res/ServerConfigDialog.ui" line="543"/>
         <source>&amp;Bottom-left</source>
         <translation type="finished">In basso a sinistra</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="550"/>
+        <location filename="res/ServerConfigDialog.ui" line="550"/>
         <source>Bottom-ri&amp;ght</source>
         <translation type="finished">In basso a destra</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="572"/>
+        <location filename="res/ServerConfigDialog.ui" line="572"/>
         <source>Cor&amp;ner Size:</source>
         <translation type="finished">Dimensione dell'angolo:</translation>
     </message>
@@ -1064,109 +1064,109 @@ Ciò consentirà a InputLeap di interagire con molti processi e con il dialogo U
     </message>
 </context>
 <context>
-    <name>SettingsDialogBase</name>
+    <name>SettingsDialog</name>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="14"/>
+        <location filename="res/SettingsDialog.ui" line="14"/>
         <source>Settings</source>
         <translation type="finished">Impostazioni</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="32"/>
+        <location filename="res/SettingsDialog.ui" line="32"/>
         <source>Sc&amp;reen name:</source>
         <translation type="finished">Nome dello schermo:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="49"/>
+        <location filename="res/SettingsDialog.ui" line="49"/>
         <source>P&amp;ort:</source>
         <translation type="finished">Porta:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="78"/>
+        <location filename="res/SettingsDialog.ui" line="78"/>
         <source>&amp;Interface:</source>
         <translation type="finished">Interfaccia:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="120"/>
+        <location filename="res/SettingsDialog.ui" line="120"/>
         <source>Elevate mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="127"/>
+        <location filename="res/SettingsDialog.ui" line="127"/>
         <source>&amp;Hide on startup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="146"/>
+        <location filename="res/SettingsDialog.ui" line="146"/>
         <source>&amp;Network Security</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="155"/>
+        <location filename="res/SettingsDialog.ui" line="155"/>
         <source>Use &amp;SSL encryption (unique certificate)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="184"/>
+        <location filename="res/SettingsDialog.ui" line="184"/>
         <source>Logging</source>
         <translation type="finished">Registro Eventi</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="202"/>
+        <location filename="res/SettingsDialog.ui" line="202"/>
         <source>&amp;Logging level:</source>
         <translation type="finished">Livello di registrazione eventi</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="251"/>
+        <location filename="res/SettingsDialog.ui" line="251"/>
         <source>Log to file:</source>
         <translation type="finished">Registra gli eventi in un file</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="268"/>
+        <location filename="res/SettingsDialog.ui" line="268"/>
         <source>Browse...</source>
         <translation type="finished">Sfoglia...</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="213"/>
+        <location filename="res/SettingsDialog.ui" line="213"/>
         <source>Error</source>
         <translation type="finished">Errore</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="107"/>
+        <location filename="res/SettingsDialog.ui" line="107"/>
         <source>&amp;Language:</source>
         <translation type="finished">Lingua</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="20"/>
+        <location filename="res/SettingsDialog.ui" line="20"/>
         <source>&amp;Miscellaneous</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="218"/>
+        <location filename="res/SettingsDialog.ui" line="218"/>
         <source>Warning</source>
         <translation type="finished">Avviso</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="223"/>
+        <location filename="res/SettingsDialog.ui" line="223"/>
         <source>Note</source>
         <translation type="finished">Nota</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="228"/>
+        <location filename="res/SettingsDialog.ui" line="228"/>
         <source>Info</source>
         <translation type="finished">Informazioni</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="233"/>
+        <location filename="res/SettingsDialog.ui" line="233"/>
         <source>Debug</source>
         <translation type="finished">Debug</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="238"/>
+        <location filename="res/SettingsDialog.ui" line="238"/>
         <source>Debug1</source>
         <translation type="finished">Debug1</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="243"/>
+        <location filename="res/SettingsDialog.ui" line="243"/>
         <source>Debug2</source>
         <translation type="finished">Debug2</translation>
     </message>
@@ -1190,64 +1190,64 @@ Ciò consentirà a InputLeap di interagire con molti processi e con il dialogo U
     </message>
 </context>
 <context>
-    <name>SetupWizardBase</name>
+    <name>SetupWizard</name>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="26"/>
+        <location filename="res/SetupWizard.ui" line="26"/>
         <source>Setup InputLeap</source>
         <translation type="finished">Configura InputLeap</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="30"/>
+        <location filename="res/SetupWizard.ui" line="30"/>
         <source>Welcome</source>
         <translation type="finished">Ti diamo il benvenuto</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="39"/>
+        <location filename="res/SetupWizard.ui" line="39"/>
         <source>Thanks for installing InputLeap!</source>
         <translation type="finished">Grazie per aver installato InputLeap!</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="114"/>
+        <location filename="res/SetupWizard.ui" line="114"/>
         <source>InputLeap lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. InputLeap is cross-platform (works on Windows, Mac OS X and Linux).</source>
         <translation type="finished">InputLeap ti permette facilmente di condividere il mouse e la tastiera tra piu' computers sulla tua scrivania, è un software Libero e Gratuito. Ti basta muovere il mouse oltre i bordi dello schermo per passare da un computer ad un altro. Puoi anche condividere la bacheca degli appunti (Copia e Incolla). Tutto cio' che serve è una connessione di rete (WiFi o LAN). InputLeap è multi-piattaforma (Funziona correttamente su Windows, Mac OS X e Linux)</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="125"/>
+        <location filename="res/SetupWizard.ui" line="125"/>
         <source>Activate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="131"/>
+        <location filename="res/SetupWizard.ui" line="131"/>
         <source>&amp;Activate now...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="152"/>
+        <location filename="res/SetupWizard.ui" line="152"/>
         <source>Email:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="178"/>
+        <location filename="res/SetupWizard.ui" line="178"/>
         <source>Password:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="204"/>
+        <location filename="res/SetupWizard.ui" line="204"/>
         <source>&lt;a href=&quot;https://symless.com/account/reset/&quot;&gt;Forgot password&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="232"/>
+        <location filename="res/SetupWizard.ui" line="232"/>
         <source>&amp;Skip activation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="277"/>
+        <location filename="res/SetupWizard.ui" line="277"/>
         <source>&amp;Server (share this computer's mouse and keyboard)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="290"/>
+        <location filename="res/SetupWizard.ui" line="290"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -1256,12 +1256,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="326"/>
+        <location filename="res/SetupWizard.ui" line="326"/>
         <source>&amp;Client (use another computer's mouse and keyboard)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="339"/>
+        <location filename="res/SetupWizard.ui" line="339"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -1270,7 +1270,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="262"/>
+        <location filename="res/SetupWizard.ui" line="262"/>
         <source>Server or Client?</source>
         <translation type="finished">Server o Client?</translation>
     </message>

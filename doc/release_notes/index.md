@@ -3,7 +3,7 @@ Release notes
 
 [comment]: <> (towncrier release notes start)
 
-InputLeap `3.0.3` ( `2025-04-20` )
+InputLeap `3.0.3` ( `2025-06-13` )
 ================================
 
 =====================================================================
@@ -20,6 +20,8 @@ Bug fixes
 - Fixed input capture Disabled signal, Enable method is now properly called after Disable.
 - Fixed a long standing bug with modifiers and dead keys on Windows because their state was not being reset.
 - Fixed an issue with mapping keys in OSX clients introduced in #1635, where keys like the equals sign "=" or the back tick "`" wouldn't be mapped correctly.
+- Remove check requiring the Alt modifier for non-extended VK_SNAPSHOT scancode in Win32.
+  Check is irrelevant for modern keyboards, and breaks Print Screen functionality.
 
 Features
 --------
@@ -27,6 +29,7 @@ Features
 - Add a reload action to the tray icon menu.
   Sometimes the clipboard copy function does not work. In this case, when the input-leap is reloaded, the function works normally again.
   To make reload easier, add a reload action to the tray icon.
+
 InputLeap `3.0.2` ( `2024-10-12` )
 ==================================
 

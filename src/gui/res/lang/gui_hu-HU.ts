@@ -171,14 +171,14 @@ A grafikus felületet Volker Lanz QSynergy alkalmazása alapján készült.
     </message>
 </context>
 <context>
-    <name>HotkeyDialogBase</name>
+    <name>HotkeyDialog</name>
     <message>
-        <location filename="res/HotkeyDialogBase.ui" line="14"/>
+        <location filename="res/HotkeyDialog.ui" line="14"/>
         <source>Hotkey</source>
         <translation>Gyorsbillentyűk</translation>
     </message>
     <message>
-        <location filename="res/HotkeyDialogBase.ui" line="20"/>
+        <location filename="res/HotkeyDialog.ui" line="20"/>
         <source>Enter the specification for the hotkey:</source>
         <translation>Adjon hozzá egy gyorsbillentyűt:</translation>
     </message>
@@ -410,170 +410,170 @@ A jövőbeni kapcsolódási kísérletek automatikus jóváhagyáshoz kattintson
     </message>
 </context>
 <context>
-    <name>MainWindowBase</name>
+    <name>MainWindow</name>
     <message>
-        <location filename="res/MainWindowBase.ui" line="26"/>
+        <location filename="res/MainWindow.ui" line="26"/>
         <source>InputLeap</source>
         <translation>InputLeap</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="90"/>
+        <location filename="res/MainWindow.ui" line="90"/>
         <source>Ser&amp;ver (share this computer&apos;s mouse and keyboard):</source>
         <translation>&amp;Kiszolgáló (jelen gép eszközeinek megosztása):</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="243"/>
+        <location filename="res/MainWindow.ui" line="243"/>
         <source>Screen name:</source>
         <translation>Megnevezés:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="257"/>
+        <location filename="res/MainWindow.ui" line="257"/>
         <source>Server I&amp;P:</source>
         <translation>Kiszolgáló I&amp;P-címe:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="380"/>
-        <location filename="res/MainWindowBase.ui" line="409"/>
+        <location filename="res/MainWindow.ui" line="380"/>
+        <location filename="res/MainWindow.ui" line="409"/>
         <source>&amp;Start</source>
         <translation>&amp;Indítás</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="181"/>
+        <location filename="res/MainWindow.ui" line="181"/>
         <source>Use existing configuration:</source>
         <translation>Meglévő konfiguráció használata:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="190"/>
+        <location filename="res/MainWindow.ui" line="190"/>
         <source>&amp;Configuration file:</source>
         <translation>&amp;Elérési útvonal:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="210"/>
+        <location filename="res/MainWindow.ui" line="210"/>
         <source>&amp;Browse...</source>
         <translation>&amp;Tallózás...</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="147"/>
+        <location filename="res/MainWindow.ui" line="147"/>
         <source>Configure interactively:</source>
         <translation>Interaktív beállítás:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="159"/>
+        <location filename="res/MainWindow.ui" line="159"/>
         <source>&amp;Configure Server...</source>
         <translation>Ki&amp;szolgáló konfigurálása...</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="350"/>
+        <location filename="res/MainWindow.ui" line="350"/>
         <source>Ready</source>
         <translation>Kész</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="296"/>
+        <location filename="res/MainWindow.ui" line="296"/>
         <source>Log</source>
         <translation>Napló</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="373"/>
+        <location filename="res/MainWindow.ui" line="373"/>
         <source>&amp;Reload</source>
         <translation>&amp;Alkalmazás</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="107"/>
+        <location filename="res/MainWindow.ui" line="107"/>
         <source>IP addresses:</source>
         <translation>IP-cím(ek):</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="131"/>
+        <location filename="res/MainWindow.ui" line="131"/>
         <source>Fingerprint:</source>
         <translation>Ujjlenyomat:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="228"/>
+        <location filename="res/MainWindow.ui" line="228"/>
         <source>&amp;Client (use another computer&apos;s mouse and keyboard):</source>
         <translation>&amp;Ügyfél (eszközök megosztása ezzel a géppel):</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="270"/>
+        <location filename="res/MainWindow.ui" line="270"/>
         <source>Auto config</source>
         <translation>Automatikus konfiguráció használata</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="390"/>
+        <location filename="res/MainWindow.ui" line="390"/>
         <source>&amp;About InputLeap...</source>
         <translation>&amp;Névjegy...</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="398"/>
+        <location filename="res/MainWindow.ui" line="398"/>
         <source>&amp;Quit</source>
         <translation>&amp;Kilépés</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="401"/>
+        <location filename="res/MainWindow.ui" line="401"/>
         <source>Quit</source>
         <translation>Kilépés</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="412"/>
+        <location filename="res/MainWindow.ui" line="412"/>
         <source>Run</source>
         <translation>Fut</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="423"/>
+        <location filename="res/MainWindow.ui" line="423"/>
         <source>S&amp;top</source>
         <translation>&amp;Leállítás</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="426"/>
+        <location filename="res/MainWindow.ui" line="426"/>
         <source>Stop</source>
         <translation>Leállítás</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="434"/>
+        <location filename="res/MainWindow.ui" line="434"/>
         <source>S&amp;how Status</source>
         <translation>&amp;Állapot mutatása</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="442"/>
+        <location filename="res/MainWindow.ui" line="442"/>
         <source>&amp;Hide</source>
         <translation>&amp;Elrejtés</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="445"/>
+        <location filename="res/MainWindow.ui" line="445"/>
         <source>Hide</source>
         <translation>Elrejtés</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="453"/>
+        <location filename="res/MainWindow.ui" line="453"/>
         <source>&amp;Show</source>
         <translation>InputLeap &amp;megnyitása</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="456"/>
+        <location filename="res/MainWindow.ui" line="456"/>
         <source>Show</source>
         <translation>Megnyitás</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="464"/>
+        <location filename="res/MainWindow.ui" line="464"/>
         <source>Save configuration &amp;as...</source>
         <translation>&amp;Konfiguráció mentése másként...</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="467"/>
+        <location filename="res/MainWindow.ui" line="467"/>
         <source>Save the interactively generated server configuration to a file.</source>
         <translation>Interaktívan létrehozott konfiguráció mentése fájlba.</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="475"/>
+        <location filename="res/MainWindow.ui" line="475"/>
         <source>Settings</source>
         <translation>Beállítások</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="478"/>
+        <location filename="res/MainWindow.ui" line="478"/>
         <source>Edit settings</source>
         <translation>Beállítások módosítása</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="486"/>
+        <location filename="res/MainWindow.ui" line="486"/>
         <source>Run Wizard</source>
         <translation>Varázsló futtatása</translation>
     </message>
@@ -619,12 +619,12 @@ A jövőbeni kapcsolódási kísérletek automatikus jóváhagyáshoz kattintson
 <context>
     <name>PluginWizardPage</name>
     <message>
-        <location filename="res/PluginWizardPageBase.ui" line="14"/>
+        <location filename="res/PluginWizardPage.ui" line="14"/>
         <source>Setup InputLeap</source>
         <translation>InputLeap beállítása</translation>
     </message>
     <message>
-        <location filename="res/PluginWizardPageBase.ui" line="101"/>
+        <location filename="res/PluginWizardPage.ui" line="101"/>
         <source>Please wait...</source>
         <translation>Kérem, várjon...</translation>
     </message>
@@ -895,34 +895,34 @@ A jövőbeni kapcsolódási kísérletek automatikus jóváhagyáshoz kattintson
     </message>
 </context>
 <context>
-    <name>ServerConfigDialogBase</name>
+    <name>ServerConfigDialog</name>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="14"/>
+        <location filename="res/ServerConfigDialog.ui" line="14"/>
         <source>Server Configuration</source>
         <translation>Kiszolgáló konfigurálása</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="24"/>
+        <location filename="res/ServerConfigDialog.ui" line="24"/>
         <source>Screens and links</source>
         <translation>Gépek és kapcsolatok</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="35"/>
+        <location filename="res/ServerConfigDialog.ui" line="35"/>
         <source>Drag a screen from the grid to the trashcan to remove it.</source>
         <translation>Eltávolításhoz vontassa a táblázatról a szemetesre a gép kijelzőjét!</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="60"/>
+        <location filename="res/ServerConfigDialog.ui" line="60"/>
         <source>Configure the layout of your InputLeap server configuration.</source>
         <translation>Itt konfigurálhatja a InputLeap kiszolgálóhoz kapcsolódó gépeit.</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="73"/>
+        <location filename="res/ServerConfigDialog.ui" line="73"/>
         <source>Drag this button to the grid to add a new screen.</source>
         <translation>Gép hozzáadásához vontassa a kijelzőt a táblázatra!</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="128"/>
+        <location filename="res/ServerConfigDialog.ui" line="128"/>
         <source>Drag new screens to the grid or move existing ones around.
 Drag a screen to the trashcan to delete it.
 Double click on a screen to edit its settings.</source>
@@ -931,134 +931,134 @@ Eltávolításhoz vontassa a táblázatból a szemetesre a gép kijelzőjét!
 Konfiguráláshoz kattintson kétszer az adott gép kijelzőjére!</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="157"/>
+        <location filename="res/ServerConfigDialog.ui" line="157"/>
         <source>Hotkeys</source>
         <translation>Gyorsbillentyűk</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="163"/>
+        <location filename="res/ServerConfigDialog.ui" line="163"/>
         <source>&amp;Hotkeys</source>
         <translation>&amp;Gyorsbillentyűk</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="175"/>
+        <location filename="res/ServerConfigDialog.ui" line="175"/>
         <source>&amp;New</source>
         <translation>&amp;Új</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="185"/>
+        <location filename="res/ServerConfigDialog.ui" line="185"/>
         <source>&amp;Edit</source>
         <translation>&amp;Módosítás</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="195"/>
+        <location filename="res/ServerConfigDialog.ui" line="195"/>
         <source>&amp;Remove</source>
         <translation>&amp;Eltávolítás</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="218"/>
+        <location filename="res/ServerConfigDialog.ui" line="218"/>
         <source>A&amp;ctions</source>
         <translation>Mű&amp;veletek</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="230"/>
+        <location filename="res/ServerConfigDialog.ui" line="230"/>
         <source>Ne&amp;w</source>
         <translation>Ú&amp;j</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="240"/>
+        <location filename="res/ServerConfigDialog.ui" line="240"/>
         <source>E&amp;dit</source>
         <translation>M&amp;ódosítás</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="250"/>
+        <location filename="res/ServerConfigDialog.ui" line="250"/>
         <source>Re&amp;move</source>
         <translation>E&amp;ltávolítás</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="274"/>
+        <location filename="res/ServerConfigDialog.ui" line="274"/>
         <source>Advanced server settings</source>
         <translation>Haladó beállítások</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="280"/>
+        <location filename="res/ServerConfigDialog.ui" line="280"/>
         <source>&amp;Switch</source>
         <translation>&amp;Váltás a gépek között</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="291"/>
+        <location filename="res/ServerConfigDialog.ui" line="291"/>
         <source>Switch &amp;after waiting</source>
         <translation>Váltás &amp;késleltetéssel</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="330"/>
-        <location filename="res/ServerConfigDialogBase.ui" line="383"/>
-        <location filename="res/ServerConfigDialogBase.ui" line="458"/>
+        <location filename="res/ServerConfigDialog.ui" line="330"/>
+        <location filename="res/ServerConfigDialog.ui" line="383"/>
+        <location filename="res/ServerConfigDialog.ui" line="458"/>
         <source>ms</source>
         <translation>ms</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="344"/>
+        <location filename="res/ServerConfigDialog.ui" line="344"/>
         <source>Switch on double &amp;tap within</source>
         <translation>Váltás két „érintést” követően</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="408"/>
+        <location filename="res/ServerConfigDialog.ui" line="408"/>
         <source>&amp;Options</source>
         <translation>&amp;Beállítások</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="419"/>
+        <location filename="res/ServerConfigDialog.ui" line="419"/>
         <source>&amp;Check clients every</source>
         <translation>Ügyfelek &amp;ütemezett keresése</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="470"/>
+        <location filename="res/ServerConfigDialog.ui" line="470"/>
         <source>Use &amp;relative mouse moves</source>
         <translation>&amp;Relatív egér mozgás használata</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="480"/>
+        <location filename="res/ServerConfigDialog.ui" line="480"/>
         <source>S&amp;ynchronize screen savers</source>
         <translation>Képernyő&amp;védők szinkronizálása</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="490"/>
+        <location filename="res/ServerConfigDialog.ui" line="490"/>
         <source>Don&apos;t take &amp;foreground window on Windows servers</source>
         <translation>Don&apos;t take &amp;foreground window on Windows servers</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="510"/>
+        <location filename="res/ServerConfigDialog.ui" line="510"/>
         <source>Ignore auto config clients</source>
         <translation>Automatikus konfigurációt használó gépek elutasítása</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="520"/>
+        <location filename="res/ServerConfigDialog.ui" line="520"/>
         <source>&amp;Dead corners</source>
         <translation>&amp;Holt sarkok</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="529"/>
+        <location filename="res/ServerConfigDialog.ui" line="529"/>
         <source>To&amp;p-left</source>
         <translation>B&amp;al felső</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="536"/>
+        <location filename="res/ServerConfigDialog.ui" line="536"/>
         <source>Top-rig&amp;ht</source>
         <translation>&amp;Jobb felső</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="543"/>
+        <location filename="res/ServerConfigDialog.ui" line="543"/>
         <source>&amp;Bottom-left</source>
         <translation>Ba&amp;l alsó</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="550"/>
+        <location filename="res/ServerConfigDialog.ui" line="550"/>
         <source>Bottom-ri&amp;ght</source>
         <translation>J&amp;obb alsó</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="572"/>
+        <location filename="res/ServerConfigDialog.ui" line="572"/>
         <source>Cor&amp;ner Size:</source>
         <translation>Sarkok m&amp;érete:</translation>
     </message>
@@ -1086,109 +1086,109 @@ Ez a beállítás lehetővé teszi a InputLeap számára más rendszergazdaként
     </message>
 </context>
 <context>
-    <name>SettingsDialogBase</name>
+    <name>SettingsDialog</name>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="14"/>
+        <location filename="res/SettingsDialog.ui" line="14"/>
         <source>Settings</source>
         <translation>Beállítások</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="32"/>
+        <location filename="res/SettingsDialog.ui" line="32"/>
         <source>Sc&amp;reen name:</source>
         <translation>&amp;Megnevezés:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="49"/>
+        <location filename="res/SettingsDialog.ui" line="49"/>
         <source>P&amp;ort:</source>
         <translation>&amp;Port:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="78"/>
+        <location filename="res/SettingsDialog.ui" line="78"/>
         <source>&amp;Interface:</source>
         <translation>&amp;Kezelőfelület:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="120"/>
+        <location filename="res/SettingsDialog.ui" line="120"/>
         <source>Elevate mode</source>
         <translation>Futtatás rendszergazdaként</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="127"/>
+        <location filename="res/SettingsDialog.ui" line="127"/>
         <source>&amp;Hide on startup</source>
         <translation>Indítás a &amp;háttérben</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="146"/>
+        <location filename="res/SettingsDialog.ui" line="146"/>
         <source>&amp;Network Security</source>
         <translation>Hálózati &amp;biztonság</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="155"/>
+        <location filename="res/SettingsDialog.ui" line="155"/>
         <source>Use &amp;SSL encryption (unique certificate)</source>
         <translation>SSL &amp;titkosítás használata (egyedi tanúsítvány)</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="184"/>
+        <location filename="res/SettingsDialog.ui" line="184"/>
         <source>Logging</source>
         <translation>Naplózás</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="202"/>
+        <location filename="res/SettingsDialog.ui" line="202"/>
         <source>&amp;Logging level:</source>
         <translation>Naplózási &amp;szint:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="251"/>
+        <location filename="res/SettingsDialog.ui" line="251"/>
         <source>Log to file:</source>
         <translation>Napló elérési útvonala:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="268"/>
+        <location filename="res/SettingsDialog.ui" line="268"/>
         <source>Browse...</source>
         <translation>Tallózás...</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="213"/>
+        <location filename="res/SettingsDialog.ui" line="213"/>
         <source>Error</source>
         <translation>Hiba</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="107"/>
+        <location filename="res/SettingsDialog.ui" line="107"/>
         <source>&amp;Language:</source>
         <translation>&amp;Nyelv:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="20"/>
+        <location filename="res/SettingsDialog.ui" line="20"/>
         <source>&amp;Miscellaneous</source>
         <translation>&amp;Egyéb</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="218"/>
+        <location filename="res/SettingsDialog.ui" line="218"/>
         <source>Warning</source>
         <translation>Figyelmeztetések</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="223"/>
+        <location filename="res/SettingsDialog.ui" line="223"/>
         <source>Note</source>
         <translation>Megjegyzések</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="228"/>
+        <location filename="res/SettingsDialog.ui" line="228"/>
         <source>Info</source>
         <translation>Információ</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="233"/>
+        <location filename="res/SettingsDialog.ui" line="233"/>
         <source>Debug</source>
         <translation>Hibák (1. szint)</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="238"/>
+        <location filename="res/SettingsDialog.ui" line="238"/>
         <source>Debug1</source>
         <translation>Hibák (2. szint)</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="243"/>
+        <location filename="res/SettingsDialog.ui" line="243"/>
         <source>Debug2</source>
         <translation>Hibák (3. szint)</translation>
     </message>
@@ -1212,64 +1212,64 @@ Ez a beállítás lehetővé teszi a InputLeap számára más rendszergazdaként
     </message>
 </context>
 <context>
-    <name>SetupWizardBase</name>
+    <name>SetupWizard</name>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="26"/>
+        <location filename="res/SetupWizard.ui" line="26"/>
         <source>Setup InputLeap</source>
         <translation>InputLeap beállítás</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="30"/>
+        <location filename="res/SetupWizard.ui" line="30"/>
         <source>Welcome</source>
         <translation>Üdvözüljük</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="39"/>
+        <location filename="res/SetupWizard.ui" line="39"/>
         <source>Thanks for installing InputLeap!</source>
         <translation>Köszönjük, hogy a InputLeap-t választotta!</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="114"/>
+        <location filename="res/SetupWizard.ui" line="114"/>
         <source>InputLeap lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. InputLeap is cross-platform (works on Windows, Mac OS X and Linux).</source>
         <translation>A InputLeap lehetővé teszi az egér és billentyűzet megosztását több számítógép között és mindemellett ingyenes és nyílt forráskódú. Csak mozgassa a kurzort a kijelző szélére, hogy átkerüljön a másik gép kijelzőjére. A gépek között a vágólap is megosztásra kerül. Ehhez csupán hálózati kapcsolatra van szükség gépei között. A InputLeap rendszerfüggetlen (tehát egyaránt elérhető Windows, Mac OS X és Linux rendszerekre).</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="125"/>
+        <location filename="res/SetupWizard.ui" line="125"/>
         <source>Activate</source>
         <translation>Aktiválás</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="131"/>
+        <location filename="res/SetupWizard.ui" line="131"/>
         <source>&amp;Activate now...</source>
         <translation>&amp;Aktiválás most...</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="152"/>
+        <location filename="res/SetupWizard.ui" line="152"/>
         <source>Email:</source>
         <translation>E-mail:</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="178"/>
+        <location filename="res/SetupWizard.ui" line="178"/>
         <source>Password:</source>
         <translation>Jelszó:</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="204"/>
+        <location filename="res/SetupWizard.ui" line="204"/>
         <source>&lt;a href=&quot;https://symless.com/account/reset/&quot;&gt;Forgot password&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;https://symless.com/account/reset/&quot;&gt;Elfelejtett jelszó&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="232"/>
+        <location filename="res/SetupWizard.ui" line="232"/>
         <source>&amp;Skip activation</source>
         <translation>Aktiválás &amp;kihagyása</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="277"/>
+        <location filename="res/SetupWizard.ui" line="277"/>
         <source>&amp;Server (share this computer&apos;s mouse and keyboard)</source>
         <translation>&amp;Kiszolgáló (jelen gép eszközeinek megosztása)</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="290"/>
+        <location filename="res/SetupWizard.ui" line="290"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -1282,12 +1282,12 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Az egér és a billentyűzet ehhez a géphez csatlakozik. Ezzel a beállítással lehetővé válik más gépek kezelése. Kiszolgáló kizárólag egyetlen gép lehet.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="326"/>
+        <location filename="res/SetupWizard.ui" line="326"/>
         <source>&amp;Client (use another computer&apos;s mouse and keyboard)</source>
         <translation>&amp;Ügyfél (eszközök megosztása ezzel a géppel)</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="339"/>
+        <location filename="res/SetupWizard.ui" line="339"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -1300,7 +1300,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Egy másik gép a kiszolgáló. Ez a gép a kiszolgálóhoz csatlakoztatott egér és billentyűzet segítségével lesz kezelhető. Ügyfél több gép is lehet.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="262"/>
+        <location filename="res/SetupWizard.ui" line="262"/>
         <source>Server or Client?</source>
         <translation>Kiszolgáló vagy ügyfél?</translation>
     </message>

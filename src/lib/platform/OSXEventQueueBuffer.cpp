@@ -20,104 +20,88 @@
 
 #include "base/Event.h"
 #include "base/IEventQueue.h"
+#include "base/Log.h"
 
 namespace inputleap {
 
-OSXEventQueueBuffer::OSXEventQueueBuffer(IEventQueue* events) :
-    m_event(nullptr),
-    m_eventQueue(events),
-    m_carbonEventQueue(nullptr)
+OSXEventQueueBuffer::OSXEventQueueBuffer(IEventQueue* events)
+    : m_eventQueue(events)
 {
     // do nothing
 }
 
 OSXEventQueueBuffer::~OSXEventQueueBuffer()
 {
-    // release the last event
-    if (m_event != nullptr) {
-        ReleaseEvent(m_event);
-    }
+    // Modern macOS handles dispatch queue memory management
 }
 
 void
 OSXEventQueueBuffer::init()
 {
-    m_carbonEventQueue = GetCurrentEventQueue();
+    // GCD approach doesn't require initialization here
 }
 
 void
 OSXEventQueueBuffer::waitForEvent(double timeout)
 {
-    EventRef event;
-    ReceiveNextEvent(0, nullptr, timeout, false, &event);
-}
-
-IEventQueueBuffer::Type OSXEventQueueBuffer::getEvent(Event& event, std::uint32_t& dataID)
-{
-    // release the previous event
-    if (m_event != nullptr) {
-        ReleaseEvent(m_event);
-        m_event = nullptr;
-    }
-
-    // get the next event
-    OSStatus error = ReceiveNextEvent(0, nullptr, 0.0, true, &m_event);
-
-    // handle the event
-    if (error == eventLoopQuitErr) {
-        event = Event(EventType::QUIT);
-        return kSystem;
-    }
-    else if (error != noErr) {
-        return kNone;
+    std::unique_lock<std::mutex> lock(m_mutex);
+    if (m_dataQueue.empty()) {
+        // Convert timeout (seconds) to chrono duration
+        auto duration = std::chrono::duration<double>(timeout);
+        LOG_DEBUG("waitForEvent waiting for events with timeout: %f seconds", timeout);
+        m_cond.wait_for(lock, duration, [this]{
+            return !m_dataQueue.empty();
+        });
     }
     else {
-        std::uint32_t eventClass = GetEventClass(m_event);
-        switch (eventClass) {
-        case 'Syne':
-            dataID = GetEventKind(m_event);
-            return kUser;
-
-        default:
-            event = Event(EventType::SYSTEM, m_eventQueue->getSystemTarget(),
-                          create_event_data<EventRef*>(&m_event));
-            return kSystem;
-        }
+        LOG_DEBUG("waitForEvent found events in the queue.");
     }
+    // After waiting, getEvent() will handle the retrieved event
 }
 
-bool OSXEventQueueBuffer::addEvent(std::uint32_t dataID)
+IEventQueueBuffer::Type
+OSXEventQueueBuffer::getEvent(Event& event, std::uint32_t& dataID)
 {
-    EventRef event;
-    OSStatus error = CreateEvent(
-                            kCFAllocatorDefault,
-                            'Syne',
-                            dataID,
-                            0,
-                            kEventAttributeNone,
-                            &event);
-
-    if (error == noErr) {
-
-        assert(m_carbonEventQueue != nullptr);
-
-        error = PostEventToQueue(
-            m_carbonEventQueue,
-            event,
-            kEventPriorityStandard);
-
-        ReleaseEvent(event);
+    std::unique_lock<std::mutex> lock(m_mutex);
+    if (m_dataQueue.empty()) {
+        // No events available
+        LOG_DEBUG("getEvent called but queue is empty. Returning kNone.");
+        return kNone;
     }
 
-    return (error == noErr);
+    // Retrieve and remove the front event
+    dataID = m_dataQueue.front();
+    m_dataQueue.pop();
+    lock.unlock(); // Unlock early to allow other operations
+
+    LOG_DEBUG("Handled user event with dataID: %u", dataID);
+    return kUser;
+}
+
+bool
+OSXEventQueueBuffer::addEvent(std::uint32_t dataID)
+{
+    // Create a Syne event and enqueue it on the main queue
+    dispatch_async(dispatch_get_main_queue(), ^{
+        std::lock_guard<std::mutex> lock(this->m_mutex);
+
+        LOG_DEBUG("Adding user event with dataID: %u", dataID);
+        this->m_dataQueue.push(dataID);
+        this->m_cond.notify_one();
+        LOG_DEBUG("User event with dataID: %u added to queue.", dataID);
+    });
+
+    // dispatch_async doesn't fail under normal conditions
+    return true;
 }
 
 bool
 OSXEventQueueBuffer::isEmpty() const
 {
-    EventRef event;
-    OSStatus status = ReceiveNextEvent(0, nullptr, 0.0, false, &event);
-    return (status == eventLoopTimedOutErr);
+    std::lock_guard<std::mutex> lock(m_mutex);
+    bool empty = m_dataQueue.empty();
+    LOG_DEBUG("isEmpty called. Queue is %s.", empty ? "empty" : "not empty");
+    return empty;
 }
 
 } // namespace inputleap

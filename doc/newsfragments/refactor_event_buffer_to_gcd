@@ -1,0 +1,4 @@
+Updates the min mac OS version from 10.9 to 10.15
+Switches from Carbon based event queue buffer to Grand Central Dispatch (GCD)
+Uses new thread-safe event queue to track events in getEvent and addEvent
+Maintained original event handling behavior- ensure all events added are treated as Syne (User) events consisted with Carbon-based logic.

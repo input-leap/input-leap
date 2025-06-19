@@ -1,2 +1,0 @@
-Remove check requiring the Alt modifier for non-extended VK_SNAPSHOT scancode in Win32.
-Check is irrelevant for modern keyboards, and breaks Print Screen functionality.

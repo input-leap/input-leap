@@ -30,6 +30,7 @@ body:
         - v3.0.0
         - v3.0.1
         - v3.0.2
+        - v3.0.3
         - From Git HEAD or commit (specify below)
     validations:
       required: true

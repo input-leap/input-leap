@@ -61,6 +61,7 @@
 
 
   <releases>
+    <release version="3.0.3" date="2025-06-13"/>
     <release version="3.0.2" date="2024-10-12"/>
     <release version="3.0.1" date="2024-10-10"/>
     <release version="3.0.0" date="2024-10-03"/>

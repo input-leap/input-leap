@@ -1,0 +1,1 @@
+Fix bug where UI names and '.ui' paths in language files are incorrect and not displaying correctly.

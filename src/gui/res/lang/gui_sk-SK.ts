@@ -171,14 +171,14 @@ Pre pomoc a ďalšie informácie navštívte našu webovú stránku (symless.com
     </message>
 </context>
 <context>
-    <name>HotkeyDialogBase</name>
+    <name>HotkeyDialog</name>
     <message>
-        <location filename="res/HotkeyDialogBase.ui" line="14"/>
+        <location filename="res/HotkeyDialog.ui" line="14"/>
         <source>Hotkey</source>
         <translation>Klávesová skratka</translation>
     </message>
     <message>
-        <location filename="res/HotkeyDialogBase.ui" line="20"/>
+        <location filename="res/HotkeyDialog.ui" line="20"/>
         <source>Enter the specification for the hotkey:</source>
         <translation>Vložte popis klávesovej skratky:</translation>
     </message>
@@ -410,170 +410,170 @@ Ak chcete automaticky dôverovať tomuto otlačku pri ďalších spojeniach, kli
     </message>
 </context>
 <context>
-    <name>MainWindowBase</name>
+    <name>MainWindow</name>
     <message>
-        <location filename="res/MainWindowBase.ui" line="26"/>
+        <location filename="res/MainWindow.ui" line="26"/>
         <source>InputLeap</source>
         <translation>InputLeap</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="90"/>
+        <location filename="res/MainWindow.ui" line="90"/>
         <source>Ser&amp;ver (share this computer&apos;s mouse and keyboard):</source>
         <translation>Ser&amp;ver (zdieľať klávesnicu a myš tohto počítača):</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="243"/>
+        <location filename="res/MainWindow.ui" line="243"/>
         <source>Screen name:</source>
         <translation>Názov obrazovky:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="257"/>
+        <location filename="res/MainWindow.ui" line="257"/>
         <source>Server I&amp;P:</source>
         <translation>I&amp;P servera:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="380"/>
-        <location filename="res/MainWindowBase.ui" line="409"/>
+        <location filename="res/MainWindow.ui" line="380"/>
+        <location filename="res/MainWindow.ui" line="409"/>
         <source>&amp;Start</source>
         <translation>S&amp;pustiť</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="181"/>
+        <location filename="res/MainWindow.ui" line="181"/>
         <source>Use existing configuration:</source>
         <translation>Použiť existujúcu konfiguráciu:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="190"/>
+        <location filename="res/MainWindow.ui" line="190"/>
         <source>&amp;Configuration file:</source>
         <translation>Sú&amp;bor s konfiguráciou:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="210"/>
+        <location filename="res/MainWindow.ui" line="210"/>
         <source>&amp;Browse...</source>
         <translation>&amp;Prechádzať...</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="147"/>
+        <location filename="res/MainWindow.ui" line="147"/>
         <source>Configure interactively:</source>
         <translation>Interaktívna konfigurácia:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="159"/>
+        <location filename="res/MainWindow.ui" line="159"/>
         <source>&amp;Configure Server...</source>
         <translation>&amp;Konfigurovať server...</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="350"/>
+        <location filename="res/MainWindow.ui" line="350"/>
         <source>Ready</source>
         <translation>Pripravené</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="296"/>
+        <location filename="res/MainWindow.ui" line="296"/>
         <source>Log</source>
         <translation>Protokol</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="373"/>
+        <location filename="res/MainWindow.ui" line="373"/>
         <source>&amp;Reload</source>
         <translation>&amp;Znovu načítať</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="107"/>
+        <location filename="res/MainWindow.ui" line="107"/>
         <source>IP addresses:</source>
         <translation>IP adresy:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="131"/>
+        <location filename="res/MainWindow.ui" line="131"/>
         <source>Fingerprint:</source>
         <translation>Otlačok:</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="228"/>
+        <location filename="res/MainWindow.ui" line="228"/>
         <source>&amp;Client (use another computer&apos;s mouse and keyboard):</source>
         <translation>&amp;Klient (používa klávesnicu a myš iného počítača):</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="270"/>
+        <location filename="res/MainWindow.ui" line="270"/>
         <source>Auto config</source>
         <translation>Automatická konfigurácia</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="390"/>
+        <location filename="res/MainWindow.ui" line="390"/>
         <source>&amp;About InputLeap...</source>
         <translation>&amp;O InputLeap...</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="398"/>
+        <location filename="res/MainWindow.ui" line="398"/>
         <source>&amp;Quit</source>
         <translation>&amp;Ukončiť</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="401"/>
+        <location filename="res/MainWindow.ui" line="401"/>
         <source>Quit</source>
         <translation>Ukončiť</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="412"/>
+        <location filename="res/MainWindow.ui" line="412"/>
         <source>Run</source>
         <translation>Spustiť</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="423"/>
+        <location filename="res/MainWindow.ui" line="423"/>
         <source>S&amp;top</source>
         <translation>Za&amp;staviť</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="426"/>
+        <location filename="res/MainWindow.ui" line="426"/>
         <source>Stop</source>
         <translation>Zastaviť</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="434"/>
+        <location filename="res/MainWindow.ui" line="434"/>
         <source>S&amp;how Status</source>
         <translation>Zo&amp;braziť stav</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="442"/>
+        <location filename="res/MainWindow.ui" line="442"/>
         <source>&amp;Hide</source>
         <translation>&amp;Skryť</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="445"/>
+        <location filename="res/MainWindow.ui" line="445"/>
         <source>Hide</source>
         <translation>Skryť</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="453"/>
+        <location filename="res/MainWindow.ui" line="453"/>
         <source>&amp;Show</source>
         <translation>Z&amp;obraziť</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="456"/>
+        <location filename="res/MainWindow.ui" line="456"/>
         <source>Show</source>
         <translation>Zobraziť</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="464"/>
+        <location filename="res/MainWindow.ui" line="464"/>
         <source>Save configuration &amp;as...</source>
         <translation>Uložiť konfiguráciu &amp;ako...</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="467"/>
+        <location filename="res/MainWindow.ui" line="467"/>
         <source>Save the interactively generated server configuration to a file.</source>
         <translation>Uložiť interaktívne vygenerovanú konfiguráciu serveru do súboru.</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="475"/>
+        <location filename="res/MainWindow.ui" line="475"/>
         <source>Settings</source>
         <translation>Nastavenia</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="478"/>
+        <location filename="res/MainWindow.ui" line="478"/>
         <source>Edit settings</source>
         <translation>Upraviť nastavenia</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="486"/>
+        <location filename="res/MainWindow.ui" line="486"/>
         <source>Run Wizard</source>
         <translation>Spustiť sprievodcu</translation>
     </message>
@@ -619,12 +619,12 @@ Ak chcete automaticky dôverovať tomuto otlačku pri ďalších spojeniach, kli
 <context>
     <name>PluginWizardPage</name>
     <message>
-        <location filename="res/PluginWizardPageBase.ui" line="14"/>
+        <location filename="res/PluginWizardPage.ui" line="14"/>
         <source>Setup InputLeap</source>
         <translation>Nastaviť InputLeap</translation>
     </message>
     <message>
-        <location filename="res/PluginWizardPageBase.ui" line="101"/>
+        <location filename="res/PluginWizardPage.ui" line="101"/>
         <source>Please wait...</source>
         <translation>Čakajte prosím...</translation>
     </message>
@@ -895,34 +895,34 @@ Ak chcete automaticky dôverovať tomuto otlačku pri ďalších spojeniach, kli
     </message>
 </context>
 <context>
-    <name>ServerConfigDialogBase</name>
+    <name>ServerConfigDialog</name>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="14"/>
+        <location filename="res/ServerConfigDialog.ui" line="14"/>
         <source>Server Configuration</source>
         <translation>Konfigurácia servera</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="24"/>
+        <location filename="res/ServerConfigDialog.ui" line="24"/>
         <source>Screens and links</source>
         <translation>Obrazovky a prepojenia</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="35"/>
+        <location filename="res/ServerConfigDialog.ui" line="35"/>
         <source>Drag a screen from the grid to the trashcan to remove it.</source>
         <translation>Pre odstránenie obrazovky ju chyťte a presuňte z mriežky do koša.</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="60"/>
+        <location filename="res/ServerConfigDialog.ui" line="60"/>
         <source>Configure the layout of your InputLeap server configuration.</source>
         <translation>Nastaviť rozloženie konfigurácie vášho servera InputLeap.</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="73"/>
+        <location filename="res/ServerConfigDialog.ui" line="73"/>
         <source>Drag this button to the grid to add a new screen.</source>
         <translation>Pre vytvorenie novej obrazovky presuňte toto tlačidlo do mriežky.</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="128"/>
+        <location filename="res/ServerConfigDialog.ui" line="128"/>
         <source>Drag new screens to the grid or move existing ones around.
 Drag a screen to the trashcan to delete it.
 Double click on a screen to edit its settings.</source>
@@ -931,134 +931,134 @@ Presuňte obrazovku do koša, ak ju chcete odstrániť.
 Dvojitým kliknutím na obrazovku upravíte jej nastavenia.</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="157"/>
+        <location filename="res/ServerConfigDialog.ui" line="157"/>
         <source>Hotkeys</source>
         <translation>Klávesové skratky</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="163"/>
+        <location filename="res/ServerConfigDialog.ui" line="163"/>
         <source>&amp;Hotkeys</source>
         <translation>&amp;Klávesové skratky</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="175"/>
+        <location filename="res/ServerConfigDialog.ui" line="175"/>
         <source>&amp;New</source>
         <translation>&amp;Nový</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="185"/>
+        <location filename="res/ServerConfigDialog.ui" line="185"/>
         <source>&amp;Edit</source>
         <translation>&amp;Upraviť</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="195"/>
+        <location filename="res/ServerConfigDialog.ui" line="195"/>
         <source>&amp;Remove</source>
         <translation>O&amp;dstrániť</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="218"/>
+        <location filename="res/ServerConfigDialog.ui" line="218"/>
         <source>A&amp;ctions</source>
         <translation>&amp;Akcie</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="230"/>
+        <location filename="res/ServerConfigDialog.ui" line="230"/>
         <source>Ne&amp;w</source>
         <translation>No&amp;vý</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="240"/>
+        <location filename="res/ServerConfigDialog.ui" line="240"/>
         <source>E&amp;dit</source>
         <translation>U&amp;praviť</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="250"/>
+        <location filename="res/ServerConfigDialog.ui" line="250"/>
         <source>Re&amp;move</source>
         <translation>Ods&amp;trániť</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="274"/>
+        <location filename="res/ServerConfigDialog.ui" line="274"/>
         <source>Advanced server settings</source>
         <translation>Pokročilé nastavenia serveru</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="280"/>
+        <location filename="res/ServerConfigDialog.ui" line="280"/>
         <source>&amp;Switch</source>
         <translation>&amp;Prepnúť</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="291"/>
+        <location filename="res/ServerConfigDialog.ui" line="291"/>
         <source>Switch &amp;after waiting</source>
         <translation>Prepnúť &amp;po prestávke</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="330"/>
-        <location filename="res/ServerConfigDialogBase.ui" line="383"/>
-        <location filename="res/ServerConfigDialogBase.ui" line="458"/>
+        <location filename="res/ServerConfigDialog.ui" line="330"/>
+        <location filename="res/ServerConfigDialog.ui" line="383"/>
+        <location filename="res/ServerConfigDialog.ui" line="458"/>
         <source>ms</source>
         <translation>ms</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="344"/>
+        <location filename="res/ServerConfigDialog.ui" line="344"/>
         <source>Switch on double &amp;tap within</source>
         <translation>Prepnúť po &amp;dvojitom ťuknutí počas</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="408"/>
+        <location filename="res/ServerConfigDialog.ui" line="408"/>
         <source>&amp;Options</source>
         <translation>&amp;Možnosti</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="419"/>
+        <location filename="res/ServerConfigDialog.ui" line="419"/>
         <source>&amp;Check clients every</source>
         <translation>K&amp;ontrolovať klientov každých</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="470"/>
+        <location filename="res/ServerConfigDialog.ui" line="470"/>
         <source>Use &amp;relative mouse moves</source>
         <translation>Používať &amp;relatívne pohyby myši</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="480"/>
+        <location filename="res/ServerConfigDialog.ui" line="480"/>
         <source>S&amp;ynchronize screen savers</source>
         <translation>&amp;Synchronizovať šetriče obrazovky</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="490"/>
+        <location filename="res/ServerConfigDialog.ui" line="490"/>
         <source>Don&apos;t take &amp;foreground window on Windows servers</source>
         <translation>Na serveroch s &amp;Windows sa neprepínať do popredia</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="510"/>
+        <location filename="res/ServerConfigDialog.ui" line="510"/>
         <source>Ignore auto config clients</source>
         <translation>Ignorovať klientov s autokonfiguráciou</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="520"/>
+        <location filename="res/ServerConfigDialog.ui" line="520"/>
         <source>&amp;Dead corners</source>
         <translation>&amp;Mŕtve rohy</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="529"/>
+        <location filename="res/ServerConfigDialog.ui" line="529"/>
         <source>To&amp;p-left</source>
         <translation>&amp;Vľavo hore</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="536"/>
+        <location filename="res/ServerConfigDialog.ui" line="536"/>
         <source>Top-rig&amp;ht</source>
         <translation>Vpravo &amp;dole</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="543"/>
+        <location filename="res/ServerConfigDialog.ui" line="543"/>
         <source>&amp;Bottom-left</source>
         <translation>&amp;Vľavo dole</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="550"/>
+        <location filename="res/ServerConfigDialog.ui" line="550"/>
         <source>Bottom-ri&amp;ght</source>
         <translation>V&amp;pravo dole</translation>
     </message>
     <message>
-        <location filename="res/ServerConfigDialogBase.ui" line="572"/>
+        <location filename="res/ServerConfigDialog.ui" line="572"/>
         <source>Cor&amp;ner Size:</source>
         <translation>&amp;Veľkost rohov:</translation>
     </message>
@@ -1086,109 +1086,109 @@ Toto umožní InputLeap pracovať s procesmi, ktoré majú takisto vyšší stup
     </message>
 </context>
 <context>
-    <name>SettingsDialogBase</name>
+    <name>SettingsDialog</name>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="14"/>
+        <location filename="res/SettingsDialog.ui" line="14"/>
         <source>Settings</source>
         <translation>Nastavenia</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="32"/>
+        <location filename="res/SettingsDialog.ui" line="32"/>
         <source>Sc&amp;reen name:</source>
         <translation>&amp;Názov obrazovky:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="49"/>
+        <location filename="res/SettingsDialog.ui" line="49"/>
         <source>P&amp;ort:</source>
         <translation>P&amp;ort:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="78"/>
+        <location filename="res/SettingsDialog.ui" line="78"/>
         <source>&amp;Interface:</source>
         <translation>&amp;Používateľské rozhranie:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="120"/>
+        <location filename="res/SettingsDialog.ui" line="120"/>
         <source>Elevate mode</source>
         <translation>Režim oprávnení</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="127"/>
+        <location filename="res/SettingsDialog.ui" line="127"/>
         <source>&amp;Hide on startup</source>
         <translation>&amp;Skryť pri spustení</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="146"/>
+        <location filename="res/SettingsDialog.ui" line="146"/>
         <source>&amp;Network Security</source>
         <translation>Sieťová &amp;bezpečnosť</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="155"/>
+        <location filename="res/SettingsDialog.ui" line="155"/>
         <source>Use &amp;SSL encryption (unique certificate)</source>
         <translation>Používať šifrovanie &amp;SSL (jedinečný certifikát)</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="184"/>
+        <location filename="res/SettingsDialog.ui" line="184"/>
         <source>Logging</source>
         <translation>Protokolovanie</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="202"/>
+        <location filename="res/SettingsDialog.ui" line="202"/>
         <source>&amp;Logging level:</source>
         <translation>Ú&amp;roveň protokolu:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="251"/>
+        <location filename="res/SettingsDialog.ui" line="251"/>
         <source>Log to file:</source>
         <translation>Protokol ukladať do súboru:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="268"/>
+        <location filename="res/SettingsDialog.ui" line="268"/>
         <source>Browse...</source>
         <translation>Prechádzať...</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="213"/>
+        <location filename="res/SettingsDialog.ui" line="213"/>
         <source>Error</source>
         <translation>Chyba</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="107"/>
+        <location filename="res/SettingsDialog.ui" line="107"/>
         <source>&amp;Language:</source>
         <translation>&amp;Jazyk:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="20"/>
+        <location filename="res/SettingsDialog.ui" line="20"/>
         <source>&amp;Miscellaneous</source>
         <translation>&amp;Rôzne</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="218"/>
+        <location filename="res/SettingsDialog.ui" line="218"/>
         <source>Warning</source>
         <translation>Varovanie</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="223"/>
+        <location filename="res/SettingsDialog.ui" line="223"/>
         <source>Note</source>
         <translation>Poznámka</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="228"/>
+        <location filename="res/SettingsDialog.ui" line="228"/>
         <source>Info</source>
         <translation>Informácie</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="233"/>
+        <location filename="res/SettingsDialog.ui" line="233"/>
         <source>Debug</source>
         <translation>Ladenie</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="238"/>
+        <location filename="res/SettingsDialog.ui" line="238"/>
         <source>Debug1</source>
         <translation>Ladenie1</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="243"/>
+        <location filename="res/SettingsDialog.ui" line="243"/>
         <source>Debug2</source>
         <translation>Ladenie2</translation>
     </message>
@@ -1212,64 +1212,64 @@ Toto umožní InputLeap pracovať s procesmi, ktoré majú takisto vyšší stup
     </message>
 </context>
 <context>
-    <name>SetupWizardBase</name>
+    <name>SetupWizard</name>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="26"/>
+        <location filename="res/SetupWizard.ui" line="26"/>
         <source>Setup InputLeap</source>
         <translation>Nastaviť InputLeap</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="30"/>
+        <location filename="res/SetupWizard.ui" line="30"/>
         <source>Welcome</source>
         <translation>Vitajte</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="39"/>
+        <location filename="res/SetupWizard.ui" line="39"/>
         <source>Thanks for installing InputLeap!</source>
         <translation>Ďakujeme, že ste sa rozhodli nainštalovať InputLeap!</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="114"/>
+        <location filename="res/SetupWizard.ui" line="114"/>
         <source>InputLeap lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. InputLeap is cross-platform (works on Windows, Mac OS X and Linux).</source>
         <translation>InputLeap vám umožní ľahko zdieľať myš a klávesnicu medzi viacerými počítačmi, je zadarmo a má otvorený zdrojový kód. Stačí len presunúť kurzor myši mimo okraj obrazovky jedného počítača a presuniete sa na druhý počítač. Môžete dokonca zdieľať všetky vaše schránky. Všetko, čo potrebujete, je pripojenie k sieti. InputLeap podporuje viacero platforiem (funguje vo Windowse, Mac OS X a Linuxe).</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="125"/>
+        <location filename="res/SetupWizard.ui" line="125"/>
         <source>Activate</source>
         <translation>Aktivovať</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="131"/>
+        <location filename="res/SetupWizard.ui" line="131"/>
         <source>&amp;Activate now...</source>
         <translation>&amp;Aktivovať teraz...</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="152"/>
+        <location filename="res/SetupWizard.ui" line="152"/>
         <source>Email:</source>
         <translation>Email:</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="178"/>
+        <location filename="res/SetupWizard.ui" line="178"/>
         <source>Password:</source>
         <translation>Heslo:</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="204"/>
+        <location filename="res/SetupWizard.ui" line="204"/>
         <source>&lt;a href=&quot;https://symless.com/account/reset/&quot;&gt;Forgot password&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;https://symless.com/account/reset/&quot;&gt;Zabudnuté heslo&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="232"/>
+        <location filename="res/SetupWizard.ui" line="232"/>
         <source>&amp;Skip activation</source>
         <translation>&amp;Preskočiť aktiváciu</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="277"/>
+        <location filename="res/SetupWizard.ui" line="277"/>
         <source>&amp;Server (share this computer&apos;s mouse and keyboard)</source>
         <translation>&amp;Server (zdieľať klávesnicu a myš tohto počítača)</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="290"/>
+        <location filename="res/SetupWizard.ui" line="290"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -1282,12 +1282,12 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;K tomuto počítaču je pripojená moja hlavná klávesnica a myš. Toto vám umožní presunúť kurzor myši na obrazovku iného počítača. V úlohe servera môže byť len jeden počítač.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="326"/>
+        <location filename="res/SetupWizard.ui" line="326"/>
         <source>&amp;Client (use another computer&apos;s mouse and keyboard)</source>
         <translation>&amp;Klient (použiť klávesnicu a myš iného počítača)</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="339"/>
+        <location filename="res/SetupWizard.ui" line="339"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -1300,7 +1300,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Server už ste nastavili. Tento počítač bude ovládaný klávesnicou a myšou pripojenou k serveru. V roli klienta môže byť viacero počítačov.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="262"/>
+        <location filename="res/SetupWizard.ui" line="262"/>
         <source>Server or Client?</source>
         <translation>Server alebo klient?</translation>
     </message>

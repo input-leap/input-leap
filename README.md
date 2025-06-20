@@ -151,5 +151,6 @@ __Q: Is it possible to use Input Leap on Mac OS X / OS X versions prior to 10.12
 >    - Input Leap currently has limited UTF-8 support; issues have been reported with processing various languages.
 >      - *(see [#860](https://github.com/input-leap/input-leap/issues/860))*
 >    - Clipboard sharing is not currently supported on Linux/Wayland.
+>    - AltGr key combinations when Server is linux and client is Windows don't usually work out of the box. See [#100](https://github.com/input-leap/input-leap/issues/100) for a workaround
 >
 > The complete list of open issues can be found in the ['Issues' tab on GitHub](https://github.com/input-leap/input-leap/issues?q=is%3Aissue+is%3Aopen). Help is always appreciated.

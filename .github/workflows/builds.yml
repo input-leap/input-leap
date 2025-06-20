@@ -356,7 +356,7 @@ jobs:
       - name: Cache OpenSSL Universal
         id: cache-openssl
         if: matrix.os == 'macos-14'
-        uses: actions/cache@v4.2.1
+        uses: actions/cache@v4.2.3
         with:
           path: ${{env.OpenSSL_Install_Path}}
           key: macOS-${{matrix.os}}-ssl-${{matrix.arch}}-${{env.OpenSSL_Version}}

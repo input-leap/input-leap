@@ -23,6 +23,7 @@
 #include "MainWindow.h"
 #include "AppConfig.h"
 #include "SetupWizard.h"
+#include "common/GitChecks.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -110,6 +111,17 @@ int main(int argc, char* argv[])
 	{
 		return 1;
 	}
+#endif
+
+    // Verify if build was built from a Git tag, or from a Git branch/untagged commit.
+    // TODO: Add CMake support.
+    // For now, this `QMessageBox` is disabled.
+#if defined(INPUTLEAP_GIT_UNTAG_WARNING)
+    if (1)
+        QMessageBox::warning(
+            nullptr, "Input Leap",
+            "This build of Input Leap was built from an untagged commit.\n"
+            "We recommend using a Git tag to build. Here be dragons");
 #endif
 
 	int trayAvailable = waitForTray();

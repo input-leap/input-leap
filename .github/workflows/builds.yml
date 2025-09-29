@@ -155,7 +155,7 @@ jobs:
 
       # Code checkout steps
       - name: Checkout input-leap
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: input-leap
           submodules: recursive
@@ -173,7 +173,7 @@ jobs:
 
       - if: matrix.wayland == 'latest'
         name: Get libportal from upstream
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: flatpak/libportal
           ref: main
@@ -277,7 +277,7 @@ jobs:
 
       # submodules require git to be installed
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: input-leap
           submodules: recursive
@@ -356,7 +356,7 @@ jobs:
       - name: Cache OpenSSL Universal
         id: cache-openssl
         if: matrix.os == 'macos-14'
-        uses: actions/cache@v4.2.4
+        uses: actions/cache@v4.3.0
         with:
           path: ${{env.OpenSSL_Install_Path}}
           key: macOS-${{matrix.os}}-ssl-${{matrix.arch}}-${{env.OpenSSL_Version}}
@@ -381,7 +381,7 @@ jobs:
           make
           make install
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           path: input-leap
           submodules: recursive
@@ -438,7 +438,7 @@ jobs:
            qt-major: 6
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           path: input-leap
           submodules: recursive
@@ -512,7 +512,7 @@ jobs:
       fail-fast: false
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Build on FreeBSD 14.1
       id: test
       uses: vmactions/freebsd-vm@v1
@@ -551,7 +551,7 @@ jobs:
     steps:
       # submodules require git to be installed
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: recursive
 

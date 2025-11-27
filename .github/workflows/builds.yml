@@ -50,8 +50,8 @@ jobs:
            cc: "gcc"
            cxx: "g++"
            wayland: dist
-         - name: ubuntu-24-10
-           os: "ubuntu:24.10"
+         - name: ubuntu-25-04
+           os: "ubuntu:25.04"
            cc: "gcc"
            cxx: "g++"
            wayland: dist

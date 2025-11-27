@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "inputleap/clipboard_types.h"
 #include "inputleap/IScreen.h"
+#include "inputleap/clipboard_types.h"
 #include "inputleap/key_types.h"
 #include "inputleap/mouse_types.h"
 #include "inputleap/option_types.h"

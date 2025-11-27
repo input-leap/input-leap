@@ -25,8 +25,7 @@ namespace inputleap {
 // XWindowsClipboardWEBPConverter
 //
 
-XWindowsClipboardWEBPConverter::XWindowsClipboardWEBPConverter(
-                Display* display) :
+XWindowsClipboardWEBPConverter::XWindowsClipboardWEBPConverter(Display* display) :
     m_atom(XInternAtom(display, "image/webp", False))
 {
     // do nothing
@@ -37,20 +36,17 @@ XWindowsClipboardWEBPConverter::~XWindowsClipboardWEBPConverter()
     // do nothing
 }
 
-IClipboard::EFormat
-XWindowsClipboardWEBPConverter::getFormat() const
+IClipboard::EFormat XWindowsClipboardWEBPConverter::getFormat() const
 {
     return IClipboard::kWebp;
 }
 
-Atom
-XWindowsClipboardWEBPConverter::getAtom() const
+Atom XWindowsClipboardWEBPConverter::getAtom() const
 {
     return m_atom;
 }
 
-int
-XWindowsClipboardWEBPConverter::getDataSize() const
+int XWindowsClipboardWEBPConverter::getDataSize() const
 {
     return 8;
 }
@@ -69,8 +65,9 @@ std::string XWindowsClipboardWEBPConverter::toIClipboard(const std::string& webp
     // check WEBPF file header, veirfy if Big or Little Endian
     const std::uint8_t* rawWEBPHeader = reinterpret_cast<const std::uint8_t*>(webpdata.data());
 
-    if (rawWEBPHeader[0] == 'R' && rawWEBPHeader[1] == 'I' && rawWEBPHeader[2] == 'F' && rawWEBPHeader[3] == 'F' &&
-        rawWEBPHeader[8] == 'W' && rawWEBPHeader[9] == 'E' && rawWEBPHeader[10] == 'B' && rawWEBPHeader[11] == 'P' ) {
+    if (rawWEBPHeader[0] == 'R' && rawWEBPHeader[1] == 'I' && rawWEBPHeader[2] == 'F' &&
+        rawWEBPHeader[3] == 'F' && rawWEBPHeader[8] == 'W' && rawWEBPHeader[9] == 'E' &&
+        rawWEBPHeader[10] == 'B' && rawWEBPHeader[11] == 'P') {
         return webpdata;
     }
 

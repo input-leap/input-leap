@@ -19,8 +19,8 @@
 #pragma once
 
 #include "base/Event.h"
-#include "base/EventTypes.h"
 #include "base/EventTarget.h"
+#include "base/EventTypes.h"
 #include "base/Fwd.h"
 
 namespace inputleap {

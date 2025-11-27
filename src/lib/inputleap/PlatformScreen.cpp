@@ -22,39 +22,30 @@
 
 namespace inputleap {
 
-PlatformScreen::PlatformScreen() :
-    m_draggingStarted(false),
-    m_fakeDraggingStarted(false)
-{
-}
+PlatformScreen::PlatformScreen() : m_draggingStarted(false), m_fakeDraggingStarted(false) {}
 
 PlatformScreen::~PlatformScreen()
 {
     // do nothing
 }
 
-void
-PlatformScreen::updateKeyMap()
+void PlatformScreen::updateKeyMap()
 {
     getKeyState()->updateKeyMap();
 }
 
-void
-PlatformScreen::updateKeyState()
+void PlatformScreen::updateKeyState()
 {
     getKeyState()->updateKeyState();
     updateButtons();
 }
 
-void
-PlatformScreen::setHalfDuplexMask(KeyModifierMask mask)
+void PlatformScreen::setHalfDuplexMask(KeyModifierMask mask)
 {
     getKeyState()->setHalfDuplexMask(mask);
 }
 
-void
-PlatformScreen::fakeKeyDown(KeyID id, KeyModifierMask mask,
-                KeyButton button)
+void PlatformScreen::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button)
 {
     getKeyState()->fakeKeyDown(id, mask, button);
 }
@@ -65,38 +56,32 @@ bool PlatformScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask, std::int32_t 
     return getKeyState()->fakeKeyRepeat(id, mask, count, button);
 }
 
-bool
-PlatformScreen::fakeKeyUp(KeyButton button)
+bool PlatformScreen::fakeKeyUp(KeyButton button)
 {
     return getKeyState()->fakeKeyUp(button);
 }
 
-void
-PlatformScreen::fakeAllKeysUp()
+void PlatformScreen::fakeAllKeysUp()
 {
     getKeyState()->fakeAllKeysUp();
 }
 
-bool
-PlatformScreen::fakeCtrlAltDel()
+bool PlatformScreen::fakeCtrlAltDel()
 {
     return getKeyState()->fakeCtrlAltDel();
 }
 
-bool
-PlatformScreen::isKeyDown(KeyButton button) const
+bool PlatformScreen::isKeyDown(KeyButton button) const
 {
     return getKeyState()->isKeyDown(button);
 }
 
-KeyModifierMask
-PlatformScreen::getActiveModifiers() const
+KeyModifierMask PlatformScreen::getActiveModifiers() const
 {
     return getKeyState()->getActiveModifiers();
 }
 
-KeyModifierMask
-PlatformScreen::pollActiveModifiers() const
+KeyModifierMask PlatformScreen::pollActiveModifiers() const
 {
     return getKeyState()->pollActiveModifiers();
 }
@@ -106,14 +91,12 @@ std::int32_t PlatformScreen::pollActiveGroup() const
     return getKeyState()->pollActiveGroup();
 }
 
-void
-PlatformScreen::pollPressedKeys(KeyButtonSet& pressedKeys) const
+void PlatformScreen::pollPressedKeys(KeyButtonSet& pressedKeys) const
 {
     getKeyState()->pollPressedKeys(pressedKeys);
 }
 
-bool
-PlatformScreen::isDraggingStarted()
+bool PlatformScreen::isDraggingStarted()
 {
     if (App::instance().argsBase().m_enableDragDrop) {
         return m_draggingStarted;

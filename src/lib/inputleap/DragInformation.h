@@ -29,7 +29,7 @@ typedef std::vector<DragInformation> DragFileList;
 class DragInformation {
 public:
     DragInformation();
-    ~DragInformation() { }
+    ~DragInformation() {}
 
     std::string& getFilename() { return m_filename; }
     void setFilename(std::string& name) { m_filename = name; }

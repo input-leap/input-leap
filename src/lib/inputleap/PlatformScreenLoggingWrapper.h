@@ -21,8 +21,7 @@
 
 namespace inputleap {
 
-class PlatformScreenLoggingWrapper : public IPlatformScreen
-{
+class PlatformScreenLoggingWrapper : public IPlatformScreen {
 public:
     PlatformScreenLoggingWrapper(std::unique_ptr<IPlatformScreen> screen);
 

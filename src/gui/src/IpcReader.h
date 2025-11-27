@@ -18,13 +18,12 @@
 
 #pragma once
 
-#include <QObject>
 #include <QMutex>
+#include <QObject>
 
 class QTcpSocket;
 
-class IpcReader : public QObject
-{
+class IpcReader : public QObject {
     Q_OBJECT
 
 public:

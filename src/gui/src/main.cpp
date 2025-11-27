@@ -19,15 +19,15 @@
 #define TRAY_RETRY_COUNT 5
 #define TRAY_RETRY_WAIT 2000
 
-#include "QInputLeapApplication.h"
-#include "MainWindow.h"
 #include "AppConfig.h"
+#include "MainWindow.h"
+#include "QInputLeapApplication.h"
 #include "SetupWizard.h"
 
+#include <QMessageBox>
+#include <QSettings>
 #include <QtCore>
 #include <QtGui>
-#include <QSettings>
-#include <QMessageBox>
 
 #if defined(Q_OS_MAC)
 #include <Carbon/Carbon.h>
@@ -37,13 +37,9 @@
 #include <cstdlib>
 #endif
 
-class QThreadImpl : public QThread
-{
+class QThreadImpl : public QThread {
 public:
-	static void msleep(unsigned long msecs)
-	{
-		QThread::msleep(msecs);
-	}
+    static void msleep(unsigned long msecs) { QThread::msleep(msecs); }
 };
 
 int waitForTray();
@@ -52,7 +48,7 @@ int waitForTray();
 bool checkMacAssistiveDevices();
 #endif
 
-void copy_qsettings(const QSettings &src, QSettings &dst)
+void copy_qsettings(const QSettings& src, QSettings& dst)
 {
     const auto keys = src.allKeys();
     for (const auto& key : keys) {
@@ -63,8 +59,7 @@ void copy_qsettings(const QSettings &src, QSettings &dst)
 int main(int argc, char* argv[])
 {
 #if (defined(WINAPI_XWINDOWS) || \
-    (defined(HAVE_LIBPORTAL_INPUTCAPTURE) || \
-    defined(HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS)))
+     (defined(HAVE_LIBPORTAL_INPUTCAPTURE) || defined(HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS)))
     const auto platformType = QGuiApplication::platformName();
 
     if (platformType == "xcb") {
@@ -80,10 +75,10 @@ int main(int argc, char* argv[])
 
 #ifdef Q_OS_DARWIN
     /* Workaround for QTBUG-40332 - "High ping when QNetworkAccessManager is instantiated" */
-    ::setenv ("QT_BEARER_POLL_TIMEOUT", "-1", 1);
+    ::setenv("QT_BEARER_POLL_TIMEOUT", "-1", 1);
 #endif
     QCoreApplication::setOrganizationName("InputLeap");
-	QCoreApplication::setOrganizationDomain("github.com");
+    QCoreApplication::setOrganizationDomain("github.com");
     QCoreApplication::setApplicationName("InputLeap");
 
     QInputLeapApplication app(argc, argv);
@@ -93,7 +88,7 @@ int main(int argc, char* argv[])
 #endif
 
 #if defined(Q_OS_MAC)
-	if (app.applicationDirPath().startsWith("/Volumes/")) {
+    if (app.applicationDirPath().startsWith("/Volumes/")) {
         // macOS preferences track applications allowed assistive access by path
         // Unfortunately, there's no user-friendly way to allow assistive access
         // to applications that are not in default paths (/Applications),
@@ -103,73 +98,66 @@ int main(int argc, char* argv[])
         QMessageBox::information(nullptr, "InputLeap",
                                  "Please drag InputLeap to the Applications folder, "
                                  "and open it from there.");
-		return 1;
-	}
+        return 1;
+    }
 
-	if (!checkMacAssistiveDevices())
-	{
-		return 1;
-	}
+    if (!checkMacAssistiveDevices()) {
+        return 1;
+    }
 #endif
 
-	int trayAvailable = waitForTray();
+    int trayAvailable = waitForTray();
 
-	QApplication::setQuitOnLastWindowClosed(false);
+    QApplication::setQuitOnLastWindowClosed(false);
 
-	QSettings settings;
+    QSettings settings;
     if (settings.allKeys().empty()) {
         // if there are no settings, attempt to copy from old Barrier settings location
         QSettings fallback_settings{"Debauchee", "Barrier"};
         copy_qsettings(fallback_settings, settings);
     }
 
-	AppConfig appConfig (&settings);
+    AppConfig appConfig(&settings);
 
-	if (appConfig.getAutoHide() && !trayAvailable)
-	{
-		// force auto hide to false - otherwise there is no way to get the GUI back
-		fprintf(stdout, "System tray not available, force disabling auto hide!\n");
-		appConfig.setAutoHide(false);
-	}
+    if (appConfig.getAutoHide() && !trayAvailable) {
+        // force auto hide to false - otherwise there is no way to get the GUI back
+        fprintf(stdout, "System tray not available, force disabling auto hide!\n");
+        appConfig.setAutoHide(false);
+    }
 
-	app.switchTranslator(appConfig.language());
+    app.switchTranslator(appConfig.language());
 
-	MainWindow mainWindow(settings, appConfig);
-	SetupWizard setupWizard(mainWindow, true);
+    MainWindow mainWindow(settings, appConfig);
+    SetupWizard setupWizard(mainWindow, true);
 
-	if (appConfig.wizardShouldRun())
-	{
-		setupWizard.show();
-	}
-	else
-	{
-		mainWindow.open();
-	}
-    QObject::connect(&mainWindow, &MainWindow::requestLanguageChange, &app, &QInputLeapApplication::switchTranslator);
-	return app.exec();
+    if (appConfig.wizardShouldRun()) {
+        setupWizard.show();
+    } else {
+        mainWindow.open();
+    }
+    QObject::connect(&mainWindow, &MainWindow::requestLanguageChange, &app,
+                     &QInputLeapApplication::switchTranslator);
+    return app.exec();
 }
 
 int waitForTray()
 {
-	// on linux, the system tray may not be available immediately after logging in,
-	// so keep retrying but give up after a short time.
-	int trayAttempts = 0;
-	while (true)
-	{
-		if (QSystemTrayIcon::isSystemTrayAvailable())
-		{
-			break;
-		}
+    // on linux, the system tray may not be available immediately after logging in,
+    // so keep retrying but give up after a short time.
+    int trayAttempts = 0;
+    while (true) {
+        if (QSystemTrayIcon::isSystemTrayAvailable()) {
+            break;
+        }
 
-		if (++trayAttempts > TRAY_RETRY_COUNT)
-		{
-			fprintf(stdout, "System tray is unavailable.\n");
-			return false;
-		}
+        if (++trayAttempts > TRAY_RETRY_COUNT) {
+            fprintf(stdout, "System tray is unavailable.\n");
+            return false;
+        }
 
-		QThreadImpl::msleep(TRAY_RETRY_WAIT);
-	}
-	return true;
+        QThreadImpl::msleep(TRAY_RETRY_WAIT);
+    }
+    return true;
 }
 
 #if defined(Q_OS_MAC)
@@ -177,36 +165,35 @@ bool checkMacAssistiveDevices()
 {
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1090 // mavericks
 
-	// new in mavericks, applications are trusted individually
-	// with use of the accessibility api. this call will show a
-	// prompt which can show the security/privacy/accessibility
+    // new in mavericks, applications are trusted individually
+    // with use of the accessibility api. this call will show a
+    // prompt which can show the security/privacy/accessibility
     // tab, with a list of allowed applications. InputLeap should
-	// show up there automatically, but will be unchecked.
+    // show up there automatically, but will be unchecked.
 
-	if (AXIsProcessTrusted()) {
-		return true;
-	}
+    if (AXIsProcessTrusted()) {
+        return true;
+    }
 
-	const void* keys[] = { kAXTrustedCheckOptionPrompt };
-	const void* trueValue[] = { kCFBooleanTrue };
-	CFDictionaryRef options = CFDictionaryCreate(nullptr, keys, trueValue, 1, nullptr, nullptr);
+    const void* keys[] = {kAXTrustedCheckOptionPrompt};
+    const void* trueValue[] = {kCFBooleanTrue};
+    CFDictionaryRef options = CFDictionaryCreate(nullptr, keys, trueValue, 1, nullptr, nullptr);
 
-	bool result = AXIsProcessTrustedWithOptions(options);
-	CFRelease(options);
-	return result;
+    bool result = AXIsProcessTrustedWithOptions(options);
+    CFRelease(options);
+    return result;
 
 #else
 
-	// now deprecated in mavericks.
-	bool result = AXAPIEnabled();
-	if (!result) {
-		QMessageBox::information(
-            nullptr, "InputLeap",
-			"Please enable access to assistive devices "
-			"System Preferences -> Security & Privacy -> "
-            "Privacy -> Accessibility, then re-open InputLeap.");
-	}
-	return result;
+    // now deprecated in mavericks.
+    bool result = AXAPIEnabled();
+    if (!result) {
+        QMessageBox::information(nullptr, "InputLeap",
+                                 "Please enable access to assistive devices "
+                                 "System Preferences -> Security & Privacy -> "
+                                 "Privacy -> Accessibility, then re-open InputLeap.");
+    }
+    return result;
 
 #endif
 }

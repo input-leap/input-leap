@@ -17,9 +17,9 @@
 
 #include "AppLocale.h"
 
+#include <QDebug>
 #include <QResource>
 #include <QXmlStreamReader>
-#include <QDebug>
 
 AppLocale::AppLocale()
 {
@@ -32,21 +32,17 @@ void AppLocale::loadLanguages()
     QByteArray bytes(reinterpret_cast<const char*>(resource.data()), resource.size());
     QXmlStreamReader xml(bytes);
 
-    while (!xml.atEnd())
-    {
+    while (!xml.atEnd()) {
         QXmlStreamReader::TokenType token = xml.readNext();
-        if (xml.hasError())
-        {
+        if (xml.hasError()) {
             qCritical() << xml.errorString();
             throw std::exception();
         }
 
-        if (xml.name() == QLatin1String("language") && token == QXmlStreamReader::StartElement)
-        {
+        if (xml.name() == QLatin1String("language") && token == QXmlStreamReader::StartElement) {
             QXmlStreamAttributes attributes = xml.attributes();
-            addLanguage(
-                attributes.value("ietfCode").toString(),
-                attributes.value("name").toString());
+            addLanguage(attributes.value("ietfCode").toString(),
+                        attributes.value("name").toString());
         }
     }
 }
@@ -59,8 +55,7 @@ void AppLocale::addLanguage(const QString& ietfCode, const QString& name)
 void AppLocale::fillLanguageComboBox(QComboBox* comboBox)
 {
     comboBox->blockSignals(true);
-    for (auto it = m_Languages.begin(); it != m_Languages.end(); ++it)
-    {
+    for (auto it = m_Languages.begin(); it != m_Languages.end(); ++it) {
         comboBox->addItem((*it).m_Name, (*it).m_IetfCode);
     }
     comboBox->blockSignals(false);

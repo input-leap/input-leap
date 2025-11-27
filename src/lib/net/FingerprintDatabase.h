@@ -43,7 +43,6 @@ public:
     static std::string to_db_line(const FingerprintData& fingerprint);
 
 private:
-
     std::vector<FingerprintData> fingerprints_;
 };
 

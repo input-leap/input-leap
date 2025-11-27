@@ -63,8 +63,7 @@ std::FILE* fopen_utf8_path(const fs::path& path, const std::string& mode)
 {
 #if SYSAPI_WIN32
     auto wchar_mode = utf8_to_win_char(mode);
-    return _wfopen(path.native().c_str(),
-                   reinterpret_cast<wchar_t*>(wchar_mode.data()));
+    return _wfopen(path.native().c_str(), reinterpret_cast<wchar_t*>(wchar_mode.data()));
 #else
     return std::fopen(path.native().c_str(), mode.c_str());
 #endif

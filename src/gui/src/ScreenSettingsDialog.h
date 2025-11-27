@@ -25,29 +25,27 @@ class QWidget;
 class QString;
 
 class Screen;
-namespace Ui
-{
-    class ScreenSettingsDialog;
+namespace Ui {
+class ScreenSettingsDialog;
 }
 
-class ScreenSettingsDialog : public QDialog
-{
+class ScreenSettingsDialog : public QDialog {
     Q_OBJECT
 
-    public:
-        ScreenSettingsDialog(QWidget* parent, Screen* pScreen = nullptr);
-        ~ScreenSettingsDialog() override;
+public:
+    ScreenSettingsDialog(QWidget* parent, Screen* pScreen = nullptr);
+    ~ScreenSettingsDialog() override;
 
-    public slots:
-        void accept() override;
+public slots:
+    void accept() override;
 
-    private slots:
-        void on_m_pButtonAddAlias_clicked();
-        void on_m_pButtonRemoveAlias_clicked();
-        void on_m_pLineEditAlias_textChanged(const QString& text);
-        void on_m_pListAliases_itemSelectionChanged();
+private slots:
+    void on_m_pButtonAddAlias_clicked();
+    void on_m_pButtonRemoveAlias_clicked();
+    void on_m_pLineEditAlias_textChanged(const QString& text);
+    void on_m_pListAliases_itemSelectionChanged();
 
-    private:
-        std::unique_ptr<Ui::ScreenSettingsDialog> ui_;
-        Screen* m_pScreen;
+private:
+    std::unique_ptr<Ui::ScreenSettingsDialog> ui_;
+    Screen* m_pScreen;
 };

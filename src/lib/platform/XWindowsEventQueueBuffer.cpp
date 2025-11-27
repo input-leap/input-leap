@@ -15,29 +15,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <cassert>
 #include "platform/XWindowsEventQueueBuffer.h"
+#include <cassert>
 
-#include "mt/Thread.h"
 #include "base/Event.h"
 #include "base/IEventQueue.h"
+#include "mt/Thread.h"
 
 #include <fcntl.h>
-#include <unistd.h>
 #include <poll.h>
+#include <unistd.h>
 
 namespace inputleap {
 
-XWindowsEventQueueBuffer::XWindowsEventQueueBuffer(IXWindowsImpl* impl,
-        Display* display, Window window, IEventQueue* events) :
-    m_display(display),
-    m_window(window),
-    m_waiting(false),
-    m_events(events)
+XWindowsEventQueueBuffer::XWindowsEventQueueBuffer(IXWindowsImpl* impl, Display* display,
+                                                   Window window, IEventQueue* events) :
+    m_display(display), m_window(window), m_waiting(false), m_events(events)
 {
     m_impl = impl;
     assert(m_display != nullptr);
-    assert(m_window  != None);
+    assert(m_window != None);
 
     m_userEvent = m_impl->XInternAtom(m_display, "INPUTLEAP_USER_EVENT", False);
     // set up for pipe hack
@@ -65,8 +62,7 @@ int XWindowsEventQueueBuffer::getPendingCountLocked()
     return m_impl->XPending(m_display);
 }
 
-void
-XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
+void XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 {
     Thread::testCancel();
 
@@ -74,8 +70,7 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 
     char buf[16];
     ssize_t read_response = read(m_pipefd[0], buf, 15);
-    if (read_response < 0)
-    {
+    if (read_response < 0) {
         // todo: handle read response
     }
 
@@ -96,14 +91,13 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
     // use poll() to wait for a message from the X server or for timeout.
     // this is a good deal more efficient than polling and sleeping.
     struct pollfd pfds[2];
-    pfds[0].fd     = ConnectionNumber(m_display);
+    pfds[0].fd = ConnectionNumber(m_display);
     pfds[0].events = POLLIN;
-    pfds[1].fd     = m_pipefd[0];
+    pfds[1].fd = m_pipefd[0];
     pfds[1].events = POLLIN;
-    int timeout    = (dtimeout < 0.0) ? -1 :
-                        static_cast<int>(1000.0 * dtimeout);
-    int remaining  =  timeout;
-    int retval     =  0;
+    int timeout = (dtimeout < 0.0) ? -1 : static_cast<int>(1000.0 * dtimeout);
+    int remaining = timeout;
+    int retval = 0;
     // It's possible that the X server has queued events locally
     // in xlib's event buffer and not pushed on to the fd. Hence we
     // can't simply monitor the fd as we may never be woken up.
@@ -118,15 +112,15 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 #define TIMEOUT_DELAY 25
 
     while (((dtimeout < 0.0) || (remaining > 0)) && getPendingCountLocked() == 0 && retval == 0) {
-        retval = poll(pfds, 2, TIMEOUT_DELAY); //16ms = 60hz, but we make it > to play nicely with the cpu
+        retval = poll(pfds, 2,
+                      TIMEOUT_DELAY); //16ms = 60hz, but we make it > to play nicely with the cpu
         if (pfds[1].revents & POLLIN) {
             read_response = read(m_pipefd[0], buf, 15);
-            if (read_response < 0)
-            {
+            if (read_response < 0) {
                 // todo: handle read response
             }
         }
-        remaining-=TIMEOUT_DELAY;
+        remaining -= TIMEOUT_DELAY;
     }
 
     {
@@ -149,12 +143,10 @@ IEventQueueBuffer::Type XWindowsEventQueueBuffer::getEvent(Event& event, std::ui
     m_impl->XNextEvent(m_display, &m_event);
 
     // process event
-    if (m_event.xany.type == ClientMessage &&
-        m_event.xclient.message_type == m_userEvent) {
+    if (m_event.xany.type == ClientMessage && m_event.xclient.message_type == m_userEvent) {
         dataID = static_cast<std::uint32_t>(m_event.xclient.data.l[0]);
         return kUser;
-    }
-    else {
+    } else {
         event = Event(EventType::SYSTEM, m_events->getSystemTarget(),
                       create_event_data<XEvent*>(&m_event));
         return kSystem;
@@ -165,11 +157,11 @@ bool XWindowsEventQueueBuffer::addEvent(std::uint32_t dataID)
 {
     // prepare a message
     XEvent xevent;
-    xevent.xclient.type         = ClientMessage;
-    xevent.xclient.window       = m_window;
+    xevent.xclient.type = ClientMessage;
+    xevent.xclient.window = m_window;
     xevent.xclient.message_type = m_userEvent;
-    xevent.xclient.format       = 32;
-    xevent.xclient.data.l[0]    = static_cast<long>(dataID);
+    xevent.xclient.format = 32;
+    xevent.xclient.data.l[0] = static_cast<long>(dataID);
 
     // save the message
     std::lock_guard<std::mutex> lock(mutex_);
@@ -186,8 +178,7 @@ bool XWindowsEventQueueBuffer::addEvent(std::uint32_t dataID)
         // The flush call can read incoming data from the socket and put
         // it in Xlib's input buffer.  That sneaks it past the other thread.
         ssize_t write_response = write(m_pipefd[1], "!", 1);
-        if (write_response < 0)
-        {
+        if (write_response < 0) {
             // todo: handle write response
         }
     }
@@ -195,15 +186,13 @@ bool XWindowsEventQueueBuffer::addEvent(std::uint32_t dataID)
     return true;
 }
 
-bool
-XWindowsEventQueueBuffer::isEmpty() const
+bool XWindowsEventQueueBuffer::isEmpty() const
 {
     std::lock_guard<std::mutex> lock(mutex_);
-    return (m_impl->XPending(m_display) == 0 );
+    return (m_impl->XPending(m_display) == 0);
 }
 
-void
-XWindowsEventQueueBuffer::flush()
+void XWindowsEventQueueBuffer::flush()
 {
     // note -- mutex_ must be locked on entry
 

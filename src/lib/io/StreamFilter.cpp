@@ -22,13 +22,12 @@
 namespace inputleap {
 
 StreamFilter::StreamFilter(IEventQueue* events, std::unique_ptr<IStream> stream) :
-    stream_(std::move(stream)),
-    m_events(events)
+    stream_(std::move(stream)), m_events(events)
 {
     // replace handlers for m_stream
     m_events->remove_handlers(stream_->get_event_target());
     m_events->add_handler(EventType::UNKNOWN, stream_->get_event_target(),
-                          [this](const auto& e){ handle_upstream_event(e); });
+                          [this](const auto& e) { handle_upstream_event(e); });
 }
 
 StreamFilter::~StreamFilter()
@@ -36,8 +35,7 @@ StreamFilter::~StreamFilter()
     m_events->remove_handler(EventType::UNKNOWN, stream_->get_event_target());
 }
 
-void
-StreamFilter::close()
+void StreamFilter::close()
 {
     getStream()->close();
 }
@@ -52,20 +50,17 @@ void StreamFilter::write(const void* buffer, std::uint32_t n)
     getStream()->write(buffer, n);
 }
 
-void
-StreamFilter::flush()
+void StreamFilter::flush()
 {
     getStream()->flush();
 }
 
-void
-StreamFilter::shutdownInput()
+void StreamFilter::shutdownInput()
 {
     getStream()->shutdownInput();
 }
 
-void
-StreamFilter::shutdownOutput()
+void StreamFilter::shutdownOutput()
 {
     getStream()->shutdownOutput();
 }
@@ -75,8 +70,7 @@ const EventTarget* StreamFilter::get_event_target() const
     return this;
 }
 
-bool
-StreamFilter::isReady() const
+bool StreamFilter::isReady() const
 {
     return getStream()->isReady();
 }
@@ -86,8 +80,7 @@ std::uint32_t StreamFilter::getSize() const
     return getStream()->getSize();
 }
 
-void
-StreamFilter::filterEvent(const Event& event)
+void StreamFilter::filterEvent(const Event& event)
 {
     Event copy{event.getType(), get_event_target(), nullptr};
     copy.clone_data_from(event);

@@ -18,13 +18,13 @@
 
 #pragma once
 
-#include "mt/Thread.h"
 #include "base/ILogOutputter.h"
+#include "mt/Thread.h"
 
 #include <cstdint>
 #include <deque>
-#include <list>
 #include <fstream>
+#include <list>
 #include <string>
 
 namespace inputleap {
@@ -152,6 +152,7 @@ public:
     void close() override;
     void show(bool showIfEmpty) override;
     bool write(ELevel level, const char* message) override;
+
 private:
     std::uint32_t m_maxBufferSize;
     Buffer m_buffer;

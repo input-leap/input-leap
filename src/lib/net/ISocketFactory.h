@@ -32,12 +32,11 @@ create sockets.
 */
 class ISocketFactory {
 public:
-    virtual ~ISocketFactory() { }
+    virtual ~ISocketFactory() {}
 
     //! Create data socket
-    virtual std::unique_ptr<IDataSocket>
-        create(IArchNetwork::EAddressFamily family,
-               ConnectionSecurityLevel security_level) const = 0;
+    virtual std::unique_ptr<IDataSocket> create(IArchNetwork::EAddressFamily family,
+                                                ConnectionSecurityLevel security_level) const = 0;
 
     //! Create listen socket
     virtual std::unique_ptr<IListenSocket>

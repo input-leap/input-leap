@@ -17,10 +17,10 @@
  */
 
 #include "inputleap/Screen.h"
+#include "base/IEventQueue.h"
+#include "base/Log.h"
 #include "inputleap/IPlatformScreen.h"
 #include "inputleap/protocol_types.h"
-#include "base/Log.h"
-#include "base/IEventQueue.h"
 #include "server/ClientProxy.h"
 
 namespace inputleap {
@@ -56,8 +56,7 @@ Screen::~Screen()
     LOG_DEBUG("closed display");
 }
 
-void
-Screen::enable()
+void Screen::enable()
 {
     assert(!m_enabled);
 
@@ -66,8 +65,7 @@ Screen::enable()
     m_screen->enable();
     if (m_isPrimary) {
         enablePrimary();
-    }
-    else {
+    } else {
         enableSecondary();
     }
 
@@ -75,22 +73,19 @@ Screen::enable()
     m_enabled = true;
 }
 
-void
-Screen::disable()
+void Screen::disable()
 {
     assert(m_enabled);
 
     if (!m_isPrimary && m_entered) {
         leave();
-    }
-    else if (m_isPrimary && !m_entered) {
+    } else if (m_isPrimary && !m_entered) {
         enter(0);
     }
     m_screen->disable();
     if (m_isPrimary) {
         disablePrimary();
-    }
-    else {
+    } else {
         disableSecondary();
     }
 
@@ -98,8 +93,7 @@ Screen::disable()
     m_enabled = false;
 }
 
-void
-Screen::enter(KeyModifierMask toggleMask)
+void Screen::enter(KeyModifierMask toggleMask)
 {
     assert(m_entered == false);
     LOG_INFO("entering screen");
@@ -110,14 +104,12 @@ Screen::enter(KeyModifierMask toggleMask)
     m_screen->enter();
     if (m_isPrimary) {
         enterPrimary();
-    }
-    else {
+    } else {
         enterSecondary(toggleMask);
     }
 }
 
-bool
-Screen::leave()
+bool Screen::leave()
 {
     assert(m_entered == true);
     LOG_INFO("leaving screen");
@@ -128,8 +120,7 @@ Screen::leave()
 
     if (m_isPrimary) {
         leavePrimary();
-    }
-    else {
+    } else {
         leaveSecondary();
     }
 
@@ -155,20 +146,17 @@ void Screen::warpCursor(std::int32_t x, std::int32_t y)
     m_screen->warpCursor(x, y);
 }
 
-void
-Screen::setClipboard(ClipboardID id, const IClipboard* clipboard)
+void Screen::setClipboard(ClipboardID id, const IClipboard* clipboard)
 {
     m_screen->setClipboard(id, clipboard);
 }
 
-void
-Screen::grabClipboard(ClipboardID id)
+void Screen::grabClipboard(ClipboardID id)
 {
     m_screen->setClipboard(id, nullptr);
 }
 
-void
-Screen::screensaver(bool activate)
+void Screen::screensaver(bool activate)
 {
     if (!m_isPrimary) {
         // activate/deactivation screen saver iff synchronization enabled
@@ -178,13 +166,11 @@ Screen::screensaver(bool activate)
     }
 }
 
-void
-Screen::keyDown(KeyID id, KeyModifierMask mask, KeyButton button)
+void Screen::keyDown(KeyID id, KeyModifierMask mask, KeyButton button)
 {
     // check for ctrl+alt+del emulation
     if (id == kKeyDelete &&
-        (mask & (KeyModifierControl | KeyModifierAlt)) ==
-                (KeyModifierControl | KeyModifierAlt)) {
+        (mask & (KeyModifierControl | KeyModifierAlt)) == (KeyModifierControl | KeyModifierAlt)) {
         LOG_DEBUG("emulating ctrl+alt+del press");
         if (m_screen->fakeCtrlAltDel()) {
             return;
@@ -199,20 +185,17 @@ void Screen::keyRepeat(KeyID id, KeyModifierMask mask, std::int32_t count, KeyBu
     m_screen->fakeKeyRepeat(id, mask, count, button);
 }
 
-void
-Screen::keyUp(KeyID, KeyModifierMask, KeyButton button)
+void Screen::keyUp(KeyID, KeyModifierMask, KeyButton button)
 {
     m_screen->fakeKeyUp(button);
 }
 
-void
-Screen::mouseDown(ButtonID button)
+void Screen::mouseDown(ButtonID button)
 {
     m_screen->fakeMouseButton(button, true);
 }
 
-void
-Screen::mouseUp(ButtonID button)
+void Screen::mouseUp(ButtonID button)
 {
     m_screen->fakeMouseButton(button, false);
 }
@@ -235,8 +218,7 @@ void Screen::mouseWheel(std::int32_t xDelta, std::int32_t yDelta)
     m_screen->fakeMouseWheel(xDelta, yDelta);
 }
 
-void
-Screen::resetOptions()
+void Screen::resetOptions()
 {
     // reset options
     m_halfDuplex = 0;
@@ -254,8 +236,7 @@ Screen::resetOptions()
     m_screen->resetOptions();
 }
 
-void
-Screen::setOptions(const OptionsList& options)
+void Screen::setOptions(const OptionsList& options)
 {
     // update options
     bool oldScreenSaverSync = m_screenSaverSync;
@@ -263,33 +244,30 @@ Screen::setOptions(const OptionsList& options)
         if (options[i] == kOptionScreenSaverSync) {
             m_screenSaverSync = (options[i + 1] != 0);
             LOG_DEBUG1("screen saver synchronization %s", m_screenSaverSync ? "on" : "off");
-        }
-        else if (options[i] == kOptionHalfDuplexCapsLock) {
+        } else if (options[i] == kOptionHalfDuplexCapsLock) {
             if (options[i + 1] != 0) {
-                m_halfDuplex |=  KeyModifierCapsLock;
-            }
-            else {
+                m_halfDuplex |= KeyModifierCapsLock;
+            } else {
                 m_halfDuplex &= ~KeyModifierCapsLock;
             }
-            LOG_DEBUG1("half-duplex caps-lock %s", ((m_halfDuplex & KeyModifierCapsLock) != 0) ? "on" : "off");
-        }
-        else if (options[i] == kOptionHalfDuplexNumLock) {
+            LOG_DEBUG1("half-duplex caps-lock %s",
+                       ((m_halfDuplex & KeyModifierCapsLock) != 0) ? "on" : "off");
+        } else if (options[i] == kOptionHalfDuplexNumLock) {
             if (options[i + 1] != 0) {
-                m_halfDuplex |=  KeyModifierNumLock;
-            }
-            else {
+                m_halfDuplex |= KeyModifierNumLock;
+            } else {
                 m_halfDuplex &= ~KeyModifierNumLock;
             }
-            LOG_DEBUG1("half-duplex num-lock %s", ((m_halfDuplex & KeyModifierNumLock) != 0) ? "on" : "off");
-        }
-        else if (options[i] == kOptionHalfDuplexScrollLock) {
+            LOG_DEBUG1("half-duplex num-lock %s",
+                       ((m_halfDuplex & KeyModifierNumLock) != 0) ? "on" : "off");
+        } else if (options[i] == kOptionHalfDuplexScrollLock) {
             if (options[i + 1] != 0) {
-                m_halfDuplex |=  KeyModifierScrollLock;
-            }
-            else {
+                m_halfDuplex |= KeyModifierScrollLock;
+            } else {
                 m_halfDuplex &= ~KeyModifierScrollLock;
             }
-            LOG_DEBUG1("half-duplex scroll-lock %s", ((m_halfDuplex & KeyModifierScrollLock) != 0) ? "on" : "off");
+            LOG_DEBUG1("half-duplex scroll-lock %s",
+                       ((m_halfDuplex & KeyModifierScrollLock) != 0) ? "on" : "off");
         }
     }
 
@@ -300,8 +278,7 @@ Screen::setOptions(const OptionsList& options)
     if (!m_isPrimary && oldScreenSaverSync != m_screenSaverSync) {
         if (m_screenSaverSync) {
             m_screen->openScreensaver(false);
-        }
-        else {
+        } else {
             m_screen->closeScreensaver();
         }
     }
@@ -325,8 +302,7 @@ void Screen::unregisterHotKey(std::uint32_t id)
     m_screen->unregisterHotKey(id);
 }
 
-void
-Screen::fakeInputBegin()
+void Screen::fakeInputBegin()
 {
     assert(!m_fakeInput);
 
@@ -334,8 +310,7 @@ Screen::fakeInputBegin()
     m_screen->fakeInputBegin();
 }
 
-void
-Screen::fakeInputEnd()
+void Screen::fakeInputEnd()
 {
     assert(m_fakeInput);
 
@@ -343,14 +318,12 @@ Screen::fakeInputEnd()
     m_screen->fakeInputEnd();
 }
 
-bool
-Screen::isOnScreen() const
+bool Screen::isOnScreen() const
 {
     return m_entered;
 }
 
-bool
-Screen::isLockedToScreen() const
+bool Screen::isLockedToScreen() const
 {
     // check for pressed mouse buttons
     // HACK: commented out as it breaks new drag drop feature
@@ -363,8 +336,7 @@ Screen::isLockedToScreen() const
 
         if (m_enableDragDrop) {
             return (buttonID == kButtonLeft) ? false : true;
-        }
-        else {
+        } else {
             return true;
         }
     }
@@ -377,8 +349,7 @@ std::int32_t Screen::getJumpZoneSize() const
 {
     if (!m_isPrimary) {
         return 0;
-    }
-    else {
+    } else {
         return m_screen->getJumpZoneSize();
     }
 }
@@ -388,44 +359,37 @@ void Screen::getCursorCenter(std::int32_t& x, std::int32_t& y) const
     m_screen->getCursorCenter(x, y);
 }
 
-KeyModifierMask
-Screen::getActiveModifiers() const
+KeyModifierMask Screen::getActiveModifiers() const
 {
     return m_screen->getActiveModifiers();
 }
 
-KeyModifierMask
-Screen::pollActiveModifiers() const
+KeyModifierMask Screen::pollActiveModifiers() const
 {
     return m_screen->pollActiveModifiers();
 }
 
-bool
-Screen::isDraggingStarted() const
+bool Screen::isDraggingStarted() const
 {
     return m_screen->isDraggingStarted();
 }
 
-bool
-Screen::isFakeDraggingStarted() const
+bool Screen::isFakeDraggingStarted() const
 {
     return m_screen->isFakeDraggingStarted();
 }
 
-void
-Screen::setDraggingStarted(bool started)
+void Screen::setDraggingStarted(bool started)
 {
     m_screen->setDraggingStarted(started);
 }
 
-void
-Screen::startDraggingFiles(DragFileList& fileList)
+void Screen::startDraggingFiles(DragFileList& fileList)
 {
     m_screen->fakeDraggingFiles(fileList);
 }
 
-void
-Screen::setEnableDragDrop(bool enabled)
+void Screen::setEnableDragDrop(bool enabled)
 {
     m_enableDragDrop = enabled;
 }
@@ -435,8 +399,7 @@ std::string& Screen::getDraggingFilename() const
     return m_screen->getDraggingFilename();
 }
 
-void
-Screen::clearDraggingFilename()
+void Screen::clearDraggingFilename()
 {
     m_screen->clearDraggingFilename();
 }
@@ -456,8 +419,7 @@ const EventTarget* Screen::get_event_target() const
     return m_screen->get_event_target();
 }
 
-bool
-Screen::getClipboard(ClipboardID id, IClipboard* clipboard) const
+bool Screen::getClipboard(ClipboardID id, IClipboard* clipboard) const
 {
     return m_screen->getClipboard(id, clipboard);
 }
@@ -472,8 +434,7 @@ void Screen::getCursorPos(std::int32_t& x, std::int32_t& y) const
     m_screen->getCursorPos(x, y);
 }
 
-void
-Screen::enablePrimary()
+void Screen::enablePrimary()
 {
     // get notified of screen saver activation/deactivation
     m_screen->openScreensaver(true);
@@ -482,8 +443,7 @@ Screen::enablePrimary()
     m_events->add_event(EventType::SCREEN_SHAPE_CHANGED, get_event_target());
 }
 
-void
-Screen::enableSecondary()
+void Screen::enableSecondary()
 {
     // assume primary has all clipboards
     for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
@@ -496,34 +456,29 @@ Screen::enableSecondary()
     }
 }
 
-void
-Screen::disablePrimary()
+void Screen::disablePrimary()
 {
     // done with screen saver
     m_screen->closeScreensaver();
 }
 
-void
-Screen::disableSecondary()
+void Screen::disableSecondary()
 {
     // done with screen saver
     m_screen->closeScreensaver();
 }
 
-void
-Screen::enterPrimary()
+void Screen::enterPrimary()
 {
     // do nothing
 }
 
-void
-Screen::enterSecondary(KeyModifierMask)
+void Screen::enterSecondary(KeyModifierMask)
 {
     // do nothing
 }
 
-void
-Screen::leavePrimary()
+void Screen::leavePrimary()
 {
     // we don't track keys while on the primary screen so update our
     // idea of them now.  this is particularly to update the state of
@@ -531,11 +486,10 @@ Screen::leavePrimary()
     m_screen->updateKeyState();
 }
 
-void
-Screen::leaveSecondary()
+void Screen::leaveSecondary()
 {
     // release any keys we think are still down
     m_screen->fakeAllKeysUp();
 }
 
-}
+} // namespace inputleap

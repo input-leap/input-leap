@@ -25,8 +25,7 @@ namespace inputleap {
 // XWindowsClipboardTIFConverter
 //
 
-XWindowsClipboardTIFConverter::XWindowsClipboardTIFConverter(
-                Display* display) :
+XWindowsClipboardTIFConverter::XWindowsClipboardTIFConverter(Display* display) :
     m_atom(XInternAtom(display, "image/tiff", False))
 {
     // do nothing
@@ -37,20 +36,17 @@ XWindowsClipboardTIFConverter::~XWindowsClipboardTIFConverter()
     // do nothing
 }
 
-IClipboard::EFormat
-XWindowsClipboardTIFConverter::getFormat() const
+IClipboard::EFormat XWindowsClipboardTIFConverter::getFormat() const
 {
     return IClipboard::kTiff;
 }
 
-Atom
-XWindowsClipboardTIFConverter::getAtom() const
+Atom XWindowsClipboardTIFConverter::getAtom() const
 {
     return m_atom;
 }
 
-int
-XWindowsClipboardTIFConverter::getDataSize() const
+int XWindowsClipboardTIFConverter::getDataSize() const
 {
     return 8;
 }
@@ -70,12 +66,14 @@ std::string XWindowsClipboardTIFConverter::toIClipboard(const std::string& tiffd
     const std::uint8_t* rawTIFHeader = reinterpret_cast<const std::uint8_t*>(tiffdata.data());
 
     // Prepare Tiff (BE)
-    if (rawTIFHeader[0] == 0x49 && rawTIFHeader[1] == 0x49 && rawTIFHeader[2] == 0x2a && rawTIFHeader[3] == 0x00) {
+    if (rawTIFHeader[0] == 0x49 && rawTIFHeader[1] == 0x49 && rawTIFHeader[2] == 0x2a &&
+        rawTIFHeader[3] == 0x00) {
         return tiffdata;
     }
 
     // Prepare Tiff (LE)
-    if (rawTIFHeader[0] == 0x4D && rawTIFHeader[1] == 0x4D && rawTIFHeader[2] == 0x00 && rawTIFHeader[3] == 0x2a) {
+    if (rawTIFHeader[0] == 0x4D && rawTIFHeader[1] == 0x4D && rawTIFHeader[2] == 0x00 &&
+        rawTIFHeader[3] == 0x2a) {
         return tiffdata;
     }
 

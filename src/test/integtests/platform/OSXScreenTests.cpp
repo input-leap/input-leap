@@ -15,10 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "platform/OSXScreen.h"
 #include "arch/Arch.h"
 #include "base/EventQueue.h"
 #include "base/Time.h"
+#include "platform/OSXScreen.h"
 
 #include <gtest/gtest.h>
 

@@ -24,30 +24,28 @@
 #include <memory>
 
 class KeySequenceWidget;
-namespace Ui
-{
-    class HotkeyDialog;
+namespace Ui {
+class HotkeyDialog;
 }
 
-class HotkeyDialog : public QDialog
-{
+class HotkeyDialog : public QDialog {
     Q_OBJECT
 
-    public:
-        HotkeyDialog(QWidget* parent, Hotkey& hotkey);
-        ~HotkeyDialog() override;
+public:
+    HotkeyDialog(QWidget* parent, Hotkey& hotkey);
+    ~HotkeyDialog() override;
 
-    public:
-        const Hotkey& hotkey() const { return m_Hotkey; }
+public:
+    const Hotkey& hotkey() const { return m_Hotkey; }
 
-    protected slots:
-        void accept() override;
+protected slots:
+    void accept() override;
 
-    protected:
-        const KeySequenceWidget* sequenceWidget() const;
-        Hotkey& hotkey() { return m_Hotkey; }
+protected:
+    const KeySequenceWidget* sequenceWidget() const;
+    Hotkey& hotkey() { return m_Hotkey; }
 
-    private:
-        std::unique_ptr<Ui::HotkeyDialog> ui_;
-        Hotkey& m_Hotkey;
+private:
+    std::unique_ptr<Ui::HotkeyDialog> ui_;
+    Hotkey& m_Hotkey;
 };

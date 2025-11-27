@@ -24,11 +24,7 @@
 
 namespace inputleap {
 
-DragInformation::DragInformation() :
-    m_filename(),
-    m_filesize(0)
-{
-}
+DragInformation::DragInformation() : m_filename(), m_filesize(0) {}
 
 void DragInformation::parseDragInfo(DragFileList& dragFileList, std::uint32_t fileNum,
                                     std::string data)
@@ -73,13 +69,10 @@ void DragInformation::parseDragInfo(DragFileList& dragFileList, std::uint32_t fi
         ++index;
     }
 
-    LOG_DEBUG("drag info received, total drag file number: %zi",
-        dragFileList.size());
+    LOG_DEBUG("drag info received, total drag file number: %zi", dragFileList.size());
 
     for (size_t i = 0; i < dragFileList.size(); ++i) {
-        LOG_DEBUG("dragging file %zi name: %s",
-            i + 1,
-            dragFileList.at(i).getFilename().c_str());
+        LOG_DEBUG("dragging file %zi name: %s", i + 1, dragFileList.at(i).getFilename().c_str());
     }
 }
 
@@ -89,14 +82,12 @@ std::string DragInformation::getDragFileExtension(std::string filename)
     findResult = filename.find_last_of(".", filename.size());
     if (findResult != std::string::npos) {
         return filename.substr(findResult + 1, filename.size() - findResult - 1);
-    }
-    else {
+    } else {
         return "";
     }
 }
 
-int
-DragInformation::setupDragInfo(DragFileList& fileList, std::string& output)
+int DragInformation::setupDragInfo(DragFileList& fileList, std::string& output)
 {
     int size = static_cast<int>(fileList.size());
     for (int i = 0; i < size; ++i) {
@@ -112,13 +103,13 @@ DragInformation::setupDragInfo(DragFileList& fileList, std::string& output)
 bool DragInformation::isFileValid(std::string filename)
 {
     bool result = false;
-    std::fstream file(filename.c_str(), std::ios::in|std::ios::binary);
+    std::fstream file(filename.c_str(), std::ios::in | std::ios::binary);
 
     if (file.is_open()) {
         result = true;
     }
 
-    file. close();
+    file.close();
 
     return result;
 }
@@ -133,20 +124,20 @@ size_t DragInformation::stringToNum(std::string& str)
 
 std::string DragInformation::getFileSize(std::string& filename)
 {
-    std::fstream file(filename.c_str(), std::ios::in|std::ios::binary);
+    std::fstream file(filename.c_str(), std::ios::in | std::ios::binary);
 
     if (!file.is_open()) {
-      throw std::runtime_error("failed to get file size");
+        throw std::runtime_error("failed to get file size");
     }
 
     // check file size
-    file.seekg (0, std::ios::end);
+    file.seekg(0, std::ios::end);
     size_t size = static_cast<size_t>(file.tellg());
 
     std::stringstream ss;
     ss << size;
 
-    file. close();
+    file.close();
 
     return ss.str();
 }

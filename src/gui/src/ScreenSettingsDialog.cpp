@@ -21,9 +21,9 @@
 
 #include "Screen.h"
 
+#include <QMessageBox>
 #include <QtCore>
 #include <QtGui>
-#include <QMessageBox>
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 static const QRegularExpression ValidScreenName("[a-z0-9\\._-]{0,255}",
@@ -56,31 +56,42 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen) :
 
     ui_->m_pLineEditName->setText(check_name_param(m_pScreen->name()));
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    ui_->m_pLineEditName->setValidator(new QRegularExpressionValidator(ValidScreenName, ui_->m_pLineEditName));
+    ui_->m_pLineEditName->setValidator(new QRegularExpressionValidator(ValidScreenName,
+                                                                       ui_->m_pLineEditName));
 #else
     ui_->m_pLineEditName->setValidator(new QRegExpValidator(ValidScreenName, ui_->m_pLineEditName));
 #endif
     ui_->m_pLineEditName->selectAll();
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    ui_->m_pLineEditAlias->setValidator(new QRegularExpressionValidator(ValidScreenName, ui_->m_pLineEditName));
+    ui_->m_pLineEditAlias->setValidator(new QRegularExpressionValidator(ValidScreenName,
+                                                                        ui_->m_pLineEditName));
 #else
     ui_->m_pLineEditAlias->setValidator(new QRegExpValidator(ValidScreenName, ui_->m_pLineEditName));
 #endif
 
-    for (int i = 0; i < m_pScreen->aliases().count(); i++)
+    for (int i = 0; i < m_pScreen->aliases().count(); i++) {
         new QListWidgetItem(m_pScreen->aliases()[i], ui_->m_pListAliases);
+    }
 
-    ui_->m_pComboBoxShift->setCurrentIndex(static_cast<int>(m_pScreen->modifier(Screen::Modifier::Shift)));
-    ui_->m_pComboBoxCtrl->setCurrentIndex(static_cast<int>(m_pScreen->modifier(Screen::Modifier::Ctrl)));
-    ui_->m_pComboBoxAlt->setCurrentIndex(static_cast<int>(m_pScreen->modifier(Screen::Modifier::Alt)));
-    ui_->m_pComboBoxMeta->setCurrentIndex(static_cast<int>(m_pScreen->modifier(Screen::Modifier::Meta)));
-    ui_->m_pComboBoxSuper->setCurrentIndex(static_cast<int>(m_pScreen->modifier(Screen::Modifier::Super)));
+    ui_->m_pComboBoxShift->setCurrentIndex(
+        static_cast<int>(m_pScreen->modifier(Screen::Modifier::Shift)));
+    ui_->m_pComboBoxCtrl->setCurrentIndex(
+        static_cast<int>(m_pScreen->modifier(Screen::Modifier::Ctrl)));
+    ui_->m_pComboBoxAlt->setCurrentIndex(
+        static_cast<int>(m_pScreen->modifier(Screen::Modifier::Alt)));
+    ui_->m_pComboBoxMeta->setCurrentIndex(
+        static_cast<int>(m_pScreen->modifier(Screen::Modifier::Meta)));
+    ui_->m_pComboBoxSuper->setCurrentIndex(
+        static_cast<int>(m_pScreen->modifier(Screen::Modifier::Super)));
 
     ui_->m_pCheckBoxCornerTopLeft->setChecked(m_pScreen->switchCorner(Screen::SwitchCorner::TopLeft));
-    ui_->m_pCheckBoxCornerTopRight->setChecked(m_pScreen->switchCorner(Screen::SwitchCorner::TopRight));
-    ui_->m_pCheckBoxCornerBottomLeft->setChecked(m_pScreen->switchCorner(Screen::SwitchCorner::BottomLeft));
-    ui_->m_pCheckBoxCornerBottomRight->setChecked(m_pScreen->switchCorner(Screen::SwitchCorner::BottomRight));
+    ui_->m_pCheckBoxCornerTopRight->setChecked(
+        m_pScreen->switchCorner(Screen::SwitchCorner::TopRight));
+    ui_->m_pCheckBoxCornerBottomLeft->setChecked(
+        m_pScreen->switchCorner(Screen::SwitchCorner::BottomLeft));
+    ui_->m_pCheckBoxCornerBottomRight->setChecked(
+        m_pScreen->switchCorner(Screen::SwitchCorner::BottomRight));
     ui_->m_pSpinBoxSwitchCornerSize->setValue(m_pScreen->switchCornerSize());
 
     ui_->m_pCheckBoxCapsLock->setChecked(m_pScreen->fix(Screen::Fix::CapsLock));
@@ -92,12 +103,10 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen) :
 
 void ScreenSettingsDialog::accept()
 {
-    if (ui_->m_pLineEditName->text().isEmpty())
-    {
-        QMessageBox::warning(
-            this, tr("Screen name is empty"),
-            tr("The screen name cannot be empty. "
-               "Please either fill in a name or cancel the dialog."));
+    if (ui_->m_pLineEditName->text().isEmpty()) {
+        QMessageBox::warning(this, tr("Screen name is empty"),
+                             tr("The screen name cannot be empty. "
+                                "Please either fill in a name or cancel the dialog."));
         return;
     }
 
@@ -105,15 +114,12 @@ void ScreenSettingsDialog::accept()
 
     m_pScreen->setName(ui_->m_pLineEditName->text());
 
-    for (int i = 0; i < ui_->m_pListAliases->count(); i++)
-    {
+    for (int i = 0; i < ui_->m_pListAliases->count(); i++) {
         QString alias(ui_->m_pListAliases->item(i)->text());
-        if (alias == ui_->m_pLineEditName->text())
-        {
-            QMessageBox::warning(
-                this, tr("Screen name matches alias"),
-                tr("The screen name cannot be the same as an alias. "
-                   "Please either remove the alias or change the screen name."));
+        if (alias == ui_->m_pLineEditName->text()) {
+            QMessageBox::warning(this, tr("Screen name matches alias"),
+                                 tr("The screen name cannot be the same as an alias. "
+                                    "Please either remove the alias or change the screen name."));
             return;
         }
         m_pScreen->addAlias(alias);
@@ -130,10 +136,14 @@ void ScreenSettingsDialog::accept()
     m_pScreen->setModifier(Screen::Modifier::Super,
                            static_cast<Screen::Modifier>(ui_->m_pComboBoxSuper->currentIndex()));
 
-    m_pScreen->setSwitchCorner(Screen::SwitchCorner::TopLeft, ui_->m_pCheckBoxCornerTopLeft->isChecked());
-    m_pScreen->setSwitchCorner(Screen::SwitchCorner::TopRight, ui_->m_pCheckBoxCornerTopRight->isChecked());
-    m_pScreen->setSwitchCorner(Screen::SwitchCorner::BottomLeft, ui_->m_pCheckBoxCornerBottomLeft->isChecked());
-    m_pScreen->setSwitchCorner(Screen::SwitchCorner::BottomRight, ui_->m_pCheckBoxCornerBottomRight->isChecked());
+    m_pScreen->setSwitchCorner(Screen::SwitchCorner::TopLeft,
+                               ui_->m_pCheckBoxCornerTopLeft->isChecked());
+    m_pScreen->setSwitchCorner(Screen::SwitchCorner::TopRight,
+                               ui_->m_pCheckBoxCornerTopRight->isChecked());
+    m_pScreen->setSwitchCorner(Screen::SwitchCorner::BottomLeft,
+                               ui_->m_pCheckBoxCornerBottomLeft->isChecked());
+    m_pScreen->setSwitchCorner(Screen::SwitchCorner::BottomRight,
+                               ui_->m_pCheckBoxCornerBottomRight->isChecked());
     m_pScreen->setSwitchCornerSize(ui_->m_pSpinBoxSwitchCornerSize->value());
 
     m_pScreen->setFix(Screen::Fix::CapsLock, ui_->m_pCheckBoxCapsLock->isChecked());
@@ -147,8 +157,9 @@ void ScreenSettingsDialog::accept()
 
 void ScreenSettingsDialog::on_m_pButtonAddAlias_clicked()
 {
-    if (!ui_->m_pLineEditAlias->text().isEmpty() && ui_->m_pListAliases->findItems(ui_->m_pLineEditAlias->text(), Qt::MatchFixedString).isEmpty())
-    {
+    if (!ui_->m_pLineEditAlias->text().isEmpty() &&
+        ui_->m_pListAliases->findItems(ui_->m_pLineEditAlias->text(), Qt::MatchFixedString)
+            .isEmpty()) {
         new QListWidgetItem(ui_->m_pLineEditAlias->text(), ui_->m_pListAliases);
         ui_->m_pLineEditAlias->clear();
     }
@@ -163,8 +174,9 @@ void ScreenSettingsDialog::on_m_pButtonRemoveAlias_clicked()
 {
     QList<QListWidgetItem*> items = ui_->m_pListAliases->selectedItems();
 
-    for (int i = 0; i < items.count(); i++)
+    for (int i = 0; i < items.count(); i++) {
         delete items[i];
+    }
 }
 
 void ScreenSettingsDialog::on_m_pListAliases_itemSelectionChanged()

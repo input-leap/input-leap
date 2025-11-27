@@ -24,7 +24,7 @@ namespace inputleap {
 
 class IOSXKeyResource {
 public:
-    virtual ~IOSXKeyResource() { }
+    virtual ~IOSXKeyResource() {}
     virtual bool isValid() const = 0;
     virtual std::uint32_t getNumModifierCombinations() const = 0;
     virtual std::uint32_t getNumTables() const = 0;

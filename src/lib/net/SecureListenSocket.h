@@ -17,20 +17,20 @@
 
 #pragma once
 
+#include "ConnectionSecurityLevel.h"
 #include "Fwd.h"
 #include "net/TCPListenSocket.h"
-#include "ConnectionSecurityLevel.h"
 
 namespace inputleap {
 
 class SecureListenSocket : public TCPListenSocket {
 public:
     SecureListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer,
-                       IArchNetwork::EAddressFamily family,
-                       ConnectionSecurityLevel security_level);
+                       IArchNetwork::EAddressFamily family, ConnectionSecurityLevel security_level);
 
     // IListenSocket overrides
     std::unique_ptr<IDataSocket> accept() override;
+
 private:
     ConnectionSecurityLevel security_level_;
 };

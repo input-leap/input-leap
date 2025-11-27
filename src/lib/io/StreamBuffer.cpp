@@ -26,9 +26,7 @@
 
 const std::uint32_t StreamBuffer::kChunkSize = 4096;
 
-StreamBuffer::StreamBuffer() :
-    m_size(0),
-    m_headUsed(0)
+StreamBuffer::StreamBuffer() : m_size(0), m_headUsed(0)
 {
     // do nothing
 }
@@ -67,7 +65,7 @@ void StreamBuffer::pop(std::uint32_t n)
 {
     // discard all chunks if n is greater than or equal to m_size
     if (n >= m_size) {
-        m_size     = 0;
+        m_size = 0;
         m_headUsed = 0;
         m_chunks.clear();
         return;
@@ -82,7 +80,7 @@ void StreamBuffer::pop(std::uint32_t n)
     while (scan->size() - m_headUsed <= n) {
         n -= static_cast<std::uint32_t>(scan->size()) - m_headUsed;
         m_headUsed = 0;
-        scan       = m_chunks.erase(scan);
+        scan = m_chunks.erase(scan);
         assert(scan != m_chunks.end());
     }
 
@@ -122,12 +120,13 @@ void StreamBuffer::write(const void* vdata, std::uint32_t n)
         // choose number of bytes for next chunk
         assert(scan->size() <= kChunkSize);
         std::uint32_t count = kChunkSize - static_cast<std::uint32_t>(scan->size());
-        if (count > n)
+        if (count > n) {
             count = n;
+        }
 
         // transfer data
         scan->insert(scan->end(), data, data + count);
-        n    -= count;
+        n -= count;
         data += count;
 
         // append another empty chunk if we're not done yet

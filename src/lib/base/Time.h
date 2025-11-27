@@ -28,7 +28,6 @@ Blocks the calling thread for \c timeout seconds.  If
 */
 void this_thread_sleep(double timeout);
 
-
 //! Get the current time
 /*!
 Returns the number of seconds since some arbitrary starting time.

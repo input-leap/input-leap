@@ -32,7 +32,7 @@ class IApp {
 public:
     virtual ~IApp() {}
 
-    virtual void setByeFunc(void(*bye)(int)) = 0;
+    virtual void setByeFunc(void (*bye)(int)) = 0;
     virtual ArgsBase& argsBase() const = 0;
     virtual int standardStartup(int argc, char** argv) = 0;
     virtual int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup) = 0;

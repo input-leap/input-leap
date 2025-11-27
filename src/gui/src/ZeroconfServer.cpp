@@ -20,10 +20,7 @@
 
 #include <stdlib.h>
 
-ZeroconfServer::ZeroconfServer(QObject* parent) :
-    QTcpServer(parent)
-{
-}
+ZeroconfServer::ZeroconfServer(QObject* parent) : QTcpServer(parent) {}
 
 void ZeroconfServer::incomingConnection(qintptr socketDescriptor)
 {

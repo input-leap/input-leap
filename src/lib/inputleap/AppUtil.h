@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "inputleap/IAppUtil.h"
 #include "inputleap/Exceptions.h"
+#include "inputleap/IAppUtil.h"
 
 namespace inputleap {
 

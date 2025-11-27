@@ -5,8 +5,7 @@
 
 namespace inputleap {
 
-class WindowsHookResource
-{
+class WindowsHookResource {
 public:
     explicit WindowsHookResource();
     ~WindowsHookResource();

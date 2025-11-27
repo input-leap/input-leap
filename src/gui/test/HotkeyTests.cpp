@@ -14,16 +14,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "../src/Hotkey.h"
-#include <gtest/gtest.h>
 #include "Utils.h"
+#include <gtest/gtest.h>
 
 #include <QtCore/QSettings>
 #include <QtCore/QTextStream>
 
-struct TestAction
-{
+struct TestAction {
     Action::ActionType type = Action::keyDown;
     std::vector<TestKey> keys;
     std::vector<std::string> type_screen_names;
@@ -93,72 +91,71 @@ struct TestAction
     }
 };
 
-struct TestHotKey
-{
+struct TestHotKey {
     std::vector<TestKey> keys;
     std::vector<TestAction> actions;
 };
 
 namespace {
 
-    Action createAction(const TestAction& test_action)
-    {
-        Action action;
-        action.setType(test_action.type);
+Action createAction(const TestAction& test_action)
+{
+    Action action;
+    action.setType(test_action.type);
 
-        switch (test_action.type) {
-            case Action::keyDown:
-            case Action::keyUp:
-            case Action::keystroke: {
-                KeySequence sequence;
-                for (auto key : test_action.keys) {
-                    sequence.appendKey(key.key, key.modifier);
-                }
-                action.setKeySequence(sequence);
-                for (const auto& type_screen_name : test_action.type_screen_names) {
-                    action.appendTypeScreenName(QString::fromStdString(type_screen_name));
-                }
-                break;
-            }
-            case Action::switchToScreen:
-                action.setSwitchScreenName(QString::fromStdString(test_action.screen_name));
-                break;
-            case Action::toggleScreen:
-                break;
-            case Action::switchInDirection:
-                action.setSwitchDirection(test_action.switch_direction);
-                break;
-            case Action::lockCursorToScreen:
-                action.setLockCursorMode(test_action.lock_cursor_mode);
-                break;
-            default:
-                break;
-        }
-        return action;
-    }
-
-    Hotkey createHotkey(const TestHotKey& test_hotkey)
-    {
-        Hotkey hotkey;
+    switch (test_action.type) {
+    case Action::keyDown:
+    case Action::keyUp:
+    case Action::keystroke: {
         KeySequence sequence;
-        for (auto key : test_hotkey.keys) {
+        for (auto key : test_action.keys) {
             sequence.appendKey(key.key, key.modifier);
         }
-        hotkey.setKeySequence(sequence);
-
-        for (auto action : test_hotkey.actions) {
-            hotkey.appendAction(createAction(action));
+        action.setKeySequence(sequence);
+        for (const auto& type_screen_name : test_action.type_screen_names) {
+            action.appendTypeScreenName(QString::fromStdString(type_screen_name));
         }
-        return hotkey;
+        break;
     }
+    case Action::switchToScreen:
+        action.setSwitchScreenName(QString::fromStdString(test_action.screen_name));
+        break;
+    case Action::toggleScreen:
+        break;
+    case Action::switchInDirection:
+        action.setSwitchDirection(test_action.switch_direction);
+        break;
+    case Action::lockCursorToScreen:
+        action.setLockCursorMode(test_action.lock_cursor_mode);
+        break;
+    default:
+        break;
+    }
+    return action;
+}
 
-    std::string hotkeyToStringViaTextStream(const Hotkey& hotkey)
-    {
-        QString result;
-        QTextStream stream{&result};
-        stream << hotkey;
-        return result.toStdString();
+Hotkey createHotkey(const TestHotKey& test_hotkey)
+{
+    Hotkey hotkey;
+    KeySequence sequence;
+    for (auto key : test_hotkey.keys) {
+        sequence.appendKey(key.key, key.modifier);
     }
+    hotkey.setKeySequence(sequence);
+
+    for (auto action : test_hotkey.actions) {
+        hotkey.appendAction(createAction(action));
+    }
+    return hotkey;
+}
+
+std::string hotkeyToStringViaTextStream(const Hotkey& hotkey)
+{
+    QString result;
+    QTextStream stream{&result};
+    stream << hotkey;
+    return result.toStdString();
+}
 } // namespace
 
 void doHotkeyLoadSaveTest(const TestHotKey& test_hotkey)
@@ -194,7 +191,8 @@ void doHotkeyLoadSaveTest(const TestHotKey& test_hotkey)
             const auto& action_after = actions_after[i];
 
             ASSERT_EQ(action_before.keySequence().sequence(), action_after.keySequence().sequence());
-            ASSERT_EQ(action_before.keySequence().modifiers(), action_after.keySequence().modifiers());
+            ASSERT_EQ(action_before.keySequence().modifiers(),
+                      action_after.keySequence().modifiers());
             ASSERT_EQ(action_before.type(), action_after.type());
             ASSERT_EQ(action_before.typeScreenNames(), action_after.typeScreenNames());
             ASSERT_EQ(action_before.switchScreenName(), action_after.switchScreenName());
@@ -222,41 +220,25 @@ TEST(HotkeyLoadSaveTests, KeysNoActions)
 
 TEST(HotkeyLoadSaveTests, CommaKeyNoActions)
 {
-    TestHotKey hotkey = {
-        {
-            {Qt::Key_A, Qt::NoModifier},
-            {Qt::Key_Comma, Qt::NoModifier},
-            {Qt::Key_B, Qt::NoModifier}
-        }, {}};
+    TestHotKey hotkey = {{{Qt::Key_A, Qt::NoModifier},
+                          {Qt::Key_Comma, Qt::NoModifier},
+                          {Qt::Key_B, Qt::NoModifier}},
+                         {}};
     doHotkeyLoadSaveTest(hotkey);
 }
 
 TEST(HotkeyLoadSaveTests, KeysSingleAction)
 {
-    TestHotKey hotkey = {
-        {
-            {Qt::Key_A, Qt::NoModifier},
-            {Qt::Key_B, Qt::NoModifier}
-        },
-        {
-            TestAction::createKeyDown({{Qt::Key_Z, Qt::NoModifier}})
-        }
-    };
+    TestHotKey hotkey = {{{Qt::Key_A, Qt::NoModifier}, {Qt::Key_B, Qt::NoModifier}},
+                         {TestAction::createKeyDown({{Qt::Key_Z, Qt::NoModifier}})}};
     doHotkeyLoadSaveTest(hotkey);
 }
 
 TEST(HotkeyLoadSaveTests, KeysMultipleAction)
 {
-    TestHotKey hotkey = {
-        {
-            {Qt::Key_A, Qt::NoModifier},
-            {Qt::Key_B, Qt::NoModifier}
-        },
-        {
-            TestAction::createKeyDown({{Qt::Key_Z, Qt::NoModifier}}),
-            TestAction::createSwitchToScreen("test_screen")
-        }
-    };
+    TestHotKey hotkey = {{{Qt::Key_A, Qt::NoModifier}, {Qt::Key_B, Qt::NoModifier}},
+                         {TestAction::createKeyDown({{Qt::Key_Z, Qt::NoModifier}}),
+                          TestAction::createSwitchToScreen("test_screen")}};
     doHotkeyLoadSaveTest(hotkey);
 }
 
@@ -268,57 +250,31 @@ TEST(HotkeyToTexStreamTests, Empty)
 
 TEST(HotkeyToTexStreamTests, KeysNoActions)
 {
-    TestHotKey hotkey = {
-        {
-            {Qt::Key_A, Qt::NoModifier},
-            {Qt::Key_B, Qt::NoModifier}
-        },
-        {}
-    };
+    TestHotKey hotkey = {{{Qt::Key_A, Qt::NoModifier}, {Qt::Key_B, Qt::NoModifier}}, {}};
     ASSERT_EQ(hotkeyToStringViaTextStream(createHotkey(hotkey)), "");
 }
 
 TEST(HotkeyToTexStreamTests, KeysSingleAction)
 {
-    TestHotKey hotkey = {
-        {
-            {Qt::Key_A, Qt::NoModifier},
-            {Qt::Key_B, Qt::NoModifier}
-        },
-        {}
-    };
+    TestHotKey hotkey = {{{Qt::Key_A, Qt::NoModifier}, {Qt::Key_B, Qt::NoModifier}}, {}};
     ASSERT_EQ(hotkeyToStringViaTextStream(createHotkey(hotkey)), "");
 }
 
-
 TEST(HotkeyToTexStreamTests, KeysCommaSingleAction)
 {
-    TestHotKey hotkey = {
-        {
-            {Qt::Key_A, Qt::NoModifier},
-            {Qt::Key_Comma, Qt::NoModifier},
-            {Qt::Key_B, Qt::NoModifier}
-        },
-        {
-            TestAction::createKeyDown({{Qt::Key_Z, Qt::NoModifier}})
-        }
-    };
+    TestHotKey hotkey = {{{Qt::Key_A, Qt::NoModifier},
+                          {Qt::Key_Comma, Qt::NoModifier},
+                          {Qt::Key_B, Qt::NoModifier}},
+                         {TestAction::createKeyDown({{Qt::Key_Z, Qt::NoModifier}})}};
     ASSERT_EQ(hotkeyToStringViaTextStream(createHotkey(hotkey)),
               "\tkeystroke(a+Comma+b) = keyDown(z,*)\n");
 }
 
 TEST(HotkeyToTexStreamTests, KeysMultipleAction)
 {
-    TestHotKey hotkey = {
-        {
-            {Qt::Key_A, Qt::NoModifier},
-            {Qt::Key_B, Qt::NoModifier}
-        },
-        {
-            TestAction::createKeyDown({{Qt::Key_Z, Qt::NoModifier}}),
-            TestAction::createSwitchToScreen("test_screen")
-        }
-    };
+    TestHotKey hotkey = {{{Qt::Key_A, Qt::NoModifier}, {Qt::Key_B, Qt::NoModifier}},
+                         {TestAction::createKeyDown({{Qt::Key_Z, Qt::NoModifier}}),
+                          TestAction::createSwitchToScreen("test_screen")}};
     ASSERT_EQ(hotkeyToStringViaTextStream(createHotkey(hotkey)),
               "\tkeystroke(a+b) = keyDown(z,*), switchToScreen(test_screen)\n");
 }

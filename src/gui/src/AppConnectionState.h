@@ -17,9 +17,4 @@
 
 #pragma once
 
-enum class AppConnectionState {
-    DISCONNECTED,
-    CONNECTING,
-    CONNECTED,
-    TRANSFERRING
-};
+enum class AppConnectionState { DISCONNECTED, CONNECTING, CONNECTED, TRANSFERRING };

@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "config.h"
@@ -9,7 +8,6 @@ namespace inputleap {
 
 class XWindowsImpl : public IXWindowsImpl {
 public:
-
     Status XInitThreads() override;
     XIOErrorHandler XSetIOErrorHandler(XIOErrorHandler handler) override;
     Window do_DefaultRootWindow(Display* display) override;
@@ -31,8 +29,8 @@ public:
     int XGetInputFocus(Display* display, Window* focus_return, int* revert_to_return) override;
     void XSetICFocus(XIC ic) override;
     Bool XQueryPointer(Display* display, Window w, Window* root_return, Window* child_return,
-                       int* root_x_return, int* root_y_return, int* win_x_return,
-                       int* win_y_return, unsigned int* mask_return) override;
+                       int* root_x_return, int* root_y_return, int* win_x_return, int* win_y_return,
+                       unsigned int* mask_return) override;
     void XLockDisplay(Display* display) override;
     Bool XCheckMaskEvent(Display* display, long event_mask, XEvent* event_return) override;
     XModifierKeymap* XGetModifierMapping(Display* display) override;
@@ -63,7 +61,7 @@ public:
                                unsigned long affect, unsigned long details) override;
     Bool XRRQueryExtension(Display* display, int* event_base_return,
                            int* error_base_return) override;
-    void XRRSelectInput(Display *display, Window window, int mask) override;
+    void XRRSelectInput(Display* display, Window window, int mask) override;
     Bool XineramaQueryExtension(Display* display, int* event_base, int* error_base) override;
     Bool XineramaIsActive(Display* display) override;
     void* XineramaQueryScreens(Display* display, int* number) override;
@@ -79,7 +77,7 @@ public:
     Status XGetWindowAttributes(Display* display, Window w, XWindowAttributes* attrs) override;
     int XSelectInput(Display* display, Window w, long event_mask) override;
     Bool XCheckIfEvent(Display* display, XEvent* event,
-                       Bool (*predicate)(Display *, XEvent *, XPointer), XPointer arg) override;
+                       Bool (*predicate)(Display*, XEvent*, XPointer), XPointer arg) override;
     Bool XFilterEvent(XEvent* event, Window window) override;
     Bool XGetEventData(Display* display, XGenericEventCookie* cookie) override;
     void XFreeEventData(Display* display, XGenericEventCookie* cookie) override;
@@ -91,8 +89,8 @@ public:
     Pixmap XCreateBitmapFromData(Display* display, Drawable d, const char* data, unsigned int width,
                                  unsigned int height) override;
     Cursor XCreatePixmapCursor(Display* display, Pixmap source, Pixmap mask,
-                               XColor* foreground_color, XColor* background_color,
-                               unsigned int x, unsigned int y) override;
+                               XColor* foreground_color, XColor* background_color, unsigned int x,
+                               unsigned int y) override;
     int XFreePixmap(Display* display, Pixmap pixmap) override;
     Status XQueryTree(Display* display, Window w, Window* root_return, Window* parent_return,
                       Window** children_return, unsigned int* nchildren_return) override;
@@ -107,7 +105,7 @@ public:
     int XGrabKeyboard(Display* display, Window grab_window, Bool owner_events, int pointer_mode,
                       int keyboard_mode, Time time) override;
     int XGrabPointer(Display* display, Window grab_window, Bool owner_events,
-                     unsigned int event_mask, int  pointer_mode, int keyboard_mode,
+                     unsigned int event_mask, int pointer_mode, int keyboard_mode,
                      Window confine_to, Cursor cursor, Time time) override;
     int XUngrabKeyboard(Display* display, Time time) override;
     int XPending(Display* display) override;
@@ -116,7 +114,7 @@ public:
     int XRefreshKeyboardMapping(XMappingEvent* event_map) override;
     int XISelectEvents(Display* display, Window w, XIEventMask* masks, int num_masks) override;
     Atom XInternAtom(Display* display, _Xconst char* atom_name, Bool only_if_exists) override;
-    int XGetScreenSaver(Display* display, int* timeout_return, int*  interval_return,
+    int XGetScreenSaver(Display* display, int* timeout_return, int* interval_return,
                         int* prefer_blanking_return, int* allow_exposures_return) override;
     int XSetScreenSaver(Display* display, int timeout, int interval, int prefer_blanking,
                         int allow_exposures) override;

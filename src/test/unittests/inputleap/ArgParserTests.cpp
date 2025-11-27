@@ -25,7 +25,7 @@ namespace inputleap {
 TEST(ArgParserTests, isArg_abbreviationsArg_returnTrue)
 {
     const int argc = 2;
-    const char* argv[argc] = { "stub", "-t" };
+    const char* argv[argc] = {"stub", "-t"};
     Argv a(argc, argv);
 
     auto result = a.shift("-t", nullptr);
@@ -35,7 +35,7 @@ TEST(ArgParserTests, isArg_abbreviationsArg_returnTrue)
 TEST(ArgParserTests, isArg_fullArg_returnTrue)
 {
     const int argc = 2;
-    const char* argv[argc] = { "stub", "--test" };
+    const char* argv[argc] = {"stub", "--test"};
     Argv a(argc, argv);
 
     auto result = a.shift(nullptr, "--test");
@@ -45,32 +45,33 @@ TEST(ArgParserTests, isArg_fullArg_returnTrue)
 TEST(ArgParserTests, isArg_hasOptarg)
 {
     const int argc = 3;
-    const char* argv[argc] = { "stub", "-t", "foo" };
+    const char* argv[argc] = {"stub", "-t", "foo"};
     Argv a(argc, argv);
 
-     const char *optarg = nullptr;
-     auto result = a.shift("-t", nullptr, &optarg);
+    const char* optarg = nullptr;
+    auto result = a.shift("-t", nullptr, &optarg);
 
-     EXPECT_STREQ(result, "-t");
-     EXPECT_STREQ(optarg, "foo");
+    EXPECT_STREQ(result, "-t");
+    EXPECT_STREQ(optarg, "foo");
 }
 
 TEST(ArgParserTests, isArg_missingArgs_throws)
 {
     const int argc = 2;
-    const char* argv[argc] = { "stub", "-t" };
+    const char* argv[argc] = {"stub", "-t"};
     Argv a(argc, argv);
 
-    EXPECT_THROW({
-             try {
-                 const char *optarg = nullptr;
-                 a.shift("-t", nullptr, &optarg);
-             } catch (XArgvParserError e) {
-                 EXPECT_STREQ(e.message.c_str(), "missing argument for `-t'");
-                 throw;
-             }
-         },
-         XArgvParserError);
+    EXPECT_THROW(
+        {
+            try {
+                const char* optarg = nullptr;
+                a.shift("-t", nullptr, &optarg);
+            } catch (XArgvParserError e) {
+                EXPECT_STREQ(e.message.c_str(), "missing argument for `-t'");
+                throw;
+            }
+        },
+        XArgvParserError);
 }
 
 TEST(ArgParserTests, searchDoubleQuotes_doubleQuotedArg_returnTrue)

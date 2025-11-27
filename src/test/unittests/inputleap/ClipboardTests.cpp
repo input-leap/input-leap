@@ -214,9 +214,9 @@ TEST(ClipboardTests, marshall_withTextSize289_sizeCharsValid)
 
     std::string actual = clipboard.marshall();
 
-    EXPECT_EQ(0, actual[8]); // 289 >> 24
-    EXPECT_EQ(0, actual[9]); // 289 >> 16
-    EXPECT_EQ(1, actual[10]); // 289 >> 8
+    EXPECT_EQ(0, actual[8]);   // 289 >> 24
+    EXPECT_EQ(0, actual[9]);   // 289 >> 16
+    EXPECT_EQ(1, actual[10]);  // 289 >> 8
     EXPECT_EQ(33, actual[11]); // 289 & 0xff
 }
 
@@ -302,9 +302,9 @@ TEST(ClipboardTests, unmarshall_withTextSize289_getTextIsValid)
     data += static_cast<char>(0);
     data += static_cast<char>(0);
     data += static_cast<char>(IClipboard::kText);
-    data += static_cast<char>(0); // 289 >> 24
-    data += static_cast<char>(0); // 289 >> 16
-    data += static_cast<char>(1); // 289 >> 8
+    data += static_cast<char>(0);  // 289 >> 24
+    data += static_cast<char>(0);  // 289 >> 16
+    data += static_cast<char>(1);  // 289 >> 8
     data += static_cast<char>(33); // 289 & 0xff = 33
     data += text;
 

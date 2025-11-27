@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "base/BitUtilities.h"
 #include "platform/XWindowsClipboardBMPConverter.h"
+#include "base/BitUtilities.h"
 
 namespace inputleap {
 
@@ -31,8 +31,7 @@ public:
     std::uint32_t offset;
 };
 
-XWindowsClipboardBMPConverter::XWindowsClipboardBMPConverter(
-                Display* display) :
+XWindowsClipboardBMPConverter::XWindowsClipboardBMPConverter(Display* display) :
     m_atom(XInternAtom(display, "image/bmp", False))
 {
     // do nothing
@@ -43,20 +42,17 @@ XWindowsClipboardBMPConverter::~XWindowsClipboardBMPConverter()
     // do nothing
 }
 
-IClipboard::EFormat
-XWindowsClipboardBMPConverter::getFormat() const
+IClipboard::EFormat XWindowsClipboardBMPConverter::getFormat() const
 {
     return IClipboard::kBitmap;
 }
 
-Atom
-XWindowsClipboardBMPConverter::getAtom() const
+Atom XWindowsClipboardBMPConverter::getAtom() const
 {
     return m_atom;
 }
 
-int
-XWindowsClipboardBMPConverter::getDataSize() const
+int XWindowsClipboardBMPConverter::getDataSize() const
 {
     return 8;
 }
@@ -102,8 +98,7 @@ std::string XWindowsClipboardBMPConverter::toIClipboard(const std::string& bmp) 
     // construct BMP
     if (offset == 14 + 40) {
         return bmp.substr(14);
-    }
-    else {
+    } else {
         return bmp.substr(14, 40) + bmp.substr(offset, bmp.size() - offset);
     }
 }

@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "base/EventTypes.h"
 #include "arch/IArchNetwork.h"
+#include "base/EventTypes.h"
 
 namespace inputleap {
 
@@ -56,7 +56,7 @@ public:
 
     ~NetworkAddress();
 
-    NetworkAddress&    operator=(const NetworkAddress&);
+    NetworkAddress& operator=(const NetworkAddress&);
 
     //! @name manipulators
     //@{
@@ -78,13 +78,13 @@ public:
     /*!
     Returns true if this address is equal to \p address.
     */
-    bool                operator==(const NetworkAddress& address) const;
+    bool operator==(const NetworkAddress& address) const;
 
     //! Check address inequality
     /*!
     Returns true if this address is not equal to \p address.
     */
-    bool                operator!=(const NetworkAddress& address) const;
+    bool operator!=(const NetworkAddress& address) const;
 
     //! Check address validity
     /*!

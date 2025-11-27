@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include "inputleap/mouse_types.h"
 #include "base/Event.h"
 #include "base/EventTypes.h"
+#include "inputleap/mouse_types.h"
 
 namespace inputleap {
 
@@ -31,7 +31,7 @@ secondary screen implementations.
 */
 class ISecondaryScreen {
 public:
-    virtual ~ISecondaryScreen() { }
+    virtual ~ISecondaryScreen() {}
 
     //! @name accessors
     //@{

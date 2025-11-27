@@ -18,14 +18,14 @@
 
 #pragma once
 
-#include "inputleap/clipboard_types.h"
-#include "inputleap/IClipboard.h"
 #include "XWindowsImpl.h"
+#include "inputleap/IClipboard.h"
+#include "inputleap/clipboard_types.h"
 
 #include <X11/Xlib.h>
 
-#include <map>
 #include <list>
+#include <map>
 #include <vector>
 
 namespace inputleap {
@@ -39,8 +39,7 @@ public:
     Use \c window as the window that owns or interacts with the
     clipboard identified by \c id.
     */
-    XWindowsClipboard(IXWindowsImpl* impl, Display*, Window window,
-                      ClipboardID id);
+    XWindowsClipboard(IXWindowsImpl* impl, Display*, Window window, ClipboardID id);
     virtual ~XWindowsClipboard();
 
     //! Notify clipboard was lost
@@ -55,17 +54,14 @@ public:
     owner window isn't this clipboard's window then this simply
     sends a failure event to the requestor.
     */
-    void addRequest(Window owner,
-                            Window requestor, Atom target,
-                            ::Time time, Atom property);
+    void addRequest(Window owner, Window requestor, Atom target, ::Time time, Atom property);
 
     //! Process clipboard request
     /*!
     Continues processing a selection request.  Returns true if the
     request was handled, false if the request was unknown.
     */
-    bool processRequest(Window requestor,
-                            ::Time time, Atom property);
+    bool processRequest(Window requestor, ::Time time, Atom property);
 
     //! Cancel clipboard request
     /*!
@@ -104,9 +100,7 @@ private:
     // suitable converter.  iff onlyIfNotAdded is true then also
     // return nullptr if a suitable converter was found but we already
     // have data of the converter's clipboard format.
-    IXWindowsClipboardConverter*
-                        getConverter(Atom target,
-                            bool onlyIfNotAdded = false) const;
+    IXWindowsClipboardConverter* getConverter(Atom target, bool onlyIfNotAdded = false) const;
 
     // convert target atom to clipboard format
     EFormat getFormat(Atom target) const;
@@ -115,9 +109,7 @@ private:
     // was owned at the given time.  returns true if the conversion
     // could be performed, false otherwise.  in either case, the
     // reply is inserted.
-    bool addSimpleRequest(
-                            Window requestor, Atom target,
-                            ::Time time, Atom property);
+    bool addSimpleRequest(Window requestor, Atom target, ::Time time, Atom property);
 
     // if not already checked then see if the cache is stale and, if so,
     // clear it.  this has the side effect of updating m_timeOwned.
@@ -145,9 +137,8 @@ private:
         // convert the given selection to the given type.  returns
         // true iff the conversion was successful or the conversion
         // cannot be performed (in which case *actualTarget == None).
-        bool readClipboard(Display* display,
-                            Atom selection, Atom target,
-                            Atom* actualTarget, std::string* data);
+        bool readClipboard(Display* display, Atom selection, Atom target, Atom* actualTarget,
+                           std::string* data);
 
     private:
         bool processEvent(Display* display, XEvent* event);
@@ -161,7 +152,7 @@ private:
         bool m_done;
 
         // atoms needed for the protocol
-        Atom m_atomNone;        // NONE, not None
+        Atom m_atomNone; // NONE, not None
         Atom m_atomIncr;
 
         // true iff we've received the selection notify
@@ -185,20 +176,20 @@ private:
     // _MOTIF_CLIP_HEADER structure
     class MotifClipHeader {
     public:
-        std::int32_t m_id;            // kMotifClipHeader
+        std::int32_t m_id; // kMotifClipHeader
         std::int32_t m_pad1[3];
         std::int32_t m_item;
         std::int32_t m_pad2[4];
         std::int32_t m_numItems;
         std::int32_t m_pad3[3];
-        std::int32_t m_selectionOwner;    // a Window
+        std::int32_t m_selectionOwner; // a Window
         std::int32_t m_pad4[2];
     };
 
     // Motif clip item structure
     class MotifClipItem {
     public:
-        std::int32_t m_id;            // kMotifClipItem
+        std::int32_t m_id; // kMotifClipItem
         std::int32_t m_pad1[5];
         std::int32_t m_size;
         std::int32_t m_numFormats;
@@ -209,11 +200,11 @@ private:
     // Motif clip format structure
     class MotifClipFormat {
     public:
-        std::int32_t m_id;            // kMotifClipFormat
+        std::int32_t m_id; // kMotifClipFormat
         std::int32_t m_pad1[6];
         std::int32_t m_length;
         std::int32_t m_data;
-        std::int32_t m_type;            // an Atom
+        std::int32_t m_type; // an Atom
         std::int32_t m_pad2[1];
         std::int32_t m_deleted;
         std::int32_t m_pad3[4];
@@ -223,8 +214,8 @@ private:
     class Reply {
     public:
         Reply(Window, Atom target, ::Time);
-        Reply(Window, Atom target, ::Time, Atom property, const std::string& data,
-              Atom type, int format);
+        Reply(Window, Atom target, ::Time, Atom property, const std::string& data, Atom type,
+              int format);
 
     public:
         // information about the request
@@ -268,13 +259,11 @@ private:
     bool insertMultipleReply(Window, ::Time, Atom);
     void insertReply(Reply*);
     void pushReplies();
-    void pushReplies(ReplyMap::iterator&,
-                            ReplyList&, ReplyList::iterator);
+    void pushReplies(ReplyMap::iterator&, ReplyList&, ReplyList::iterator);
     bool sendReply(Reply*);
     void clearReplies();
     void clearReplies(ReplyList&);
-    void sendNotify(Window requestor, Atom selection,
-                            Atom target, Atom property, Time time);
+    void sendNotify(Window requestor, Atom selection, Atom target, Atom property, Time time);
     bool wasOwnedAtTime(::Time) const;
 
     // data conversion methods
@@ -334,7 +323,7 @@ converters.
 */
 class IXWindowsClipboardConverter {
 public:
-    virtual ~IXWindowsClipboardConverter() { }
+    virtual ~IXWindowsClipboardConverter() {}
 
     //! @name accessors
     //@{
@@ -343,8 +332,7 @@ public:
     /*!
     Return the clipboard format this object converts from/to.
     */
-    virtual IClipboard::EFormat
-                        getFormat() const = 0;
+    virtual IClipboard::EFormat getFormat() const = 0;
 
     //! Get X11 format atom
     /*!

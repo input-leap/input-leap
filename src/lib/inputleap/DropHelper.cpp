@@ -24,8 +24,8 @@
 
 namespace inputleap {
 
-void
-DropHelper::writeToDir(const std::string& destination, DragFileList& fileList, std::string& data)
+void DropHelper::writeToDir(const std::string& destination, DragFileList& fileList,
+                            std::string& data)
 {
     LOG_DEBUG("dropping file, files=%zi target=%s", fileList.size(), destination.c_str());
 
@@ -46,11 +46,11 @@ DropHelper::writeToDir(const std::string& destination, DragFileList& fileList, s
         file.write(data.c_str(), data.size());
         file.close();
 
-        LOG_INFO("dropped file \"%s\" in \"%s\"", fileList.at(0).getFilename().c_str(), destination.c_str());
+        LOG_INFO("dropped file \"%s\" in \"%s\"", fileList.at(0).getFilename().c_str(),
+                 destination.c_str());
 
         fileList.clear();
-    }
-    else {
+    } else {
         LOG_ERR("drop file failed: drop target is empty");
     }
 }

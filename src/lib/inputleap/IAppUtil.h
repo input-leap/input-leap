@@ -24,7 +24,7 @@ namespace inputleap {
 
 class IAppUtil {
 public:
-    virtual ~IAppUtil() { }
+    virtual ~IAppUtil() {}
 
     virtual void adoptApp(IApp* app) = 0;
     virtual IApp& app() const = 0;

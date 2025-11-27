@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include "server/BaseClientProxy.h"
 #include "inputleap/Fwd.h"
 #include "inputleap/protocol_types.h"
+#include "server/BaseClientProxy.h"
 
 namespace inputleap {
 
@@ -41,7 +41,7 @@ public:
     ~PrimaryClient();
 
 #ifdef INPUTLEAP_TEST_ENV
-    PrimaryClient() : BaseClientProxy("") { }
+    PrimaryClient() : BaseClientProxy("") {}
 #endif
 
     //! @name manipulators
@@ -151,7 +151,8 @@ public:
         throw std::invalid_argument("Unsupported");
     }
 
-    bool isPrimary() const override{ return true; }
+    bool isPrimary() const override { return true; }
+
 private:
     inputleap::Screen* m_screen;
     bool m_clipboardDirty[kClipboardEnd];

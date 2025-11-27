@@ -17,18 +17,16 @@
 
 #pragma once
 
+#include <QComboBox>
 #include <QString>
 #include <QVector>
-#include <QComboBox>
 
-class AppLocale
-{
-    class Language
-    {
+class AppLocale {
+    class Language {
     public:
-        Language() { }
-        Language(const QString& IetfCode, const QString& name)
-            : m_IetfCode(IetfCode), m_Name(name) { }
+        Language() {}
+        Language(const QString& IetfCode, const QString& name) : m_IetfCode(IetfCode), m_Name(name)
+        {}
 
     public:
         QString m_IetfCode;

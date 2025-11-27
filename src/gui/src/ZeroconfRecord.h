@@ -20,13 +20,11 @@
 #include <QtCore/QMetaType>
 #include <QtCore/QString>
 
-class ZeroconfRecord
-{
+class ZeroconfRecord {
 public:
     ZeroconfRecord() {}
-    ZeroconfRecord(const QString& name, const QString& regType,
-                   const QString& domain)
-        : serviceName(name), registeredType(regType), replyDomain(domain)
+    ZeroconfRecord(const QString& name, const QString& regType, const QString& domain) :
+        serviceName(name), registeredType(regType), replyDomain(domain)
     {}
     ZeroconfRecord(const char* name, const char* regType, const char* domain)
     {
@@ -35,10 +33,10 @@ public:
         replyDomain = QString::fromUtf8(domain);
     }
 
-    bool operator==(const ZeroconfRecord& other) const {
-        return serviceName == other.serviceName
-            && registeredType == other.registeredType
-            && replyDomain == other.replyDomain;
+    bool operator==(const ZeroconfRecord& other) const
+    {
+        return serviceName == other.serviceName && registeredType == other.registeredType &&
+               replyDomain == other.replyDomain;
     }
 
 public:

@@ -18,8 +18,8 @@
 #pragma once
 
 #include <cstdio>
-#include <iosfwd>
 #include <ios>
+#include <iosfwd>
 #if INPUTLEAP_USE_GULRAK_FILESYSTEM
 #include <ghc/fs_fwd.hpp>
 #else

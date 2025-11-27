@@ -51,8 +51,9 @@ const fs::path& DataDirectories::profile(const fs::path& path)
 
 const fs::path& DataDirectories::global()
 {
-    if (_global.empty())
+    if (_global.empty()) {
         _global = known_folder_path(FOLDERID_ProgramData) / "InputLeap";
+    }
     return _global;
 }
 const fs::path& DataDirectories::global(const fs::path& path)
@@ -66,8 +67,9 @@ const fs::path& DataDirectories::systemconfig()
     // systemconfig() is a special case in that it will track the current value
     // of global() unless and until it is explicitly set otherwise
     // previously it would default to the windows folder which was horrible!
-    if (_systemconfig.empty())
+    if (_systemconfig.empty()) {
         return global();
+    }
     return _systemconfig;
 }
 

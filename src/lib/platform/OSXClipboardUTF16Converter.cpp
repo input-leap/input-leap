@@ -32,8 +32,7 @@ OSXClipboardUTF16Converter::~OSXClipboardUTF16Converter()
     // do nothing
 }
 
-CFStringRef
-OSXClipboardUTF16Converter::getOSXFormat() const
+CFStringRef OSXClipboardUTF16Converter::getOSXFormat() const
 {
     return CFSTR("public.utf16-plain-text");
 }

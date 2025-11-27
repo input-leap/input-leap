@@ -19,9 +19,9 @@
 #pragma once
 
 #include "Fwd.h"
+#include "arch/IArchNetwork.h"
 #include "base/Fwd.h"
 #include "net/ISocketFactory.h"
-#include "arch/IArchNetwork.h"
 
 namespace inputleap {
 
@@ -32,9 +32,8 @@ public:
     virtual ~TCPSocketFactory();
 
     // ISocketFactory overrides
-    std::unique_ptr<IDataSocket>
-        create(IArchNetwork::EAddressFamily family,
-               ConnectionSecurityLevel security_level) const override;
+    std::unique_ptr<IDataSocket> create(IArchNetwork::EAddressFamily family,
+                                        ConnectionSecurityLevel security_level) const override;
 
     std::unique_ptr<IListenSocket>
         create_listen(IArchNetwork::EAddressFamily family,

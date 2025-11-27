@@ -24,16 +24,19 @@ namespace inputleap {
 const std::size_t AllocatedLineSize = 1024;
 const char CommentChar = '#';
 
-static void add_key(const char * const buffer, std::vector<DWORD> &keys)
+static void add_key(const char* const buffer, std::vector<DWORD>& keys)
 {
-    const char *first;
+    const char* first;
     // skip spaces. ignore blank lines and comment lines
-    for (first = buffer; *first == ' '; ++first);
-    if (*first != 0 && *first != CommentChar)
+    for (first = buffer; *first == ' '; ++first)
+        ;
+    if (*first != 0 && *first != CommentChar) {
         keys.emplace_back(std::stoul(first, 0, 0));
+    }
 }
 
-/*static*/ bool ImmuneKeysReader::get_list(const char * const path, std::vector<DWORD> &keys, std::string &badline)
+/*static*/ bool ImmuneKeysReader::get_list(const char* const path, std::vector<DWORD>& keys,
+                                           std::string& badline)
 {
     // default values for return params
     keys.clear();

@@ -30,8 +30,7 @@ MSWindowsClipboardAnyTextConverter::~MSWindowsClipboardAnyTextConverter()
     // do nothing
 }
 
-IClipboard::EFormat
-MSWindowsClipboardAnyTextConverter::getFormat() const
+IClipboard::EFormat MSWindowsClipboardAnyTextConverter::getFormat() const
 {
     return IClipboard::kText;
 }
@@ -40,18 +39,17 @@ HANDLE MSWindowsClipboardAnyTextConverter::fromIClipboard(const std::string& dat
 {
     // convert linefeeds and then convert to desired encoding
     std::string text = doFromIClipboard(convertLinefeedToWin32(data));
-    std::uint32_t size = (std::uint32_t)text.size();
+    std::uint32_t size = (std::uint32_t) text.size();
 
     // copy to memory handle
     HGLOBAL gData = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, size);
     if (gData != nullptr) {
         // get a pointer to the allocated memory
-        char* dst = (char*)GlobalLock(gData);
+        char* dst = (char*) GlobalLock(gData);
         if (dst != nullptr) {
             memcpy(dst, text.data(), size);
             GlobalUnlock(gData);
-        }
-        else {
+        } else {
             GlobalFree(gData);
             gData = nullptr;
         }
@@ -63,8 +61,8 @@ HANDLE MSWindowsClipboardAnyTextConverter::fromIClipboard(const std::string& dat
 std::string MSWindowsClipboardAnyTextConverter::toIClipboard(HANDLE data) const
 {
     // get datator
-    const char* src = (const char*)GlobalLock(data);
-    std::uint32_t srcSize = (std::uint32_t)GlobalSize(data);
+    const char* src = (const char*) GlobalLock(data);
+    std::uint32_t srcSize = (std::uint32_t) GlobalSize(data);
     if (src == nullptr || srcSize <= 1) {
         return {};
     }
@@ -85,7 +83,7 @@ std::string MSWindowsClipboardAnyTextConverter::convertLinefeedToWin32(const std
 
     // count newlines in string
     std::uint32_t numNewlines = 0;
-    std::uint32_t n = (std::uint32_t)src.size();
+    std::uint32_t n = (std::uint32_t) src.size();
     for (const char* scan = src.c_str(); n > 0; ++scan, --n) {
         if (*scan == '\n') {
             ++numNewlines;
@@ -100,7 +98,7 @@ std::string MSWindowsClipboardAnyTextConverter::convertLinefeedToWin32(const std
     dst.reserve(src.size() + numNewlines);
 
     // copy string, converting newlines
-    n = (std::uint32_t)src.size();
+    n = (std::uint32_t) src.size();
     for (const char* scan = src.c_str(); n > 0; ++scan, --n) {
         if (scan[0] == '\n') {
             dst += '\r';
@@ -115,7 +113,7 @@ std::string MSWindowsClipboardAnyTextConverter::convertLinefeedToUnix(const std:
 {
     // count newlines in string
     std::uint32_t numNewlines = 0;
-    std::uint32_t n = (std::uint32_t)src.size();
+    std::uint32_t n = (std::uint32_t) src.size();
     for (const char* scan = src.c_str(); n > 0; ++scan, --n) {
         if (scan[0] == '\r' && scan[1] == '\n') {
             ++numNewlines;
@@ -130,7 +128,7 @@ std::string MSWindowsClipboardAnyTextConverter::convertLinefeedToUnix(const std:
     dst.reserve(src.size());
 
     // copy string, converting newlines
-    n = (std::uint32_t)src.size();
+    n = (std::uint32_t) src.size();
     for (const char* scan = src.c_str(); n > 0; ++scan, --n) {
         if (scan[0] != '\r' || scan[1] != '\n') {
             dst += scan[0];

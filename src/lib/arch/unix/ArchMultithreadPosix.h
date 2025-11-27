@@ -22,9 +22,9 @@
 
 #include "arch/IArchMultithread.h"
 
-#include <pthread.h>
 #include <list>
 #include <mutex>
+#include <pthread.h>
 
 #define ARCH_MULTITHREAD ArchMultithreadPosix
 
@@ -85,7 +85,7 @@ private:
 private:
     typedef std::list<ArchThread> ThreadList;
 
-    static ArchMultithreadPosix*    s_instance;
+    static ArchMultithreadPosix* s_instance;
 
     bool m_newThreadCalled;
 

@@ -27,27 +27,25 @@ class Action;
 class QButtonGroup;
 class ServerConfig;
 
-namespace Ui
-{
-    class ActionDialog;
+namespace Ui {
+class ActionDialog;
 }
 
-class ActionDialog : public QDialog
-{
+class ActionDialog : public QDialog {
     Q_OBJECT
 
-    public:
-        ActionDialog(QWidget* parent, const ServerConfig& config, Hotkey& hotkey, Action& action);
-        ~ActionDialog() override;
+public:
+    ActionDialog(QWidget* parent, const ServerConfig& config, Hotkey& hotkey, Action& action);
+    ~ActionDialog() override;
 
-    protected slots:
-        void accept() override;
+protected slots:
+    void accept() override;
 
-    private:
-        void key_sequence_changed();
+private:
+    void key_sequence_changed();
 
-        std::unique_ptr<Ui::ActionDialog> ui_;
-        Hotkey& hotkey_;
-        Action& action_;
-        QButtonGroup* button_group_type_;
+    std::unique_ptr<Ui::ActionDialog> ui_;
+    Hotkey& hotkey_;
+    Action& action_;
+    QButtonGroup* button_group_type_;
 };

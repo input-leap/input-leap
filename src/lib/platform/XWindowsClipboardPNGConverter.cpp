@@ -25,8 +25,7 @@ namespace inputleap {
 // XWindowsClipboardPNGConverter
 //
 
-XWindowsClipboardPNGConverter::XWindowsClipboardPNGConverter(
-                Display* display) :
+XWindowsClipboardPNGConverter::XWindowsClipboardPNGConverter(Display* display) :
     m_atom(XInternAtom(display, "image/png", False))
 {
     // do nothing
@@ -37,20 +36,17 @@ XWindowsClipboardPNGConverter::~XWindowsClipboardPNGConverter()
     // do nothing
 }
 
-IClipboard::EFormat
-XWindowsClipboardPNGConverter::getFormat() const
+IClipboard::EFormat XWindowsClipboardPNGConverter::getFormat() const
 {
     return IClipboard::kPNG;
 }
 
-Atom
-XWindowsClipboardPNGConverter::getAtom() const
+Atom XWindowsClipboardPNGConverter::getAtom() const
 {
     return m_atom;
 }
 
-int
-XWindowsClipboardPNGConverter::getDataSize() const
+int XWindowsClipboardPNGConverter::getDataSize() const
 {
     return 8;
 }
@@ -69,7 +65,8 @@ std::string XWindowsClipboardPNGConverter::toIClipboard(const std::string& pngda
     // check PNG file header
     const std::uint8_t* rawPNGHeader = reinterpret_cast<const std::uint8_t*>(pngdata.data());
 
-    if (rawPNGHeader[0] == 0x89 && rawPNGHeader[1] == 0x50 && rawPNGHeader[2] == 0x4e && rawPNGHeader[3] == 0x47) {
+    if (rawPNGHeader[0] == 0x89 && rawPNGHeader[1] == 0x50 && rawPNGHeader[2] == 0x4e &&
+        rawPNGHeader[3] == 0x47) {
         return pngdata;
     }
 

@@ -18,26 +18,25 @@
 
 #include "net/TCPListenSocket.h"
 
+#include "arch/Arch.h"
+#include "arch/XArch.h"
+#include "base/IEventQueue.h"
+#include "io/XIO.h"
 #include "net/NetworkAddress.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocket.h"
 #include "net/TSocketMultiplexerMethodJob.h"
 #include "net/XSocket.h"
-#include "io/XIO.h"
-#include "arch/Arch.h"
-#include "arch/XArch.h"
-#include "base/IEventQueue.h"
 
 namespace inputleap {
 
-TCPListenSocket::TCPListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family) :
-    m_events(events),
-    m_socketMultiplexer(socketMultiplexer)
+TCPListenSocket::TCPListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer,
+                                 IArchNetwork::EAddressFamily family) :
+    m_events(events), m_socketMultiplexer(socketMultiplexer)
 {
     try {
         m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
-    }
-    catch (XArchNetwork& e) {
+    } catch (XArchNetwork& e) {
         throw XSocketCreate(e.what());
     }
 }
@@ -49,14 +48,12 @@ TCPListenSocket::~TCPListenSocket()
             m_socketMultiplexer->removeSocket(this);
             ARCH->closeSocket(m_socket);
         }
-    }
-    catch (...) {
+    } catch (...) {
         // ignore
     }
 }
 
-void
-TCPListenSocket::bind(const NetworkAddress& addr)
+void TCPListenSocket::bind(const NetworkAddress& addr)
 {
     try {
         std::lock_guard<std::mutex> lock(mutex_);
@@ -64,23 +61,20 @@ TCPListenSocket::bind(const NetworkAddress& addr)
         ARCH->bindSocket(m_socket, addr.getAddress());
         ARCH->listenOnSocket(m_socket);
 
-        auto new_job = std::make_unique<TSocketMultiplexerMethodJob>(
-                    [this](auto j, auto r, auto w, auto e)
-                    { return serviceListening(j, r, w, e); },
-                    m_socket, true, false);
+        auto new_job =
+            std::make_unique<TSocketMultiplexerMethodJob>([this](auto j, auto r, auto w, auto e) {
+            return serviceListening(j, r, w, e);
+        }, m_socket, true, false);
 
         m_socketMultiplexer->addSocket(this, std::move(new_job));
-    }
-    catch (XArchNetworkAddressInUse& e) {
+    } catch (XArchNetworkAddressInUse& e) {
         throw XSocketAddressInUse(e.what());
-    }
-    catch (XArchNetwork& e) {
+    } catch (XArchNetwork& e) {
         throw XSocketBind(e.what());
     }
 }
 
-void
-TCPListenSocket::close()
+void TCPListenSocket::close()
 {
     std::lock_guard<std::mutex> lock(mutex_);
     if (m_socket == nullptr) {
@@ -90,8 +84,7 @@ TCPListenSocket::close()
         m_socketMultiplexer->removeSocket(this);
         ARCH->closeSocket(m_socket);
         m_socket = nullptr;
-    }
-    catch (XArchNetwork& e) {
+    } catch (XArchNetwork& e) {
         throw XSocketIOClose(e.what());
     }
 }
@@ -109,14 +102,12 @@ std::unique_ptr<IDataSocket> TCPListenSocket::accept()
                                              ARCH->acceptSocket(m_socket, nullptr));
         setListeningJob();
         return socket;
-    }
-    catch (XArchNetwork&) {
+    } catch (XArchNetwork&) {
         if (socket) {
             setListeningJob();
         }
         return nullptr;
-    }
-    catch (std::exception &ex) {
+    } catch (std::exception& ex) {
         if (socket) {
             setListeningJob();
         }
@@ -124,18 +115,17 @@ std::unique_ptr<IDataSocket> TCPListenSocket::accept()
     }
 }
 
-void
-TCPListenSocket::setListeningJob()
+void TCPListenSocket::setListeningJob()
 {
-    auto new_job = std::make_unique<TSocketMultiplexerMethodJob>(
-                [this](auto j, auto r, auto w, auto e)
-                { return serviceListening(j, r, w, e); },
-                m_socket, true, false);
+    auto new_job =
+        std::make_unique<TSocketMultiplexerMethodJob>([this](auto j, auto r, auto w, auto e) {
+        return serviceListening(j, r, w, e);
+    }, m_socket, true, false);
     m_socketMultiplexer->addSocket(this, std::move(new_job));
 }
 
-MultiplexerJobStatus TCPListenSocket::serviceListening(ISocketMultiplexerJob* job,
-                                                       bool read, bool, bool error)
+MultiplexerJobStatus TCPListenSocket::serviceListening(ISocketMultiplexerJob* job, bool read, bool,
+                                                       bool error)
 {
     (void) job;
 

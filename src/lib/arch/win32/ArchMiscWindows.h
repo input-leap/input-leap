@@ -21,8 +21,8 @@
 #include "common/common.h"
 
 #define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
 #include <Tlhelp32.h>
+#include <Windows.h>
 
 #include <set>
 #include <string>
@@ -32,20 +32,10 @@ namespace inputleap {
 //! Miscellaneous win32 functions.
 class ArchMiscWindows {
 public:
-    enum EValueType {
-        kUNKNOWN,
-        kNO_VALUE,
-        kUINT,
-        kSTRING,
-        kBINARY
-    };
-    enum EBusyModes {
-        kIDLE   = 0x0000,
-        kSYSTEM  = 0x0001,
-        kDISPLAY = 0x0002
-    };
+    enum EValueType { kUNKNOWN, kNO_VALUE, kUINT, kSTRING, kBINARY };
+    enum EBusyModes { kIDLE = 0x0000, kSYSTEM = 0x0001, kDISPLAY = 0x0002 };
 
-    typedef int            (*RunFunc)(void);
+    typedef int (*RunFunc)(void);
 
     //! Initialize
     static void init();
@@ -117,8 +107,7 @@ public:
     static EValueType typeOfValue(HKEY key, const TCHAR* name);
 
     //! Set a string value in the registry
-    static void setValue(HKEY key, const TCHAR* name,
-                            const std::string& value);
+    static void setValue(HKEY key, const TCHAR* name, const std::string& value);
 
     //! Set a DWORD value in the registry
     static void setValue(HKEY key, const TCHAR* name, DWORD value);
@@ -127,8 +116,7 @@ public:
     /*!
     Sets the \p name value of \p key to \p value.data().
     */
-    static void setValueBinary(HKEY key, const TCHAR* name,
-                            const std::string& value);
+    static void setValueBinary(HKEY key, const TCHAR* name, const std::string& value);
 
     //! Read a string value from the registry
     static std::string readValueString(HKEY, const TCHAR* name);
@@ -165,7 +153,7 @@ public:
     static bool wasLaunchedAsService();
 
     //! Returns true if we got the parent process name.
-    static bool getParentProcessName(std::string &name);
+    static bool getParentProcessName(std::string& name);
 
     static HINSTANCE instanceWin32();
 
@@ -180,8 +168,7 @@ private:
     static HKEY openKey(HKEY parent, const TCHAR* child, bool create);
 
     //! Open and return a registry key, closing the parent key
-    static HKEY openKey(HKEY parent, const TCHAR* const* keyPath,
-                            bool create);
+    static HKEY openKey(HKEY parent, const TCHAR* const* keyPath, bool create);
 
     //! Read a string value from the registry
     static std::string readBinaryOrString(HKEY, const TCHAR* name, DWORD type);
@@ -193,14 +180,14 @@ private:
 
 private:
     typedef std::set<HWND> Dialogs;
-    typedef DWORD (WINAPI *STES_t)(DWORD);
+    typedef DWORD(WINAPI* STES_t)(DWORD);
 
-    static Dialogs*    s_dialogs;
-    static DWORD        s_busyState;
-    static STES_t        s_stes;
-    static HICON        s_largeIcon;
-    static HICON        s_smallIcon;
-    static HINSTANCE    s_instanceWin32;
+    static Dialogs* s_dialogs;
+    static DWORD s_busyState;
+    static STES_t s_stes;
+    static HICON s_largeIcon;
+    static HICON s_smallIcon;
+    static HINSTANCE s_instanceWin32;
 };
 
 } // namespace inputleap

@@ -18,20 +18,20 @@
 
 #pragma once
 
-#include "server/Config.h"
-#include "inputleap/clipboard_types.h"
-#include "inputleap/Clipboard.h"
-#include "inputleap/key_types.h"
-#include "inputleap/mouse_types.h"
-#include "inputleap/Fwd.h"
-#include "inputleap/INode.h"
-#include "inputleap/DragInformation.h"
-#include "inputleap/ServerArgs.h"
-#include "base/Fwd.h"
 #include "base/Event.h"
 #include "base/EventTarget.h"
-#include "base/Stopwatch.h"
 #include "base/EventTypes.h"
+#include "base/Fwd.h"
+#include "base/Stopwatch.h"
+#include "inputleap/Clipboard.h"
+#include "inputleap/DragInformation.h"
+#include "inputleap/Fwd.h"
+#include "inputleap/INode.h"
+#include "inputleap/ServerArgs.h"
+#include "inputleap/clipboard_types.h"
+#include "inputleap/key_types.h"
+#include "inputleap/mouse_types.h"
+#include "server/Config.h"
 
 #include <map>
 #include <set>
@@ -62,9 +62,7 @@ public:
     //! Switch to screen data
     class SwitchToScreenInfo {
     public:
-        SwitchToScreenInfo(const std::string& screen) :
-            m_screen{screen}
-        {}
+        SwitchToScreenInfo(const std::string& screen) : m_screen{screen} {}
 
     public:
         std::string m_screen;
@@ -82,7 +80,7 @@ public:
     //! Screen connected data
     class ScreenConnectedInfo {
     public:
-        ScreenConnectedInfo(std::string screen) : m_screen(screen) { }
+        ScreenConnectedInfo(std::string screen) : m_screen(screen) {}
 
     public:
         std::string m_screen;
@@ -93,13 +91,10 @@ public:
     public:
         enum State { kOff, kOn, kToggle };
 
-        KeyboardBroadcastInfo(State state) :
-            m_state{state}
-        {}
+        KeyboardBroadcastInfo(State state) : m_state{state} {}
 
         KeyboardBroadcastInfo(State state, const std::string& screens) :
-            m_state{state},
-            screens_{screens}
+            m_state{state}, screens_{screens}
         {}
 
     public:
@@ -112,12 +107,12 @@ public:
     client (local screen) \p primaryClient.  The client retains
     ownership of \p primaryClient.
     */
-    Server(Config& config, PrimaryClient* primaryClient,
-        inputleap::Screen* screen, IEventQueue* events, ServerArgs const& args);
+    Server(Config& config, PrimaryClient* primaryClient, inputleap::Screen* screen,
+           IEventQueue* events, const ServerArgs& args);
     ~Server();
 
 #ifdef INPUTLEAP_TEST_ENV
-    Server() : m_mock(true), m_config(nullptr) { }
+    Server() : m_mock(true), m_config(nullptr) {}
     void setActive(BaseClientProxy* active) { m_active = active; }
 #endif
 
@@ -322,10 +317,8 @@ private:
     // event processing
     void onClipboardChanged(BaseClientProxy* sender, ClipboardID id, std::uint32_t seqNum);
     void onScreensaver(bool activated);
-    void onKeyDown(KeyID, KeyModifierMask, KeyButton,
-                            const char* screens);
-    void onKeyUp(KeyID, KeyModifierMask, KeyButton,
-                            const char* screens);
+    void onKeyDown(KeyID, KeyModifierMask, KeyButton, const char* screens);
+    void onKeyUp(KeyID, KeyModifierMask, KeyButton, const char* screens);
     void onKeyRepeat(KeyID, KeyModifierMask, std::int32_t, KeyButton);
     void onMouseDown(ButtonID);
     void onMouseUp(ButtonID);

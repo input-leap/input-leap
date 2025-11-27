@@ -29,18 +29,15 @@ namespace inputleap {
 
 // NOTE: do not mock methods that are not pure virtual. this mock exists only
 // to provide an implementation of the KeyState abstract class.
-class MockKeyState : public KeyState
-{
+class MockKeyState : public KeyState {
 public:
     MockKeyState(const MockEventQueue& eventQueue) :
         KeyState(const_cast<MockEventQueue*>(&eventQueue))
-    {
-    }
+    {}
 
     MockKeyState(const MockEventQueue& eventQueue, const MockKeyMap& keyMap) :
         KeyState(const_cast<MockEventQueue*>(&eventQueue), const_cast<MockKeyMap&>(keyMap))
-    {
-    }
+    {}
 
     MOCK_CONST_METHOD0(pollActiveGroup, std::int32_t());
     MOCK_CONST_METHOD0(pollActiveModifiers, KeyModifierMask());

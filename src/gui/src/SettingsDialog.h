@@ -24,32 +24,30 @@
 
 class AppConfig;
 
-namespace Ui
-{
-    class SettingsDialog;
+namespace Ui {
+class SettingsDialog;
 }
 
-class SettingsDialog : public QDialog
-{
+class SettingsDialog : public QDialog {
     Q_OBJECT
 
-    public:
-        SettingsDialog(QWidget* parent, AppConfig& config);
-        ~SettingsDialog() override;
+public:
+    SettingsDialog(QWidget* parent, AppConfig& config);
+    ~SettingsDialog() override;
 
-    Q_SIGNALS:
-        void requestLanguageChange(QString newLang);
+Q_SIGNALS:
+    void requestLanguageChange(QString newLang);
 
-    protected:
-        void accept() override;
-        void reject() override;
-        void changeEvent(QEvent* event) override;
+protected:
+    void accept() override;
+    void reject() override;
+    void changeEvent(QEvent* event) override;
 
-    private:
-        void languageChanged(int index);
-        void logToFileChanged(bool checked);
-        void browseLogClicked();
+private:
+    void languageChanged(int index);
+    void logToFileChanged(bool checked);
+    void browseLogClicked();
 
-        std::unique_ptr<Ui::SettingsDialog> ui_;
-        AppConfig& app_config_;
+    std::unique_ptr<Ui::SettingsDialog> ui_;
+    AppConfig& app_config_;
 };

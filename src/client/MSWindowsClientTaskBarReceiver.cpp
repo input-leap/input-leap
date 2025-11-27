@@ -18,30 +18,28 @@
 
 #include "MSWindowsClientTaskBarReceiver.h"
 
-#include "resource.h"
+#include "arch/Arch.h"
+#include "arch/win32/ArchMiscWindows.h"
+#include "arch/win32/ArchTaskBarWindows.h"
+#include "base/EventQueue.h"
+#include "base/EventTypes.h"
+#include "base/log_outputters.h"
 #include "client/Client.h"
 #include "platform/MSWindowsClipboard.h"
 #include "platform/MSWindowsScreen.h"
-#include "arch/win32/ArchTaskBarWindows.h"
-#include "arch/win32/ArchMiscWindows.h"
-#include "arch/Arch.h"
-#include "base/EventQueue.h"
-#include "base/log_outputters.h"
-#include "base/EventTypes.h"
+#include "resource.h"
 
 namespace inputleap {
 
-const UINT MSWindowsClientTaskBarReceiver::s_stateToIconID[kMaxState] =
-{
-    IDI_TASKBAR_NOT_RUNNING,
-    IDI_TASKBAR_NOT_WORKING,
-    IDI_TASKBAR_NOT_CONNECTED,
-    IDI_TASKBAR_NOT_CONNECTED,
-    IDI_TASKBAR_CONNECTED
-};
+const UINT MSWindowsClientTaskBarReceiver::s_stateToIconID[kMaxState] = {IDI_TASKBAR_NOT_RUNNING,
+                                                                         IDI_TASKBAR_NOT_WORKING,
+                                                                         IDI_TASKBAR_NOT_CONNECTED,
+                                                                         IDI_TASKBAR_NOT_CONNECTED,
+                                                                         IDI_TASKBAR_CONNECTED};
 
-MSWindowsClientTaskBarReceiver::MSWindowsClientTaskBarReceiver(
-                HINSTANCE appInstance, const BufferedLogOutputter* logBuffer, IEventQueue* events) :
+MSWindowsClientTaskBarReceiver::MSWindowsClientTaskBarReceiver(HINSTANCE appInstance,
+                                                               const BufferedLogOutputter* logBuffer,
+                                                               IEventQueue* events) :
     ClientTaskBarReceiver(events),
     m_appInstance(appInstance),
     m_window(nullptr),
@@ -66,8 +64,7 @@ MSWindowsClientTaskBarReceiver::~MSWindowsClientTaskBarReceiver()
     cleanup();
 }
 
-void
-MSWindowsClientTaskBarReceiver::cleanup()
+void MSWindowsClientTaskBarReceiver::cleanup()
 {
     ARCH->removeReceiver(this);
     for (std::uint32_t i = 0; i < kMaxState; ++i) {
@@ -77,8 +74,7 @@ MSWindowsClientTaskBarReceiver::cleanup()
     destroyWindow();
 }
 
-void
-MSWindowsClientTaskBarReceiver::showStatus()
+void MSWindowsClientTaskBarReceiver::showStatus()
 {
     // create the window
     createWindow();
@@ -94,7 +90,7 @@ MSWindowsClientTaskBarReceiver::showStatus()
 
     // update dialog
     HWND child = GetDlgItem(m_window, IDC_TASKBAR_STATUS_STATUS);
-    SendMessage(child, WM_SETTEXT, 0, (LPARAM)status.c_str());
+    SendMessage(child, WM_SETTEXT, 0, (LPARAM) status.c_str());
 
     if (!IsWindowVisible(m_window)) {
         // position it by the mouse
@@ -102,11 +98,11 @@ MSWindowsClientTaskBarReceiver::showStatus()
         GetCursorPos(&cursorPos);
         RECT windowRect;
         GetWindowRect(m_window, &windowRect);
-        int  x = cursorPos.x;
-        int  y = cursorPos.y;
+        int x = cursorPos.x;
+        int y = cursorPos.y;
         int fw = GetSystemMetrics(SM_CXDLGFRAME);
         int fh = GetSystemMetrics(SM_CYDLGFRAME);
-        int ww = windowRect.right  - windowRect.left;
+        int ww = windowRect.right - windowRect.left;
         int wh = windowRect.bottom - windowRect.top;
         int sw = GetSystemMetrics(SM_CXFULLSCREEN);
         int sh = GetSystemMetrics(SM_CYFULLSCREEN);
@@ -118,8 +114,7 @@ MSWindowsClientTaskBarReceiver::showStatus()
         }
         if (x + ww - fw > sw) {
             x -= ww - fw;
-        }
-        else {
+        } else {
             x -= fw;
         }
         if (x < 0) {
@@ -127,20 +122,17 @@ MSWindowsClientTaskBarReceiver::showStatus()
         }
         if (y + wh - fh > sh) {
             y -= wh - fh;
-        }
-        else {
+        } else {
             y -= fh;
         }
         if (y < 0) {
             y = 0;
         }
-        SetWindowPos(m_window, HWND_TOPMOST, x, y, ww, wh,
-                            SWP_SHOWWINDOW);
+        SetWindowPos(m_window, HWND_TOPMOST, x, y, ww, wh, SWP_SHOWWINDOW);
     }
 }
 
-void
-MSWindowsClientTaskBarReceiver::runMenu(int x, int y)
+void MSWindowsClientTaskBarReceiver::runMenu(int x, int y)
 {
     // do popup menu.  we need a window to pass to TrackPopupMenu().
     // the SetForegroundWindow() and SendMessage() calls around
@@ -152,14 +144,9 @@ MSWindowsClientTaskBarReceiver::runMenu(int x, int y)
     HMENU menu = GetSubMenu(m_menu, 0);
     SetMenuDefaultItem(menu, IDC_TASKBAR_STATUS, FALSE);
     HMENU logLevelMenu = GetSubMenu(menu, 3);
-    CheckMenuRadioItem(logLevelMenu, 0, 6,
-                            CLOG->getFilter() - kERROR, MF_BYPOSITION);
-    int n = TrackPopupMenu(menu,
-                            TPM_NONOTIFY |
-                            TPM_RETURNCMD |
-                            TPM_LEFTBUTTON |
-                            TPM_RIGHTBUTTON,
-                            x, y, 0, m_window, nullptr);
+    CheckMenuRadioItem(logLevelMenu, 0, 6, CLOG->getFilter() - kERROR, MF_BYPOSITION);
+    int n = TrackPopupMenu(menu, TPM_NONOTIFY | TPM_RETURNCMD | TPM_LEFTBUTTON | TPM_RIGHTBUTTON, x,
+                           y, 0, m_window, nullptr);
     SendMessage(m_window, WM_NULL, 0, 0);
 
     // perform the requested operation
@@ -209,8 +196,7 @@ MSWindowsClientTaskBarReceiver::runMenu(int x, int y)
     }
 }
 
-void
-MSWindowsClientTaskBarReceiver::primaryAction()
+void MSWindowsClientTaskBarReceiver::primaryAction()
 {
     showStatus();
 }
@@ -220,8 +206,7 @@ IArchTaskBarReceiver::Icon MSWindowsClientTaskBarReceiver::getIcon() const
     return static_cast<Icon>(m_icon[getStatus()]);
 }
 
-void
-MSWindowsClientTaskBarReceiver::copyLog() const
+void MSWindowsClientTaskBarReceiver::copyLog() const
 {
     if (m_logBuffer != nullptr) {
         // collect log buffer
@@ -242,8 +227,7 @@ MSWindowsClientTaskBarReceiver::copyLog() const
     }
 }
 
-void
-MSWindowsClientTaskBarReceiver::onStatusChanged()
+void MSWindowsClientTaskBarReceiver::onStatusChanged()
 {
     if (IsWindowVisible(m_window)) {
         showStatus();
@@ -253,24 +237,18 @@ MSWindowsClientTaskBarReceiver::onStatusChanged()
 HICON
 MSWindowsClientTaskBarReceiver::loadIcon(UINT id)
 {
-    HANDLE icon = LoadImage(m_appInstance,
-                            MAKEINTRESOURCE(id),
-                            IMAGE_ICON,
-                            0, 0,
-                            LR_DEFAULTCOLOR);
+    HANDLE icon = LoadImage(m_appInstance, MAKEINTRESOURCE(id), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
     return static_cast<HICON>(icon);
 }
 
-void
-MSWindowsClientTaskBarReceiver::deleteIcon(HICON icon)
+void MSWindowsClientTaskBarReceiver::deleteIcon(HICON icon)
 {
     if (icon != nullptr) {
         DestroyIcon(icon);
     }
 }
 
-void
-MSWindowsClientTaskBarReceiver::createWindow()
+void MSWindowsClientTaskBarReceiver::createWindow()
 {
     // ignore if already created
     if (m_window != nullptr) {
@@ -278,12 +256,9 @@ MSWindowsClientTaskBarReceiver::createWindow()
     }
 
     // get the status dialog
-    m_window = CreateDialogParam(m_appInstance,
-                            MAKEINTRESOURCE(IDD_TASKBAR_STATUS),
-                            nullptr,
-                            (DLGPROC)&MSWindowsClientTaskBarReceiver::staticDlgProc,
-                            reinterpret_cast<LPARAM>(
-                                static_cast<void*>(this)));
+    m_window = CreateDialogParam(m_appInstance, MAKEINTRESOURCE(IDD_TASKBAR_STATUS), nullptr,
+                                 (DLGPROC) &MSWindowsClientTaskBarReceiver::staticDlgProc,
+                                 reinterpret_cast<LPARAM>(static_cast<void*>(this)));
 
     // window should appear on top of everything, including (especially)
     // the task bar.
@@ -295,8 +270,7 @@ MSWindowsClientTaskBarReceiver::createWindow()
     ArchTaskBarWindows::addDialog(m_window);
 }
 
-void
-MSWindowsClientTaskBarReceiver::destroyWindow()
+void MSWindowsClientTaskBarReceiver::destroyWindow()
 {
     if (m_window != nullptr) {
         ArchTaskBarWindows::removeDialog(m_window);
@@ -305,9 +279,7 @@ MSWindowsClientTaskBarReceiver::destroyWindow()
     }
 }
 
-BOOL
-MSWindowsClientTaskBarReceiver::dlgProc(HWND hwnd,
-                            UINT msg, WPARAM wParam, LPARAM)
+BOOL MSWindowsClientTaskBarReceiver::dlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM)
 {
     switch (msg) {
     case WM_INITDIALOG:
@@ -324,19 +296,16 @@ MSWindowsClientTaskBarReceiver::dlgProc(HWND hwnd,
     return FALSE;
 }
 
-BOOL CALLBACK
-MSWindowsClientTaskBarReceiver::staticDlgProc(HWND hwnd,
-                            UINT msg, WPARAM wParam, LPARAM lParam)
+BOOL CALLBACK MSWindowsClientTaskBarReceiver::staticDlgProc(HWND hwnd, UINT msg, WPARAM wParam,
+                                                            LPARAM lParam)
 {
     // if msg is WM_INITDIALOG, extract the MSWindowsClientTaskBarReceiver*
     // and put it in the extra window data then forward the call.
     MSWindowsClientTaskBarReceiver* self = nullptr;
     if (msg == WM_INITDIALOG) {
-        self = static_cast<MSWindowsClientTaskBarReceiver*>(
-                            reinterpret_cast<void*>(lParam));
+        self = static_cast<MSWindowsClientTaskBarReceiver*>(reinterpret_cast<void*>(lParam));
         SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR) lParam);
-    }
-    else {
+    } else {
         // get the extra window data and forward the call
         LONG_PTR data = GetWindowLongPtr(hwnd, GWLP_USERDATA);
         if (data != 0) {
@@ -347,27 +316,23 @@ MSWindowsClientTaskBarReceiver::staticDlgProc(HWND hwnd,
     // forward the message
     if (self != nullptr) {
         return self->dlgProc(hwnd, msg, wParam, lParam);
-    }
-    else {
+    } else {
         return (msg == WM_INITDIALOG) ? TRUE : FALSE;
     }
 }
 
-IArchTaskBarReceiver*
-createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events)
+IArchTaskBarReceiver* createTaskBarReceiver(const BufferedLogOutputter* logBuffer,
+                                            IEventQueue* events)
 {
-    ArchMiscWindows::setIcons(
-        (HICON)LoadImage(ArchMiscWindows::instanceWin32(),
-        MAKEINTRESOURCE(IDI_INPUTLEAP),
-        IMAGE_ICON,
-        32, 32, LR_SHARED),
-        (HICON)LoadImage(ArchMiscWindows::instanceWin32(),
-        MAKEINTRESOURCE(IDI_INPUTLEAP),
-        IMAGE_ICON,
-        16, 16, LR_SHARED));
+    ArchMiscWindows::setIcons((HICON) LoadImage(ArchMiscWindows::instanceWin32(),
+                                                MAKEINTRESOURCE(IDI_INPUTLEAP), IMAGE_ICON, 32, 32,
+                                                LR_SHARED),
+                              (HICON) LoadImage(ArchMiscWindows::instanceWin32(),
+                                                MAKEINTRESOURCE(IDI_INPUTLEAP), IMAGE_ICON, 16, 16,
+                                                LR_SHARED));
 
-    return new MSWindowsClientTaskBarReceiver(
-        MSWindowsScreen::getWindowInstance(), logBuffer, events);
+    return new MSWindowsClientTaskBarReceiver(MSWindowsScreen::getWindowInstance(), logBuffer,
+                                              events);
 }
 
 } // namespace inputleap

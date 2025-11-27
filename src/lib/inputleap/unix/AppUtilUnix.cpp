@@ -26,24 +26,19 @@ AppUtilUnix::AppUtilUnix(IEventQueue* events)
     (void) events;
 }
 
-AppUtilUnix::~AppUtilUnix()
-{
-}
+AppUtilUnix::~AppUtilUnix() {}
 
-int
-standardStartupStatic(int argc, char** argv)
+int standardStartupStatic(int argc, char** argv)
 {
     return AppUtil::instance().app().standardStartup(argc, argv);
 }
 
-int
-AppUtilUnix::run(int argc, char** argv)
+int AppUtilUnix::run(int argc, char** argv)
 {
     return app().runInner(argc, argv, nullptr, &standardStartupStatic);
 }
 
-void
-AppUtilUnix::startNode()
+void AppUtilUnix::startNode()
 {
     app().startNode();
 }

@@ -18,14 +18,14 @@
 #include "ZeroconfService.h"
 
 #include "MainWindow.h"
-#include "ZeroconfRegister.h"
 #include "ZeroconfBrowser.h"
+#include "ZeroconfRegister.h"
 
-#include <QtNetwork>
 #include <QMessageBox>
+#include <QtNetwork>
 #define _MSL_STDINT_H
-#include <stdint.h>
 #include <dns_sd.h>
+#include <stdint.h>
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -34,14 +34,10 @@
 #include <stdlib.h>
 #endif
 
-static const QStringList preferedIPAddress(
-                QStringList() <<
-                "192.168." <<
-                "10." <<
-                "172.");
+static const QStringList preferedIPAddress(QStringList() << "192.168." << "10." << "172.");
 
-const char* ZeroconfService:: m_ServerServiceName = "_inputLeapServerZeroconf._tcp";
-const char* ZeroconfService:: m_ClientServiceName = "_inputLeapClientZeroconf._tcp";
+const char* ZeroconfService::m_ServerServiceName = "_inputLeapServerZeroconf._tcp";
+const char* ZeroconfService::m_ClientServiceName = "_inputLeapClientZeroconf._tcp";
 
 static void silence_avahi_warning()
 {
@@ -50,8 +46,8 @@ static void silence_avahi_warning()
     // this environmental variable before calling the avahi library.
     // additionally, Microsoft does not give us a POSIX setenv() so
     // we use their OS-specific API instead
-    const char *name  = "AVAHI_COMPAT_NOWARN";
-    const char *value = "1";
+    const char* name = "AVAHI_COMPAT_NOWARN";
+    const char* value = "1";
 #ifdef _WIN32
 #if QT_VERSION_MAJOR < 6
     SetEnvironmentVariable(name, value);
@@ -64,20 +60,20 @@ static void silence_avahi_warning()
 }
 
 ZeroconfService::ZeroconfService(MainWindow* mainWindow) :
-    m_pMainWindow(mainWindow),
-    m_ServiceRegistered(false)
+    m_pMainWindow(mainWindow), m_ServiceRegistered(false)
 {
     silence_avahi_warning();
     if (m_pMainWindow->app_role() == AppRole::Server) {
         if (registerService(true)) {
             zeroconf_browser_ = std::make_unique<ZeroconfBrowser>(this);
-            connect(zeroconf_browser_.get(), &ZeroconfBrowser::currentRecordsChanged, this, &ZeroconfService::clientDetected);
+            connect(zeroconf_browser_.get(), &ZeroconfBrowser::currentRecordsChanged, this,
+                    &ZeroconfService::clientDetected);
             zeroconf_browser_->browseForType(QLatin1String(m_ClientServiceName));
         }
-    }
-    else {
+    } else {
         zeroconf_browser_ = std::make_unique<ZeroconfBrowser>(this);
-        connect(zeroconf_browser_.get(), &ZeroconfBrowser::currentRecordsChanged, this, &ZeroconfService::serverDetected);
+        connect(zeroconf_browser_.get(), &ZeroconfBrowser::currentRecordsChanged, this,
+                &ZeroconfService::serverDetected);
         zeroconf_browser_->browseForType(QLatin1String(m_ServerServiceName));
     }
 
@@ -90,8 +86,7 @@ void ZeroconfService::serverDetected(const QList<ZeroconfRecord>& list)
 {
     for (const ZeroconfRecord& record : list) {
         registerService(false);
-        m_pMainWindow->appendLogInfo(tr("zeroconf server detected: %1").arg(
-            record.serviceName));
+        m_pMainWindow->appendLogInfo(tr("zeroconf server detected: %1").arg(record.serviceName));
         m_pMainWindow->serverDetected(record.serviceName);
     }
 }
@@ -99,8 +94,7 @@ void ZeroconfService::serverDetected(const QList<ZeroconfRecord>& list)
 void ZeroconfService::clientDetected(const QList<ZeroconfRecord>& list)
 {
     for (const ZeroconfRecord& record : list) {
-        m_pMainWindow->appendLogInfo(tr("zeroconf client detected: %1").arg(
-            record.serviceName));
+        m_pMainWindow->appendLogInfo(tr("zeroconf client detected: %1").arg(record.serviceName));
         m_pMainWindow->autoAddScreen(record.serviceName);
     }
 }
@@ -108,7 +102,7 @@ void ZeroconfService::clientDetected(const QList<ZeroconfRecord>& list)
 void ZeroconfService::errorHandle(DNSServiceErrorType errorCode)
 {
     QMessageBox::critical(nullptr, tr("Zero configuration service"),
-        tr("Error code: %1.").arg(errorCode));
+                          tr("Error code: %1.").arg(errorCode));
 }
 
 bool ZeroconfService::registerService(bool server)
@@ -117,23 +111,21 @@ bool ZeroconfService::registerService(bool server)
 
     if (!m_ServiceRegistered) {
         if (!m_zeroconfServer.listen()) {
-            QMessageBox::critical(nullptr, tr("Zero configuration service"),
-                tr("Unable to start the zeroconf: %1.")
-                .arg(m_zeroconfServer.errorString()));
+            QMessageBox::critical(
+                nullptr, tr("Zero configuration service"),
+                tr("Unable to start the zeroconf: %1.").arg(m_zeroconfServer.errorString()));
             result = false;
-        }
-        else {
+        } else {
             zeroconf_register_ = std::make_unique<ZeroconfRegister>(this);
             if (server) {
                 zeroconf_register_->registerService(
                     ZeroconfRecord(tr("%1").arg(m_pMainWindow->getScreenName()),
-                    QLatin1String(m_ServerServiceName), QString()),
+                                   QLatin1String(m_ServerServiceName), QString()),
                     m_zeroconfServer.serverPort());
-            }
-            else {
+            } else {
                 zeroconf_register_->registerService(
                     ZeroconfRecord(tr("%1").arg(m_pMainWindow->getScreenName()),
-                    QLatin1String(m_ClientServiceName), QString()),
+                                   QLatin1String(m_ClientServiceName), QString()),
                     m_zeroconfServer.serverPort());
             }
 

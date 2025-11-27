@@ -26,7 +26,7 @@ This interface defines operations for querying system info.
 */
 class IArchSystem {
 public:
-    virtual ~IArchSystem() { }
+    virtual ~IArchSystem() {}
 
     //! @name accessors
     //@{

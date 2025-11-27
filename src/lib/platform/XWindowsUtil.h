@@ -37,9 +37,8 @@ public:
     if \c format is not nullptr.  If \c deleteProperty is true then the
     property is deleted after being read.
     */
-    static bool getWindowProperty(Display*, Window window, Atom property,
-                                  std::string* data, Atom* type,
-                                  std::int32_t* format, bool deleteProperty);
+    static bool getWindowProperty(Display*, Window window, Atom property, std::string* data,
+                                  Atom* type, std::int32_t* format, bool deleteProperty);
 
     //! Set property
     /*!
@@ -141,7 +140,7 @@ public:
         void* m_userData;
         XErrorHandler m_oldXHandler;
         ErrorLock* m_next;
-        static ErrorLock*    s_top;
+        static ErrorLock* s_top;
     };
 
 private:
@@ -151,8 +150,7 @@ private:
         Atom m_property;
     };
 
-    static Bool propertyNotifyPredicate(Display*,
-                            XEvent* xevent, XPointer arg);
+    static Bool propertyNotifyPredicate(Display*, XEvent* xevent, XPointer arg);
 };
 
 } // namespace inputleap

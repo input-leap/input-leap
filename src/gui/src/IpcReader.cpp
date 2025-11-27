@@ -20,10 +20,10 @@
 //#define INPUTLEAP_IPC_VERBOSE
 
 #include "IpcReader.h"
-#include <QTcpSocket>
 #include "Ipc.h"
-#include <QMutex>
 #include <QByteArray>
+#include <QMutex>
+#include <QTcpSocket>
 
 #ifdef INPUTLEAP_IPC_VERBOSE
 #include <iostream>
@@ -32,14 +32,9 @@
 #define IPC_LOG(x)
 #endif
 
-IpcReader::IpcReader(QTcpSocket* socket) :
-m_Socket(socket)
-{
-}
+IpcReader::IpcReader(QTcpSocket* socket) : m_Socket(socket) {}
 
-IpcReader::~IpcReader()
-{
-}
+IpcReader::~IpcReader() {}
 
 void IpcReader::start()
 {
@@ -77,8 +72,7 @@ void IpcReader::read()
             delete[] data;
 
             Q_EMIT readLogLine(line);
-        }
-        else {
+        } else {
             IPC_LOG(std::cerr << "aborting, message invalid" << std::endl);
             return;
         }
@@ -102,14 +96,12 @@ bool IpcReader::readStream(char* buffer, int length)
         int got = m_Socket->read(buffer, ask);
         read += got;
 
-        IPC_LOG(std::cout << "> ask=" << ask << " got=" << got
-            << " read=" << read << std::endl);
+        IPC_LOG(std::cout << "> ask=" << ask << " got=" << got << " read=" << read << std::endl);
 
         if (got == -1) {
             IPC_LOG(std::cout << "socket ended, aborting" << std::endl);
             return false;
-        }
-        else if (length - read > 0) {
+        } else if (length - read > 0) {
             IPC_LOG(std::cout << "more remains, seek to " << got << std::endl);
             buffer += got;
         }
@@ -117,24 +109,19 @@ bool IpcReader::readStream(char* buffer, int length)
     return true;
 }
 
-int IpcReader::bytesToInt(const char *buffer, int size)
+int IpcReader::bytesToInt(const char* buffer, int size)
 {
     if (size == 1) {
         return static_cast<unsigned char>(buffer[0]);
-    }
-    else if (size == 2) {
-        return
-            ((static_cast<unsigned char>(buffer[0])) << 8) +
-              static_cast<unsigned char>(buffer[1]);
-    }
-    else if (size == 4) {
-        return
-            ((static_cast<unsigned char>(buffer[0])) << 24) +
-            ((static_cast<unsigned char>(buffer[1])) << 16) +
-            ((static_cast<unsigned char>(buffer[2])) << 8) +
-              static_cast<unsigned char>(buffer[3]);
-    }
-    else {
+    } else if (size == 2) {
+        return ((static_cast<unsigned char>(buffer[0])) << 8) +
+               static_cast<unsigned char>(buffer[1]);
+    } else if (size == 4) {
+        return ((static_cast<unsigned char>(buffer[0])) << 24) +
+               ((static_cast<unsigned char>(buffer[1])) << 16) +
+               ((static_cast<unsigned char>(buffer[2])) << 8) +
+               static_cast<unsigned char>(buffer[3]);
+    } else {
         return 0;
     }
 }

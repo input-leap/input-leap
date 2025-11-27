@@ -18,12 +18,12 @@
 
 #include "platform/MSWindowsScreenSaver.h"
 
-#include "platform/MSWindowsScreen.h"
-#include "mt/Thread.h"
 #include "arch/Arch.h"
 #include "arch/win32/ArchMiscWindows.h"
 #include "base/Log.h"
 #include "base/Time.h"
+#include "mt/Thread.h"
+#include "platform/MSWindowsScreen.h"
 
 #include <malloc.h>
 #include <tchar.h>
@@ -36,11 +36,7 @@ namespace inputleap {
 
 static const TCHAR* g_isSecureNT = "ScreenSaverIsSecure";
 static const TCHAR* g_isSecure9x = "ScreenSaveUsePassword";
-static const TCHAR* const g_pathScreenSaverIsSecure[] = {
-    "Control Panel",
-    "Desktop",
-    nullptr
-};
+static const TCHAR* const g_pathScreenSaverIsSecure[] = {"Control Panel", "Desktop", nullptr};
 
 //
 // MSWindowsScreenSaver
@@ -66,8 +62,7 @@ MSWindowsScreenSaver::~MSWindowsScreenSaver()
     unwatchProcess();
 }
 
-bool
-MSWindowsScreenSaver::checkStarted(UINT msg, WPARAM wParam, LPARAM lParam)
+bool MSWindowsScreenSaver::checkStarted(UINT msg, WPARAM wParam, LPARAM lParam)
 {
     // if already started then say it didn't just start
     if (m_active) {
@@ -86,9 +81,9 @@ MSWindowsScreenSaver::checkStarted(UINT msg, WPARAM wParam, LPARAM lParam)
 
     // set parameters common to all screen saver handling
     m_threadID = GetCurrentThreadId();
-    m_msg      = msg;
-    m_wParam   = wParam;
-    m_lParam   = lParam;
+    m_msg = msg;
+    m_wParam = wParam;
+    m_lParam = lParam;
 
     // on the windows nt family we wait for the desktop to
     // change until it's neither the Screen-Saver desktop
@@ -106,8 +101,7 @@ MSWindowsScreenSaver::checkStarted(UINT msg, WPARAM wParam, LPARAM lParam)
     return true;
 }
 
-void
-MSWindowsScreenSaver::enable()
+void MSWindowsScreenSaver::enable()
 {
     SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, m_wasEnabled, 0, 0);
 
@@ -120,8 +114,7 @@ MSWindowsScreenSaver::enable()
     ArchMiscWindows::removeBusyState(ArchMiscWindows::kDISPLAY);
 }
 
-void
-MSWindowsScreenSaver::disable()
+void MSWindowsScreenSaver::disable()
 {
     SystemParametersInfo(SPI_GETSCREENSAVEACTIVE, 0, &m_wasEnabled, 0);
     SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, FALSE, 0, 0);
@@ -136,8 +129,7 @@ MSWindowsScreenSaver::disable()
     ArchMiscWindows::addBusyState(ArchMiscWindows::kDISPLAY);
 }
 
-void
-MSWindowsScreenSaver::activate()
+void MSWindowsScreenSaver::activate()
 {
     // don't activate if already active
     if (!isActive()) {
@@ -145,8 +137,7 @@ MSWindowsScreenSaver::activate()
         HWND hwnd = GetForegroundWindow();
         if (hwnd != nullptr) {
             PostMessage(hwnd, WM_SYSCOMMAND, SC_SCREENSAVE, 0);
-        }
-        else {
+        } else {
             // no foreground window.  pretend we got the event instead.
             DefWindowProc(nullptr, WM_SYSCOMMAND, SC_SCREENSAVE, 0);
         }
@@ -156,18 +147,16 @@ MSWindowsScreenSaver::activate()
     }
 }
 
-void
-MSWindowsScreenSaver::deactivate()
+void MSWindowsScreenSaver::deactivate()
 {
     bool killed = false;
 
     // NT runs screen saver in another desktop
     HDESK desktop = OpenDesktop("Screen-saver", 0, FALSE,
-                            DESKTOP_READOBJECTS | DESKTOP_WRITEOBJECTS);
+                                DESKTOP_READOBJECTS | DESKTOP_WRITEOBJECTS);
     if (desktop != nullptr) {
-        EnumDesktopWindows(desktop,
-                            &MSWindowsScreenSaver::killScreenSaverFunc,
-                            reinterpret_cast<LPARAM>(&killed));
+        EnumDesktopWindows(desktop, &MSWindowsScreenSaver::killScreenSaverFunc,
+                           reinterpret_cast<LPARAM>(&killed));
         CloseDesktop(desktop);
     }
 
@@ -186,28 +175,24 @@ MSWindowsScreenSaver::deactivate()
 
     // force timer to restart
     SystemParametersInfo(SPI_GETSCREENSAVEACTIVE, 0, &m_wasEnabled, 0);
-    SystemParametersInfo(SPI_SETSCREENSAVEACTIVE,
-                                !m_wasEnabled, 0, SPIF_SENDWININICHANGE);
-    SystemParametersInfo(SPI_SETSCREENSAVEACTIVE,
-                                 m_wasEnabled, 0, SPIF_SENDWININICHANGE);
+    SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, !m_wasEnabled, 0, SPIF_SENDWININICHANGE);
+    SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, m_wasEnabled, 0, SPIF_SENDWININICHANGE);
 
     // disable display power down
     ArchMiscWindows::removeBusyState(ArchMiscWindows::kDISPLAY);
 }
 
-bool
-MSWindowsScreenSaver::isActive() const
+bool MSWindowsScreenSaver::isActive() const
 {
     BOOL running;
     SystemParametersInfo(SPI_GETSCREENSAVERRUNNING, 0, &running, 0);
     return (running != FALSE);
 }
 
-BOOL CALLBACK
-MSWindowsScreenSaver::killScreenSaverFunc(HWND hwnd, LPARAM arg)
+BOOL CALLBACK MSWindowsScreenSaver::killScreenSaverFunc(HWND hwnd, LPARAM arg)
 {
     if (IsWindowVisible(hwnd)) {
-        HINSTANCE instance = (HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE);
+        HINSTANCE instance = (HINSTANCE) GetWindowLongPtr(hwnd, GWLP_HINSTANCE);
         if (instance != MSWindowsScreen::getWindowInstance()) {
             PostMessage(hwnd, WM_CLOSE, 0, 0);
             *reinterpret_cast<bool*>(arg) = true;
@@ -216,8 +201,7 @@ MSWindowsScreenSaver::killScreenSaverFunc(HWND hwnd, LPARAM arg)
     return TRUE;
 }
 
-void
-MSWindowsScreenSaver::watchDesktop()
+void MSWindowsScreenSaver::watchDesktop()
 {
     // stop watching previous process/desktop
     unwatchProcess();
@@ -225,11 +209,10 @@ MSWindowsScreenSaver::watchDesktop()
     // watch desktop in another thread
     LOG_DEBUG("watching screen saver desktop");
     m_active = true;
-    m_watch  = new Thread([this](){ watch_desktop_thread(); });
+    m_watch = new Thread([this]() { watch_desktop_thread(); });
 }
 
-void
-MSWindowsScreenSaver::watchProcess(HANDLE process)
+void MSWindowsScreenSaver::watchProcess(HANDLE process)
 {
     // stop watching previous process/desktop
     unwatchProcess();
@@ -238,13 +221,12 @@ MSWindowsScreenSaver::watchProcess(HANDLE process)
     if (process != nullptr) {
         LOG_DEBUG("watching screen saver process");
         m_process = process;
-        m_active  = true;
-        m_watch   = new Thread([this](){ watch_process_thread(); });
+        m_active = true;
+        m_watch = new Thread([this]() { watch_process_thread(); });
     }
 }
 
-void
-MSWindowsScreenSaver::unwatchProcess()
+void MSWindowsScreenSaver::unwatchProcess()
 {
     if (m_watch != nullptr) {
         LOG_DEBUG("stopped watching screen saver process/desktop");
@@ -298,31 +280,26 @@ void MSWindowsScreenSaver::watch_process_thread()
     }
 }
 
-void
-MSWindowsScreenSaver::setSecure(bool secure, bool saveSecureAsInt)
+void MSWindowsScreenSaver::setSecure(bool secure, bool saveSecureAsInt)
 {
-    HKEY hkey =
-        ArchMiscWindows::addKey(HKEY_CURRENT_USER, g_pathScreenSaverIsSecure);
+    HKEY hkey = ArchMiscWindows::addKey(HKEY_CURRENT_USER, g_pathScreenSaverIsSecure);
     if (hkey == nullptr) {
         return;
     }
 
     if (saveSecureAsInt) {
         ArchMiscWindows::setValue(hkey, g_isSecureNT, secure ? 1 : 0);
-    }
-    else {
+    } else {
         ArchMiscWindows::setValue(hkey, g_isSecureNT, secure ? "1" : "0");
     }
 
     ArchMiscWindows::closeKey(hkey);
 }
 
-bool
-MSWindowsScreenSaver::isSecure(bool* wasSecureFlagAnInt) const
+bool MSWindowsScreenSaver::isSecure(bool* wasSecureFlagAnInt) const
 {
     // get the password protection setting key
-    HKEY hkey =
-        ArchMiscWindows::openKey(HKEY_CURRENT_USER, g_pathScreenSaverIsSecure);
+    HKEY hkey = ArchMiscWindows::openKey(HKEY_CURRENT_USER, g_pathScreenSaverIsSecure);
     if (hkey == nullptr) {
         return false;
     }
@@ -336,16 +313,14 @@ MSWindowsScreenSaver::isSecure(bool* wasSecureFlagAnInt) const
         break;
 
     case ArchMiscWindows::kUINT: {
-        DWORD value =
-            ArchMiscWindows::readValueInt(hkey, g_isSecureNT);
+        DWORD value = ArchMiscWindows::readValueInt(hkey, g_isSecureNT);
         *wasSecureFlagAnInt = true;
         result = (value != 0);
         break;
     }
 
     case ArchMiscWindows::kSTRING: {
-        std::string value =
-            ArchMiscWindows::readValueString(hkey, g_isSecureNT);
+        std::string value = ArchMiscWindows::readValueString(hkey, g_isSecureNT);
         *wasSecureFlagAnInt = false;
         result = (value != "0");
         break;

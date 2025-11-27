@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "base/IEventQueueBuffer.h"
 #include "arch/IArchMultithread.h"
+#include "base/IEventQueueBuffer.h"
 #include <condition_variable>
 #include <deque>
 
@@ -35,7 +35,7 @@ public:
     ~SimpleEventQueueBuffer();
 
     // IEventQueueBuffer overrides
-    void init() override { }
+    void init() override {}
     void waitForEvent(double timeout) override;
     Type getEvent(Event& event, std::uint32_t& dataID) override;
     bool addEvent(std::uint32_t dataID) override;

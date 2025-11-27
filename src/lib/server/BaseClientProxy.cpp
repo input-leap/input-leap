@@ -20,10 +20,7 @@
 
 namespace inputleap {
 
-BaseClientProxy::BaseClientProxy(const std::string& name) :
-    m_name(name),
-    m_x(0),
-    m_y(0)
+BaseClientProxy::BaseClientProxy(const std::string& name) : m_name(name), m_x(0), m_y(0)
 {
     // do nothing
 }

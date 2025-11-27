@@ -20,9 +20,9 @@
 
 #include "config.h"
 
-#include "inputleap/PlatformScreen.h"
-#include "inputleap/KeyMap.h"
 #include "XWindowsImpl.h"
+#include "inputleap/KeyMap.h"
+#include "inputleap/PlatformScreen.h"
 
 #include <X11/Xlib.h>
 
@@ -39,8 +39,7 @@ class XWindowsScreenSaver;
 class XWindowsScreen : public PlatformScreen {
 public:
     XWindowsScreen(IXWindowsImpl* impl, const char* displayName, bool isPrimary,
-        int mouseScrollDelta,
-        IEventQueue* events);
+                   int mouseScrollDelta, IEventQueue* events);
     ~XWindowsScreen() override;
 
     //! @name manipulators
@@ -51,7 +50,8 @@ public:
     // IScreen overrides
     const EventTarget* get_event_target() const override;
     bool getClipboard(ClipboardID id, IClipboard*) const override;
-    void getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width, std::int32_t& height) const override;
+    void getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width,
+                  std::int32_t& height) const override;
     void getCursorPos(std::int32_t& x, std::int32_t& y) const override;
 
     // IPrimaryScreen overrides
@@ -106,8 +106,7 @@ private:
     ClipboardID getClipboardID(Atom selection) const;
 
     // continue processing a selection request
-    void processClipboardRequest(Window window,
-                            Time time, Atom property);
+    void processClipboardRequest(Window window, Time time, Atom property);
 
     // terminate a selection request
     void destroyClipboardRequest(Window window);
@@ -164,7 +163,7 @@ private:
     public:
         HotKeyItem(int, unsigned int);
 
-        bool            operator<(const HotKeyItem&) const;
+        bool operator<(const HotKeyItem&) const;
 
     private:
         int m_keycode;
@@ -264,7 +263,7 @@ private:
 
     // pointer to (singleton) screen.  this is only needed by
     // ioErrorHandler().
-    static XWindowsScreen*    s_screen;
+    static XWindowsScreen* s_screen;
 };
 
 } // namespace inputleap

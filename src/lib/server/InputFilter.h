@@ -18,12 +18,12 @@
 
 #pragma once
 
-#include "base/Fwd.h"
 #include "base/EventTarget.h"
+#include "base/Fwd.h"
+#include "inputleap/IPlatformScreen.h"
 #include "inputleap/key_types.h"
 #include "inputleap/mouse_types.h"
 #include "inputleap/protocol_types.h"
-#include "inputleap/IPlatformScreen.h"
 
 #include <map>
 #include <set>
@@ -37,11 +37,7 @@ public:
     // -------------------------------------------------------------------------
     // Input Filter Condition Classes
     // -------------------------------------------------------------------------
-    enum EFilterStatus {
-        kNoMatch,
-        kActivate,
-        kDeactivate
-    };
+    enum EFilterStatus { kNoMatch, kActivate, kDeactivate };
 
     class Condition {
     public:
@@ -122,7 +118,7 @@ public:
     class Action {
     public:
         Action();
-        virtual    ~Action();
+        virtual ~Action();
 
         virtual Action* clone() const = 0;
         virtual std::string format() const = 0;
@@ -317,10 +313,10 @@ public:
     virtual ~InputFilter();
 
 #ifdef INPUTLEAP_TEST_ENV
-    InputFilter() : m_primaryClient(nullptr) { }
+    InputFilter() : m_primaryClient(nullptr) {}
 #endif
 
-    InputFilter&        operator=(const InputFilter&);
+    InputFilter& operator=(const InputFilter&);
 
     // add rule, adopting the condition and the actions
     void addFilterRule(const Rule& rule);

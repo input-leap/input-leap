@@ -39,8 +39,7 @@ void IClipboard::unmarshall(IClipboard* clipboard, const std::string& data, Time
         // read each format
         for (std::uint32_t i = 0; i < numFormats; ++i) {
             // get the format id
-            IClipboard::EFormat format =
-                static_cast<IClipboard::EFormat>(readUInt32(index));
+            IClipboard::EFormat format = static_cast<IClipboard::EFormat>(readUInt32(index));
             index += 4;
 
             // get the size of the format data
@@ -50,7 +49,7 @@ void IClipboard::unmarshall(IClipboard* clipboard, const std::string& data, Time
             // save the data if it's a known format.  if either the client
             // or server supports more clipboard formats than the other
             // then one of them will get a format >= kNumFormats here.
-            if (format <IClipboard::kNumFormats) {
+            if (format < IClipboard::kNumFormats) {
                 clipboard->add(format, std::string(index, size));
             }
             index += size;
@@ -78,15 +77,13 @@ std::string IClipboard::marshall(const IClipboard* clipboard)
     formatData.resize(IClipboard::kNumFormats);
     // FIXME -- use current time
     if (clipboard->open(0)) {
-
         // compute size of marshalled data
         std::uint32_t size = 4;
         std::uint32_t numFormats = 0;
         for (std::uint32_t format = 0; format != IClipboard::kNumFormats; ++format) {
             if (clipboard->has(static_cast<IClipboard::EFormat>(format))) {
                 ++numFormats;
-                formatData[format] =
-                    clipboard->get(static_cast<IClipboard::EFormat>(format));
+                formatData[format] = clipboard->get(static_cast<IClipboard::EFormat>(format));
                 size += 4 + 4 + static_cast<std::uint32_t>(formatData[format].size());
             }
         }
@@ -109,8 +106,7 @@ std::string IClipboard::marshall(const IClipboard* clipboard)
     return data;
 }
 
-bool
-IClipboard::copy(IClipboard* dst, const IClipboard* src)
+bool IClipboard::copy(IClipboard* dst, const IClipboard* src)
 {
     assert(dst != nullptr);
     assert(src != nullptr);
@@ -118,8 +114,7 @@ IClipboard::copy(IClipboard* dst, const IClipboard* src)
     return copy(dst, src, src->getTime());
 }
 
-bool
-IClipboard::copy(IClipboard* dst, const IClipboard* src, Time time)
+bool IClipboard::copy(IClipboard* dst, const IClipboard* src, Time time)
 {
     assert(dst != nullptr);
     assert(src != nullptr);
@@ -128,8 +123,7 @@ IClipboard::copy(IClipboard* dst, const IClipboard* src, Time time)
     if (src->open(time)) {
         if (dst->open(time)) {
             if (dst->clear()) {
-                for (std::int32_t format = 0;
-                                format != IClipboard::kNumFormats; ++format) {
+                for (std::int32_t format = 0; format != IClipboard::kNumFormats; ++format) {
                     IClipboard::EFormat eFormat = static_cast<IClipboard::EFormat>(format);
                     if (src->has(eFormat)) {
                         dst->add(eFormat, src->get(eFormat));
@@ -150,16 +144,15 @@ std::uint32_t IClipboard::readUInt32(const char* buf)
     const unsigned char* ubuf = reinterpret_cast<const unsigned char*>(buf);
     return (static_cast<std::uint32_t>(ubuf[0]) << 24) |
            (static_cast<std::uint32_t>(ubuf[1]) << 16) |
-           (static_cast<std::uint32_t>(ubuf[2]) <<  8) |
-            static_cast<std::uint32_t>(ubuf[3]);
+           (static_cast<std::uint32_t>(ubuf[2]) << 8) | static_cast<std::uint32_t>(ubuf[3]);
 }
 
 void IClipboard::writeUInt32(std::string* buf, std::uint32_t v)
 {
     *buf += static_cast<std::uint8_t>((v >> 24) & 0xff);
     *buf += static_cast<std::uint8_t>((v >> 16) & 0xff);
-    *buf += static_cast<std::uint8_t>((v >>  8) & 0xff);
-    *buf += static_cast<std::uint8_t>( v & 0xff);
+    *buf += static_cast<std::uint8_t>((v >> 8) & 0xff);
+    *buf += static_cast<std::uint8_t>(v & 0xff);
 }
 
 } // namespace inputleap

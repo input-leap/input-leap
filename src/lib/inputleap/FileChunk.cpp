@@ -17,12 +17,12 @@
 
 #include "inputleap/FileChunk.h"
 
+#include "base/Log.h"
+#include "base/Stopwatch.h"
+#include "base/String.h"
 #include "inputleap/ProtocolUtil.h"
 #include "inputleap/protocol_types.h"
 #include "io/IStream.h"
-#include "base/Stopwatch.h"
-#include "base/String.h"
-#include "base/Log.h"
 
 namespace inputleap {
 
@@ -81,24 +81,25 @@ int FileChunk::assemble(inputleap::IStream* stream, std::string& dataReceived, s
     case kDataChunk:
         dataReceived.append(content);
         if (CLOG->getFilter() >= kDEBUG2) {
-                LOG_DEBUG2("recv file chunk size=%zi", content.size());
-                double interval = stopwatch.getTime();
-                receivedDataSize += content.size();
-                LOG_DEBUG2("recv file interval=%f s", interval);
-                if (interval >= kIntervalThreshold) {
-                    double averageSpeed = receivedDataSize / interval / 1000;
-                    LOG_DEBUG2("recv file average speed=%f kb/s", averageSpeed);
+            LOG_DEBUG2("recv file chunk size=%zi", content.size());
+            double interval = stopwatch.getTime();
+            receivedDataSize += content.size();
+            LOG_DEBUG2("recv file interval=%f s", interval);
+            if (interval >= kIntervalThreshold) {
+                double averageSpeed = receivedDataSize / interval / 1000;
+                LOG_DEBUG2("recv file average speed=%f kb/s", averageSpeed);
 
-                    receivedDataSize = 0;
-                    elapsedTime += interval;
-                    stopwatch.reset();
-                }
+                receivedDataSize = 0;
+                elapsedTime += interval;
+                stopwatch.reset();
             }
+        }
         return kNotFinish;
 
     case kDataEnd:
         if (expectedSize != dataReceived.size()) {
-            LOG_ERR("corrupted clipboard data, expected size=%zd actual size=%zd", expectedSize, dataReceived.size());
+            LOG_ERR("corrupted clipboard data, expected size=%zd actual size=%zd", expectedSize,
+                    dataReceived.size());
             return kError;
         }
 
@@ -111,8 +112,8 @@ int FileChunk::assemble(inputleap::IStream* stream, std::string& dataReceived, s
             LOG_DEBUG2("file transfer finished: total average speed=%f kb/s", averageSpeed);
         }
         return kFinish;
-        default:
-            break;
+    default:
+        break;
     }
 
     return kError;

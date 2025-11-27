@@ -20,9 +20,9 @@
 
 #include <QList>
 
-#include "Screen.h"
 #include "BaseConfig.h"
 #include "Hotkey.h"
+#include "Screen.h"
 
 class QTextStream;
 class QSettings;
@@ -31,103 +31,102 @@ class QFile;
 class ServerConfigDialog;
 class MainWindow;
 
-class ServerConfig : public BaseConfig
-{
+class ServerConfig : public BaseConfig {
     friend class ServerConfigDialog;
     friend QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config);
 
-    public:
-        ServerConfig(QSettings* settings, int numColumns, int numRows,
-            QString serverName, MainWindow* mainWindow);
-        ~ServerConfig();
+public:
+    ServerConfig(QSettings* settings, int numColumns, int numRows, QString serverName,
+                 MainWindow* mainWindow);
+    ~ServerConfig();
 
-    public:
-        const std::vector<Screen>& screens() const { return m_Screens; }
-        int numColumns() const { return m_NumColumns; }
-        int numRows() const { return m_NumRows; }
-        bool hasHeartbeat() const { return m_HasHeartbeat; }
-        int heartbeat() const { return m_Heartbeat; }
-        bool relativeMouseMoves() const { return m_RelativeMouseMoves; }
-        bool screenSaverSync() const { return m_ScreenSaverSync; }
-        bool win32KeepForeground() const { return m_Win32KeepForeground; }
-        bool hasSwitchDelay() const { return m_HasSwitchDelay; }
-        int switchDelay() const { return m_SwitchDelay; }
-        bool hasSwitchDoubleTap() const { return m_HasSwitchDoubleTap; }
-        int switchDoubleTap() const { return m_SwitchDoubleTap; }
-        bool switchCorner(SwitchCorner c) const { return m_SwitchCorners[static_cast<int>(c)]; }
-        int switchCornerSize() const { return m_SwitchCornerSize; }
-        const QList<bool>& switchCorners() const { return m_SwitchCorners; }
-        const std::vector<Hotkey>& hotkeys() const { return m_Hotkeys; }
-        bool ignoreAutoConfigClient() const { return m_IgnoreAutoConfigClient; }
-        bool enableDragAndDrop() const { return m_EnableDragAndDrop; }
-        bool clipboardSharing() const { return m_ClipboardSharing; }
-        size_t clipboardSharingSize() const { return m_ClipboardSharingSize; }
-        static size_t defaultClipboardSharingSize();
+public:
+    const std::vector<Screen>& screens() const { return m_Screens; }
+    int numColumns() const { return m_NumColumns; }
+    int numRows() const { return m_NumRows; }
+    bool hasHeartbeat() const { return m_HasHeartbeat; }
+    int heartbeat() const { return m_Heartbeat; }
+    bool relativeMouseMoves() const { return m_RelativeMouseMoves; }
+    bool screenSaverSync() const { return m_ScreenSaverSync; }
+    bool win32KeepForeground() const { return m_Win32KeepForeground; }
+    bool hasSwitchDelay() const { return m_HasSwitchDelay; }
+    int switchDelay() const { return m_SwitchDelay; }
+    bool hasSwitchDoubleTap() const { return m_HasSwitchDoubleTap; }
+    int switchDoubleTap() const { return m_SwitchDoubleTap; }
+    bool switchCorner(SwitchCorner c) const { return m_SwitchCorners[static_cast<int>(c)]; }
+    int switchCornerSize() const { return m_SwitchCornerSize; }
+    const QList<bool>& switchCorners() const { return m_SwitchCorners; }
+    const std::vector<Hotkey>& hotkeys() const { return m_Hotkeys; }
+    bool ignoreAutoConfigClient() const { return m_IgnoreAutoConfigClient; }
+    bool enableDragAndDrop() const { return m_EnableDragAndDrop; }
+    bool clipboardSharing() const { return m_ClipboardSharing; }
+    size_t clipboardSharingSize() const { return m_ClipboardSharingSize; }
+    static size_t defaultClipboardSharingSize();
 
-        void saveSettings();
-        void loadSettings();
-        bool save(const QString& fileName) const;
-        void save(QFile& file) const;
-        int numScreens() const;
-        int autoAddScreen(const QString name);
+    void saveSettings();
+    void loadSettings();
+    bool save(const QString& fileName) const;
+    void save(QFile& file) const;
+    int numScreens() const;
+    int autoAddScreen(const QString name);
 
-    protected:
-        QSettings& settings() { return *m_pSettings; }
-        std::vector<Screen>& screens() { return m_Screens; }
-        void setScreens(const std::vector<Screen>& screens) { m_Screens = screens; }
-        void addScreen(const Screen& screen) { m_Screens.push_back(screen); }
-        void setNumColumns(int n) { m_NumColumns = n; }
-        void setNumRows(int n) { m_NumRows = n; }
-        void haveHeartbeat(bool on) { m_HasHeartbeat = on; }
-        void setHeartbeat(int val) { m_Heartbeat = val; }
-        void setRelativeMouseMoves(bool on) { m_RelativeMouseMoves = on; }
-        void setScreenSaverSync(bool on) { m_ScreenSaverSync = on; }
-        void setWin32KeepForeground(bool on) { m_Win32KeepForeground = on; }
-        void haveSwitchDelay(bool on) { m_HasSwitchDelay = on; }
-        void setSwitchDelay(int val) { m_SwitchDelay = val; }
-        void haveSwitchDoubleTap(bool on) { m_HasSwitchDoubleTap = on; }
-        void setSwitchDoubleTap(int val) { m_SwitchDoubleTap = val; }
-        void setSwitchCorner(SwitchCorner c, bool on) { m_SwitchCorners[static_cast<int>(c)] = on; }
-        void setSwitchCornerSize(int val) { m_SwitchCornerSize = val; }
-        void setIgnoreAutoConfigClient(bool on) { m_IgnoreAutoConfigClient = on; }
-        void setEnableDragAndDrop(bool on) { m_EnableDragAndDrop = on; }
-        void setClipboardSharing(bool on) { m_ClipboardSharing = on; }
-        size_t setClipboardSharingSize(size_t size);
-        QList<bool>& switchCorners() { return m_SwitchCorners; }
-        std::vector<Hotkey>& hotkeys() { return m_Hotkeys; }
+protected:
+    QSettings& settings() { return *m_pSettings; }
+    std::vector<Screen>& screens() { return m_Screens; }
+    void setScreens(const std::vector<Screen>& screens) { m_Screens = screens; }
+    void addScreen(const Screen& screen) { m_Screens.push_back(screen); }
+    void setNumColumns(int n) { m_NumColumns = n; }
+    void setNumRows(int n) { m_NumRows = n; }
+    void haveHeartbeat(bool on) { m_HasHeartbeat = on; }
+    void setHeartbeat(int val) { m_Heartbeat = val; }
+    void setRelativeMouseMoves(bool on) { m_RelativeMouseMoves = on; }
+    void setScreenSaverSync(bool on) { m_ScreenSaverSync = on; }
+    void setWin32KeepForeground(bool on) { m_Win32KeepForeground = on; }
+    void haveSwitchDelay(bool on) { m_HasSwitchDelay = on; }
+    void setSwitchDelay(int val) { m_SwitchDelay = val; }
+    void haveSwitchDoubleTap(bool on) { m_HasSwitchDoubleTap = on; }
+    void setSwitchDoubleTap(int val) { m_SwitchDoubleTap = val; }
+    void setSwitchCorner(SwitchCorner c, bool on) { m_SwitchCorners[static_cast<int>(c)] = on; }
+    void setSwitchCornerSize(int val) { m_SwitchCornerSize = val; }
+    void setIgnoreAutoConfigClient(bool on) { m_IgnoreAutoConfigClient = on; }
+    void setEnableDragAndDrop(bool on) { m_EnableDragAndDrop = on; }
+    void setClipboardSharing(bool on) { m_ClipboardSharing = on; }
+    size_t setClipboardSharingSize(size_t size);
+    QList<bool>& switchCorners() { return m_SwitchCorners; }
+    std::vector<Hotkey>& hotkeys() { return m_Hotkeys; }
 
-        void init();
-        int adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) const;
+    void init();
+    int adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) const;
 
-    private:
-        bool findScreenName(const QString& name, int& index);
-        bool fixNoServer(const QString& name, int& index);
-        int showAddClientDialog(const QString& clientName);
-        void addToFirstEmptyGrid(const QString& clientName);
+private:
+    bool findScreenName(const QString& name, int& index);
+    bool fixNoServer(const QString& name, int& index);
+    int showAddClientDialog(const QString& clientName);
+    void addToFirstEmptyGrid(const QString& clientName);
 
-    private:
-        QSettings* m_pSettings;
-        std::vector<Screen> m_Screens;
-        int m_NumColumns;
-        int m_NumRows;
-        bool m_HasHeartbeat;
-        int m_Heartbeat;
-        bool m_RelativeMouseMoves;
-        bool m_ScreenSaverSync;
-        bool m_Win32KeepForeground;
-        bool m_HasSwitchDelay;
-        int m_SwitchDelay;
-        bool m_HasSwitchDoubleTap;
-        int m_SwitchDoubleTap;
-        int m_SwitchCornerSize;
-        QList<bool> m_SwitchCorners;
-        std::vector<Hotkey> m_Hotkeys;
-        QString m_ServerName;
-        bool m_IgnoreAutoConfigClient;
-        bool m_EnableDragAndDrop;
-        bool m_ClipboardSharing;
-        size_t m_ClipboardSharingSize;
-        MainWindow* m_pMainWindow;
+private:
+    QSettings* m_pSettings;
+    std::vector<Screen> m_Screens;
+    int m_NumColumns;
+    int m_NumRows;
+    bool m_HasHeartbeat;
+    int m_Heartbeat;
+    bool m_RelativeMouseMoves;
+    bool m_ScreenSaverSync;
+    bool m_Win32KeepForeground;
+    bool m_HasSwitchDelay;
+    int m_SwitchDelay;
+    bool m_HasSwitchDoubleTap;
+    int m_SwitchDoubleTap;
+    int m_SwitchCornerSize;
+    QList<bool> m_SwitchCorners;
+    std::vector<Hotkey> m_Hotkeys;
+    QString m_ServerName;
+    bool m_IgnoreAutoConfigClient;
+    bool m_EnableDragAndDrop;
+    bool m_ClipboardSharing;
+    size_t m_ClipboardSharingSize;
+    MainWindow* m_pMainWindow;
 };
 
 QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config);

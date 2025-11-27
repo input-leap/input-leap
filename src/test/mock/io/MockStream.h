@@ -22,10 +22,9 @@
 
 #include <gmock/gmock.h>
 
-class MockStream : public inputleap::IStream
-{
+class MockStream : public inputleap::IStream {
 public:
-    MockStream() { }
+    MockStream() {}
     MOCK_METHOD0(close, void());
     MOCK_METHOD2(read, std::uint32_t(void*, std::uint32_t));
     MOCK_METHOD2(write, void(const void*, std::uint32_t));

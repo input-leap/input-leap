@@ -23,8 +23,8 @@
 #include "base/ILogOutputter.h"
 #include "ipc/Ipc.h"
 
-#include <deque>
 #include <condition_variable>
+#include <deque>
 #include <mutex>
 
 namespace inputleap {
@@ -111,8 +111,7 @@ private:
     std::condition_variable notify_cv_;
     std::mutex notify_mutex_;
     bool m_bufferWaiting;
-    IArchMultithread::ThreadID
- m_bufferThreadId;
+    IArchMultithread::ThreadID m_bufferThreadId;
     std::uint16_t m_bufferMaxSize;
     std::uint16_t m_bufferRateWriteLimit;
     double m_bufferRateTimeLimit;

@@ -18,20 +18,20 @@
 
 #include "client/ServerProxy.h"
 
+#include "base/EventQueueTimer.h"
+#include "base/IEventQueue.h"
+#include "base/Log.h"
+#include "base/XBase.h"
 #include "client/Client.h"
-#include "inputleap/FileChunk.h"
-#include "inputleap/ClipboardChunk.h"
-#include "inputleap/StreamChunker.h"
 #include "inputleap/Clipboard.h"
+#include "inputleap/ClipboardChunk.h"
+#include "inputleap/Exceptions.h"
+#include "inputleap/FileChunk.h"
 #include "inputleap/ProtocolUtil.h"
+#include "inputleap/StreamChunker.h"
 #include "inputleap/option_types.h"
 #include "inputleap/protocol_types.h"
-#include "inputleap/Exceptions.h"
 #include "io/IStream.h"
-#include "base/Log.h"
-#include "base/IEventQueue.h"
-#include "base/EventQueueTimer.h"
-#include "base/XBase.h"
 
 #include <memory>
 
@@ -57,14 +57,15 @@ ServerProxy::ServerProxy(Client* client, inputleap::IStream* stream, IEventQueue
     assert(m_stream != nullptr);
 
     // initialize modifier translation table
-    for (KeyModifierID id = 0; id < kKeyModifierIDLast; ++id)
+    for (KeyModifierID id = 0; id < kKeyModifierIDLast; ++id) {
         m_modifierTranslationTable[id] = id;
+    }
 
     // handle data on stream
     m_events->add_handler(EventType::STREAM_INPUT_READY, m_stream->get_event_target(),
-                          [this](const auto& e){ handle_data(); });
+                          [this](const auto& e) { handle_data(); });
     m_events->add_handler(EventType::CLIPBOARD_SENDING, this,
-                          [this](const auto& e){ handle_clipboard_sending_event(e); });
+                          [this](const auto& e) { handle_clipboard_sending_event(e); });
 
     // send heartbeat
     setKeepAliveRate(kKeepAliveRate);
@@ -77,8 +78,7 @@ ServerProxy::~ServerProxy()
     m_events->remove_handler(EventType::CLIPBOARD_SENDING, this);
 }
 
-void
-ServerProxy::resetKeepAliveAlarm()
+void ServerProxy::resetKeepAliveAlarm()
 {
     if (m_keepAliveAlarmTimer != nullptr) {
         m_events->remove_handler(EventType::TIMER, m_keepAliveAlarmTimer);
@@ -86,15 +86,13 @@ ServerProxy::resetKeepAliveAlarm()
         m_keepAliveAlarmTimer = nullptr;
     }
     if (m_keepAliveAlarm > 0.0) {
-        m_keepAliveAlarmTimer =
-            m_events->newOneShotTimer(m_keepAliveAlarm, nullptr);
+        m_keepAliveAlarmTimer = m_events->newOneShotTimer(m_keepAliveAlarm, nullptr);
         m_events->add_handler(EventType::TIMER, m_keepAliveAlarmTimer,
-                              [this](const auto& e){ handle_keep_alive_alarm(); });
+                              [this](const auto& e) { handle_keep_alive_alarm(); });
     }
 }
 
-void
-ServerProxy::setKeepAliveRate(double rate)
+void ServerProxy::setKeepAliveRate(double rate)
 {
     m_keepAliveAlarm = rate * kKeepAlivesUntilDeath;
     resetKeepAliveAlarm();
@@ -188,15 +186,15 @@ ServerProxy::EResult ServerProxy::parseHandshakeMessage(const std::uint8_t* code
 
     else if (memcmp(code, kMsgEIncompatible, 4) == 0) {
         std::int32_t major, minor;
-        ProtocolUtil::readf(m_stream,
-                        kMsgEIncompatible + 4, &major, &minor);
+        ProtocolUtil::readf(m_stream, kMsgEIncompatible + 4, &major, &minor);
         LOG_ERR("server has incompatible version %d.%d", major, minor);
         m_client->disconnect("server has incompatible version");
         return kDisconnect;
     }
 
     else if (memcmp(code, kMsgEBusy, 4) == 0) {
-        LOG_ERR("server already has a connected client with name \"%s\"", m_client->getName().c_str());
+        LOG_ERR("server already has a connected client with name \"%s\"",
+                m_client->getName().c_str());
         m_client->disconnect("server already has a connected client with our name");
         return kDisconnect;
     }
@@ -211,8 +209,7 @@ ServerProxy::EResult ServerProxy::parseHandshakeMessage(const std::uint8_t* code
         LOG_ERR("server disconnected due to a protocol error");
         m_client->disconnect("server reported a protocol error");
         return kDisconnect;
-    }
-    else {
+    } else {
         return kUnknown;
     }
 
@@ -301,8 +298,7 @@ ServerProxy::EResult ServerProxy::parseMessage(const std::uint8_t* code)
 
     else if (memcmp(code, kMsgDFileTransfer, 4) == 0) {
         fileChunkReceived();
-    }
-    else if (memcmp(code, kMsgDDragInfo, 4) == 0) {
+    } else if (memcmp(code, kMsgDDragInfo, 4) == 0) {
         dragInfoReceived();
     }
 
@@ -311,13 +307,11 @@ ServerProxy::EResult ServerProxy::parseMessage(const std::uint8_t* code)
         LOG_DEBUG1("recv close");
         m_client->disconnect(nullptr);
         return kDisconnect;
-    }
-    else if (memcmp(code, kMsgEBad, 4) == 0) {
+    } else if (memcmp(code, kMsgEBad, 4) == 0) {
         LOG_ERR("server disconnected due to a protocol error");
         m_client->disconnect("server reported a protocol error");
         return kDisconnect;
-    }
-    else {
+    } else {
         return kUnknown;
     }
 
@@ -339,8 +333,7 @@ void ServerProxy::handle_keep_alive_alarm()
     m_client->disconnect("server is not responding");
 }
 
-void
-ServerProxy::onInfoChanged()
+void ServerProxy::onInfoChanged()
 {
     // ignore mouse motion until we receive acknowledgment of our info
     // change message.
@@ -350,16 +343,14 @@ ServerProxy::onInfoChanged()
     queryInfo();
 }
 
-bool
-ServerProxy::onGrabClipboard(ClipboardID id)
+bool ServerProxy::onGrabClipboard(ClipboardID id)
 {
     LOG_DEBUG1("sending clipboard %d changed", id);
     ProtocolUtil::writef(m_stream, kMsgCClipboard, id, m_seqNum);
     return true;
 }
 
-void
-ServerProxy::onClipboardChanged(ClipboardID id, const IClipboard* clipboard)
+void ServerProxy::onClipboardChanged(ClipboardID id, const IClipboard* clipboard)
 {
     std::string data = IClipboard::marshall(clipboard);
     LOG_DEBUG("sending clipboard %d seqnum=%d", id, m_seqNum);
@@ -367,8 +358,7 @@ ServerProxy::onClipboardChanged(ClipboardID id, const IClipboard* clipboard)
     StreamChunker::sendClipboard(data, data.size(), id, m_seqNum, m_events, this);
 }
 
-void
-ServerProxy::flushCompressedMouse()
+void ServerProxy::flushCompressedMouse()
 {
     if (m_compressMouse) {
         m_compressMouse = false;
@@ -382,59 +372,53 @@ ServerProxy::flushCompressedMouse()
     }
 }
 
-void
-ServerProxy::sendInfo(const ClientInfo& info)
+void ServerProxy::sendInfo(const ClientInfo& info)
 {
     LOG_DEBUG1("sending info shape=%d,%d %dx%d", info.m_x, info.m_y, info.m_w, info.m_h);
-    ProtocolUtil::writef(m_stream, kMsgDInfo,
-                                info.m_x, info.m_y,
-                                info.m_w, info.m_h, 0,
-                                info.m_mx, info.m_my);
+    ProtocolUtil::writef(m_stream, kMsgDInfo, info.m_x, info.m_y, info.m_w, info.m_h, 0, info.m_mx,
+                         info.m_my);
 }
 
-KeyID
-ServerProxy::translateKey(KeyID id) const
+KeyID ServerProxy::translateKey(KeyID id) const
 {
-    static const KeyID s_translationTable[kKeyModifierIDLast][2] = {
-        { kKeyNone,      kKeyNone },
-        { kKeyShift_L,   kKeyShift_R },
-        { kKeyControl_L, kKeyControl_R },
-        { kKeyAlt_L,     kKeyAlt_R },
-        { kKeyMeta_L,    kKeyMeta_R },
-        { kKeySuper_L,   kKeySuper_R },
-        { kKeyAltGr,     kKeyAltGr}
-    };
+    static const KeyID s_translationTable[kKeyModifierIDLast][2] = {{kKeyNone, kKeyNone},
+                                                                    {kKeyShift_L, kKeyShift_R},
+                                                                    {kKeyControl_L, kKeyControl_R},
+                                                                    {kKeyAlt_L, kKeyAlt_R},
+                                                                    {kKeyMeta_L, kKeyMeta_R},
+                                                                    {kKeySuper_L, kKeySuper_R},
+                                                                    {kKeyAltGr, kKeyAltGr}};
 
     KeyModifierID id2 = kKeyModifierIDNull;
     std::uint32_t side = 0;
     switch (id) {
     case kKeyShift_L:
-        id2  = kKeyModifierIDShift;
+        id2 = kKeyModifierIDShift;
         side = 0;
         break;
 
     case kKeyShift_R:
-        id2  = kKeyModifierIDShift;
+        id2 = kKeyModifierIDShift;
         side = 1;
         break;
 
     case kKeyControl_L:
-        id2  = kKeyModifierIDControl;
+        id2 = kKeyModifierIDControl;
         side = 0;
         break;
 
     case kKeyControl_R:
-        id2  = kKeyModifierIDControl;
+        id2 = kKeyModifierIDControl;
         side = 1;
         break;
 
     case kKeyAlt_L:
-        id2  = kKeyModifierIDAlt;
+        id2 = kKeyModifierIDAlt;
         side = 0;
         break;
 
     case kKeyAlt_R:
-        id2  = kKeyModifierIDAlt;
+        id2 = kKeyModifierIDAlt;
         side = 1;
         break;
 
@@ -444,22 +428,22 @@ ServerProxy::translateKey(KeyID id) const
         break;
 
     case kKeyMeta_L:
-        id2  = kKeyModifierIDMeta;
+        id2 = kKeyModifierIDMeta;
         side = 0;
         break;
 
     case kKeyMeta_R:
-        id2  = kKeyModifierIDMeta;
+        id2 = kKeyModifierIDMeta;
         side = 1;
         break;
 
     case kKeySuper_L:
-        id2  = kKeyModifierIDSuper;
+        id2 = kKeyModifierIDSuper;
         side = 0;
         break;
 
     case kKeySuper_R:
-        id2  = kKeyModifierIDSuper;
+        id2 = kKeyModifierIDSuper;
         side = 1;
         break;
     default:
@@ -468,31 +452,19 @@ ServerProxy::translateKey(KeyID id) const
 
     if (id2 != kKeyModifierIDNull) {
         return s_translationTable[m_modifierTranslationTable[id2]][side];
-    }
-    else {
+    } else {
         return id;
     }
 }
 
-KeyModifierMask
-ServerProxy::translateModifierMask(KeyModifierMask mask) const
+KeyModifierMask ServerProxy::translateModifierMask(KeyModifierMask mask) const
 {
-    static const KeyModifierMask s_masks[kKeyModifierIDLast] = {
-        0x0000,
-        KeyModifierShift,
-        KeyModifierControl,
-        KeyModifierAlt,
-        KeyModifierMeta,
-        KeyModifierSuper,
-        KeyModifierAltGr
-    };
+    static const KeyModifierMask s_masks[kKeyModifierIDLast] =
+        {0x0000,          KeyModifierShift, KeyModifierControl, KeyModifierAlt,
+         KeyModifierMeta, KeyModifierSuper, KeyModifierAltGr};
 
-    KeyModifierMask newMask = mask & ~(KeyModifierShift |
-                                        KeyModifierControl |
-                                        KeyModifierAlt |
-                                        KeyModifierMeta |
-                                        KeyModifierSuper |
-                                        KeyModifierAltGr );
+    KeyModifierMask newMask = mask & ~(KeyModifierShift | KeyModifierControl | KeyModifierAlt |
+                                       KeyModifierMeta | KeyModifierSuper | KeyModifierAltGr);
     if ((mask & KeyModifierShift) != 0) {
         newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDShift]];
     }
@@ -514,8 +486,7 @@ ServerProxy::translateModifierMask(KeyModifierMask mask) const
     return newMask;
 }
 
-void
-ServerProxy::enter()
+void ServerProxy::enter()
 {
     // parse
     std::int16_t x, y;
@@ -525,18 +496,17 @@ ServerProxy::enter()
     LOG_DEBUG1("recv enter, %d,%d %d %04x", x, y, seqNum, mask);
 
     // discard old compressed mouse motion, if any
-    m_compressMouse         = false;
+    m_compressMouse = false;
     m_compressMouseRelative = false;
-    m_dxMouse               = 0;
-    m_dyMouse               = 0;
-    m_seqNum                = seqNum;
+    m_dxMouse = 0;
+    m_dyMouse = 0;
+    m_seqNum = seqNum;
 
     // forward
     m_client->enter(x, y, seqNum, static_cast<KeyModifierMask>(mask), false);
 }
 
-void
-ServerProxy::leave()
+void ServerProxy::leave()
 {
     // parse
     LOG_DEBUG1("recv leave");
@@ -548,8 +518,7 @@ ServerProxy::leave()
     m_client->leave();
 }
 
-void
-ServerProxy::setClipboard()
+void ServerProxy::setClipboard()
 {
     // parse
     static std::string dataCached;
@@ -561,8 +530,7 @@ ServerProxy::setClipboard()
     if (r == kStart) {
         size_t size = ClipboardChunk::getExpectedSize();
         LOG_DEBUG("receiving clipboard %d size=%zd", id, size);
-    }
-    else if (r == kFinish) {
+    } else if (r == kFinish) {
         LOG_DEBUG("received clipboard %d size=%zd", id, dataCached.size());
 
         // forward
@@ -574,8 +542,7 @@ ServerProxy::setClipboard()
     }
 }
 
-void
-ServerProxy::grabClipboard()
+void ServerProxy::grabClipboard()
 {
     // parse
     ClipboardID id;
@@ -592,8 +559,7 @@ ServerProxy::grabClipboard()
     m_client->grabClipboard(id);
 }
 
-void
-ServerProxy::keyDown()
+void ServerProxy::keyDown()
 {
     // get mouse up to date
     flushCompressedMouse();
@@ -604,43 +570,39 @@ ServerProxy::keyDown()
     LOG_DEBUG1("recv key down id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button);
 
     // translate
-    KeyID id2             = translateKey(static_cast<KeyID>(id));
-    KeyModifierMask mask2 = translateModifierMask(
-                                static_cast<KeyModifierMask>(mask));
-    if (id2   != static_cast<KeyID>(id) ||
-        mask2 != static_cast<KeyModifierMask>(mask))
+    KeyID id2 = translateKey(static_cast<KeyID>(id));
+    KeyModifierMask mask2 = translateModifierMask(static_cast<KeyModifierMask>(mask));
+    if (id2 != static_cast<KeyID>(id) || mask2 != static_cast<KeyModifierMask>(mask)) {
         LOG_DEBUG1("key down translated to id=0x%08x, mask=0x%04x", id2, mask2);
+    }
 
     // forward
     m_client->keyDown(id2, mask2, button);
 }
 
-void
-ServerProxy::keyRepeat()
+void ServerProxy::keyRepeat()
 {
     // get mouse up to date
     flushCompressedMouse();
 
     // parse
     std::uint16_t id, mask, count, button;
-    ProtocolUtil::readf(m_stream, kMsgDKeyRepeat + 4,
-                                &id, &mask, &count, &button);
-    LOG_DEBUG1("recv key repeat id=0x%08x, mask=0x%04x, count=%d, button=0x%04x", id, mask, count, button);
+    ProtocolUtil::readf(m_stream, kMsgDKeyRepeat + 4, &id, &mask, &count, &button);
+    LOG_DEBUG1("recv key repeat id=0x%08x, mask=0x%04x, count=%d, button=0x%04x", id, mask, count,
+               button);
 
     // translate
-    KeyID id2             = translateKey(static_cast<KeyID>(id));
-    KeyModifierMask mask2 = translateModifierMask(
-                                static_cast<KeyModifierMask>(mask));
-    if (id2   != static_cast<KeyID>(id) ||
-        mask2 != static_cast<KeyModifierMask>(mask))
+    KeyID id2 = translateKey(static_cast<KeyID>(id));
+    KeyModifierMask mask2 = translateModifierMask(static_cast<KeyModifierMask>(mask));
+    if (id2 != static_cast<KeyID>(id) || mask2 != static_cast<KeyModifierMask>(mask)) {
         LOG_DEBUG1("key repeat translated to id=0x%08x, mask=0x%04x", id2, mask2);
+    }
 
     // forward
     m_client->keyRepeat(id2, mask2, count, button);
 }
 
-void
-ServerProxy::keyUp()
+void ServerProxy::keyUp()
 {
     // get mouse up to date
     flushCompressedMouse();
@@ -651,19 +613,17 @@ ServerProxy::keyUp()
     LOG_DEBUG1("recv key up id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button);
 
     // translate
-    KeyID id2             = translateKey(static_cast<KeyID>(id));
-    KeyModifierMask mask2 = translateModifierMask(
-                                static_cast<KeyModifierMask>(mask));
-    if (id2   != static_cast<KeyID>(id) ||
-        mask2 != static_cast<KeyModifierMask>(mask))
+    KeyID id2 = translateKey(static_cast<KeyID>(id));
+    KeyModifierMask mask2 = translateModifierMask(static_cast<KeyModifierMask>(mask));
+    if (id2 != static_cast<KeyID>(id) || mask2 != static_cast<KeyModifierMask>(mask)) {
         LOG_DEBUG1("key up translated to id=0x%08x, mask=0x%04x", id2, mask2);
+    }
 
     // forward
     m_client->keyUp(id2, mask2, button);
 }
 
-void
-ServerProxy::mouseDown()
+void ServerProxy::mouseDown()
 {
     // get mouse up to date
     flushCompressedMouse();
@@ -677,8 +637,7 @@ ServerProxy::mouseDown()
     m_client->mouseDown(static_cast<ButtonID>(id));
 }
 
-void
-ServerProxy::mouseUp()
+void ServerProxy::mouseUp()
 {
     // get mouse up to date
     flushCompressedMouse();
@@ -692,8 +651,7 @@ ServerProxy::mouseUp()
     m_client->mouseUp(static_cast<ButtonID>(id));
 }
 
-void
-ServerProxy::mouseMove()
+void ServerProxy::mouseMove()
 {
     // parse
     bool ignore;
@@ -711,9 +669,9 @@ ServerProxy::mouseMove()
     // if compressing then ignore the motion but record it
     if (m_compressMouse) {
         m_compressMouseRelative = false;
-        ignore    = true;
-        m_xMouse  = x;
-        m_yMouse  = y;
+        ignore = true;
+        m_xMouse = x;
+        m_yMouse = y;
         m_dxMouse = 0;
         m_dyMouse = 0;
     }
@@ -725,8 +683,7 @@ ServerProxy::mouseMove()
     }
 }
 
-void
-ServerProxy::mouseRelativeMove()
+void ServerProxy::mouseRelativeMove()
 {
     // parse
     bool ignore;
@@ -743,7 +700,7 @@ ServerProxy::mouseRelativeMove()
 
     // if compressing then ignore the motion but record it
     if (m_compressMouseRelative) {
-        ignore     = true;
+        ignore = true;
         m_dxMouse += dx;
         m_dyMouse += dy;
     }
@@ -755,8 +712,7 @@ ServerProxy::mouseRelativeMove()
     }
 }
 
-void
-ServerProxy::mouseWheel()
+void ServerProxy::mouseWheel()
 {
     // get mouse up to date
     flushCompressedMouse();
@@ -770,8 +726,7 @@ ServerProxy::mouseWheel()
     m_client->mouseWheel(xDelta, yDelta);
 }
 
-void
-ServerProxy::screensaver()
+void ServerProxy::screensaver()
 {
     // parse
     std::int8_t on;
@@ -782,8 +737,7 @@ ServerProxy::screensaver()
     m_client->screensaver(on != 0);
 }
 
-void
-ServerProxy::resetOptions()
+void ServerProxy::resetOptions()
 {
     // parse
     LOG_DEBUG1("recv reset options");
@@ -800,8 +754,7 @@ ServerProxy::resetOptions()
     }
 }
 
-void
-ServerProxy::setOptions()
+void ServerProxy::setOptions()
 {
     // parse
     OptionsList options;
@@ -816,37 +769,29 @@ ServerProxy::setOptions()
         KeyModifierID id = kKeyModifierIDNull;
         if (options[i] == kOptionModifierMapForShift) {
             id = kKeyModifierIDShift;
-        }
-        else if (options[i] == kOptionModifierMapForControl) {
+        } else if (options[i] == kOptionModifierMapForControl) {
             id = kKeyModifierIDControl;
-        }
-        else if (options[i] == kOptionModifierMapForAlt) {
+        } else if (options[i] == kOptionModifierMapForAlt) {
             id = kKeyModifierIDAlt;
-        }
-        else if (options[i] == kOptionModifierMapForAltGr) {
+        } else if (options[i] == kOptionModifierMapForAltGr) {
             id = kKeyModifierIDAltGr;
-        }
-        else if (options[i] == kOptionModifierMapForMeta) {
+        } else if (options[i] == kOptionModifierMapForMeta) {
             id = kKeyModifierIDMeta;
-        }
-        else if (options[i] == kOptionModifierMapForSuper) {
+        } else if (options[i] == kOptionModifierMapForSuper) {
             id = kKeyModifierIDSuper;
-        }
-        else if (options[i] == kOptionHeartbeat) {
+        } else if (options[i] == kOptionHeartbeat) {
             // update keep alive
             setKeepAliveRate(1.0e-3 * static_cast<double>(options[i + 1]));
         }
 
         if (id != kKeyModifierIDNull) {
-            m_modifierTranslationTable[id] =
-                static_cast<KeyModifierID>(options[i + 1]);
+            m_modifierTranslationTable[id] = static_cast<KeyModifierID>(options[i + 1]);
             LOG_DEBUG1("modifier %d mapped to %d", id, m_modifierTranslationTable[id]);
         }
     }
 }
 
-void
-ServerProxy::queryInfo()
+void ServerProxy::queryInfo()
 {
     ClientInfo info;
     m_client->getShape(info.m_x, info.m_y, info.m_w, info.m_h);
@@ -854,25 +799,20 @@ ServerProxy::queryInfo()
     sendInfo(info);
 }
 
-void
-ServerProxy::infoAcknowledgment()
+void ServerProxy::infoAcknowledgment()
 {
     LOG_DEBUG1("recv info acknowledgment");
     m_ignoreMouse = false;
 }
 
-void
-ServerProxy::fileChunkReceived()
+void ServerProxy::fileChunkReceived()
 {
-    int result = FileChunk::assemble(
-                    m_stream,
-                    m_client->getReceivedFileData(),
-                    m_client->getExpectedFileSize());
+    int result = FileChunk::assemble(m_stream, m_client->getReceivedFileData(),
+                                     m_client->getExpectedFileSize());
 
     if (result == kFinish) {
         m_events->add_event(EventType::FILE_RECEIVE_COMPLETED, m_client);
-    }
-    else if (result == kStart) {
+    } else if (result == kStart) {
         if (m_client->getDragFileList().size() > 0) {
             std::string filename = m_client->getDragFileList().at(0).getFilename();
             LOG_DEBUG("start receiving %s", filename.c_str());
@@ -880,8 +820,7 @@ ServerProxy::fileChunkReceived()
     }
 }
 
-void
-ServerProxy::dragInfoReceived()
+void ServerProxy::dragInfoReceived()
 {
     // parse
     std::uint32_t fileNum = 0;

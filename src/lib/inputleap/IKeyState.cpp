@@ -19,8 +19,8 @@
 #include "inputleap/IKeyState.h"
 #include "base/EventQueue.h"
 
-#include <cstring>
 #include <cstdlib>
+#include <cstring>
 
 namespace inputleap {
 
@@ -37,14 +37,12 @@ IKeyState::KeyInfo IKeyState::KeyInfo::create(KeyID id, KeyModifierMask mask, Ke
     return info;
 }
 
-bool
-IKeyState::KeyInfo::isDefault(const char* screens)
+bool IKeyState::KeyInfo::isDefault(const char* screens)
 {
     return (screens == nullptr || screens[0] == '\0');
 }
 
-bool
-IKeyState::KeyInfo::contains(const char* screens, const std::string& name)
+bool IKeyState::KeyInfo::contains(const char* screens, const std::string& name)
 {
     // special cases
     if (isDefault(screens)) {
@@ -63,14 +61,10 @@ IKeyState::KeyInfo::contains(const char* screens, const std::string& name)
     return (strstr(screens, match.c_str()) != nullptr);
 }
 
-bool
-IKeyState::KeyInfo::equal(const KeyInfo* a, const KeyInfo* b)
+bool IKeyState::KeyInfo::equal(const KeyInfo* a, const KeyInfo* b)
 {
-    return (a->m_key    == b->m_key &&
-            a->m_mask   == b->m_mask &&
-            a->m_button == b->m_button &&
-            a->m_count  == b->m_count &&
-            a->screens_ == b->screens_);
+    return (a->m_key == b->m_key && a->m_mask == b->m_mask && a->m_button == b->m_button &&
+            a->m_count == b->m_count && a->screens_ == b->screens_);
 }
 
 std::string IKeyState::KeyInfo::join(const std::set<std::string>& destinations)
@@ -83,8 +77,7 @@ std::string IKeyState::KeyInfo::join(const std::set<std::string>& destinations)
         if (*i == "*") {
             screens = "*";
             break;
-        }
-        else {
+        } else {
             if (screens.empty()) {
                 screens = ":";
             }

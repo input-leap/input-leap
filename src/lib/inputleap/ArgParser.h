@@ -27,7 +27,7 @@ namespace inputleap {
 // Thrown whenever the option parsing fails.
 class XArgvParserError {
 public:
-    XArgvParserError(const char *fmt, ...);
+    XArgvParserError(const char* fmt, ...);
     std::string message;
 };
 
@@ -44,13 +44,13 @@ public:
     // Return the next argument (excluding argv[0]) and remove it from the list,
     // if either name1 or name2 match the argument. If optarg is not null, it set
     // to the subsequent argument which is also removed from the list.
-    const char* shift(const char *name1, const char*name2 = nullptr, const char** optarg = nullptr);
+    const char* shift(const char* name1, const char* name2 = nullptr, const char** optarg = nullptr);
 
     // Return the next argument (excluding argv[0]) but do not remove it from the list
     const char* peek() { return m_argv.front(); }
 
     // Return true if the given name is in the argument list
-    bool contains(const char *name);
+    bool contains(const char* name);
 
     // True if no more arguments are available
     bool empty() { return m_argv.empty(); }
@@ -66,7 +66,6 @@ private:
 };
 
 class ArgParser {
-
 public:
     ArgParser(App* app);
 
@@ -77,8 +76,8 @@ public:
     void setArgsBase(ArgsBase& argsBase) { m_argsBase = &argsBase; }
 
     static void splitCommandString(std::string& command, std::vector<std::string>& argv);
-    static bool searchDoubleQuotes(std::string& command, size_t& left,
-                            size_t& right, size_t startPos = 0);
+    static bool searchDoubleQuotes(std::string& command, size_t& left, size_t& right,
+                                   size_t startPos = 0);
     static void removeDoubleQuotes(std::string& arg);
     static const char** getArgv(std::vector<std::string>& argsArray);
     static std::string assembleCommand(std::vector<std::string>& argsArray,
@@ -87,7 +86,7 @@ public:
     static std::string parse_exename(const char* arg);
 
 private:
-    void updateCommonArgs(Argv &argv);
+    void updateCommonArgs(Argv& argv);
 
     static ArgsBase& argsBase() { return *m_argsBase; }
 

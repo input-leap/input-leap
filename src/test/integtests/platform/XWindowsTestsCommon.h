@@ -9,7 +9,6 @@ namespace inputleap {
 
 class XDisplayOpenUtil {
 public:
-
     ~XDisplayOpenUtil()
     {
         if (display_ != nullptr) {
@@ -32,8 +31,9 @@ public:
 
             // failed to open the display and DISPLAY is null? probably
             // running in a CI, let's skip
-            if (display_ == nullptr && std::getenv("DISPLAY") == nullptr)
+            if (display_ == nullptr && std::getenv("DISPLAY") == nullptr) {
                 GTEST_SKIP() << "DISPLAY environment variable not set, skipping test";
+            }
 
             if (display_) {
                 return;
@@ -44,6 +44,7 @@ public:
     }
 
     Display* display() { return display_; }
+
 private:
     Display* display_ = nullptr;
 };

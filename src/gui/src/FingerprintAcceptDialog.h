@@ -17,8 +17,8 @@
 
 #pragma once
 
-#include "net/FingerprintData.h"
 #include "inputleap/AppRole.h"
+#include "net/FingerprintData.h"
 #include <QDialog>
 #include <memory>
 
@@ -26,13 +26,11 @@ namespace Ui {
 class FingerprintAcceptDialog;
 }
 
-class FingerprintAcceptDialog : public QDialog
-{
+class FingerprintAcceptDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit FingerprintAcceptDialog(QWidget* parent,
-                                     AppRole type,
+    explicit FingerprintAcceptDialog(QWidget* parent, AppRole type,
                                      const inputleap::FingerprintData& fingerprint_sha1,
                                      const inputleap::FingerprintData& fingerprint_sha256);
     ~FingerprintAcceptDialog() override;

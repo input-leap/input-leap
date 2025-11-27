@@ -26,14 +26,11 @@ std::string XBadClient::getWhat() const noexcept
     return "XBadClient";
 }
 
-
 //
 // XIncompatibleClient
 //
 
-XIncompatibleClient::XIncompatibleClient(int major, int minor) :
-    m_major(major),
-    m_minor(minor)
+XIncompatibleClient::XIncompatibleClient(int major, int minor) : m_major(major), m_minor(minor)
 {
     // do nothing
 }
@@ -51,17 +48,15 @@ int XIncompatibleClient::getMinor() const noexcept
 std::string XIncompatibleClient::getWhat() const noexcept
 {
     return format("XIncompatibleClient", "incompatible client %{1}.%{2}",
-                                inputleap::string::sprintf("%d", m_major).c_str(),
-                                inputleap::string::sprintf("%d", m_minor).c_str());
+                  inputleap::string::sprintf("%d", m_major).c_str(),
+                  inputleap::string::sprintf("%d", m_minor).c_str());
 }
-
 
 //
 // XDuplicateClient
 //
 
-XDuplicateClient::XDuplicateClient(const std::string& name) :
-    m_name(name)
+XDuplicateClient::XDuplicateClient(const std::string& name) : m_name(name)
 {
     // do nothing
 }
@@ -76,13 +71,11 @@ std::string XDuplicateClient::getWhat() const noexcept
     return format("XDuplicateClient", "duplicate client %{1}", m_name.c_str());
 }
 
-
 //
 // XUnknownClient
 //
 
-XUnknownClient::XUnknownClient(const std::string& name) :
-    m_name(name)
+XUnknownClient::XUnknownClient(const std::string& name) : m_name(name)
 {
     // do nothing
 }
@@ -97,13 +90,11 @@ std::string XUnknownClient::getWhat() const noexcept
     return format("XUnknownClient", "unknown client %{1}", m_name.c_str());
 }
 
-
 //
 // XExitApp
 //
 
-XExitApp::XExitApp(int code) :
-    m_code(code)
+XExitApp::XExitApp(int code) : m_code(code)
 {
     // do nothing
 }
@@ -115,9 +106,8 @@ int XExitApp::getCode() const noexcept
 
 std::string XExitApp::getWhat() const noexcept
 {
-    return format(
-        "XExitApp", "exiting with code %{1}",
-        inputleap::string::sprintf("%d", m_code).c_str());
+    return format("XExitApp", "exiting with code %{1}",
+                  inputleap::string::sprintf("%d", m_code).c_str());
 }
 
 } // namespace inputleap

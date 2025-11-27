@@ -40,8 +40,10 @@ public:
     */
     void updateStatus(Client*, const std::string& errorMsg);
 
-    void updateStatus(INode* n, const std::string& errorMsg)  override
-        { updateStatus(static_cast<Client*>(n), errorMsg); }
+    void updateStatus(INode* n, const std::string& errorMsg) override
+    {
+        updateStatus(static_cast<Client*>(n), errorMsg);
+    }
 
     //@}
 
@@ -52,14 +54,7 @@ public:
     void cleanup() override {}
 
 protected:
-    enum EState {
-        kNotRunning,
-        kNotWorking,
-        kNotConnected,
-        kConnecting,
-        kConnected,
-        kMaxState
-    };
+    enum EState { kNotRunning, kNotWorking, kNotConnected, kConnecting, kConnected, kMaxState };
 
     //! Get status
     EState getStatus() const;
@@ -86,6 +81,7 @@ private:
     IEventQueue* m_events;
 };
 
-IArchTaskBarReceiver* createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events);
+IArchTaskBarReceiver* createTaskBarReceiver(const BufferedLogOutputter* logBuffer,
+                                            IEventQueue* events);
 
 } // namespace inputleap

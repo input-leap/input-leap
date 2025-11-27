@@ -19,12 +19,12 @@
 
 #include "inputleap/KeyMap.h"
 
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 using ::testing::_;
-using ::testing::NiceMock;
 using ::testing::Invoke;
+using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::ReturnRef;
 using ::testing::SaveArg;
@@ -139,7 +139,7 @@ TEST(KeyMapTests, findBestKey_onlyOneRequiredDown_matchTwoRequiredChangesItem)
     item1.m_sensitive = KeyModifierShift | KeyModifierAlt | KeyModifierControl;
     KeyMap::KeyItemList itemList2;
     KeyMap::KeyItem item2;
-    item2.m_required = KeyModifierShift| KeyModifierAlt;
+    item2.m_required = KeyModifierShift | KeyModifierAlt;
     item2.m_sensitive = KeyModifierShift | KeyModifierAlt | KeyModifierControl;
     KeyModifierMask currentState = 0;
     KeyModifierMask desiredState = 0;
@@ -170,7 +170,7 @@ TEST(KeyMapTests, findBestKey_noRequiredDown_cannotMatch)
 TEST(KeyMapTests, isCommand_shiftMask_returnFalse)
 {
     KeyMap keyMap;
-    KeyModifierMask mask= KeyModifierShift;
+    KeyModifierMask mask = KeyModifierShift;
 
     EXPECT_FALSE(keyMap.isCommand(mask));
 }
@@ -178,7 +178,7 @@ TEST(KeyMapTests, isCommand_shiftMask_returnFalse)
 TEST(KeyMapTests, isCommand_controlMask_returnTrue)
 {
     KeyMap keyMap;
-    KeyModifierMask mask= KeyModifierControl;
+    KeyModifierMask mask = KeyModifierControl;
 
     EXPECT_EQ(true, keyMap.isCommand(mask));
 }
@@ -186,7 +186,7 @@ TEST(KeyMapTests, isCommand_controlMask_returnTrue)
 TEST(KeyMapTests, isCommand_alternateMask_returnTrue)
 {
     KeyMap keyMap;
-    KeyModifierMask mask= KeyModifierAlt;
+    KeyModifierMask mask = KeyModifierAlt;
 
     EXPECT_EQ(true, keyMap.isCommand(mask));
 }
@@ -194,7 +194,7 @@ TEST(KeyMapTests, isCommand_alternateMask_returnTrue)
 TEST(KeyMapTests, isCommand_alternateGraphicMask_returnTrue)
 {
     KeyMap keyMap;
-    KeyModifierMask mask= KeyModifierAltGr;
+    KeyModifierMask mask = KeyModifierAltGr;
 
     EXPECT_EQ(true, keyMap.isCommand(mask));
 }
@@ -202,7 +202,7 @@ TEST(KeyMapTests, isCommand_alternateGraphicMask_returnTrue)
 TEST(KeyMapTests, isCommand_metaMask_returnTrue)
 {
     KeyMap keyMap;
-    KeyModifierMask mask= KeyModifierMeta;
+    KeyModifierMask mask = KeyModifierMeta;
 
     EXPECT_EQ(true, keyMap.isCommand(mask));
 }
@@ -210,9 +210,9 @@ TEST(KeyMapTests, isCommand_metaMask_returnTrue)
 TEST(KeyMapTests, isCommand_superMask_returnTrue)
 {
     KeyMap keyMap;
-    KeyModifierMask mask= KeyModifierSuper;
+    KeyModifierMask mask = KeyModifierSuper;
 
     EXPECT_EQ(true, keyMap.isCommand(mask));
 }
 
-}
+} // namespace inputleap

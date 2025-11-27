@@ -2,10 +2,7 @@
 
 namespace inputleap {
 
-WindowsHookResource::WindowsHookResource() :
-    _hook(nullptr)
-{
-}
+WindowsHookResource::WindowsHookResource() : _hook(nullptr) {}
 
 WindowsHookResource::~WindowsHookResource()
 {
@@ -14,8 +11,9 @@ WindowsHookResource::~WindowsHookResource()
 
 bool WindowsHookResource::set(int idHook, HOOKPROC lpfn, HINSTANCE hmod, DWORD dwThreadId)
 {
-    if (is_set())
+    if (is_set()) {
         return false;
+    }
     _hook = SetWindowsHookEx(idHook, lpfn, hmod, dwThreadId);
     return is_set();
 }
@@ -31,7 +29,13 @@ bool WindowsHookResource::unset()
     return true;
 }
 
-bool WindowsHookResource::is_set() const { return _hook != nullptr; }
-WindowsHookResource::operator HHOOK() const { return _hook; }
+bool WindowsHookResource::is_set() const
+{
+    return _hook != nullptr;
+}
+WindowsHookResource::operator HHOOK() const
+{
+    return _hook;
+}
 
 } // namespace inputleap

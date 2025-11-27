@@ -17,8 +17,8 @@
 
 #include "QUtility.h"
 
-#include "ProcessorArch.h"
 #include "CommandProcess.h"
+#include "ProcessorArch.h"
 
 #if defined(Q_OS_LINUX)
 #include <QProcess>
@@ -31,10 +31,8 @@
 
 void setIndexFromItemData(QComboBox* comboBox, const QVariant& itemData)
 {
-    for (int i = 0; i < comboBox->count(); ++i)
-    {
-        if (comboBox->itemData(i) == itemData)
-        {
+    for (int i = 0; i < comboBox->count(); ++i) {
+        if (comboBox->itemData(i) == itemData) {
             comboBox->setCurrentIndex(i);
             return;
         }
@@ -54,8 +52,7 @@ QString getFirstMacAddress()
     const auto interfaces = QNetworkInterface::allInterfaces();
     for (const QNetworkInterface& interface : interfaces) {
         mac = interface.hardwareAddress();
-        if (mac.size() != 0)
-        {
+        if (mac.size() != 0) {
             break;
         }
     }

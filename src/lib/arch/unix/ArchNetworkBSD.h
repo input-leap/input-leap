@@ -20,12 +20,12 @@
 
 #include "config.h"
 
-#include "arch/IArchNetwork.h"
 #include "arch/IArchMultithread.h"
+#include "arch/IArchNetwork.h"
 #include <mutex>
 
 #if HAVE_SYS_SOCKET_H
-#    include <sys/socket.h>
+#include <sys/socket.h>
 #endif
 
 // old systems may use char* for [gs]etsockopt()'s optval argument.
@@ -46,7 +46,7 @@ public:
 
 class ArchNetAddressImpl {
 public:
-    ArchNetAddressImpl() : m_len(sizeof(m_addr)) { }
+    ArchNetAddressImpl() : m_len(sizeof(m_addr)) {}
 
 public:
     struct sockaddr_storage m_addr;

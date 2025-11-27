@@ -18,21 +18,21 @@
 
 #pragma once
 
-#include "Fwd.h"
 #include "EventTypes.h"
+#include "Fwd.h"
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
-#include <utility>
 #include <stdexcept>
+#include <utility>
 
 namespace inputleap {
 
 class EventDataBase {
 public:
     virtual EventDataBase* clone() const = 0;
-    virtual ~EventDataBase() { }
+    virtual ~EventDataBase() {}
 };
 
 template<class T>
@@ -46,6 +46,7 @@ public:
 
     T& data() { return data_; }
     const T& data() const { return data_; }
+
 private:
     T data_;
 };
@@ -61,8 +62,8 @@ class Event {
 public:
     typedef std::uint32_t Flags;
     enum {
-        kNone                = 0x00,    //!< No flags
-        kDeliverImmediately  = 0x01,    //!< Dispatch and free event immediately
+        kNone = 0x00,               //!< No flags
+        kDeliverImmediately = 0x01, //!< Dispatch and free event immediately
     };
 
     Event() = default;
@@ -78,10 +79,7 @@ public:
     */
     Event(EventType type, const EventTarget* target = nullptr, EventDataBase* data = nullptr,
           Flags flags = kNone) :
-        type_{type},
-        target_{target},
-        data_{data},
-        flags_{flags}
+        type_{type}, target_{target}, data_{data}, flags_{flags}
     {}
 
     /// Moves event data from another event
@@ -100,10 +98,7 @@ public:
     /*!
     Deletes event data for the given event (using free()).
     */
-    static void deleteData(const Event& event)
-    {
-        delete event.data_;
-    }
+    static void deleteData(const Event& event) { delete event.data_; }
 
     //! Get event type
     /*!

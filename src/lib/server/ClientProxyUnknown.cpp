@@ -20,29 +20,24 @@
 #include "ClientConnectionByStream.h"
 #include "ClientConnectionLoggingWrapper.h"
 #include "base/ELevel.h"
-#include "server/Server.h"
-#include "server/ClientProxy1_6.h"
-#include "inputleap/protocol_types.h"
-#include "inputleap/ProtocolUtil.h"
+#include "base/IEventQueue.h"
+#include "base/Log.h"
 #include "inputleap/Exceptions.h"
+#include "inputleap/ProtocolUtil.h"
+#include "inputleap/protocol_types.h"
 #include "io/IStream.h"
 #include "io/XIO.h"
-#include "base/Log.h"
-#include "base/IEventQueue.h"
+#include "server/ClientProxy1_6.h"
+#include "server/Server.h"
 
 namespace inputleap {
 
-ClientProxyUnknown::ClientProxyUnknown(std::unique_ptr<inputleap::IStream> stream,
-                                       double timeout, Server* server, IEventQueue* events) :
-    stream_(std::move(stream)),
-    m_proxy(nullptr),
-    m_ready(false),
-    m_server(server),
-    m_events(events)
+ClientProxyUnknown::ClientProxyUnknown(std::unique_ptr<inputleap::IStream> stream, double timeout,
+                                       Server* server, IEventQueue* events) :
+    stream_(std::move(stream)), m_proxy(nullptr), m_ready(false), m_server(server), m_events(events)
 {
     assert(m_server != nullptr);
-    m_events->add_handler(EventType::TIMER, this,
-                          [this](const auto& e){ handle_timeout(); });
+    m_events->add_handler(EventType::TIMER, this, [this](const auto& e) { handle_timeout(); });
     m_timer = m_events->newOneShotTimer(timeout, this);
     addStreamHandlers();
 
@@ -57,30 +52,26 @@ ClientProxyUnknown::~ClientProxyUnknown()
     delete m_proxy;
 }
 
-ClientProxy*
-ClientProxyUnknown::orphanClientProxy()
+ClientProxy* ClientProxyUnknown::orphanClientProxy()
 {
     if (m_ready) {
         remove_handlers();
         ClientProxy* proxy = m_proxy;
         m_proxy = nullptr;
         return proxy;
-    }
-    else {
+    } else {
         return nullptr;
     }
 }
 
-void
-ClientProxyUnknown::sendSuccess()
+void ClientProxyUnknown::sendSuccess()
 {
     m_ready = true;
     removeTimer();
     m_events->add_event(EventType::CLIENT_PROXY_UNKNOWN_SUCCESS, this);
 }
 
-void
-ClientProxyUnknown::sendFailure()
+void ClientProxyUnknown::sendFailure()
 {
     delete m_proxy;
     m_proxy = nullptr;
@@ -90,34 +81,31 @@ ClientProxyUnknown::sendFailure()
     m_events->add_event(EventType::CLIENT_PROXY_UNKNOWN_FAILURE, this);
 }
 
-void
-ClientProxyUnknown::addStreamHandlers()
+void ClientProxyUnknown::addStreamHandlers()
 {
     assert(stream_.get() != nullptr);
     m_events->add_handler(EventType::STREAM_INPUT_READY, stream_->get_event_target(),
-                          [this](const auto& e){ handle_data(); });
+                          [this](const auto& e) { handle_data(); });
     m_events->add_handler(EventType::STREAM_OUTPUT_ERROR, stream_->get_event_target(),
-                          [this](const auto& e){ handle_write_error(); });
+                          [this](const auto& e) { handle_write_error(); });
     m_events->add_handler(EventType::STREAM_INPUT_SHUTDOWN, stream_->get_event_target(),
-                          [this](const auto& e){ handle_disconnect(); });
+                          [this](const auto& e) { handle_disconnect(); });
     m_events->add_handler(EventType::STREAM_INPUT_FORMAT_ERROR, stream_->get_event_target(),
-                          [this](const auto& e){ handle_disconnect(); });
+                          [this](const auto& e) { handle_disconnect(); });
     m_events->add_handler(EventType::STREAM_OUTPUT_SHUTDOWN, stream_->get_event_target(),
-                          [this](const auto& e){ handle_write_error(); });
+                          [this](const auto& e) { handle_write_error(); });
 }
 
-void
-ClientProxyUnknown::addProxyHandlers()
+void ClientProxyUnknown::addProxyHandlers()
 {
     assert(m_proxy != nullptr);
     m_events->add_handler(EventType::CLIENT_PROXY_READY, m_proxy,
-                          [this](const auto& e){ handle_ready(); });
+                          [this](const auto& e) { handle_ready(); });
     m_events->add_handler(EventType::CLIENT_PROXY_DISCONNECTED, m_proxy,
-                          [this](const auto& e){ handle_disconnect(); });
+                          [this](const auto& e) { handle_disconnect(); });
 }
 
-void
-ClientProxyUnknown::remove_handlers()
+void ClientProxyUnknown::remove_handlers()
 {
     if (stream_) {
         m_events->remove_handler(EventType::STREAM_INPUT_READY, stream_->get_event_target());
@@ -132,8 +120,7 @@ ClientProxyUnknown::remove_handlers()
     }
 }
 
-void
-ClientProxyUnknown::removeTimer()
+void ClientProxyUnknown::removeTimer()
 {
     if (m_timer != nullptr) {
         m_events->deleteTimer(m_timer);
@@ -173,7 +160,7 @@ void ClientProxyUnknown::handle_data()
 
         {
             std::unique_ptr<IClientConnection> conn =
-                    std::make_unique<ClientConnectionByStream>(std::move(stream_));
+                std::make_unique<ClientConnectionByStream>(std::move(stream_));
 
             if (Log::getInstance()->getFilter() >= kDEBUG1) {
                 conn = std::make_unique<ClientConnectionLoggingWrapper>(name, std::move(conn));
@@ -201,19 +188,17 @@ void ClientProxyUnknown::handle_data()
         // wait until the proxy signals that it's ready or has disconnected
         addProxyHandlers();
         return;
-    }
-    catch (XIncompatibleClient& e) {
+    } catch (XIncompatibleClient& e) {
         // client is incompatible
-        LOG_WARN("client \"%s\" has incompatible version %d.%d)", name.c_str(), e.getMajor(), e.getMinor());
-        ProtocolUtil::writef(stream_.get(), kMsgEIncompatible,
-                             kProtocolMajorVersion, kProtocolMinorVersion);
-    }
-    catch (XBadClient&) {
+        LOG_WARN("client \"%s\" has incompatible version %d.%d)", name.c_str(), e.getMajor(),
+                 e.getMinor());
+        ProtocolUtil::writef(stream_.get(), kMsgEIncompatible, kProtocolMajorVersion,
+                             kProtocolMinorVersion);
+    } catch (XBadClient&) {
         // client not behaving
         LOG_WARN("protocol error from client \"%s\"", name.c_str());
         ProtocolUtil::writef(stream_.get(), kMsgEBad);
-    }
-    catch (XBase& e) {
+    } catch (XBase& e) {
         // misc error
         LOG_WARN("error communicating with client \"%s\": %s", name.c_str(), e.what());
     }

@@ -23,16 +23,12 @@
 #include "tchar.h"
 #include <string>
 
-#include <windows.h>
 #include <psapi.h>
+#include <windows.h>
 
 #include <stdexcept>
 
-static const char* s_settingsKeyNames[] = {
-    _T("SOFTWARE"),
-    _T("InputLeap"),
-    nullptr
-};
+static const char* s_settingsKeyNames[] = {_T("SOFTWARE"), _T("InputLeap"), nullptr};
 
 namespace inputleap {
 
@@ -46,22 +42,22 @@ ArchSystemWindows::~ArchSystemWindows()
     // do nothing
 }
 
-std::string
-ArchSystemWindows::setting(const std::string& valueName) const
+std::string ArchSystemWindows::setting(const std::string& valueName) const
 {
     HKEY key = ArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, s_settingsKeyNames);
-    if (key == nullptr)
+    if (key == nullptr) {
         return "";
+    }
 
     return ArchMiscWindows::readValueString(key, valueName.c_str());
 }
 
-void
-ArchSystemWindows::setting(const std::string& valueName, const std::string& valueString) const
+void ArchSystemWindows::setting(const std::string& valueName, const std::string& valueString) const
 {
     HKEY key = ArchMiscWindows::addKey(HKEY_LOCAL_MACHINE, s_settingsKeyNames);
-    if (key == nullptr)
+    if (key == nullptr) {
         throw std::runtime_error(std::string("could not access registry key: ") + valueName);
+    }
     ArchMiscWindows::setValue(key, valueName.c_str(), valueString.c_str());
 }
 

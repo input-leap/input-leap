@@ -23,15 +23,15 @@
 #include "mt/Thread.h"
 #include "platform/EiScreen.h"
 
-#include <glib.h>
-#include <libportal/portal.h>
 #include <libportal/inputcapture.h>
+#include <libportal/portal.h>
+#include <glib.h>
 
 namespace inputleap {
 
 class PortalInputCapture {
 public:
-    PortalInputCapture(EiScreen *screen, IEventQueue *events);
+    PortalInputCapture(EiScreen* screen, IEventQueue* events);
     ~PortalInputCapture();
     void enable();
     void disable();
@@ -43,22 +43,22 @@ private:
     void glib_thread();
     gboolean timeout_handler();
     gboolean init_input_capture_session();
-    void cb_init_input_capture_session(GObject* object, GAsyncResult *res);
-    void cb_set_pointer_barriers(GObject* object, GAsyncResult *res);
-    void cb_session_closed(XdpSession *session);
+    void cb_init_input_capture_session(GObject* object, GAsyncResult* res);
+    void cb_set_pointer_barriers(GObject* object, GAsyncResult* res);
+    void cb_session_closed(XdpSession* session);
     void cb_disabled(XdpInputCaptureSession* session, GVariant* option);
     void cb_activated(XdpInputCaptureSession* session, std::uint32_t activation_id,
                       GVariant* options);
     void cb_deactivated(XdpInputCaptureSession* session, std::uint32_t activation_id,
                         GVariant* options);
-    void cb_zones_changed(XdpInputCaptureSession *session, GVariant *options);
+    void cb_zones_changed(XdpInputCaptureSession* session, GVariant* options);
 
     /// g_signal_connect callback wrapper
     static void cb_session_closed_cb(XdpSession* session, gpointer data)
     {
         reinterpret_cast<PortalInputCapture*>(data)->cb_session_closed(session);
     }
-    static void cb_disabled_cb(XdpInputCaptureSession *session, GVariant* options, gpointer data)
+    static void cb_disabled_cb(XdpInputCaptureSession* session, GVariant* options, gpointer data)
     {
         reinterpret_cast<PortalInputCapture*>(data)->cb_disabled(session, options);
     }
@@ -70,10 +70,9 @@ private:
     static void cb_deactivated_cb(XdpInputCaptureSession* session, std::uint32_t activation_id,
                                   GVariant* options, gpointer data)
     {
-        reinterpret_cast<PortalInputCapture*>(data)->cb_deactivated(session, activation_id,
-                                                                    options);
+        reinterpret_cast<PortalInputCapture*>(data)->cb_deactivated(session, activation_id, options);
     }
-    static void cb_zones_changed_cb(XdpInputCaptureSession *session, GVariant *options,
+    static void cb_zones_changed_cb(XdpInputCaptureSession* session, GVariant* options,
                                     gpointer data)
     {
         reinterpret_cast<PortalInputCapture*>(data)->cb_zones_changed(session, options);

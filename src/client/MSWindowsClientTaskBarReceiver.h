@@ -19,8 +19,8 @@
 #pragma once
 
 #include "base/Fwd.h"
-#include "inputleap/ClientTaskBarReceiver.h"
 #include "common/win32/winapi.h"
+#include "inputleap/ClientTaskBarReceiver.h"
 
 namespace inputleap {
 
@@ -59,7 +59,7 @@ private:
     HICON m_icon[kMaxState];
     const BufferedLogOutputter* m_logBuffer;
 
-    static const UINT    s_stateToIconID[];
+    static const UINT s_stateToIconID[];
 };
 
 } // namespace inputleap

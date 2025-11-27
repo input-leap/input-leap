@@ -31,7 +31,7 @@ Generated events use \c this as the target.
 */
 class ISocket {
 public:
-    virtual ~ISocket() { }
+    virtual ~ISocket() {}
 
     //! @name manipulators
     //@{

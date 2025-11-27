@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "io/XIO.h"
 #include "base/XBase.h"
+#include "io/XIO.h"
 
 #include <cstdint>
 
@@ -34,15 +34,15 @@ class XSocketAddress : public XSocket {
 public:
     //! Failure codes
     enum EError {
-        kUnknown,        //!< Unknown error
-        kNotFound,        //!< The hostname is unknown
-        kNoAddress,        //!< The hostname is valid but has no IP address
-        kUnsupported,    //!< The hostname is valid but has no supported address
-        kBadPort        //!< The port is invalid
+        kUnknown,     //!< Unknown error
+        kNotFound,    //!< The hostname is unknown
+        kNoAddress,   //!< The hostname is valid but has no IP address
+        kUnsupported, //!< The hostname is valid but has no supported address
+        kBadPort      //!< The port is invalid
     };
 
     XSocketAddress(EError, const std::string& hostname, int port) noexcept;
-    virtual ~XSocketAddress() noexcept { }
+    virtual ~XSocketAddress() noexcept {}
 
     //! @name accessors
     //@{

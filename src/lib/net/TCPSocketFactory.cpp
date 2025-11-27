@@ -17,18 +17,17 @@
  */
 
 #include "net/TCPSocketFactory.h"
-#include "net/TCPSocket.h"
-#include "net/TCPListenSocket.h"
-#include "net/SecureSocket.h"
-#include "net/SecureListenSocket.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
+#include "net/SecureListenSocket.h"
+#include "net/SecureSocket.h"
+#include "net/TCPListenSocket.h"
+#include "net/TCPSocket.h"
 
 namespace inputleap {
 
 TCPSocketFactory::TCPSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
-    m_events(events),
-    m_socketMultiplexer(socketMultiplexer)
+    m_events(events), m_socketMultiplexer(socketMultiplexer)
 {
     // do nothing
 }
@@ -38,9 +37,8 @@ TCPSocketFactory::~TCPSocketFactory()
     // do nothing
 }
 
-std::unique_ptr<IDataSocket>
-    TCPSocketFactory::create(IArchNetwork::EAddressFamily family,
-                             ConnectionSecurityLevel security_level) const
+std::unique_ptr<IDataSocket> TCPSocketFactory::create(IArchNetwork::EAddressFamily family,
+                                                      ConnectionSecurityLevel security_level) const
 {
     if (security_level != ConnectionSecurityLevel::PLAINTEXT) {
         auto secure_socket = std::make_unique<SecureSocket>(m_events, m_socketMultiplexer, family,

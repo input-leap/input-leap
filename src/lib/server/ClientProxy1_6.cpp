@@ -19,23 +19,22 @@
 #include "server/ClientProxy1_6.h"
 #include "ClientConnectionByStream.h"
 
-#include "inputleap/ProtocolUtil.h"
+#include "base/EventQueueTimer.h"
+#include "base/IEventQueue.h"
+#include "base/Log.h"
 #include "inputleap/ClipboardChunk.h"
 #include "inputleap/Exceptions.h"
 #include "inputleap/FileChunk.h"
+#include "inputleap/ProtocolUtil.h"
 #include "inputleap/StreamChunker.h"
-#include "server/Server.h"
 #include "io/IStream.h"
-#include "base/Log.h"
-#include "base/IEventQueue.h"
-#include "base/EventQueueTimer.h"
+#include "server/Server.h"
 
 #include <cstring>
 
 namespace inputleap {
 
-ClientProxy1_6::ClientProxy1_6(const std::string& name,
-                               std::unique_ptr<IClientConnection> backend,
+ClientProxy1_6::ClientProxy1_6(const std::string& name, std::unique_ptr<IClientConnection> backend,
                                Server* server, IEventQueue* events) :
     ClientProxy(name, std::move(backend)),
     m_heartbeatTimer(nullptr),
@@ -47,21 +46,19 @@ ClientProxy1_6::ClientProxy1_6(const std::string& name,
 {
     // install event handlers
     m_events->add_handler(EventType::STREAM_INPUT_READY, get_conn().get_event_target(),
-                          [this](const auto& e){ handle_data(); });
+                          [this](const auto& e) { handle_data(); });
     m_events->add_handler(EventType::STREAM_OUTPUT_ERROR, get_conn().get_event_target(),
-                          [this](const auto& e){ handle_write_error(); });
+                          [this](const auto& e) { handle_write_error(); });
     m_events->add_handler(EventType::STREAM_INPUT_SHUTDOWN, get_conn().get_event_target(),
-                          [this](const auto& e){ handle_disconnect(); });
+                          [this](const auto& e) { handle_disconnect(); });
     m_events->add_handler(EventType::STREAM_INPUT_FORMAT_ERROR, get_conn().get_event_target(),
-                          [this](const auto& e){ handle_disconnect(); });
+                          [this](const auto& e) { handle_disconnect(); });
     m_events->add_handler(EventType::STREAM_OUTPUT_SHUTDOWN, get_conn().get_event_target(),
-                          [this](const auto& e){ handle_write_error(); });
-    m_events->add_handler(EventType::FILE_KEEPALIVE, this,
-                          [this](const auto& e){ keepAlive(); });
+                          [this](const auto& e) { handle_write_error(); });
+    m_events->add_handler(EventType::FILE_KEEPALIVE, this, [this](const auto& e) { keepAlive(); });
     m_events->add_handler(EventType::CLIPBOARD_SENDING, this,
-                          [this](const auto& e){ handle_clipboard_sending_event(e); });
-    m_events->add_handler(EventType::TIMER, this,
-                          [this](const auto& e){ handle_flatline(); });
+                          [this](const auto& e) { handle_clipboard_sending_event(e); });
+    m_events->add_handler(EventType::TIMER, this, [this](const auto& e) { handle_flatline(); });
 
     setHeartbeatRate(kHeartRate, kHeartRate * kHeartBeatsUntilDeath);
 
@@ -108,7 +105,7 @@ void ClientProxy1_6::addHeartbeatTimer()
     if (m_keepAliveRate > 0.0) {
         m_keepAliveTimer = m_events->newTimer(m_keepAliveRate, nullptr);
         m_events->add_handler(EventType::TIMER, m_keepAliveTimer,
-                              [this](const auto& e){ keepAlive(); });
+                              [this](const auto& e) { keepAlive(); });
     }
 
     if (m_heartbeatAlarm > 0.0) {
@@ -169,9 +166,11 @@ void ClientProxy1_6::handle_data()
 
         // parse message
         try {
-            LOG_DEBUG2("msg from \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]);
+            LOG_DEBUG2("msg from \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2],
+                       code[3]);
             if (!(this->*m_parser)(code)) {
-                LOG_ERR("invalid message from client \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]);
+                LOG_ERR("invalid message from client \"%s\": %c%c%c%c", getName().c_str(), code[0],
+                        code[1], code[2], code[3]);
                 disconnect();
                 return;
             }
@@ -198,8 +197,7 @@ bool ClientProxy1_6::parseHandshakeMessage(const std::uint8_t* code)
         // discard no-ops
         LOG_DEBUG2("no-op from %s", getName().c_str());
         return true;
-    }
-    else if (memcmp(code, kMsgDInfo, 4) == 0) {
+    } else if (memcmp(code, kMsgDInfo, 4) == 0) {
         // future messages get parsed by parseMessage
         // NOTE: we're taking address of virtual function here,
         // not ClientProxy1_3 implementation of it.
@@ -231,16 +229,13 @@ bool ClientProxy1_6::parseMessage(const std::uint8_t* code)
             return true;
         }
         return false;
-    }
-    else if (memcmp(code, kMsgCNoop, 4) == 0) {
+    } else if (memcmp(code, kMsgCNoop, 4) == 0) {
         // discard no-ops
         LOG_DEBUG2("no-op from %s", getName().c_str());
         return true;
-    }
-    else if (memcmp(code, kMsgCClipboard, 4) == 0) {
+    } else if (memcmp(code, kMsgCClipboard, 4) == 0) {
         return recvGrabClipboard();
-    }
-    else if (memcmp(code, kMsgDClipboard, 4) == 0) {
+    } else if (memcmp(code, kMsgDClipboard, 4) == 0) {
         return recvClipboard();
     }
     return false;
@@ -340,8 +335,7 @@ void ClientProxy1_6::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
     get_conn().send_key_down_1_6(key, mask, button);
 }
 
-void ClientProxy1_6::keyRepeat(KeyID key, KeyModifierMask mask, std::int32_t count,
-                               KeyButton button)
+void ClientProxy1_6::keyRepeat(KeyID key, KeyModifierMask mask, std::int32_t count, KeyButton button)
 {
     get_conn().send_key_repeat_1_6(key, mask, count, button);
 }
@@ -423,11 +417,11 @@ bool ClientProxy1_6::recvInfo()
 {
     // parse the message
     std::int16_t x, y, w, h, dummy1, mx, my;
-    if (!ProtocolUtil::readf(getStream(), kMsgDInfo + 4,
-                            &x, &y, &w, &h, &dummy1, &mx, &my)) {
+    if (!ProtocolUtil::readf(getStream(), kMsgDInfo + 4, &x, &y, &w, &h, &dummy1, &mx, &my)) {
         return false;
     }
-    LOG_DEBUG("received client \"%s\" info shape=%d,%d %dx%d at %d,%d", getName().c_str(), x, y, w, h, mx, my);
+    LOG_DEBUG("received client \"%s\" info shape=%d,%d %dx%d at %d,%d", getName().c_str(), x, y, w,
+              h, mx, my);
 
     // validate
     if (w <= 0 || h <= 0) {
@@ -439,10 +433,10 @@ bool ClientProxy1_6::recvInfo()
     }
 
     // save
-    m_info.m_x  = x;
-    m_info.m_y  = y;
-    m_info.m_w  = w;
-    m_info.m_h  = h;
+    m_info.m_x = x;
+    m_info.m_y = y;
+    m_info.m_w = w;
+    m_info.m_h = h;
     m_info.m_mx = mx;
     m_info.m_my = my;
 
@@ -464,8 +458,8 @@ bool ClientProxy1_6::recvClipboard()
         size_t size = ClipboardChunk::getExpectedSize();
         LOG_DEBUG("receiving clipboard %d size=%zd", id, size);
     } else if (r == kFinish) {
-        LOG_DEBUG("received client \"%s\" clipboard %d seqnum=%d, size=%zd",
-                getName().c_str(), id, seq, dataCached.size());
+        LOG_DEBUG("received client \"%s\" clipboard %d seqnum=%d, size=%zd", getName().c_str(), id,
+                  seq, dataCached.size());
         // save clipboard
         m_clipboard[id].m_clipboard.unmarshall(dataCached, 0);
         m_clipboard[id].m_sequenceNumber = seq;
@@ -489,7 +483,8 @@ bool ClientProxy1_6::recvGrabClipboard()
     if (!ProtocolUtil::readf(getStream(), kMsgCClipboard + 4, &id, &seqNum)) {
         return false;
     }
-    LOG_DEBUG("received client \"%s\" grabbed clipboard %d seqnum=%d", getName().c_str(), id, seqNum);
+    LOG_DEBUG("received client \"%s\" grabbed clipboard %d seqnum=%d", getName().c_str(), id,
+              seqNum);
 
     // validate
     if (id >= kClipboardEnd) {
@@ -538,9 +533,7 @@ void ClientProxy1_6::dragInfoReceived()
 }
 
 ClientProxy1_6::ClientClipboard::ClientClipboard() :
-    m_clipboard(),
-    m_sequenceNumber(0),
-    m_dirty(true)
+    m_clipboard(), m_sequenceNumber(0), m_dirty(true)
 {
     // do nothing
 }

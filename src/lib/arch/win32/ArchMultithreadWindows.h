@@ -84,7 +84,7 @@ private:
 private:
     typedef std::list<ArchThread> ThreadList;
 
-    static ArchMultithreadWindows*    s_instance;
+    static ArchMultithreadWindows* s_instance;
 
     std::mutex thread_mutex_;
 

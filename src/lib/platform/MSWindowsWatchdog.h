@@ -18,15 +18,15 @@
 
 #pragma once
 
-#include "platform/MSWindowsSession.h"
+#include "arch/IArchMultithread.h"
 #include "base/Fwd.h"
 #include "inputleap/Exceptions.h"
-#include "arch/IArchMultithread.h"
+#include "platform/MSWindowsSession.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include <string>
 #include <list>
+#include <string>
 
 namespace inputleap {
 
@@ -36,11 +36,8 @@ class IpcServer;
 
 class MSWindowsWatchdog {
 public:
-    MSWindowsWatchdog(
-        bool daemonized,
-        bool autoDetectCommand,
-        IpcServer& ipcServer,
-        IpcLogOutputter& ipcLogOutputter);
+    MSWindowsWatchdog(bool daemonized, bool autoDetectCommand, IpcServer& ipcServer,
+                      IpcLogOutputter& ipcLogOutputter);
 
     void startAsync();
     std::string getCommand() const;
@@ -87,7 +84,7 @@ An error occurred in the process watchdog.
 */
 class XMSWindowsWatchdogError : public XBase {
 public:
-    XMSWindowsWatchdogError(const std::string& msg) : XBase(msg) { }
+    XMSWindowsWatchdogError(const std::string& msg) : XBase(msg) {}
 
     // XBase overrides
     virtual std::string getWhat() const noexcept { return what(); }

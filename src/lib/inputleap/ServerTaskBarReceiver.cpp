@@ -17,16 +17,15 @@
  */
 
 #include "inputleap/ServerTaskBarReceiver.h"
-#include "server/Server.h"
-#include "base/IEventQueue.h"
 #include "arch/Arch.h"
+#include "base/IEventQueue.h"
 #include "common/Version.h"
+#include "server/Server.h"
 
 namespace inputleap {
 
 ServerTaskBarReceiver::ServerTaskBarReceiver(IEventQueue* events) :
-    m_state(kNotRunning),
-    m_events(events)
+    m_state(kNotRunning), m_events(events)
 {
     // do nothing
 }
@@ -44,18 +43,15 @@ void ServerTaskBarReceiver::updateStatus(Server* server, const std::string& erro
         if (server == nullptr) {
             if (m_errorMessage.empty()) {
                 m_state = kNotRunning;
-            }
-            else {
+            } else {
                 m_state = kNotWorking;
             }
-        }
-        else {
+        } else {
             m_clients.clear();
             server->getClients(m_clients);
             if (m_clients.size() <= 1) {
                 m_state = kNotConnected;
-            }
-            else {
+            } else {
                 m_state = kConnected;
             }
         }
@@ -68,8 +64,7 @@ void ServerTaskBarReceiver::updateStatus(Server* server, const std::string& erro
     ARCH->updateReceiver(this);
 }
 
-ServerTaskBarReceiver::EState
-ServerTaskBarReceiver::getStatus() const
+ServerTaskBarReceiver::EState ServerTaskBarReceiver::getStatus() const
 {
     return m_state;
 }
@@ -79,46 +74,39 @@ const std::string& ServerTaskBarReceiver::getErrorMessage() const
     return m_errorMessage;
 }
 
-const ServerTaskBarReceiver::Clients&
-ServerTaskBarReceiver::getClients() const
+const ServerTaskBarReceiver::Clients& ServerTaskBarReceiver::getClients() const
 {
     return m_clients;
 }
 
-void
-ServerTaskBarReceiver::quit()
+void ServerTaskBarReceiver::quit()
 {
     m_events->add_event(EventType::QUIT);
 }
 
-void
-ServerTaskBarReceiver::onStatusChanged(Server*)
+void ServerTaskBarReceiver::onStatusChanged(Server*)
 {
     // do nothing
 }
 
-void
-ServerTaskBarReceiver::lock() const
+void ServerTaskBarReceiver::lock() const
 {
     // do nothing
 }
 
-void
-ServerTaskBarReceiver::unlock() const
+void ServerTaskBarReceiver::unlock() const
 {
     // do nothing
 }
 
-std::string
-ServerTaskBarReceiver::getToolTip() const
+std::string ServerTaskBarReceiver::getToolTip() const
 {
     switch (m_state) {
     case kNotRunning:
         return inputleap::string::sprintf("%s:  Not running", kAppVersion);
 
     case kNotWorking:
-        return inputleap::string::sprintf("%s:  %s",
-                                kAppVersion, m_errorMessage.c_str());
+        return inputleap::string::sprintf("%s:  %s", kAppVersion, m_errorMessage.c_str());
 
     case kNotConnected:
         return inputleap::string::sprintf("%s:  Waiting for clients", kAppVersion);

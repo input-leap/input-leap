@@ -24,9 +24,7 @@
 namespace inputleap {
 
 OSXEventQueueBuffer::OSXEventQueueBuffer(IEventQueue* events) :
-    m_event(nullptr),
-    m_eventQueue(events),
-    m_carbonEventQueue(nullptr)
+    m_event(nullptr), m_eventQueue(events), m_carbonEventQueue(nullptr)
 {
     // do nothing
 }
@@ -39,14 +37,12 @@ OSXEventQueueBuffer::~OSXEventQueueBuffer()
     }
 }
 
-void
-OSXEventQueueBuffer::init()
+void OSXEventQueueBuffer::init()
 {
     m_carbonEventQueue = GetCurrentEventQueue();
 }
 
-void
-OSXEventQueueBuffer::waitForEvent(double timeout)
+void OSXEventQueueBuffer::waitForEvent(double timeout)
 {
     EventRef event;
     ReceiveNextEvent(0, nullptr, timeout, false, &event);
@@ -67,11 +63,9 @@ IEventQueueBuffer::Type OSXEventQueueBuffer::getEvent(Event& event, std::uint32_
     if (error == eventLoopQuitErr) {
         event = Event(EventType::QUIT);
         return kSystem;
-    }
-    else if (error != noErr) {
+    } else if (error != noErr) {
         return kNone;
-    }
-    else {
+    } else {
         std::uint32_t eventClass = GetEventClass(m_event);
         switch (eventClass) {
         case 'Syne':
@@ -89,22 +83,13 @@ IEventQueueBuffer::Type OSXEventQueueBuffer::getEvent(Event& event, std::uint32_
 bool OSXEventQueueBuffer::addEvent(std::uint32_t dataID)
 {
     EventRef event;
-    OSStatus error = CreateEvent(
-                            kCFAllocatorDefault,
-                            'Syne',
-                            dataID,
-                            0,
-                            kEventAttributeNone,
-                            &event);
+    OSStatus error = CreateEvent(kCFAllocatorDefault, 'Syne', dataID, 0, kEventAttributeNone,
+                                 &event);
 
     if (error == noErr) {
-
         assert(m_carbonEventQueue != nullptr);
 
-        error = PostEventToQueue(
-            m_carbonEventQueue,
-            event,
-            kEventPriorityStandard);
+        error = PostEventToQueue(m_carbonEventQueue, event, kEventPriorityStandard);
 
         ReleaseEvent(event);
     }
@@ -112,8 +97,7 @@ bool OSXEventQueueBuffer::addEvent(std::uint32_t dataID)
     return (error == noErr);
 }
 
-bool
-OSXEventQueueBuffer::isEmpty() const
+bool OSXEventQueueBuffer::isEmpty() const
 {
     EventRef event;
     OSStatus status = ReceiveNextEvent(0, nullptr, 0.0, false, &event);

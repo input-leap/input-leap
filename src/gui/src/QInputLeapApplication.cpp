@@ -24,8 +24,7 @@
 
 QInputLeapApplication* QInputLeapApplication::s_Instance = nullptr;
 
-QInputLeapApplication::QInputLeapApplication(int& argc, char** argv) :
-    QApplication(argc, argv)
+QInputLeapApplication::QInputLeapApplication(int& argc, char** argv) : QApplication(argc, argv)
 {
     s_Instance = this;
 }
@@ -37,8 +36,9 @@ void QInputLeapApplication::commitData(QSessionManager&)
     const auto all_topLevelWidgets = topLevelWidgets();
     for (QWidget* widget : all_topLevelWidgets) {
         MainWindow* mainWindow = qobject_cast<MainWindow*>(widget);
-        if (mainWindow)
+        if (mainWindow) {
             mainWindow->saveSettings();
+        }
     }
 }
 

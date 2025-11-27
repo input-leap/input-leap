@@ -18,12 +18,12 @@
 
 #include "ipc/IpcClientProxy.h"
 
-#include "ipc/Ipc.h"
-#include "ipc/IpcMessage.h"
-#include "inputleap/ProtocolUtil.h"
-#include "io/IStream.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
+#include "inputleap/ProtocolUtil.h"
+#include "io/IStream.h"
+#include "ipc/Ipc.h"
+#include "ipc/IpcMessage.h"
 
 namespace inputleap {
 
@@ -34,13 +34,13 @@ IpcClientProxy::IpcClientProxy(std::unique_ptr<IStream>&& stream, IEventQueue* e
     m_events(events)
 {
     m_events->add_handler(EventType::STREAM_INPUT_READY, stream_->get_event_target(),
-                          [this](const auto& e){ handle_data(); });
+                          [this](const auto& e) { handle_data(); });
     m_events->add_handler(EventType::STREAM_OUTPUT_ERROR, stream_->get_event_target(),
-                          [this](const auto& e){ handle_write_error(); });
+                          [this](const auto& e) { handle_write_error(); });
     m_events->add_handler(EventType::STREAM_INPUT_SHUTDOWN, stream_->get_event_target(),
-                          [this](const auto& e){ handle_disconnect(); });
+                          [this](const auto& e) { handle_disconnect(); });
     m_events->add_handler(EventType::STREAM_OUTPUT_SHUTDOWN, stream_->get_event_target(),
-                          [this](const auto& e){ handle_write_error(); });
+                          [this](const auto& e) { handle_write_error(); });
 }
 
 IpcClientProxy::~IpcClientProxy()
@@ -79,18 +79,14 @@ void IpcClientProxy::handle_data()
     std::uint8_t code[4];
     std::uint32_t n = stream_->read(code, 4);
     while (n != 0) {
-
-        LOG_DEBUG("ipc read: %c%c%c%c",
-            code[0], code[1], code[2], code[3]);
+        LOG_DEBUG("ipc read: %c%c%c%c", code[0], code[1], code[2], code[3]);
 
         EventDataBase* event_data = nullptr;
         if (memcmp(code, kIpcMsgHello, 4) == 0) {
             event_data = create_event_data<IpcHelloMessage>(parseHello());
-        }
-        else if (memcmp(code, kIpcMsgCommand, 4) == 0) {
+        } else if (memcmp(code, kIpcMsgCommand, 4) == 0) {
             event_data = create_event_data<IpcCommandMessage>(parseCommand());
-        }
-        else {
+        } else {
             LOG_ERR("invalid ipc message");
             disconnect();
         }
@@ -103,8 +99,7 @@ void IpcClientProxy::handle_data()
     LOG_DEBUG("finished ipc handle data");
 }
 
-void
-IpcClientProxy::send(const IpcMessage& message)
+void IpcClientProxy::send(const IpcMessage& message)
 {
     // don't allow other threads to write until we've finished the entire
     // message. stream write is locked, but only for that single write.
@@ -152,8 +147,7 @@ IpcCommandMessage IpcClientProxy::parseCommand()
     return IpcCommandMessage(command, elevate != 0);
 }
 
-void
-IpcClientProxy::disconnect()
+void IpcClientProxy::disconnect()
 {
     LOG_DEBUG("ipc disconnect, closing stream");
     m_disconnecting = true;

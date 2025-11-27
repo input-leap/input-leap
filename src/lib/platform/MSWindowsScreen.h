@@ -20,9 +20,9 @@
 #pragma once
 
 #include "base/Fwd.h"
-#include "platform/MSWindowsHook.h"
-#include "inputleap/PlatformScreen.h"
 #include "inputleap/DragInformation.h"
+#include "inputleap/PlatformScreen.h"
+#include "platform/MSWindowsHook.h"
 #include "platform/synwinhk.h"
 #include <map>
 #include <string>
@@ -41,11 +41,7 @@ class MSWindowsDropTarget;
 //! Implementation of IPlatformScreen for Microsoft Windows
 class MSWindowsScreen : public PlatformScreen {
 public:
-    MSWindowsScreen(
-        bool isPrimary,
-        bool noHooks,
-        bool stopOnDeskSwitch,
-        IEventQueue* events);
+    MSWindowsScreen(bool isPrimary, bool noHooks, bool stopOnDeskSwitch, IEventQueue* events);
     virtual ~MSWindowsScreen();
 
     //! @name manipulators
@@ -80,8 +76,7 @@ public:
     // IPrimaryScreen overrides
     virtual void reconfigure(std::uint32_t activeSides);
     virtual void warpCursor(std::int32_t x, std::int32_t y);
-    virtual std::uint32_t registerHotKey(KeyID key,
-                            KeyModifierMask mask);
+    virtual std::uint32_t registerHotKey(KeyID key, KeyModifierMask mask);
     virtual void unregisterHotKey(std::uint32_t id);
     virtual void fakeInputBegin();
     virtual void fakeInputEnd();
@@ -97,10 +92,8 @@ public:
 
     // IKeyState overrides
     virtual void updateKeys();
-    virtual void fakeKeyDown(KeyID id, KeyModifierMask mask,
-                            KeyButton button);
-    virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, std::int32_t count,
-                               KeyButton button);
+    virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button);
+    virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, std::int32_t count, KeyButton button);
     virtual bool fakeKeyUp(KeyButton button);
     virtual void fakeAllKeysUp();
 
@@ -147,6 +140,7 @@ private:
     // convenience function to send events
 public: // HACK
     void sendEvent(EventType type, EventDataBase* = nullptr);
+
 private: // HACK
     void sendClipboardEvent(EventType type, ClipboardID id);
 
@@ -220,8 +214,7 @@ private: // HACK
     void saveMousePosition(std::int32_t x, std::int32_t y);
 
     // check if it is a modifier key repeating message
-    bool isModifierRepeat(KeyModifierMask oldState,
-                            KeyModifierMask state, WPARAM wParam) const;
+    bool isModifierRepeat(KeyModifierMask oldState, KeyModifierMask state, WPARAM wParam) const;
 
     // send drag info and data back to server
     void send_drag_thread();
@@ -233,7 +226,7 @@ private:
 
         UINT getVirtualKey() const;
 
-        bool            operator<(const HotKeyItem&) const;
+        bool operator<(const HotKeyItem&) const;
 
     private:
         UINT m_keycode;
@@ -244,7 +237,7 @@ private:
     typedef std::map<HotKeyItem, std::uint32_t> HotKeyToIDMap;
     typedef std::vector<KeyButton> PrimaryKeyDownList;
 
-    static HINSTANCE    s_windowInstance;
+    static HINSTANCE s_windowInstance;
 
     // true if screen is being used as a primary screen, false otherwise
     bool m_isPrimary;
@@ -329,8 +322,7 @@ private:
 
     MSWindowsHook m_hook;
 
-    static MSWindowsScreen*
-                        s_screen;
+    static MSWindowsScreen* s_screen;
 
     IEventQueue* m_events;
 

@@ -27,8 +27,7 @@
 namespace inputleap {
 
 //! Loads and provides functions for the Windows hook
-class MSWindowsHook
-{
+class MSWindowsHook {
 public:
     void setSides(std::uint32_t sides);
     void setZone(std::int32_t x, std::int32_t y, std::int32_t w, std::int32_t h,

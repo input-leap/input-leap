@@ -38,20 +38,20 @@
 #include "common/common.h"
 
 #if SYSAPI_WIN32
-#    include "arch/win32/ArchDaemonWindows.h"
-#    include "arch/win32/ArchLogWindows.h"
-#    include "arch/win32/ArchMiscWindows.h"
-#    include "arch/win32/ArchMultithreadWindows.h"
-#    include "arch/win32/ArchNetworkWinsock.h"
-#    include "arch/win32/ArchSystemWindows.h"
-#    include "arch/win32/ArchTaskBarWindows.h"
+#include "arch/win32/ArchDaemonWindows.h"
+#include "arch/win32/ArchLogWindows.h"
+#include "arch/win32/ArchMiscWindows.h"
+#include "arch/win32/ArchMultithreadWindows.h"
+#include "arch/win32/ArchNetworkWinsock.h"
+#include "arch/win32/ArchSystemWindows.h"
+#include "arch/win32/ArchTaskBarWindows.h"
 #elif SYSAPI_UNIX
-#    include "arch/unix/ArchDaemonUnix.h"
-#    include "arch/unix/ArchLogUnix.h"
-#    include "arch/unix/ArchMultithreadPosix.h"
-#    include "arch/unix/ArchNetworkBSD.h"
-#    include "arch/unix/ArchSystemUnix.h"
-#    include "arch/unix/ArchTaskBarXWindows.h"
+#include "arch/unix/ArchDaemonUnix.h"
+#include "arch/unix/ArchLogUnix.h"
+#include "arch/unix/ArchMultithreadPosix.h"
+#include "arch/unix/ArchNetworkBSD.h"
+#include "arch/unix/ArchSystemUnix.h"
+#include "arch/unix/ArchTaskBarXWindows.h"
 #endif
 
 #include <mutex>
@@ -62,7 +62,7 @@ namespace inputleap {
 \def ARCH
 This macro evaluates to the singleton Arch object.
 */
-#define ARCH    (Arch::getInstance())
+#define ARCH (Arch::getInstance())
 
 //! Delegating implementation of architecture dependent interfaces
 /*!
@@ -75,11 +75,11 @@ exactly one of these objects before attempting to call any method,
 typically at the beginning of \c main().
 */
 class Arch : public ARCH_DAEMON,
-                public ARCH_LOG,
-                public ARCH_MULTITHREAD,
-                public ARCH_NETWORK,
-                public ARCH_SYSTEM,
-                public ARCH_TASKBAR {
+             public ARCH_LOG,
+             public ARCH_MULTITHREAD,
+             public ARCH_NETWORK,
+             public ARCH_SYSTEM,
+             public ARCH_TASKBAR {
 public:
     Arch();
     Arch(Arch* arch);
@@ -106,7 +106,7 @@ public:
     static void setInstance(Arch* s) { s_instance = s; }
 
 private:
-    static Arch*        s_instance;
+    static Arch* s_instance;
 };
 
 } // namespace inputleap

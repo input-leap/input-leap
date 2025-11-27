@@ -29,8 +29,7 @@ public:
     virtual ~OSXClipboardTextConverter();
 
     // IOSXClipboardAnyTextConverter overrides
-    virtual CFStringRef
-                        getOSXFormat() const;
+    virtual CFStringRef getOSXFormat() const;
 
 protected:
     // OSXClipboardAnyTextConverter overrides

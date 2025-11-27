@@ -16,26 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "platform/MSWindowsClipboard.h"
 #include "platform/IMSWindowsClipboardFacade.h"
+#include "platform/MSWindowsClipboard.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 namespace inputleap {
 
-class MSWindowsClipboardTests : public ::testing::Test
-{
+class MSWindowsClipboardTests : public ::testing::Test {
 protected:
-    virtual void SetUp()
-    {
-        emptyClipboard();
-    }
+    virtual void SetUp() { emptyClipboard(); }
 
-    virtual void TearDown()
-    {
-        emptyClipboard();
-    }
+    virtual void TearDown() { emptyClipboard(); }
 
 private:
     void emptyClipboard()
@@ -46,8 +39,7 @@ private:
     }
 };
 
-class MockFacade : public IMSWindowsClipboardFacade
-{
+class MockFacade : public IMSWindowsClipboardFacade {
 public:
     MOCK_METHOD2(write, void(HANDLE, UINT));
 };

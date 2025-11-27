@@ -21,10 +21,7 @@
 
 namespace inputleap {
 
-Stopwatch::Stopwatch(bool triggered) :
-    m_mark(0.0),
-    m_triggered(triggered),
-    m_stopped(triggered)
+Stopwatch::Stopwatch(bool triggered) : m_mark(0.0), m_triggered(triggered), m_stopped(triggered)
 {
     if (!triggered) {
         m_mark = inputleap::current_time_seconds();
@@ -36,15 +33,13 @@ Stopwatch::~Stopwatch()
     // do nothing
 }
 
-double
-Stopwatch::reset()
+double Stopwatch::reset()
 {
     if (m_stopped) {
         const double dt = m_mark;
         m_mark = 0.0;
         return dt;
-    }
-    else {
+    } else {
         const double t = inputleap::current_time_seconds();
         const double dt = t - m_mark;
         m_mark = t;
@@ -52,8 +47,7 @@ Stopwatch::reset()
     }
 }
 
-void
-Stopwatch::stop()
+void Stopwatch::stop()
 {
     if (m_stopped) {
         return;
@@ -64,8 +58,7 @@ Stopwatch::stop()
     m_stopped = true;
 }
 
-void
-Stopwatch::start()
+void Stopwatch::start()
 {
     m_triggered = false;
     if (!m_stopped) {
@@ -77,25 +70,21 @@ Stopwatch::start()
     m_stopped = false;
 }
 
-void
-Stopwatch::setTrigger()
+void Stopwatch::setTrigger()
 {
     stop();
     m_triggered = true;
 }
 
-double
-Stopwatch::getTime()
+double Stopwatch::getTime()
 {
     if (m_triggered) {
         const double dt = m_mark;
         start();
         return dt;
-    }
-    else if (m_stopped) {
+    } else if (m_stopped) {
         return m_mark;
-    }
-    else {
+    } else {
         return inputleap::current_time_seconds() - m_mark;
     }
 }
@@ -105,19 +94,16 @@ Stopwatch::operator double()
     return getTime();
 }
 
-bool
-Stopwatch::isStopped() const
+bool Stopwatch::isStopped() const
 {
     return m_stopped;
 }
 
-double
-Stopwatch::getTime() const
+double Stopwatch::getTime() const
 {
     if (m_stopped) {
         return m_mark;
-    }
-    else {
+    } else {
         return inputleap::current_time_seconds() - m_mark;
     }
 }

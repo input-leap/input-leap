@@ -17,25 +17,20 @@
 
 #pragma once
 
-
 #include "AppLocale.h"
 
-#include <QWizard>
 #include <QNetworkAccessManager>
+#include <QWizard>
 #include <memory>
 
 class MainWindow;
-namespace Ui
-{
-    class SetupWizard;
+namespace Ui {
+class SetupWizard;
 }
-class SetupWizard : public QWizard
-{
+class SetupWizard : public QWizard {
     Q_OBJECT
 public:
-    enum {
-        kMaximiumLoginAttemps = 3
-    };
+    enum { kMaximiumLoginAttemps = 3 };
 
 public:
     SetupWizard(MainWindow& mainWindow, bool startMain);

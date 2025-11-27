@@ -19,8 +19,8 @@
 
 #include "base/Log.h"
 
-#include <cstddef>
 #include <algorithm>
+#include <cstddef>
 #include <memory>
 #include <unistd.h>
 
@@ -28,9 +28,7 @@
 
 namespace inputleap {
 
-EiKeyState::EiKeyState(EiScreen* screen, IEventQueue* events) :
-    KeyState(events),
-    screen_{screen}
+EiKeyState::EiKeyState(EiScreen* screen, IEventQueue* events) : KeyState(events), screen_{screen}
 {
     xkb_ = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
 
@@ -59,7 +57,7 @@ void EiKeyState::init(int fd, size_t len)
     lseek(fd, 0, SEEK_SET);
     auto sz = read(fd, buffer.get(), len);
 
-    if ((size_t)sz < len) {
+    if ((size_t) sz < len) {
         LOG_NOTE("Failed to create XKB context: %s", strerror(errno));
         return;
     }
@@ -69,8 +67,7 @@ void EiKeyState::init(int fd, size_t len)
     // enforce null-termination in our buffer and pass the whole thing as string.
 
     buffer[len] = '\0'; // guarantee null-termination
-    auto keymap = xkb_keymap_new_from_string(xkb_, buffer.get(),
-                                             XKB_KEYMAP_FORMAT_TEXT_V1,
+    auto keymap = xkb_keymap_new_from_string(xkb_, buffer.get(), XKB_KEYMAP_FORMAT_TEXT_V1,
                                              XKB_KEYMAP_COMPILE_NO_FLAGS);
     if (!keymap) {
         LOG_NOTE("Failed to compile keymap, falling back to defaults");
@@ -89,7 +86,6 @@ void EiKeyState::init(int fd, size_t len)
     }
     xkb_state_ = xkb_state_new(xkb_keymap_);
 }
-
 
 EiKeyState::~EiKeyState()
 {
@@ -126,20 +122,22 @@ std::uint32_t EiKeyState::convert_mod_mask(std::uint32_t xkb_mask) const
     std::uint32_t barrier_mask = 0;
 
     for (xkb_mod_index_t xkbmod = 0; xkbmod < xkb_keymap_num_mods(xkb_keymap_); xkbmod++) {
-        if ((xkb_mask & (1 << xkbmod)) == 0)
+        if ((xkb_mask & (1 << xkbmod)) == 0) {
             continue;
+        }
 
-        const char *name = xkb_keymap_mod_get_name(xkb_keymap_, xkbmod);
-        if (strcmp(XKB_MOD_NAME_SHIFT, name) == 0)
+        const char* name = xkb_keymap_mod_get_name(xkb_keymap_, xkbmod);
+        if (strcmp(XKB_MOD_NAME_SHIFT, name) == 0) {
             barrier_mask |= (1 << kKeyModifierBitShift);
-        else if (strcmp(XKB_MOD_NAME_CAPS, name) == 0)
+        } else if (strcmp(XKB_MOD_NAME_CAPS, name) == 0) {
             barrier_mask |= (1 << kKeyModifierBitCapsLock);
-        else if (strcmp(XKB_MOD_NAME_CTRL, name) == 0)
+        } else if (strcmp(XKB_MOD_NAME_CTRL, name) == 0) {
             barrier_mask |= (1 << kKeyModifierBitControl);
-        else if (strcmp(XKB_MOD_NAME_ALT, name) == 0)
+        } else if (strcmp(XKB_MOD_NAME_ALT, name) == 0) {
             barrier_mask |= (1 << kKeyModifierBitAlt);
-        else if (strcmp(XKB_MOD_NAME_LOGO, name) == 0)
+        } else if (strcmp(XKB_MOD_NAME_LOGO, name) == 0) {
             barrier_mask |= (1 << kKeyModifierBitSuper);
+        }
     }
 
     return barrier_mask;
@@ -156,8 +154,9 @@ void EiKeyState::assign_generated_modifiers(std::uint32_t keycode, inputleap::Ke
 
     if (changed) {
         for (xkb_mod_index_t m = 0; m < xkb_keymap_num_mods(xkb_keymap_); m++) {
-            if (xkb_state_mod_index_is_active(state, m, XKB_STATE_MODS_LOCKED))
+            if (xkb_state_mod_index_is_active(state, m, XKB_STATE_MODS_LOCKED)) {
                 item.m_lock = true;
+            }
 
             if (xkb_state_mod_index_is_active(state, m, XKB_STATE_MODS_EFFECTIVE)) {
                 mods_generates |= (1 << m);
@@ -177,32 +176,34 @@ void EiKeyState::getKeyMap(inputleap::KeyMap& keyMap)
 
     // X keycodes are evdev keycodes + 8 (libei gives us evdev keycodes)
     for (auto keycode = min_keycode; keycode <= max_keycode; keycode++) {
-
         // skip keys with no groups (they generate no symbols)
-        if (xkb_keymap_num_layouts_for_key(xkb_keymap_, keycode) == 0)
+        if (xkb_keymap_num_layouts_for_key(xkb_keymap_, keycode) == 0) {
             continue;
+        }
 
         for (auto group = 0U; group < xkb_keymap_num_layouts(xkb_keymap_); group++) {
             for (auto level = 0U;
-                 level < xkb_keymap_num_levels_for_key(xkb_keymap_, keycode, group);
-                 level++) {
-                const xkb_keysym_t *syms;
+                 level < xkb_keymap_num_levels_for_key(xkb_keymap_, keycode, group); level++) {
+                const xkb_keysym_t* syms;
                 xkb_mod_mask_t masks[64];
-                auto nmasks = xkb_keymap_key_get_mods_for_level(xkb_keymap_, keycode, group,
-                                                                level, masks, 64);
-                auto nsyms = xkb_keymap_key_get_syms_by_level(xkb_keymap_, keycode, group, level, &syms);
+                auto nmasks = xkb_keymap_key_get_mods_for_level(xkb_keymap_, keycode, group, level,
+                                                                masks, 64);
+                auto nsyms = xkb_keymap_key_get_syms_by_level(xkb_keymap_, keycode, group, level,
+                                                              &syms);
 
-                if (nsyms == 0)
+                if (nsyms == 0) {
                     continue;
+                }
 
-                if (nsyms > 1)
+                if (nsyms > 1) {
                     LOG_WARN(" Multiple keysyms per keycode are not supported, keycode %d", keycode);
+                }
 
                 inputleap::KeyMap::KeyItem item{};
                 xkb_keysym_t keysym = syms[0];
                 KeySym sym = static_cast<KeyID>(keysym);
                 item.m_id = XKBUtil::mapKeySymToKeyID(sym);
-                item.m_button   = static_cast<KeyButton>(keycode) - 8; // X keycode offset
+                item.m_button = static_cast<KeyButton>(keycode) - 8; // X keycode offset
                 item.m_group = group;
 
                 // For debugging only
@@ -227,9 +228,9 @@ void EiKeyState::getKeyMap(inputleap::KeyMap& keyMap)
                 // add capslock version of key is sensitive to capslock
                 if (item.m_sensitive & KeyModifierShift && item.m_sensitive & KeyModifierCapsLock) {
                     item.m_required &= ~KeyModifierShift;
-                    item.m_required |=  KeyModifierCapsLock;
+                    item.m_required |= KeyModifierCapsLock;
                     keyMap.addKeyEntry(item);
-                    item.m_required |=  KeyModifierShift;
+                    item.m_required |= KeyModifierShift;
                     item.m_required &= ~KeyModifierCapsLock;
                 }
 
@@ -247,10 +248,9 @@ void EiKeyState::fakeKey(const Keystroke& keystroke)
     switch (keystroke.m_type) {
     case Keystroke::kButton:
         LOG_DEBUG1("  %03x (%08x) %s", keystroke.m_data.m_button.m_button,
-             keystroke.m_data.m_button.m_client,
-             keystroke.m_data.m_button.m_press ? "down" : "up");
-        screen_->fakeKey(keystroke.m_data.m_button.m_button,
-                         keystroke.m_data.m_button.m_press);
+                   keystroke.m_data.m_button.m_client,
+                   keystroke.m_data.m_button.m_press ? "down" : "up");
+        screen_->fakeKey(keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_press);
         break;
     default:
         break;

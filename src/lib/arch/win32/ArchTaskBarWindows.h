@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "arch/IArchTaskBar.h"
 #include "arch/IArchMultithread.h"
+#include "arch/IArchTaskBar.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -77,21 +77,19 @@ private:
     void updateIcon(UINT);
     void addAllIcons();
     void removeAllIcons();
-    void modifyIconNoLock(ReceiverToInfoMap::const_iterator,
-                            DWORD taskBarMessage);
+    void modifyIconNoLock(ReceiverToInfoMap::const_iterator, DWORD taskBarMessage);
     void removeIconNoLock(UINT id);
     void handleIconMessage(IArchTaskBarReceiver*, LPARAM);
 
     bool processDialogs(MSG*);
     LRESULT wndProc(HWND, UINT, WPARAM, LPARAM);
-    static LRESULT CALLBACK
-                        staticWndProc(HWND, UINT, WPARAM, LPARAM);
+    static LRESULT CALLBACK staticWndProc(HWND, UINT, WPARAM, LPARAM);
     void threadMainLoop();
 
     HINSTANCE instanceWin32();
 
 private:
-    static ArchTaskBarWindows*    s_instance;
+    static ArchTaskBarWindows* s_instance;
 
     // multithread data
     std::mutex mutex_;

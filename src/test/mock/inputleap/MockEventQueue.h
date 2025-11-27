@@ -25,12 +25,11 @@
 
 namespace inputleap {
 
-class MockEventQueue : public IEventQueue
-{
+class MockEventQueue : public IEventQueue {
 public:
     MOCK_METHOD0(loop, void());
-    MOCK_METHOD2(newOneShotTimer, EventQueueTimer*(double, const EventTarget*));
-    MOCK_METHOD2(newTimer, EventQueueTimer*(double, const EventTarget*));
+    MOCK_METHOD2(newOneShotTimer, EventQueueTimer*(double, const EventTarget*) );
+    MOCK_METHOD2(newTimer, EventQueueTimer*(double, const EventTarget*) );
     MOCK_METHOD2(getEvent, bool(Event&, double));
     MOCK_METHOD1(set_buffer, void(std::unique_ptr<IEventQueueBuffer>));
     MOCK_METHOD1(remove_handlers, void(const EventTarget*));

@@ -17,11 +17,11 @@
 
 #pragma once
 
-#include "Fwd.h"
 #include "ConnectionSecurityLevel.h"
+#include "Fwd.h"
+#include "io/filesystem.h"
 #include "net/TCPSocket.h"
 #include "net/XSocket.h"
-#include "io/filesystem.h"
 #include <mutex>
 
 namespace inputleap {
@@ -36,8 +36,8 @@ class SecureSocket : public TCPSocket {
 public:
     SecureSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer,
                  IArchNetwork::EAddressFamily family, ConnectionSecurityLevel security_level);
-    SecureSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer,
-                 ArchSocket socket, ConnectionSecurityLevel security_level);
+    SecureSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket,
+                 ConnectionSecurityLevel security_level);
     ~SecureSocket();
 
     // ISocket overrides
@@ -62,7 +62,7 @@ public:
 private:
     // SSL
     void initContext(bool server); // may only be called with ssl_mutex_ acquired
-    void createSSL(); // may only be called with ssl_mutex_ acquired.
+    void createSSL();              // may only be called with ssl_mutex_ acquired.
     int secureAccept(int s);
     int secureConnect(int s);
 
@@ -97,10 +97,10 @@ private:
     bool m_fatal;
     ConnectionSecurityLevel security_level_ = ConnectionSecurityLevel::ENCRYPTED;
 
-    int secure_accept_retry_ = 0; // used only in secureAccept()
+    int secure_accept_retry_ = 0;  // used only in secureAccept()
     int secure_connect_retry_ = 0; // used only in secureConnect()
-    int secure_read_retry_ = 0; // used only in secureRead()
-    int secure_write_retry_ = 0; // used only in secureWrite()
+    int secure_read_retry_ = 0;    // used only in secureRead()
+    int secure_write_retry_ = 0;   // used only in secureWrite()
 
     // The following are used only from doWrite()
     // FIXME: using std::vector would simplify logic significantly.

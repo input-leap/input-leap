@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "net/ISocketMultiplexerJob.h"
 #include "arch/Arch.h"
+#include "net/ISocketMultiplexerJob.h"
 #include <functional>
 
 namespace inputleap {
@@ -30,22 +30,16 @@ A socket multiplexer job class that invokes a member function.
 */
 class TSocketMultiplexerMethodJob : public ISocketMultiplexerJob {
 public:
-    using RunFunction = std::function<MultiplexerJobStatus(ISocketMultiplexerJob*, bool, bool, bool)>;
+    using RunFunction =
+        std::function<MultiplexerJobStatus(ISocketMultiplexerJob*, bool, bool, bool)>;
 
     //! run() invokes \c object->method(arg)
-    TSocketMultiplexerMethodJob(const RunFunction& func,
-                                ArchSocket socket, bool readable, bool writable) :
-        func_{func},
-        m_socket(ARCH->copySocket(socket)),
-        m_readable(readable),
-        m_writable(writable)
-    {
-    }
+    TSocketMultiplexerMethodJob(const RunFunction& func, ArchSocket socket, bool readable,
+                                bool writable) :
+        func_{func}, m_socket(ARCH->copySocket(socket)), m_readable(readable), m_writable(writable)
+    {}
 
-    ~TSocketMultiplexerMethodJob() override
-    {
-        ARCH->closeSocket(m_socket);
-    }
+    ~TSocketMultiplexerMethodJob() override { ARCH->closeSocket(m_socket); }
 
     // IJob overrides
     virtual MultiplexerJobStatus run(bool readable, bool writable, bool error) override

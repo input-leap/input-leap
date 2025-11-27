@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include "io/IStream.h"
-#include "base/IEventQueue.h"
 #include "base/EventTarget.h"
+#include "base/IEventQueue.h"
+#include "io/IStream.h"
 #include <memory>
 
 namespace inputleap {

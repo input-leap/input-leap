@@ -50,7 +50,7 @@ private:
 
     typedef std::map<KeySym, std::uint32_t> KeySymMap;
 
-    static KeySymMap    s_keySymToUCS4;
+    static KeySymMap s_keySymToUCS4;
 };
 
 } // namespace inputleap

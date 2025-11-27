@@ -17,8 +17,4 @@
 
 #pragma once
 
-enum class ConnectionSecurityLevel {
-    PLAINTEXT,
-    ENCRYPTED,
-    ENCRYPTED_AUTHENTICATED
-};
+enum class ConnectionSecurityLevel { PLAINTEXT, ENCRYPTED, ENCRYPTED_AUTHENTICATED };

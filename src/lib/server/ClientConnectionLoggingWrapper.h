@@ -26,8 +26,7 @@ class IStream;
 /// Wraps a IClientConnection and logs messages received from and sent to it.
 class ClientConnectionLoggingWrapper : public IClientConnection {
 public:
-    ClientConnectionLoggingWrapper(const std::string& name,
-                                   std::unique_ptr<IClientConnection> conn);
+    ClientConnectionLoggingWrapper(const std::string& name, std::unique_ptr<IClientConnection> conn);
     ~ClientConnectionLoggingWrapper() override;
 
     IStream* get_stream() override;

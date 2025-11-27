@@ -18,21 +18,21 @@
 
 #include "platform/XWindowsClipboard.h"
 
-#include "platform/XWindowsClipboardTextConverter.h"
-#include "platform/XWindowsClipboardUCS2Converter.h"
-#include "platform/XWindowsClipboardUTF8Converter.h"
-#include "platform/XWindowsClipboardHTMLConverter.h"
+#include "arch/Arch.h"
+#include "base/Log.h"
+#include "base/Stopwatch.h"
+#include "base/Time.h"
+#include "mt/Thread.h"
 #include "platform/XWindowsClipboardBMPConverter.h"
+#include "platform/XWindowsClipboardHTMLConverter.h"
 #include "platform/XWindowsClipboardJPGConverter.h"
 #include "platform/XWindowsClipboardPNGConverter.h"
 #include "platform/XWindowsClipboardTIFConverter.h"
+#include "platform/XWindowsClipboardTextConverter.h"
+#include "platform/XWindowsClipboardUCS2Converter.h"
+#include "platform/XWindowsClipboardUTF8Converter.h"
 #include "platform/XWindowsClipboardWEBPConverter.h"
 #include "platform/XWindowsUtil.h"
-#include "mt/Thread.h"
-#include "arch/Arch.h"
-#include "base/Log.h"
-#include "base/Time.h"
-#include "base/Stopwatch.h"
 
 #include <X11/Xatom.h>
 
@@ -42,8 +42,8 @@
 
 namespace inputleap {
 
-XWindowsClipboard::XWindowsClipboard(IXWindowsImpl* impl, Display* display,
-                Window window, ClipboardID id) :
+XWindowsClipboard::XWindowsClipboard(IXWindowsImpl* impl, Display* display, Window window,
+                                     ClipboardID id) :
     m_display(display),
     m_window(window),
     m_id(id),
@@ -55,23 +55,18 @@ XWindowsClipboard::XWindowsClipboard(IXWindowsImpl* impl, Display* display,
 {
     m_impl = impl;
     // get some atoms
-    m_atomTargets         = m_impl->XInternAtom(m_display, "TARGETS", False);
-    m_atomMultiple        = m_impl->XInternAtom(m_display, "MULTIPLE", False);
-    m_atomTimestamp       = m_impl->XInternAtom(m_display, "TIMESTAMP", False);
-    m_atomInteger         = m_impl->XInternAtom(m_display, "INTEGER", False);
-    m_atomAtom            = m_impl->XInternAtom(m_display, "ATOM", False);
-    m_atomAtomPair        = m_impl->XInternAtom(m_display, "ATOM_PAIR", False);
-    m_atomData            = m_impl->XInternAtom(m_display, "CLIP_TEMPORARY",
-                                                False);
-    m_atomINCR            = m_impl->XInternAtom(m_display, "INCR", False);
-    m_atomMotifClipLock   = m_impl->XInternAtom(m_display, "_MOTIF_CLIP_LOCK",
-                                                False);
-    m_atomMotifClipHeader = m_impl->XInternAtom(m_display, "_MOTIF_CLIP_HEADER",
-                                                False);
-    m_atomMotifClipAccess = m_impl->XInternAtom(m_display,
-                                "_MOTIF_CLIP_LOCK_ACCESS_VALID", False);
-    m_atomGDKSelection    = m_impl->XInternAtom(m_display, "GDK_SELECTION",
-                                                False);
+    m_atomTargets = m_impl->XInternAtom(m_display, "TARGETS", False);
+    m_atomMultiple = m_impl->XInternAtom(m_display, "MULTIPLE", False);
+    m_atomTimestamp = m_impl->XInternAtom(m_display, "TIMESTAMP", False);
+    m_atomInteger = m_impl->XInternAtom(m_display, "INTEGER", False);
+    m_atomAtom = m_impl->XInternAtom(m_display, "ATOM", False);
+    m_atomAtomPair = m_impl->XInternAtom(m_display, "ATOM_PAIR", False);
+    m_atomData = m_impl->XInternAtom(m_display, "CLIP_TEMPORARY", False);
+    m_atomINCR = m_impl->XInternAtom(m_display, "INCR", False);
+    m_atomMotifClipLock = m_impl->XInternAtom(m_display, "_MOTIF_CLIP_LOCK", False);
+    m_atomMotifClipHeader = m_impl->XInternAtom(m_display, "_MOTIF_CLIP_HEADER", False);
+    m_atomMotifClipAccess = m_impl->XInternAtom(m_display, "_MOTIF_CLIP_LOCK_ACCESS_VALID", False);
+    m_atomGDKSelection = m_impl->XInternAtom(m_display, "GDK_SELECTION", False);
 
     // set selection atom based on clipboard id
     switch (id) {
@@ -91,24 +86,19 @@ XWindowsClipboard::XWindowsClipboard(IXWindowsImpl* impl, Display* display,
     m_converters.push_back(new XWindowsClipboardJPGConverter(m_display));
     m_converters.push_back(new XWindowsClipboardTIFConverter(m_display));
     m_converters.push_back(new XWindowsClipboardBMPConverter(m_display));
+    m_converters.push_back(new XWindowsClipboardHTMLConverter(m_display, "text/html"));
     m_converters.push_back(new XWindowsClipboardHTMLConverter(m_display,
-                                "text/html"));
-    m_converters.push_back(new XWindowsClipboardHTMLConverter(m_display,
-                                "application/x-moz-nativehtml"));
+                                                              "application/x-moz-nativehtml"));
     m_converters.push_back(new XWindowsClipboardUTF8Converter(m_display,
-                                "text/plain;charset=UTF-8"));
+                                                              "text/plain;charset=UTF-8"));
     m_converters.push_back(new XWindowsClipboardUTF8Converter(m_display,
-                                "text/plain;charset=utf-8"));
-    m_converters.push_back(new XWindowsClipboardUTF8Converter(m_display,
-                                "UTF8_STRING"));
-    m_converters.push_back(new XWindowsClipboardUCS2Converter(m_display,
-                                "text/plain;charset=ISO-10646-UCS-2"));
-    m_converters.push_back(new XWindowsClipboardUCS2Converter(m_display,
-                                "text/unicode"));
-    m_converters.push_back(new XWindowsClipboardTextConverter(m_display,
-                                "text/plain"));
-    m_converters.push_back(new XWindowsClipboardTextConverter(m_display,
-                                "STRING"));
+                                                              "text/plain;charset=utf-8"));
+    m_converters.push_back(new XWindowsClipboardUTF8Converter(m_display, "UTF8_STRING"));
+    m_converters.push_back(
+        new XWindowsClipboardUCS2Converter(m_display, "text/plain;charset=ISO-10646-UCS-2"));
+    m_converters.push_back(new XWindowsClipboardUCS2Converter(m_display, "text/unicode"));
+    m_converters.push_back(new XWindowsClipboardTextConverter(m_display, "text/plain"));
+    m_converters.push_back(new XWindowsClipboardTextConverter(m_display, "STRING"));
 
     // we have no data
     clearCache();
@@ -120,26 +110,26 @@ XWindowsClipboard::~XWindowsClipboard()
     clearConverters();
 }
 
-void
-XWindowsClipboard::lost(Time time)
+void XWindowsClipboard::lost(Time time)
 {
     LOG_DEBUG("lost clipboard %d ownership at %d", m_id, time);
     if (m_owner) {
-        m_owner    = false;
+        m_owner = false;
         m_timeLost = time;
         clearCache();
     }
 }
 
-void
-XWindowsClipboard::addRequest(Window owner, Window requestor,
-                Atom target, ::Time time, Atom property)
+void XWindowsClipboard::addRequest(Window owner, Window requestor, Atom target, ::Time time,
+                                   Atom property)
 {
     // must be for our window and we must have owned the selection
     // at the given time.
     bool success = false;
     if (owner == m_window) {
-        LOG_DEBUG1("request for clipboard %ld, target %s by 0x%08lx (property=%s)", m_selection, XWindowsUtil::atomToString(m_display, target).c_str(), requestor, XWindowsUtil::atomToString(m_display, property).c_str());
+        LOG_DEBUG1("request for clipboard %ld, target %s by 0x%08lx (property=%s)", m_selection,
+                   XWindowsUtil::atomToString(m_display, target).c_str(), requestor,
+                   XWindowsUtil::atomToString(m_display, property).c_str());
         if (wasOwnedAtTime(time)) {
             if (target == m_atomMultiple) {
                 // add a multiple request.  property may not be None
@@ -147,15 +137,13 @@ XWindowsClipboard::addRequest(Window owner, Window requestor,
                 if (property != None) {
                     success = insertMultipleReply(requestor, time, property);
                 }
-            }
-            else {
+            } else {
                 addSimpleRequest(requestor, target, time, property);
 
                 // addSimpleRequest() will have already handled failure
                 success = true;
             }
-        }
-        else {
+        } else {
             LOG_DEBUG1("failed, not owned at time %ld", time);
         }
     }
@@ -170,9 +158,7 @@ XWindowsClipboard::addRequest(Window owner, Window requestor,
     pushReplies();
 }
 
-bool
-XWindowsClipboard::addSimpleRequest(Window requestor,
-                Atom target, ::Time time, Atom property)
+bool XWindowsClipboard::addSimpleRequest(Window requestor, Atom target, ::Time time, Atom property)
 {
     // obsolete requestors may supply a None property.  in
     // that case we use the target as the property to store
@@ -183,25 +169,22 @@ XWindowsClipboard::addSimpleRequest(Window requestor,
 
     // handle targets
     std::string data;
-    Atom type  = None;
+    Atom type = None;
     int format = 0;
     if (target == m_atomTargets) {
         type = getTargetsData(data, &format);
-    }
-    else if (target == m_atomTimestamp) {
+    } else if (target == m_atomTimestamp) {
         type = getTimestampData(data, &format);
-    }
-    else {
+    } else {
         IXWindowsClipboardConverter* converter = getConverter(target);
         if (converter != nullptr) {
             IClipboard::EFormat clipboardFormat = converter->getFormat();
             if (m_added[clipboardFormat]) {
                 try {
-                    data   = converter->fromIClipboard(m_data[clipboardFormat]);
+                    data = converter->fromIClipboard(m_data[clipboardFormat]);
                     format = converter->getDataSize();
-                    type   = converter->getAtom();
-                }
-                catch (...) {
+                    type = converter->getAtom();
+                } catch (...) {
                     // ignore -- cannot convert
                 }
             }
@@ -211,11 +194,9 @@ XWindowsClipboard::addSimpleRequest(Window requestor,
     if (type != None) {
         // success
         LOG_DEBUG1("success");
-        insertReply(new Reply(requestor, target, time,
-                                property, data, type, format));
+        insertReply(new Reply(requestor, target, time, property, data, type, format));
         return true;
-    }
-    else {
+    } else {
         // failure
         LOG_DEBUG1("failed");
         insertReply(new Reply(requestor, target, time));
@@ -223,16 +204,15 @@ XWindowsClipboard::addSimpleRequest(Window requestor,
     }
 }
 
-bool
-XWindowsClipboard::processRequest(Window requestor,
-                ::Time /*time*/, Atom property)
+bool XWindowsClipboard::processRequest(Window requestor, ::Time /*time*/, Atom property)
 {
     auto index = m_replies.find(requestor);
     if (index == m_replies.end()) {
         // unknown requestor window
         return false;
     }
-    LOG_DEBUG1("received property %s delete from 0x08%lx", XWindowsUtil::atomToString(m_display, property).c_str(), requestor);
+    LOG_DEBUG1("received property %s delete from 0x08%lx",
+               XWindowsUtil::atomToString(m_display, property).c_str(), requestor);
 
     // find the property in the known requests.  it should be the
     // first property but we'll check 'em all if we have to.
@@ -250,8 +230,7 @@ XWindowsClipboard::processRequest(Window requestor,
     return false;
 }
 
-bool
-XWindowsClipboard::destroyRequest(Window requestor)
+bool XWindowsClipboard::destroyRequest(Window requestor)
 {
     auto index = m_replies.find(requestor);
     if (index == m_replies.end()) {
@@ -269,20 +248,17 @@ XWindowsClipboard::destroyRequest(Window requestor)
     return true;
 }
 
-Window
-XWindowsClipboard::getWindow() const
+Window XWindowsClipboard::getWindow() const
 {
     return m_window;
 }
 
-Atom
-XWindowsClipboard::getSelection() const
+Atom XWindowsClipboard::getSelection() const
 {
     return m_selection;
 }
 
-bool
-XWindowsClipboard::clear()
+bool XWindowsClipboard::clear()
 {
     assert(m_open);
 
@@ -305,7 +281,7 @@ XWindowsClipboard::clear()
 
     // save time
     m_timeOwned = m_time;
-    m_timeLost  = 0;
+    m_timeLost = 0;
 
     // we're the owner now
     m_owner = true;
@@ -321,14 +297,13 @@ void XWindowsClipboard::add(EFormat format, const std::string& data)
 
     LOG_DEBUG("add %zd bytes to clipboard %d format: %d", data.size(), m_id, format);
 
-    m_data[format]  = data;
+    m_data[format] = data;
     m_added[format] = true;
 
     // FIXME -- set motif clipboard item?
 }
 
-bool
-XWindowsClipboard::open(Time time) const
+bool XWindowsClipboard::open(Time time) const
 {
     if (m_open) {
         LOG_DEBUG("failed to open clipboard: already opened");
@@ -365,8 +340,7 @@ XWindowsClipboard::open(Time time) const
     return true;
 }
 
-void
-XWindowsClipboard::close() const
+void XWindowsClipboard::close() const
 {
     assert(m_open);
 
@@ -378,18 +352,16 @@ XWindowsClipboard::close() const
     }
 
     m_motif = false;
-    m_open  = false;
+    m_open = false;
 }
 
-IClipboard::Time
-XWindowsClipboard::getTime() const
+IClipboard::Time XWindowsClipboard::getTime() const
 {
     checkCache();
     return m_timeOwned;
 }
 
-bool
-XWindowsClipboard::has(EFormat format) const
+bool XWindowsClipboard::has(EFormat format) const
 {
     assert(m_open);
 
@@ -405,8 +377,7 @@ std::string XWindowsClipboard::get(EFormat format) const
     return m_data[format];
 }
 
-void
-XWindowsClipboard::clearConverters()
+void XWindowsClipboard::clearConverters()
 {
     for (auto index = m_converters.begin(); index != m_converters.end(); ++index) {
         delete *index;
@@ -414,8 +385,7 @@ XWindowsClipboard::clearConverters()
     m_converters.clear();
 }
 
-IXWindowsClipboardConverter*
-XWindowsClipboard::getConverter(Atom target, bool onlyIfNotAdded) const
+IXWindowsClipboardConverter* XWindowsClipboard::getConverter(Atom target, bool onlyIfNotAdded) const
 {
     IXWindowsClipboardConverter* converter = nullptr;
     for (auto index = m_converters.begin(); index != m_converters.end(); ++index) {
@@ -425,7 +395,8 @@ XWindowsClipboard::getConverter(Atom target, bool onlyIfNotAdded) const
         }
     }
     if (converter == nullptr) {
-        LOG_DEBUG1("  no converter for target %s", XWindowsUtil::atomToString(m_display, target).c_str());
+        LOG_DEBUG1("  no converter for target %s",
+                   XWindowsUtil::atomToString(m_display, target).c_str());
         return nullptr;
     }
 
@@ -440,8 +411,7 @@ XWindowsClipboard::getConverter(Atom target, bool onlyIfNotAdded) const
     return converter;
 }
 
-void
-XWindowsClipboard::checkCache() const
+void XWindowsClipboard::checkCache() const
 {
     if (!m_checkCache) {
         return;
@@ -452,8 +422,7 @@ XWindowsClipboard::checkCache() const
     // owner.
     if (m_motif) {
         m_timeOwned = motifGetTime();
-    }
-    else {
+    } else {
         m_timeOwned = icccmGetTime();
     }
 
@@ -468,25 +437,22 @@ XWindowsClipboard::checkCache() const
     }
 }
 
-void
-XWindowsClipboard::clearCache() const
+void XWindowsClipboard::clearCache() const
 {
     const_cast<XWindowsClipboard*>(this)->doClearCache();
 }
 
-void
-XWindowsClipboard::doClearCache()
+void XWindowsClipboard::doClearCache()
 {
     m_checkCache = false;
-    m_cached     = false;
+    m_cached = false;
     for (std::int32_t index = 0; index < kNumFormats; ++index) {
-        m_data[index]  = "";
+        m_data[index] = "";
         m_added[index] = false;
     }
 }
 
-void
-XWindowsClipboard::fillCache() const
+void XWindowsClipboard::fillCache() const
 {
     // get the selection data if not already cached
     checkCache();
@@ -495,22 +461,19 @@ XWindowsClipboard::fillCache() const
     }
 }
 
-void
-XWindowsClipboard::doFillCache()
+void XWindowsClipboard::doFillCache()
 {
     if (m_motif) {
         motifFillCache();
-    }
-    else {
+    } else {
         icccmFillCache();
     }
     m_checkCache = false;
-    m_cached     = true;
-    m_cacheTime  = m_timeOwned;
+    m_cached = true;
+    m_cacheTime = m_timeOwned;
 }
 
-void
-XWindowsClipboard::icccmFillCache()
+void XWindowsClipboard::icccmFillCache()
 {
     LOG_DEBUG("ICCCM fill clipboard %d", m_id);
 
@@ -531,7 +494,8 @@ XWindowsClipboard::icccmFillCache()
     XWindowsUtil::convertAtomProperty(data);
     const Atom* targets = reinterpret_cast<const Atom*>(data.data()); // TODO: Safe?
     const std::uint32_t numTargets = data.size() / sizeof(Atom);
-    LOG_DEBUG("  available targets: %s", XWindowsUtil::atomsToString(m_display, targets, numTargets).c_str());
+    LOG_DEBUG("  available targets: %s",
+              XWindowsUtil::atomsToString(m_display, targets, numTargets).c_str());
 
     // try each converter in order (because they're in order of
     // preference).
@@ -557,15 +521,16 @@ XWindowsClipboard::icccmFillCache()
         IClipboard::EFormat format = converter->getFormat();
         std::string targetData;
         if (!icccmGetSelection(target, &actualTarget, &targetData)) {
-            LOG_DEBUG1("  no data for target %s", XWindowsUtil::atomToString(m_display, target).c_str());
+            LOG_DEBUG1("  no data for target %s",
+                       XWindowsUtil::atomToString(m_display, target).c_str());
             m_added[format] = false;
             continue;
         }
 
         if (actualTarget != target) {
             LOG_DEBUG1("  target %s not same as actual target %s",
-                XWindowsUtil::atomToString(m_display, target).c_str(),
-                XWindowsUtil::atomToString(m_display, actualTarget).c_str());
+                       XWindowsUtil::atomToString(m_display, target).c_str(),
+                       XWindowsUtil::atomToString(m_display, actualTarget).c_str());
             m_added[format] = false;
             continue;
         }
@@ -573,65 +538,64 @@ XWindowsClipboard::icccmFillCache()
         if (targetData.empty()) {
             m_added[format] = false;
             LOG_DEBUG1("  no targetdata for target %s (actual target %s)",
-                XWindowsUtil::atomToString(m_display, target).c_str(),
-                XWindowsUtil::atomToString(m_display, actualTarget).c_str());
-             continue;
+                       XWindowsUtil::atomToString(m_display, target).c_str(),
+                       XWindowsUtil::atomToString(m_display, actualTarget).c_str());
+            continue;
         }
 
         if (!converter->toIClipboard(targetData).empty()) {
             // add to clipboard and note we've done it
-            m_data[format]  = converter->toIClipboard(targetData);
+            m_data[format] = converter->toIClipboard(targetData);
             m_added[format] = true;
-            LOG_DEBUG("  added format %d for target %s (%zu %s)", format, XWindowsUtil::atomToString(m_display, target).c_str(), targetData.size(), targetData.size() == 1 ? "byte" : "bytes");
+            LOG_DEBUG("  added format %d for target %s (%zu %s)", format,
+                      XWindowsUtil::atomToString(m_display, target).c_str(), targetData.size(),
+                      targetData.size() == 1 ? "byte" : "bytes");
         } else {
-            LOG_DEBUG1("  no clipboard data for target %s", XWindowsUtil::atomToString(m_display, target).c_str());
+            LOG_DEBUG1("  no clipboard data for target %s",
+                       XWindowsUtil::atomToString(m_display, target).c_str());
             m_added[format] = false;
         }
     }
 }
 
-bool
-XWindowsClipboard::icccmGetSelection(Atom target,
-                Atom* actualTarget, std::string* data) const
+bool XWindowsClipboard::icccmGetSelection(Atom target, Atom* actualTarget, std::string* data) const
 {
     assert(actualTarget != nullptr);
     assert(data != nullptr);
 
     // request data conversion
     CICCCMGetClipboard getter(m_window, m_time, m_atomData);
-    if (!getter.readClipboard(m_display, m_selection,
-                                target, actualTarget, data)) {
-        LOG_DEBUG1("can't get data for selection target %s", XWindowsUtil::atomToString(m_display, target).c_str());
-        if (getter.m_error) LOG_WARN("ICCCM violation by clipboard owner");
+    if (!getter.readClipboard(m_display, m_selection, target, actualTarget, data)) {
+        LOG_DEBUG1("can't get data for selection target %s",
+                   XWindowsUtil::atomToString(m_display, target).c_str());
+        if (getter.m_error) {
+            LOG_WARN("ICCCM violation by clipboard owner");
+        }
         return false;
-    }
-    else if (*actualTarget == None) {
-        LOG_DEBUG1("selection conversion failed for target %s", XWindowsUtil::atomToString(m_display, target).c_str());
+    } else if (*actualTarget == None) {
+        LOG_DEBUG1("selection conversion failed for target %s",
+                   XWindowsUtil::atomToString(m_display, target).c_str());
         return false;
     }
     return true;
 }
 
-IClipboard::Time
-XWindowsClipboard::icccmGetTime() const
+IClipboard::Time XWindowsClipboard::icccmGetTime() const
 {
     Atom actualTarget;
     std::string data;
-    if (icccmGetSelection(m_atomTimestamp, &actualTarget, &data) &&
-        actualTarget == m_atomInteger) {
+    if (icccmGetSelection(m_atomTimestamp, &actualTarget, &data) && actualTarget == m_atomInteger) {
         Time time = *reinterpret_cast<const Time*>(data.data());
         LOG_DEBUG1("got ICCCM time %d", time);
         return time;
-    }
-    else {
+    } else {
         // no timestamp
         LOG_DEBUG1("can't get ICCCM time");
         return 0;
     }
 }
 
-bool
-XWindowsClipboard::motifLockClipboard() const
+bool XWindowsClipboard::motifLockClipboard() const
 {
     // fail if anybody owns the lock (even us, so this is non-recursive)
     Window lockOwner = m_impl->XGetSelectionOwner(m_display, m_atomMotifClipLock);
@@ -656,8 +620,7 @@ XWindowsClipboard::motifLockClipboard() const
     return true;
 }
 
-void
-XWindowsClipboard::motifUnlockClipboard() const
+void XWindowsClipboard::motifUnlockClipboard() const
 {
     LOG_DEBUG1("unlocked motif clipboard");
 
@@ -672,8 +635,7 @@ XWindowsClipboard::motifUnlockClipboard() const
     m_impl->XSetSelectionOwner(m_display, m_atomMotifClipLock, None, time);
 }
 
-bool
-XWindowsClipboard::motifOwnsClipboard() const
+bool XWindowsClipboard::motifOwnsClipboard() const
 {
     // get the current selection owner
     // FIXME -- this can't be right.  even if the window is destroyed
@@ -689,16 +651,15 @@ XWindowsClipboard::motifOwnsClipboard() const
     std::int32_t format;
     std::string data;
     Window root = RootWindow(m_display, DefaultScreen(m_display));
-    if (!XWindowsUtil::getWindowProperty(m_display, root,
-                                m_atomMotifClipHeader,
-                                &data, &target, &format, False)) {
+    if (!XWindowsUtil::getWindowProperty(m_display, root, m_atomMotifClipHeader, &data, &target,
+                                         &format, False)) {
         return false;
     }
 
     // check the owner window against the current clipboard owner
     if (data.size() >= sizeof(MotifClipHeader)) {
         MotifClipHeader header;
-        std::memcpy (&header, data.data(), sizeof(header));
+        std::memcpy(&header, data.data(), sizeof(header));
         if ((header.m_id == kMotifClipHeader) &&
             (static_cast<Window>(header.m_selectionOwner) == owner)) {
             return true;
@@ -708,8 +669,7 @@ XWindowsClipboard::motifOwnsClipboard() const
     return false;
 }
 
-void
-XWindowsClipboard::motifFillCache()
+void XWindowsClipboard::motifFillCache()
 {
     LOG_DEBUG("Motif fill clipboard %d", m_id);
 
@@ -718,9 +678,8 @@ XWindowsClipboard::motifFillCache()
     std::int32_t format;
     std::string data;
     Window root = RootWindow(m_display, DefaultScreen(m_display));
-    if (!XWindowsUtil::getWindowProperty(m_display, root,
-                                m_atomMotifClipHeader,
-                                &data, &target, &format, False)) {
+    if (!XWindowsUtil::getWindowProperty(m_display, root, m_atomMotifClipHeader, &data, &target,
+                                         &format, False)) {
         return;
     }
 
@@ -728,7 +687,7 @@ XWindowsClipboard::motifFillCache()
     if (data.size() < sizeof(header)) { // check that the header is okay
         return;
     }
-    std::memcpy (&header, data.data(), sizeof(header));
+    std::memcpy(&header, data.data(), sizeof(header));
     if (header.m_id != kMotifClipHeader || header.m_numItems < 1) {
         return;
     }
@@ -738,9 +697,8 @@ XWindowsClipboard::motifFillCache()
     sprintf(name, "_MOTIF_CLIP_ITEM_%d", header.m_item);
     Atom atomItem = m_impl->XInternAtom(m_display, name, False);
     data = "";
-    if (!XWindowsUtil::getWindowProperty(m_display, root,
-                                atomItem, &data,
-                                &target, &format, False)) {
+    if (!XWindowsUtil::getWindowProperty(m_display, root, atomItem, &data, &target, &format,
+                                         False)) {
         return;
     }
 
@@ -748,16 +706,15 @@ XWindowsClipboard::motifFillCache()
     if (data.size() < sizeof(item)) { // check that the item is okay
         return;
     }
-    std::memcpy (&item, data.data(), sizeof(item));
-    if (item.m_id != kMotifClipItem ||
-        item.m_numFormats - item.m_numDeletedFormats < 1) {
+    std::memcpy(&item, data.data(), sizeof(item));
+    if (item.m_id != kMotifClipItem || item.m_numFormats - item.m_numDeletedFormats < 1) {
         return;
     }
 
     // format list is after static item structure elements
     const std::int32_t numFormats = item.m_numFormats - item.m_numDeletedFormats;
-    const std::int32_t* formats = reinterpret_cast<const std::int32_t*>(item.m_size +
-                                                            static_cast<const char*>(data.data()));
+    const std::int32_t* formats =
+        reinterpret_cast<const std::int32_t*>(item.m_size + static_cast<const char*>(data.data()));
 
     // get the available formats
     typedef std::map<Atom, std::string> MotifFormatMap;
@@ -767,9 +724,8 @@ XWindowsClipboard::motifFillCache()
         sprintf(name, "_MOTIF_CLIP_ITEM_%d", formats[i]);
         Atom atomFormat = m_impl->XInternAtom(m_display, name, False);
         data.clear();
-        if (!XWindowsUtil::getWindowProperty(m_display, root,
-                                    atomFormat, &data,
-                                    &target, &format, False)) {
+        if (!XWindowsUtil::getWindowProperty(m_display, root, atomFormat, &data, &target, &format,
+                                             False)) {
             continue;
         }
 
@@ -778,11 +734,9 @@ XWindowsClipboard::motifFillCache()
         if (data.size() < sizeof(motifFormat)) {
             continue;
         }
-        std::memcpy (&motifFormat, data.data(), sizeof(motifFormat));
-        if (motifFormat.m_id != kMotifClipFormat ||
-            motifFormat.m_length < 0 ||
-            motifFormat.m_type == None ||
-            motifFormat.m_deleted != 0) {
+        std::memcpy(&motifFormat, data.data(), sizeof(motifFormat));
+        if (motifFormat.m_id != kMotifClipFormat || motifFormat.m_length < 0 ||
+            motifFormat.m_type == None || motifFormat.m_deleted != 0) {
             continue;
         }
 
@@ -809,7 +763,7 @@ XWindowsClipboard::motifFillCache()
 
         // get format
         MotifClipFormat motifFormat;
-        std::memcpy (&motifFormat, index2->second.data(), sizeof(motifFormat));
+        std::memcpy(&motifFormat, index2->second.data(), sizeof(motifFormat));
         target = motifFormat.m_type;
 
         // get the data (finally)
@@ -817,15 +771,16 @@ XWindowsClipboard::motifFillCache()
         IClipboard::EFormat format = converter->getFormat();
         std::string targetData;
         if (!motifGetSelection(&motifFormat, &actualTarget, &targetData)) {
-            LOG_DEBUG1("  no data for target %s", XWindowsUtil::atomToString(m_display, target).c_str());
+            LOG_DEBUG1("  no data for target %s",
+                       XWindowsUtil::atomToString(m_display, target).c_str());
             m_added[format] = false;
             continue;
         }
 
         if (actualTarget != target) {
             LOG_DEBUG1("  target %s not same as actual target %s",
-                XWindowsUtil::atomToString(m_display, target).c_str(),
-                XWindowsUtil::atomToString(m_display, actualTarget).c_str());
+                       XWindowsUtil::atomToString(m_display, target).c_str(),
+                       XWindowsUtil::atomToString(m_display, actualTarget).c_str());
             m_added[format] = false;
             continue;
         }
@@ -833,26 +788,28 @@ XWindowsClipboard::motifFillCache()
         if (targetData.empty()) {
             m_added[format] = false;
             LOG_DEBUG1("  no targetdata for target %s (actual target %s)",
-                XWindowsUtil::atomToString(m_display, target).c_str(),
-                XWindowsUtil::atomToString(m_display, actualTarget).c_str());
+                       XWindowsUtil::atomToString(m_display, target).c_str(),
+                       XWindowsUtil::atomToString(m_display, actualTarget).c_str());
             continue;
         }
 
         if (!converter->toIClipboard(targetData).empty()) {
             // add to clipboard and note we've done it
-            m_data[format]  = converter->toIClipboard(targetData);
+            m_data[format] = converter->toIClipboard(targetData);
             m_added[format] = true;
-            LOG_DEBUG("  added format %d for target %s (%zu %s)", format, XWindowsUtil::atomToString(m_display, target).c_str(), targetData.size(), targetData.size() == 1 ? "byte" : "bytes");
+            LOG_DEBUG("  added format %d for target %s (%zu %s)", format,
+                      XWindowsUtil::atomToString(m_display, target).c_str(), targetData.size(),
+                      targetData.size() == 1 ? "byte" : "bytes");
         } else {
-            LOG_DEBUG1("  no clipboard data for target %s", XWindowsUtil::atomToString(m_display, target).c_str());
+            LOG_DEBUG1("  no clipboard data for target %s",
+                       XWindowsUtil::atomToString(m_display, target).c_str());
             m_added[format] = false;
         }
     }
 }
 
-bool
-XWindowsClipboard::motifGetSelection(const MotifClipFormat* format,
-                            Atom* actualTarget, std::string* data) const
+bool XWindowsClipboard::motifGetSelection(const MotifClipFormat* format, Atom* actualTarget,
+                                          std::string* data) const
 {
     // if the current clipboard owner and the owner indicated by the
     // motif clip header are the same then transfer via a property on
@@ -868,28 +825,25 @@ XWindowsClipboard::motifGetSelection(const MotifClipFormat* format,
     // part that i don't know.
     char name[18 + 20];
     sprintf(name, "_MOTIF_CLIP_ITEM_%d", format->m_data);
-       Atom target = m_impl->XInternAtom(m_display, name, False);
+    Atom target = m_impl->XInternAtom(m_display, name, False);
     Window root = RootWindow(m_display, DefaultScreen(m_display));
-    return XWindowsUtil::getWindowProperty(m_display, root, target, data,
-                                           actualTarget, nullptr, False);
+    return XWindowsUtil::getWindowProperty(m_display, root, target, data, actualTarget, nullptr,
+                                           False);
 }
 
-IClipboard::Time
-XWindowsClipboard::motifGetTime() const
+IClipboard::Time XWindowsClipboard::motifGetTime() const
 {
     return icccmGetTime();
 }
 
-bool
-XWindowsClipboard::insertMultipleReply(Window requestor,
-                ::Time time, Atom property)
+bool XWindowsClipboard::insertMultipleReply(Window requestor, ::Time time, Atom property)
 {
     // get the requested targets
     Atom target;
     std::int32_t format;
     std::string data;
-    if (!XWindowsUtil::getWindowProperty(m_display, requestor,
-                                property, &data, &target, &format, False)) {
+    if (!XWindowsUtil::getWindowProperty(m_display, requestor, property, &data, &target, &format,
+                                         False)) {
         // can't get the requested targets
         return false;
     }
@@ -907,7 +861,7 @@ XWindowsClipboard::insertMultipleReply(Window requestor,
     // add replies for each target
     bool changed = false;
     for (std::uint32_t i = 0; i < numTargets; i += 2) {
-        const Atom request_target   = targets[i + 0];
+        const Atom request_target = targets[i + 0];
         const Atom request_property = targets[i + 1];
         if (!addSimpleRequest(requestor, request_target, time, request_property)) {
             // note that we can't perform the requested conversion
@@ -918,20 +872,17 @@ XWindowsClipboard::insertMultipleReply(Window requestor,
 
     // update the targets property if we changed it
     if (changed) {
-        XWindowsUtil::setWindowProperty(m_display, requestor,
-                                property, data.data(), data.size(),
-                                target, format);
+        XWindowsUtil::setWindowProperty(m_display, requestor, property, data.data(), data.size(),
+                                        target, format);
     }
 
     // add reply for MULTIPLE request
-    insertReply(new Reply(requestor, m_atomMultiple,
-                                time, property, std::string(), None, 32));
+    insertReply(new Reply(requestor, m_atomMultiple, time, property, std::string(), None, 32));
 
     return true;
 }
 
-void
-XWindowsClipboard::insertReply(Reply* reply)
+void XWindowsClipboard::insertReply(Reply* reply)
 {
     assert(reply != nullptr);
 
@@ -966,8 +917,8 @@ XWindowsClipboard::insertReply(Reply* reply)
             m_eventMasks[reply->m_requestor] = attr.your_event_mask;
 
             // add the events we want
-            m_impl->XSelectInput(m_display, reply->m_requestor, attr.your_event_mask |
-                                    StructureNotifyMask | PropertyChangeMask);
+            m_impl->XSelectInput(m_display, reply->m_requestor,
+                                 attr.your_event_mask | StructureNotifyMask | PropertyChangeMask);
         }
 
         // if we failed then the window has already been destroyed
@@ -978,31 +929,29 @@ XWindowsClipboard::insertReply(Reply* reply)
     }
 }
 
-void
-XWindowsClipboard::pushReplies()
+void XWindowsClipboard::pushReplies()
 {
     // send the first reply for each window if that reply hasn't
     // been sent yet.
-    for (auto index = m_replies.begin(); index != m_replies.end(); ) {
+    for (auto index = m_replies.begin(); index != m_replies.end();) {
         assert(!index->second.empty());
         auto listit = index->second.begin();
         while (listit != index->second.end()) {
-            if (!(*listit)->m_replied)
+            if (!(*listit)->m_replied) {
                 break;
+            }
             ++listit;
         }
         if (listit != index->second.end() && !(*listit)->m_replied) {
             pushReplies(index, index->second, listit);
-        }
-        else {
+        } else {
             ++index;
         }
     }
 }
 
-void
-XWindowsClipboard::pushReplies(ReplyMap::iterator& mapIndex,
-                ReplyList& replies, ReplyList::iterator index)
+void XWindowsClipboard::pushReplies(ReplyMap::iterator& mapIndex, ReplyList& replies,
+                                    ReplyList::iterator index)
 {
     Reply* reply = *index;
     while (sendReply(reply)) {
@@ -1024,27 +973,27 @@ XWindowsClipboard::pushReplies(ReplyMap::iterator& mapIndex,
         m_impl->XSelectInput(m_display, requestor, m_eventMasks[requestor]);
         m_replies.erase(mapIndex++);
         m_eventMasks.erase(requestor);
-    }
-    else {
+    } else {
         ++mapIndex;
     }
 }
 
-bool
-XWindowsClipboard::sendReply(Reply* reply)
+bool XWindowsClipboard::sendReply(Reply* reply)
 {
     assert(reply != nullptr);
 
     // bail out immediately if reply is done
     if (reply->m_done) {
-        LOG_DEBUG1("clipboard: finished reply to 0x%08lx,%ld,%ld", reply->m_requestor, reply->m_target, reply->m_property);
+        LOG_DEBUG1("clipboard: finished reply to 0x%08lx,%ld,%ld", reply->m_requestor,
+                   reply->m_target, reply->m_property);
         return true;
     }
 
     // start in failed state if property is None
     bool failed = (reply->m_property == None);
     if (!failed) {
-        LOG_DEBUG1("clipboard: setting property on 0x%08lx,%ld,%ld", reply->m_requestor, reply->m_target, reply->m_property);
+        LOG_DEBUG1("clipboard: setting property on 0x%08lx,%ld,%ld", reply->m_requestor,
+                   reply->m_target, reply->m_property);
 
         // send using INCR if already sending incrementally or if reply
         // is too large, otherwise just send it.
@@ -1054,9 +1003,8 @@ XWindowsClipboard::sendReply(Reply* reply)
         // send INCR reply if incremental and we haven't replied yet
         if (useINCR && !reply->m_replied) {
             std::uint32_t size = reply->m_data.size();
-            if (!XWindowsUtil::setWindowProperty(m_display,
-                                reply->m_requestor, reply->m_property,
-                                &size, 4, m_atomINCR, 32)) {
+            if (!XWindowsUtil::setWindowProperty(m_display, reply->m_requestor, reply->m_property,
+                                                 &size, 4, m_atomINCR, 32)) {
                 failed = true;
             }
         }
@@ -1065,18 +1013,16 @@ XWindowsClipboard::sendReply(Reply* reply)
         else {
             // how much more data should we send?
             std::uint32_t size = reply->m_data.size() - reply->m_ptr;
-            if (size > maxRequestSize)
+            if (size > maxRequestSize) {
                 size = maxRequestSize;
+            }
 
             // send it
-            if (!XWindowsUtil::setWindowProperty(m_display,
-                                reply->m_requestor, reply->m_property,
-                                reply->m_data.data() + reply->m_ptr,
-                                size,
-                                reply->m_type, reply->m_format)) {
+            if (!XWindowsUtil::setWindowProperty(m_display, reply->m_requestor, reply->m_property,
+                                                 reply->m_data.data() + reply->m_ptr, size,
+                                                 reply->m_type, reply->m_format)) {
                 failed = true;
-            }
-            else {
+            } else {
                 reply->m_ptr += size;
 
                 // we've finished the reply if we just sent the zero
@@ -1093,7 +1039,8 @@ XWindowsClipboard::sendReply(Reply* reply)
     // the final zero-length property.
     // FIXME -- how do you gracefully cancel an incremental transfer?
     if (failed) {
-        LOG_DEBUG1("clipboard: sending failure to 0x%08lx,%ld,%ld", reply->m_requestor, reply->m_target, reply->m_property);
+        LOG_DEBUG1("clipboard: sending failure to 0x%08lx,%ld,%ld", reply->m_requestor,
+                   reply->m_target, reply->m_property);
         reply->m_done = true;
         if (reply->m_property != None) {
             XWindowsUtil::ErrorLock lock(m_display);
@@ -1101,20 +1048,14 @@ XWindowsClipboard::sendReply(Reply* reply)
         }
 
         if (!reply->m_replied) {
-            sendNotify(reply->m_requestor, m_selection,
-                                reply->m_target, None,
-                                reply->m_time);
+            sendNotify(reply->m_requestor, m_selection, reply->m_target, None, reply->m_time);
 
             // don't wait for any reply (because we're not expecting one)
             return true;
-        }
-        else {
+        } else {
             static const char dummy = 0;
-            XWindowsUtil::setWindowProperty(m_display,
-                                reply->m_requestor, reply->m_property,
-                                &dummy,
-                                0,
-                                reply->m_type, reply->m_format);
+            XWindowsUtil::setWindowProperty(m_display, reply->m_requestor, reply->m_property,
+                                            &dummy, 0, reply->m_type, reply->m_format);
 
             // wait for delete notify
             return false;
@@ -1123,7 +1064,8 @@ XWindowsClipboard::sendReply(Reply* reply)
 
     // send notification if we haven't yet
     if (!reply->m_replied) {
-        LOG_DEBUG1("clipboard: sending notify to 0x%08lx,%ld,%ld", reply->m_requestor, reply->m_target, reply->m_property);
+        LOG_DEBUG1("clipboard: sending notify to 0x%08lx,%ld,%ld", reply->m_requestor,
+                   reply->m_target, reply->m_property);
         reply->m_replied = true;
 
         // dump every property on the requestor window to the debug2
@@ -1133,18 +1075,16 @@ XWindowsClipboard::sendReply(Reply* reply)
         if (CLOG->getFilter() >= kDEBUG2) {
             XWindowsUtil::ErrorLock lock(m_display);
             int n;
-            Atom* props = m_impl->XListProperties(m_display, reply->m_requestor,
-                                                  &n);
+            Atom* props = m_impl->XListProperties(m_display, reply->m_requestor, &n);
             LOG_DEBUG2("properties of 0x%08lx:", reply->m_requestor);
             for (int i = 0; i < n; ++i) {
                 Atom target;
                 std::string data;
                 char* name = m_impl->XGetAtomName(m_display, props[i]);
-                if (!XWindowsUtil::getWindowProperty(m_display, reply->m_requestor,
-                                                     props[i], &data, &target, nullptr, False)) {
+                if (!XWindowsUtil::getWindowProperty(m_display, reply->m_requestor, props[i], &data,
+                                                     &target, nullptr, False)) {
                     LOG_DEBUG2("  %s: <can't read property>", name);
-                }
-                else {
+                } else {
                     // if there are any non-ascii characters in string
                     // then print the binary data.
                     static const char* hex = "0123456789abcdef";
@@ -1177,17 +1117,15 @@ XWindowsClipboard::sendReply(Reply* reply)
             }
         }
 
-        sendNotify(reply->m_requestor, m_selection,
-                                reply->m_target, reply->m_property,
-                                reply->m_time);
+        sendNotify(reply->m_requestor, m_selection, reply->m_target, reply->m_property,
+                   reply->m_time);
     }
 
     // wait for delete notify
     return false;
 }
 
-void
-XWindowsClipboard::clearReplies()
+void XWindowsClipboard::clearReplies()
 {
     for (auto index = m_replies.begin(); index != m_replies.end(); ++index) {
         clearReplies(index->second);
@@ -1196,8 +1134,7 @@ XWindowsClipboard::clearReplies()
     m_eventMasks.clear();
 }
 
-void
-XWindowsClipboard::clearReplies(ReplyList& replies)
+void XWindowsClipboard::clearReplies(ReplyList& replies)
 {
     for (auto index = replies.begin(); index != replies.end(); ++index) {
         delete *index;
@@ -1205,24 +1142,22 @@ XWindowsClipboard::clearReplies(ReplyList& replies)
     replies.clear();
 }
 
-void
-XWindowsClipboard::sendNotify(Window requestor,
-                Atom selection, Atom target, Atom property, Time time)
+void XWindowsClipboard::sendNotify(Window requestor, Atom selection, Atom target, Atom property,
+                                   Time time)
 {
     XEvent event;
-    event.xselection.type      = SelectionNotify;
-    event.xselection.display   = m_display;
+    event.xselection.type = SelectionNotify;
+    event.xselection.display = m_display;
     event.xselection.requestor = requestor;
     event.xselection.selection = selection;
-    event.xselection.target    = target;
-    event.xselection.property  = property;
-    event.xselection.time      = time;
+    event.xselection.target = target;
+    event.xselection.property = property;
+    event.xselection.time = time;
     XWindowsUtil::ErrorLock lock(m_display);
     m_impl->XSendEvent(m_display, requestor, False, 0, &event);
 }
 
-bool
-XWindowsClipboard::wasOwnedAtTime(::Time time) const
+bool XWindowsClipboard::wasOwnedAtTime(::Time time) const
 {
     // not owned if we've never owned the selection
     checkCache();
@@ -1238,12 +1173,10 @@ XWindowsClipboard::wasOwnedAtTime(::Time time) const
     if (m_timeLost == 0) {
         if (time == CurrentTime) {
             return true;
-        }
-        else {
+        } else {
             lost = XWindowsUtil::getCurrentTime(m_display, m_window);
         }
-    }
-    else {
+    } else {
         if (time == CurrentTime) {
             return false;
         }
@@ -1251,7 +1184,7 @@ XWindowsClipboard::wasOwnedAtTime(::Time time) const
 
     // compare time to range
     Time duration = lost - m_timeOwned;
-    Time when     = time - m_timeOwned;
+    Time when = time - m_timeOwned;
     return (/*when >= 0 &&*/ when <= duration);
 }
 
@@ -1288,13 +1221,12 @@ Atom XWindowsClipboard::getTimestampData(std::string& data, int* format) const
     return m_atomInteger;
 }
 
-
 //
 // XWindowsClipboard::CICCCMGetClipboard
 //
 
-XWindowsClipboard::CICCCMGetClipboard::CICCCMGetClipboard(
-                Window requestor, Time time, Atom property) :
+XWindowsClipboard::CICCCMGetClipboard::CICCCMGetClipboard(Window requestor, Time time,
+                                                          Atom property) :
     m_requestor(requestor),
     m_time(time),
     m_property(property),
@@ -1314,25 +1246,27 @@ XWindowsClipboard::CICCCMGetClipboard::~CICCCMGetClipboard()
     // do nothing
 }
 
-bool
-XWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
-                Atom selection, Atom target, Atom* actualTarget, std::string* data)
+bool XWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display, Atom selection,
+                                                          Atom target, Atom* actualTarget,
+                                                          std::string* data)
 {
     assert(actualTarget != nullptr);
     assert(data != nullptr);
 
-    LOG_DEBUG1("request selection=%s, target=%s, window=%lx", XWindowsUtil::atomToString(display, selection).c_str(), XWindowsUtil::atomToString(display, target).c_str(), m_requestor);
+    LOG_DEBUG1("request selection=%s, target=%s, window=%lx",
+               XWindowsUtil::atomToString(display, selection).c_str(),
+               XWindowsUtil::atomToString(display, target).c_str(), m_requestor);
 
     m_atomNone = XInternAtom(display, "NONE", False);
     m_atomIncr = XInternAtom(display, "INCR", False);
 
     // save output pointers
     m_actualTarget = actualTarget;
-    m_data         = data;
+    m_data = data;
 
     // assume failure
     *m_actualTarget = None;
-    *m_data         = "";
+    *m_data = "";
 
     // delete target property
     XDeleteProperty(display, m_requestor, m_property);
@@ -1340,12 +1274,10 @@ XWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
     // select window for property changes
     XWindowAttributes attr;
     XGetWindowAttributes(display, m_requestor, &attr);
-    XSelectInput(display, m_requestor,
-                                attr.your_event_mask | PropertyChangeMask);
+    XSelectInput(display, m_requestor, attr.your_event_mask | PropertyChangeMask);
 
     // request data conversion
-    XConvertSelection(display, selection, target,
-                                m_property, m_requestor, m_time);
+    XConvertSelection(display, selection, target, m_property, m_requestor, m_time);
 
     // synchronize with server before we start following timeout countdown
     XSync(display, False);
@@ -1357,8 +1289,8 @@ XWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
     // by badly behaved selection owners.
     XEvent xevent;
     std::vector<XEvent> events;
-    Stopwatch timeout(false);    // timer not stopped, not triggered
-    static const double s_timeout = 0.25;    // FIXME -- is this too short?
+    Stopwatch timeout(false);             // timer not stopped, not triggered
+    static const double s_timeout = 0.25; // FIXME -- is this too short?
     bool noWait = false;
     while (!m_done && !m_failed) {
         // fail if timeout has expired
@@ -1374,8 +1306,7 @@ XWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
                 if (!processEvent(display, &xevent)) {
                     // not processed so save it
                     events.push_back(xevent);
-                }
-                else {
+                } else {
                     // reset timer since we've made some progress
                     timeout.reset();
 
@@ -1386,8 +1317,7 @@ XWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
                     noWait = true;
                 }
             }
-        }
-        else {
+        } else {
             inputleap::this_thread_sleep(0.01);
         }
     }
@@ -1405,9 +1335,7 @@ XWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
     return !m_failed;
 }
 
-bool
-XWindowsClipboard::CICCCMGetClipboard::processEvent(
-                Display* display, XEvent* xevent)
+bool XWindowsClipboard::CICCCMGetClipboard::processEvent(Display* display, XEvent* xevent)
 {
     // process event
     switch (xevent->type) {
@@ -1423,8 +1351,7 @@ XWindowsClipboard::CICCCMGetClipboard::processEvent(
     case SelectionNotify:
         if (xevent->xselection.requestor == m_requestor) {
             // done if we can't convert
-            if (xevent->xselection.property == None ||
-                xevent->xselection.property == m_atomNone) {
+            if (xevent->xselection.property == None || xevent->xselection.property == m_atomNone) {
                 m_done = true;
                 return true;
             }
@@ -1441,9 +1368,8 @@ XWindowsClipboard::CICCCMGetClipboard::processEvent(
 
     case PropertyNotify:
         // proceed if conversion successful and we're receiving more data
-        if (xevent->xproperty.window == m_requestor &&
-            xevent->xproperty.atom   == m_property &&
-            xevent->xproperty.state  == PropertyNewValue) {
+        if (xevent->xproperty.window == m_requestor && xevent->xproperty.atom == m_property &&
+            xevent->xproperty.state == PropertyNewValue) {
             if (!m_reading) {
                 // we haven't gotten the SelectionNotify yet
                 return true;
@@ -1462,8 +1388,8 @@ XWindowsClipboard::CICCCMGetClipboard::processEvent(
     // get the data from the property
     Atom target;
     const std::string::size_type oldSize = m_data->size();
-    if (!XWindowsUtil::getWindowProperty(display, m_requestor,
-                                         m_property, m_data, &target, nullptr, True)) {
+    if (!XWindowsUtil::getWindowProperty(display, m_requestor, m_property, m_data, &target, nullptr,
+                                         True)) {
         // unable to read property
         m_failed = true;
         return true;
@@ -1475,14 +1401,12 @@ XWindowsClipboard::CICCCMGetClipboard::processEvent(
     if (target == m_atomIncr) {
         if (m_incr) {
             m_failed = true;
-            m_error  = true;
-        }
-        else if (m_data->size() == oldSize) {
+            m_error = true;
+        } else if (m_data->size() == oldSize) {
             m_failed = true;
-            m_error  = true;
-        }
-        else {
-            m_incr   = true;
+            m_error = true;
+        } else {
+            m_incr = true;
 
             // discard INCR data
             *m_data = "";
@@ -1493,7 +1417,8 @@ XWindowsClipboard::CICCCMGetClipboard::processEvent(
     else if (m_incr) {
         // if first incremental chunk then save target
         if (oldSize == 0) {
-            LOG_DEBUG1("  INCR first chunk, target %s", XWindowsUtil::atomToString(display, target).c_str());
+            LOG_DEBUG1("  INCR first chunk, target %s",
+                       XWindowsUtil::atomToString(display, target).c_str());
             *m_actualTarget = target;
         }
 
@@ -1502,7 +1427,7 @@ XWindowsClipboard::CICCCMGetClipboard::processEvent(
             if (target != *m_actualTarget) {
                 LOG_WARN("  INCR target mismatch");
                 m_failed = true;
-                m_error  = true;
+                m_error = true;
             }
         }
 
@@ -1517,14 +1442,15 @@ XWindowsClipboard::CICCCMGetClipboard::processEvent(
     else {
         LOG_DEBUG1("  target %s", XWindowsUtil::atomToString(display, target).c_str());
         *m_actualTarget = target;
-        m_done          = true;
+        m_done = true;
     }
 
     // this event has been processed
-    if (!m_incr) LOG_DEBUG1("  got data, %zd bytes", m_data->size());
+    if (!m_incr) {
+        LOG_DEBUG1("  got data, %zd bytes", m_data->size());
+    }
     return true;
 }
-
 
 //
 // XWindowsClipboard::Reply
@@ -1545,8 +1471,8 @@ XWindowsClipboard::Reply::Reply(Window requestor, Atom target, ::Time time) :
     // do nothing
 }
 
-XWindowsClipboard::Reply::Reply(Window requestor, Atom target, ::Time time,
-                Atom property, const std::string& data, Atom type, int format) :
+XWindowsClipboard::Reply::Reply(Window requestor, Atom target, ::Time time, Atom property,
+                                const std::string& data, Atom type, int format) :
     m_requestor(requestor),
     m_target(target),
     m_time(time),

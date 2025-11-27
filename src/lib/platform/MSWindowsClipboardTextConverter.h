@@ -23,8 +23,7 @@
 namespace inputleap {
 
 //! Convert to/from locale text encoding
-class MSWindowsClipboardTextConverter :
-                public MSWindowsClipboardAnyTextConverter {
+class MSWindowsClipboardTextConverter : public MSWindowsClipboardAnyTextConverter {
 public:
     MSWindowsClipboardTextConverter();
     virtual ~MSWindowsClipboardTextConverter();

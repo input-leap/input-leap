@@ -18,16 +18,15 @@
 
 #pragma once
 
-#include <QObject>
 #include <QAbstractSocket>
+#include <QObject>
 
 #include "ElevateMode.h"
 
 class QTcpSocket;
 class IpcReader;
 
-class IpcClient : public QObject
-{
+class IpcClient : public QObject {
     Q_OBJECT
 
 public:

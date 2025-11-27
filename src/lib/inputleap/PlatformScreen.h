@@ -19,8 +19,8 @@
 #pragma once
 
 #include "base/EventTarget.h"
-#include "inputleap/IPlatformScreen.h"
 #include "inputleap/DragInformation.h"
+#include "inputleap/IPlatformScreen.h"
 #include <stdexcept>
 
 namespace inputleap {
@@ -56,16 +56,23 @@ public:
     bool isDraggingStarted() override;
     bool isFakeDraggingStarted() override { return m_fakeDraggingStarted; }
     std::string& getDraggingFilename() override { return m_draggingFilename; }
-    void clearDraggingFilename() override { }
+    void clearDraggingFilename() override {}
 
     // IPlatformScreen overrides
 
-    void fakeDraggingFiles(DragFileList fileList)  override
-        { (void) fileList; throw std::runtime_error("fakeDraggingFiles not implemented"); }
+    void fakeDraggingFiles(DragFileList fileList) override
+    {
+        (void) fileList;
+        throw std::runtime_error("fakeDraggingFiles not implemented");
+    }
     const std::string& getDropTarget() const override
-        { throw std::runtime_error("getDropTarget not implemented"); }
+    {
+        throw std::runtime_error("getDropTarget not implemented");
+    }
     void setDropTarget(const std::string&) override
-        { throw std::runtime_error("setDropTarget not implemented"); }
+    {
+        throw std::runtime_error("setDropTarget not implemented");
+    }
 
     bool fakeMediaKey(KeyID id) override;
 

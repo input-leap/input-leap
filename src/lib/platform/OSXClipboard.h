@@ -44,6 +44,7 @@ public:
     virtual std::string get(EFormat) const;
 
     bool synchronize();
+
 private:
     void clearConverters();
 
@@ -61,7 +62,7 @@ This interface defines the methods common to all Scrap book format
 */
 class IOSXClipboardConverter {
 public:
-    virtual ~IOSXClipboardConverter() { }
+    virtual ~IOSXClipboardConverter() {}
     //! @name accessors
     //@{
 
@@ -69,8 +70,7 @@ public:
     /*!
     Return the clipboard format this object converts from/to.
     */
-    virtual IClipboard::EFormat
-                        getFormat() const = 0;
+    virtual IClipboard::EFormat getFormat() const = 0;
 
     //! returns the scrap flavor type that this object converts from/to
     virtual CFStringRef getOSXFormat() const = 0;

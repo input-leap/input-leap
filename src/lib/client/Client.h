@@ -18,17 +18,17 @@
 
 #pragma once
 
-#include "base/Fwd.h"
 #include "base/EventTarget.h"
-#include "inputleap/Fwd.h"
-#include "inputleap/IClient.h"
+#include "base/EventTypes.h"
+#include "base/Fwd.h"
+#include "inputleap/ClientArgs.h"
 #include "inputleap/Clipboard.h"
 #include "inputleap/DragInformation.h"
+#include "inputleap/Fwd.h"
+#include "inputleap/IClient.h"
 #include "inputleap/INode.h"
-#include "inputleap/ClientArgs.h"
 #include "net/Fwd.h"
 #include "net/NetworkAddress.h"
-#include "base/EventTypes.h"
 
 namespace inputleap {
 
@@ -41,7 +41,7 @@ class Client : public IClient, public INode, public EventTarget {
 public:
     class FailInfo {
     public:
-        FailInfo(const char* what) : m_retry(false), m_what(what) { }
+        FailInfo(const char* what) : m_retry(false), m_what(what) {}
         bool m_retry;
         std::string m_what;
     };
@@ -52,9 +52,8 @@ public:
     as its name and \p address as the server's address and \p factory
     to create the socket.  \p screen is    the local screen.
     */
-    Client(IEventQueue* events, const std::string& name,
-           const NetworkAddress& address, ISocketFactory* socketFactory,
-           inputleap::Screen* screen, ClientArgs const& args);
+    Client(IEventQueue* events, const std::string& name, const NetworkAddress& address,
+           ISocketFactory* socketFactory, inputleap::Screen* screen, const ClientArgs& args);
 
     ~Client();
 
@@ -88,7 +87,6 @@ public:
 
     //! Send dragging file information back to server
     void sendDragInfo(std::uint32_t fileCount, std::string& info, size_t size);
-
 
     //@}
     //! @name accessors

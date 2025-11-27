@@ -17,9 +17,9 @@
 
 #pragma once
 
-#include "ipc/IpcServer.h"
-#include "ipc/IpcMessage.h"
 #include "arch/Arch.h"
+#include "ipc/IpcMessage.h"
+#include "ipc/IpcServer.h"
 
 #include <gmock/gmock.h>
 
@@ -31,8 +31,7 @@ namespace inputleap {
 using ::testing::_;
 using ::testing::Invoke;
 
-class MockIpcServer : public IpcServer
-{
+class MockIpcServer : public IpcServer {
 public:
     MockIpcServer() {}
 
@@ -42,17 +41,20 @@ public:
     MOCK_METHOD2(send, void(const IpcMessage&, EIpcClientType));
     MOCK_CONST_METHOD1(hasClients, bool(EIpcClientType));
 
-    void delegateToFake() {
+    void delegateToFake()
+    {
         ON_CALL(*this, send(_, _)).WillByDefault(Invoke(this, &MockIpcServer::mockSend));
     }
 
-    void waitForSend() {
+    void waitForSend()
+    {
         std::unique_lock<std::mutex> lock{send_mutex_};
         ARCH->wait_cond_var(send_cv_, lock, 5);
     }
 
 private:
-    void mockSend(const IpcMessage&, EIpcClientType) {
+    void mockSend(const IpcMessage&, EIpcClientType)
+    {
         std::lock_guard<std::mutex> lock(send_mutex_);
         send_cv_.notify_all();
     }

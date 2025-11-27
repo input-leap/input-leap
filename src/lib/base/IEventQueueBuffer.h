@@ -29,12 +29,12 @@ An event queue buffer provides a queue of events for an IEventQueue.
 */
 class IEventQueueBuffer {
 public:
-    virtual ~IEventQueueBuffer() { }
+    virtual ~IEventQueueBuffer() {}
 
     enum Type {
-        kNone,        //!< No event is available
-        kSystem,    //!< Event is a system event
-        kUser        //!< Event is a user event
+        kNone,   //!< No event is available
+        kSystem, //!< Event is a system event
+        kUser    //!< Event is a user event
     };
 
     //! @name manipulators
@@ -44,7 +44,7 @@ public:
     /*!
     Useful for platform-specific initialisation from a specific thread.
     */
-    virtual    void init() = 0;
+    virtual void init() = 0;
 
     //! Block waiting for an event
     /*!

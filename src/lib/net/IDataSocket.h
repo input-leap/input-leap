@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include "net/ISocket.h"
-#include "io/IStream.h"
 #include "base/EventTypes.h"
+#include "io/IStream.h"
+#include "net/ISocket.h"
 #include <string>
 
 namespace inputleap {
@@ -34,7 +34,7 @@ class IDataSocket : public ISocket, public inputleap::IStream {
 public:
     class ConnectionFailedInfo {
     public:
-        ConnectionFailedInfo(const char* what) : m_what(what) { }
+        ConnectionFailedInfo(const char* what) : m_what(what) {}
         std::string m_what;
     };
 

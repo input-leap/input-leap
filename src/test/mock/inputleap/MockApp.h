@@ -26,10 +26,9 @@
 
 namespace inputleap {
 
-class MockApp : public App
-{
+class MockApp : public App {
 public:
-    MockApp() : App(nullptr, nullptr, nullptr) { }
+    MockApp() : App(nullptr, nullptr, nullptr) {}
 
     MOCK_METHOD0(help, void());
     MOCK_METHOD0(loadConfig, void());

@@ -79,7 +79,7 @@ public:
     */
     double getTime();
     //! Same as getTime()
-                        operator double();
+    operator double();
     //@}
     //! @name accessors
     //@{
@@ -98,7 +98,7 @@ public:
     */
     double getTime() const;
     //! Same as getTime() const
-                        operator double() const;
+    operator double() const;
     //@}
 
 private:

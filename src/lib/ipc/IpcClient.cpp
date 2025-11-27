@@ -18,8 +18,8 @@
 
 #include "ipc/IpcClient.h"
 #include "ipc/Ipc.h"
-#include "ipc/IpcServerProxy.h"
 #include "ipc/IpcMessage.h"
+#include "ipc/IpcServerProxy.h"
 #include <cassert>
 
 namespace inputleap {
@@ -40,31 +40,26 @@ IpcClient::IpcClient(IEventQueue* events, SocketMultiplexer* socketMultiplexer, 
     init();
 }
 
-void
-IpcClient::init()
+void IpcClient::init()
 {
     m_serverAddress.resolve();
 }
 
-IpcClient::~IpcClient()
-{
-}
+IpcClient::~IpcClient() {}
 
-void
-IpcClient::connect()
+void IpcClient::connect()
 {
     m_events->add_handler(EventType::DATA_SOCKET_CONNECTED, m_socket.get_event_target(),
-                          [this](const auto& e){ handle_connected(); });
+                          [this](const auto& e) { handle_connected(); });
 
     m_socket.connect(m_serverAddress);
     server_ = std::make_unique<IpcServerProxy>(m_socket, m_events);
 
     m_events->add_handler(EventType::IPC_SERVER_PROXY_MESSAGE_RECEIVED, server_.get(),
-                          [this](const auto& e){ handle_message_received(e); });
+                          [this](const auto& e) { handle_message_received(e); });
 }
 
-void
-IpcClient::disconnect()
+void IpcClient::disconnect()
 {
     m_events->remove_handler(EventType::DATA_SOCKET_CONNECTED, m_socket.get_event_target());
     m_events->remove_handler(EventType::IPC_SERVER_PROXY_MESSAGE_RECEIVED, server_.get());
@@ -73,8 +68,7 @@ IpcClient::disconnect()
     server_.reset();
 }
 
-void
-IpcClient::send(const IpcMessage& message)
+void IpcClient::send(const IpcMessage& message)
 {
     assert(server_);
     server_->send(message);

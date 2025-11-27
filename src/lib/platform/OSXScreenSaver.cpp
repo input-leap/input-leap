@@ -16,16 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#import "inputleap/IPrimaryScreen.h"
 #import "platform/OSXScreenSaver.h"
+#import "inputleap/IPrimaryScreen.h"
 
-#import "platform/OSXScreenSaverUtil.h"
-#import "base/Log.h"
 #import "base/IEventQueue.h"
+#import "base/Log.h"
+#import "platform/OSXScreenSaverUtil.h"
 
-#import <string.h>
 #import <sys/sysctl.h>
-
+#import <string.h>
 
 namespace inputleap {
 
@@ -34,29 +33,25 @@ void getProcessSerialNumber(const char* name, ProcessSerialNumber& psn);
 bool testProcessName(const char* name, const ProcessSerialNumber& psn);
 
 OSXScreenSaver::OSXScreenSaver(IEventQueue* events, const EventTarget* event_target) :
-    event_target_(event_target),
-    m_enabled(true),
-    m_events(events)
+    event_target_(event_target), m_enabled(true), m_events(events)
 {
-    m_autoReleasePool       = screenSaverUtilCreatePool();
+    m_autoReleasePool = screenSaverUtilCreatePool();
     m_screenSaverController = screenSaverUtilCreateController();
 
     // install launch/termination event handlers
     EventTypeSpec launchEventTypes[2];
     launchEventTypes[0].eventClass = kEventClassApplication;
-    launchEventTypes[0].eventKind  = kEventAppLaunched;
+    launchEventTypes[0].eventKind = kEventAppLaunched;
     launchEventTypes[1].eventClass = kEventClassApplication;
-    launchEventTypes[1].eventKind  = kEventAppTerminated;
+    launchEventTypes[1].eventKind = kEventAppTerminated;
 
-    EventHandlerUPP launchTerminationEventHandler =
-        NewEventHandlerUPP(launchTerminationCallback);
-    InstallApplicationEventHandler(launchTerminationEventHandler, 2,
-                                launchEventTypes, this,
-                                &m_launchTerminationEventHandlerRef);
+    EventHandlerUPP launchTerminationEventHandler = NewEventHandlerUPP(launchTerminationCallback);
+    InstallApplicationEventHandler(launchTerminationEventHandler, 2, launchEventTypes, this,
+                                   &m_launchTerminationEventHandlerRef);
     DisposeEventHandlerUPP(launchTerminationEventHandler);
 
     m_screenSaverPSN.highLongOfPSN = 0;
-    m_screenSaverPSN.lowLongOfPSN  = 0;
+    m_screenSaverPSN.lowLongOfPSN = 0;
 
     if (isActive()) {
         getProcessSerialNumber("ScreenSaverEngine", m_screenSaverPSN);
@@ -66,44 +61,38 @@ OSXScreenSaver::OSXScreenSaver(IEventQueue* events, const EventTarget* event_tar
 OSXScreenSaver::~OSXScreenSaver()
 {
     RemoveEventHandler(m_launchTerminationEventHandlerRef);
-//    screenSaverUtilReleaseController(m_screenSaverController);
+    //    screenSaverUtilReleaseController(m_screenSaverController);
     screenSaverUtilReleasePool(m_autoReleasePool);
 }
 
-void
-OSXScreenSaver::enable()
+void OSXScreenSaver::enable()
 {
     m_enabled = true;
     screenSaverUtilEnable(m_screenSaverController);
 }
 
-void
-OSXScreenSaver::disable()
+void OSXScreenSaver::disable()
 {
     m_enabled = false;
     screenSaverUtilDisable(m_screenSaverController);
 }
 
-void
-OSXScreenSaver::activate()
+void OSXScreenSaver::activate()
 {
     screenSaverUtilActivate(m_screenSaverController);
 }
 
-void
-OSXScreenSaver::deactivate()
+void OSXScreenSaver::deactivate()
 {
     screenSaverUtilDeactivate(m_screenSaverController, m_enabled);
 }
 
-bool
-OSXScreenSaver::isActive() const
+bool OSXScreenSaver::isActive() const
 {
     return (screenSaverUtilIsActive(m_screenSaverController) != 0);
 }
 
-void
-OSXScreenSaver::processLaunched(ProcessSerialNumber psn)
+void OSXScreenSaver::processLaunched(ProcessSerialNumber psn)
 {
     if (testProcessName("ScreenSaverEngine", psn)) {
         m_screenSaverPSN = psn;
@@ -114,44 +103,37 @@ OSXScreenSaver::processLaunched(ProcessSerialNumber psn)
     }
 }
 
-void
-OSXScreenSaver::processTerminated(ProcessSerialNumber psn)
+void OSXScreenSaver::processTerminated(ProcessSerialNumber psn)
 {
     if (m_screenSaverPSN.highLongOfPSN == psn.highLongOfPSN &&
-        m_screenSaverPSN.lowLongOfPSN  == psn.lowLongOfPSN) {
+        m_screenSaverPSN.lowLongOfPSN == psn.lowLongOfPSN) {
         LOG_DEBUG1("ScreenSaverEngine terminated. Enabled=%d", m_enabled);
         if (m_enabled) {
             m_events->add_event(EventType::PRIMARY_SCREEN_SAVER_DEACTIVATED, event_target_);
         }
 
         m_screenSaverPSN.highLongOfPSN = 0;
-        m_screenSaverPSN.lowLongOfPSN  = 0;
+        m_screenSaverPSN.lowLongOfPSN = 0;
     }
 }
 
-pascal OSStatus
-OSXScreenSaver::launchTerminationCallback(
-                EventHandlerCallRef nextHandler,
-                EventRef theEvent, void* userData)
+pascal OSStatus OSXScreenSaver::launchTerminationCallback(EventHandlerCallRef nextHandler,
+                                                          EventRef theEvent, void* userData)
 {
-    OSStatus        result;
+    OSStatus result;
     ProcessSerialNumber psn;
-    EventParamType    actualType;
-    ByteCount        actualSize;
+    EventParamType actualType;
+    ByteCount actualSize;
 
-    result = GetEventParameter(theEvent, kEventParamProcessID,
-                               typeProcessSerialNumber, &actualType,
+    result = GetEventParameter(theEvent, kEventParamProcessID, typeProcessSerialNumber, &actualType,
                                sizeof(psn), &actualSize, &psn);
 
-    if ((result == noErr) &&
-        (actualSize > 0) &&
-        (actualType == typeProcessSerialNumber)) {
-        OSXScreenSaver* screenSaver = (OSXScreenSaver*)userData;
+    if ((result == noErr) && (actualSize > 0) && (actualType == typeProcessSerialNumber)) {
+        OSXScreenSaver* screenSaver = (OSXScreenSaver*) userData;
         std::uint32_t eventKind = GetEventKind(theEvent);
         if (eventKind == kEventAppLaunched) {
             screenSaver->processLaunched(psn);
-        }
-        else if (eventKind == kEventAppTerminated) {
+        } else if (eventKind == kEventAppTerminated) {
             screenSaver->processTerminated(psn);
         }
     }
@@ -160,16 +142,15 @@ OSXScreenSaver::launchTerminationCallback(
 
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
-void
-getProcessSerialNumber(const char* name, ProcessSerialNumber& psn)
+void getProcessSerialNumber(const char* name, ProcessSerialNumber& psn)
 {
     ProcessInfoRec procInfo;
-    Str31 procName;    // pascal string. first byte holds length.
+    Str31 procName; // pascal string. first byte holds length.
     memset(&procInfo, 0, sizeof(procInfo));
     procInfo.processName = procName;
     procInfo.processInfoLength = sizeof(ProcessInfoRec);
 
-    ProcessSerialNumber    checkPsn;
+    ProcessSerialNumber checkPsn;
     OSErr err = GetNextProcess(&checkPsn);
     while (err == 0) {
         memset(procName, 0, sizeof(procName));
@@ -177,7 +158,7 @@ getProcessSerialNumber(const char* name, ProcessSerialNumber& psn)
         if (err != 0) {
             break;
         }
-        if (strcmp(name, (const char*)&procName[1]) == 0) {
+        if (strcmp(name, (const char*) &procName[1]) == 0) {
             psn = checkPsn;
             break;
         }
@@ -185,11 +166,10 @@ getProcessSerialNumber(const char* name, ProcessSerialNumber& psn)
     }
 }
 
-bool
-testProcessName(const char* name, const ProcessSerialNumber& psn)
+bool testProcessName(const char* name, const ProcessSerialNumber& psn)
 {
-    CFStringRef    processName;
-    OSStatus    err = CopyProcessName(&psn, &processName);
+    CFStringRef processName;
+    OSStatus err = CopyProcessName(&psn, &processName);
     return (err == 0 && CFEqual(CFSTR("ScreenSaverEngine"), processName));
 }
 

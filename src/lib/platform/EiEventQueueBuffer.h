@@ -19,15 +19,15 @@
 #include "config.h"
 
 #include "base/IEventQueueBuffer.h"
+#include "inputleap/IScreen.h"
 #include "mt/Thread.h"
 #include "platform/EiScreen.h"
-#include "inputleap/IScreen.h"
 
 #include <libei.h>
 
-#include <queue>
 #include <memory>
 #include <mutex>
+#include <queue>
 
 namespace inputleap {
 
@@ -37,7 +37,7 @@ public:
     EiEventQueueBuffer(EiScreen* screen, ei* ei, IEventQueue* events);
     ~EiEventQueueBuffer();
 
-    void init() override { }
+    void init() override {}
     void waitForEvent(double timeout_in_ms) override;
     Type getEvent(Event& event, uint32_t& dataID) override;
     bool addEvent(uint32_t dataID) override;

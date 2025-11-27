@@ -17,33 +17,30 @@
  */
 
 #include "IpcClient.h"
-#include <QTcpSocket>
-#include <QHostAddress>
-#include <iostream>
-#include <QTimer>
-#include "IpcReader.h"
 #include "Ipc.h"
+#include "IpcReader.h"
 #include <QDataStream>
+#include <QHostAddress>
+#include <QTcpSocket>
+#include <QTimer>
+#include <iostream>
 
-IpcClient::IpcClient() :
-m_ReaderStarted(false),
-m_Enabled(false)
+IpcClient::IpcClient() : m_ReaderStarted(false), m_Enabled(false)
 {
     m_Socket = new QTcpSocket(this);
     connect(m_Socket, &QTcpSocket::connected, this, &IpcClient::connected);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
     connect(m_Socket, &QTcpSocket::errorOccurred, this, &IpcClient::error);
 #else
-    connect(m_Socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
+    connect(m_Socket, SIGNAL(error(QAbstractSocket::SocketError)), this,
+            SLOT(error(QAbstractSocket::SocketError)));
 #endif
 
     m_Reader = new IpcReader(m_Socket);
     connect(m_Reader, &IpcReader::readLogLine, this, &IpcClient::handleReadLogLine);
 }
 
-IpcClient::~IpcClient()
-{
-}
+IpcClient::~IpcClient() {}
 
 void IpcClient::connected()
 {
@@ -75,9 +72,15 @@ void IpcClient::error(QAbstractSocket::SocketError error)
 {
     QString text;
     switch (error) {
-        case 0: text = "connection refused"; break;
-        case 1: text = "remote host closed"; break;
-        default: text = QString("code=%1").arg(error); break;
+    case 0:
+        text = "connection refused";
+        break;
+    case 1:
+        text = "remote host closed";
+        break;
+    default:
+        text = QString("code=%1").arg(error);
+        break;
     }
 
     Q_EMIT errorMessage(QString("ipc connection error, %1").arg(text));
@@ -102,7 +105,7 @@ void IpcClient::sendHello()
     stream.writeRawData(typeBuf, 1);
 }
 
-void IpcClient::sendCommand(const QString& command, ElevateMode const elevate)
+void IpcClient::sendCommand(const QString& command, const ElevateMode elevate)
 {
     QDataStream stream(m_Socket);
 
@@ -129,22 +132,19 @@ void IpcClient::handleReadLogLine(const QString& text)
 }
 
 // TODO: qt must have a built in way of converting int to bytes.
-void IpcClient::intToBytes(int value, char *buffer, int size)
+void IpcClient::intToBytes(int value, char* buffer, int size)
 {
     if (size == 1) {
         buffer[0] = value & 0xff;
-    }
-    else if (size == 2) {
+    } else if (size == 2) {
         buffer[0] = (value >> 8) & 0xff;
         buffer[1] = value & 0xff;
-    }
-    else if (size == 4) {
+    } else if (size == 4) {
         buffer[0] = (value >> 24) & 0xff;
         buffer[1] = (value >> 16) & 0xff;
         buffer[2] = (value >> 8) & 0xff;
         buffer[3] = value & 0xff;
-    }
-    else {
+    } else {
         // TODO: other sizes, if needed.
     }
 }

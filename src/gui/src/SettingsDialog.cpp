@@ -20,15 +20,15 @@
 #include "SettingsDialog.h"
 #include "ui_SettingsDialog.h"
 
+#include "AppConfig.h"
 #include "AppLocale.h"
 #include "QUtility.h"
-#include "AppConfig.h"
 
+#include <QDir>
+#include <QFileDialog>
+#include <QMessageBox>
 #include <QtCore>
 #include <QtGui>
-#include <QMessageBox>
-#include <QFileDialog>
-#include <QDir>
 
 SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
@@ -72,7 +72,8 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
             [this](int state) { logToFileChanged(state == 2); });
 #endif
     connect(ui_->m_pButtonBrowseLog, &QPushButton::clicked, this, &SettingsDialog::browseLogClicked);
-    connect(ui_->m_pComboLanguage, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &SettingsDialog::languageChanged);
+    connect(ui_->m_pComboLanguage, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
+            &SettingsDialog::languageChanged);
 }
 
 void SettingsDialog::accept()
@@ -85,7 +86,8 @@ void SettingsDialog::accept()
     app_config_.setLogLevel(ui_->m_pComboLogLevel->currentIndex());
     app_config_.setLogToFile(ui_->m_pCheckBoxLogToFile->isChecked());
     app_config_.setLogFilename(ui_->m_pLineEditLogFilename->text());
-    app_config_.setLanguage(ui_->m_pComboLanguage->itemData(ui_->m_pComboLanguage->currentIndex()).toString());
+    app_config_.setLanguage(
+        ui_->m_pComboLanguage->itemData(ui_->m_pComboLanguage->currentIndex()).toString());
     app_config_.setElevateMode(static_cast<ElevateMode>(ui_->m_pComboElevate->currentIndex()));
     app_config_.setAutoHide(ui_->m_pCheckBoxAutoHide->isChecked());
     app_config_.setAutoStart(ui_->m_pCheckBoxAutoStart->isChecked());
@@ -96,7 +98,8 @@ void SettingsDialog::accept()
 
 void SettingsDialog::reject()
 {
-    if (app_config_.language() != ui_->m_pComboLanguage->itemData(ui_->m_pComboLanguage->currentIndex()).toString()) {
+    if (app_config_.language() !=
+        ui_->m_pComboLanguage->itemData(ui_->m_pComboLanguage->currentIndex()).toString()) {
         Q_EMIT requestLanguageChange(app_config_.language());
     }
     QDialog::reject();
@@ -104,21 +107,18 @@ void SettingsDialog::reject()
 
 void SettingsDialog::changeEvent(QEvent* event)
 {
-    if (event != nullptr)
-    {
-        switch (event->type())
-        {
-        case QEvent::LanguageChange:
-            {
-                int logLevelIndex = ui_->m_pComboLogLevel->currentIndex();
+    if (event != nullptr) {
+        switch (event->type()) {
+        case QEvent::LanguageChange: {
+            int logLevelIndex = ui_->m_pComboLogLevel->currentIndex();
 
-                ui_->m_pComboLanguage->blockSignals(true);
-                ui_->retranslateUi(this);
-                ui_->m_pComboLanguage->blockSignals(false);
+            ui_->m_pComboLanguage->blockSignals(true);
+            ui_->retranslateUi(this);
+            ui_->m_pComboLanguage->blockSignals(false);
 
-                ui_->m_pComboLogLevel->setCurrentIndex(logLevelIndex);
-                break;
-            }
+            ui_->m_pComboLogLevel->setCurrentIndex(logLevelIndex);
+            break;
+        }
 
         default:
             QDialog::changeEvent(event);
@@ -128,20 +128,17 @@ void SettingsDialog::changeEvent(QEvent* event)
 
 void SettingsDialog::logToFileChanged(bool checked)
 {
-
     ui_->m_pLineEditLogFilename->setEnabled(checked);
     ui_->m_pButtonBrowseLog->setEnabled(checked);
 }
 
 void SettingsDialog::browseLogClicked()
 {
-    QString fileName = QFileDialog::getSaveFileName(
-        this, tr("Save log file to..."),
-        ui_->m_pLineEditLogFilename->text(),
-        "Logs (*.log *.txt)");
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save log file to..."),
+                                                    ui_->m_pLineEditLogFilename->text(),
+                                                    "Logs (*.log *.txt)");
 
-    if (!fileName.isEmpty())
-    {
+    if (!fileName.isEmpty()) {
         ui_->m_pLineEditLogFilename->setText(fileName);
     }
 }

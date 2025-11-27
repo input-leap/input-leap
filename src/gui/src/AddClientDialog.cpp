@@ -18,8 +18,8 @@
 #include "AddClientDialog.h"
 #include "ui_AddClientDialog.h"
 
-#include <QPushButton>
 #include <QLabel>
+#include <QPushButton>
 
 AddClientDialog::AddClientDialog(const QString& clientName, QWidget* parent) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
@@ -30,10 +30,11 @@ AddClientDialog::AddClientDialog(const QString& clientName, QWidget* parent) :
     ui_->setupUi(this);
 
     ui_->m_pLabelHead->setText("A client wants to connect. "
-                    "Please choose a location for " + clientName + ".");
+                               "Please choose a location for " +
+                               clientName + ".");
 
     QIcon icon(":res/icons/64x64/video-display.png");
-    QSize IconSize(32,32);
+    QSize IconSize(32, 32);
 
     m_pButtonLeft = new QPushButton(this);
     m_pButtonLeft->setIcon(icon);
@@ -68,7 +69,7 @@ AddClientDialog::AddClientDialog(const QString& clientName, QWidget* parent) :
 #endif
 
     QPushButton* advanced = ui_->m_pDialogButtonBox->addButton("Advanced",
-                                                    QDialogButtonBox::HelpRole);
+                                                               QDialogButtonBox::HelpRole);
     connect(advanced, &QPushButton::clicked, this, &AddClientDialog::handleButtonAdvanced);
 }
 
@@ -81,7 +82,7 @@ AddClientDialog::~AddClientDialog()
     delete m_pLabelCenter;
 }
 
-void AddClientDialog::changeEvent(QEvent *e)
+void AddClientDialog::changeEvent(QEvent* e)
 {
     QDialog::changeEvent(e);
     switch (e->type()) {

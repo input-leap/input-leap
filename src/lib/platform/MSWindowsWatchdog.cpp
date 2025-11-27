@@ -18,33 +18,31 @@
 
 #include "platform/MSWindowsWatchdog.h"
 
-#include "ipc/IpcLogOutputter.h"
-#include "ipc/IpcServer.h"
-#include "ipc/IpcMessage.h"
-#include "ipc/Ipc.h"
-#include "inputleap/App.h"
-#include "inputleap/ArgsBase.h"
-#include "mt/Thread.h"
+#include "arch/Arch.h"
 #include "arch/win32/ArchDaemonWindows.h"
 #include "arch/win32/XArchWindows.h"
-#include "arch/Arch.h"
-#include "base/log_outputters.h"
 #include "base/Log.h"
 #include "base/Time.h"
+#include "base/log_outputters.h"
 #include "common/Version.h"
+#include "inputleap/App.h"
+#include "inputleap/ArgsBase.h"
+#include "ipc/Ipc.h"
+#include "ipc/IpcLogOutputter.h"
+#include "ipc/IpcMessage.h"
+#include "ipc/IpcServer.h"
+#include "mt/Thread.h"
 
-#include <sstream>
-#include <UserEnv.h>
 #include <Shellapi.h>
+#include <UserEnv.h>
+#include <sstream>
 
 namespace inputleap {
 
 #define MAXIMUM_WAIT_TIME 3
-enum {
-    kOutputBufferSize = 4096
-};
+enum { kOutputBufferSize = 4096 };
 
-typedef VOID (WINAPI *SendSas)(BOOL asUser);
+typedef VOID(WINAPI* SendSas)(BOOL asUser);
 
 std::string activeDesktopName()
 {
@@ -53,19 +51,17 @@ std::string activeDesktopName()
     HDESK desk = OpenInputDesktop(0, FALSE, GENERIC_READ);
     if (desk != nullptr) {
         TCHAR buffer[BufferLength];
-        if (GetUserObjectInformation(desk, UOI_NAME, buffer, BufferLength - 1, nullptr) == TRUE)
+        if (GetUserObjectInformation(desk, UOI_NAME, buffer, BufferLength - 1, nullptr) == TRUE) {
             name = buffer;
+        }
         CloseDesktop(desk);
     }
     LOG_DEBUG("found desktop name: %.64s", name.c_str());
     return name;
 }
 
-MSWindowsWatchdog::MSWindowsWatchdog(
-    bool daemonized,
-    bool autoDetectCommand,
-    IpcServer& ipcServer,
-    IpcLogOutputter& ipcLogOutputter) :
+MSWindowsWatchdog::MSWindowsWatchdog(bool daemonized, bool autoDetectCommand, IpcServer& ipcServer,
+                                     IpcLogOutputter& ipcLogOutputter) :
     m_thread(nullptr),
     m_autoDetectCommand(autoDetectCommand),
     m_monitoring(true),
@@ -80,18 +76,15 @@ MSWindowsWatchdog::MSWindowsWatchdog(
     m_fileLogOutputter(nullptr),
     m_autoElevated(false),
     m_daemonized(daemonized)
+{}
+
+void MSWindowsWatchdog::startAsync()
 {
+    m_thread = new Thread([this]() { main_loop(); });
+    m_outputThread = new Thread([this]() { output_loop(); });
 }
 
-void
-MSWindowsWatchdog::startAsync()
-{
-    m_thread = new Thread([this](){ main_loop(); });
-    m_outputThread = new Thread([this](){ output_loop(); });
-}
-
-void
-MSWindowsWatchdog::stop()
+void MSWindowsWatchdog::stop()
 {
     m_monitoring = false;
 
@@ -107,10 +100,7 @@ MSWindowsWatchdog::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES s
 {
     HANDLE sourceToken;
 
-    BOOL tokenRet = OpenProcessToken(
-        process,
-        TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS,
-        &sourceToken);
+    BOOL tokenRet = OpenProcessToken(process, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS, &sourceToken);
 
     if (!tokenRet) {
         LOG_ERR("could not open token, process handle: %d", process);
@@ -120,9 +110,8 @@ MSWindowsWatchdog::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES s
     LOG_DEBUG("got token %i, duplicating", sourceToken);
 
     HANDLE newToken;
-    BOOL duplicateRet = DuplicateTokenEx(
-        sourceToken, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS, security,
-        SecurityImpersonation, TokenPrimary, &newToken);
+    BOOL duplicateRet = DuplicateTokenEx(sourceToken, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS,
+                                         security, SecurityImpersonation, TokenPrimary, &newToken);
 
     if (!duplicateRet) {
         LOG_ERR("could not duplicate token %i", sourceToken);
@@ -142,7 +131,7 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security)
     // and so would be unusable with the new elevated process taking focus.
     if (m_elevateProcess || m_autoElevated) {
         LOG_DEBUG("getting elevated token, %s",
-            (m_elevateProcess ? "elevation required" : "at login screen"));
+                  (m_elevateProcess ? "elevation required" : "at login screen"));
 
         HANDLE process;
         if (!m_session.isProcessInSession("winlogon.exe", &process)) {
@@ -164,7 +153,7 @@ void MSWindowsWatchdog::main_loop()
     HINSTANCE sasLib = LoadLibrary("sas.dll");
     if (sasLib) {
         LOG_DEBUG("found sas.dll");
-        sendSasFunc = (SendSas)GetProcAddress(sasLib, "SendSAS");
+        sendSasFunc = (SendSas) GetProcAddress(sasLib, "SendSAS");
     }
 
     SECURITY_ATTRIBUTES saAttr;
@@ -180,7 +169,6 @@ void MSWindowsWatchdog::main_loop()
 
     while (m_monitoring) {
         try {
-
             if (m_processRunning && getCommand().empty()) {
                 LOG_INFO("process started but command is empty, shutting down");
                 shutdownExistingProcesses();
@@ -195,24 +183,21 @@ void MSWindowsWatchdog::main_loop()
                 inputleap::this_thread_sleep(timeout);
             }
 
-            if (!getCommand().empty() && ((m_processFailures != 0) || m_session.hasChanged() || m_commandChanged)) {
+            if (!getCommand().empty() &&
+                ((m_processFailures != 0) || m_session.hasChanged() || m_commandChanged)) {
                 startProcess();
             }
 
             if (m_processRunning && !isProcessActive()) {
-
                 m_processFailures++;
                 m_processRunning = false;
 
-                LOG_WARN("detected application not running, pid=%d",
-                    m_processInfo.dwProcessId);
+                LOG_WARN("detected application not running, pid=%d", m_processInfo.dwProcessId);
             }
 
             if (sendSasFunc != nullptr) {
-
                 HANDLE sendSasEvent = CreateEvent(nullptr, FALSE, FALSE, "Global\\SendSAS");
                 if (sendSasEvent != nullptr) {
-
                     // use SendSAS event to wait for next session (timeout 1 second).
                     if (WaitForSingleObject(sendSasEvent, 1000) == WAIT_OBJECT_0) {
                         LOG_DEBUG("calling SendSAS");
@@ -227,14 +212,12 @@ void MSWindowsWatchdog::main_loop()
             // if the sas event failed, wait by sleeping.
             inputleap::this_thread_sleep(1);
 
-        }
-        catch (std::exception& e) {
+        } catch (std::exception& e) {
             LOG_ERR("failed to launch, error: %s", e.what());
             m_processFailures++;
             m_processRunning = false;
             continue;
-        }
-        catch (...) {
+        } catch (...) {
             LOG_ERR("failed to launch, unknown error.");
             m_processFailures++;
             m_processRunning = false;
@@ -250,22 +233,19 @@ void MSWindowsWatchdog::main_loop()
     LOG_DEBUG("watchdog main thread finished");
 }
 
-bool
-MSWindowsWatchdog::isProcessActive()
+bool MSWindowsWatchdog::isProcessActive()
 {
     DWORD exitCode;
     GetExitCodeProcess(m_processInfo.hProcess, &exitCode);
     return exitCode == STILL_ACTIVE;
 }
 
-void
-MSWindowsWatchdog::setFileLogOutputter(FileLogOutputter* outputter)
+void MSWindowsWatchdog::setFileLogOutputter(FileLogOutputter* outputter)
 {
     m_fileLogOutputter = outputter;
 }
 
-void
-MSWindowsWatchdog::startProcess()
+void MSWindowsWatchdog::startProcess()
 {
     if (m_command.empty()) {
         throw XMSWindowsWatchdogError("cannot start process, command is empty");
@@ -287,7 +267,7 @@ MSWindowsWatchdog::startProcess()
     } else {
         m_autoElevated = activeDesktopName() != "Default";
 
-        SECURITY_ATTRIBUTES sa{ 0 };
+        SECURITY_ATTRIBUTES sa{0};
         HANDLE userToken = getUserToken(&sa);
         m_elevateProcess = m_autoElevated ? m_autoElevated : m_elevateProcess;
         m_autoElevated = false;
@@ -307,8 +287,7 @@ MSWindowsWatchdog::startProcess()
         GetExitCodeProcess(m_processInfo.hProcess, &exitCode);
         LOG_ERR("exit code: %d", exitCode);
         throw std::runtime_error(error_code_to_string_windows(GetLastError()));
-    }
-    else {
+    } else {
         // wait for program to fail.
         inputleap::this_thread_sleep(1);
         if (!isProcessActive()) {
@@ -319,29 +298,27 @@ MSWindowsWatchdog::startProcess()
         m_processFailures = 0;
 
         LOG_DEBUG("started process, session=%i, elevated: %s, command=%s",
-            m_session.getActiveSessionId(),
-            m_elevateProcess ? "yes" : "no",
-            m_command.c_str());
+                  m_session.getActiveSessionId(), m_elevateProcess ? "yes" : "no",
+                  m_command.c_str());
     }
 }
 
 BOOL MSWindowsWatchdog::doStartProcessAsSelf(std::string& command)
 {
-    DWORD creationFlags =
-        NORMAL_PRIORITY_CLASS |
-        CREATE_NO_WINDOW |
-        CREATE_UNICODE_ENVIRONMENT;
+    DWORD creationFlags = NORMAL_PRIORITY_CLASS | CREATE_NO_WINDOW | CREATE_UNICODE_ENVIRONMENT;
 
     STARTUPINFO si;
     ZeroMemory(&si, sizeof(STARTUPINFO));
     si.cb = sizeof(STARTUPINFO);
-    si.lpDesktop = const_cast<char*>("winsta0\\Default"); // TODO: maybe this should be \winlogon if we have logonui.exe?
+    si.lpDesktop = const_cast<char*>(
+        "winsta0\\Default"); // TODO: maybe this should be \winlogon if we have logonui.exe?
     si.hStdError = m_stdOutWrite;
     si.hStdOutput = m_stdOutWrite;
     si.dwFlags |= STARTF_USESTDHANDLES;
 
     LOG_INFO("starting new process as self");
-    return CreateProcess(nullptr, LPSTR(command.c_str()), nullptr, nullptr, FALSE, creationFlags, nullptr, nullptr, &si, &m_processInfo);
+    return CreateProcess(nullptr, LPSTR(command.c_str()), nullptr, nullptr, FALSE, creationFlags,
+                         nullptr, nullptr, &si, &m_processInfo);
 }
 
 BOOL MSWindowsWatchdog::doStartProcessAsUser(std::string& command, HANDLE userToken,
@@ -353,7 +330,8 @@ BOOL MSWindowsWatchdog::doStartProcessAsUser(std::string& command, HANDLE userTo
     STARTUPINFO si;
     ZeroMemory(&si, sizeof(STARTUPINFO));
     si.cb = sizeof(STARTUPINFO);
-    si.lpDesktop = const_cast<char*>("winsta0\\Default"); // TODO: maybe this should be \winlogon if we have logonui.exe?
+    si.lpDesktop = const_cast<char*>(
+        "winsta0\\Default"); // TODO: maybe this should be \winlogon if we have logonui.exe?
     si.hStdError = m_stdOutWrite;
     si.hStdOutput = m_stdOutWrite;
     si.dwFlags |= STARTF_USESTDHANDLES;
@@ -365,16 +343,13 @@ BOOL MSWindowsWatchdog::doStartProcessAsUser(std::string& command, HANDLE userTo
         throw std::runtime_error(error_code_to_string_windows(GetLastError()));
     }
 
-    DWORD creationFlags =
-        NORMAL_PRIORITY_CLASS |
-        CREATE_NO_WINDOW |
-        CREATE_UNICODE_ENVIRONMENT;
+    DWORD creationFlags = NORMAL_PRIORITY_CLASS | CREATE_NO_WINDOW | CREATE_UNICODE_ENVIRONMENT;
 
     // re-launch in current active user session
     LOG_INFO("starting new process as privileged user");
-    BOOL createRet = CreateProcessAsUser(userToken, nullptr, LPSTR(command.c_str()),
-                                         sa, nullptr, TRUE, creationFlags,
-                                         environment, nullptr, &si, &m_processInfo);
+    BOOL createRet = CreateProcessAsUser(userToken, nullptr, LPSTR(command.c_str()), sa, nullptr,
+                                         TRUE, creationFlags, environment, nullptr, &si,
+                                         &m_processInfo);
 
     DestroyEnvironmentBlock(environment);
     CloseHandle(userToken);
@@ -382,8 +357,7 @@ BOOL MSWindowsWatchdog::doStartProcessAsUser(std::string& command, HANDLE userTo
     return createRet;
 }
 
-void
-MSWindowsWatchdog::setCommand(const std::string& command, bool elevate)
+void MSWindowsWatchdog::setCommand(const std::string& command, bool elevate)
 {
     LOG_INFO("service command updated");
     m_command = command;
@@ -392,8 +366,7 @@ MSWindowsWatchdog::setCommand(const std::string& command, bool elevate)
     m_processFailures = 0;
 }
 
-std::string
-MSWindowsWatchdog::getCommand() const
+std::string MSWindowsWatchdog::getCommand() const
 {
     if (!m_autoDetectCommand) {
         return m_command;
@@ -424,7 +397,6 @@ void MSWindowsWatchdog::output_loop()
     CHAR buffer[kOutputBufferSize + 1];
 
     while (m_monitoring) {
-
         DWORD bytesRead;
         BOOL success = ReadFile(m_stdOutRead, buffer, kOutputBufferSize, &bytesRead, nullptr);
 
@@ -432,8 +404,7 @@ void MSWindowsWatchdog::output_loop()
         // the reads until another one turns up.
         if (!success || bytesRead == 0) {
             inputleap::this_thread_sleep(1);
-        }
-        else {
+        } else {
             buffer[bytesRead] = '\0';
             m_ipcLogOutputter.write(kINFO, buffer);
             if (m_fileLogOutputter != nullptr) {
@@ -443,8 +414,7 @@ void MSWindowsWatchdog::output_loop()
     }
 }
 
-void
-MSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
+void MSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
 {
     DWORD exitCode;
     GetExitCodeProcess(handle, &exitCode);
@@ -458,22 +428,19 @@ MSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
     // wait for process to exit gracefully.
     double start = inputleap::current_time_seconds();
     while (true) {
-
         GetExitCodeProcess(handle, &exitCode);
         if (exitCode != STILL_ACTIVE) {
             // yay, we got a graceful shutdown. there should be no hook in use errors!
             LOG_INFO("process %d was shutdown gracefully", pid);
             break;
-        }
-        else {
-
+        } else {
             double elapsed = (inputleap::current_time_seconds() - start);
             if (elapsed > timeout) {
                 // if timeout reached, kill forcefully.
                 // calling TerminateProcess on InputLeap is very bad!
                 // it causes the hook DLL to stay loaded in some apps,
                 // making it impossible to start InputLeap again.
-                LOG_WARN("shutdown timed out after %d secs, forcefully terminating", (int)elapsed);
+                LOG_WARN("shutdown timed out after %d secs, forcefully terminating", (int) elapsed);
                 TerminateProcess(handle, kExitSuccess);
                 break;
             }
@@ -483,8 +450,7 @@ MSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
     }
 }
 
-void
-MSWindowsWatchdog::shutdownExistingProcesses()
+void MSWindowsWatchdog::shutdownExistingProcesses()
 {
     // first we need to take a snapshot of the running processes
     HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -507,13 +473,10 @@ MSWindowsWatchdog::shutdownExistingProcesses()
     // now just iterate until we can find winlogon.exe pid
     DWORD pid = 0;
     while (gotEntry) {
-
         // make sure we're not checking the system process
         if (entry.th32ProcessID != 0) {
-
             if (_stricmp(entry.szExeFile, "InputLeapc.exe") == 0 ||
                 _stricmp(entry.szExeFile, "InputLeaps.exe") == 0) {
-
                 HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
                 shutdownProcess(handle, entry.th32ProcessID, 10);
             }
@@ -522,10 +485,8 @@ MSWindowsWatchdog::shutdownExistingProcesses()
         // now move on to the next entry (if we're not at the end)
         gotEntry = Process32Next(snapshot, &entry);
         if (!gotEntry) {
-
             DWORD err = GetLastError();
             if (err != ERROR_NO_MORE_FILES) {
-
                 // only worry about error if it's not the end of the snapshot
                 LOG_ERR("could not get subsiquent process entry");
                 throw std::runtime_error(error_code_to_string_windows(GetLastError()));

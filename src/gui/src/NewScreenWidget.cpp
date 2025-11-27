@@ -22,10 +22,7 @@
 #include <QtCore>
 #include <QtGui>
 
-NewScreenWidget::NewScreenWidget(QWidget* parent) :
-    QLabel(parent)
-{
-}
+NewScreenWidget::NewScreenWidget(QWidget* parent) : QLabel(parent) {}
 
 void NewScreenWidget::mousePressEvent(QMouseEvent* event)
 {
@@ -41,9 +38,9 @@ void NewScreenWidget::mousePressEvent(QMouseEvent* event)
     QDrag* pDrag = new QDrag(this);
     pDrag->setMimeData(pMimeData);
     pDrag->setPixmap(
-#if QT_VERSION >= QT_VERSION_CHECK(6,6,0)
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
         pixmap()
-#elif QT_VERSION >= QT_VERSION_CHECK(5,15,0)
+#elif QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
         pixmap(Qt::ReturnByValue)
 #else
         *pixmap()

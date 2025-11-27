@@ -18,8 +18,8 @@
 
 #include "platform/MSWindowsUtil.h"
 
-#include <stdio.h>
 #include "base/String.h"
+#include <stdio.h>
 
 namespace inputleap {
 
@@ -32,26 +32,19 @@ std::string MSWindowsUtil::getString(HINSTANCE instance, DWORD id)
         return {};
     }
 
-    return std::string (msg, n);
+    return std::string(msg, n);
 }
 
 std::string MSWindowsUtil::getErrorString(HINSTANCE hinstance, DWORD error, DWORD id)
 {
     char* buffer;
-    if (FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
-                                FORMAT_MESSAGE_IGNORE_INSERTS |
-                                FORMAT_MESSAGE_FROM_SYSTEM,
-                                0,
-                                error,
-                                MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                                (LPTSTR)&buffer,
-                                0,
-                                nullptr) == 0) {
+    if (FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS |
+                          FORMAT_MESSAGE_FROM_SYSTEM,
+                      0, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR) &buffer, 0,
+                      nullptr) == 0) {
         std::string errorString = inputleap::string::sprintf("%d", error);
-        return inputleap::string::format(getString(hinstance, id).c_str(),
-                            errorString.c_str());
-    }
-    else {
+        return inputleap::string::format(getString(hinstance, id).c_str(), errorString.c_str());
+    } else {
         std::string result(buffer);
         LocalFree(buffer);
         return result;
@@ -67,15 +60,17 @@ absolutley be replaced!
 
 */
 
-void
-MSWindowsUtil::createDirectory(const std::string& path, bool stripLast)
+void MSWindowsUtil::createDirectory(const std::string& path, bool stripLast)
 {
     // create parent directories
-    for (auto pos = path.find_first_of('\\'); pos != std::string::npos; pos = path.find_first_of('\\', pos + 1))
+    for (auto pos = path.find_first_of('\\'); pos != std::string::npos;
+         pos = path.find_first_of('\\', pos + 1)) {
         CreateDirectory(path.substr(0, pos).c_str(), nullptr);
-    if (!stripLast)
+    }
+    if (!stripLast) {
         // create innermost directory
         CreateDirectory(path.c_str(), nullptr);
+    }
 }
 
 } // namespace inputleap

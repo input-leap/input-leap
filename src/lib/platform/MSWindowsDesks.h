@@ -19,12 +19,12 @@
 
 #pragma once
 
-#include "platform/synwinhk.h"
 #include "base/Fwd.h"
 #include "inputleap/Fwd.h"
 #include "inputleap/key_types.h"
 #include "inputleap/mouse_types.h"
 #include "inputleap/option_types.h"
+#include "platform/synwinhk.h"
 #include <condition_variable>
 #include <functional>
 #include <mutex>
@@ -66,10 +66,9 @@ public:
     updated in a thread attached to the current desk.
     \p hookLibrary must be a handle to the hook library.
     */
-    MSWindowsDesks(
-        bool isPrimary, bool noHooks,
-        const IScreenSaver* screensaver, IEventQueue* events,
-        const std::function<void()>& updateKeys, bool stopOnDeskSwitch);
+    MSWindowsDesks(bool isPrimary, bool noHooks, const IScreenSaver* screensaver,
+                   IEventQueue* events, const std::function<void()>& updateKeys,
+                   bool stopOnDeskSwitch);
     ~MSWindowsDesks();
 
     //! @name manipulators
@@ -163,8 +162,7 @@ public:
     /*!
     Synthesize a press or release of key \c button.
     */
-    void fakeKeyEvent(KeyButton button, UINT virtualKey,
-                            bool press, bool isAutoRepeat) const;
+    void fakeKeyEvent(KeyButton button, UINT virtualKey, bool press, bool isAutoRepeat) const;
 
     //! Fake mouse press/release
     /*!

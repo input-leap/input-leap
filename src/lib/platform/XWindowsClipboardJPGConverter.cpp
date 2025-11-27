@@ -25,8 +25,7 @@ namespace inputleap {
 // XWindowsClipboardJPGConverter
 //
 
-XWindowsClipboardJPGConverter::XWindowsClipboardJPGConverter(
-                Display* display) :
+XWindowsClipboardJPGConverter::XWindowsClipboardJPGConverter(Display* display) :
     m_atom(XInternAtom(display, "image/jpeg", False))
 {
     // do nothing
@@ -37,20 +36,17 @@ XWindowsClipboardJPGConverter::~XWindowsClipboardJPGConverter()
     // do nothing
 }
 
-IClipboard::EFormat
-XWindowsClipboardJPGConverter::getFormat() const
+IClipboard::EFormat XWindowsClipboardJPGConverter::getFormat() const
 {
     return IClipboard::kJpeg;
 }
 
-Atom
-XWindowsClipboardJPGConverter::getAtom() const
+Atom XWindowsClipboardJPGConverter::getAtom() const
 {
     return m_atom;
 }
 
-int
-XWindowsClipboardJPGConverter::getDataSize() const
+int XWindowsClipboardJPGConverter::getDataSize() const
 {
     return 8;
 }

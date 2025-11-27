@@ -35,7 +35,6 @@ public:
     // IArchSystem overrides
     std::string setting(const std::string&) const override;
     void setting(const std::string&, const std::string&) const override;
-
 };
 
 } // namespace inputleap

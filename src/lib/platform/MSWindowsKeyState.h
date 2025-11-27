@@ -39,39 +39,39 @@ public:
     MSWindowsKeyState(MSWindowsDesks* desks, const void* event_target, IEventQueue* events);
     MSWindowsKeyState(MSWindowsDesks* desks, const void* event_target, IEventQueue* events,
                       inputleap::KeyMap& keyMap);
-	virtual ~MSWindowsKeyState();
+    virtual ~MSWindowsKeyState();
 
-	//! @name manipulators
-	//@{
+    //! @name manipulators
+    //@{
 
-	//! Handle screen disabling
-	/*!
+    //! Handle screen disabling
+    /*!
 	Called when screen is disabled.  This is needed to deal with platform
 	brokenness.
 	*/
-	void				disable();
+    void disable();
 
-	//! Set the active keyboard layout
-	/*!
+    //! Set the active keyboard layout
+    /*!
 	Uses \p keyLayout when querying the keyboard.
 	*/
-	void				setKeyLayout(HKL keyLayout);
+    void setKeyLayout(HKL keyLayout);
 
-	//! Test and set autorepeat state
-	/*!
+    //! Test and set autorepeat state
+    /*!
 	Returns true if the given button is autorepeating and updates internal
 	state.
 	*/
-	bool				testAutoRepeat(bool press, bool isRepeat, KeyButton);
+    bool testAutoRepeat(bool press, bool isRepeat, KeyButton);
 
-	//! Remember modifier state
-	/*!
+    //! Remember modifier state
+    /*!
 	Records the current non-toggle modifier state.
 	*/
-	void				saveModifiers();
+    void saveModifiers();
 
-	//! Set effective modifier state
-	/*!
+    //! Set effective modifier state
+    /*!
 	Temporarily sets the non-toggle modifier state to those saved by the
 	last call to \c saveModifiers if \p enable is \c true.  Restores the
 	modifier state to the current modifier state if \p enable is \c false.
@@ -83,152 +83,140 @@ public:
 	state indicates Alt is down, because local apps never saw the Alt down
 	event.
 	*/
-	void				useSavedModifiers(bool enable);
+    void useSavedModifiers(bool enable);
 
-	//@}
-	//! @name accessors
-	//@{
+    //@}
+    //! @name accessors
+    //@{
 
-	//! Map a virtual key to a button
-	/*!
+    //! Map a virtual key to a button
+    /*!
 	Returns the button for the \p virtualKey.
 	*/
-	KeyButton			virtualKeyToButton(UINT virtualKey) const;
+    KeyButton virtualKeyToButton(UINT virtualKey) const;
 
-	//! Map key event to a key
-	/*!
+    //! Map key event to a key
+    /*!
 	Converts a key event into a KeyID and the shadow modifier state
 	to a modifier mask.
 	*/
-	KeyID				mapKeyFromEvent(WPARAM charAndVirtKey,
-							LPARAM info, KeyModifierMask* maskOut) const;
+    KeyID mapKeyFromEvent(WPARAM charAndVirtKey, LPARAM info, KeyModifierMask* maskOut) const;
 
-	//! Check if keyboard groups have changed
-	/*!
+    //! Check if keyboard groups have changed
+    /*!
 	Returns true iff the number or order of the keyboard groups have
 	changed since the last call to updateKeys().
 	*/
-	bool				didGroupsChange() const;
+    bool didGroupsChange() const;
 
-	//! Map key to virtual key
-	/*!
+    //! Map key to virtual key
+    /*!
 	Returns the virtual key for key \p key or 0 if there's no such virtual
 	key.
 	*/
-	UINT				mapKeyToVirtualKey(KeyID key) const;
+    UINT mapKeyToVirtualKey(KeyID key) const;
 
-	//! Map virtual key and button to KeyID
-	/*!
+    //! Map virtual key and button to KeyID
+    /*!
 	Returns the KeyID for virtual key \p virtualKey and button \p button
 	(button should include the extended key bit), or kKeyNone if there is
 	no such key.
 	*/
-	KeyID				getKeyID(UINT virtualKey, KeyButton button) const;
+    KeyID getKeyID(UINT virtualKey, KeyButton button) const;
 
-	//! Map button to virtual key
-	/*!
+    //! Map button to virtual key
+    /*!
 	Returns the virtual key for button \p button
 	(button should include the extended key bit), or kKeyNone if there is
 	no such key.
 	*/
-	UINT				mapButtonToVirtualKey(KeyButton button) const;
+    UINT mapButtonToVirtualKey(KeyButton button) const;
 
-	//@}
+    //@}
 
-	// IKeyState overrides
-	virtual void		fakeKeyDown(KeyID id, KeyModifierMask mask,
-							KeyButton button);
-    virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, std::int32_t count,
-                               KeyButton button);
-	virtual bool		fakeCtrlAltDel();
-	virtual KeyModifierMask
-						pollActiveModifiers() const;
+    // IKeyState overrides
+    virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button);
+    virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, std::int32_t count, KeyButton button);
+    virtual bool fakeCtrlAltDel();
+    virtual KeyModifierMask pollActiveModifiers() const;
     virtual std::int32_t pollActiveGroup() const;
-	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const;
+    virtual void pollPressedKeys(KeyButtonSet& pressedKeys) const;
 
-	// KeyState overrides
-	virtual void		onKey(KeyButton button, bool down,
-							KeyModifierMask newState);
+    // KeyState overrides
+    virtual void onKey(KeyButton button, bool down, KeyModifierMask newState);
     virtual void sendKeyEvent(const EventTarget* target, bool press, bool isAutoRepeat, KeyID key,
                               KeyModifierMask mask, std::int32_t count, KeyButton button);
 
-	// Unit test accessors
-	KeyButton			getLastDown() const { return m_lastDown; }
-	void				setLastDown(KeyButton value) { m_lastDown = value; }
-	KeyModifierMask		getSavedModifiers() const { return m_savedModifiers; }
-	void				setSavedModifiers(KeyModifierMask value) { m_savedModifiers = value; }
+    // Unit test accessors
+    KeyButton getLastDown() const { return m_lastDown; }
+    void setLastDown(KeyButton value) { m_lastDown = value; }
+    KeyModifierMask getSavedModifiers() const { return m_savedModifiers; }
+    void setSavedModifiers(KeyModifierMask value) { m_savedModifiers = value; }
 
 protected:
-	// KeyState overrides
-	virtual void		getKeyMap(inputleap::KeyMap& keyMap);
-	virtual void		fakeKey(const Keystroke& keystroke);
-	virtual KeyModifierMask&
-						getActiveModifiersRValue();
+    // KeyState overrides
+    virtual void getKeyMap(inputleap::KeyMap& keyMap);
+    virtual void fakeKey(const Keystroke& keystroke);
+    virtual KeyModifierMask& getActiveModifiersRValue();
 
 private:
-	typedef std::vector<HKL> GroupList;
+    typedef std::vector<HKL> GroupList;
 
-	// send ctrl+alt+del hotkey event on NT family
+    // send ctrl+alt+del hotkey event on NT family
     static void ctrl_alt_del_thread();
 
-	bool				getGroups(GroupList&) const;
+    bool getGroups(GroupList&) const;
     void setWindowGroup(std::int32_t group);
 
-	KeyID				getIDForKey(inputleap::KeyMap::KeyItem& item,
-							KeyButton button, UINT virtualKey,
-							PBYTE keyState, HKL hkl) const;
+    KeyID getIDForKey(inputleap::KeyMap::KeyItem& item, KeyButton button, UINT virtualKey,
+                      PBYTE keyState, HKL hkl) const;
 
-	void				addKeyEntry(inputleap::KeyMap& keyMap, inputleap::KeyMap::KeyItem& item);
+    void addKeyEntry(inputleap::KeyMap& keyMap, inputleap::KeyMap::KeyItem& item);
 
-	void				init();
-
-private:
-	// not implemented
-	MSWindowsKeyState(const MSWindowsKeyState&);
-	MSWindowsKeyState& operator=(const MSWindowsKeyState&);
+    void init();
 
 private:
-	typedef std::map<HKL, std::int32_t> GroupMap;
-	typedef std::map<KeyID, UINT> KeyToVKMap;
+    // not implemented
+    MSWindowsKeyState(const MSWindowsKeyState&);
+    MSWindowsKeyState& operator=(const MSWindowsKeyState&);
+
+private:
+    typedef std::map<HKL, std::int32_t> GroupMap;
+    typedef std::map<KeyID, UINT> KeyToVKMap;
 
     const void* event_target_;
-	MSWindowsDesks*	m_desks;
-	HKL					m_keyLayout;
-	UINT				m_buttonToVK[512];
-	UINT				m_buttonToNumpadVK[512];
-	KeyButton			m_virtualKeyToButton[256];
-	KeyToVKMap			m_keyToVKMap;
-	IEventQueue*		m_events;
+    MSWindowsDesks* m_desks;
+    HKL m_keyLayout;
+    UINT m_buttonToVK[512];
+    UINT m_buttonToNumpadVK[512];
+    KeyButton m_virtualKeyToButton[256];
+    KeyToVKMap m_keyToVKMap;
+    IEventQueue* m_events;
 
-	// the timer used to check for fixing key state
-	EventQueueTimer*	m_fixTimer;
+    // the timer used to check for fixing key state
+    EventQueueTimer* m_fixTimer;
 
-	// the groups (keyboard layouts)
-	GroupList			m_groups;
-	GroupMap			m_groupMap;
+    // the groups (keyboard layouts)
+    GroupList m_groups;
+    GroupMap m_groupMap;
 
-	// the last button that we generated a key down event for.  this
-	// is zero if the last key event was a key up.  we use this to
-	// synthesize key repeats since the low level keyboard hook can't
-	// tell us if an event is a key repeat.
-	KeyButton			m_lastDown;
+    // the last button that we generated a key down event for.  this
+    // is zero if the last key event was a key up.  we use this to
+    // synthesize key repeats since the low level keyboard hook can't
+    // tell us if an event is a key repeat.
+    KeyButton m_lastDown;
 
-	// modifier tracking
-	bool				m_useSavedModifiers;
-	KeyModifierMask		m_savedModifiers;
-	KeyModifierMask		m_originalSavedModifiers;
+    // modifier tracking
+    bool m_useSavedModifiers;
+    KeyModifierMask m_savedModifiers;
+    KeyModifierMask m_originalSavedModifiers;
 
-	// pointer to ToUnicodeEx.  on win95 family this will be nullptr.
-	typedef int (WINAPI *ToUnicodeEx_t)(UINT wVirtKey,
-										UINT wScanCode,
-										PBYTE lpKeyState,
-										LPWSTR pwszBuff,
-										int cchBuff,
-										UINT wFlags,
-										HKL dwhkl);
-	ToUnicodeEx_t		m_ToUnicodeEx;
+    // pointer to ToUnicodeEx.  on win95 family this will be nullptr.
+    typedef int(WINAPI* ToUnicodeEx_t)(UINT wVirtKey, UINT wScanCode, PBYTE lpKeyState,
+                                       LPWSTR pwszBuff, int cchBuff, UINT wFlags, HKL dwhkl);
+    ToUnicodeEx_t m_ToUnicodeEx;
 
-	static const KeyID	s_virtualKey[];
+    static const KeyID s_virtualKey[];
 };
 
 } // namespace inputleap

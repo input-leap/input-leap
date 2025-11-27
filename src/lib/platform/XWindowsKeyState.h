@@ -20,13 +20,13 @@
 
 #include "config.h"
 
+#include "XWindowsImpl.h"
 #include "base/Fwd.h"
 #include "inputleap/KeyState.h"
-#include "XWindowsImpl.h"
 
 #include <X11/Xlib.h>
+#include <X11/extensions/XKBstr.h>
 #include <X11/extensions/XTest.h>
-#    include <X11/extensions/XKBstr.h>
 
 #include <map>
 #include <vector>
@@ -40,15 +40,11 @@ A key state for X Windows.
 class XWindowsKeyState : public KeyState {
 public:
     typedef std::vector<int> KeycodeList;
-    enum {
-        kGroupPoll       = -1,
-        kGroupPollAndSet = -2
-    };
+    enum { kGroupPoll = -1, kGroupPollAndSet = -2 };
 
-    XWindowsKeyState(IXWindowsImpl* impl, Display*, bool useXKB,
-                     IEventQueue* events);
-    XWindowsKeyState(IXWindowsImpl* impl, Display*, bool useXKB,
-                     IEventQueue* events, inputleap::KeyMap& keyMap);
+    XWindowsKeyState(IXWindowsImpl* impl, Display*, bool useXKB, IEventQueue* events);
+    XWindowsKeyState(IXWindowsImpl* impl, Display*, bool useXKB, IEventQueue* events,
+                     inputleap::KeyMap& keyMap);
     ~XWindowsKeyState();
 
     //! @name modifiers
@@ -94,8 +90,7 @@ public:
     Converts the InputLeap key \p key to all of the keycodes that map to
     that key.
     */
-    void mapKeyToKeycodes(KeyID key,
-                            KeycodeList& keycodes) const;
+    void mapKeyToKeycodes(KeyID key, KeycodeList& keycodes) const;
 
     //@}
 

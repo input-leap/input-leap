@@ -23,22 +23,21 @@
 
 class QSessionManager;
 
-class QInputLeapApplication : public QApplication
-{
-    public:
-        QInputLeapApplication(int& argc, char** argv);
-        ~QInputLeapApplication();
+class QInputLeapApplication : public QApplication {
+public:
+    QInputLeapApplication(int& argc, char** argv);
+    ~QInputLeapApplication();
 
-    public:
-        void commitData(QSessionManager& manager);
-        void switchTranslator(QString lang);
-        // takes ownership
-        void setTranslator(QTranslator* translator);
+public:
+    void commitData(QSessionManager& manager);
+    void switchTranslator(QString lang);
+    // takes ownership
+    void setTranslator(QTranslator* translator);
 
-        static QInputLeapApplication* getInstance();
+    static QInputLeapApplication* getInstance();
 
-    private:
-        std::unique_ptr<QTranslator> translator_;
+private:
+    std::unique_ptr<QTranslator> translator_;
 
-        static QInputLeapApplication* s_Instance;
+    static QInputLeapApplication* s_Instance;
 };

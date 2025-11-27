@@ -18,12 +18,12 @@
 
 #pragma once
 
-#include "ipc/Ipc.h"
 #include "arch/IArchMultithread.h"
-#include "base/EventTypes.h"
 #include "base/Event.h"
 #include "base/EventTarget.h"
+#include "base/EventTypes.h"
 #include "base/Fwd.h"
+#include "ipc/Ipc.h"
 
 #include <mutex>
 

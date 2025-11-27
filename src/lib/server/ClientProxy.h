@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include "server/BaseClientProxy.h"
 #include "base/Event.h"
 #include "base/EventTypes.h"
+#include "server/BaseClientProxy.h"
 #include <memory>
 
 namespace inputleap {

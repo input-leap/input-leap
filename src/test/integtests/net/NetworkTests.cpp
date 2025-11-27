@@ -20,41 +20,41 @@
 
 #define INPUTLEAP_TEST_ENV
 
-#include "test/mock/server/MockConfig.h"
-#include "test/mock/server/MockPrimaryClient.h"
-#include "test/mock/inputleap/MockScreen.h"
-#include "test/mock/server/MockInputFilter.h"
-#include "test/global/TestEventQueue.h"
-#include "server/Server.h"
-#include "server/ClientListener.h"
-#include "server/ClientProxy.h"
+#include "base/Log.h"
 #include "client/Client.h"
 #include "inputleap/FileChunk.h"
 #include "inputleap/StreamChunker.h"
-#include "net/SocketMultiplexer.h"
-#include "net/NetworkAddress.h"
-#include "net/TCPSocketFactory.h"
 #include "mt/Thread.h"
-#include "base/Log.h"
+#include "net/NetworkAddress.h"
+#include "net/SocketMultiplexer.h"
+#include "net/TCPSocketFactory.h"
+#include "server/ClientListener.h"
+#include "server/ClientProxy.h"
+#include "server/Server.h"
+#include "test/global/TestEventQueue.h"
+#include "test/mock/inputleap/MockScreen.h"
+#include "test/mock/server/MockConfig.h"
+#include "test/mock/server/MockInputFilter.h"
+#include "test/mock/server/MockPrimaryClient.h"
 #include <stdexcept>
 
 #include <gtest/gtest.h>
-#include <sstream>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <stdio.h>
 
 namespace inputleap {
 
 using ::testing::_;
+using ::testing::Invoke;
 using ::testing::NiceMock;
 using ::testing::Return;
-using ::testing::Invoke;
 
 #define TEST_PORT 24803
 #define TEST_HOST "localhost"
 
-const size_t kMockDataSize = 1024 * 1024 * 10; // 10MB
+const size_t kMockDataSize = 1024 * 1024 * 10;      // 10MB
 const std::uint16_t kMockDataChunkIncrement = 1024; // 1KB
 const char* kMockFilename = "NetworkTests.mock";
 const size_t kMockFileSize = 1024 * 1024 * 10; // 10MB
@@ -64,13 +64,9 @@ void getCursorPos(std::int32_t& x, std::int32_t& y);
 std::uint8_t* newMockData(size_t size);
 void createFile(std::fstream& file, const char* filename, size_t size);
 
-class NetworkTests : public ::testing::Test
-{
+class NetworkTests : public ::testing::Test {
 public:
-    NetworkTests() :
-        m_mockData(nullptr),
-        m_mockDataSize(0),
-        m_mockFileSize(0)
+    NetworkTests() : m_mockData(nullptr), m_mockDataSize(0), m_mockFileSize(0)
     {
         m_mockData = newMockData(kMockDataSize);
         createFile(m_mockFile, kMockFilename, kMockFileSize);
@@ -97,11 +93,11 @@ public:
     void sendToServer_mockFile_file_recieve_completed(const Event& event);
 
 public:
-    TestEventQueue        m_events;
+    TestEventQueue m_events;
     std::uint8_t* m_mockData;
-    size_t                m_mockDataSize;
+    size_t m_mockDataSize;
     std::fstream m_mockFile;
-    size_t                m_mockFileSize;
+    size_t m_mockFileSize;
 };
 
 TEST_F(NetworkTests, sendToClient_mockData)
@@ -115,16 +111,14 @@ TEST_F(NetworkTests, sendToClient_mockData)
     SocketMultiplexer serverSocketMultiplexer;
     ClientListener listener(serverAddress,
                             std::make_unique<TCPSocketFactory>(&m_events, &serverSocketMultiplexer),
-                            &m_events,
-                            ConnectionSecurityLevel::PLAINTEXT);
+                            &m_events, ConnectionSecurityLevel::PLAINTEXT);
     NiceMock<MockScreen> serverScreen;
     NiceMock<MockPrimaryClient> primaryClient;
     NiceMock<MockConfig> serverConfig;
     NiceMock<MockInputFilter> serverInputFilter;
 
     m_events.add_handler(EventType::CLIENT_LISTENER_CONNECTED, &listener,
-                         [this, &listener](const auto& e)
-    {
+                         [this, &listener](const auto& e) {
         sendToClient_mockData_handle_client_connected(e, &listener);
     });
 
@@ -140,20 +134,18 @@ TEST_F(NetworkTests, sendToClient_mockData)
     // client
     NiceMock<MockScreen> clientScreen;
     SocketMultiplexer clientSocketMultiplexer;
-    TCPSocketFactory* clientSocketFactory = new TCPSocketFactory(&m_events, &clientSocketMultiplexer);
+    TCPSocketFactory* clientSocketFactory = new TCPSocketFactory(&m_events,
+                                                                 &clientSocketMultiplexer);
 
     ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
     ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
-
 
     ClientArgs clientArgs;
     clientArgs.m_enableDragDrop = true;
     clientArgs.m_enableCrypto = false;
     Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
 
-    m_events.add_handler(EventType::FILE_RECEIVE_COMPLETED, &client,
-                         [this](const auto& e)
-    {
+    m_events.add_handler(EventType::FILE_RECEIVE_COMPLETED, &client, [this](const auto& e) {
         sendToClient_mockData_file_receive_completed(e);
     });
 
@@ -184,8 +176,7 @@ TEST_F(NetworkTests, sendToClient_mockFile)
     NiceMock<MockInputFilter> serverInputFilter;
 
     m_events.add_handler(EventType::CLIENT_LISTENER_CONNECTED, &listener,
-                         [this, &listener](const auto& e)
-    {
+                         [this, &listener](const auto& e) {
         sendToClient_mockFile_handle_client_connected(e, &listener);
     });
 
@@ -201,20 +192,18 @@ TEST_F(NetworkTests, sendToClient_mockFile)
     // client
     NiceMock<MockScreen> clientScreen;
     SocketMultiplexer clientSocketMultiplexer;
-    TCPSocketFactory* clientSocketFactory = new TCPSocketFactory(&m_events, &clientSocketMultiplexer);
+    TCPSocketFactory* clientSocketFactory = new TCPSocketFactory(&m_events,
+                                                                 &clientSocketMultiplexer);
 
     ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
     ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
-
 
     ClientArgs clientArgs;
     clientArgs.m_enableDragDrop = true;
     clientArgs.m_enableCrypto = false;
     Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
 
-    m_events.add_handler(EventType::FILE_RECEIVE_COMPLETED, &client,
-                         [this](const auto& e)
-    {
+    m_events.add_handler(EventType::FILE_RECEIVE_COMPLETED, &client, [this](const auto& e) {
         sendToClient_mockFile_file_receive_completed(e);
     });
 
@@ -255,7 +244,8 @@ TEST_F(NetworkTests, sendToServer_mockData)
     // client
     NiceMock<MockScreen> clientScreen;
     SocketMultiplexer clientSocketMultiplexer;
-    TCPSocketFactory* clientSocketFactory = new TCPSocketFactory(&m_events, &clientSocketMultiplexer);
+    TCPSocketFactory* clientSocketFactory = new TCPSocketFactory(&m_events,
+                                                                 &clientSocketMultiplexer);
 
     ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
     ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
@@ -266,14 +256,11 @@ TEST_F(NetworkTests, sendToServer_mockData)
     Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
 
     m_events.add_handler(EventType::CLIENT_LISTENER_CONNECTED, &listener,
-                         [this, &client](const auto& e)
-    {
+                         [this, &client](const auto& e) {
         sendToServer_mockData_handle_client_connected(e, &client);
     });
 
-    m_events.add_handler(EventType::FILE_RECEIVE_COMPLETED, &server,
-                         [this](const auto& e)
-    {
+    m_events.add_handler(EventType::FILE_RECEIVE_COMPLETED, &server, [this](const auto& e) {
         sendToServer_mockData_file_receive_completed(e);
     });
 
@@ -315,7 +302,8 @@ TEST_F(NetworkTests, sendToServer_mockFile)
     // client
     NiceMock<MockScreen> clientScreen;
     SocketMultiplexer clientSocketMultiplexer;
-    TCPSocketFactory* clientSocketFactory = new TCPSocketFactory(&m_events, &clientSocketMultiplexer);
+    TCPSocketFactory* clientSocketFactory = new TCPSocketFactory(&m_events,
+                                                                 &clientSocketMultiplexer);
 
     ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
     ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
@@ -326,14 +314,11 @@ TEST_F(NetworkTests, sendToServer_mockFile)
     Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
 
     m_events.add_handler(EventType::CLIENT_LISTENER_CONNECTED, &listener,
-                         [this, &client](const auto& e)
-    {
+                         [this, &client](const auto& e) {
         sendToServer_mockFile_handle_client_connected(e, &client);
     });
 
-    m_events.add_handler(EventType::FILE_RECEIVE_COMPLETED, &server,
-                         [this](const auto& e)
-    {
+    m_events.add_handler(EventType::FILE_RECEIVE_COMPLETED, &server, [this](const auto& e) {
         sendToServer_mockFile_file_recieve_completed(e);
     });
 
@@ -452,7 +437,6 @@ void NetworkTests::sendMockData(const EventTarget* event_target)
         if (sentLength == kMockDataSize) {
             break;
         }
-
     }
 
     // send last message

@@ -23,30 +23,29 @@
 
 class QSettings;
 
-class KeySequence
-{
-    public:
-        KeySequence();
+class KeySequence {
+public:
+    KeySequence();
 
-    public:
-        QString toString() const;
-        bool appendKey(int key, int modifiers);
-        bool appendMouseButton(int button);
-        bool isMouseButton() const;
-        bool valid() const { return m_IsValid; }
-        int modifiers() const { return m_Modifiers; }
-        void saveSettings(QSettings& settings) const;
-        void loadSettings(QSettings& settings);
-        const QList<int>& sequence() const { return m_Sequence; }
+public:
+    QString toString() const;
+    bool appendKey(int key, int modifiers);
+    bool appendMouseButton(int button);
+    bool isMouseButton() const;
+    bool valid() const { return m_IsValid; }
+    int modifiers() const { return m_Modifiers; }
+    void saveSettings(QSettings& settings) const;
+    void loadSettings(QSettings& settings);
+    const QList<int>& sequence() const { return m_Sequence; }
 
-    private:
-        void setValid(bool b) { m_IsValid = b; }
-        void setModifiers(int i) { m_Modifiers = i; }
+private:
+    void setValid(bool b) { m_IsValid = b; }
+    void setModifiers(int i) { m_Modifiers = i; }
 
-    private:
-        QList<int> m_Sequence;
-        int m_Modifiers;
-        bool m_IsValid;
+private:
+    QList<int> m_Sequence;
+    int m_Modifiers;
+    bool m_IsValid;
 
-        static QString keyToString(int key);
+    static QString keyToString(int key);
 };

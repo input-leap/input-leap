@@ -17,15 +17,14 @@
 
 #include "inputleap/StreamChunker.h"
 
-#include "inputleap/FileChunk.h"
-#include "inputleap/ClipboardChunk.h"
-#include "inputleap/protocol_types.h"
-#include "base/EventTypes.h"
 #include "base/Event.h"
-#include "base/IEventQueue.h"
 #include "base/EventTypes.h"
+#include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/String.h"
+#include "inputleap/ClipboardChunk.h"
+#include "inputleap/FileChunk.h"
+#include "inputleap/protocol_types.h"
 
 #include <fstream>
 #include <stdexcept>
@@ -49,7 +48,7 @@ void StreamChunker::sendFile(const char* filename, IEventQueue* events,
     }
 
     // check file size
-    file.seekg (0, std::ios::end);
+    file.seekg(0, std::ios::end);
     size_t size = static_cast<size_t>(file.tellg());
 
     // send first message (file size)
@@ -61,7 +60,7 @@ void StreamChunker::sendFile(const char* filename, IEventQueue* events,
     // send chunk messages with a fixed chunk size
     size_t sentLength = 0;
     size_t chunkSize = g_chunkSize;
-    file.seekg (0, std::ios::beg);
+    file.seekg(0, std::ios::beg);
 
     while (true) {
         if (s_interruptFile) {
@@ -87,7 +86,7 @@ void StreamChunker::sendFile(const char* filename, IEventQueue* events,
                           create_event_data<FileChunk>(fileChunk));
 
         sentLength += chunkSize;
-        file.seekg (sentLength, std::ios::beg);
+        file.seekg(sentLength, std::ios::beg);
 
         if (sentLength == size) {
             break;
@@ -148,8 +147,7 @@ void StreamChunker::sendClipboard(std::string& data, std::size_t size, Clipboard
     LOG_DEBUG("sent clipboard size=%zd", sentLength);
 }
 
-void
-StreamChunker::interruptFile()
+void StreamChunker::interruptFile()
 {
     if (s_isChunkingFile) {
         s_interruptFile = true;

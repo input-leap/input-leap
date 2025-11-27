@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include "ipc/Ipc.h"
-#include "base/EventTypes.h"
 #include "base/Event.h"
+#include "base/EventTypes.h"
+#include "ipc/Ipc.h"
 #include <string>
 
 namespace inputleap {
@@ -56,7 +56,6 @@ public:
     IpcShutdownMessage();
     virtual ~IpcShutdownMessage();
 };
-
 
 class IpcLogLineMessage : public IpcMessage {
 public:

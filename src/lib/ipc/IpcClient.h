@@ -18,11 +18,11 @@
 
 #pragma once
 
+#include "base/EventTarget.h"
+#include "base/EventTypes.h"
 #include "net/Fwd.h"
 #include "net/NetworkAddress.h"
 #include "net/TCPSocket.h"
-#include "base/EventTarget.h"
-#include "base/EventTypes.h"
 #include <memory>
 
 namespace inputleap {

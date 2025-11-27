@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "io/XIO.h"
 #include "base/EventTypes.h"
+#include "io/XIO.h"
 
 #include <stdarg.h>
 

@@ -21,11 +21,8 @@
 #include <stdexcept>
 
 CommandProcess::CommandProcess(QString cmd, QStringList arguments, QString input) :
-    m_Command(cmd),
-    m_Arguments(arguments),
-    m_Input(input)
-{
-}
+    m_Command(cmd), m_Arguments(arguments), m_Input(input)
+{}
 
 QString CommandProcess::run()
 {
@@ -35,8 +32,7 @@ QString CommandProcess::run()
     bool success = process.waitForStarted();
 
     QString output, error;
-    if (success)
-    {
+    if (success) {
         if (!m_Input.isEmpty()) {
             process.write(m_Input.toStdString().c_str());
         }
@@ -48,13 +44,11 @@ QString CommandProcess::run()
     }
 
     int code = process.exitCode();
-    if (!error.isEmpty() || !success || code != 0)
-    {
-        throw std::runtime_error(
-            QString("Code: %1\nError: %2")
-                .arg(process.exitCode())
-                .arg(error.isEmpty() ? "Unknown" : error)
-                .toStdString());
+    if (!error.isEmpty() || !success || code != 0) {
+        throw std::runtime_error(QString("Code: %1\nError: %2")
+                                     .arg(process.exitCode())
+                                     .arg(error.isEmpty() ? "Unknown" : error)
+                                     .toStdString());
     }
 
     Q_EMIT finished();

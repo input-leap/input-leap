@@ -27,15 +27,9 @@ class UniquePtrContainer {
 public:
     using Container = std::vector<std::unique_ptr<T>>;
 
-    void clear()
-    {
-        data_.clear();
-    }
+    void clear() { data_.clear(); }
 
-    void insert(std::unique_ptr<T>&& d)
-    {
-        data_.push_back(std::move(d));
-    }
+    void insert(std::unique_ptr<T>&& d) { data_.push_back(std::move(d)); }
 
     std::unique_ptr<T> erase(T* p)
     {
@@ -56,6 +50,7 @@ public:
     typename Container::iterator end() { return data_.end(); }
     typename Container::const_iterator end() const { return data_.end(); }
     typename Container::const_iterator cend() const { return data_.cend(); }
+
 private:
     std::vector<std::unique_ptr<T>> data_;
 };

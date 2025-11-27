@@ -18,12 +18,12 @@
 
 #pragma once
 
-#include "inputleap/clipboard_types.h"
-#include "inputleap/key_types.h"
-#include "inputleap/Fwd.h"
-#include "base/Fwd.h"
 #include "base/Event.h"
 #include "base/EventTarget.h"
+#include "base/Fwd.h"
+#include "inputleap/Fwd.h"
+#include "inputleap/clipboard_types.h"
+#include "inputleap/key_types.h"
 
 namespace inputleap {
 

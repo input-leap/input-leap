@@ -17,8 +17,8 @@
 
 #pragma once
 
-#import <CoreFoundation/CoreFoundation.h>
 #import <Carbon/Carbon.h>
+#import <CoreFoundation/CoreFoundation.h>
 
 #include "inputleap/key_types.h"
 

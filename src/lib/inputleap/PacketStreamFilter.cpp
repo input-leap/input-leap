@@ -17,8 +17,8 @@
  */
 
 #include "inputleap/PacketStreamFilter.h"
-#include "inputleap/protocol_types.h"
 #include "base/IEventQueue.h"
+#include "inputleap/protocol_types.h"
 
 #include <cstring>
 #include <memory>
@@ -26,10 +26,7 @@
 namespace inputleap {
 
 PacketStreamFilter::PacketStreamFilter(IEventQueue* events, std::unique_ptr<IStream> stream) :
-    StreamFilter(events, std::move(stream)),
-    m_size(0),
-    m_inputShutdown(false),
-    m_events(events)
+    StreamFilter(events, std::move(stream)), m_size(0), m_inputShutdown(false), m_events(events)
 {
     // do nothing
 }
@@ -39,8 +36,7 @@ PacketStreamFilter::~PacketStreamFilter()
     // do nothing
 }
 
-void
-PacketStreamFilter::close()
+void PacketStreamFilter::close()
 {
     std::lock_guard<std::mutex> lock(mutex_);
     m_size = 0;
@@ -91,15 +87,14 @@ void PacketStreamFilter::write(const void* buffer, std::uint32_t count)
     length[0] = static_cast<std::uint8_t>((count >> 24) & 0xff);
     length[1] = static_cast<std::uint8_t>((count >> 16) & 0xff);
     length[2] = static_cast<std::uint8_t>((count >> 8) & 0xff);
-    length[3] = static_cast<std::uint8_t>(count& 0xff);
+    length[3] = static_cast<std::uint8_t>(count & 0xff);
     getStream()->write(length, sizeof(length));
 
     // write the payload
     getStream()->write(buffer, count);
 }
 
-void
-PacketStreamFilter::shutdownInput()
+void PacketStreamFilter::shutdownInput()
 {
     std::lock_guard<std::mutex> lock(mutex_);
     m_size = 0;
@@ -107,8 +102,7 @@ PacketStreamFilter::shutdownInput()
     StreamFilter::shutdownInput();
 }
 
-bool
-PacketStreamFilter::isReady() const
+bool PacketStreamFilter::isReady() const
 {
     std::lock_guard<std::mutex> lock(mutex_);
     return isReadyNoLock();
@@ -120,8 +114,7 @@ std::uint32_t PacketStreamFilter::getSize() const
     return isReadyNoLock() ? m_size : 0;
 }
 
-bool
-PacketStreamFilter::isReadyNoLock() const
+bool PacketStreamFilter::isReadyNoLock() const
 {
     return (m_size != 0 && m_buffer.getSize() >= m_size);
 }
@@ -136,8 +129,8 @@ bool PacketStreamFilter::readPacketSize()
         m_buffer.pop(sizeof(buffer));
         m_size = (static_cast<std::uint32_t>(buffer[0]) << 24) |
                  (static_cast<std::uint32_t>(buffer[1]) << 16) |
-                 (static_cast<std::uint32_t>(buffer[2]) <<  8) |
-                  static_cast<std::uint32_t>(buffer[3]);
+                 (static_cast<std::uint32_t>(buffer[2]) << 8) |
+                 static_cast<std::uint32_t>(buffer[3]);
 
         if (m_size > PROTOCOL_MAX_MESSAGE_LENGTH) {
             m_events->add_event(EventType::STREAM_INPUT_FORMAT_ERROR, get_event_target());
@@ -147,8 +140,7 @@ bool PacketStreamFilter::readPacketSize()
     return true;
 }
 
-bool
-PacketStreamFilter::readMore()
+bool PacketStreamFilter::readMore()
 {
     // note if we have whole packet
     bool wasReady = isReadyNoLock();
@@ -177,16 +169,14 @@ PacketStreamFilter::readMore()
     return (wasReady != isReady);
 }
 
-void
-PacketStreamFilter::filterEvent(const Event& event)
+void PacketStreamFilter::filterEvent(const Event& event)
 {
     if (event.getType() == EventType::STREAM_INPUT_READY) {
         std::lock_guard<std::mutex> lock(mutex_);
         if (!readMore()) {
             return;
         }
-    }
-    else if (event.getType() == EventType::STREAM_INPUT_SHUTDOWN) {
+    } else if (event.getType() == EventType::STREAM_INPUT_SHUTDOWN) {
         // discard this if we have buffered data
         std::lock_guard<std::mutex> lock(mutex_);
         m_inputShutdown = true;

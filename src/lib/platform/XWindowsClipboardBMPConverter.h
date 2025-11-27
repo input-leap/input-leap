@@ -23,8 +23,7 @@
 namespace inputleap {
 
 //! Convert to/from some text encoding
-class XWindowsClipboardBMPConverter :
-                public IXWindowsClipboardConverter {
+class XWindowsClipboardBMPConverter : public IXWindowsClipboardConverter {
 public:
     XWindowsClipboardBMPConverter(Display* display);
     ~XWindowsClipboardBMPConverter() override;

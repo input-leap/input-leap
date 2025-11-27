@@ -17,11 +17,10 @@
 
 #pragma once
 
-#include <QThread>
 #include <QTcpSocket>
+#include <QThread>
 
-class ZeroconfThread : public QThread
-{
+class ZeroconfThread : public QThread {
     Q_OBJECT
 
 public:

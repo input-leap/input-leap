@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "io/StreamFilter.h"
 #include "io/StreamBuffer.h"
+#include "io/StreamFilter.h"
 
 #include <mutex>
 

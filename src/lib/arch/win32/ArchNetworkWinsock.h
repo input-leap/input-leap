@@ -25,15 +25,15 @@
 #endif
 #define INCL_WINSOCK_API_TYPEDEFS 0
 
-#include "arch/IArchNetwork.h"
 #include "arch/IArchMultithread.h"
+#include "arch/IArchNetwork.h"
 
 #include <WinSock2.h>
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-#include <mutex>
 #include <list>
+#include <mutex>
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -57,7 +57,7 @@ public:
     int m_len;
     struct sockaddr_storage m_addr;
 };
-#define ADDR_HDR_SIZE    offsetof(ArchNetAddressImpl, m_addr)
+#define ADDR_HDR_SIZE offsetof(ArchNetAddressImpl, m_addr)
 #define TYPED_ADDR(type_, addr_) (reinterpret_cast<type_*>(&addr_->m_addr))
 
 //! Win32 implementation of IArchNetwork
@@ -81,8 +81,7 @@ public:
     virtual int pollSocket(PollEntry[], int num, double timeout);
     virtual void unblockPollSocket(ArchThread thread);
     virtual size_t readSocket(ArchSocket s, void* buf, size_t len);
-    virtual size_t writeSocket(ArchSocket s,
-                            const void* buf, size_t len);
+    virtual size_t writeSocket(ArchSocket s, const void* buf, size_t len);
     virtual void throwErrorOnSocket(ArchSocket);
     virtual bool setNoDelayOnSocket(ArchSocket, bool noDelay);
     virtual bool setReuseAddrOnSocket(ArchSocket, bool reuse);

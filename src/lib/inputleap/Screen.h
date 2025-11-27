@@ -18,15 +18,15 @@
 
 #pragma once
 
-#include "inputleap/Fwd.h"
+#include "base/Fwd.h"
 #include "inputleap/DragInformation.h"
-#include "inputleap/clipboard_types.h"
-#include "inputleap/IScreen.h"
+#include "inputleap/Fwd.h"
 #include "inputleap/IPlatformScreen.h"
+#include "inputleap/IScreen.h"
+#include "inputleap/clipboard_types.h"
 #include "inputleap/key_types.h"
 #include "inputleap/mouse_types.h"
 #include "inputleap/option_types.h"
-#include "base/Fwd.h"
 #include <memory>
 
 namespace inputleap {
@@ -42,7 +42,7 @@ public:
     virtual ~Screen();
 
 #ifdef INPUTLEAP_TEST_ENV
-    Screen() : m_mock(true) { }
+    Screen() : m_mock(true) {}
 #endif
 
     //! @name manipulators
@@ -342,4 +342,4 @@ private:
     bool m_enableDragDrop;
 };
 
-}
+} // namespace inputleap

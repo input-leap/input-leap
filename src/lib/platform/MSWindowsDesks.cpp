@@ -19,17 +19,17 @@
 
 #include "platform/MSWindowsDesks.h"
 
-#include "platform/MSWindowsScreen.h"
+#include "arch/win32/ArchMiscWindows.h"
+#include "base/EventQueueTimer.h"
+#include "base/IEventQueue.h"
+#include "base/Log.h"
 #include "inputleap/IScreenSaver.h"
 #include "inputleap/XScreen.h"
 #include "mt/Thread.h"
-#include "arch/win32/ArchMiscWindows.h"
-#include "base/Log.h"
-#include "base/IEventQueue.h"
-#include "base/EventQueueTimer.h"
+#include "platform/MSWindowsScreen.h"
 
-#include <malloc.h>
 #include <VersionHelpers.h>
+#include <malloc.h>
 
 namespace inputleap {
 
@@ -50,20 +50,20 @@ namespace inputleap {
 
 // X button stuff
 #if !defined(WM_XBUTTONDOWN)
-#define WM_XBUTTONDOWN        0x020B
-#define WM_XBUTTONUP        0x020C
-#define WM_XBUTTONDBLCLK    0x020D
-#define WM_NCXBUTTONDOWN    0x00AB
-#define WM_NCXBUTTONUP        0x00AC
-#define WM_NCXBUTTONDBLCLK    0x00AD
-#define MOUSEEVENTF_XDOWN    0x0080
-#define MOUSEEVENTF_XUP        0x0100
-#define XBUTTON1            0x0001
-#define XBUTTON2            0x0002
+#define WM_XBUTTONDOWN 0x020B
+#define WM_XBUTTONUP 0x020C
+#define WM_XBUTTONDBLCLK 0x020D
+#define WM_NCXBUTTONDOWN 0x00AB
+#define WM_NCXBUTTONUP 0x00AC
+#define WM_NCXBUTTONDBLCLK 0x00AD
+#define MOUSEEVENTF_XDOWN 0x0080
+#define MOUSEEVENTF_XUP 0x0100
+#define XBUTTON1 0x0001
+#define XBUTTON2 0x0002
 #endif
 #if !defined(VK_XBUTTON1)
-#define VK_XBUTTON1            0x05
-#define VK_XBUTTON2            0x06
+#define VK_XBUTTON1 0x05
+#define VK_XBUTTON2 0x06
 #endif
 
 // <unused>; <unused>
@@ -74,7 +74,7 @@ namespace inputleap {
 #define INPUTLEAP_MSG_LEAVE INPUTLEAP_HOOK_LAST_MSG + 3
 // wParam = flags, HIBYTE(lParam) = virtual key, LOBYTE(lParam) = scan code
 #define INPUTLEAP_MSG_FAKE_KEY INPUTLEAP_HOOK_LAST_MSG + 4
- // flags, XBUTTON id
+// flags, XBUTTON id
 #define INPUTLEAP_MSG_FAKE_BUTTON INPUTLEAP_HOOK_LAST_MSG + 5
 // x; y
 #define INPUTLEAP_MSG_FAKE_MOVE INPUTLEAP_HOOK_LAST_MSG + 6
@@ -95,15 +95,18 @@ namespace inputleap {
 // MSWindowsDesks
 //
 
-MSWindowsDesks::MSWindowsDesks(bool isPrimary, bool noHooks,
-        const IScreenSaver* screensaver, IEventQueue* events,
-        const std::function<void()>& updateKeys, bool stopOnDeskSwitch) :
+MSWindowsDesks::MSWindowsDesks(bool isPrimary, bool noHooks, const IScreenSaver* screensaver,
+                               IEventQueue* events, const std::function<void()>& updateKeys,
+                               bool stopOnDeskSwitch) :
     m_isPrimary(isPrimary),
     m_noHooks(noHooks),
     m_isOnScreen(m_isPrimary),
-    m_x(0), m_y(0),
-    m_w(0), m_h(0),
-    m_xCenter(0), m_yCenter(0),
+    m_x(0),
+    m_y(0),
+    m_w(0),
+    m_h(0),
+    m_xCenter(0),
+    m_yCenter(0),
     m_multimon(false),
     m_timer(nullptr),
     m_screensaver(screensaver),
@@ -114,7 +117,7 @@ MSWindowsDesks::MSWindowsDesks(bool isPrimary, bool noHooks,
     m_events(events),
     m_stopOnDeskSwitch(stopOnDeskSwitch)
 {
-    m_cursor    = createBlankCursor();
+    m_cursor = createBlankCursor();
     m_deskClass = createDeskWindowClass(m_isPrimary);
     m_keyLayout = GetKeyboardLayout(GetCurrentThreadId());
     resetOptions();
@@ -127,8 +130,7 @@ MSWindowsDesks::~MSWindowsDesks()
     destroyCursor(m_cursor);
 }
 
-void
-MSWindowsDesks::enable()
+void MSWindowsDesks::enable()
 {
     m_threadID = GetCurrentThreadId();
 
@@ -140,14 +142,12 @@ MSWindowsDesks::enable()
     // we wouldn't need this if windows notified us of a desktop
     // change but as far as i can tell it doesn't.
     m_timer = m_events->newTimer(0.2, nullptr);
-    m_events->add_handler(EventType::TIMER, m_timer,
-                          [this](const auto& e){ handle_check_desk(); });
+    m_events->add_handler(EventType::TIMER, m_timer, [this](const auto& e) { handle_check_desk(); });
 
     updateKeys();
 }
 
-void
-MSWindowsDesks::disable()
+void MSWindowsDesks::disable()
 {
     // remove timer
     if (m_timer != nullptr) {
@@ -162,28 +162,24 @@ MSWindowsDesks::disable()
     m_isOnScreen = m_isPrimary;
 }
 
-void
-MSWindowsDesks::enter()
+void MSWindowsDesks::enter()
 {
     sendMessage(INPUTLEAP_MSG_ENTER, 0, 0);
 }
 
-void
-MSWindowsDesks::leave(HKL keyLayout)
+void MSWindowsDesks::leave(HKL keyLayout)
 {
-    sendMessage(INPUTLEAP_MSG_LEAVE, (WPARAM)keyLayout, 0);
+    sendMessage(INPUTLEAP_MSG_LEAVE, (WPARAM) keyLayout, 0);
 }
 
-void
-MSWindowsDesks::resetOptions()
+void MSWindowsDesks::resetOptions()
 {
     m_leaveForegroundOption = false;
 }
 
-void
-MSWindowsDesks::setOptions(const OptionsList& options)
+void MSWindowsDesks::setOptions(const OptionsList& options)
 {
-    for (std::uint32_t i = 0, n = (std::uint32_t)options.size(); i < n; i += 2) {
+    for (std::uint32_t i = 0, n = (std::uint32_t) options.size(); i < n; i += 2) {
         if (options[i] == kOptionWin32KeepForeground) {
             m_leaveForegroundOption = (options[i + 1] != 0);
             LOG_DEBUG1("%s the foreground window", m_leaveForegroundOption ? "don\'t grab" : "grab");
@@ -191,8 +187,7 @@ MSWindowsDesks::setOptions(const OptionsList& options)
     }
 }
 
-void
-MSWindowsDesks::updateKeys()
+void MSWindowsDesks::updateKeys()
 {
     sendMessage(INPUTLEAP_MSG_SYNC_KEYS, 0, 0);
 }
@@ -201,17 +196,16 @@ void MSWindowsDesks::setShape(std::int32_t x, std::int32_t y, std::int32_t width
                               std::int32_t height, std::int32_t xCenter, std::int32_t yCenter,
                               bool isMultimon)
 {
-    m_x        = x;
-    m_y        = y;
-    m_w        = width;
-    m_h        = height;
-    m_xCenter  = xCenter;
-    m_yCenter  = yCenter;
+    m_x = x;
+    m_y = y;
+    m_w = width;
+    m_h = height;
+    m_xCenter = xCenter;
+    m_yCenter = yCenter;
     m_multimon = isMultimon;
 }
 
-void
-MSWindowsDesks::installScreensaverHooks(bool install)
+void MSWindowsDesks::installScreensaverHooks(bool install)
 {
     if (m_isPrimary && m_screensaverNotify != install) {
         m_screensaverNotify = install;
@@ -219,14 +213,12 @@ MSWindowsDesks::installScreensaverHooks(bool install)
     }
 }
 
-void
-MSWindowsDesks::fakeInputBegin()
+void MSWindowsDesks::fakeInputBegin()
 {
     sendMessage(INPUTLEAP_MSG_FAKE_INPUT, 1, 0);
 }
 
-void
-MSWindowsDesks::fakeInputEnd()
+void MSWindowsDesks::fakeInputEnd()
 {
     sendMessage(INPUTLEAP_MSG_FAKE_INPUT, 0, 0);
 }
@@ -239,10 +231,8 @@ void MSWindowsDesks::getCursorPos(std::int32_t& x, std::int32_t& y) const
     y = pos.y;
 }
 
-void
-MSWindowsDesks::fakeKeyEvent(
-                KeyButton button, UINT virtualKey,
-                bool press, bool /*isAutoRepeat*/) const
+void MSWindowsDesks::fakeKeyEvent(KeyButton button, UINT virtualKey, bool press,
+                                  bool /*isAutoRepeat*/) const
 {
     // synthesize event
     DWORD flags = 0;
@@ -253,12 +243,10 @@ MSWindowsDesks::fakeKeyEvent(
         flags |= KEYEVENTF_KEYUP;
     }
     sendMessage(INPUTLEAP_MSG_FAKE_KEY, flags,
-                            MAKEWORD(static_cast<BYTE>(button & 0xffu),
-                                static_cast<BYTE>(virtualKey & 0xffu)));
+                MAKEWORD(static_cast<BYTE>(button & 0xffu), static_cast<BYTE>(virtualKey & 0xffu)));
 }
 
-void
-MSWindowsDesks::fakeMouseButton(ButtonID button, bool press)
+void MSWindowsDesks::fakeMouseButton(ButtonID button, bool press)
 {
     // the system will swap the meaning of left/right for us if
     // the user has configured a left-handed mouse but we don't
@@ -312,16 +300,12 @@ MSWindowsDesks::fakeMouseButton(ButtonID button, bool press)
 
 void MSWindowsDesks::fakeMouseMove(std::int32_t x, std::int32_t y) const
 {
-    sendMessage(INPUTLEAP_MSG_FAKE_MOVE,
-                            static_cast<WPARAM>(x),
-                            static_cast<LPARAM>(y));
+    sendMessage(INPUTLEAP_MSG_FAKE_MOVE, static_cast<WPARAM>(x), static_cast<LPARAM>(y));
 }
 
 void MSWindowsDesks::fakeMouseRelativeMove(std::int32_t dx, std::int32_t dy) const
 {
-    sendMessage(INPUTLEAP_MSG_FAKE_REL_MOVE,
-                            static_cast<WPARAM>(dx),
-                            static_cast<LPARAM>(dy));
+    sendMessage(INPUTLEAP_MSG_FAKE_REL_MOVE, static_cast<WPARAM>(dx), static_cast<LPARAM>(dy));
 }
 
 void MSWindowsDesks::fakeMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const
@@ -329,8 +313,7 @@ void MSWindowsDesks::fakeMouseWheel(std::int32_t xDelta, std::int32_t yDelta) co
     sendMessage(INPUTLEAP_MSG_FAKE_WHEEL, xDelta, yDelta);
 }
 
-void
-MSWindowsDesks::sendMessage(UINT msg, WPARAM wParam, LPARAM lParam) const
+void MSWindowsDesks::sendMessage(UINT msg, WPARAM wParam, LPARAM lParam) const
 {
     if (m_activeDesk != nullptr && m_activeDesk->m_window != nullptr) {
         PostThreadMessage(m_activeDesk->m_threadID, msg, wParam, lParam);
@@ -348,35 +331,32 @@ MSWindowsDesks::createBlankCursor() const
     std::uint8_t* cursorXOR = new std::uint8_t[ch * ((cw + 31) >> 2)];
     memset(cursorAND, 0xff, ch * ((cw + 31) >> 2));
     memset(cursorXOR, 0x00, ch * ((cw + 31) >> 2));
-    HCURSOR c = CreateCursor(MSWindowsScreen::getWindowInstance(),
-                            0, 0, cw, ch, cursorAND, cursorXOR);
+    HCURSOR c = CreateCursor(MSWindowsScreen::getWindowInstance(), 0, 0, cw, ch, cursorAND,
+                             cursorXOR);
     delete[] cursorXOR;
     delete[] cursorAND;
     return c;
 }
 
-void
-MSWindowsDesks::destroyCursor(HCURSOR cursor) const
+void MSWindowsDesks::destroyCursor(HCURSOR cursor) const
 {
     if (cursor != nullptr) {
         DestroyCursor(cursor);
     }
 }
 
-ATOM
-MSWindowsDesks::createDeskWindowClass(bool isPrimary) const
+ATOM MSWindowsDesks::createDeskWindowClass(bool isPrimary) const
 {
     WNDCLASSEX classInfo;
-    classInfo.cbSize        = sizeof(classInfo);
-    classInfo.style         = CS_DBLCLKS | CS_NOCLOSE;
-    classInfo.lpfnWndProc   = isPrimary ?
-                                &MSWindowsDesks::primaryDeskProc :
-                                &MSWindowsDesks::secondaryDeskProc;
-    classInfo.cbClsExtra    = 0;
-    classInfo.cbWndExtra    = 0;
-    classInfo.hInstance     = MSWindowsScreen::getWindowInstance();
+    classInfo.cbSize = sizeof(classInfo);
+    classInfo.style = CS_DBLCLKS | CS_NOCLOSE;
+    classInfo.lpfnWndProc = isPrimary ? &MSWindowsDesks::primaryDeskProc
+                                      : &MSWindowsDesks::secondaryDeskProc;
+    classInfo.cbClsExtra = 0;
+    classInfo.cbWndExtra = 0;
+    classInfo.hInstance = MSWindowsScreen::getWindowInstance();
     classInfo.hIcon = nullptr;
-    classInfo.hCursor       = m_cursor;
+    classInfo.hCursor = m_cursor;
     classInfo.hbrBackground = nullptr;
     classInfo.lpszMenuName = nullptr;
     classInfo.lpszClassName = "InputLeapDesk";
@@ -384,27 +364,18 @@ MSWindowsDesks::createDeskWindowClass(bool isPrimary) const
     return RegisterClassEx(&classInfo);
 }
 
-void
-MSWindowsDesks::destroyClass(ATOM windowClass) const
+void MSWindowsDesks::destroyClass(ATOM windowClass) const
 {
     if (windowClass != 0) {
-        UnregisterClass(MAKEINTATOM(windowClass),
-                            MSWindowsScreen::getWindowInstance());
+        UnregisterClass(MAKEINTATOM(windowClass), MSWindowsScreen::getWindowInstance());
     }
 }
 
-HWND
-MSWindowsDesks::createWindow(ATOM windowClass, const char* name) const
+HWND MSWindowsDesks::createWindow(ATOM windowClass, const char* name) const
 {
-    HWND window = CreateWindowEx(WS_EX_TRANSPARENT |
-                                    WS_EX_TOOLWINDOW,
-                                MAKEINTATOM(windowClass),
-                                name,
-                                WS_POPUP,
-                                0, 0, 1, 1,
-                                nullptr, nullptr,
-                                MSWindowsScreen::getWindowInstance(),
-                                nullptr);
+    HWND window = CreateWindowEx(WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW, MAKEINTATOM(windowClass),
+                                 name, WS_POPUP, 0, 0, 1, 1, nullptr, nullptr,
+                                 MSWindowsScreen::getWindowInstance(), nullptr);
     if (window == nullptr) {
         LOG_ERR("failed to create window: %d", GetLastError());
         throw XScreenOpenFailure();
@@ -412,24 +383,19 @@ MSWindowsDesks::createWindow(ATOM windowClass, const char* name) const
     return window;
 }
 
-void
-MSWindowsDesks::destroyWindow(HWND hwnd) const
+void MSWindowsDesks::destroyWindow(HWND hwnd) const
 {
     if (hwnd != nullptr) {
         DestroyWindow(hwnd);
     }
 }
 
-LRESULT CALLBACK
-MSWindowsDesks::primaryDeskProc(
-                HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK MSWindowsDesks::primaryDeskProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
-LRESULT CALLBACK
-MSWindowsDesks::secondaryDeskProc(
-                HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK MSWindowsDesks::secondaryDeskProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     // would like to detect any local user input and hide the hider
     // window but for now we just detect mouse motion.
@@ -445,8 +411,7 @@ MSWindowsDesks::secondaryDeskProc(
     if (hide && IsWindowVisible(hwnd)) {
         ReleaseCapture();
         SetWindowPos(hwnd, HWND_BOTTOM, 0, 0, 0, 0,
-                            SWP_NOMOVE | SWP_NOSIZE |
-                            SWP_NOACTIVATE | SWP_HIDEWINDOW);
+                     SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_HIDEWINDOW);
     }
 
     return DefWindowProc(hwnd, msg, wParam, lParam);
@@ -459,10 +424,8 @@ void MSWindowsDesks::deskMouseMove(std::int32_t x, std::int32_t y) const
     // the primary screen.
     std::int32_t w = GetSystemMetrics(SM_CXSCREEN);
     std::int32_t h = GetSystemMetrics(SM_CYSCREEN);
-    mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
-                            (DWORD)((65535.0f * x) / (w - 1) + 0.5f),
-                            (DWORD)((65535.0f * y) / (h - 1) + 0.5f),
-                            0, 0);
+    mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE, (DWORD) ((65535.0f * x) / (w - 1) + 0.5f),
+                (DWORD) ((65535.0f * y) / (h - 1) + 0.5f), 0, 0);
 }
 
 void MSWindowsDesks::deskMouseRelativeMove(std::int32_t dx, std::int32_t dy) const
@@ -478,16 +441,14 @@ void MSWindowsDesks::deskMouseRelativeMove(std::int32_t dx, std::int32_t dy) con
 
     // save mouse speed & acceleration
     int oldSpeed[4];
-    bool accelChanged =
-                SystemParametersInfo(SPI_GETMOUSE,0, oldSpeed, 0) &&
-                SystemParametersInfo(SPI_GETMOUSESPEED, 0, oldSpeed + 3, 0);
+    bool accelChanged = SystemParametersInfo(SPI_GETMOUSE, 0, oldSpeed, 0) &&
+                        SystemParametersInfo(SPI_GETMOUSESPEED, 0, oldSpeed + 3, 0);
 
     // use 1:1 motion
     if (accelChanged) {
-        int newSpeed[4] = { 0, 0, 0, 1 };
-        accelChanged =
-                SystemParametersInfo(SPI_SETMOUSE, 0, newSpeed, 0) ||
-                SystemParametersInfo(SPI_SETMOUSESPEED, 0, newSpeed + 3, 0);
+        int newSpeed[4] = {0, 0, 0, 1};
+        accelChanged = SystemParametersInfo(SPI_SETMOUSE, 0, newSpeed, 0) ||
+                       SystemParametersInfo(SPI_SETMOUSESPEED, 0, newSpeed + 3, 0);
     }
 
     // move relative to mouse position
@@ -500,16 +461,14 @@ void MSWindowsDesks::deskMouseRelativeMove(std::int32_t dx, std::int32_t dy) con
     }
 }
 
-void
-MSWindowsDesks::deskEnter(Desk* desk)
+void MSWindowsDesks::deskEnter(Desk* desk)
 {
     if (!m_isPrimary) {
         ReleaseCapture();
     }
     ShowCursor(TRUE);
     SetWindowPos(desk->m_window, HWND_BOTTOM, 0, 0, 0, 0,
-                            SWP_NOMOVE | SWP_NOSIZE |
-                            SWP_NOACTIVATE | SWP_HIDEWINDOW);
+                 SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_HIDEWINDOW);
 
     // restore the foreground window
     // XXX -- this raises the window to the top of the Z-order.  we
@@ -517,10 +476,8 @@ MSWindowsDesks::deskEnter(Desk* desk)
     // (mouse over activation) but i've no idea how to do that.
     // the obvious workaround of using SetWindowPos() to move it back
     // after being raised doesn't work.
-    DWORD thisThread =
-        GetWindowThreadProcessId(desk->m_window, nullptr);
-    DWORD thatThread =
-        GetWindowThreadProcessId(desk->m_foregroundWindow, nullptr);
+    DWORD thisThread = GetWindowThreadProcessId(desk->m_window, nullptr);
+    DWORD thatThread = GetWindowThreadProcessId(desk->m_foregroundWindow, nullptr);
     AttachThreadInput(thatThread, thisThread, TRUE);
     SetForegroundWindow(desk->m_foregroundWindow);
     AttachThreadInput(thatThread, thisThread, FALSE);
@@ -528,8 +485,7 @@ MSWindowsDesks::deskEnter(Desk* desk)
     desk->m_foregroundWindow = nullptr;
 }
 
-void
-MSWindowsDesks::deskLeave(Desk* desk, HKL keyLayout)
+void MSWindowsDesks::deskLeave(Desk* desk, HKL keyLayout)
 {
     ShowCursor(FALSE);
     if (m_isPrimary) {
@@ -543,8 +499,7 @@ MSWindowsDesks::deskLeave(Desk* desk, HKL keyLayout)
         y = m_yCenter;
         w = 1;
         h = 1;
-        SetWindowPos(desk->m_window, HWND_TOP, x, y, w, h,
-                            SWP_NOACTIVATE | SWP_SHOWWINDOW);
+        SetWindowPos(desk->m_window, HWND_TOP, x, y, w, h, SWP_NOACTIVATE | SWP_SHOWWINDOW);
 
         // since we're using low-level hooks, disable the foreground window
         // so it can't mess up any of our keyboard events.  the console
@@ -558,10 +513,8 @@ MSWindowsDesks::deskLeave(Desk* desk, HKL keyLayout)
         if (desk->m_foregroundWindow != nullptr) {
             EnableWindow(desk->m_window, TRUE);
             SetActiveWindow(desk->m_window);
-            DWORD thisThread =
-                GetWindowThreadProcessId(desk->m_window, nullptr);
-            DWORD thatThread =
-                GetWindowThreadProcessId(desk->m_foregroundWindow, nullptr);
+            DWORD thisThread = GetWindowThreadProcessId(desk->m_window, nullptr);
+            DWORD thatThread = GetWindowThreadProcessId(desk->m_foregroundWindow, nullptr);
             AttachThreadInput(thatThread, thisThread, TRUE);
             SetForegroundWindow(desk->m_window);
             AttachThreadInput(thatThread, thisThread, FALSE);
@@ -569,12 +522,10 @@ MSWindowsDesks::deskLeave(Desk* desk, HKL keyLayout)
 
         // switch to requested keyboard layout
         ActivateKeyboardLayout(keyLayout, 0);
-    }
-    else {
+    } else {
         // move hider window under the cursor center, raise, and show it
-        SetWindowPos(desk->m_window, HWND_TOP,
-                            m_xCenter, m_yCenter, 1, 1,
-                            SWP_NOACTIVATE | SWP_SHOWWINDOW);
+        SetWindowPos(desk->m_window, HWND_TOP, m_xCenter, m_yCenter, 1, 1,
+                     SWP_NOACTIVATE | SWP_SHOWWINDOW);
 
         // watch for mouse motion.  if we see any then we hide the
         // hider window so the user can use the physically attached
@@ -593,19 +544,18 @@ void MSWindowsDesks::desk_thread(Desk* desk)
     MSG msg;
 
     // use given desktop for this thread
-    desk->m_threadID         = GetCurrentThreadId();
+    desk->m_threadID = GetCurrentThreadId();
     desk->m_window = nullptr;
     desk->m_foregroundWindow = nullptr;
     if (desk->m_desk != nullptr && SetThreadDesktop(desk->m_desk) != 0) {
         // create a message queue
-        PeekMessage(&msg, nullptr, 0,0, PM_NOREMOVE);
+        PeekMessage(&msg, nullptr, 0, 0, PM_NOREMOVE);
 
         // create a window.  we use this window to hide the cursor.
         try {
             desk->m_window = createWindow(m_deskClass, "InputLeapDesk");
             LOG_DEBUG("desk %s window is 0x%08x", desk->m_name.c_str(), desk->m_window);
-        }
-        catch (...) {
+        } catch (...) {
             // ignore
             LOG_DEBUG("can't create desk window for %s", desk->m_name.c_str());
         }
@@ -638,8 +588,9 @@ void MSWindowsDesks::desk_thread(Desk* desk)
                 }
                 // a window on the primary screen with low-level hooks
                 // should never activate.
-                if (desk->m_window)
+                if (desk->m_window) {
                     EnableWindow(desk->m_window, FALSE);
+                }
             }
             break;
 
@@ -650,17 +601,17 @@ void MSWindowsDesks::desk_thread(Desk* desk)
 
         case INPUTLEAP_MSG_LEAVE:
             m_isOnScreen = false;
-            m_keyLayout  = (HKL)msg.wParam;
+            m_keyLayout = (HKL) msg.wParam;
             deskLeave(desk, m_keyLayout);
             break;
 
         case INPUTLEAP_MSG_FAKE_KEY:
-            keybd_event(HIBYTE(msg.lParam), LOBYTE(msg.lParam), (DWORD)msg.wParam, 0);
+            keybd_event(HIBYTE(msg.lParam), LOBYTE(msg.lParam), (DWORD) msg.wParam, 0);
             break;
 
         case INPUTLEAP_MSG_FAKE_BUTTON:
             if (msg.wParam != 0) {
-                mouse_event((DWORD)msg.wParam, 0, 0, (DWORD)msg.lParam, 0);
+                mouse_event((DWORD) msg.wParam, 0, 0, (DWORD) msg.lParam, 0);
             }
             break;
 
@@ -676,10 +627,9 @@ void MSWindowsDesks::desk_thread(Desk* desk)
 
         case INPUTLEAP_MSG_FAKE_WHEEL:
             if (msg.lParam != 0) {
-                mouse_event(MOUSEEVENTF_WHEEL, 0, 0, (DWORD)msg.lParam, 0);
-            }
-            else if (IsWindowsVistaOrGreater() && msg.wParam != 0) {
-                mouse_event(MOUSEEVENTF_HWHEEL, 0, 0, (DWORD)msg.wParam, 0);
+                mouse_event(MOUSEEVENTF_WHEEL, 0, 0, (DWORD) msg.lParam, 0);
+            } else if (IsWindowsVistaOrGreater() && msg.wParam != 0) {
+                mouse_event(MOUSEEVENTF_HWHEEL, 0, 0, (DWORD) msg.wParam, 0);
             }
             break;
 
@@ -700,16 +650,14 @@ void MSWindowsDesks::desk_thread(Desk* desk)
             if (!m_noHooks) {
                 if (msg.wParam != 0) {
                     MSWindowsHook::installScreenSaver();
-                }
-                else {
+                } else {
                     MSWindowsHook::uninstallScreenSaver();
                 }
             }
             break;
 
         case INPUTLEAP_MSG_FAKE_INPUT:
-            keybd_event(INPUTLEAP_HOOK_FAKE_INPUT_VIRTUAL_KEY,
-                        INPUTLEAP_HOOK_FAKE_INPUT_SCANCODE,
+            keybd_event(INPUTLEAP_HOOK_FAKE_INPUT_VIRTUAL_KEY, INPUTLEAP_HOOK_FAKE_INPUT_SCANCODE,
                         msg.wParam ? 0 : KEYEVENTF_KEYUP, 0);
             break;
         }
@@ -732,18 +680,17 @@ void MSWindowsDesks::desk_thread(Desk* desk)
 
 MSWindowsDesks::Desk* MSWindowsDesks::addDesk(const std::string& name, HDESK hdesk)
 {
-    Desk* desk      = new Desk;
-    desk->m_name     = name;
-    desk->m_desk     = hdesk;
+    Desk* desk = new Desk;
+    desk->m_name = name;
+    desk->m_desk = hdesk;
     desk->m_targetID = GetCurrentThreadId();
-    desk->m_thread   = new Thread([this, desk]() { desk_thread(desk); });
+    desk->m_thread = new Thread([this, desk]() { desk_thread(desk); });
     waitForDesk();
     m_desks.insert(std::make_pair(name, desk));
     return desk;
 }
 
-void
-MSWindowsDesks::removeDesks()
+void MSWindowsDesks::removeDesks()
 {
     for (auto index = m_desks.begin(); index != m_desks.end(); ++index) {
         Desk* desk = index->second;
@@ -753,24 +700,22 @@ MSWindowsDesks::removeDesks()
         delete desk;
     }
     m_desks.clear();
-    m_activeDesk  = nullptr;
+    m_activeDesk = nullptr;
     m_activeDeskName = "";
 }
 
-void
-MSWindowsDesks::checkDesk()
+void MSWindowsDesks::checkDesk()
 {
     // get current desktop.  if we already know about it then return.
     Desk* desk;
-    HDESK hdesk  = openInputDesktop();
+    HDESK hdesk = openInputDesktop();
     std::string name = getDesktopName(hdesk);
     auto index = m_desks.find(name);
     if (index == m_desks.end()) {
         desk = addDesk(name, hdesk);
         // hold on to hdesk until thread exits so the desk can't
         // be removed by the system
-    }
-    else {
+    } else {
         closeDesktop(hdesk);
         desk = index->second;
     }
@@ -806,46 +751,42 @@ MSWindowsDesks::checkDesk()
             if (isAccessible) {
                 LOG_DEBUG("desktop is now accessible");
                 syncKeys = true;
-            }
-            else {
+            } else {
                 LOG_DEBUG("desktop is now inaccessible");
             }
         }
 
         // switch desk
-        m_activeDesk     = desk;
+        m_activeDesk = desk;
         m_activeDeskName = name;
         sendMessage(INPUTLEAP_MSG_SWITCH, 0, 0);
 
         // hide cursor on new desk
         if (!wasOnScreen) {
-            sendMessage(INPUTLEAP_MSG_LEAVE, (WPARAM)m_keyLayout, 0);
+            sendMessage(INPUTLEAP_MSG_LEAVE, (WPARAM) m_keyLayout, 0);
         }
 
         // update keys if necessary
         if (syncKeys) {
             updateKeys();
         }
-    }
-    else if (name != m_activeDeskName) {
+    } else if (name != m_activeDeskName) {
         // screen saver might have started
         PostThreadMessage(m_threadID, INPUTLEAP_MSG_SCREEN_SAVER, TRUE, 0);
     }
 }
 
-bool
-MSWindowsDesks::isDeskAccessible(const Desk* desk) const
+bool MSWindowsDesks::isDeskAccessible(const Desk* desk) const
 {
     return (desk != nullptr && desk->m_desk != nullptr);
 }
 
-void
-MSWindowsDesks::waitForDesk() const
+void MSWindowsDesks::waitForDesk() const
 {
     MSWindowsDesks* self = const_cast<MSWindowsDesks*>(this);
 
     std::unique_lock<std::mutex> lock(mutex_);
-    desks_ready_cv_.wait(lock, [this](){ return is_desks_ready_; });
+    desks_ready_cv_.wait(lock, [this]() { return is_desks_ready_; });
     self->is_desks_ready_ = false;
 }
 
@@ -865,13 +806,11 @@ void MSWindowsDesks::handle_check_desk()
 HDESK
 MSWindowsDesks::openInputDesktop()
 {
-    return OpenInputDesktop(
-        DF_ALLOWOTHERACCOUNTHOOK, TRUE,
-        DESKTOP_CREATEWINDOW | DESKTOP_HOOKCONTROL | GENERIC_WRITE);
+    return OpenInputDesktop(DF_ALLOWOTHERACCOUNTHOOK, TRUE,
+                            DESKTOP_CREATEWINDOW | DESKTOP_HOOKCONTROL | GENERIC_WRITE);
 }
 
-void
-MSWindowsDesks::closeDesktop(HDESK desk)
+void MSWindowsDesks::closeDesktop(HDESK desk)
 {
     if (desk != nullptr) {
         CloseDesktop(desk);
@@ -882,19 +821,17 @@ std::string MSWindowsDesks::getDesktopName(HDESK desk)
 {
     if (desk == nullptr) {
         return {};
-    }
-    else {
+    } else {
         DWORD size;
         GetUserObjectInformation(desk, UOI_NAME, nullptr, 0, &size);
-        TCHAR* name = (TCHAR*)alloca(size + sizeof(TCHAR));
+        TCHAR* name = (TCHAR*) alloca(size + sizeof(TCHAR));
         GetUserObjectInformation(desk, UOI_NAME, name, size, &size);
         std::string result(name);
         return result;
     }
 }
 
-HWND
-MSWindowsDesks::getForegroundWindow() const
+HWND MSWindowsDesks::getForegroundWindow() const
 {
     // Ideally we'd return nullptr as much as possible, only returning
     // the actual foreground window when we know it's going to mess

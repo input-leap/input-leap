@@ -18,21 +18,20 @@
 
 #include "server/ClientListener.h"
 
-#include "server/ClientProxy.h"
-#include "server/ClientProxyUnknown.h"
+#include "base/IEventQueue.h"
+#include "base/Log.h"
 #include "inputleap/PacketStreamFilter.h"
 #include "net/IDataSocket.h"
 #include "net/IListenSocket.h"
 #include "net/ISocketFactory.h"
 #include "net/XSocket.h"
-#include "base/Log.h"
-#include "base/IEventQueue.h"
+#include "server/ClientProxy.h"
+#include "server/ClientProxyUnknown.h"
 
 namespace inputleap {
 
 ClientListener::ClientListener(const NetworkAddress& address,
-                               std::unique_ptr<ISocketFactory> socket_factory,
-                IEventQueue* events,
+                               std::unique_ptr<ISocketFactory> socket_factory, IEventQueue* events,
                                ConnectionSecurityLevel security_level) :
     socket_factory_{std::move(socket_factory)},
     m_server(nullptr),
@@ -45,18 +44,16 @@ ClientListener::ClientListener(const NetworkAddress& address,
 
         // setup event handler
         m_events->add_handler(EventType::LISTEN_SOCKET_CONNECTING, listen_->get_event_target(),
-                              [this](const auto& e){ handle_client_connecting(); });
+                              [this](const auto& e) { handle_client_connecting(); });
 
         // bind listen address
         LOG_DEBUG1("binding listen socket");
         listen_->bind(address);
-    }
-    catch (XSocketAddressInUse&) {
+    } catch (XSocketAddressInUse&) {
         cleanupListenSocket();
         socket_factory_.reset();
         throw;
-    }
-    catch (XBase&) {
+    } catch (XBase&) {
         cleanupListenSocket();
         socket_factory_.reset();
         throw;
@@ -88,15 +85,13 @@ ClientListener::~ClientListener()
     cleanupClientSockets();
 }
 
-void
-ClientListener::setServer(Server* server)
+void ClientListener::setServer(Server* server)
 {
     assert(server != nullptr);
     m_server = server;
 }
 
-ClientProxy*
-ClientListener::getNextClient()
+ClientProxy* ClientListener::getNextClient()
 {
     ClientProxy* client = nullptr;
     if (!m_waitingClients.empty()) {
@@ -120,10 +115,7 @@ void ClientListener::handle_client_connecting()
     client_sockets_.insert(std::move(socket));
 
     m_events->add_handler(EventType::CLIENT_LISTENER_ACCEPTED, socket_ptr->get_event_target(),
-                          [this, socket_ptr](const auto& e)
-    {
-        handle_client_accepted(socket_ptr);
-    });
+                          [this, socket_ptr](const auto& e) { handle_client_accepted(socket_ptr); });
 
     // When using non SSL, server accepts clients immediately, while SSL
     // has to call secure accept which may require retry
@@ -145,16 +137,15 @@ void ClientListener::handle_client_accepted(IDataSocket* socket_ptr)
     assert(m_server != nullptr);
 
     // create proxy for unknown client
-    ClientProxyUnknown* client = new ClientProxyUnknown(std::move(stream), 30.0, m_server,
-                                                        m_events);
+    ClientProxyUnknown* client = new ClientProxyUnknown(std::move(stream), 30.0, m_server, m_events);
 
     m_newClients.insert(client);
 
     // watch for events from unknown client
     m_events->add_handler(EventType::CLIENT_PROXY_UNKNOWN_SUCCESS, client,
-                          [this, client](const auto& e){ handle_unknown_client(client); });
+                          [this, client](const auto& e) { handle_unknown_client(client); });
     m_events->add_handler(EventType::CLIENT_PROXY_UNKNOWN_FAILURE, client,
-                          [this, client](const auto& e){ handle_unknown_client(client); });
+                          [this, client](const auto& e) { handle_unknown_client(client); });
 }
 
 void ClientListener::handle_unknown_client(ClientProxyUnknown* unknownClient)
@@ -203,15 +194,13 @@ void ClientListener::handle_client_disconnected(ClientProxy* client)
     }
 }
 
-void
-ClientListener::cleanupListenSocket()
+void ClientListener::cleanupListenSocket()
 {
     m_events->remove_handler(EventType::LISTEN_SOCKET_CONNECTING, listen_->get_event_target());
     listen_.reset();
 }
 
-void
-ClientListener::cleanupClientSockets()
+void ClientListener::cleanupClientSockets()
 {
     client_sockets_.clear();
 }

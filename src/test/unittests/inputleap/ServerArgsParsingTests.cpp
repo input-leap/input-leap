@@ -27,14 +27,12 @@ using ::testing::_;
 using ::testing::Invoke;
 using ::testing::NiceMock;
 
-bool
-server_stubParseGenericArgs(int, const char* const*, int&)
+bool server_stubParseGenericArgs(int, const char* const*, int&)
 {
     return false;
 }
 
-bool
-server_stubCheckUnexpectedArgs()
+bool server_stubCheckUnexpectedArgs()
 {
     return false;
 }
@@ -46,7 +44,7 @@ TEST(ServerArgsParsingTests, parseServerArgs_addressArg_set_address)
     ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
     ServerArgs serverArgs;
     const int argc = 3;
-    const char* kAddressCmd[argc] = { "stub", "--address", "mock_address" };
+    const char* kAddressCmd[argc] = {"stub", "--address", "mock_address"};
 
     argParser.parseServerArgs(serverArgs, argc, kAddressCmd);
 
@@ -60,7 +58,7 @@ TEST(ServerArgsParsingTests, parseServerArgs_configArg_setConfigFile)
     ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
     ServerArgs serverArgs;
     const int argc = 3;
-    const char* kConfigCmd[argc] = { "stub", "--config", "mock_configFile" };
+    const char* kConfigCmd[argc] = {"stub", "--config", "mock_configFile"};
 
     argParser.parseServerArgs(serverArgs, argc, kConfigCmd);
 

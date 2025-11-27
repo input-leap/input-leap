@@ -28,7 +28,7 @@ This interface defines the methods common to all screen savers.
 */
 class IScreenSaver {
 public:
-    virtual ~IScreenSaver() { }
+    virtual ~IScreenSaver() {}
 
     // note -- the c'tor/d'tor must *not* enable/disable the screen saver
 

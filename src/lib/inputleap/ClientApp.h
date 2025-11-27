@@ -18,11 +18,11 @@
 
 #pragma once
 
+#include "ClientArgs.h"
 #include "Fwd.h"
 #include "base/Fwd.h"
-#include "net/Fwd.h"
 #include "inputleap/App.h"
-#include "ClientArgs.h"
+#include "net/Fwd.h"
 
 namespace inputleap {
 
@@ -46,8 +46,12 @@ public:
     const char* daemonInfo() const override;
 
     // TODO: move to server only (not supported on client)
-    void loadConfig() override { }
-    bool loadConfig(const std::string& pathname) override { (void) pathname; return false; }
+    void loadConfig() override {}
+    bool loadConfig(const std::string& pathname) override
+    {
+        (void) pathname;
+        return false;
+    }
 
     int foregroundStartup(int argc, char** argv) override;
     int standardStartup(int argc, char** argv) override;
@@ -65,7 +69,7 @@ public:
     void handle_client_failed(const Event& e);
     void handle_client_disconnected();
     Client* openClient(const std::string& name, const NetworkAddress& address,
-                inputleap::Screen* screen);
+                       inputleap::Screen* screen);
     void closeClient(Client* client);
     bool startClient();
     void stopClient();

@@ -35,7 +35,7 @@ namespace inputleap {
 //! Win32 implementation of IArchDaemon
 class ArchDaemonWindows : public IArchDaemon {
 public:
-    typedef int            (*RunFunc)(void);
+    typedef int (*RunFunc)(void);
 
     ArchDaemonWindows();
     virtual ~ArchDaemonWindows();
@@ -79,11 +79,8 @@ public:
     static UINT getDaemonQuitMessage();
 
     // IArchDaemon overrides
-    virtual void installDaemon(const char* name,
-                            const char* description,
-                            const char* pathname,
-                            const char* commandLine,
-                            const char* dependencies);
+    virtual void installDaemon(const char* name, const char* description, const char* pathname,
+                               const char* commandLine, const char* dependencies);
     virtual void uninstallDaemon(const char* name);
     virtual void installDaemon();
     virtual void uninstallDaemon();
@@ -117,14 +114,14 @@ private:
 private:
     class XArchDaemonRunFailed {
     public:
-        XArchDaemonRunFailed(int result) : m_result(result) { }
+        XArchDaemonRunFailed(int result) : m_result(result) {}
 
     public:
         int m_result;
     };
 
 private:
-    static ArchDaemonWindows*    s_daemon;
+    static ArchDaemonWindows* s_daemon;
 
     std::mutex service_mutex_;
     std::condition_variable service_cv_;
@@ -146,12 +143,7 @@ private:
 #define DEFAULT_DAEMON_NAME _T("InputLeap")
 #define DEFAULT_DAEMON_INFO _T("Manages the InputLeap foreground processes.")
 
-static const TCHAR* const g_daemonKeyPath[] = {
-    _T("SOFTWARE"),
-    _T("The InputLeap Project"),
-    _T("InputLeap"),
-    _T("Service"),
-    nullptr
-};
+static const TCHAR* const g_daemonKeyPath[] = {_T("SOFTWARE"), _T("The InputLeap Project"),
+                                               _T("InputLeap"), _T("Service"), nullptr};
 
 } // namespace inputleap

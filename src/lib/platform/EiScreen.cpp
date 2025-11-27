@@ -16,23 +16,23 @@
 
 #include "platform/EiScreen.h"
 
-#include "platform/EiEventQueueBuffer.h"
-#include "platform/PortalRemoteDesktop.h"
-#include "platform/PortalInputCapture.h"
-#include "platform/EiKeyState.h"
+#include "arch/Arch.h"
+#include "arch/XArch.h"
+#include "base/IEventQueue.h"
+#include "base/Log.h"
+#include "base/Stopwatch.h"
 #include "inputleap/Clipboard.h"
 #include "inputleap/KeyMap.h"
 #include "inputleap/XScreen.h"
-#include "arch/XArch.h"
-#include "arch/Arch.h"
-#include "base/Log.h"
-#include "base/Stopwatch.h"
-#include "base/IEventQueue.h"
+#include "platform/EiEventQueueBuffer.h"
+#include "platform/EiKeyState.h"
+#include "platform/PortalInputCapture.h"
+#include "platform/PortalRemoteDesktop.h"
 
-#include <cmath>
-#include <cstring>
-#include <cstdlib>
 #include <algorithm>
+#include <cmath>
+#include <cstdlib>
+#include <cstring>
 #include <unistd.h>
 #include <vector>
 
@@ -43,21 +43,17 @@ struct ScrollRemainder {
 namespace inputleap {
 
 EiScreen::EiScreen(bool is_primary, IEventQueue* events, bool use_portal) :
-    is_primary_(is_primary),
-    events_(events),
-    w_(1),
-    h_(1),
-    is_on_screen_(is_primary)
+    is_primary_(is_primary), events_(events), w_(1), h_(1), is_on_screen_(is_primary)
 {
     init_ei();
     key_state_ = new EiKeyState(this, events);
     // install event handlers
     events_->add_handler(EventType::SYSTEM, events_->getSystemTarget(),
-                         [this](const auto& e){ handle_system_event(e); });
+                         [this](const auto& e) { handle_system_event(e); });
 
     if (use_portal) {
         events_->add_handler(EventType::EI_SCREEN_CONNECTED_TO_EIS, get_event_target(),
-                             [this](const auto& e){ handle_connected_to_eis_event(e); });
+                             [this](const auto& e) { handle_connected_to_eis_event(e); });
         if (is_primary) {
 #if HAVE_LIBPORTAL_INPUTCAPTURE
             portal_input_capture_ = new PortalInputCapture(this, events_);
@@ -66,7 +62,7 @@ EiScreen::EiScreen(bool is_primary, IEventQueue* events, bool use_portal) :
 #endif
         } else {
             events_->add_handler(EventType::EI_SESSION_CLOSED, get_event_target(),
-                                 [this](const auto& e){ handle_portal_session_closed(e); });
+                                 [this](const auto& e) { handle_portal_session_closed(e); });
             portal_remote_desktop_ = new PortalRemoteDesktop(this, events_);
         }
     } else {
@@ -94,27 +90,25 @@ EiScreen::~EiScreen()
 #endif
 }
 
-void EiScreen::handle_ei_log_event(ei* ei,
-                                   ei_log_priority priority,
-                                   const char* message,
+void EiScreen::handle_ei_log_event(ei* ei, ei_log_priority priority, const char* message,
                                    ei_log_context* context)
 {
     switch (priority) {
-        case EI_LOG_PRIORITY_DEBUG:
-            LOG_DEBUG3("ei: %s", message);
-            break;
-        case EI_LOG_PRIORITY_INFO:
-            LOG_INFO("ei: %s", message);
-            break;
-        case EI_LOG_PRIORITY_WARNING:
-            LOG_WARN("ei: %s", message);
-            break;
-        case EI_LOG_PRIORITY_ERROR:
-            LOG_ERR("ei: %s", message);
-            break;
-        default:
-            LOG_PRINT("ei: %s", message);
-            break;
+    case EI_LOG_PRIORITY_DEBUG:
+        LOG_DEBUG3("ei: %s", message);
+        break;
+    case EI_LOG_PRIORITY_INFO:
+        LOG_INFO("ei: %s", message);
+        break;
+    case EI_LOG_PRIORITY_WARNING:
+        LOG_WARN("ei: %s", message);
+        break;
+    case EI_LOG_PRIORITY_ERROR:
+        LOG_ERR("ei: %s", message);
+        break;
+    default:
+        LOG_PRINT("ei: %s", message);
+        break;
     }
 }
 
@@ -138,25 +132,25 @@ void EiScreen::init_ei()
 void EiScreen::cleanup_ei()
 {
     if (ei_pointer_) {
-            free(ei_device_get_user_data(ei_pointer_));
-            ei_device_set_user_data(ei_pointer_, nullptr);
-            ei_pointer_ = ei_device_unref(ei_pointer_);
+        free(ei_device_get_user_data(ei_pointer_));
+        ei_device_set_user_data(ei_pointer_, nullptr);
+        ei_pointer_ = ei_device_unref(ei_pointer_);
     }
     if (ei_keyboard_) {
-            free(ei_device_get_user_data(ei_keyboard_));
-            ei_device_set_user_data(ei_keyboard_, nullptr);
-            ei_keyboard_ = ei_device_unref(ei_keyboard_);
+        free(ei_device_get_user_data(ei_keyboard_));
+        ei_device_set_user_data(ei_keyboard_, nullptr);
+        ei_keyboard_ = ei_device_unref(ei_keyboard_);
     }
     if (ei_abs_) {
-            free(ei_device_get_user_data(ei_abs_));
-            ei_device_set_user_data(ei_abs_, nullptr);
-            ei_abs_ = ei_device_unref(ei_abs_);
+        free(ei_device_get_user_data(ei_abs_));
+        ei_device_set_user_data(ei_abs_, nullptr);
+        ei_abs_ = ei_device_unref(ei_abs_);
     }
     ei_seat_unref(ei_seat_);
     for (auto it = ei_devices_.begin(); it != ei_devices_.end(); it++) {
-            free(ei_device_get_user_data(*it));
-            ei_device_set_user_data(*it, nullptr);
-            ei_device_unref(*it);
+        free(ei_device_get_user_data(*it));
+        ei_device_set_user_data(*it, nullptr);
+        ei_device_unref(*it);
     }
     ei_devices_.clear();
     ei_ = ei_unref(ei_);
@@ -206,7 +200,7 @@ std::uint32_t EiScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 
     auto set = hotkeys_.find(key);
     if (set == hotkeys_.end()) {
-        hotkeys_.emplace(key, HotKeySet { key });
+        hotkeys_.emplace(key, HotKeySet{key});
         set = hotkeys_.find(key);
     }
     set->second.add_item(HotKeyItem(mask, id));
@@ -245,21 +239,28 @@ bool EiScreen::isAnyMouseButtonDown(uint32_t& buttonID) const
 
 void EiScreen::getCursorCenter(int32_t& x, int32_t& y) const
 {
-    x = x_ + w_/2;
-    y = y_ + h_/2;
+    x = x_ + w_ / 2;
+    y = y_ + h_ / 2;
 }
 
 void EiScreen::fakeMouseButton(ButtonID button, bool press)
 {
     uint32_t code;
 
-    if (!ei_pointer_)
+    if (!ei_pointer_) {
         return;
+    }
 
     switch (button) {
-    case kButtonLeft:   code = 0x110; break; // BTN_LEFT
-    case kButtonMiddle: code = 0x112; break; // BTN_MIDDLE
-    case kButtonRight:  code = 0x111; break; // BTN_RIGHT
+    case kButtonLeft:
+        code = 0x110;
+        break; // BTN_LEFT
+    case kButtonMiddle:
+        code = 0x112;
+        break; // BTN_MIDDLE
+    case kButtonRight:
+        code = 0x111;
+        break; // BTN_RIGHT
     default:
         code = 0x110 + (button - 1);
         break;
@@ -278,8 +279,9 @@ void EiScreen::fakeMouseMove(int32_t x, int32_t y)
         return;
     }
 
-    if (!ei_abs_)
+    if (!ei_abs_) {
         return;
+    }
 
     ei_device_pointer_motion_absolute(ei_abs_, x, y);
     ei_device_frame(ei_abs_, ei_now(ei_));
@@ -287,8 +289,9 @@ void EiScreen::fakeMouseMove(int32_t x, int32_t y)
 
 void EiScreen::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
 {
-    if (!ei_pointer_)
+    if (!ei_pointer_) {
         return;
+    }
 
     ei_device_pointer_motion(ei_pointer_, dx, dy);
     ei_device_frame(ei_pointer_, ei_now(ei_));
@@ -296,8 +299,9 @@ void EiScreen::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
 
 void EiScreen::fakeMouseWheel(int32_t xDelta, int32_t yDelta) const
 {
-    if (!ei_pointer_)
+    if (!ei_pointer_) {
         return;
+    }
 
     // libEI and InputLeap seem to use opposite directions, so we have
     // to send EI the opposite of the value received if we want to remain
@@ -308,8 +312,9 @@ void EiScreen::fakeMouseWheel(int32_t xDelta, int32_t yDelta) const
 
 void EiScreen::fakeKey(uint32_t keycode, bool is_down) const
 {
-    if (!ei_keyboard_)
+    if (!ei_keyboard_) {
         return;
+    }
 
     auto xkb_keycode = keycode + 8;
     key_state_->update_xkb_state(xkb_keycode, is_down);
@@ -346,14 +351,15 @@ void EiScreen::enter()
     }
 #if HAVE_LIBPORTAL_INPUTCAPTURE
     else {
-        LOG_DEBUG("Releasing input capture at (cursor_x_,cursor_y_) = (%i,%i)",
-             cursor_x_, cursor_y_);
+        LOG_DEBUG("Releasing input capture at (cursor_x_,cursor_y_) = (%i,%i)", cursor_x_,
+                  cursor_y_);
         portal_input_capture_->release(cursor_x_, cursor_y_);
     }
 #endif
 }
 
-bool EiScreen::canLeave() {
+bool EiScreen::canLeave()
+{
     return true;
 }
 
@@ -399,8 +405,7 @@ void EiScreen::screensaver(bool activate)
     // FIXME
 }
 
-void
-EiScreen::resetOptions()
+void EiScreen::resetOptions()
 {
     // Should reset options to neutral, see setOptions().
     // We don't have ei-specific options, nothing to do here
@@ -429,7 +434,7 @@ void EiScreen::update_shape()
     y_ = std::numeric_limits<uint32_t>::max();
     for (auto it = ei_devices_.begin(); it != ei_devices_.end(); it++) {
         auto idx = 0;
-        struct ei_region *r;
+        struct ei_region* r;
         while ((r = ei_device_get_region(*it, idx++)) != nullptr) {
             x_ = std::min(ei_region_get_x(r), x_);
             y_ = std::min(ei_region_get_y(r), y_);
@@ -445,7 +450,7 @@ void EiScreen::update_shape()
     send_event(EventType::SCREEN_SHAPE_CHANGED, nullptr);
 }
 
-void EiScreen::add_device(struct ei_device *device)
+void EiScreen::add_device(struct ei_device* device)
 {
     LOG_DEBUG("adding device %s", ei_device_get_name(device));
 
@@ -455,8 +460,7 @@ void EiScreen::add_device(struct ei_device *device)
     // route: one device for each capability. Note this may be the same device
     // if the first device comes with multiple capabilities.
 
-    if (!ei_pointer_ &&
-        ei_device_has_capability(device, EI_DEVICE_CAP_POINTER) &&
+    if (!ei_pointer_ && ei_device_has_capability(device, EI_DEVICE_CAP_POINTER) &&
         ei_device_has_capability(device, EI_DEVICE_CAP_BUTTON) &&
         ei_device_has_capability(device, EI_DEVICE_CAP_SCROLL)) {
         ei_pointer_ = ei_device_ref(device);
@@ -465,7 +469,7 @@ void EiScreen::add_device(struct ei_device *device)
     if (!ei_keyboard_ && ei_device_has_capability(device, EI_DEVICE_CAP_KEYBOARD)) {
         ei_keyboard_ = ei_device_ref(device);
 
-        struct ei_keymap *keymap = ei_device_keyboard_get_keymap(device);
+        struct ei_keymap* keymap = ei_device_keyboard_get_keymap(device);
         if (keymap && ei_keymap_get_type(keymap) == EI_KEYMAP_TYPE_XKB) {
             int fd = ei_keymap_get_fd(keymap);
             size_t len = ei_keymap_get_size(keymap);
@@ -476,14 +480,14 @@ void EiScreen::add_device(struct ei_device *device)
             // Where the EIS implementation does not tell us, we just default to
             // whatever libxkbcommon thinks is default. At least this way we can
             // influence with env vars what we get
-            LOG_WARN("keyboard device %s does not have a keymap, we are guessing", ei_device_get_name(device));
+            LOG_WARN("keyboard device %s does not have a keymap, we are guessing",
+                     ei_device_get_name(device));
             key_state_->init_default_keymap();
         }
         key_state_->updateKeyMap();
     }
 
-    if (!ei_abs_ &&
-        ei_device_has_capability(device, EI_DEVICE_CAP_POINTER_ABSOLUTE) &&
+    if (!ei_abs_ && ei_device_has_capability(device, EI_DEVICE_CAP_POINTER_ABSOLUTE) &&
         ei_device_has_capability(device, EI_DEVICE_CAP_BUTTON) &&
         ei_device_has_capability(device, EI_DEVICE_CAP_SCROLL)) {
         ei_abs_ = ei_device_ref(device);
@@ -494,16 +498,19 @@ void EiScreen::add_device(struct ei_device *device)
     update_shape();
 }
 
-void EiScreen::remove_device(struct ei_device *device)
+void EiScreen::remove_device(struct ei_device* device)
 {
     LOG_DEBUG("removing device %s", ei_device_get_name(device));
 
-    if (device == ei_pointer_)
+    if (device == ei_pointer_) {
         ei_pointer_ = ei_device_unref(ei_pointer_);
-    if (device == ei_keyboard_)
+    }
+    if (device == ei_keyboard_) {
         ei_keyboard_ = ei_device_unref(ei_keyboard_);
-    if (device == ei_abs_)
+    }
+    if (device == ei_abs_) {
         ei_abs_ = ei_device_unref(ei_abs_);
+    }
 
     for (auto it = ei_devices_.begin(); it != ei_devices_.end(); it++) {
         if (*it == device) {
@@ -525,20 +532,19 @@ ButtonID EiScreen::map_button_from_evdev(ei_event* event) const
 {
     uint32_t button = ei_event_button_get_button(event);
 
-    switch (button)
-    {
-        case 0x110:
-            return kButtonLeft;
-        case 0x111:
-            return kButtonRight;
-        case 0x112:
-            return kButtonMiddle;
-        case 0x113:
-            return kButtonExtra0;
-        case 0x114:
-            return kButtonExtra1;
-        default:
-            return kButtonNone;
+    switch (button) {
+    case 0x110:
+        return kButtonLeft;
+    case 0x111:
+        return kButtonRight;
+    case 0x112:
+        return kButtonMiddle;
+    case 0x113:
+        return kButtonExtra0;
+    case 0x114:
+        return kButtonExtra1;
+    default:
+        return kButtonNone;
     }
 
     return kButtonNone;
@@ -557,7 +563,8 @@ bool EiScreen::on_hotkey(KeyID keyid, bool is_pressed, KeyModifierMask mask)
     // key combinations may not work correctly, more effort is needed here.
     auto id = it->second.find_by_mask(mask);
     if (id != 0) {
-        EventType type = is_pressed ? EventType::PRIMARY_SCREEN_HOTKEY_DOWN : EventType::PRIMARY_SCREEN_HOTKEY_UP;
+        EventType type = is_pressed ? EventType::PRIMARY_SCREEN_HOTKEY_DOWN
+                                    : EventType::PRIMARY_SCREEN_HOTKEY_UP;
         events_->add_event(type, get_event_target(), create_event_data<HotKeyInfo>(id));
         return true;
     }
@@ -576,15 +583,15 @@ void EiScreen::on_key_event(ei_event* event)
     key_state_->update_xkb_state(keyval, pressed);
     KeyModifierMask mask = key_state_->pollActiveModifiers();
 
-    LOG_DEBUG1("event: Key %s keycode=%d keyid=%d mask=0x%x", pressed ? "press" : "release", keycode, keyid, mask);
+    LOG_DEBUG1("event: Key %s keycode=%d keyid=%d mask=0x%x", pressed ? "press" : "release",
+               keycode, keyid, mask);
 
     if (is_primary_ && on_hotkey(keyid, pressed, mask)) {
         return;
     }
 
     if (keyid != kKeyNone) {
-        key_state_->sendKeyEvent(get_event_target(), pressed, false, keyid,
-                                 mask, 1, keybutton);
+        key_state_->sendKeyEvent(get_event_target(), pressed, false, keyid, mask, 1, keybutton);
     }
 }
 
@@ -604,8 +611,7 @@ void EiScreen::on_button_event(ei_event* event)
         return;
     }
 
-    send_event(pressed ? EventType::PRIMARY_SCREEN_BUTTON_DOWN
-                       : EventType::PRIMARY_SCREEN_BUTTON_UP,
+    send_event(pressed ? EventType::PRIMARY_SCREEN_BUTTON_DOWN : EventType::PRIMARY_SCREEN_BUTTON_UP,
                create_event_data<ButtonInfo>(ButtonInfo{button, mask}));
 }
 
@@ -618,17 +624,18 @@ void EiScreen::on_pointer_scroll_event(ei_event* event)
     // convert between the two and keep the remainders because
     // we will very likely get subpixel scroll events.
     // This means a single pixel is 120/PIXEL_TO_WHEEL_RATIO in wheel values.
-    const int PIXEL_TO_WHEEL_RATIO = 120/PIXELS_PER_WHEEL_CLICK;
+    const int PIXEL_TO_WHEEL_RATIO = 120 / PIXELS_PER_WHEEL_CLICK;
 
     assert(is_primary_);
 
     double dx = ei_event_scroll_get_dx(event);
     double dy = ei_event_scroll_get_dy(event);
-    struct ei_device *device = ei_event_get_device(event);
+    struct ei_device* device = ei_event_get_device(event);
 
     LOG_DEBUG1("event: Scroll (%.2f, %.2f)", dx, dy);
 
-    struct ScrollRemainder *remainder = static_cast<struct ScrollRemainder*>(ei_device_get_user_data(device));
+    struct ScrollRemainder* remainder =
+        static_cast<struct ScrollRemainder*>(ei_device_get_user_data(device));
     if (!remainder) {
         remainder = new ScrollRemainder();
         ei_device_set_user_data(device, remainder);
@@ -647,10 +654,11 @@ void EiScreen::on_pointer_scroll_event(ei_event* event)
     // libEI and InputLeap seem to use opposite directions, so we have
     // to send the opposite of the value reported by EI if we want to
     // remain compatible with other platforms (including X11).
-    if (x != 0 || y != 0)
+    if (x != 0 || y != 0) {
         send_event(EventType::PRIMARY_SCREEN_WHEEL,
-                   create_event_data<WheelInfo>(WheelInfo{(int32_t)-x * PIXEL_TO_WHEEL_RATIO,
-                                                          (int32_t)-y * PIXEL_TO_WHEEL_RATIO}));
+                   create_event_data<WheelInfo>(WheelInfo{(int32_t) -x * PIXEL_TO_WHEEL_RATIO,
+                                                          (int32_t) -y * PIXEL_TO_WHEEL_RATIO}));
+    }
 
     remainder->x = rx;
     remainder->y = ry;
@@ -672,8 +680,7 @@ void EiScreen::on_pointer_scroll_discrete_event(ei_event* event)
     // libEI and InputLeap seem to use opposite directions, so we have
     // to send the opposite of the value reported by EI if we want to
     // remain compatible with other platforms (including X11).
-    send_event(EventType::PRIMARY_SCREEN_WHEEL,
-               create_event_data<WheelInfo>(WheelInfo{-dx, -dy}));
+    send_event(EventType::PRIMARY_SCREEN_WHEEL, create_event_data<WheelInfo>(WheelInfo{-dx, -dy}));
 }
 
 void EiScreen::on_motion_event(ei_event* event)
@@ -685,22 +692,23 @@ void EiScreen::on_motion_event(ei_event* event)
     double dy = ei_event_pointer_get_dy(event);
 
     if (is_on_screen_) {
-        LOG_DEBUG("on_motion_event on primary at (cursor_x_,cursor_y_)=(%i,%i)",
-             cursor_x_, cursor_y_);
+        LOG_DEBUG("on_motion_event on primary at (cursor_x_,cursor_y_)=(%i,%i)", cursor_x_,
+                  cursor_y_);
         send_event(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY,
                    create_event_data<MotionInfo>(MotionInfo{cursor_x_, cursor_y_}));
 
 #if HAVE_LIBPORTAL_INPUTCAPTURE
-         if (portal_input_capture_->is_active()) {
-             portal_input_capture_->release();
-         }
+        if (portal_input_capture_->is_active()) {
+            portal_input_capture_->release();
+        }
 #endif
     } else {
         buffer_dx += dx;
         buffer_dy += dy;
         auto pixel_dx = static_cast<std::int32_t>(buffer_dx);
         auto pixel_dy = static_cast<std::int32_t>(buffer_dy);
-        LOG_DEBUG2("on_motion_event(buffer) on secondary at (dx,dy)=(%0.2f,%0.2f)", buffer_dx, buffer_dy);
+        LOG_DEBUG2("on_motion_event(buffer) on secondary at (dx,dy)=(%0.2f,%0.2f)", buffer_dx,
+                   buffer_dy);
         if (pixel_dx || pixel_dy) {
             LOG_DEBUG("on_motion_event on secondary at (dx,dy)=(%d,%d)", pixel_dx, pixel_dy);
             send_event(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY,
@@ -727,7 +735,7 @@ void EiScreen::handle_connected_to_eis_event(const Event& event)
     }
 }
 
-void EiScreen::handle_portal_session_closed(const Event &event)
+void EiScreen::handle_portal_session_closed(const Event& event)
 {
     // Portal may or may EI_EVENT_DISCONNECT us before sending the DBus Closed signal
     // Let's clean up either way.
@@ -743,7 +751,7 @@ void EiScreen::handle_system_event(const Event& sysevent)
     // Only one ei_dispatch per system event, see the comment in
     // EiEventQueueBuffer::addEvent
     ei_dispatch(ei_);
-    struct ei_event * event;
+    struct ei_event* event;
 
     while ((event = ei_get_event(ei_)) != nullptr) {
         auto type = ei_event_get_type(event);
@@ -751,101 +759,99 @@ void EiScreen::handle_system_event(const Event& sysevent)
         auto device = ei_event_get_device(event);
 
         switch (type) {
-            case EI_EVENT_CONNECT:
-                LOG_DEBUG("connected to EIS");
-                break;
-            case EI_EVENT_SEAT_ADDED:
-                if (!ei_seat_) {
-                    ei_seat_ = ei_seat_ref(seat);
-                    ei_seat_bind_capabilities(ei_seat_, EI_DEVICE_CAP_POINTER,
-                                              EI_DEVICE_CAP_POINTER_ABSOLUTE,
-                                              EI_DEVICE_CAP_KEYBOARD,
-                                              EI_DEVICE_CAP_BUTTON,
-                                              EI_DEVICE_CAP_SCROLL,
-                                              nullptr);
-                    LOG_DEBUG("using seat %s", ei_seat_get_name(ei_seat_));
-                    // we don't care about touch
-                }
-                break;
-            case EI_EVENT_DEVICE_ADDED:
-                if (seat == ei_seat_) {
-                    add_device(device);
-                } else {
-                    LOG_INFO("seat %s is ignored", ei_seat_get_name(ei_seat_));
-                }
-                break;
-            case EI_EVENT_DEVICE_REMOVED:
-                remove_device(device);
-                break;
-            case EI_EVENT_SEAT_REMOVED:
-                if (seat == ei_seat_) {
-                    ei_seat_ = ei_seat_unref(ei_seat_);
-                }
-                break;
-            case EI_EVENT_DISCONNECT:
-                // We're using libei which emulates the various seat/device remove events
-                // so by the time we get here our EiScreen should be in a neutral state.
-                //
-                // We don't do anything here, we let the portal's Session.Closed signal
-                // handle the rest.
-                LOG_WARN("disconnected from EIS");
-                disconnected = true;
-                break;
-            case EI_EVENT_DEVICE_PAUSED:
-                LOG_DEBUG("device %s is paused", ei_device_get_name(device));
-                break;
-            case EI_EVENT_DEVICE_RESUMED:
-                LOG_DEBUG("device %s is resumed", ei_device_get_name(device));
-                if (!is_primary_ && is_on_screen_) {
-                    ei_device_start_emulating(device, ++sequence_number_);
-                }
-                break;
-            case EI_EVENT_KEYBOARD_MODIFIERS:
-                // FIXME
-                break;
+        case EI_EVENT_CONNECT:
+            LOG_DEBUG("connected to EIS");
+            break;
+        case EI_EVENT_SEAT_ADDED:
+            if (!ei_seat_) {
+                ei_seat_ = ei_seat_ref(seat);
+                ei_seat_bind_capabilities(ei_seat_, EI_DEVICE_CAP_POINTER,
+                                          EI_DEVICE_CAP_POINTER_ABSOLUTE, EI_DEVICE_CAP_KEYBOARD,
+                                          EI_DEVICE_CAP_BUTTON, EI_DEVICE_CAP_SCROLL, nullptr);
+                LOG_DEBUG("using seat %s", ei_seat_get_name(ei_seat_));
+                // we don't care about touch
+            }
+            break;
+        case EI_EVENT_DEVICE_ADDED:
+            if (seat == ei_seat_) {
+                add_device(device);
+            } else {
+                LOG_INFO("seat %s is ignored", ei_seat_get_name(ei_seat_));
+            }
+            break;
+        case EI_EVENT_DEVICE_REMOVED:
+            remove_device(device);
+            break;
+        case EI_EVENT_SEAT_REMOVED:
+            if (seat == ei_seat_) {
+                ei_seat_ = ei_seat_unref(ei_seat_);
+            }
+            break;
+        case EI_EVENT_DISCONNECT:
+            // We're using libei which emulates the various seat/device remove events
+            // so by the time we get here our EiScreen should be in a neutral state.
+            //
+            // We don't do anything here, we let the portal's Session.Closed signal
+            // handle the rest.
+            LOG_WARN("disconnected from EIS");
+            disconnected = true;
+            break;
+        case EI_EVENT_DEVICE_PAUSED:
+            LOG_DEBUG("device %s is paused", ei_device_get_name(device));
+            break;
+        case EI_EVENT_DEVICE_RESUMED:
+            LOG_DEBUG("device %s is resumed", ei_device_get_name(device));
+            if (!is_primary_ && is_on_screen_) {
+                ei_device_start_emulating(device, ++sequence_number_);
+            }
+            break;
+        case EI_EVENT_KEYBOARD_MODIFIERS:
+            // FIXME
+            break;
 
-            // events below are for a receiver context (barriers)
-            case EI_EVENT_FRAME:
-                break;
-            case EI_EVENT_DEVICE_START_EMULATING:
-                LOG_DEBUG("device %s starts emulating", ei_device_get_name(device));
-                break;
-            case EI_EVENT_DEVICE_STOP_EMULATING:
-                LOG_DEBUG("device %s stops emulating", ei_device_get_name(device));
-                break;
-            case EI_EVENT_KEYBOARD_KEY:
-                on_key_event(event);
-                break;
-            case EI_EVENT_BUTTON_BUTTON:
-                on_button_event(event);
-                break;
-            case EI_EVENT_POINTER_MOTION:
-                on_motion_event(event);
-                break;
-            case EI_EVENT_POINTER_MOTION_ABSOLUTE:
-                on_abs_motion_event(event);
-                break;
-            case EI_EVENT_TOUCH_UP:
-                break;
-            case EI_EVENT_TOUCH_MOTION:
-                break;
-            case EI_EVENT_TOUCH_DOWN:
-                break;
-            case EI_EVENT_SCROLL_DELTA:
-                on_pointer_scroll_event(event);
-                break;
-            case EI_EVENT_SCROLL_DISCRETE:
-                on_pointer_scroll_discrete_event(event);
-                break;
-            case EI_EVENT_SCROLL_STOP:
-            case EI_EVENT_SCROLL_CANCEL:
-                break;
+        // events below are for a receiver context (barriers)
+        case EI_EVENT_FRAME:
+            break;
+        case EI_EVENT_DEVICE_START_EMULATING:
+            LOG_DEBUG("device %s starts emulating", ei_device_get_name(device));
+            break;
+        case EI_EVENT_DEVICE_STOP_EMULATING:
+            LOG_DEBUG("device %s stops emulating", ei_device_get_name(device));
+            break;
+        case EI_EVENT_KEYBOARD_KEY:
+            on_key_event(event);
+            break;
+        case EI_EVENT_BUTTON_BUTTON:
+            on_button_event(event);
+            break;
+        case EI_EVENT_POINTER_MOTION:
+            on_motion_event(event);
+            break;
+        case EI_EVENT_POINTER_MOTION_ABSOLUTE:
+            on_abs_motion_event(event);
+            break;
+        case EI_EVENT_TOUCH_UP:
+            break;
+        case EI_EVENT_TOUCH_MOTION:
+            break;
+        case EI_EVENT_TOUCH_DOWN:
+            break;
+        case EI_EVENT_SCROLL_DELTA:
+            on_pointer_scroll_event(event);
+            break;
+        case EI_EVENT_SCROLL_DISCRETE:
+            on_pointer_scroll_discrete_event(event);
+            break;
+        case EI_EVENT_SCROLL_STOP:
+        case EI_EVENT_SCROLL_CANCEL:
+            break;
         }
         ei_event_unref(event);
     }
 
-    if (disconnected)
+    if (disconnected) {
         ei_ = ei_unref(ei_);
+    }
 }
 
 void EiScreen::updateButtons()
@@ -859,16 +865,9 @@ IKeyState* EiScreen::getKeyState() const
     return key_state_;
 }
 
-EiScreen::HotKeyItem::HotKeyItem(std::uint32_t mask, std::uint32_t id) :
-    mask_(mask),
-    id_(id)
-{
-}
+EiScreen::HotKeyItem::HotKeyItem(std::uint32_t mask, std::uint32_t id) : mask_(mask), id_(id) {}
 
-EiScreen::HotKeySet::HotKeySet(KeyID key) :
-    id_(key)
-{
-}
+EiScreen::HotKeySet::HotKeySet(KeyID key) : id_(key) {}
 
 bool EiScreen::HotKeySet::remove_by_id(std::uint32_t id)
 {

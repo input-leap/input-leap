@@ -32,14 +32,12 @@ MSWindowsClipboardHTMLConverter::~MSWindowsClipboardHTMLConverter()
     // do nothing
 }
 
-IClipboard::EFormat
-MSWindowsClipboardHTMLConverter::getFormat() const
+IClipboard::EFormat MSWindowsClipboardHTMLConverter::getFormat() const
 {
     return IClipboard::kHTML;
 }
 
-UINT
-MSWindowsClipboardHTMLConverter::getWin32Format() const
+UINT MSWindowsClipboardHTMLConverter::getWin32Format() const
 {
     return m_format;
 }
@@ -48,23 +46,21 @@ std::string MSWindowsClipboardHTMLConverter::doFromIClipboard(const std::string&
 {
     // prepare to CF_HTML format prefix and suffix
     std::string prefix("Version:0.9\r\nStartHTML:0000000105\r\n"
-                    "EndHTML:ZZZZZZZZZZ\r\n"
-                    "StartFragment:XXXXXXXXXX\r\nEndFragment:YYYYYYYYYY\r\n"
-                    "<!DOCTYPE><HTML><BODY><!--StartFragment-->");
+                       "EndHTML:ZZZZZZZZZZ\r\n"
+                       "StartFragment:XXXXXXXXXX\r\nEndFragment:YYYYYYYYYY\r\n"
+                       "<!DOCTYPE><HTML><BODY><!--StartFragment-->");
     std::string suffix("<!--EndFragment--></BODY></HTML>\r\n");
 
     // Get byte offsets for header
-    std::uint32_t StartFragment = (std::uint32_t)prefix.size();
-    std::uint32_t EndFragment = StartFragment + (std::uint32_t)data.size();
+    std::uint32_t StartFragment = (std::uint32_t) prefix.size();
+    std::uint32_t EndFragment = StartFragment + (std::uint32_t) data.size();
     // StartHTML is constant by the design of the prefix
-    std::uint32_t EndHTML = EndFragment + (std::uint32_t)suffix.size();
+    std::uint32_t EndHTML = EndFragment + (std::uint32_t) suffix.size();
 
     prefix.replace(prefix.find("XXXXXXXXXX"), 10,
-                            inputleap::string::sprintf("%010u", StartFragment));
-    prefix.replace(prefix.find("YYYYYYYYYY"), 10,
-                            inputleap::string::sprintf("%010u", EndFragment));
-    prefix.replace(prefix.find("ZZZZZZZZZZ"), 10,
-                            inputleap::string::sprintf("%010u", EndHTML));
+                   inputleap::string::sprintf("%010u", StartFragment));
+    prefix.replace(prefix.find("YYYYYYYYYY"), 10, inputleap::string::sprintf("%010u", EndFragment));
+    prefix.replace(prefix.find("ZZZZZZZZZZ"), 10, inputleap::string::sprintf("%010u", EndHTML));
 
     // concatenate
     prefix += data;
@@ -76,14 +72,14 @@ std::string MSWindowsClipboardHTMLConverter::doToIClipboard(const std::string& d
 {
     // get fragment start/end args
     std::string startArg = findArg(data, "StartFragment");
-    std::string endArg   = findArg(data, "EndFragment");
+    std::string endArg = findArg(data, "EndFragment");
     if (startArg.empty() || endArg.empty()) {
         return std::string();
     }
 
     // convert args to integers
-    std::int32_t start = (std::int32_t)atoi(startArg.c_str());
-    std::int32_t end   = (std::int32_t)atoi(endArg.c_str());
+    std::int32_t start = (std::int32_t) atoi(startArg.c_str());
+    std::int32_t end = (std::int32_t) atoi(endArg.c_str());
     if (start <= 0 || end <= 0 || start >= end) {
         return std::string();
     }

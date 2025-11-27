@@ -18,13 +18,13 @@
 
 #define INPUTLEAP_TEST_ENV
 
-#include "config.h"
 #include "XWindowsTestsCommon.h"
+#include "config.h"
 
-#include "test/mock/inputleap/MockKeyMap.h"
-#include "test/mock/inputleap/MockEventQueue.h"
-#include "platform/XWindowsKeyState.h"
 #include "base/Log.h"
+#include "platform/XWindowsKeyState.h"
+#include "test/mock/inputleap/MockEventQueue.h"
+#include "test/mock/inputleap/MockKeyMap.h"
 
 #define XK_LATIN1
 #define XK_MISCELLANY
@@ -32,20 +32,15 @@
 
 #include <X11/XKBlib.h>
 
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 #include <errno.h>
 
 namespace inputleap {
 
-class XWindowsKeyStateTests : public ::testing::Test
-{
+class XWindowsKeyStateTests : public ::testing::Test {
 protected:
-
-    void SetUp() override
-    {
-        display_util_.open();
-    }
+    void SetUp() override { display_util_.open(); }
 
     XDisplayOpenUtil display_util_;
 };
@@ -210,8 +205,7 @@ TEST_F(XWindowsKeyStateTests, pollActiveGroup_xkb_areEqual)
         std::int32_t actual = keyState.pollActiveGroup();
 
         ASSERT_EQ(state.group, actual);
-    }
-    else {
+    } else {
         FAIL() << "XkbGetState() returned error " << errno;
     }
 }

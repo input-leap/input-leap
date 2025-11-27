@@ -25,12 +25,10 @@ KeyID IOSXKeyResource::getKeyID(std::uint8_t c)
 {
     if (c == 0) {
         return kKeyNone;
-    }
-    else if (c >= 32 && c < 127) {
+    } else if (c >= 32 && c < 127) {
         // ASCII
         return static_cast<KeyID>(c);
-    }
-    else {
+    } else {
         // handle special keys
         switch (c) {
         case 0x01:
@@ -117,13 +115,13 @@ KeyID IOSXKeyResource::getKeyID(std::uint8_t c)
 
         // get current keyboard script
         TISInputSourceRef isref = TISCopyCurrentKeyboardInputSource();
-        CFArrayRef langs = (CFArrayRef) TISGetInputSourceProperty(isref, kTISPropertyInputSourceLanguages);
-        CFStringEncoding encoding = CFStringConvertIANACharSetNameToEncoding(
-                                        (CFStringRef)CFArrayGetValueAtIndex(langs, 0));
+        CFArrayRef langs = (CFArrayRef) TISGetInputSourceProperty(isref,
+                                                                  kTISPropertyInputSourceLanguages);
+        CFStringEncoding encoding =
+            CFStringConvertIANACharSetNameToEncoding((CFStringRef) CFArrayGetValueAtIndex(langs, 0));
         // convert to unicode
-        CFStringRef cfString =
-            CFStringCreateWithCStringNoCopy(
-                kCFAllocatorDefault, str, encoding, kCFAllocatorNull);
+        CFStringRef cfString = CFStringCreateWithCStringNoCopy(kCFAllocatorDefault, str, encoding,
+                                                               kCFAllocatorNull);
 
         // sometimes CFStringCreate...() returns nullptr (e.g. Apple Korean
         // encoding with char value 214).  if it did then make no key,
@@ -133,8 +131,7 @@ KeyID IOSXKeyResource::getKeyID(std::uint8_t c)
         }
 
         // convert to precomposed
-        CFMutableStringRef mcfString =
-            CFStringCreateMutableCopy(kCFAllocatorDefault, 0, cfString);
+        CFMutableStringRef mcfString = CFStringCreateMutableCopy(kCFAllocatorDefault, 0, cfString);
         CFRelease(cfString);
         CFStringNormalize(mcfString, kCFStringNormalizationFormC);
 
@@ -159,8 +156,7 @@ KeyID IOSXKeyResource::getKeyID(std::uint8_t c)
     }
 }
 
-KeyID
-IOSXKeyResource::unicharToKeyID(UniChar c)
+KeyID IOSXKeyResource::unicharToKeyID(UniChar c)
 {
     switch (c) {
     case 3:

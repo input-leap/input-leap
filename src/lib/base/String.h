@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include <cstdint>
 #include "common/common.h"
+#include <cstdint>
 
 #include <stdarg.h>
 #include <string>
@@ -113,7 +113,7 @@ std::vector<std::string> splitString(std::string string, const char c);
 This class provides case-insensitve comparison functions.
 */
 class CaselessCmp {
-    public:
+public:
     //! Same as less()
     bool operator()(const std::string& a, const std::string& b) const;
 
@@ -124,13 +124,11 @@ class CaselessCmp {
     static bool equal(const std::string& a, const std::string& b);
 
     //! Returns true iff \c a is lexicographically less than \c b
-    static bool cmpLess(const std::string::value_type& a,
-                        const std::string::value_type& b);
+    static bool cmpLess(const std::string::value_type& a, const std::string::value_type& b);
 
     //! Returns true iff \c a is lexicographically equal to \c b
-    static bool cmpEqual(const std::string::value_type& a,
-                         const std::string::value_type& b);
+    static bool cmpEqual(const std::string::value_type& a, const std::string::value_type& b);
 };
 
-}
-}
+} // namespace string
+} // namespace inputleap

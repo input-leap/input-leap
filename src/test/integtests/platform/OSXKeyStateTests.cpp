@@ -16,11 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "test/mock/inputleap/MockKeyMap.h"
-#include "test/mock/inputleap/MockEventQueue.h"
-#include "platform/OSXKeyState.h"
 #include "base/Log.h"
 #include "base/Time.h"
+#include "platform/OSXKeyState.h"
+#include "test/mock/inputleap/MockEventQueue.h"
+#include "test/mock/inputleap/MockKeyMap.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -99,8 +99,7 @@ TEST_F(OSXKeyStateTests, fakeAndPoll_charKeyAndModifier)
     keyState.fakeKeyUp(2);
 }
 
-bool
-OSXKeyStateTests::isKeyPressed(const OSXKeyState& keyState, KeyButton button)
+bool OSXKeyStateTests::isKeyPressed(const OSXKeyState& keyState, KeyButton button)
 {
     // HACK: allow os to realize key state changes.
     inputleap::this_thread_sleep(.2);

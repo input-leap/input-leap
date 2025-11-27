@@ -24,8 +24,8 @@ namespace inputleap {
 
 class DropHelper {
 public:
-    static void writeToDir(const std::string& destination,
-                           DragFileList& fileList, std::string& data);
+    static void writeToDir(const std::string& destination, DragFileList& fileList,
+                           std::string& data);
 };
 
 } // namespace inputleap

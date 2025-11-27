@@ -22,8 +22,7 @@
 
 class ZeroconfRegister;
 
-class ZeroconfServer : public QTcpServer
-{
+class ZeroconfServer : public QTcpServer {
     Q_OBJECT
 
 public:

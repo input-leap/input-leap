@@ -34,9 +34,7 @@ static QString getTimeStamp()
     return '[' + current.toString(Qt::ISODate) + ']';
 }
 
-LogWindow::LogWindow(QWidget *parent) :
-    QDialog(parent),
-    ui_{std::make_unique<Ui::LogWindow>()}
+LogWindow::LogWindow(QWidget* parent) : QDialog(parent), ui_{std::make_unique<Ui::LogWindow>()}
 {
     // explicitly unset DeleteOnClose so the log window can be show and hidden
     // repeatedly until InputLeap is finished
@@ -56,23 +54,24 @@ LogWindow::LogWindow(QWidget *parent) :
 void LogWindow::startNewInstance()
 {
     // put a space between last log output and new instance.
-    if (!buffer_.isEmpty())
+    if (!buffer_.isEmpty()) {
         appendRaw("");
+    }
 }
 
 void LogWindow::appendInfo(const QString& text)
 {
-    buffer_.append(s_info_line.arg(getTimeStamp(),text));
+    buffer_.append(s_info_line.arg(getTimeStamp(), text));
 }
 
 void LogWindow::appendDebug(const QString& text)
 {
-    buffer_.append(s_debug_line.arg(getTimeStamp(),text));
+    buffer_.append(s_debug_line.arg(getTimeStamp(), text));
 }
 
 void LogWindow::appendError(const QString& text)
 {
-    buffer_.append(s_error_line.arg(getTimeStamp(),text));
+    buffer_.append(s_error_line.arg(getTimeStamp(), text));
 }
 
 void LogWindow::appendRaw(const QString& text)

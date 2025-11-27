@@ -24,8 +24,7 @@
 namespace inputleap {
 
 //! Convert to/from some text encoding
-class XWindowsClipboardWEBPConverter :
-                public IXWindowsClipboardConverter {
+class XWindowsClipboardWEBPConverter : public IXWindowsClipboardConverter {
 public:
     XWindowsClipboardWEBPConverter(Display* display);
     ~XWindowsClipboardWEBPConverter() override;

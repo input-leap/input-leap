@@ -27,7 +27,6 @@ std::string XIOClosed::getWhat() const noexcept
     return format("XIOClosed", "already closed");
 }
 
-
 //
 // XIOEndOfStream
 //
@@ -36,7 +35,6 @@ std::string XIOEndOfStream::getWhat() const noexcept
 {
     return format("XIOEndOfStream", "reached end of stream");
 }
-
 
 //
 // XIOWouldBlock

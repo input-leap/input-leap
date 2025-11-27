@@ -18,15 +18,15 @@
 
 #include "platform/XWindowsKeyState.h"
 
-#include "platform/XKBUtil.h"
 #include "base/Log.h"
+#include "platform/XKBUtil.h"
 
 #include <X11/X.h>
 #include <X11/Xutil.h>
 #define XK_MISCELLANY
 #define XK_XKB_KEYS
-#include <X11/keysymdef.h>
 #include <X11/XKBlib.h>
+#include <X11/keysymdef.h>
 
 #include <algorithm>
 #include <cstddef>
@@ -36,24 +36,18 @@ namespace inputleap {
 
 static const size_t ModifiersFromXDefaultSize = 32;
 
-XWindowsKeyState::XWindowsKeyState(IXWindowsImpl* impl,
-        Display* display, bool useXKB,
-        IEventQueue* events) :
-    KeyState(events),
-    m_display(display),
-    m_modifierFromX(ModifiersFromXDefaultSize)
+XWindowsKeyState::XWindowsKeyState(IXWindowsImpl* impl, Display* display, bool useXKB,
+                                   IEventQueue* events) :
+    KeyState(events), m_display(display), m_modifierFromX(ModifiersFromXDefaultSize)
 {
-     m_impl = impl;
+    m_impl = impl;
 
     init(display, useXKB);
 }
 
-XWindowsKeyState::XWindowsKeyState(IXWindowsImpl* impl,
-    Display* display, bool useXKB,
-    IEventQueue* events, inputleap::KeyMap& keyMap) :
-    KeyState(events, keyMap),
-    m_display(display),
-    m_modifierFromX(ModifiersFromXDefaultSize)
+XWindowsKeyState::XWindowsKeyState(IXWindowsImpl* impl, Display* display, bool useXKB,
+                                   IEventQueue* events, inputleap::KeyMap& keyMap) :
+    KeyState(events, keyMap), m_display(display), m_modifierFromX(ModifiersFromXDefaultSize)
 {
     m_impl = impl;
     init(display, useXKB);
@@ -66,8 +60,7 @@ XWindowsKeyState::~XWindowsKeyState()
     }
 }
 
-void
-XWindowsKeyState::init(Display* display, bool useXKB)
+void XWindowsKeyState::init(Display* display, bool useXKB)
 {
     (void) display;
     (void) useXKB;
@@ -75,10 +68,9 @@ XWindowsKeyState::init(Display* display, bool useXKB)
     XGetKeyboardControl(m_display, &m_keyboardState);
     if (useXKB) {
         m_xkb = m_impl->XkbGetMap(m_display,
-                                  XkbKeyActionsMask | XkbKeyBehaviorsMask |
-                                  XkbAllClientInfoMask, XkbUseCoreKbd);
-    }
-    else {
+                                  XkbKeyActionsMask | XkbKeyBehaviorsMask | XkbAllClientInfoMask,
+                                  XkbUseCoreKbd);
+    } else {
         m_xkb = nullptr;
     }
     setActiveGroup(kGroupPollAndSet);
@@ -91,24 +83,20 @@ void XWindowsKeyState::setActiveGroup(std::int32_t group)
         // actually poll for the group
         m_group = -1;
         m_group = pollActiveGroup();
-    }
-    else if (group == kGroupPoll) {
+    } else if (group == kGroupPoll) {
         m_group = -1;
-    }
-    else {
+    } else {
         assert(group >= 0);
         m_group = group;
     }
 }
 
-void
-XWindowsKeyState::setAutoRepeat(const XKeyboardState& state)
+void XWindowsKeyState::setAutoRepeat(const XKeyboardState& state)
 {
     m_keyboardState = state;
 }
 
-KeyModifierMask
-XWindowsKeyState::mapModifiersFromX(unsigned int state) const
+KeyModifierMask XWindowsKeyState::mapModifiersFromX(unsigned int state) const
 {
     LOG_DEBUG2("mapping state: %i", state);
     std::uint32_t offset = 8 * getGroupFromState(state);
@@ -118,7 +106,8 @@ XWindowsKeyState::mapModifiersFromX(unsigned int state) const
             LOG_DEBUG2("|= modifier: %i", offset + i);
             if (offset + i >= m_modifierFromX.size()) {
                 LOG_ERR("m_modifierFromX is too small (%zd) for the "
-                    "requested offset (%d)", m_modifierFromX.size(), offset+i);
+                        "requested offset (%d)",
+                        m_modifierFromX.size(), offset + i);
             } else {
                 mask |= m_modifierFromX[offset + i];
             }
@@ -127,9 +116,7 @@ XWindowsKeyState::mapModifiersFromX(unsigned int state) const
     return mask;
 }
 
-bool
-XWindowsKeyState::mapModifiersToX(KeyModifierMask mask,
-                unsigned int& modifiers) const
+bool XWindowsKeyState::mapModifiersToX(KeyModifierMask mask, unsigned int& modifiers) const
 {
     modifiers = 0;
 
@@ -139,8 +126,7 @@ XWindowsKeyState::mapModifiersToX(KeyModifierMask mask,
             auto j = m_modifierToX.find(bit);
             if (j == m_modifierToX.end()) {
                 return false;
-            }
-            else {
+            } else {
                 modifiers |= j->second;
             }
         }
@@ -149,8 +135,7 @@ XWindowsKeyState::mapModifiersToX(KeyModifierMask mask,
     return true;
 }
 
-void
-XWindowsKeyState::mapKeyToKeycodes(KeyID key, KeycodeList& keycodes) const
+void XWindowsKeyState::mapKeyToKeycodes(KeyID key, KeycodeList& keycodes) const
 {
     keycodes.clear();
     auto range = m_keyCodeFromKey.equal_range(key);
@@ -159,22 +144,19 @@ XWindowsKeyState::mapKeyToKeycodes(KeyID key, KeycodeList& keycodes) const
     }
 }
 
-bool
-XWindowsKeyState::fakeCtrlAltDel()
+bool XWindowsKeyState::fakeCtrlAltDel()
 {
     // pass keys through unchanged
     return false;
 }
 
-KeyModifierMask
-XWindowsKeyState::pollActiveModifiers() const
+KeyModifierMask XWindowsKeyState::pollActiveModifiers() const
 {
     Window root = DefaultRootWindow(m_display), window;
     int xRoot, yRoot, xWindow, yWindow;
     unsigned int state = 0;
-    if (m_impl->XQueryPointer(m_display, root, &root, &window,
-                              &xRoot, &yRoot, &xWindow, &yWindow, &state
-                              ) == False) {
+    if (m_impl->XQueryPointer(m_display, root, &root, &window, &xRoot, &yRoot, &xWindow, &yWindow,
+                              &state) == False) {
         state = 0;
     }
     return mapModifiersFromX(state);
@@ -196,8 +178,7 @@ std::int32_t XWindowsKeyState::pollActiveGroup() const
     return 0;
 }
 
-void
-XWindowsKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
+void XWindowsKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
 {
     char keys[32];
     m_impl->XQueryKeymap(m_display, keys);
@@ -210,8 +191,7 @@ XWindowsKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
     }
 }
 
-void
-XWindowsKeyState::getKeyMap(inputleap::KeyMap& keyMap)
+void XWindowsKeyState::getKeyMap(inputleap::KeyMap& keyMap)
 {
     // get autorepeat info.  we must use the global_auto_repeat told to
     // us because it may have modified by InputLeap.
@@ -220,8 +200,7 @@ XWindowsKeyState::getKeyMap(inputleap::KeyMap& keyMap)
     m_keyboardState.global_auto_repeat = oldGlobalAutoRepeat;
 
     if (m_xkb != nullptr) {
-        unsigned mask = XkbKeyActionsMask | XkbKeyBehaviorsMask |
-                        XkbAllClientInfoMask;
+        unsigned mask = XkbKeyActionsMask | XkbKeyBehaviorsMask | XkbAllClientInfoMask;
         if (m_impl->XkbGetUpdatedMap(m_display, mask, m_xkb) == Success) {
             updateKeysymMapXKB(keyMap);
             return;
@@ -230,25 +209,25 @@ XWindowsKeyState::getKeyMap(inputleap::KeyMap& keyMap)
     updateKeysymMap(keyMap);
 }
 
-void
-XWindowsKeyState::fakeKey(const Keystroke& keystroke)
+void XWindowsKeyState::fakeKey(const Keystroke& keystroke)
 {
     switch (keystroke.m_type) {
     case Keystroke::kButton:
-        LOG_DEBUG1("  %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client, keystroke.m_data.m_button.m_press ? "down" : "up");
+        LOG_DEBUG1("  %03x (%08x) %s", keystroke.m_data.m_button.m_button,
+                   keystroke.m_data.m_button.m_client,
+                   keystroke.m_data.m_button.m_press ? "down" : "up");
         if (keystroke.m_data.m_button.m_repeat) {
             int c = keystroke.m_data.m_button.m_button;
             int i = (c >> 3);
             int b = 1 << (c & 7);
             if (m_keyboardState.global_auto_repeat == AutoRepeatModeOff ||
-                (c!=113 && c!=116 && (m_keyboardState.auto_repeats[i] & b) == 0)) {
+                (c != 113 && c != 116 && (m_keyboardState.auto_repeats[i] & b) == 0)) {
                 LOG_DEBUG1("  discard autorepeat");
                 break;
             }
         }
         m_impl->XTestFakeKeyEvent(m_display, keystroke.m_data.m_button.m_button,
-                                  keystroke.m_data.m_button.m_press,
-                                  CurrentTime);
+                                  keystroke.m_data.m_button.m_press, CurrentTime);
         break;
 
     case Keystroke::kGroup:
@@ -256,40 +235,33 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
             LOG_DEBUG1("  group %d", keystroke.m_data.m_group.m_group);
             if (m_xkb != nullptr) {
                 if (m_impl->XkbLockGroup(m_display, XkbUseCoreKbd,
-                                         keystroke.m_data.m_group.m_group
-                                         ) == False) {
+                                         keystroke.m_data.m_group.m_group) == False) {
                     LOG_DEBUG1("XkbLockGroup request not sent");
                 }
-            }
-            else
-            {
+            } else {
                 LOG_DEBUG1("  ignored");
             }
-        }
-        else {
+        } else {
             LOG_DEBUG1("  group %+d", keystroke.m_data.m_group.m_group);
             if (m_xkb != nullptr) {
                 if (m_impl->XkbLockGroup(m_display, XkbUseCoreKbd,
                                          getEffectiveGroup(pollActiveGroup(),
-                                         keystroke.m_data.m_group.m_group)
-                                         ) == False) {
+                                                           keystroke.m_data.m_group.m_group)) ==
+                    False) {
                     LOG_DEBUG1("XkbLockGroup request not sent");
                 }
-            }
-            else
-            {
+            } else {
                 LOG_DEBUG1("  ignored");
             }
         }
         break;
-        default:
-            break;
+    default:
+        break;
     }
     XFlush(m_display);
 }
 
-void
-XWindowsKeyState::updateKeysymMap(inputleap::KeyMap& keyMap)
+void XWindowsKeyState::updateKeysymMap(inputleap::KeyMap& keyMap)
 {
     // there are up to 4 keysyms per keycode
     static const int maxKeysyms = 4;
@@ -299,13 +271,13 @@ XWindowsKeyState::updateKeysymMap(inputleap::KeyMap& keyMap)
     // prepare map from X modifier to KeyModifierMask.  certain bits
     // are predefined.
     std::fill(m_modifierFromX.begin(), m_modifierFromX.end(), 0);
-    m_modifierFromX[ShiftMapIndex]   = KeyModifierShift;
-    m_modifierFromX[LockMapIndex]    = KeyModifierCapsLock;
+    m_modifierFromX[ShiftMapIndex] = KeyModifierShift;
+    m_modifierFromX[LockMapIndex] = KeyModifierCapsLock;
     m_modifierFromX[ControlMapIndex] = KeyModifierControl;
     m_modifierToX.clear();
-    m_modifierToX[KeyModifierShift]    = ShiftMask;
+    m_modifierToX[KeyModifierShift] = ShiftMask;
     m_modifierToX[KeyModifierCapsLock] = LockMask;
-    m_modifierToX[KeyModifierControl]  = ControlMask;
+    m_modifierToX[KeyModifierControl] = ControlMask;
 
     // prepare map from KeyID to KeyCode
     m_keyCodeFromKey.clear();
@@ -317,8 +289,7 @@ XWindowsKeyState::updateKeysymMap(inputleap::KeyMap& keyMap)
 
     // get the keyboard mapping for all keys
     int keysymsPerKeycode;
-    KeySym* allKeysyms = m_impl->XGetKeyboardMapping(m_display,
-                                                     minKeycode, numKeycodes,
+    KeySym* allKeysyms = m_impl->XGetKeyboardMapping(m_display, minKeycode, numKeycodes,
                                                      &keysymsPerKeycode);
 
     // it's more convenient to always have maxKeysyms KeySyms per key
@@ -327,10 +298,8 @@ XWindowsKeyState::updateKeysymMap(inputleap::KeyMap& keyMap)
         for (int i = 0; i < numKeycodes; ++i) {
             for (int j = 0; j < maxKeysyms; ++j) {
                 if (j < keysymsPerKeycode) {
-                    tmpKeysyms[maxKeysyms * i + j] =
-                        allKeysyms[keysymsPerKeycode * i + j];
-                }
-                else {
+                    tmpKeysyms[maxKeysyms * i + j] = allKeysyms[keysymsPerKeycode * i + j];
+                } else {
                     tmpKeysyms[maxKeysyms * i + j] = NoSymbol;
                 }
             }
@@ -359,8 +328,7 @@ XWindowsKeyState::updateKeysymMap(inputleap::KeyMap& keyMap)
     std::map<KeyCode, unsigned int> modifierButtons;
     XModifierKeymap* modifiers = m_impl->XGetModifierMapping(m_display);
     for (unsigned int i = 0; i < 8; ++i) {
-        const KeyCode* buttons =
-            modifiers->modifiermap + i * modifiers->max_keypermod;
+        const KeyCode* buttons = modifiers->modifiermap + i * modifiers->max_keypermod;
         for (int j = 0; j < modifiers->max_keypermod; ++j) {
             modifierButtons.insert(std::make_pair(buttons[j], i));
         }
@@ -377,8 +345,7 @@ XWindowsKeyState::updateKeysymMap(inputleap::KeyMap& keyMap)
     // we update the last known good set.
     if (!modifierButtons.empty()) {
         m_lastGoodNonXKBModifiers = modifierButtons;
-    }
-    else {
+    } else {
         modifierButtons = m_lastGoodNonXKBModifiers;
     }
 
@@ -387,8 +354,8 @@ XWindowsKeyState::updateKeysymMap(inputleap::KeyMap& keyMap)
     for (int i = 0; i < numKeycodes; ++i) {
         KeySym* keysyms = allKeysyms + maxKeysyms * i;
         KeyCode keycode = static_cast<KeyCode>(i + minKeycode);
-        item.m_button   = static_cast<KeyButton>(keycode);
-        item.m_client   = 0;
+        item.m_button = static_cast<KeyButton>(keycode);
+        item.m_client = 0;
 
         // determine modifier sensitivity
         item.m_sensitive = 0;
@@ -403,8 +370,8 @@ XWindowsKeyState::updateKeysymMap(inputleap::KeyMap& keyMap)
         // check if the key is caps-lock sensitive.  some systems only
         // provide one keysym for keys sensitive to caps-lock.  if we
         // find that then fill in the missing keysym.
-        if (keysyms[0] != NoSymbol && keysyms[1] == NoSymbol &&
-            keysyms[2] == NoSymbol && keysyms[3] == NoSymbol) {
+        if (keysyms[0] != NoSymbol && keysyms[1] == NoSymbol && keysyms[2] == NoSymbol &&
+            keysyms[3] == NoSymbol) {
             KeySym lKeysym, uKeysym;
             XConvertCase(keysyms[0], &lKeysym, &uKeysym);
             if (lKeysym != uKeysym) {
@@ -412,20 +379,14 @@ XWindowsKeyState::updateKeysymMap(inputleap::KeyMap& keyMap)
                 keysyms[1] = uKeysym;
                 item.m_sensitive |= KeyModifierCapsLock;
             }
-        }
-        else if (keysyms[0] != NoSymbol && keysyms[1] != NoSymbol) {
+        } else if (keysyms[0] != NoSymbol && keysyms[1] != NoSymbol) {
             KeySym lKeysym, uKeysym;
             XConvertCase(keysyms[0], &lKeysym, &uKeysym);
-            if (lKeysym != uKeysym &&
-                lKeysym == keysyms[0] &&
-                uKeysym == keysyms[1]) {
+            if (lKeysym != uKeysym && lKeysym == keysyms[0] && uKeysym == keysyms[1]) {
                 item.m_sensitive |= KeyModifierCapsLock;
-            }
-            else if (keysyms[2] != NoSymbol && keysyms[3] != NoSymbol) {
+            } else if (keysyms[2] != NoSymbol && keysyms[3] != NoSymbol) {
                 XConvertCase(keysyms[2], &lKeysym, &uKeysym);
-                if (lKeysym != uKeysym &&
-                    lKeysym == keysyms[2] &&
-                    uKeysym == keysyms[3]) {
+                if (lKeysym != uKeysym && lKeysym == keysyms[2] && uKeysym == keysyms[3]) {
                     item.m_sensitive |= KeyModifierCapsLock;
                 }
             }
@@ -436,19 +397,16 @@ XWindowsKeyState::updateKeysymMap(inputleap::KeyMap& keyMap)
         // if it's sensitive to caps-lock.
         if ((item.m_sensitive & KeyModifierCapsLock) != 0) {
             item.m_sensitive |= KeyModifierShift;
-        }
-        else if ((keysyms[0] != NoSymbol && keysyms[1] != NoSymbol &&
-                keysyms[0] != keysyms[1]) ||
-                (keysyms[2] != NoSymbol && keysyms[3] != NoSymbol &&
-                keysyms[2] != keysyms[3])) {
+        } else if ((keysyms[0] != NoSymbol && keysyms[1] != NoSymbol && keysyms[0] != keysyms[1]) ||
+                   (keysyms[2] != NoSymbol && keysyms[3] != NoSymbol && keysyms[2] != keysyms[3])) {
             item.m_sensitive |= KeyModifierShift;
         }
 
         // key is sensitive to numlock if any keysym on it is
-        if (IsKeypadKey(keysyms[0]) || IsPrivateKeypadKey(keysyms[0]) ||
-            IsKeypadKey(keysyms[1]) || IsPrivateKeypadKey(keysyms[1]) ||
-            IsKeypadKey(keysyms[2]) || IsPrivateKeypadKey(keysyms[2]) ||
-            IsKeypadKey(keysyms[3]) || IsPrivateKeypadKey(keysyms[3])) {
+        if (IsKeypadKey(keysyms[0]) || IsPrivateKeypadKey(keysyms[0]) || IsKeypadKey(keysyms[1]) ||
+            IsPrivateKeypadKey(keysyms[1]) || IsKeypadKey(keysyms[2]) ||
+            IsPrivateKeypadKey(keysyms[2]) || IsKeypadKey(keysyms[3]) ||
+            IsPrivateKeypadKey(keysyms[3])) {
             item.m_sensitive |= KeyModifierNumLock;
         }
 
@@ -461,8 +419,7 @@ XWindowsKeyState::updateKeysymMap(inputleap::KeyMap& keyMap)
                     // because it probably does.
                     if (keysyms[1] == NoSymbol || j != 3) {
                         item.m_id = XKBUtil::mapKeySymToKeyID(keysyms[0]);
-                    }
-                    else {
+                    } else {
                         item.m_id = XKBUtil::mapKeySymToKeyID(keysyms[1]);
                     }
                 }
@@ -484,7 +441,7 @@ XWindowsKeyState::updateKeysymMap(inputleap::KeyMap& keyMap)
             }
 
             item.m_generates = 0;
-            item.m_lock      = false;
+            item.m_lock = false;
             if (modifierButtons.count(keycode) > 0) {
                 // get flags for modifier keys
                 inputleap::KeyMap::initModifierKey(item);
@@ -508,22 +465,20 @@ XWindowsKeyState::updateKeysymMap(inputleap::KeyMap& keyMap)
                 // add capslock version of key is sensitive to capslock
                 KeySym lKeysym, uKeysym;
                 XConvertCase(keysyms[j], &lKeysym, &uKeysym);
-                if (lKeysym != uKeysym &&
-                    lKeysym == keysyms[j - 1] &&
-                    uKeysym == keysyms[j]) {
+                if (lKeysym != uKeysym && lKeysym == keysyms[j - 1] && uKeysym == keysyms[j]) {
                     item.m_required &= ~KeyModifierShift;
-                    item.m_required |=  KeyModifierCapsLock;
+                    item.m_required |= KeyModifierCapsLock;
                     keyMap.addKeyEntry(item);
-                    item.m_required |=  KeyModifierShift;
+                    item.m_required |= KeyModifierShift;
                     item.m_required &= ~KeyModifierCapsLock;
                 }
 
                 // add numlock version of key if sensitive to numlock
                 if (IsKeypadKey(keysyms[j]) || IsPrivateKeypadKey(keysyms[j])) {
                     item.m_required &= ~KeyModifierShift;
-                    item.m_required |=  KeyModifierNumLock;
+                    item.m_required |= KeyModifierNumLock;
                     keyMap.addKeyEntry(item);
-                    item.m_required |=  KeyModifierShift;
+                    item.m_required |= KeyModifierShift;
                     item.m_required &= ~KeyModifierNumLock;
                 }
             }
@@ -533,18 +488,15 @@ XWindowsKeyState::updateKeysymMap(inputleap::KeyMap& keyMap)
     delete[] allKeysyms;
 }
 
-void
-XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
+void XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
 {
-    static const XkbKTMapEntryRec defMapEntry = {
-        True,        // active
-        0,            // level
-        {
-            0,        // mods.mask
-            0,        // mods.real_mods
-            0        // mods.vmods
-        }
-    };
+    static const XkbKTMapEntryRec defMapEntry = {True, // active
+                                                 0,    // level
+                                                 {
+                                                     0, // mods.mask
+                                                     0, // mods.real_mods
+                                                     0  // mods.vmods
+                                                 }};
 
     LOG_DEBUG1("XKB mapping");
 
@@ -583,8 +535,8 @@ XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
     inputleap::KeyMap::KeyItem item;
     for (int i = m_xkb->min_key_code; i <= m_xkb->max_key_code; ++i) {
         KeyCode keycode = static_cast<KeyCode>(i);
-        item.m_button   = static_cast<KeyButton>(keycode);
-        item.m_client   = 0;
+        item.m_button = static_cast<KeyButton>(keycode);
+        item.m_client = 0;
 
         // skip keys with no groups (they generate no symbols)
         if (m_impl->do_XkbKeyNumGroups(m_xkb, keycode) == 0) {
@@ -600,19 +552,17 @@ XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
         // iterate over all groups
         for (int group = 0; group < maxNumGroups; ++group) {
             item.m_group = group;
-            int eGroup   = getEffectiveGroup(keycode, group);
+            int eGroup = getEffectiveGroup(keycode, group);
 
             // get key info
-            XkbKeyTypePtr type = m_impl->do_XkbKeyKeyType(m_xkb, keycode,
-                                                          eGroup);
+            XkbKeyTypePtr type = m_impl->do_XkbKeyKeyType(m_xkb, keycode, eGroup);
 
             // set modifiers the item is sensitive to
             item.m_sensitive = type->mods.mask;
 
             // iterate over all shift levels for the button (including none)
             for (int j = -1; j < type->map_count; ++j) {
-                const XkbKTMapEntryRec* mapEntry =
-                    ((j == -1) ? &defMapEntry : type->map + j);
+                const XkbKTMapEntryRec* mapEntry = ((j == -1) ? &defMapEntry : type->map + j);
                 if (!mapEntry->active) {
                     continue;
                 }
@@ -620,8 +570,7 @@ XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
 
                 // set required modifiers for this item
                 item.m_required = mapEntry->mods.mask;
-                if ((item.m_required & LockMask) != 0 &&
-                    j != -1 && type->preserve != nullptr &&
+                if ((item.m_required & LockMask) != 0 && j != -1 && type->preserve != nullptr &&
                     (type->preserve[j].mask & LockMask) != 0) {
                     // sensitive caps lock and we preserve caps-lock.
                     // preserving caps-lock means we Xlib functions would
@@ -633,21 +582,17 @@ XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
                 }
 
                 // get the keysym for this item
-                KeySym keysym = m_impl->do_XkbKeySymEntry(m_xkb, keycode, level,
-                                                          eGroup);
+                KeySym keysym = m_impl->do_XkbKeySymEntry(m_xkb, keycode, level, eGroup);
 
                 // check for group change actions, locking modifiers, and
                 // modifier masks.
-                item.m_lock         = false;
-                bool isModifier     = false;
+                item.m_lock = false;
+                bool isModifier = false;
                 std::uint32_t modifierMask = m_xkb->map->modmap[keycode];
                 if (m_impl->do_XkbKeyHasActions(m_xkb, keycode) == True) {
-                    XkbAction* action =
-                        m_impl->do_XkbKeyActionEntry(m_xkb, keycode, level,
-                                                     eGroup);
-                    if (action->type == XkbSA_SetMods ||
-                        action->type == XkbSA_LockMods) {
-                        isModifier  = true;
+                    XkbAction* action = m_impl->do_XkbKeyActionEntry(m_xkb, keycode, level, eGroup);
+                    if (action->type == XkbSA_SetMods || action->type == XkbSA_LockMods) {
+                        isModifier = true;
 
                         // note toggles
                         item.m_lock = (action->type == XkbSA_LockMods);
@@ -656,10 +601,8 @@ XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
                         if ((action->mods.flags & XkbSA_UseModMapMods) == 0) {
                             modifierMask = action->mods.mask;
                         }
-                    }
-                    else if (action->type == XkbSA_SetGroup ||
-                            action->type == XkbSA_LatchGroup ||
-                            action->type == XkbSA_LockGroup) {
+                    } else if (action->type == XkbSA_SetGroup || action->type == XkbSA_LatchGroup ||
+                               action->type == XkbSA_LockGroup) {
                         // ignore group change key
                         continue;
                     }
@@ -671,26 +614,23 @@ XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
                     auto k = m_lastGoodXKBModifiers.find(eGroup * 256 + keycode);
                     if (k != m_lastGoodXKBModifiers.end()) {
                         // Use last known good modifier
-                        isModifier   = true;
-                        level        = k->second.m_level;
+                        isModifier = true;
+                        level = k->second.m_level;
                         modifierMask = k->second.m_mask;
-                        item.m_lock  = k->second.m_lock;
+                        item.m_lock = k->second.m_lock;
                     }
-                }
-                else if (isModifier) {
+                } else if (isModifier) {
                     // Save known good modifier
-                    XKBModifierInfo& info =
-                        m_lastGoodXKBModifiers[eGroup * 256 + keycode];
+                    XKBModifierInfo& info = m_lastGoodXKBModifiers[eGroup * 256 + keycode];
                     info.m_level = level;
-                    info.m_mask  = modifierMask;
-                    info.m_lock  = item.m_lock;
+                    info.m_mask = modifierMask;
+                    info.m_lock = item.m_lock;
                 }
 
                 // record the modifier mask for this key.  don't bother
                 // for keys that change the group.
                 item.m_generates = 0;
-                std::uint32_t modifierBit =
-                    XKBUtil::getModifierBitForKeySym(keysym);
+                std::uint32_t modifierBit = XKBUtil::getModifierBitForKeySym(keysym);
                 if (isModifier && modifierBit != kKeyModifierBitNone) {
                     item.m_generates = (1u << modifierBit);
                     for (std::int32_t k = 0; k < 8; ++k) {
@@ -712,8 +652,7 @@ XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
 
                         // save modifier
                         m_modifierFromX[8 * group + k] |= (1u << modifierBit);
-                        m_modifierToX.insert(std::make_pair(
-                                1u << modifierBit, 1u << k));
+                        m_modifierToX.insert(std::make_pair(1u << modifierBit, 1u << k));
                     }
                 }
 
@@ -736,21 +675,19 @@ XWindowsKeyState::updateKeysymMapXKB(inputleap::KeyMap& keyMap)
                             continue;
                         }
 
-                        item.m_id       = lKeyID;
+                        item.m_id = lKeyID;
                         item.m_required = 0;
                         keyMap.addKeyEntry(item);
 
-                        item.m_id       = uKeyID;
+                        item.m_id = uKeyID;
                         item.m_required = ShiftMask;
                         keyMap.addKeyEntry(item);
                         item.m_required = LockMask;
                         keyMap.addKeyEntry(item);
 
                         if (group == 0) {
-                            m_keyCodeFromKey.insert(
-                                    std::make_pair(lKeyID, keycode));
-                            m_keyCodeFromKey.insert(
-                                    std::make_pair(uKeyID, keycode));
+                            m_keyCodeFromKey.insert(std::make_pair(lKeyID, keycode));
+                            m_keyCodeFromKey.insert(std::make_pair(uKeyID, keycode));
                         }
                         continue;
                     }
@@ -779,14 +716,11 @@ void XWindowsKeyState::remapKeyModifiers(KeyID id, std::int32_t group,
     (void) id;
 
     XWindowsKeyState* self = static_cast<XWindowsKeyState*>(vself);
-    item.m_required  =
-        self->mapModifiersFromX(XkbBuildCoreState(item.m_required, group));
-    item.m_sensitive =
-        self->mapModifiersFromX(XkbBuildCoreState(item.m_sensitive, group));
+    item.m_required = self->mapModifiersFromX(XkbBuildCoreState(item.m_required, group));
+    item.m_sensitive = self->mapModifiersFromX(XkbBuildCoreState(item.m_sensitive, group));
 }
 
-bool
-XWindowsKeyState::hasModifiersXKB() const
+bool XWindowsKeyState::hasModifiersXKB() const
 {
     // iterate over all keycodes
     for (int i = m_xkb->min_key_code; i <= m_xkb->max_key_code; ++i) {
@@ -802,10 +736,8 @@ XWindowsKeyState::hasModifiersXKB() const
                         continue;
                     }
                     int level = ((j == -1) ? 0 : type->map[j].level);
-                    XkbAction* action =
-                        m_impl->do_XkbKeyActionEntry(m_xkb, keycode, level, group);
-                    if (action->type == XkbSA_SetMods ||
-                        action->type == XkbSA_LockMods) {
+                    XkbAction* action = m_impl->do_XkbKeyActionEntry(m_xkb, keycode, level, group);
+                    if (action->type == XkbSA_SetMods || action->type == XkbSA_LockMods) {
                         return true;
                     }
                 }
@@ -815,10 +747,9 @@ XWindowsKeyState::hasModifiersXKB() const
     return false;
 }
 
-int
-XWindowsKeyState::getEffectiveGroup(KeyCode keycode, int group) const
+int XWindowsKeyState::getEffectiveGroup(KeyCode keycode, int group) const
 {
-    (void)keycode;
+    (void) keycode;
     // get effective group for key
     int numGroups = m_impl->do_XkbKeyNumGroups(m_xkb, keycode);
     if (group >= numGroups) {

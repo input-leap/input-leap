@@ -30,7 +30,6 @@ class IpcLogOutputter;
 class MSWindowsWatchdog;
 
 class DaemonApp {
-
 public:
     DaemonApp();
     virtual ~DaemonApp();

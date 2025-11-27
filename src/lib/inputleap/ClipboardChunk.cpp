@@ -17,19 +17,18 @@
 
 #include "inputleap/ClipboardChunk.h"
 
+#include "base/Log.h"
+#include "base/String.h"
 #include "inputleap/ProtocolUtil.h"
 #include "inputleap/protocol_types.h"
 #include "io/IStream.h"
-#include "base/Log.h"
-#include "base/String.h"
 #include <cstring>
 
 namespace inputleap {
 
 size_t ClipboardChunk::s_expectedSize = 0;
 
-ClipboardChunk ClipboardChunk::start(ClipboardID id, std::uint32_t sequence,
-                                     const std::size_t& size)
+ClipboardChunk ClipboardChunk::start(ClipboardID id, std::uint32_t sequence, const std::size_t& size)
 {
     ClipboardChunk chunk;
     chunk.id_ = id;
@@ -39,8 +38,7 @@ ClipboardChunk ClipboardChunk::start(ClipboardID id, std::uint32_t sequence,
     return chunk;
 }
 
-ClipboardChunk ClipboardChunk::data(ClipboardID id, std::uint32_t sequence,
-                                    const std::string& data)
+ClipboardChunk ClipboardChunk::data(ClipboardID id, std::uint32_t sequence, const std::string& data)
 {
     ClipboardChunk chunk;
     chunk.id_ = id;
@@ -59,8 +57,8 @@ ClipboardChunk ClipboardChunk::end(ClipboardID id, std::uint32_t sequence)
     return chunk;
 }
 
-int ClipboardChunk::assemble(inputleap::IStream* stream, std::string& dataCached,
-                             ClipboardID& id, std::uint32_t& sequence)
+int ClipboardChunk::assemble(inputleap::IStream* stream, std::string& dataCached, ClipboardID& id,
+                             std::uint32_t& sequence)
 {
     std::uint8_t mark;
     std::string data;
@@ -74,18 +72,16 @@ int ClipboardChunk::assemble(inputleap::IStream* stream, std::string& dataCached
         LOG_DEBUG("start receiving clipboard data");
         dataCached.clear();
         return kStart;
-    }
-    else if (mark == kDataChunk) {
+    } else if (mark == kDataChunk) {
         dataCached.append(data);
         return kNotFinish;
-    }
-    else if (mark == kDataEnd) {
+    } else if (mark == kDataEnd) {
         // validate
         if (id >= kClipboardEnd) {
             return kError;
-        }
-        else if (s_expectedSize != dataCached.size()) {
-            LOG_ERR("corrupted clipboard data, expected size=%zd actual size=%zd", s_expectedSize, dataCached.size());
+        } else if (s_expectedSize != dataCached.size()) {
+            LOG_ERR("corrupted clipboard data, expected size=%zd actual size=%zd", s_expectedSize,
+                    dataCached.size());
             return kError;
         }
         return kFinish;

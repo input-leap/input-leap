@@ -19,11 +19,11 @@
 #pragma once
 
 #include "Fwd.h"
+#include "arch/IArchNetwork.h"
 #include "base/EventTarget.h"
+#include "io/StreamBuffer.h"
 #include "net/IDataSocket.h"
 #include "net/ISocketMultiplexerJob.h"
-#include "io/StreamBuffer.h"
-#include "arch/IArchNetwork.h"
 #include <condition_variable>
 #include <memory>
 #include <mutex>
@@ -38,7 +38,8 @@ A data socket using TCP.
 */
 class TCPSocket : public IDataSocket, public EventTarget {
 public:
-    TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family);
+    TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer,
+              IArchNetwork::EAddressFamily family);
     TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket);
     virtual ~TCPSocket();
 
@@ -60,14 +61,13 @@ public:
     // IDataSocket overrides
     void connect(const NetworkAddress&) override;
 
-
     virtual std::unique_ptr<ISocketMultiplexerJob> newJob();
 
 protected:
     enum EJobResult {
-        kBreak = -1,    //!< Break the Job chain
-        kRetry,            //!< Retry the same job
-        kNew            //!< Require a new job
+        kBreak = -1, //!< Break the Job chain
+        kRetry,      //!< Retry the same job
+        kNew         //!< Require a new job
     };
 
     ArchSocket getSocket() { return m_socket; }
@@ -106,6 +106,7 @@ protected:
     StreamBuffer m_outputBuffer;
 
     mutable std::mutex tcp_mutex_;
+
 private:
     ArchSocket m_socket;
     std::condition_variable flushed_cv_;

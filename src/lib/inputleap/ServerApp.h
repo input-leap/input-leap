@@ -18,16 +18,16 @@
 
 #pragma once
 
-#include "inputleap/ArgsBase.h"
-#include "inputleap/App.h"
-#include "inputleap/Fwd.h"
-#include "base/Fwd.h"
-#include "server/Config.h"
-#include "net/NetworkAddress.h"
+#include "ServerArgs.h"
 #include "arch/Arch.h"
 #include "arch/IArchMultithread.h"
 #include "base/EventTypes.h"
-#include "ServerArgs.h"
+#include "base/Fwd.h"
+#include "inputleap/App.h"
+#include "inputleap/ArgsBase.h"
+#include "inputleap/Fwd.h"
+#include "net/NetworkAddress.h"
+#include "server/Config.h"
 
 #include <map>
 

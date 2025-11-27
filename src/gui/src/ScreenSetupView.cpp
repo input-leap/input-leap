@@ -17,15 +17,14 @@
  */
 
 #include "ScreenSetupView.h"
-#include "ScreenSetupModel.h"
 #include "ScreenSettingsDialog.h"
+#include "ScreenSetupModel.h"
 
+#include <QHeaderView>
 #include <QtCore>
 #include <QtGui>
-#include <QHeaderView>
 
-ScreenSetupView::ScreenSetupView(QWidget* parent) :
-    QTableView(parent)
+ScreenSetupView::ScreenSetupView(QWidget* parent) : QTableView(parent)
 {
     setDropIndicatorShown(true);
     setDragDropMode(DragDrop);
@@ -53,11 +52,13 @@ ScreenSetupModel* ScreenSetupView::model() const
 
 void ScreenSetupView::setTableSize()
 {
-    for (int i = 0; i < model()->columnCount(); i++)
+    for (int i = 0; i < model()->columnCount(); i++) {
         setColumnWidth(i, width() / model()->columnCount());
+    }
 
-    for (int i = 0; i < model()->rowCount(); i++)
+    for (int i = 0; i < model()->rowCount(); i++) {
         setRowHeight(i, height() / model()->rowCount());
+    }
 }
 
 void ScreenSetupView::resizeEvent(QResizeEvent* event)
@@ -68,19 +69,22 @@ void ScreenSetupView::resizeEvent(QResizeEvent* event)
 
 void ScreenSetupView::enter(const QModelIndex& index)
 {
-    if (!index.isValid())
+    if (!index.isValid()) {
         return;
+    }
     Screen& screen = model()->screen(index);
-    if (screen.isNull())
+    if (screen.isNull()) {
         screen = Screen(tr("Unnamed"));
+    }
     ScreenSettingsDialog dlg(this, &screen);
     dlg.exec();
 }
 
 void ScreenSetupView::remove(const QModelIndex& index)
 {
-    if (!index.isValid())
+    if (!index.isValid()) {
         return;
+    }
     Screen& screen = model()->screen(index);
     if (!screen.isNull()) {
         screen = Screen();
@@ -90,87 +94,79 @@ void ScreenSetupView::remove(const QModelIndex& index)
 
 void ScreenSetupView::keyPressEvent(QKeyEvent* event)
 {
-    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Delete)
-    {
+    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Delete) {
         QModelIndexList indexes = selectedIndexes();
-        if (indexes.count() == 1 && indexes[0].isValid())
-        {
-            if (event->key() == Qt::Key_Return)
+        if (indexes.count() == 1 && indexes[0].isValid()) {
+            if (event->key() == Qt::Key_Return) {
                 enter(indexes[0]);
-            else if (event->key() == Qt::Key_Delete)
+            } else if (event->key() == Qt::Key_Delete) {
                 remove(indexes[0]);
+            }
         }
         // Do not let base handle the event, at least not for return key because it
         // results in next esc/return key in the opened Screen Settings dialog not
         // only closing that but also the parent Server Configuration dialog.
-    }
-    else if ((event->modifiers() & Qt::ControlModifier)
-        && (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right
-         || event->key() == Qt::Key_Up   || event->key() == Qt::Key_Down))
-    {
+    } else if ((event->modifiers() & Qt::ControlModifier) &&
+               (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right ||
+                event->key() == Qt::Key_Up || event->key() == Qt::Key_Down)) {
         QModelIndexList indexes = selectedIndexes();
-        if (indexes.count() == 1 && indexes[0].isValid())
-        {
+        if (indexes.count() == 1 && indexes[0].isValid()) {
             const QModelIndex& fromIndex = indexes[0];
             QModelIndex toIndex;
 
-            if (event->key() == Qt::Key_Left)
+            if (event->key() == Qt::Key_Left) {
                 toIndex = fromIndex.sibling(fromIndex.row(), fromIndex.column() - 1);
-            else if (event->key() == Qt::Key_Right)
+            } else if (event->key() == Qt::Key_Right) {
                 toIndex = fromIndex.sibling(fromIndex.row(), fromIndex.column() + 1);
-            else if (event->key() == Qt::Key_Up)
+            } else if (event->key() == Qt::Key_Up) {
                 toIndex = fromIndex.sibling(fromIndex.row() - 1, fromIndex.column());
-            else if (event->key() == Qt::Key_Down)
+            } else if (event->key() == Qt::Key_Down) {
                 toIndex = fromIndex.sibling(fromIndex.row() + 1, fromIndex.column());
+            }
 
-            if (toIndex.isValid() && fromIndex != toIndex)
+            if (toIndex.isValid() && fromIndex != toIndex) {
                 std::swap(model()->screen(fromIndex), model()->screen(toIndex));
+            }
         }
         // In this case let base also handle the event, because it will proceed moving
         // the selection to target, update the view according to model changes etc.
         QTableView::keyPressEvent(event);
-    }
-    else
-    {
+    } else {
         QTableView::keyPressEvent(event);
     }
 }
 
 void ScreenSetupView::mouseDoubleClickEvent(QMouseEvent* event)
 {
-    if (event->buttons() & Qt::LeftButton)
-    {
+    if (event->buttons() & Qt::LeftButton) {
         int col = columnAt(event->pos().x());
         int row = rowAt(event->pos().y());
         enter(model()->createIndex(row, col));
-    }
-    else
+    } else {
         event->ignore();
+    }
 }
 
 void ScreenSetupView::dragEnterEvent(QDragEnterEvent* event)
 {
     // we accept anything that enters us by a drag as long as the
     // mime type is okay. anything else is dealt with in dragMoveEvent()
-    if (event->mimeData()->hasFormat(ScreenSetupModel::mimeType()))
+    if (event->mimeData()->hasFormat(ScreenSetupModel::mimeType())) {
         event->accept();
-    else
+    } else {
         event->ignore();
+    }
 }
 
 void ScreenSetupView::dragMoveEvent(QDragMoveEvent* event)
 {
-    if (event->mimeData()->hasFormat(ScreenSetupModel::mimeType()))
-    {
+    if (event->mimeData()->hasFormat(ScreenSetupModel::mimeType())) {
         // where does the event come from? myself or someone else?
-        if (event->source() == this)
-        {
+        if (event->source() == this) {
             // myself is ok, but then it must be a move action, never a copy
             event->setDropAction(Qt::MoveAction);
             event->accept();
-        }
-        else
-        {
+        } else {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
             int col = columnAt(event->position().x());
             int row = rowAt(event->position().y());
@@ -179,14 +175,15 @@ void ScreenSetupView::dragMoveEvent(QDragMoveEvent* event)
             int row = rowAt(event->pos().y());
 #endif
             // a drop from outside is not allowed if there's a screen already there.
-            if (!model()->screen(col, row).isNull())
+            if (!model()->screen(col, row).isNull()) {
                 event->ignore();
-            else
+            } else {
                 event->acceptProposedAction();
+            }
         }
-    }
-    else
+    } else {
         event->ignore();
+    }
 }
 
 // this is reimplemented from QAbstractItemView::startDrag()
@@ -194,12 +191,14 @@ void ScreenSetupView::startDrag(Qt::DropActions)
 {
     QModelIndexList indexes = selectedIndexes();
 
-    if (indexes.count() != 1)
+    if (indexes.count() != 1) {
         return;
+    }
 
     QMimeData* pData = model()->mimeData(indexes);
-    if (pData == nullptr)
+    if (pData == nullptr) {
         return;
+    }
 
     QPixmap pixmap = *model()->screen(indexes[0]).pixmap();
     QDrag* pDrag = new QDrag(this);
@@ -207,21 +206,21 @@ void ScreenSetupView::startDrag(Qt::DropActions)
     pDrag->setMimeData(pData);
     pDrag->setHotSpot(QPoint(pixmap.width() / 2, pixmap.height() / 2));
 
-    if (pDrag->exec(Qt::MoveAction, Qt::MoveAction) == Qt::MoveAction)
-    {
+    if (pDrag->exec(Qt::MoveAction, Qt::MoveAction) == Qt::MoveAction) {
         selectionModel()->clear();
 
         // make sure to only delete the drag source if screens weren't swapped
         // see ScreenSetupModel::dropMimeData
-        if (!model()->screen(indexes[0]).swapped())
+        if (!model()->screen(indexes[0]).swapped()) {
             model()->screen(indexes[0]) = Screen();
-        else
+        } else {
             model()->screen(indexes[0]).setSwapped(false);
+        }
     }
 }
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-void ScreenSetupView::initViewItemOption(QStyleOptionViewItem *option) const
+void ScreenSetupView::initViewItemOption(QStyleOptionViewItem* option) const
 {
     option->showDecorationSelected = true;
     option->decorationPosition = QStyleOptionViewItem::Top;

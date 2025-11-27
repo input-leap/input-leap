@@ -21,9 +21,7 @@
 
 namespace inputleap {
 
-Clipboard::Clipboard() :
-    m_open(false),
-    m_owner(false)
+Clipboard::Clipboard() : m_open(false), m_owner(false)
 {
     open(0);
     clear();
@@ -35,14 +33,13 @@ Clipboard::~Clipboard()
     // do nothing
 }
 
-bool
-Clipboard::clear()
+bool Clipboard::clear()
 {
     assert(m_open);
 
     // clear all data
     for (std::int32_t index = 0; index < kNumFormats; ++index) {
-        m_data[index]  = "";
+        m_data[index] = "";
         m_added[index] = false;
     }
 
@@ -55,18 +52,16 @@ Clipboard::clear()
     return true;
 }
 
-void
-Clipboard::add(EFormat format, const std::string& data)
+void Clipboard::add(EFormat format, const std::string& data)
 {
     assert(m_open);
     assert(m_owner);
 
-    m_data[format]  = data;
+    m_data[format] = data;
     m_added[format] = true;
 }
 
-bool
-Clipboard::open(Time time) const
+bool Clipboard::open(Time time) const
 {
     assert(!m_open);
 
@@ -76,22 +71,19 @@ Clipboard::open(Time time) const
     return true;
 }
 
-void
-Clipboard::close() const
+void Clipboard::close() const
 {
     assert(m_open);
 
     m_open = false;
 }
 
-Clipboard::Time
-Clipboard::getTime() const
+Clipboard::Time Clipboard::getTime() const
 {
     return m_timeOwned;
 }
 
-bool
-Clipboard::has(EFormat format) const
+bool Clipboard::has(EFormat format) const
 {
     assert(m_open);
     return m_added[format];
@@ -103,8 +95,7 @@ std::string Clipboard::get(EFormat format) const
     return m_data[format];
 }
 
-void
-Clipboard::unmarshall(const std::string& data, Time time)
+void Clipboard::unmarshall(const std::string& data, Time time)
 {
     IClipboard::unmarshall(this, data, time);
 }

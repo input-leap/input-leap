@@ -31,13 +31,11 @@ enum {
     kAddClientOther,
     kAddClientIgnore
 };
-namespace Ui
-{
-    class AddClientDialog;
+namespace Ui {
+class AddClientDialog;
 }
 
-class AddClientDialog : public QDialog
-{
+class AddClientDialog : public QDialog {
     Q_OBJECT
 public:
     AddClientDialog(const QString& clientName, QWidget* parent = nullptr);
@@ -47,7 +45,7 @@ public:
     bool ignoreAutoConfigClient() { return m_IgnoreAutoConfigClient; }
 
 protected:
-    void changeEvent(QEvent *e) override;
+    void changeEvent(QEvent* e) override;
 
 private slots:
     void on_m_pCheckBoxIgnoreClient_toggled(bool checked);

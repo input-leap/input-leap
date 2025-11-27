@@ -16,24 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "EventQueueTimer.h"
 #include "base/SimpleEventQueueBuffer.h"
-#include "base/Stopwatch.h"
+#include "EventQueueTimer.h"
 #include "arch/Arch.h"
+#include "base/Stopwatch.h"
 
 namespace inputleap {
 
 SimpleEventQueueBuffer::SimpleEventQueueBuffer()
 {
-    m_queueReady     = false;
+    m_queueReady = false;
 }
 
-SimpleEventQueueBuffer::~SimpleEventQueueBuffer()
-{
-}
+SimpleEventQueueBuffer::~SimpleEventQueueBuffer() {}
 
-void
-SimpleEventQueueBuffer::waitForEvent(double timeout)
+void SimpleEventQueueBuffer::waitForEvent(double timeout)
 {
     std::unique_lock<std::mutex> lock(queue_mutex_);
     Stopwatch timer(true);
@@ -72,8 +69,7 @@ bool SimpleEventQueueBuffer::addEvent(std::uint32_t dataID)
     return true;
 }
 
-bool
-SimpleEventQueueBuffer::isEmpty() const
+bool SimpleEventQueueBuffer::isEmpty() const
 {
     std::lock_guard<std::mutex> lock(queue_mutex_);
     return !m_queueReady;

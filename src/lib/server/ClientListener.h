@@ -18,13 +18,13 @@
 
 #pragma once
 
-#include "server/Config.h"
+#include "base/Event.h"
 #include "base/EventTarget.h"
 #include "base/EventTypes.h"
-#include "base/Event.h"
 #include "base/UniquePtrContainer.h"
 #include "net/ConnectionSecurityLevel.h"
 #include "net/Fwd.h"
+#include "server/Config.h"
 #include <deque>
 #include <memory>
 #include <set>
@@ -38,9 +38,8 @@ class Server;
 class ClientListener : public EventTarget {
 public:
     // The factories are adopted.
-    ClientListener(const NetworkAddress&,
-                   std::unique_ptr<ISocketFactory> socket_factory, IEventQueue* events,
-                   ConnectionSecurityLevel security_level);
+    ClientListener(const NetworkAddress&, std::unique_ptr<ISocketFactory> socket_factory,
+                   IEventQueue* events, ConnectionSecurityLevel security_level);
     ~ClientListener();
 
     //! @name manipulators

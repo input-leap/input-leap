@@ -32,8 +32,7 @@ class QSocketNotifier;
 #include <dns_sd.h>
 #include <memory>
 
-class ZeroconfRegister : public QObject
-{
+class ZeroconfRegister : public QObject {
     Q_OBJECT
 
 public:
@@ -51,9 +50,9 @@ private slots:
     void socketReadyRead();
 
 private:
-    static void DNSSD_API registerService(DNSServiceRef sdRef,
-        DNSServiceFlags, DNSServiceErrorType errorCode, const char* name,
-        const char* regtype, const char* domain, void* context);
+    static void DNSSD_API registerService(DNSServiceRef sdRef, DNSServiceFlags,
+                                          DNSServiceErrorType errorCode, const char* name,
+                                          const char* regtype, const char* domain, void* context);
 
 private:
     DNSServiceRef m_DnsServiceRef;

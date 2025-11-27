@@ -32,15 +32,16 @@ public:
     ~MSWindowsDropTarget();
 
     // IUnknown implementation
-    HRESULT __stdcall    QueryInterface(REFIID iid, void** object);
-    ULONG __stdcall        AddRef(void);
-    ULONG __stdcall        Release(void);
+    HRESULT __stdcall QueryInterface(REFIID iid, void** object);
+    ULONG __stdcall AddRef(void);
+    ULONG __stdcall Release(void);
 
     // IDropTarget implementation
-    HRESULT __stdcall    DragEnter(IDataObject* dataObject, DWORD keyState, POINTL point, DWORD* effect);
-    HRESULT __stdcall    DragOver(DWORD keyState, POINTL point, DWORD* effect);
-    HRESULT __stdcall    DragLeave(void);
-    HRESULT __stdcall    Drop(IDataObject* dataObject, DWORD keyState, POINTL point, DWORD* effect);
+    HRESULT __stdcall DragEnter(IDataObject* dataObject, DWORD keyState, POINTL point,
+                                DWORD* effect);
+    HRESULT __stdcall DragOver(DWORD keyState, POINTL point, DWORD* effect);
+    HRESULT __stdcall DragLeave(void);
+    HRESULT __stdcall Drop(IDataObject* dataObject, DWORD keyState, POINTL point, DWORD* effect);
 
     void setDraggingFilename(char* const);
     std::string getDraggingFilename();
@@ -55,8 +56,7 @@ private:
     bool m_allowDrop;
     std::string m_dragFilename;
 
-    static MSWindowsDropTarget*
-                        s_instance;
+    static MSWindowsDropTarget* s_instance;
 };
 
 } // namespace inputleap

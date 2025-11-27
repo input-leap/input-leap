@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include "inputleap/key_types.h"
-#include "inputleap/mouse_types.h"
 #include "base/Event.h"
 #include "base/EventTypes.h"
+#include "inputleap/key_types.h"
+#include "inputleap/mouse_types.h"
 
 namespace inputleap {
 
@@ -32,15 +32,12 @@ primary screen implementations.
 */
 class IPrimaryScreen {
 public:
-    virtual ~IPrimaryScreen() { }
+    virtual ~IPrimaryScreen() {}
 
     //! Button event data
     class ButtonInfo {
     public:
-        ButtonInfo(ButtonID button, KeyModifierMask mask) :
-            m_button{button},
-            m_mask{mask}
-        {}
+        ButtonInfo(ButtonID button, KeyModifierMask mask) : m_button{button}, m_mask{mask} {}
 
         static bool equal(const ButtonInfo*, const ButtonInfo*);
 
@@ -51,10 +48,7 @@ public:
     //! Motion event data
     class MotionInfo {
     public:
-        MotionInfo(std::int32_t x, std::int32_t y) :
-            m_x{x},
-            m_y{y}
-        {}
+        MotionInfo(std::int32_t x, std::int32_t y) : m_x{x}, m_y{y} {}
 
     public:
         std::int32_t m_x;
@@ -63,9 +57,7 @@ public:
     //! Wheel motion event data
     class WheelInfo {
     public:
-        WheelInfo(std::int32_t x_delta, std::int32_t y_delta) :
-            m_xDelta{x_delta},
-            m_yDelta{y_delta}
+        WheelInfo(std::int32_t x_delta, std::int32_t y_delta) : m_xDelta{x_delta}, m_yDelta{y_delta}
         {}
 
     public:

@@ -32,15 +32,11 @@ ArchSystemUnix::~ArchSystemUnix()
     // do nothing
 }
 
-std::string
-ArchSystemUnix::setting(const std::string&) const
+std::string ArchSystemUnix::setting(const std::string&) const
 {
     return "";
 }
 
-void
-ArchSystemUnix::setting(const std::string&, const std::string&) const
-{
-}
+void ArchSystemUnix::setting(const std::string&, const std::string&) const {}
 
 } // namespace inputleap

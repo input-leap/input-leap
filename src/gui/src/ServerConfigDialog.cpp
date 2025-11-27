@@ -19,20 +19,22 @@
 #include "ServerConfigDialog.h"
 #include <ui_ServerConfigDialog.h>
 
-#include "ServerConfig.h"
-#include "HotkeyDialog.h"
 #include "ActionDialog.h"
+#include "HotkeyDialog.h"
+#include "ServerConfig.h"
 
+#include <QMessageBox>
 #include <QtCore>
 #include <QtGui>
-#include <QMessageBox>
 
-ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, const QString& defaultScreenName) :
+ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config,
+                                       const QString& defaultScreenName) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
     ui_{std::make_unique<Ui::ServerConfigDialog>()},
     m_OrigServerConfig(config),
     m_ServerConfig(config),
-    m_ScreenSetupModel(serverConfig().screens(), serverConfig().numColumns(), serverConfig().numRows()),
+    m_ScreenSetupModel(serverConfig().screens(), serverConfig().numColumns(),
+                       serverConfig().numRows()),
     m_Message("")
 {
     ui_->setupUi(this);
@@ -50,10 +52,14 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, co
     ui_->m_pCheckBoxSwitchDoubleTap->setChecked(serverConfig().hasSwitchDoubleTap());
     ui_->m_pSpinBoxSwitchDoubleTap->setValue(serverConfig().switchDoubleTap());
 
-    ui_->m_pCheckBoxCornerTopLeft->setChecked(serverConfig().switchCorner(BaseConfig::SwitchCorner::TopLeft));
-    ui_->m_pCheckBoxCornerTopRight->setChecked(serverConfig().switchCorner(BaseConfig::SwitchCorner::TopRight));
-    ui_->m_pCheckBoxCornerBottomLeft->setChecked(serverConfig().switchCorner(BaseConfig::SwitchCorner::BottomLeft));
-    ui_->m_pCheckBoxCornerBottomRight->setChecked(serverConfig().switchCorner(BaseConfig::SwitchCorner::BottomRight));
+    ui_->m_pCheckBoxCornerTopLeft->setChecked(
+        serverConfig().switchCorner(BaseConfig::SwitchCorner::TopLeft));
+    ui_->m_pCheckBoxCornerTopRight->setChecked(
+        serverConfig().switchCorner(BaseConfig::SwitchCorner::TopRight));
+    ui_->m_pCheckBoxCornerBottomLeft->setChecked(
+        serverConfig().switchCorner(BaseConfig::SwitchCorner::BottomLeft));
+    ui_->m_pCheckBoxCornerBottomRight->setChecked(
+        serverConfig().switchCorner(BaseConfig::SwitchCorner::BottomRight));
     ui_->m_pSpinBoxSwitchCornerSize->setValue(serverConfig().switchCornerSize());
 
     ui_->m_pCheckBoxIgnoreAutoConfigClient->setChecked(serverConfig().ignoreAutoConfigClient());
@@ -70,8 +76,10 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, co
 
     ui_->m_pScreenSetupView->setModel(&m_ScreenSetupModel);
 
-    if (serverConfig().numScreens() == 0)
-        model().screen(serverConfig().numColumns() / 2, serverConfig().numRows() / 2) = Screen(defaultScreenName);
+    if (serverConfig().numScreens() == 0) {
+        model().screen(serverConfig().numColumns() / 2,
+                       serverConfig().numRows() / 2) = Screen(defaultScreenName);
+    }
 }
 
 void ServerConfigDialog::accept()
@@ -114,8 +122,7 @@ void ServerConfigDialog::on_m_pButtonNewHotkey_clicked()
 {
     Hotkey hotkey;
     HotkeyDialog dlg(this, hotkey);
-    if (dlg.exec() == QDialog::Accepted)
-    {
+    if (dlg.exec() == QDialog::Accepted) {
         serverConfig().hotkeys().push_back(hotkey);
         ui_->m_pListHotkeys->addItem(hotkey.text());
     }
@@ -127,8 +134,9 @@ void ServerConfigDialog::on_m_pButtonEditHotkey_clicked()
     Q_ASSERT(idx >= 0 && idx < static_cast<int>(serverConfig().hotkeys().size()));
     Hotkey& hotkey = serverConfig().hotkeys()[idx];
     HotkeyDialog dlg(this, hotkey);
-    if (dlg.exec() == QDialog::Accepted)
+    if (dlg.exec() == QDialog::Accepted) {
         ui_->m_pListHotkeys->currentItem()->setText(hotkey.text());
+    }
 }
 
 void ServerConfigDialog::on_m_pButtonRemoveHotkey_clicked()
@@ -147,8 +155,7 @@ void ServerConfigDialog::on_m_pListHotkeys_itemSelectionChanged()
     ui_->m_pButtonRemoveHotkey->setEnabled(itemsSelected);
     ui_->m_pButtonNewAction->setEnabled(itemsSelected);
 
-    if (itemsSelected && serverConfig().hotkeys().size() > 0)
-    {
+    if (itemsSelected && serverConfig().hotkeys().size() > 0) {
         ui_->m_pListActions->clear();
 
         int idx = ui_->m_pListHotkeys->row(ui_->m_pListHotkeys->selectedItems()[0]);
@@ -157,8 +164,9 @@ void ServerConfigDialog::on_m_pListHotkeys_itemSelectionChanged()
         // only possibly be 0. GDB shows we got called indirectly from the delete line in
         // on_m_pButtonRemoveHotkey_clicked() above, but the delete is of course necessary and seems correct.
         // The while() is a generalized workaround for all that and shouldn't be required.
-        while (idx >= 0 && idx >= static_cast<int>(serverConfig().hotkeys().size()))
+        while (idx >= 0 && idx >= static_cast<int>(serverConfig().hotkeys().size())) {
             idx--;
+        }
 
         Q_ASSERT(idx >= 0 && idx < static_cast<int>(serverConfig().hotkeys().size()));
 
@@ -177,8 +185,7 @@ void ServerConfigDialog::on_m_pButtonNewAction_clicked()
 
     Action action;
     ActionDialog dlg(this, serverConfig(), hotkey, action);
-    if (dlg.exec() == QDialog::Accepted)
-    {
+    if (dlg.exec() == QDialog::Accepted) {
         hotkey.appendAction(action);
         ui_->m_pListActions->addItem(action.text());
     }

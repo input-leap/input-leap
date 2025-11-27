@@ -16,27 +16,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "test/mock/inputleap/MockKeyState.h"
 #include "test/mock/inputleap/MockEventQueue.h"
 #include "test/mock/inputleap/MockKeyMap.h"
+#include "test/mock/inputleap/MockKeyState.h"
 
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 namespace inputleap {
 
 using ::testing::_;
-using ::testing::NiceMock;
 using ::testing::Invoke;
+using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::ReturnRef;
 using ::testing::SaveArg;
 
-void
-stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys);
+void stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys);
 
-void
-assertMaskIsOne(ForeachKeyCallback cb, void* userData);
+void assertMaskIsOne(ForeachKeyCallback cb, void* userData);
 
 const inputleap::KeyMap::KeyItem* stubMapKey(inputleap::KeyMap::Keystrokes& keys, KeyID id,
                                              std::int32_t group,
@@ -402,14 +400,12 @@ TEST(KeyStateTests, isKeyDown_noKeysDown_returnsFalse)
     ASSERT_FALSE(actual);
 }
 
-void
-stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys)
+void stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys)
 {
     pressedKeys.insert(1);
 }
 
-void
-assertMaskIsOne(ForeachKeyCallback cb, void* userData)
+void assertMaskIsOne(ForeachKeyCallback cb, void* userData)
 {
     (void) cb;
 

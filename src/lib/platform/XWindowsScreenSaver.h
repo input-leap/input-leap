@@ -20,10 +20,10 @@
 
 #include "config.h"
 
-#include "inputleap/IScreenSaver.h"
-#include "base/Fwd.h"
-#include "base/EventTarget.h"
 #include "XWindowsImpl.h"
+#include "base/EventTarget.h"
+#include "base/Fwd.h"
+#include "inputleap/IScreenSaver.h"
 
 #include <X11/Xlib.h>
 
@@ -34,8 +34,8 @@ namespace inputleap {
 //! X11 screen saver implementation
 class XWindowsScreenSaver : public IScreenSaver, public EventTarget {
 public:
-    XWindowsScreenSaver(IXWindowsImpl* impl, Display*, Window,
-                        const EventTarget* event_target, IEventQueue* events);
+    XWindowsScreenSaver(IXWindowsImpl* impl, Display*, Window, const EventTarget* event_target,
+                        IEventQueue* events);
     virtual ~XWindowsScreenSaver();
 
     //! @name manipulators

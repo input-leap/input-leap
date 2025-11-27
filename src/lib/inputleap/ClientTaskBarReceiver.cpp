@@ -17,17 +17,16 @@
  */
 
 #include "inputleap/ClientTaskBarReceiver.h"
-#include "client/Client.h"
-#include "base/String.h"
-#include "base/IEventQueue.h"
 #include "arch/Arch.h"
+#include "base/IEventQueue.h"
+#include "base/String.h"
+#include "client/Client.h"
 #include "common/Version.h"
 
 namespace inputleap {
 
 ClientTaskBarReceiver::ClientTaskBarReceiver(IEventQueue* events) :
-    m_state(kNotRunning),
-    m_events(events)
+    m_state(kNotRunning), m_events(events)
 {
     // do nothing
 }
@@ -37,8 +36,7 @@ ClientTaskBarReceiver::~ClientTaskBarReceiver()
     // do nothing
 }
 
-void
-ClientTaskBarReceiver::updateStatus(Client* client, const std::string& errorMsg)
+void ClientTaskBarReceiver::updateStatus(Client* client, const std::string& errorMsg)
 {
     {
         // update our status
@@ -46,21 +44,17 @@ ClientTaskBarReceiver::updateStatus(Client* client, const std::string& errorMsg)
         if (client == nullptr) {
             if (m_errorMessage.empty()) {
                 m_state = kNotRunning;
-            }
-            else {
+            } else {
                 m_state = kNotWorking;
             }
-        }
-        else {
+        } else {
             m_server = client->getServerAddress().getHostname();
 
             if (client->isConnected()) {
                 m_state = kConnected;
-            }
-            else if (client->isConnecting()) {
+            } else if (client->isConnecting()) {
                 m_state = kConnecting;
-            }
-            else {
+            } else {
                 m_state = kNotConnected;
             }
         }
@@ -73,8 +67,7 @@ ClientTaskBarReceiver::updateStatus(Client* client, const std::string& errorMsg)
     ARCH->updateReceiver(this);
 }
 
-ClientTaskBarReceiver::EState
-ClientTaskBarReceiver::getStatus() const
+ClientTaskBarReceiver::EState ClientTaskBarReceiver::getStatus() const
 {
     return m_state;
 }
@@ -84,52 +77,44 @@ const std::string& ClientTaskBarReceiver::getErrorMessage() const
     return m_errorMessage;
 }
 
-void
-ClientTaskBarReceiver::quit()
+void ClientTaskBarReceiver::quit()
 {
     m_events->add_event(EventType::QUIT);
 }
 
-void
-ClientTaskBarReceiver::onStatusChanged(Client*)
+void ClientTaskBarReceiver::onStatusChanged(Client*)
 {
     // do nothing
 }
 
-void
-ClientTaskBarReceiver::lock() const
+void ClientTaskBarReceiver::lock() const
 {
     // do nothing
 }
 
-void
-ClientTaskBarReceiver::unlock() const
+void ClientTaskBarReceiver::unlock() const
 {
     // do nothing
 }
 
-std::string
-ClientTaskBarReceiver::getToolTip() const
+std::string ClientTaskBarReceiver::getToolTip() const
 {
     switch (m_state) {
     case kNotRunning:
         return inputleap::string::sprintf("%s:  Not running", kAppVersion);
 
     case kNotWorking:
-        return inputleap::string::sprintf("%s:  %s",
-                                kAppVersion, m_errorMessage.c_str());
+        return inputleap::string::sprintf("%s:  %s", kAppVersion, m_errorMessage.c_str());
 
     case kNotConnected:
-        return inputleap::string::sprintf("%s:  Not connected:  %s",
-                                kAppVersion, m_errorMessage.c_str());
+        return inputleap::string::sprintf("%s:  Not connected:  %s", kAppVersion,
+                                          m_errorMessage.c_str());
 
     case kConnecting:
-        return inputleap::string::sprintf("%s:  Connecting to %s...",
-                                kAppVersion, m_server.c_str());
+        return inputleap::string::sprintf("%s:  Connecting to %s...", kAppVersion, m_server.c_str());
 
     case kConnected:
-        return inputleap::string::sprintf("%s:  Connected to %s",
-                                kAppVersion, m_server.c_str());
+        return inputleap::string::sprintf("%s:  Connected to %s", kAppVersion, m_server.c_str());
 
     default:
         return "";

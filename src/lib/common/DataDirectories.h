@@ -21,8 +21,7 @@
 
 namespace inputleap {
 
-class DataDirectories
-{
+class DataDirectories {
 public:
     static const fs::path& profile();
     static const fs::path& profile(const fs::path& path);
@@ -41,6 +40,7 @@ public:
 
     static void maybe_copy_old_profile(const fs::path& old_profile_path,
                                        const fs::path& curr_profile_path);
+
 private:
     static fs::path _profile;
     static fs::path _global;

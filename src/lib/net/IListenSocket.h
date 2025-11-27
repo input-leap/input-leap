@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "net/ISocket.h"
 #include "base/EventTypes.h"
+#include "net/ISocket.h"
 #include <memory>
 
 namespace inputleap {

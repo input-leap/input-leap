@@ -25,16 +25,15 @@
 #endif
 
 #include <gtest/gtest.h>
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
 #define LOCK_TIMEOUT 30
 
 void lock(std::string lockFile);
 void unlock(std::string lockFile);
 
-int
-main(int argc, char **argv)
+int main(int argc, char** argv)
 {
 #if SYSAPI_WIN32
     // record window instance for tray icon, etc
@@ -58,7 +57,6 @@ main(int argc, char **argv)
         lock(lockFile);
     }
 
-
     testing::InitGoogleTest(&argc, argv);
 
     int result = RUN_ALL_TESTS();
@@ -67,12 +65,12 @@ main(int argc, char **argv)
         unlock(lockFile);
     }
 
-  // gtest seems to randomly finish with error codes (e.g. -1, -1073741819)
-  // even when no tests have failed. not sure what causes this, but it
-  // happens on all platforms and  keeps leading to false positives.
-  // according to the documentation, 1 is a failure, so we should be
-  // able to trust that code.
-  return (result == 1) ? 1 : 0;
+    // gtest seems to randomly finish with error codes (e.g. -1, -1073741819)
+    // even when no tests have failed. not sure what causes this, but it
+    // happens on all platforms and  keeps leading to false positives.
+    // according to the documentation, 1 is a failure, so we should be
+    // able to trust that code.
+    return (result == 1) ? 1 : 0;
 }
 
 void lock(std::string lockFile)
@@ -81,7 +79,6 @@ void lock(std::string lockFile)
 
     // keep checking until timeout is reached.
     while ((inputleap::current_time_seconds() - start) < LOCK_TIMEOUT) {
-
         std::ifstream is(lockFile.c_str());
         bool noLock = !is;
         is.close();

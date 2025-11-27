@@ -18,23 +18,20 @@
 
 #include "platform/MSWindowsClipboard.h"
 
-#include "platform/MSWindowsClipboardTextConverter.h"
-#include "platform/MSWindowsClipboardUTF16Converter.h"
-#include "platform/MSWindowsClipboardBitmapConverter.h"
-#include "platform/MSWindowsClipboardHTMLConverter.h"
-#include "platform/MSWindowsClipboardFacade.h"
 #include "arch/win32/ArchMiscWindows.h"
 #include "base/Log.h"
+#include "platform/MSWindowsClipboardBitmapConverter.h"
+#include "platform/MSWindowsClipboardFacade.h"
+#include "platform/MSWindowsClipboardHTMLConverter.h"
+#include "platform/MSWindowsClipboardTextConverter.h"
+#include "platform/MSWindowsClipboardUTF16Converter.h"
 
 namespace inputleap {
 
-UINT                    MSWindowsClipboard::s_ownershipFormat = 0;
+UINT MSWindowsClipboard::s_ownershipFormat = 0;
 
 MSWindowsClipboard::MSWindowsClipboard(HWND window) :
-    m_window(window),
-    m_time(0),
-    m_facade(new MSWindowsClipboardFacade()),
-    m_deleteFacade(true)
+    m_window(window), m_time(0), m_facade(new MSWindowsClipboardFacade()), m_deleteFacade(true)
 {
     // add converters, most desired first
     m_converters.push_back(new MSWindowsClipboardUTF16Converter);
@@ -49,20 +46,19 @@ MSWindowsClipboard::~MSWindowsClipboard()
     // dependency injection causes confusion over ownership, so we need
     // logic to decide whether or not we delete the facade. there must
     // be a more elegant way of doing this.
-    if (m_deleteFacade)
+    if (m_deleteFacade) {
         delete m_facade;
+    }
 }
 
-void
-MSWindowsClipboard::setFacade(IMSWindowsClipboardFacade& facade)
+void MSWindowsClipboard::setFacade(IMSWindowsClipboardFacade& facade)
 {
     delete m_facade;
     m_facade = &facade;
     m_deleteFacade = false;
 }
 
-bool
-MSWindowsClipboard::emptyUnowned()
+bool MSWindowsClipboard::emptyUnowned()
 {
     LOG_DEBUG("empty clipboard");
 
@@ -77,8 +73,7 @@ MSWindowsClipboard::emptyUnowned()
     return true;
 }
 
-bool
-MSWindowsClipboard::clear()
+bool MSWindowsClipboard::clear()
 {
     if (!emptyUnowned()) {
         return false;
@@ -95,8 +90,7 @@ MSWindowsClipboard::clear()
     return true;
 }
 
-void
-MSWindowsClipboard::add(EFormat format, const std::string& data)
+void MSWindowsClipboard::add(EFormat format, const std::string& data)
 {
     LOG_DEBUG("add %d bytes to clipboard format: %d", data.size(), format);
 
@@ -115,8 +109,7 @@ MSWindowsClipboard::add(EFormat format, const std::string& data)
     }
 }
 
-bool
-MSWindowsClipboard::open(Time time) const
+bool MSWindowsClipboard::open(Time time) const
 {
     LOG_DEBUG("open clipboard");
 
@@ -134,21 +127,18 @@ MSWindowsClipboard::open(Time time) const
     return true;
 }
 
-void
-MSWindowsClipboard::close() const
+void MSWindowsClipboard::close() const
 {
     LOG_DEBUG("close clipboard");
     CloseClipboard();
 }
 
-IClipboard::Time
-MSWindowsClipboard::getTime() const
+IClipboard::Time MSWindowsClipboard::getTime() const
 {
     return m_time;
 }
 
-bool
-MSWindowsClipboard::has(EFormat format) const
+bool MSWindowsClipboard::has(EFormat format) const
 {
     for (auto index = m_converters.begin(); index != m_converters.end(); ++index) {
         IMSWindowsClipboardConverter* converter = *index;
@@ -166,7 +156,6 @@ std::string MSWindowsClipboard::get(EFormat format) const
     // find the converter for the first clipboard format we can handle
     IMSWindowsClipboardConverter* converter = nullptr;
     for (auto index = m_converters.begin(); index != m_converters.end(); ++index) {
-
         converter = *index;
         if (converter->getFormat() == format) {
             break;
@@ -193,8 +182,7 @@ std::string MSWindowsClipboard::get(EFormat format) const
     return converter->toIClipboard(win32Data);
 }
 
-void
-MSWindowsClipboard::clearConverters()
+void MSWindowsClipboard::clearConverters()
 {
     for (auto index = m_converters.begin(); index != m_converters.end(); ++index) {
         delete *index;
@@ -211,8 +199,7 @@ bool MSWindowsClipboard::is_owned_by_us()
     return (IsClipboardFormatAvailable(getOwnershipFormat()) != 0);
 }
 
-UINT
-MSWindowsClipboard::getOwnershipFormat()
+UINT MSWindowsClipboard::getOwnershipFormat()
 {
     // create ownership format if we haven't yet
     if (s_ownershipFormat == 0) {

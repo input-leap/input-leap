@@ -21,18 +21,18 @@
 
 #define INPUTLEAP_TEST_ENV
 
-#include "test/global/TestEventQueue.h"
-#include "ipc/IpcServer.h"
-#include "ipc/IpcClient.h"
-#include "ipc/IpcServerProxy.h"
-#include "ipc/IpcMessage.h"
-#include "ipc/IpcClientProxy.h"
-#include "ipc/Ipc.h"
-#include "net/SocketMultiplexer.h"
-#include "mt/Thread.h"
 #include "arch/Arch.h"
-#include "base/Log.h"
 #include "base/EventQueue.h"
+#include "base/Log.h"
+#include "ipc/Ipc.h"
+#include "ipc/IpcClient.h"
+#include "ipc/IpcClientProxy.h"
+#include "ipc/IpcMessage.h"
+#include "ipc/IpcServer.h"
+#include "ipc/IpcServerProxy.h"
+#include "mt/Thread.h"
+#include "net/SocketMultiplexer.h"
+#include "test/global/TestEventQueue.h"
 
 #include <gtest/gtest.h>
 
@@ -40,8 +40,7 @@
 
 namespace inputleap {
 
-class IpcTests : public ::testing::Test
-{
+class IpcTests : public ::testing::Test {
 public:
     IpcTests();
     virtual ~IpcTests();
@@ -61,7 +60,6 @@ public:
     IpcClient* m_sendMessageToServer_client;
     IpcServer* m_sendMessageToClient_server;
     TestEventQueue m_events;
-
 };
 
 TEST_F(IpcTests, connectToServer)
@@ -72,10 +70,7 @@ TEST_F(IpcTests, connectToServer)
     m_connectToServer_server = &server;
 
     m_events.add_handler(EventType::IPC_SERVER_MESSAGE_RECEIVED, &server,
-                         [this](const auto& e)
-    {
-        connectToServer_handle_message_received(e);
-    });
+                         [this](const auto& e) { connectToServer_handle_message_received(e); });
 
     IpcClient client(&m_events, &socketMultiplexer, TEST_IPC_PORT);
     client.connect();
@@ -96,9 +91,7 @@ TEST_F(IpcTests, sendMessageToServer)
     server.listen();
 
     // event handler sends "test" command to server.
-    m_events.add_handler(EventType::IPC_SERVER_MESSAGE_RECEIVED, &server,
-                         [this](const auto& e)
-    {
+    m_events.add_handler(EventType::IPC_SERVER_MESSAGE_RECEIVED, &server, [this](const auto& e) {
         sendMessageToServer_serverHandleMessageReceived(e);
     });
 
@@ -122,18 +115,14 @@ TEST_F(IpcTests, sendMessageToClient)
     m_sendMessageToClient_server = &server;
 
     // event handler sends "test" log line to client.
-    m_events.add_handler(EventType::IPC_SERVER_MESSAGE_RECEIVED, &server,
-                         [this](const auto& e)
-    {
+    m_events.add_handler(EventType::IPC_SERVER_MESSAGE_RECEIVED, &server, [this](const auto& e) {
         sendMessageToClient_server_handle_client_connected(e);
     });
 
     IpcClient client(&m_events, &socketMultiplexer, TEST_IPC_PORT);
     client.connect();
 
-    m_events.add_handler(EventType::IPC_CLIENT_MESSAGE_RECEIVED, &client,
-                         [this](const auto& e)
-    {
+    m_events.add_handler(EventType::IPC_CLIENT_MESSAGE_RECEIVED, &client, [this](const auto& e) {
         sendMessageToClient_client_handle_message_received(e);
     });
 
@@ -147,24 +136,20 @@ TEST_F(IpcTests, sendMessageToClient)
 }
 
 IpcTests::IpcTests() :
-m_connectToServer_helloMessageReceived(false),
-m_connectToServer_hasClientNode(false),
-m_connectToServer_server(nullptr),
-m_sendMessageToServer_client(nullptr),
-m_sendMessageToClient_server(nullptr)
-{
-}
+    m_connectToServer_helloMessageReceived(false),
+    m_connectToServer_hasClientNode(false),
+    m_connectToServer_server(nullptr),
+    m_sendMessageToServer_client(nullptr),
+    m_sendMessageToClient_server(nullptr)
+{}
 
-IpcTests::~IpcTests()
-{
-}
+IpcTests::~IpcTests() {}
 
 void IpcTests::connectToServer_handle_message_received(const Event& e)
 {
     const auto& m = e.get_data_as<IpcMessage>();
     if (m.type() == kIpcHello) {
-        m_connectToServer_hasClientNode =
-            m_connectToServer_server->hasClients(kIpcClientNode);
+        m_connectToServer_hasClientNode = m_connectToServer_server->hasClients(kIpcClientNode);
         m_connectToServer_helloMessageReceived = true;
         m_events.raiseQuitEvent();
     }
@@ -177,8 +162,7 @@ void IpcTests::sendMessageToServer_serverHandleMessageReceived(const Event& e)
         LOG_DEBUG("client said hello, sending test to server");
         IpcCommandMessage cm("test", true);
         m_sendMessageToServer_client->send(cm);
-    }
-    else if (m.type() == kIpcCommand) {
+    } else if (m.type() == kIpcCommand) {
         const auto& cm = static_cast<const IpcCommandMessage&>(m);
         LOG_DEBUG("got ipc command message, %s", cm.command().c_str());
         m_sendMessageToServer_receivedString = cm.command();

@@ -20,28 +20,23 @@
 #include "base/Log.h"
 #include "common/common.h"
 
-#include <stdio.h>
 #include <Shlobj.h>
+#include <stdio.h>
 
 namespace inputleap {
 
-void getDropData(IDataObject *pDataObject);
+void getDropData(IDataObject* pDataObject);
 
 MSWindowsDropTarget* MSWindowsDropTarget::s_instance = nullptr;
 
-MSWindowsDropTarget::MSWindowsDropTarget() :
-    m_refCount(1),
-    m_allowDrop(false)
+MSWindowsDropTarget::MSWindowsDropTarget() : m_refCount(1), m_allowDrop(false)
 {
     s_instance = this;
 }
 
-MSWindowsDropTarget::~MSWindowsDropTarget()
-{
-}
+MSWindowsDropTarget::~MSWindowsDropTarget() {}
 
-MSWindowsDropTarget&
-MSWindowsDropTarget::instance()
+MSWindowsDropTarget& MSWindowsDropTarget::instance()
 {
     assert(s_instance != nullptr);
     return *s_instance;
@@ -83,38 +78,33 @@ MSWindowsDropTarget::Drop(IDataObject* dataObject, DWORD keyState, POINTL point,
     return S_OK;
 }
 
-bool
-MSWindowsDropTarget::queryDataObject(IDataObject* dataObject)
+bool MSWindowsDropTarget::queryDataObject(IDataObject* dataObject)
 {
     // check if it supports CF_HDROP using a HGLOBAL
-    FORMATETC fmtetc = { CF_HDROP, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
+    FORMATETC fmtetc = {CF_HDROP, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL};
 
     return dataObject->QueryGetData(&fmtetc) == S_OK ? true : false;
 }
 
-void
-MSWindowsDropTarget::setDraggingFilename(char* const filename)
+void MSWindowsDropTarget::setDraggingFilename(char* const filename)
 {
     m_dragFilename = filename;
 }
 
-std::string
-MSWindowsDropTarget::getDraggingFilename()
+std::string MSWindowsDropTarget::getDraggingFilename()
 {
     return m_dragFilename;
 }
 
-void
-MSWindowsDropTarget::clearDraggingFilename()
+void MSWindowsDropTarget::clearDraggingFilename()
 {
     m_dragFilename.clear();
 }
 
-void
-getDropData(IDataObject* dataObject)
+void getDropData(IDataObject* dataObject)
 {
     // construct a FORMATETC object
-    FORMATETC fmtEtc = { CF_HDROP, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
+    FORMATETC fmtEtc = {CF_HDROP, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL};
     STGMEDIUM stgMed;
 
     // See if the dataobject contains any DROP stored as a HGLOBAL
@@ -126,7 +116,7 @@ getDropData(IDataObject* dataObject)
             // data object global handler contains:
             // DROPFILESfilename1 filename2 two spaces as the end
             // TODO: get multiple filenames
-            wchar_t* wcData = (wchar_t*)((LPBYTE)data + sizeof(DROPFILES));
+            wchar_t* wcData = (wchar_t*) ((LPBYTE) data + sizeof(DROPFILES));
 
             // convert wchar to char
             char* filename = new char[wcslen(wcData) + 1];
@@ -145,36 +135,31 @@ getDropData(IDataObject* dataObject)
     }
 }
 
-HRESULT __stdcall
-MSWindowsDropTarget::QueryInterface (REFIID iid, void ** object)
+HRESULT __stdcall MSWindowsDropTarget::QueryInterface(REFIID iid, void** object)
 {
     if (iid == IID_IDropTarget || iid == IID_IUnknown) {
         AddRef();
         *object = this;
         return S_OK;
-    }
-    else {
+    } else {
         *object = 0;
         return E_NOINTERFACE;
     }
 }
 
-ULONG __stdcall
-MSWindowsDropTarget::AddRef(void)
+ULONG __stdcall MSWindowsDropTarget::AddRef(void)
 {
     return InterlockedIncrement(&m_refCount);
 }
 
-ULONG __stdcall
-MSWindowsDropTarget::Release(void)
+ULONG __stdcall MSWindowsDropTarget::Release(void)
 {
     LONG count = InterlockedDecrement(&m_refCount);
 
     if (count == 0) {
         delete this;
         return 0;
-    }
-    else {
+    } else {
         return count;
     }
 }

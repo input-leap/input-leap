@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "platform/MSWindowsClipboardFacade.h"
 #include "inputleap/IClipboard.h"
+#include "platform/MSWindowsClipboardFacade.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -35,7 +35,7 @@ class IMSWindowsClipboardFacade;
 class MSWindowsClipboard : public IClipboard {
 public:
     MSWindowsClipboard(HWND window);
-    MSWindowsClipboard(HWND window, IMSWindowsClipboardFacade &facade);
+    MSWindowsClipboard(HWND window, IMSWindowsClipboardFacade& facade);
     virtual ~MSWindowsClipboard();
 
     //! Empty clipboard without ownership
@@ -82,7 +82,7 @@ private:
     HWND m_window;
     mutable Time m_time;
     ConverterList m_converters;
-    static UINT            s_ownershipFormat;
+    static UINT s_ownershipFormat;
     IMSWindowsClipboardFacade* m_facade;
     bool m_deleteFacade;
 };
@@ -94,12 +94,11 @@ converters.
 */
 class IMSWindowsClipboardConverter {
 public:
-    virtual ~IMSWindowsClipboardConverter() { }
+    virtual ~IMSWindowsClipboardConverter() {}
     // accessors
 
     // return the clipboard format this object converts from/to
-    virtual IClipboard::EFormat
-                        getFormat() const = 0;
+    virtual IClipboard::EFormat getFormat() const = 0;
 
     // return the atom representing the win32 clipboard format that
     // this object converts from/to

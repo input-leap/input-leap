@@ -18,50 +18,47 @@
 
 #include "inputleap/win32/DaemonApp.h"
 
+#include "arch/XArch.h"
+#include "base/EventQueue.h"
+#include "base/Log.h"
+#include "base/log_outputters.h"
+#include "common/DataDirectories.h"
 #include "inputleap/App.h"
 #include "inputleap/ArgParser.h"
-#include "inputleap/ServerArgs.h"
 #include "inputleap/ClientArgs.h"
+#include "inputleap/ServerArgs.h"
 #include "ipc/IpcClientProxy.h"
-#include "ipc/IpcMessage.h"
 #include "ipc/IpcLogOutputter.h"
+#include "ipc/IpcMessage.h"
 #include "net/SocketMultiplexer.h"
-#include "arch/XArch.h"
-#include "base/Log.h"
-#include "base/EventQueue.h"
-#include "base/log_outputters.h"
-#include "base/Log.h"
-#include "common/DataDirectories.h"
 
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/XArchWindows.h"
 #include "inputleap/Screen.h"
-#include "platform/MSWindowsScreen.h"
 #include "platform/MSWindowsDebugOutputter.h"
-#include "platform/MSWindowsWatchdog.h"
 #include "platform/MSWindowsEventQueueBuffer.h"
+#include "platform/MSWindowsScreen.h"
 #include "platform/MSWindowsUtil.h"
+#include "platform/MSWindowsWatchdog.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-#include <string>
 #include <iostream>
 #include <sstream>
+#include <string>
 
 namespace inputleap {
 
 DaemonApp* DaemonApp::s_instance = nullptr;
 
-int
-mainLoopStatic()
+int mainLoopStatic()
 {
     DaemonApp::s_instance->mainLoop(true);
     return kExitSuccess;
 }
 
-int
-mainLoopStatic(int, const char**)
+int mainLoopStatic(int, const char**)
 {
     return ArchMiscWindows::runDaemon(mainLoopStatic);
 }
@@ -76,12 +73,9 @@ DaemonApp::DaemonApp() :
     s_instance = this;
 }
 
-DaemonApp::~DaemonApp()
-{
-}
+DaemonApp::~DaemonApp() {}
 
-int
-DaemonApp::run(int argc, char** argv)
+int DaemonApp::run(int argc, char** argv)
 {
     // win32 instance needed for threading, etc.
     ArchMiscWindows::setInstanceWin32(GetModuleHandle(nullptr));
@@ -94,15 +88,15 @@ DaemonApp::run(int argc, char** argv)
     m_events = &events;
 
     bool uninstall = false;
-    try
-    {
+    try {
         // sends debug messages to visual studio console window.
         log.insert(new MSWindowsDebugOutputter());
 
         // default log level to system setting.
         std::string logLevel = arch.setting("LogLevel");
-        if (logLevel != "")
+        if (logLevel != "") {
             log.setFilter(logLevel.c_str());
+        }
 
         bool foreground = false;
 
@@ -111,17 +105,14 @@ DaemonApp::run(int argc, char** argv)
 
             if (arg == "/f" || arg == "-f") {
                 foreground = true;
-            }
-            else if (arg == "/install") {
+            } else if (arg == "/install") {
                 uninstall = true;
                 arch.installDaemon();
                 return kExitSuccess;
-            }
-            else if (arg == "/uninstall") {
+            } else if (arg == "/uninstall") {
                 arch.uninstallDaemon();
                 return kExitSuccess;
-            }
-            else {
+            } else {
                 std::stringstream ss;
                 ss << "Unrecognized argument: " << arg;
                 foregroundError(ss.str().c_str());
@@ -132,17 +123,16 @@ DaemonApp::run(int argc, char** argv)
         if (foreground) {
             // add a console to catch Ctrl+C and run process in foreground
             // instead of daemonizing. useful for debugging.
-            if (IsDebuggerPresent())
+            if (IsDebuggerPresent()) {
                 AllocConsole();
+            }
             mainLoop(false);
-        }
-        else {
+        } else {
             arch.daemonize("InputLeap", mainLoopStatic);
         }
 
         return kExitSuccess;
-    }
-    catch (std::runtime_error& e) {
+    } catch (std::runtime_error& e) {
         std::string message = e.what();
         if (uninstall && (message.find("The service has not been started") != std::string::npos)) {
             // TODO: if we're keeping this use error code instead (what is it?!).
@@ -150,27 +140,22 @@ DaemonApp::run(int argc, char** argv)
             // it's quite misleading for the user. they thing something has gone
             // horribly wrong, but it's just the service manager reporting a false
             // positive (the service has actually shut down in most cases).
-        }
-        else {
+        } else {
             foregroundError(message.c_str());
         }
         return kExitFailed;
-    }
-    catch (std::exception& e) {
+    } catch (std::exception& e) {
         foregroundError(e.what());
         return kExitFailed;
-    }
-    catch (...) {
+    } catch (...) {
         foregroundError("Unrecognized error.");
         return kExitFailed;
     }
 }
 
-void
-DaemonApp::mainLoop(bool daemonized)
+void DaemonApp::mainLoop(bool daemonized)
 {
-    try
-    {
+    try {
         DAEMON_RUNNING(true);
 
         if (daemonized) {
@@ -220,27 +205,24 @@ DaemonApp::mainLoop(bool daemonized)
         delete m_ipcServer;
 
         DAEMON_RUNNING(false);
-    }
-    catch (std::exception& e) {
+    } catch (std::exception& e) {
         LOG_CRIT("An error occurred: %s", e.what());
-    }
-    catch (...) {
+    } catch (...) {
         LOG_CRIT("An unknown error occurred.\n");
     }
 }
 
-void
-DaemonApp::foregroundError(const char* message)
+void DaemonApp::foregroundError(const char* message)
 {
     MessageBox(nullptr, message, "InputLeap Service", MB_OK | MB_ICONERROR);
 }
 
-std::string
-DaemonApp::logFilename()
+std::string DaemonApp::logFilename()
 {
     std::string logFilename = ARCH->setting("LogFilename");
-    if (logFilename.empty())
+    if (logFilename.empty()) {
         logFilename = (inputleap::DataDirectories::global() / LOG_FILENAME).u8string();
+    }
     MSWindowsUtil::createDirectory(logFilename, true);
     return logFilename;
 }
@@ -249,111 +231,114 @@ void DaemonApp::handle_ipc_message(const Event& e)
 {
     const IpcMessage& m = e.get_data_as<IpcMessage>();
     switch (m.type()) {
-        case kIpcCommand: {
-            const IpcCommandMessage& cm = static_cast<const IpcCommandMessage&>(m);
-            std::string command = cm.command();
+    case kIpcCommand: {
+        const IpcCommandMessage& cm = static_cast<const IpcCommandMessage&>(m);
+        std::string command = cm.command();
 
-            // if empty quotes, clear.
-            if (command == "\"\"") {
-                command.clear();
+        // if empty quotes, clear.
+        if (command == "\"\"") {
+            command.clear();
+        }
+
+        if (!command.empty()) {
+            LOG_DEBUG("new command, elevate=%d command=%s", cm.elevate(), command.c_str());
+
+            std::vector<std::string> argsArray;
+            ArgParser::splitCommandString(command, argsArray);
+            ArgParser argParser(nullptr);
+            const char** argv = argParser.getArgv(argsArray);
+            ServerArgs serverArgs;
+            ClientArgs clientArgs;
+            int argc = static_cast<int>(argsArray.size());
+            bool server = argsArray[0].find("input-leaps") != std::string::npos ? true : false;
+            ArgsBase* argBase = nullptr;
+
+            if (server) {
+                argParser.parseServerArgs(serverArgs, argc, argv);
+                argBase = &serverArgs;
+            } else {
+                argParser.parseClientArgs(clientArgs, argc, argv);
+                argBase = &clientArgs;
             }
 
-            if (!command.empty()) {
-                LOG_DEBUG("new command, elevate=%d command=%s", cm.elevate(), command.c_str());
+            delete[] argv;
 
-                std::vector<std::string> argsArray;
-                ArgParser::splitCommandString(command, argsArray);
-                ArgParser argParser(nullptr);
-                const char** argv = argParser.getArgv(argsArray);
-                ServerArgs serverArgs;
-                ClientArgs clientArgs;
-                int argc = static_cast<int>(argsArray.size());
-                bool server = argsArray[0].find("input-leaps") != std::string::npos ? true : false;
-                ArgsBase* argBase = nullptr;
-
-                if (server) {
-                    argParser.parseServerArgs(serverArgs, argc, argv);
-                    argBase = &serverArgs;
-                }
-                else {
-                    argParser.parseClientArgs(clientArgs, argc, argv);
-                    argBase = &clientArgs;
-                }
-
-                delete[] argv;
-
-                std::string logLevel(argBase->m_logFilter);
-                if (!logLevel.empty()) {
-                    try {
-                        // change log level based on that in the command string
-                        // and change to that log level now.
-                        ARCH->setting("LogLevel", logLevel);
-                        CLOG->setFilter(logLevel.c_str());
-                    }
-                    catch (std::runtime_error& e) {
-                        LOG_ERR("failed to save LogLevel setting, %s", e.what());
-                    }
-                }
-
-                // eg. no log-to-file while running in foreground
-                if (m_fileLogOutputter != nullptr) {
-                    std::string logFilename;
-                    if (argBase->m_logFile != nullptr) {
-                        logFilename = std::string(argBase->m_logFile);
-                        ARCH->setting("LogFilename", logFilename);
-                        m_watchdog->setFileLogOutputter(m_fileLogOutputter);
-                        command = ArgParser::assembleCommand(argsArray, "--log", 1);
-                        LOG_DEBUG("removed log file argument and filename %s from command ", logFilename.c_str());
-                        LOG_DEBUG("new command, elevate=%d command=%s", cm.elevate(), command.c_str());
-                    } else {
-                        m_watchdog->setFileLogOutputter(nullptr);
-                    }
-                    m_fileLogOutputter->setLogFilename(logFilename.c_str());
+            std::string logLevel(argBase->m_logFilter);
+            if (!logLevel.empty()) {
+                try {
+                    // change log level based on that in the command string
+                    // and change to that log level now.
+                    ARCH->setting("LogLevel", logLevel);
+                    CLOG->setFilter(logLevel.c_str());
+                } catch (std::runtime_error& e) {
+                    LOG_ERR("failed to save LogLevel setting, %s", e.what());
                 }
             }
-            else {
-                LOG_DEBUG("empty command, elevate=%d", cm.elevate());
+
+            // eg. no log-to-file while running in foreground
+            if (m_fileLogOutputter != nullptr) {
+                std::string logFilename;
+                if (argBase->m_logFile != nullptr) {
+                    logFilename = std::string(argBase->m_logFile);
+                    ARCH->setting("LogFilename", logFilename);
+                    m_watchdog->setFileLogOutputter(m_fileLogOutputter);
+                    command = ArgParser::assembleCommand(argsArray, "--log", 1);
+                    LOG_DEBUG("removed log file argument and filename %s from command ",
+                              logFilename.c_str());
+                    LOG_DEBUG("new command, elevate=%d command=%s", cm.elevate(), command.c_str());
+                } else {
+                    m_watchdog->setFileLogOutputter(nullptr);
+                }
+                m_fileLogOutputter->setLogFilename(logFilename.c_str());
             }
+        } else {
+            LOG_DEBUG("empty command, elevate=%d", cm.elevate());
+        }
 
-            try {
-                // store command in system settings. this is used when the daemon
-                // next starts.
-                ARCH->setting("Command", command);
+        try {
+            // store command in system settings. this is used when the daemon
+            // next starts.
+            ARCH->setting("Command", command);
 
-                // TODO: it would be nice to store bools/ints...
-                ARCH->setting("Elevate", std::string(cm.elevate() ? "1" : "0"));
-            }
-            catch (std::runtime_error& e) {
-                LOG_ERR("failed to save settings, %s", e.what());
-            }
+            // TODO: it would be nice to store bools/ints...
+            ARCH->setting("Elevate", std::string(cm.elevate() ? "1" : "0"));
+        } catch (std::runtime_error& e) {
+            LOG_ERR("failed to save settings, %s", e.what());
+        }
 
-            // tell the relauncher about the new command. this causes the
-            // relauncher to stop the existing command and start the new
-            // command.
-            m_watchdog->setCommand(command, cm.elevate());
+        // tell the relauncher about the new command. this causes the
+        // relauncher to stop the existing command and start the new
+        // command.
+        m_watchdog->setCommand(command, cm.elevate());
 
+        break;
+    }
+
+    case kIpcHello:
+        const auto& hm = static_cast<const IpcHelloMessage&>(m);
+        std::string type;
+        switch (hm.clientType()) {
+        case kIpcClientGui:
+            type = "gui";
+            break;
+        case kIpcClientNode:
+            type = "node";
+            break;
+        default:
+            type = "unknown";
             break;
         }
 
-        case kIpcHello:
-            const auto& hm = static_cast<const IpcHelloMessage&>(m);
-            std::string type;
-            switch (hm.clientType()) {
-                case kIpcClientGui: type = "gui"; break;
-                case kIpcClientNode: type = "node"; break;
-                default: type = "unknown"; break;
-            }
+        LOG_DEBUG("ipc hello, type=%s", type.c_str());
 
-            LOG_DEBUG("ipc hello, type=%s", type.c_str());
+        const char* serverstatus = m_watchdog->isProcessActive() ? "active" : "not active";
 
-            const char * serverstatus = m_watchdog->isProcessActive() ? "active" : "not active";
+        // using CLOG_PRINT here allows the GUI to see that the server status
+        // regardless of which log level is set
+        LOG_PRINT("server status: %s", serverstatus);
 
-            // using CLOG_PRINT here allows the GUI to see that the server status
-            // regardless of which log level is set
-            LOG_PRINT("server status: %s", serverstatus);
-
-            m_ipcLogOutputter->notifyBuffer();
-            break;
+        m_ipcLogOutputter->notifyBuffer();
+        break;
     }
 }
 

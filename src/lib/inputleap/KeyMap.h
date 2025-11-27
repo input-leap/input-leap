@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "inputleap/key_types.h"
 #include "base/String.h"
+#include "inputleap/key_types.h"
 
 #ifdef INPUTLEAP_TEST_ENV
 #include <gtest/gtest_prod.h>
@@ -51,18 +51,18 @@ public:
     */
     struct KeyItem {
     public:
-        KeyID m_id; //!< KeyID
+        KeyID m_id;                  //!< KeyID
         std::int32_t m_group;        //!< Group for key
-        KeyButton m_button; //!< Button to generate KeyID
-        KeyModifierMask m_required; //!< Modifiers required for KeyID
+        KeyButton m_button;          //!< Button to generate KeyID
+        KeyModifierMask m_required;  //!< Modifiers required for KeyID
         KeyModifierMask m_sensitive; //!< Modifiers key is sensitive to
         KeyModifierMask m_generates; //!< Modifiers key is mapped to
-        bool m_dead; //!< \c true if this is a dead KeyID
-        bool m_lock; //!< \c true if this locks a modifier
-        std::uint32_t m_client;        //!< Client data
+        bool m_dead;                 //!< \c true if this is a dead KeyID
+        bool m_lock;                 //!< \c true if this locks a modifier
+        std::uint32_t m_client;      //!< Client data
 
     public:
-        bool            operator==(const KeyItem&) const;
+        bool operator==(const KeyItem&) const;
     };
 
     //! The KeyButtons needed to synthesize a KeyID
@@ -81,8 +81,8 @@ public:
     class Keystroke {
     public:
         enum EType {
-            kButton,                    //!< Synthesize button
-            kGroup                        //!< Set new group
+            kButton, //!< Synthesize button
+            kGroup   //!< Set new group
         };
 
         Keystroke(KeyButton, bool press, bool repeat, std::uint32_t clientData);
@@ -91,16 +91,16 @@ public:
     public:
         struct Button {
         public:
-            KeyButton m_button; //!< Button to synthesize
-            bool m_press; //!< \c true iff press
-            bool m_repeat; //!< \c true iff for an autorepeat
-            std::uint32_t m_client;        //!< Client data
+            KeyButton m_button;     //!< Button to synthesize
+            bool m_press;           //!< \c true iff press
+            bool m_repeat;          //!< \c true iff for an autorepeat
+            std::uint32_t m_client; //!< Client data
         };
         struct Group {
         public:
-            std::int32_t m_group;        //!< Group/offset to change to/by
-            bool m_absolute; //!< \c true iff change to, else by
-            bool m_restore; //!< \c true iff for restoring state
+            std::int32_t m_group; //!< Group/offset to change to/by
+            bool m_absolute;      //!< \c true iff change to, else by
+            bool m_restore;       //!< \c true iff for restoring state
         };
         union Data {
         public:
@@ -274,8 +274,7 @@ public:
     /*!
     Put all the keys in \p modifiers into \p keys.
     */
-    static void collectButtons(const ModifierToKeys& modifiers,
-                            ButtonToKeyMap& keys);
+    static void collectButtons(const ModifierToKeys& modifiers, ButtonToKeyMap& keys);
 
     //! Set modifier key state
     /*!
@@ -324,30 +323,24 @@ public:
 
 private:
 #ifdef INPUTLEAP_TEST_ENV
-    FRIEND_TEST(KeyMapTests,
-                findBestKey_requiredDown_matchExactFirstItem);
-    FRIEND_TEST(KeyMapTests,
-        findBestKey_requiredAndExtraSensitiveDown_matchExactFirstItem);
-    FRIEND_TEST(KeyMapTests,
-        findBestKey_requiredAndExtraSensitiveDown_matchExactSecondItem);
-    FRIEND_TEST(KeyMapTests,
-        findBestKey_extraSensitiveDown_matchExactSecondItem);
-    FRIEND_TEST(KeyMapTests,
-                findBestKey_noRequiredDown_matchOneRequiredChangeItem);
-    FRIEND_TEST(KeyMapTests,
-                findBestKey_onlyOneRequiredDown_matchTwoRequiredChangesItem);
+    FRIEND_TEST(KeyMapTests, findBestKey_requiredDown_matchExactFirstItem);
+    FRIEND_TEST(KeyMapTests, findBestKey_requiredAndExtraSensitiveDown_matchExactFirstItem);
+    FRIEND_TEST(KeyMapTests, findBestKey_requiredAndExtraSensitiveDown_matchExactSecondItem);
+    FRIEND_TEST(KeyMapTests, findBestKey_extraSensitiveDown_matchExactSecondItem);
+    FRIEND_TEST(KeyMapTests, findBestKey_noRequiredDown_matchOneRequiredChangeItem);
+    FRIEND_TEST(KeyMapTests, findBestKey_onlyOneRequiredDown_matchTwoRequiredChangesItem);
     FRIEND_TEST(KeyMapTests, findBestKey_noRequiredDown_cannotMatch);
 #endif
 
 private:
     //! Ways to synthesize a key
     enum EKeystroke {
-        kKeystrokePress,        //!< Synthesize a press
-        kKeystrokeRelease,        //!< Synthesize a release
-        kKeystrokeRepeat,        //!< Synthesize an autorepeat
-        kKeystrokeClick,        //!< Synthesize a press and release
-        kKeystrokeModify,        //!< Synthesize pressing a modifier
-        kKeystrokeUnmodify        //!< Synthesize releasing a modifier
+        kKeystrokePress,   //!< Synthesize a press
+        kKeystrokeRelease, //!< Synthesize a release
+        kKeystrokeRepeat,  //!< Synthesize an autorepeat
+        kKeystrokeClick,   //!< Synthesize a press and release
+        kKeystrokeModify,  //!< Synthesize pressing a modifier
+        kKeystrokeUnmodify //!< Synthesize releasing a modifier
     };
 
     // A list of ways to synthesize a KeyID
@@ -373,9 +366,8 @@ private:
     // particular KeyID and isn't entirely concerned with the modifiers
     // used to do it.
     const KeyItem* mapCharacterKey(Keystrokes& keys, KeyID id, std::int32_t group,
-                                   ModifierToKeys& activeModifiers,
-                                   KeyModifierMask& currentState, KeyModifierMask desiredMask,
-                                   bool isAutoRepeat) const;
+                                   ModifierToKeys& activeModifiers, KeyModifierMask& currentState,
+                                   KeyModifierMask desiredMask, bool isAutoRepeat) const;
 
     // maps a modifier key
     const KeyItem* mapModifierKey(Keystrokes& keys, KeyID id, std::int32_t group,
@@ -417,21 +409,15 @@ private:
     // \p requiredState for each modifier indicated in \p sensitiveMask.
     // returns \c true iff successful and sets \p currentState to the
     // resulting modifier state.
-    bool keysForModifierState(KeyButton button, std::int32_t group,
-                            ModifierToKeys& activeModifiers,
-                            KeyModifierMask& currentState,
-                            KeyModifierMask requiredState,
-                            KeyModifierMask sensitiveMask,
-                            KeyModifierMask notRequiredMask,
-                            Keystrokes& keystrokes) const;
+    bool keysForModifierState(KeyButton button, std::int32_t group, ModifierToKeys& activeModifiers,
+                              KeyModifierMask& currentState, KeyModifierMask requiredState,
+                              KeyModifierMask sensitiveMask, KeyModifierMask notRequiredMask,
+                              Keystrokes& keystrokes) const;
 
     // Adds keystrokes to synthesize key \p keyItem in mode \p type to
     // \p keystrokes and to undo the synthesis to \p undo.
-    void addKeystrokes(EKeystroke type,
-                            const KeyItem& keyItem,
-                            ModifierToKeys& activeModifiers,
-                            KeyModifierMask& currentState,
-                            Keystrokes& keystrokes) const;
+    void addKeystrokes(EKeystroke type, const KeyItem& keyItem, ModifierToKeys& activeModifiers,
+                       KeyModifierMask& currentState, Keystrokes& keystrokes) const;
 
     // Returns the number of modifiers indicated in \p state.
     static std::int32_t getNumModifiers(KeyModifierMask state);
@@ -441,7 +427,7 @@ private:
 
     // not implemented
     KeyMap(const KeyMap&);
-    KeyMap&            operator=(const KeyMap&);
+    KeyMap& operator=(const KeyMap&);
 
 private:
     // Ways to synthesize a KeyID over multiple keyboard groups
@@ -463,10 +449,8 @@ private:
     typedef std::set<KeyButton> KeyButtonSet;
 
     // Key maps for parsing/formatting
-    typedef std::map<std::string, KeyID,
-                            inputleap::string::CaselessCmp> NameToKeyMap;
-    typedef std::map<std::string, KeyModifierMask,
-                            inputleap::string::CaselessCmp> NameToModifierMap;
+    typedef std::map<std::string, KeyID, inputleap::string::CaselessCmp> NameToKeyMap;
+    typedef std::map<std::string, KeyModifierMask, inputleap::string::CaselessCmp> NameToModifierMap;
     typedef std::map<KeyID, std::string> KeyToNameMap;
     typedef std::map<KeyModifierMask, std::string> ModifierToNameMap;
 
@@ -480,7 +464,7 @@ private:
 
     // half-duplex info
     KeyButtonSet m_halfDuplex; // half-duplex set by InputLeap
-    KeySet m_halfDuplexMods; // half-duplex set by user
+    KeySet m_halfDuplexMods;   // half-duplex set by user
 
     // dummy KeyItem for changing modifiers
     KeyItem m_modifierKeyItem;
@@ -492,4 +476,4 @@ private:
     static ModifierToNameMap* s_modifierToNameMap;
 };
 
-}
+} // namespace inputleap

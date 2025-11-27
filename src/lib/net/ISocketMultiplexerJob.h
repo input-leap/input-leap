@@ -25,8 +25,7 @@ namespace inputleap {
 
 class ISocketMultiplexerJob;
 
-struct MultiplexerJobStatus
-{
+struct MultiplexerJobStatus {
     MultiplexerJobStatus(bool cont, std::unique_ptr<ISocketMultiplexerJob>&& nj) :
         continue_servicing(cont), new_job(std::move(nj))
     {}
@@ -41,7 +40,7 @@ A socket multiplexer job handles events on a socket.
 */
 class ISocketMultiplexerJob {
 public:
-    virtual ~ISocketMultiplexerJob() { }
+    virtual ~ISocketMultiplexerJob() {}
 
     //! @name manipulators
     //@{

@@ -22,18 +22,16 @@
 #include "arch/XArch.h"
 #include "base/Time.h"
 
-#include <signal.h>
 #include <sys/time.h>
-#include <time.h>
 #include <cerrno>
 #include <csignal>
 #include <fstream>
+#include <signal.h>
+#include <time.h>
 
 #define SIGWAKEUP SIGUSR1
 
-static
-void
-setSignalSet(sigset_t* sigset)
+static void setSignalSet(sigset_t* sigset)
 {
     sigemptyset(sigset);
     sigaddset(sigset, SIGHUP);
@@ -79,14 +77,14 @@ public:
     ArchThreadImpl();
 
 public:
-    int                    m_refCount;
-    IArchMultithread::ThreadID        m_id;
-    pthread_t            m_thread;
+    int m_refCount;
+    IArchMultithread::ThreadID m_id;
+    pthread_t m_thread;
     std::function<void()> func_;
-    bool                m_cancel;
-    bool                m_cancelling;
-    bool                m_exited;
-    void*                m_networkData;
+    bool m_cancel;
+    bool m_cancelling;
+    bool m_exited;
+    void* m_networkData;
 };
 
 ArchThreadImpl::ArchThreadImpl() :
@@ -100,16 +98,13 @@ ArchThreadImpl::ArchThreadImpl() :
     // do nothing
 }
 
-
 //
 // ArchMultithreadPosix
 //
 
 ArchMultithreadPosix* ArchMultithreadPosix::s_instance = nullptr;
 
-ArchMultithreadPosix::ArchMultithreadPosix() :
-    m_newThreadCalled(false),
-    m_nextID(0)
+ArchMultithreadPosix::ArchMultithreadPosix() : m_newThreadCalled(false), m_nextID(0)
 {
     assert(s_instance == nullptr);
 
@@ -123,7 +118,7 @@ ArchMultithreadPosix::ArchMultithreadPosix() :
 
     // create thread for calling (main) thread and add it to our
     // list.  no need to lock the mutex since we're the only thread.
-    m_mainThread           = new ArchThreadImpl;
+    m_mainThread = new ArchThreadImpl;
     m_mainThread->m_thread = pthread_self();
     insert(m_mainThread);
 
@@ -134,11 +129,11 @@ ArchMultithreadPosix::ArchMultithreadPosix() :
     // to install it now.
     struct sigaction act;
     sigemptyset(&act.sa_mask);
-# if defined(SA_INTERRUPT)
-    act.sa_flags   = SA_INTERRUPT;
-# else
-    act.sa_flags   = 0;
-# endif
+#if defined(SA_INTERRUPT)
+    act.sa_flags = SA_INTERRUPT;
+#else
+    act.sa_flags = 0;
+#endif
     act.sa_handler = &threadCancel;
     sigaction(SIGWAKEUP, &act, nullptr);
 
@@ -160,23 +155,20 @@ ArchMultithreadPosix::~ArchMultithreadPosix()
     s_instance = nullptr;
 }
 
-void
-ArchMultithreadPosix::setNetworkDataForCurrentThread(void* data)
+void ArchMultithreadPosix::setNetworkDataForCurrentThread(void* data)
 {
     std::lock_guard<std::mutex> lock(m_threadMutex);
     ArchThreadImpl* thread = find(pthread_self());
     thread->m_networkData = data;
 }
 
-void*
-ArchMultithreadPosix::getNetworkDataForThread(ArchThread thread)
+void* ArchMultithreadPosix::getNetworkDataForThread(ArchThread thread)
 {
     std::lock_guard<std::mutex> lock(m_threadMutex);
     return thread->m_networkData;
 }
 
-ArchMultithreadPosix*
-ArchMultithreadPosix::getInstance()
+ArchMultithreadPosix* ArchMultithreadPosix::getInstance()
 {
     return s_instance;
 }
@@ -207,8 +199,7 @@ ArchThread ArchMultithreadPosix::newThread(const std::function<void()>& func)
     pthread_attr_t attr;
     int status = pthread_attr_init(&attr);
     if (status == 0) {
-        status = pthread_create(&thread->m_thread, &attr,
-                            &ArchMultithreadPosix::threadFunc, thread);
+        status = pthread_create(&thread->m_thread, &attr, &ArchMultithreadPosix::threadFunc, thread);
         pthread_attr_destroy(&attr);
     }
 
@@ -217,8 +208,7 @@ ArchThread ArchMultithreadPosix::newThread(const std::function<void()>& func)
         // failed to start thread so clean up
         delete thread;
         thread = nullptr;
-    }
-    else {
+    } else {
         // add thread to list
         insert(thread);
 
@@ -229,8 +219,7 @@ ArchThread ArchMultithreadPosix::newThread(const std::function<void()>& func)
     return thread;
 }
 
-ArchThread
-ArchMultithreadPosix::newCurrentThread()
+ArchThread ArchMultithreadPosix::newCurrentThread()
 {
     std::lock_guard<std::mutex> lock(m_threadMutex);
 
@@ -239,8 +228,7 @@ ArchMultithreadPosix::newCurrentThread()
     return thread;
 }
 
-void
-ArchMultithreadPosix::closeThread(ArchThread thread)
+void ArchMultithreadPosix::closeThread(ArchThread thread)
 {
     assert(thread != nullptr);
 
@@ -263,15 +251,13 @@ ArchMultithreadPosix::closeThread(ArchThread thread)
     }
 }
 
-ArchThread
-ArchMultithreadPosix::copyThread(ArchThread thread)
+ArchThread ArchMultithreadPosix::copyThread(ArchThread thread)
 {
     refThread(thread);
     return thread;
 }
 
-void
-ArchMultithreadPosix::cancelThread(ArchThread thread)
+void ArchMultithreadPosix::cancelThread(ArchThread thread)
 {
     assert(thread != nullptr);
 
@@ -292,16 +278,14 @@ ArchMultithreadPosix::cancelThread(ArchThread thread)
     }
 }
 
-void
-ArchMultithreadPosix::setPriorityOfThread(ArchThread thread, int /*n*/)
+void ArchMultithreadPosix::setPriorityOfThread(ArchThread thread, int /*n*/)
 {
     assert(thread != nullptr);
 
     // FIXME
 }
 
-void
-ArchMultithreadPosix::testCancelThread()
+void ArchMultithreadPosix::testCancelThread()
 {
     // find current thread
     ArchThreadImpl* thread = nullptr;
@@ -314,8 +298,7 @@ ArchMultithreadPosix::testCancelThread()
     testCancelThreadImpl(thread);
 }
 
-bool
-ArchMultithreadPosix::wait(ArchThread target, double timeout)
+bool ArchMultithreadPosix::wait(ArchThread target, double timeout)
 {
     assert(target != nullptr);
 
@@ -363,56 +346,47 @@ ArchMultithreadPosix::wait(ArchThread target, double timeout)
 
         closeThread(target);
         return false;
-    }
-    catch (...) {
+    } catch (...) {
         closeThread(target);
         throw;
     }
 }
 
-bool
-ArchMultithreadPosix::isSameThread(ArchThread thread1, ArchThread thread2)
+bool ArchMultithreadPosix::isSameThread(ArchThread thread1, ArchThread thread2)
 {
     return (thread1 == thread2);
 }
 
-bool
-ArchMultithreadPosix::isExitedThread(ArchThread thread)
+bool ArchMultithreadPosix::isExitedThread(ArchThread thread)
 {
     std::lock_guard<std::mutex> lock(m_threadMutex);
     return thread->m_exited;
 }
 
-IArchMultithread::ThreadID
-ArchMultithreadPosix::getIDOfThread(ArchThread thread)
+IArchMultithread::ThreadID ArchMultithreadPosix::getIDOfThread(ArchThread thread)
 {
     return thread->m_id;
 }
 
-void
-ArchMultithreadPosix::setSignalHandler(
-                ESignal signal, SignalFunc func, void* userData)
+void ArchMultithreadPosix::setSignalHandler(ESignal signal, SignalFunc func, void* userData)
 {
     std::lock_guard<std::mutex> lock(m_threadMutex);
-    m_signalFunc[signal]     = func;
+    m_signalFunc[signal] = func;
     m_signalUserData[signal] = userData;
 }
 
-void
-ArchMultithreadPosix::raiseSignal(ESignal signal)
+void ArchMultithreadPosix::raiseSignal(ESignal signal)
 {
     std::lock_guard<std::mutex> lock(m_threadMutex);
     if (m_signalFunc[signal] != nullptr) {
         m_signalFunc[signal](signal, m_signalUserData[signal]);
         pthread_kill(m_mainThread->m_thread, SIGWAKEUP);
-    }
-    else if (signal == kINTERRUPT || signal == kTERMINATE) {
+    } else if (signal == kINTERRUPT || signal == kTERMINATE) {
         ARCH->cancelThread(m_mainThread);
     }
 }
 
-void
-ArchMultithreadPosix::startSignalHandler()
+void ArchMultithreadPosix::startSignalHandler()
 {
     // set signal mask.  the main thread blocks these signals and
     // the signal handler thread will listen for them.
@@ -438,8 +412,7 @@ ArchMultithreadPosix::startSignalHandler()
     }
 }
 
-ArchThreadImpl*
-ArchMultithreadPosix::find(pthread_t thread)
+ArchThreadImpl* ArchMultithreadPosix::find(pthread_t thread)
 {
     ArchThreadImpl* impl = findNoRef(thread);
     if (impl != nullptr) {
@@ -448,11 +421,10 @@ ArchMultithreadPosix::find(pthread_t thread)
     return impl;
 }
 
-ArchThreadImpl*
-ArchMultithreadPosix::findNoRef(pthread_t thread)
+ArchThreadImpl* ArchMultithreadPosix::findNoRef(pthread_t thread)
 {
     // linear search
-    for (auto index  = m_threadList.begin(); index != m_threadList.end(); ++index) {
+    for (auto index = m_threadList.begin(); index != m_threadList.end(); ++index) {
         if ((*index)->m_thread == thread) {
             return *index;
         }
@@ -460,8 +432,7 @@ ArchMultithreadPosix::findNoRef(pthread_t thread)
     return nullptr;
 }
 
-void
-ArchMultithreadPosix::insert(ArchThreadImpl* thread)
+void ArchMultithreadPosix::insert(ArchThreadImpl* thread)
 {
     assert(thread != nullptr);
 
@@ -478,11 +449,9 @@ ArchMultithreadPosix::insert(ArchThreadImpl* thread)
     m_threadList.push_back(thread);
 }
 
-void
-ArchMultithreadPosix::erase(ArchThreadImpl* thread)
+void ArchMultithreadPosix::erase(ArchThreadImpl* thread)
 {
-    for (ThreadList::iterator index  = m_threadList.begin();
-                               index != m_threadList.end(); ++index) {
+    for (ThreadList::iterator index = m_threadList.begin(); index != m_threadList.end(); ++index) {
         if (*index == thread) {
             m_threadList.erase(index);
             break;
@@ -490,16 +459,14 @@ ArchMultithreadPosix::erase(ArchThreadImpl* thread)
     }
 }
 
-void
-ArchMultithreadPosix::refThread(ArchThreadImpl* thread)
+void ArchMultithreadPosix::refThread(ArchThreadImpl* thread)
 {
     assert(thread != nullptr);
     assert(findNoRef(thread->m_thread) != nullptr);
     ++thread->m_refCount;
 }
 
-void
-ArchMultithreadPosix::testCancelThreadImpl(ArchThreadImpl* thread)
+void ArchMultithreadPosix::testCancelThreadImpl(ArchThreadImpl* thread)
 {
     assert(thread != nullptr);
 
@@ -508,15 +475,14 @@ ArchMultithreadPosix::testCancelThreadImpl(ArchThreadImpl* thread)
     // update cancel state
     if (thread->m_cancel && !thread->m_cancelling) {
         thread->m_cancelling = true;
-        thread->m_cancel     = false;
+        thread->m_cancel = false;
 
         // unwind thread's stack if cancelling
         throw XThreadCancel();
     }
 }
 
-void*
-ArchMultithreadPosix::threadFunc(void* vrep)
+void* ArchMultithreadPosix::threadFunc(void* vrep)
 {
     // get the thread
     ArchThreadImpl* thread = static_cast<ArchThreadImpl*>(vrep);
@@ -532,8 +498,7 @@ ArchMultithreadPosix::threadFunc(void* vrep)
     return nullptr;
 }
 
-void
-ArchMultithreadPosix::doThreadFunc(ArchThread thread)
+void ArchMultithreadPosix::doThreadFunc(ArchThread thread)
 {
     // default priority is slightly below normal
     setPriorityOfThread(thread, 1);
@@ -549,8 +514,7 @@ ArchMultithreadPosix::doThreadFunc(ArchThread thread)
 
     catch (XThreadCancel&) {
         // client called cancel()
-    }
-    catch (...) {
+    } catch (...) {
         // note -- don't catch (...) to avoid masking bugs
         {
             std::lock_guard<std::mutex> lock(m_threadMutex);
@@ -570,14 +534,12 @@ ArchMultithreadPosix::doThreadFunc(ArchThread thread)
     closeThread(thread);
 }
 
-void
-ArchMultithreadPosix::threadCancel(int)
+void ArchMultithreadPosix::threadCancel(int)
 {
     // do nothing
 }
 
-void*
-ArchMultithreadPosix::threadSignalHandler(void*)
+void* ArchMultithreadPosix::threadSignalHandler(void*)
 {
     // detach
     pthread_detach(pthread_self());

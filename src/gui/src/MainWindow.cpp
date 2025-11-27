@@ -22,30 +22,30 @@
 #include "ui_MainWindow.h"
 
 #include "AboutDialog.h"
+#include "CommandProcess.h"
+#include "DataDownloader.h"
+#include "FingerprintAcceptDialog.h"
+#include "ProcessorArch.h"
+#include "QUtility.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
-#include "ZeroconfService.h"
-#include "DataDownloader.h"
-#include "CommandProcess.h"
-#include "FingerprintAcceptDialog.h"
-#include "QUtility.h"
-#include "ProcessorArch.h"
 #include "SslCertificate.h"
+#include "ZeroconfService.h"
 #include "base/String.h"
 #include "common/DataDirectories.h"
 #include "net/FingerprintDatabase.h"
 #include "net/SecureUtils.h"
 
-#include <QtCore>
-#include <QtGui>
-#include <QtNetwork>
-#include <QNetworkAccessManager>
+#include <QDesktopServices>
+#include <QFileDialog>
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
-#include <QFileDialog>
-#include <QDesktopServices>
+#include <QNetworkAccessManager>
 #include <QRegularExpression>
+#include <QtCore>
+#include <QtGui>
+#include <QtNetwork>
 
 #if defined(Q_OS_MAC)
 #include <ApplicationServices/ApplicationServices.h>
@@ -79,19 +79,27 @@ const char* icon_file_for_connection_state(AppConnectionState state)
 {
 #if defined(Q_OS_MAC)
     switch (state) {
-        default:
-        case AppConnectionState::DISCONNECTED: return ":/res/icons/128x128/input-leap-disconnected-mask.png";
-        case AppConnectionState::CONNECTING:   return ":/res/icons/128x128/input-leap-disconnected-mask.png";
-        case AppConnectionState::CONNECTED:    return ":/res/icons/128x128/input-leap-connected-mask.png";
-        case AppConnectionState::TRANSFERRING: return ":/res/icons/128x128/input-leap-transfering-mask.png";
+    default:
+    case AppConnectionState::DISCONNECTED:
+        return ":/res/icons/128x128/input-leap-disconnected-mask.png";
+    case AppConnectionState::CONNECTING:
+        return ":/res/icons/128x128/input-leap-disconnected-mask.png";
+    case AppConnectionState::CONNECTED:
+        return ":/res/icons/128x128/input-leap-connected-mask.png";
+    case AppConnectionState::TRANSFERRING:
+        return ":/res/icons/128x128/input-leap-transfering-mask.png";
     }
 #else
     switch (state) {
-        default:
-        case AppConnectionState::DISCONNECTED: return ":/res/icons/128x128/input-leap-disconnected.png";
-        case AppConnectionState::CONNECTING:   return ":/res/icons/128x128/input-leap-disconnected.png";
-        case AppConnectionState::CONNECTED:    return ":/res/icons/128x128/input-leap-connected.png";
-        case AppConnectionState::TRANSFERRING: return ":/res/icons/128x128/input-leap-transfering.png";
+    default:
+    case AppConnectionState::DISCONNECTED:
+        return ":/res/icons/128x128/input-leap-disconnected.png";
+    case AppConnectionState::CONNECTING:
+        return ":/res/icons/128x128/input-leap-disconnected.png";
+    case AppConnectionState::CONNECTED:
+        return ":/res/icons/128x128/input-leap-connected.png";
+    case AppConnectionState::TRANSFERRING:
+        return ":/res/icons/128x128/input-leap-transfering.png";
     }
 #endif
 }
@@ -99,11 +107,15 @@ const char* icon_file_for_connection_state(AppConnectionState state)
 const char* icon_name_for_connection_state(AppConnectionState state)
 {
     switch (state) {
-        default:
-        case AppConnectionState::DISCONNECTED: return "input-leap-disconnected";
-        case AppConnectionState::CONNECTING: return "input-leap-disconnected";
-        case AppConnectionState::CONNECTED: return "input-leap-connected";
-        case AppConnectionState::TRANSFERRING: return "input-leap-transfering";
+    default:
+    case AppConnectionState::DISCONNECTED:
+        return "input-leap-disconnected";
+    case AppConnectionState::CONNECTING:
+        return "input-leap-disconnected";
+    case AppConnectionState::CONNECTED:
+        return "input-leap-connected";
+    case AppConnectionState::TRANSFERRING:
+        return "input-leap-transfering";
     }
 }
 
@@ -174,13 +186,14 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 
     ui_->m_pComboServerList->hide();
     ui_->m_pLabelPadlock->hide();
-    ui_->m_pLabelPadlock->setPixmap(QPixmap(":/res/icons/64x64/padlock.png").scaledToHeight(fontMetrics().height() * 1.5, Qt::SmoothTransformation));
+    ui_->m_pLabelPadlock->setPixmap(QPixmap(":/res/icons/64x64/padlock.png")
+                                        .scaledToHeight(fontMetrics().height() * 1.5,
+                                                        Qt::SmoothTransformation));
     ui_->frame_fingerprint_details->hide();
 
     updateSSLFingerprint();
 
-    connect(ui_->toolbutton_show_fingerprint, &QToolButton::clicked, this, [this](bool checked)
-    {
+    connect(ui_->toolbutton_show_fingerprint, &QToolButton::clicked, this, [this](bool checked) {
         (void) checked;
 
         m_fingerprint_expanded = !m_fingerprint_expanded;
@@ -243,7 +256,7 @@ void MainWindow::open()
     }
 }
 
-void MainWindow::setStatus(const QString &status)
+void MainWindow::setStatus(const QString& status)
 {
     ui_->m_pStatusLabel->setText(status);
 }
@@ -283,7 +296,6 @@ void MainWindow::retranslateMenuBar()
     m_pMenuHelp->setTitle(tr("&File"));
     main_menu_->setTitle(tr("&Window"));
 #endif
-
 }
 
 void MainWindow::createMenuBar()
@@ -328,8 +340,8 @@ void MainWindow::loadSettings()
     ui_->m_pRadioInternalConfig->setChecked(settings().value("useInternalConfig", true).toBool());
 
     ui_->m_pGroupServer->setChecked(settings().value("groupServerChecked", false).toBool());
-    ui_->m_pLineEditConfigFile->setText(settings().value("configFile",
-                                                    QDir::homePath() + "/" + APP_CONFIG_NAME).toString());
+    ui_->m_pLineEditConfigFile->setText(
+        settings().value("configFile", QDir::homePath() + "/" + APP_CONFIG_NAME).toString());
     ui_->m_pGroupClient->setChecked(settings().value("groupClientChecked", true).toBool());
     ui_->m_pLineEditHostname->setText(settings().value("serverHostname").toString());
 }
@@ -337,7 +349,8 @@ void MainWindow::loadSettings()
 void MainWindow::initConnections()
 {
     connect(ui_->m_pActionMinimize, &QAction::triggered, this, &MainWindow::hide);
-    connect(ui_->m_pComboServerList, &QComboBox::currentTextChanged, this, &MainWindow::comboServerList_currentIndexChanged);
+    connect(ui_->m_pComboServerList, &QComboBox::currentTextChanged, this,
+            &MainWindow::comboServerList_currentIndexChanged);
     connect(ui_->m_pActionRestore, &QAction::triggered, this, &MainWindow::showNormal);
     connect(ui_->m_pActionStartCmdApp, &QAction::triggered, this, &MainWindow::start_cmd_app);
     connect(ui_->m_pActionStopCmdApp, &QAction::triggered, this, &MainWindow::stop_cmd_app);
@@ -373,14 +386,10 @@ void MainWindow::set_icon(AppConnectionState state)
 
 void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason)
 {
-    if (reason == QSystemTrayIcon::DoubleClick)
-    {
-        if (isVisible())
-        {
+    if (reason == QSystemTrayIcon::DoubleClick) {
+        if (isVisible()) {
             hide();
-        }
-        else
-        {
+        } else {
             showNormal();
             activateWindow();
         }
@@ -389,8 +398,7 @@ void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason)
 
 void MainWindow::logOutput()
 {
-    if (cmd_app_process_)
-    {
+    if (cmd_app_process_) {
         QString text(cmd_app_process_->readAllStandardOutput());
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         const auto results = text.split(QRegularExpression("\r|\n|\r\n"));
@@ -398,8 +406,7 @@ void MainWindow::logOutput()
         const auto results = text.split(QRegExp("\r|\n|\r\n"));
 #endif
         for (const auto& line : results) {
-            if (!line.isEmpty())
-            {
+            if (!line.isEmpty()) {
                 appendLogRaw(line);
             }
         }
@@ -408,8 +415,7 @@ void MainWindow::logOutput()
 
 void MainWindow::logError()
 {
-    if (cmd_app_process_)
-    {
+    if (cmd_app_process_) {
         appendLogRaw(cmd_app_process_->readAllStandardError());
     }
 }
@@ -421,7 +427,8 @@ void MainWindow::appendLogInfo(const QString& text)
     }
 }
 
-void MainWindow::appendLogDebug(const QString& text) {
+void MainWindow::appendLogDebug(const QString& text)
+{
     if (appConfig().logLevel() >= 4) {
         m_pLogWindow->appendDebug(text);
     }
@@ -447,7 +454,7 @@ void MainWindow::appendLogRaw(const QString& text)
     }
 }
 
-void MainWindow::updateFromLogLine(const QString &line)
+void MainWindow::updateFromLogLine(const QString& line)
 {
     // TODO: this code makes Andrew cry
     checkConnected(line);
@@ -457,18 +464,15 @@ void MainWindow::updateFromLogLine(const QString &line)
 void MainWindow::checkConnected(const QString& line)
 {
     // TODO: implement ipc connection state messages to replace this hack.
-    if (line.contains("started server") ||
-        line.contains("connected to server") ||
-        line.contains("server status: active"))
-    {
+    if (line.contains("started server") || line.contains("connected to server") ||
+        line.contains("server status: active")) {
         set_connection_state(AppConnectionState::CONNECTED);
 
         if (!appConfig().startedBefore() && isVisible()) {
-                QMessageBox::information(
-                    this, "InputLeap",
-                    tr("InputLeap is now connected. You can close the "
-                    "config window and InputLeap will remain connected in "
-                    "the background."));
+            QMessageBox::information(this, "InputLeap",
+                                     tr("InputLeap is now connected. You can close the "
+                                        "config window and InputLeap will remain connected in "
+                                        "the background."));
 
             appConfig().setStartedBefore(true);
             appConfig().saveSettings();
@@ -479,7 +483,8 @@ void MainWindow::checkConnected(const QString& line)
 void MainWindow::checkFingerprint(const QString& line)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    QRegularExpression fingerprintRegex("peer fingerprint \\(SHA1\\): ([A-F0-9:]+) \\(SHA256\\): ([A-F0-9:]+)$");
+    QRegularExpression fingerprintRegex(
+        "peer fingerprint \\(SHA1\\): ([A-F0-9:]+) \\(SHA256\\): ([A-F0-9:]+)$");
     QRegularExpressionMatch match = fingerprintRegex.match(line);
     if (!match.hasMatch()) {
         return;
@@ -488,7 +493,8 @@ void MainWindow::checkFingerprint(const QString& line)
     auto match1 = match.captured(1).toStdString();
     auto match2 = match.captured(2).toStdString();
 #else
-    QRegExp fingerprintRegex(".*peer fingerprint \\(SHA1\\): ([A-F0-9:]+) \\(SHA256\\): ([A-F0-9:]+)");
+    QRegExp fingerprintRegex(
+        ".*peer fingerprint \\(SHA1\\): ([A-F0-9:]+) \\(SHA256\\): ([A-F0-9:]+)");
     if (!fingerprintRegex.exactMatch(line)) {
         return;
     }
@@ -497,21 +503,18 @@ void MainWindow::checkFingerprint(const QString& line)
     auto match2 = fingerprintRegex.cap(2).toStdString();
 #endif
 
-    inputleap::FingerprintData fingerprint_sha1 = {
-        inputleap::fingerprint_type_to_string(inputleap::FingerprintType::SHA1),
-        inputleap::string::from_hex(match1)
-    };
+    inputleap::FingerprintData fingerprint_sha1 = {inputleap::fingerprint_type_to_string(
+                                                       inputleap::FingerprintType::SHA1),
+                                                   inputleap::string::from_hex(match1)};
 
-    inputleap::FingerprintData fingerprint_sha256 = {
-        inputleap::fingerprint_type_to_string(inputleap::FingerprintType::SHA256),
-        inputleap::string::from_hex(match2)
-    };
+    inputleap::FingerprintData fingerprint_sha256 = {inputleap::fingerprint_type_to_string(
+                                                         inputleap::FingerprintType::SHA256),
+                                                     inputleap::string::from_hex(match2)};
 
     bool is_client = app_role() == AppRole::Client;
 
-    auto db_path = is_client
-            ? inputleap::DataDirectories::trusted_servers_ssl_fingerprints_path()
-            : inputleap::DataDirectories::trusted_clients_ssl_fingerprints_path();
+    auto db_path = is_client ? inputleap::DataDirectories::trusted_servers_ssl_fingerprints_path()
+                             : inputleap::DataDirectories::trusted_clients_ssl_fingerprints_path();
 
     auto db_dir = db_path.parent_path();
     if (!inputleap::fs::exists(db_dir)) {
@@ -576,15 +579,11 @@ void MainWindow::start_cmd_app()
 
     args << "-f" << "--no-tray" << "--debug" << appConfig().logLevelText();
 
-
     args << "--name" << getScreenName();
 
-    if (desktopMode)
-    {
+    if (desktopMode) {
         cmd_app_process_ = new QProcess(this);
-    }
-    else
-    {
+    } else {
         // tell client/server to talk to daemon through ipc.
         args << "--ipc";
 
@@ -599,7 +598,7 @@ void MainWindow::start_cmd_app()
         // when it is not allowed to elevate. In these cases restarting
         // the server is fruitless.
         if (appConfig().elevateMode() == ElevateAsNeeded) {
-                args << "--stop-on-desk-switch";
+            args << "--stop-on-desk-switch";
         }
 #endif
     }
@@ -621,19 +620,19 @@ void MainWindow::start_cmd_app()
     // launched the process (e.g. when launched with elevation). setting the
     // profile dir on launch ensures it uses the same profile dir is used
     // no matter how its relaunched.
-    args << "--profile-dir" << QString::fromStdString("\"" + inputleap::DataDirectories::profile().u8string() + "\"");
+    args << "--profile-dir"
+         << QString::fromStdString("\"" + inputleap::DataDirectories::profile().u8string() + "\"");
 #endif
 
-    if ((app_role() == AppRole::Client && !clientArgs(args, app))
-        || (app_role() == AppRole::Server && !serverArgs(args, app)))
-    {
+    if ((app_role() == AppRole::Client && !clientArgs(args, app)) ||
+        (app_role() == AppRole::Server && !serverArgs(args, app))) {
         stop_cmd_app();
         return;
     }
 
-    if (desktopMode)
-    {
-        connect(cmd_app_process_, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &MainWindow::cmd_app_finished);
+    if (desktopMode) {
+        connect(cmd_app_process_, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+                this, &MainWindow::cmd_app_finished);
         connect(cmd_app_process_, &QProcess::readyReadStandardOutput, this, &MainWindow::logOutput);
         connect(cmd_app_process_, &QProcess::readyReadStandardError, this, &MainWindow::logError);
     }
@@ -649,22 +648,25 @@ void MainWindow::start_cmd_app()
     appendLogInfo("config file: " + configFilename());
     appendLogInfo("log level: " + appConfig().logLevelText());
 
-    if (appConfig().logToFile())
+    if (appConfig().logToFile()) {
         appendLogInfo("log file: " + appConfig().logFilename());
+    }
 
-    if (desktopMode)
-    {
+    if (desktopMode) {
         cmd_app_process_->start(app, args);
-        if (!cmd_app_process_->waitForStarted())
-        {
+        if (!cmd_app_process_->waitForStarted()) {
             show();
-            QMessageBox::warning(this, tr("Program can not be started"), QString(tr("The executable<br><br>%1<br><br>could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.").arg(app)));
+            QMessageBox::warning(
+                this, tr("Program can not be started"),
+                QString(tr("The executable<br><br>%1<br><br>could not be successfully started, "
+                           "although it does exist. Please check if you have sufficient "
+                           "permissions to run this program.")
+                            .arg(app)));
             return;
         }
     }
 
-    if (serviceMode)
-    {
+    if (serviceMode) {
         QString command(app + " " + args.join(" "));
         m_IpcClient.sendCommand(command, appConfig().elevateMode());
     }
@@ -680,8 +682,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 {
     app = appPath(appConfig().client_name());
 
-    if (!QFile::exists(app))
-    {
+    if (!QFile::exists(app)) {
         show();
         QMessageBox::warning(this, tr("InputLeap client not found"),
                              tr("The executable for the InputLeap client does not exist."));
@@ -693,8 +694,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
     app = QString("\"%1\"").arg(app);
 #endif
 
-    if (appConfig().logToFile())
-    {
+    if (appConfig().logToFile()) {
         appConfig().persistLogDir();
         args << "--log" << appConfig().logFilenameCmd();
     }
@@ -710,8 +710,9 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
     } else if (ui_->m_pLineEditHostname->text().isEmpty()) {
         show();
         if (!m_SuppressEmptyServerWarning) {
-            QMessageBox::warning(this, tr("Hostname is empty"),
-                             tr("Please fill in a hostname for the InputLeap client to connect to."));
+            QMessageBox::warning(
+                this, tr("Hostname is empty"),
+                tr("Please fill in a hostname for the InputLeap client to connect to."));
         }
         return false;
     }
@@ -724,15 +725,14 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 QString MainWindow::configFilename()
 {
     QString filename;
-    if (ui_->m_pRadioInternalConfig->isChecked())
-    {
+    if (ui_->m_pRadioInternalConfig->isChecked()) {
         // TODO: no need to use a temporary file, since we need it to
         // be permanent (since it'll be used for Windows services, etc).
         m_pTempConfigFile = new QTemporaryFile();
-        if (!m_pTempConfigFile->open())
-        {
+        if (!m_pTempConfigFile->open()) {
             QMessageBox::critical(this, tr("Cannot write configuration file"),
-                                  tr("The temporary configuration file required to start InputLeap can not be written."));
+                                  tr("The temporary configuration file required to start InputLeap "
+                                     "can not be written."));
             return "";
         }
 
@@ -740,16 +740,16 @@ QString MainWindow::configFilename()
         filename = m_pTempConfigFile->fileName();
 
         m_pTempConfigFile->close();
-    }
-    else
-    {
-        if (!QFile::exists(ui_->m_pLineEditConfigFile->text()))
-        {
+    } else {
+        if (!QFile::exists(ui_->m_pLineEditConfigFile->text())) {
             if (QMessageBox::warning(this, tr("Configuration filename invalid"),
-                tr("You have not filled in a valid configuration file for the InputLeap server. "
-                        "Do you want to browse for the configuration file now?"), QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes
-                    || !on_m_pButtonBrowseConfigFile_clicked())
+                                     tr("You have not filled in a valid configuration file for the "
+                                        "InputLeap server. "
+                                        "Do you want to browse for the configuration file now?"),
+                                     QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes ||
+                !on_m_pButtonBrowseConfigFile_clicked()) {
                 return "";
+            }
         }
 
         filename = ui_->m_pLineEditConfigFile->text();
@@ -770,8 +770,9 @@ QString MainWindow::hostname() const
 QString MainWindow::address()
 {
     QString address = appConfig().networkInterface();
-    if (!address.isEmpty())
+    if (!address.isEmpty()) {
         address = "[" + address + "]";
+    }
     return address + ":" + QString::number(appConfig().port());
 }
 
@@ -784,8 +785,7 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 {
     app = appPath(appConfig().server_name());
 
-    if (!QFile::exists(app))
-    {
+    if (!QFile::exists(app)) {
         QMessageBox::warning(this, tr("InputLeap server not found"),
                              tr("The executable for the InputLeap server does not exist."));
         return false;
@@ -796,8 +796,7 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
     app = QString("\"%1\"").arg(app);
 #endif
 
-    if (appConfig().logToFile())
-    {
+    if (appConfig().logToFile()) {
         appConfig().persistLogDir();
 
         args << "--log" << appConfig().logFilenameCmd();
@@ -823,12 +822,9 @@ void MainWindow::stop_cmd_app()
 
     m_ExpectedRunningState = kStopped;
 
-    if (appConfig().processMode() == Service)
-    {
+    if (appConfig().processMode() == Service) {
         stopService();
-    }
-    else if (appConfig().processMode() == Desktop)
-    {
+    } else if (appConfig().processMode() == Desktop) {
         stopDesktop();
     }
 
@@ -876,36 +872,36 @@ void MainWindow::cmd_app_finished(int exitCode, QProcess::ExitStatus)
 {
     if (exitCode == 0) {
         appendLogInfo(QString("process exited normally"));
-    }
-    else {
+    } else {
         appendLogError(QString("process exited with error code: %1").arg(exitCode));
     }
 
     if (m_ExpectedRunningState == kStarted) {
         QTimer::singleShot(1000, this, &MainWindow::start_cmd_app);
         appendLogInfo(QString("detected process not running, auto restarting"));
-    }
-    else {
+    } else {
         set_connection_state(AppConnectionState::DISCONNECTED);
     }
 }
 
 void MainWindow::set_connection_state(AppConnectionState state)
 {
-    if (connection_state() == state)
+    if (connection_state() == state) {
         return;
+    }
 
-    if (state == AppConnectionState::CONNECTED || state == AppConnectionState::CONNECTING)
-    {
-        disconnect(ui_->m_pButtonToggleStart, &QPushButton::clicked, ui_->m_pActionStartCmdApp, &QAction::trigger);
-        connect(ui_->m_pButtonToggleStart, &QPushButton::clicked, ui_->m_pActionStopCmdApp, &QAction::trigger);
+    if (state == AppConnectionState::CONNECTED || state == AppConnectionState::CONNECTING) {
+        disconnect(ui_->m_pButtonToggleStart, &QPushButton::clicked, ui_->m_pActionStartCmdApp,
+                   &QAction::trigger);
+        connect(ui_->m_pButtonToggleStart, &QPushButton::clicked, ui_->m_pActionStopCmdApp,
+                &QAction::trigger);
         ui_->m_pButtonToggleStart->setText(tr("&Stop"));
         ui_->m_pButtonReload->setEnabled(true);
-    }
-    else if (state == AppConnectionState::DISCONNECTED)
-    {
-        disconnect(ui_->m_pButtonToggleStart, &QPushButton::clicked, ui_->m_pActionStopCmdApp, &QAction::trigger);
-        connect(ui_->m_pButtonToggleStart, &QPushButton::clicked, ui_->m_pActionStartCmdApp, &QAction::trigger);
+    } else if (state == AppConnectionState::DISCONNECTED) {
+        disconnect(ui_->m_pButtonToggleStart, &QPushButton::clicked, ui_->m_pActionStopCmdApp,
+                   &QAction::trigger);
+        connect(ui_->m_pButtonToggleStart, &QPushButton::clicked, ui_->m_pActionStartCmdApp,
+                &QAction::trigger);
         ui_->m_pButtonToggleStart->setText(tr("&Start"));
         ui_->m_pButtonReload->setEnabled(false);
     }
@@ -918,13 +914,11 @@ void MainWindow::set_connection_state(AppConnectionState state)
     ui_->m_pActionStartCmdApp->setEnabled(!connected);
     ui_->m_pActionStopCmdApp->setEnabled(connected);
 
-    switch (state)
-    {
+    switch (state) {
     case AppConnectionState::CONNECTED: {
         if (m_AppConfig->getCryptoEnabled()) {
             ui_->m_pLabelPadlock->show();
-        }
-        else {
+        } else {
             ui_->m_pLabelPadlock->hide();
         }
 
@@ -959,15 +953,16 @@ void MainWindow::setVisible(bool visible)
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1070 // lion
     // dock hide only supported on lion :(
-    ProcessSerialNumber psn = { 0, kCurrentProcess };
+    ProcessSerialNumber psn = {0, kCurrentProcess};
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     GetCurrentProcess(&psn);
 #pragma GCC diagnostic pop
-    if (visible)
+    if (visible) {
         TransformProcessType(&psn, kProcessTransformToForegroundApplication);
-    else
+    } else {
         TransformProcessType(&psn, kProcessTransformToBackgroundApplication);
+    }
 #endif
 }
 
@@ -980,7 +975,6 @@ QString MainWindow::getIPAddresses()
     for (int i = 0; i < addresses.size(); i++) {
         if (addresses[i].protocol() == QAbstractSocket::IPv4Protocol &&
             addresses[i] != QHostAddress(QHostAddress::LocalHost)) {
-
             QString address = addresses[i].toString();
             QString format = "%1, ";
 
@@ -1009,20 +1003,16 @@ QString MainWindow::getScreenName()
 {
     if (appConfig().screenName() == "") {
         return QHostInfo::localHostName();
-    }
-    else {
+    } else {
         return appConfig().screenName();
     }
 }
 
 void MainWindow::changeEvent(QEvent* event)
 {
-    if (event != nullptr)
-    {
-        switch (event->type())
-        {
-        case QEvent::LanguageChange:
-        {
+    if (event != nullptr) {
+        switch (event->type()) {
+        case QEvent::LanguageChange: {
             ui_->retranslateUi(this);
             retranslateMenuBar();
 
@@ -1030,13 +1020,11 @@ void MainWindow::changeEvent(QEvent* event)
 
             break;
         }
-        case QEvent::WindowStateChange:
-        {
+        case QEvent::WindowStateChange: {
             windowStateChanged();
             break;
         }
-        default:
-        {
+        default: {
             break;
         }
         }
@@ -1151,10 +1139,10 @@ void MainWindow::on_m_pGroupServer_toggled(bool on)
 
 bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Browse for a InputLeap config file"), QString(), APP_CONFIG_OPEN_FILTER);
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Browse for a InputLeap config file"),
+                                                    QString(), APP_CONFIG_OPEN_FILTER);
 
-    if (!fileName.isEmpty())
-    {
+    if (!fileName.isEmpty()) {
         ui_->m_pLineEditConfigFile->setText(fileName);
         return true;
     }
@@ -1164,10 +1152,10 @@ bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
 
 bool MainWindow::on_m_pActionSave_triggered()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save configuration as..."), QString(), APP_CONFIG_SAVE_FILTER);
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save configuration as..."), QString(),
+                                                    APP_CONFIG_SAVE_FILTER);
 
-    if (!fileName.isEmpty() && !serverConfig().save(fileName))
-    {
+    if (!fileName.isEmpty() && !serverConfig().save(fileName)) {
         QMessageBox::warning(this, tr("Save failed"), tr("Could not save configuration to file."));
         return true;
     }
@@ -1183,10 +1171,13 @@ void MainWindow::on_m_pActionAbout_triggered()
 void MainWindow::on_m_pActionSettings_triggered()
 {
     auto dialog = std::make_unique<SettingsDialog>(this, appConfig());
-    connect(dialog.get(), &SettingsDialog::requestLanguageChange, this, &MainWindow::requestLanguageChange);
-    if (dialog.get()->exec() == QDialog::Accepted)
+    connect(dialog.get(), &SettingsDialog::requestLanguageChange, this,
+            &MainWindow::requestLanguageChange);
+    if (dialog.get()->exec() == QDialog::Accepted) {
         updateSSLFingerprint();
-    disconnect(dialog.get(), &SettingsDialog::requestLanguageChange, this, &MainWindow::requestLanguageChange);
+    }
+    disconnect(dialog.get(), &SettingsDialog::requestLanguageChange, this,
+               &MainWindow::requestLanguageChange);
 }
 
 void MainWindow::autoAddScreen(const QString name)
@@ -1197,21 +1188,18 @@ void MainWindow::autoAddScreen(const QString name)
             switch (r) {
             case kAutoAddScreenManualServer:
                 showConfigureServer(
-                    tr("Please add the server (%1) to the grid.")
-                        .arg(appConfig().screenName()));
+                    tr("Please add the server (%1) to the grid.").arg(appConfig().screenName()));
                 break;
 
             case kAutoAddScreenManualClient:
-                showConfigureServer(
-                    tr("Please drag the new client screen (%1) "
-                        "to the desired position on the grid.")
-                        .arg(name));
+                showConfigureServer(tr("Please drag the new client screen (%1) "
+                                       "to the desired position on the grid.")
+                                        .arg(name));
                 break;
             default:
                 break;
             }
-        }
-        else {
+        } else {
             restart_cmd_app();
         }
     }
@@ -1240,8 +1228,7 @@ bool MainWindow::isServiceRunning(QString name)
     SC_HANDLE hSCManager;
     hSCManager = OpenSCManager(nullptr, nullptr, SC_MANAGER_CONNECT);
     if (hSCManager == nullptr) {
-        appendLogError("failed to open a service controller manager, error: " +
-            GetLastError());
+        appendLogError("failed to open a service controller manager, error: " + GetLastError());
         return false;
     }
 
@@ -1250,7 +1237,8 @@ bool MainWindow::isServiceRunning(QString name)
 #if QT_VERSION_MAJOR < 6
     SC_HANDLE hService = OpenService(hSCManager, array.data(), SERVICE_QUERY_STATUS);
 #else
-    SC_HANDLE hService = OpenService(hSCManager, reinterpret_cast<LPCWSTR>(array.data()), SERVICE_QUERY_STATUS);
+    SC_HANDLE hService = OpenService(hSCManager, reinterpret_cast<LPCWSTR>(array.data()),
+                                     SERVICE_QUERY_STATUS);
 #endif
     if (hService == nullptr) {
         appendLogDebug("failed to open service: " + name);
@@ -1294,15 +1282,11 @@ void MainWindow::downloadBonjour()
     if (arch == kProcessorArchWin32) {
         url.setUrl(bonjourBaseUrl + bonjourFilename32);
         appendLogInfo("downloading 32-bit Bonjour");
-    }
-    else if (arch == kProcessorArchWin64) {
+    } else if (arch == kProcessorArchWin64) {
         url.setUrl(bonjourBaseUrl + bonjourFilename64);
         appendLogInfo("downloading 64-bit Bonjour");
-    }
-    else {
-        QMessageBox::critical(
-            this, tr("InputLeap"),
-            tr("Failed to detect system architecture."));
+    } else {
+        QMessageBox::critical(this, tr("InputLeap"), tr("Failed to detect system architecture."));
         return;
     }
 
@@ -1323,8 +1307,7 @@ void MainWindow::downloadBonjour()
 #else
         m_DownloadMessageBox->setStandardButtons(QMessageBox::NoButton);
 #endif
-        m_pCancelButton = m_DownloadMessageBox->addButton(
-            tr("Cancel"), QMessageBox::RejectRole);
+        m_pCancelButton = m_DownloadMessageBox->addButton(tr("Cancel"), QMessageBox::RejectRole);
     }
     m_DownloadMessageBox->exec();
 
@@ -1340,8 +1323,7 @@ void MainWindow::installBonjour()
 #if QT_VERSION >= 0x050000
     QString tempLocation = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
 #else
-    QString tempLocation = QDesktopServices::storageLocation(
-                                QDesktopServices::TempLocation);
+    QString tempLocation = QDesktopServices::storageLocation(QDesktopServices::TempLocation);
 #endif
     QString filename = tempLocation;
     filename.append("\\").append(bonjourTargetFilename);
@@ -1351,8 +1333,7 @@ void MainWindow::installBonjour()
 
         QMessageBox::warning(
             this, "InputLeap",
-            tr("Failed to download Bonjour installer to location: %1")
-            .arg(tempLocation));
+            tr("Failed to download Bonjour installer to location: %1").arg(tempLocation));
         return;
     }
 
@@ -1385,17 +1366,16 @@ void MainWindow::installBonjour()
 void MainWindow::promptAutoConfig()
 {
     if (!isBonjourRunning()) {
-        int r = QMessageBox::question(
-            this, tr("InputLeap"),
-            tr("Do you want to enable auto config and install Bonjour?\n\n"
-               "This feature helps you establish the connection."),
-            QMessageBox::Yes | QMessageBox::No);
+        int r =
+            QMessageBox::question(this, tr("InputLeap"),
+                                  tr("Do you want to enable auto config and install Bonjour?\n\n"
+                                     "This feature helps you establish the connection."),
+                                  QMessageBox::Yes | QMessageBox::No);
 
         if (r == QMessageBox::Yes) {
             m_AppConfig->setAutoConfig(true);
             downloadBonjour();
-        }
-        else {
+        } else {
             m_AppConfig->setAutoConfig(false);
             ui_->m_pCheckBoxAutoConfig->setChecked(false);
         }
@@ -1404,7 +1384,7 @@ void MainWindow::promptAutoConfig()
     m_AppConfig->setAutoConfigPrompted(true);
 }
 
-void MainWindow::comboServerList_currentIndexChanged(QString )
+void MainWindow::comboServerList_currentIndexChanged(QString)
 {
     if (ui_->m_pComboServerList->count() != 0) {
         restart_cmd_app();
@@ -1415,11 +1395,10 @@ void MainWindow::on_m_pCheckBoxAutoConfig_toggled(bool checked)
 {
     if (!isBonjourRunning() && checked) {
         if (!m_SuppressAutoConfigWarning) {
-            int r = QMessageBox::information(
-                this, tr("InputLeap"),
-                tr("Auto config feature requires Bonjour.\n\n"
-                   "Do you want to install Bonjour?"),
-                QMessageBox::Yes | QMessageBox::No);
+            int r = QMessageBox::information(this, tr("InputLeap"),
+                                             tr("Auto config feature requires Bonjour.\n\n"
+                                                "Do you want to install Bonjour?"),
+                                             QMessageBox::Yes | QMessageBox::No);
 
             if (r == QMessageBox::Yes) {
                 downloadBonjour();
@@ -1449,8 +1428,9 @@ void MainWindow::bonjourInstallFinished()
 
 void MainWindow::windowStateChanged()
 {
-    if (windowState() == Qt::WindowMinimized && appConfig().getMinimizeToTray())
+    if (windowState() == Qt::WindowMinimized && appConfig().getMinimizeToTray()) {
         hide();
+    }
 }
 
 void MainWindow::showLogWindow()

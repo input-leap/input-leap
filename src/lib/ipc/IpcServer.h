@@ -18,11 +18,11 @@
 
 #pragma once
 
-#include "ipc/Ipc.h"
-#include "net/TCPListenSocket.h"
-#include "net/NetworkAddress.h"
 #include "arch/Arch.h"
 #include "base/EventTypes.h"
+#include "ipc/Ipc.h"
+#include "net/NetworkAddress.h"
+#include "net/TCPListenSocket.h"
 
 #include <list>
 #include <mutex>
@@ -83,10 +83,7 @@ private:
 
 #ifdef INPUTLEAP_TEST_ENV
 public:
-    IpcServer() :
-        m_mock(true),
-        m_events(nullptr),
-        m_socketMultiplexer(nullptr) { }
+    IpcServer() : m_mock(true), m_events(nullptr), m_socketMultiplexer(nullptr) {}
 #endif
 };
 

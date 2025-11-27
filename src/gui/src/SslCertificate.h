@@ -17,16 +17,15 @@
 
 #pragma once
 
+#include "io/filesystem.h"
 #include <QObject>
 #include <string>
-#include "io/filesystem.h"
 
-class SslCertificate : public QObject
-{
+class SslCertificate : public QObject {
     Q_OBJECT
 
 public:
-    explicit SslCertificate(QObject *parent = nullptr);
+    explicit SslCertificate(QObject* parent = nullptr);
 
 public slots:
     void generateCertificate();

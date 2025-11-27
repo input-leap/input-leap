@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include "inputleap/clipboard_types.h"
-#include "inputleap/Fwd.h"
 #include "base/Event.h"
 #include "base/EventTypes.h"
+#include "inputleap/Fwd.h"
+#include "inputleap/clipboard_types.h"
 
 namespace inputleap {
 
@@ -31,7 +31,7 @@ This interface defines the methods common to all screens.
 */
 class IScreen {
 public:
-    virtual ~IScreen() { }
+    virtual ~IScreen() {}
 
     struct ClipboardInfo {
     public:

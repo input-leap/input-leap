@@ -49,9 +49,9 @@
 #include "io/filesystem.h"
 
 #include <openssl/evp.h>
+#include <openssl/pem.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
-#include <openssl/pem.h>
 #include <algorithm>
 #include <cstdio>
 #include <cstring>
@@ -64,10 +64,12 @@ namespace {
 const EVP_MD* get_digest_for_type(FingerprintType type)
 {
     switch (type) {
-        case FingerprintType::SHA1: return EVP_sha1();
-        case FingerprintType::SHA256: return EVP_sha256();
-        default:
-            break;
+    case FingerprintType::SHA1:
+        return EVP_sha1();
+    case FingerprintType::SHA256:
+        return EVP_sha256();
+    default:
+        break;
     }
     throw std::runtime_error("Unknown fingerprint type " + std::to_string(static_cast<int>(type)));
 }
@@ -162,26 +164,26 @@ void generate_pem_self_signed_cert(const std::string& path)
     if (!private_key) {
         throw std::runtime_error("Could not allocate private key for certificate");
     }
-# if OPENSSL_VERSION_NUMBER < 0x00908000L
+#if OPENSSL_VERSION_NUMBER < 0x00908000L
     RSA* rsa = RSA_generate_key(key_bits, RSA_F4, nullptr, nullptr);
     if (!rsa) {
         throw std::runtime_error("Failed to generate RSA key");
     }
-# else // OpenSSL ≥ 0.9.8 and < 3
-    BIGNUM *bignum = BN_new();
-    auto bignum_free = finally([bignum](){ BN_free(bignum); });
+#else // OpenSSL ≥ 0.9.8 and < 3
+    BIGNUM* bignum = BN_new();
+    auto bignum_free = finally([bignum]() { BN_free(bignum); });
 
     RSA* rsa = RSA_new();
     if (!BN_set_word(bignum, RSA_F4) || !RSA_generate_key_ex(rsa, key_bits, bignum, nullptr)) {
-        RSA_free(rsa);  // This is the only case where *rsa is not owned by *private_key
+        RSA_free(rsa); // This is the only case where *rsa is not owned by *private_key
         throw std::runtime_error("Failed to generate RSA key");
     }
-# endif
+#endif
     EVP_PKEY_assign_RSA(private_key, rsa);
 #else // OpenSSL ≥ 3
     EVP_PKEY* private_key = EVP_RSA_gen(key_bits);
 #endif
-    auto private_key_free = finally([private_key](){ EVP_PKEY_free(private_key); });
+    auto private_key_free = finally([private_key]() { EVP_PKEY_free(private_key); });
 
     auto* cert = X509_new();
     if (!cert) {
@@ -196,7 +198,7 @@ void generate_pem_self_signed_cert(const std::string& path)
 
     auto* name = X509_get_subject_name(cert);
     X509_NAME_add_entry_by_txt(name, "CN", MBSTRING_ASC,
-                               reinterpret_cast<const unsigned char *>("InputLeap"), -1, -1, 0);
+                               reinterpret_cast<const unsigned char*>("InputLeap"), -1, -1, 0);
     X509_set_issuer_name(cert, name);
 
     X509_sign(cert, private_key, EVP_sha256());
@@ -241,9 +243,9 @@ walked in either direction.
     Else pictures would be too dense, and drawing the frame would
     fail, too, because the key type would not fit in anymore.
 */
-#define	FLDBASE		8
-#define	FLDSIZE_Y	(FLDBASE + 1)
-#define	FLDSIZE_X	(FLDBASE * 2 + 1)
+#define FLDBASE 8
+#define FLDSIZE_Y (FLDBASE + 1)
+#define FLDSIZE_X (FLDBASE * 2 + 1)
 
 std::string create_fingerprint_randomart(const std::vector<std::uint8_t>& dgst_raw)
 {
@@ -255,7 +257,7 @@ std::string create_fingerprint_randomart(const std::vector<std::uint8_t>& dgst_r
     std::uint8_t field[FLDSIZE_X][FLDSIZE_Y];
     std::size_t i;
     std::uint32_t b;
-    int	 x, y;
+    int x, y;
 
     // avoid compiler warning when comparing len to items in field array
     std::uint8_t len = static_cast<uint8_t>(strlen(augmentation_string) - 1);
@@ -263,7 +265,9 @@ std::string create_fingerprint_randomart(const std::vector<std::uint8_t>& dgst_r
     std::vector<char> retval;
     retval.reserve((FLDSIZE_X + 3) * (FLDSIZE_Y + 2));
 
-    auto add_char = [&retval](char ch) { retval.push_back(ch); };
+    auto add_char = [&retval](char ch) {
+        retval.push_back(ch);
+    };
 
     /* initialize field */
     std::memset(field, 0, FLDSIZE_X * FLDSIZE_Y * sizeof(char));
@@ -286,8 +290,9 @@ std::string create_fingerprint_randomart(const std::vector<std::uint8_t>& dgst_r
             y = std::min(y, FLDSIZE_Y - 1);
 
             /* augment the field */
-            if (field[x][y] < len - 2)
+            if (field[x][y] < len - 2) {
                 field[x][y]++;
+            }
             input = input >> 2;
         }
     }
@@ -298,24 +303,27 @@ std::string create_fingerprint_randomart(const std::vector<std::uint8_t>& dgst_r
 
     /* output upper border */
     add_char('+');
-    for (i = 0; i < FLDSIZE_X; i++)
+    for (i = 0; i < FLDSIZE_X; i++) {
         add_char('-');
+    }
     add_char('+');
     add_char('\n');
 
     /* output content */
     for (y = 0; y < FLDSIZE_Y; y++) {
         add_char('|');
-        for (x = 0; x < FLDSIZE_X; x++)
+        for (x = 0; x < FLDSIZE_X; x++) {
             add_char(augmentation_string[std::min<int>(field[x][y], len)]);
+        }
         add_char('|');
         add_char('\n');
     }
 
     /* output lower border */
     add_char('+');
-    for (i = 0; i < FLDSIZE_X; i++)
+    for (i = 0; i < FLDSIZE_X; i++) {
         add_char('-');
+    }
     add_char('+');
 
     return std::string{retval.data(), retval.size()};

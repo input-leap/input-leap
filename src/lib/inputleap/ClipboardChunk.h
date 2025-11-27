@@ -30,7 +30,6 @@ class IStream;
 
 class ClipboardChunk {
 public:
-
     static ClipboardChunk start(ClipboardID id, std::uint32_t sequence, const std::size_t& size);
     static ClipboardChunk data(ClipboardID id, std::uint32_t sequence, const std::string& data);
     static ClipboardChunk end(ClipboardID id, std::uint32_t sequence);
@@ -46,7 +45,7 @@ public:
     std::string data_;
 
 private:
-    static size_t        s_expectedSize;
+    static size_t s_expectedSize;
 };
 
 } // namespace inputleap

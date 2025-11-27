@@ -22,33 +22,30 @@ namespace inputleap {
 
 ArgsBase::ArgsBase() :
 #if SYSAPI_WIN32
-m_daemon(false), // daemon mode not supported on windows (use --service)
-m_debugServiceWait(false),
-m_pauseOnExit(false),
-m_stopOnDeskSwitch(false),
+    m_daemon(false), // daemon mode not supported on windows (use --service)
+    m_debugServiceWait(false),
+    m_pauseOnExit(false),
+    m_stopOnDeskSwitch(false),
 #else
-m_daemon(true), // backward compatibility for unix (daemon by default)
+    m_daemon(true), // backward compatibility for unix (daemon by default)
 #endif
-m_backend(false),
-m_restartable(true),
-m_noHooks(false),
-m_logFilter(nullptr),
-m_logFile(nullptr),
-m_display(nullptr),
-m_disableTray(false),
-m_enableIpc(false),
-m_enableDragDrop(false),
-m_dropTarget(""),
-m_shouldExit(false),
-network_address(),
-m_enableCrypto(true),
-m_profileDirectory(),
-m_pluginDirectory("")
-{
-}
+    m_backend(false),
+    m_restartable(true),
+    m_noHooks(false),
+    m_logFilter(nullptr),
+    m_logFile(nullptr),
+    m_display(nullptr),
+    m_disableTray(false),
+    m_enableIpc(false),
+    m_enableDragDrop(false),
+    m_dropTarget(""),
+    m_shouldExit(false),
+    network_address(),
+    m_enableCrypto(true),
+    m_profileDirectory(),
+    m_pluginDirectory("")
+{}
 
-ArgsBase::~ArgsBase()
-{
-}
+ArgsBase::~ArgsBase() {}
 
 } // namespace inputleap

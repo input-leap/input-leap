@@ -36,11 +36,8 @@ public:
     ~ArchDaemonNone() override;
 
     // IArchDaemon overrides
-    void installDaemon(const char* name,
-                       const char* description,
-                       const char* pathname,
-                       const char* commandLine,
-                       const char* dependencies) override;
+    void installDaemon(const char* name, const char* description, const char* pathname,
+                       const char* commandLine, const char* dependencies) override;
     void uninstallDaemon(const char* name) override;
     int daemonize(const char* name, DaemonFunc func) override;
     bool canInstallDaemon(const char* name) override;

@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "base/BitUtilities.h"
 #include "platform/OSXClipboardBMPConverter.h"
+#include "base/BitUtilities.h"
 #include "base/Log.h"
 
 namespace inputleap {
@@ -42,14 +42,12 @@ OSXClipboardBMPConverter::~OSXClipboardBMPConverter()
     // do nothing
 }
 
-IClipboard::EFormat
-OSXClipboardBMPConverter::getFormat() const
+IClipboard::EFormat OSXClipboardBMPConverter::getFormat() const
 {
     return IClipboard::kBitmap;
 }
 
-CFStringRef
-OSXClipboardBMPConverter::getOSXFormat() const
+CFStringRef OSXClipboardBMPConverter::getOSXFormat() const
 {
     // TODO: does this only work with Windows?
     return CFSTR("com.microsoft.bmp");
@@ -89,8 +87,7 @@ std::string OSXClipboardBMPConverter::toIClipboard(const std::string& bmp) const
     // construct BMP
     if (offset == 14 + 40) {
         return bmp.substr(14);
-    }
-    else {
+    } else {
         return bmp.substr(14, 40) + bmp.substr(offset, bmp.size() - offset);
     }
 }

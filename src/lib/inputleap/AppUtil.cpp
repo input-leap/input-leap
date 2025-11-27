@@ -23,32 +23,26 @@ namespace inputleap {
 
 AppUtil* AppUtil::s_instance = nullptr;
 
-AppUtil::AppUtil() :
-m_app(nullptr)
+AppUtil::AppUtil() : m_app(nullptr)
 {
     s_instance = this;
 }
 
-AppUtil::~AppUtil()
-{
-}
+AppUtil::~AppUtil() {}
 
-void
-AppUtil::adoptApp(IApp* app)
+void AppUtil::adoptApp(IApp* app)
 {
     app->setByeFunc(&exitAppStatic);
     m_app = app;
 }
 
-IApp&
-AppUtil::app() const
+IApp& AppUtil::app() const
 {
     assert(m_app != nullptr);
     return *m_app;
 }
 
-AppUtil&
-AppUtil::instance()
+AppUtil& AppUtil::instance()
 {
     assert(s_instance != nullptr);
     return *s_instance;

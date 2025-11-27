@@ -23,13 +23,12 @@
 class QMouseEvent;
 class QWidget;
 
-class NewScreenWidget : public QLabel
-{
+class NewScreenWidget : public QLabel {
     Q_OBJECT
 
-    public:
-        NewScreenWidget(QWidget* parent);
+public:
+    NewScreenWidget(QWidget* parent);
 
-    protected:
-        void mousePressEvent(QMouseEvent* event) override;
+protected:
+    void mousePressEvent(QMouseEvent* event) override;
 };

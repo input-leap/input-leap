@@ -19,9 +19,9 @@
 #pragma once
 
 #include "base/Event.h"
-#include "base/IEventQueue.h"
 #include "base/EventTypes.h"
 #include "base/Fwd.h"
+#include "base/IEventQueue.h"
 
 namespace inputleap {
 
@@ -31,8 +31,8 @@ Defines the interface for all streams.
 */
 class IStream {
 public:
-    IStream() { }
-    virtual ~IStream() { }
+    IStream() {}
+    virtual ~IStream() {}
 
     //! @name manipulators
     //@{
@@ -116,4 +116,4 @@ public:
     //@}
 };
 
-}
+} // namespace inputleap

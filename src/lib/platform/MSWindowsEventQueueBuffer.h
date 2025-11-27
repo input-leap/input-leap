@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "base/IEventQueueBuffer.h"
 #include "base/Fwd.h"
+#include "base/IEventQueueBuffer.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -33,7 +33,7 @@ public:
     virtual ~MSWindowsEventQueueBuffer();
 
     // IEventQueueBuffer overrides
-    virtual    void init() { }
+    virtual void init() {}
     virtual void waitForEvent(double timeout);
     virtual Type getEvent(Event& event, std::uint32_t& dataID);
     virtual bool addEvent(std::uint32_t dataID);

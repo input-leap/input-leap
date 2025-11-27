@@ -18,8 +18,8 @@
 
 #include "KeySequenceWidget.h"
 
-#include <iostream>
 #include <QMouseEvent>
+#include <iostream>
 
 KeySequenceWidget::KeySequenceWidget(QWidget* parent, const KeySequence& seq) :
     QPushButton(parent),
@@ -48,14 +48,14 @@ void KeySequenceWidget::mousePressEvent(QMouseEvent* event)
 {
     event->accept();
 
-    if (status() == Stopped)
-    {
+    if (status() == Stopped) {
         startRecording();
         return;
     }
 
-    if (m_KeySequence.appendMouseButton(event->button()))
+    if (m_KeySequence.appendMouseButton(event->button())) {
         stopRecording();
+    }
 
     updateOutput();
 }
@@ -71,8 +71,7 @@ void KeySequenceWidget::startRecording()
 
 void KeySequenceWidget::stopRecording()
 {
-    if (!keySequence().valid())
-    {
+    if (!keySequence().valid()) {
         m_KeySequence = backupSequence();
         updateOutput();
     }
@@ -86,33 +85,30 @@ void KeySequenceWidget::stopRecording()
 
 bool KeySequenceWidget::event(QEvent* event)
 {
-    if (status() == Recording)
-    {
-        switch(event->type())
-        {
-            case QEvent::KeyPress:
-                keyPressEvent(static_cast<QKeyEvent*>(event));
-                return true;
+    if (status() == Recording) {
+        switch (event->type()) {
+        case QEvent::KeyPress:
+            keyPressEvent(static_cast<QKeyEvent*>(event));
+            return true;
 
-            case QEvent::MouseButtonRelease:
-                event->accept();
-                return true;
+        case QEvent::MouseButtonRelease:
+            event->accept();
+            return true;
 
-            case QEvent::ShortcutOverride:
-                event->accept();
-                return true;
+        case QEvent::ShortcutOverride:
+            event->accept();
+            return true;
 
-            case QEvent::FocusOut:
-                stopRecording();
-                if (!valid())
-                {
-                    m_KeySequence = backupSequence();
-                    updateOutput();
-                }
-                break;
+        case QEvent::FocusOut:
+            stopRecording();
+            if (!valid()) {
+                m_KeySequence = backupSequence();
+                updateOutput();
+            }
+            break;
 
-            default:
-                break;
+        default:
+            break;
         }
     }
 
@@ -123,11 +119,13 @@ void KeySequenceWidget::keyPressEvent(QKeyEvent* event)
 {
     event->accept();
 
-    if (status() == Stopped)
+    if (status() == Stopped) {
         return;
+    }
 
-    if (m_KeySequence.appendKey(event->key(), event->modifiers()))
+    if (m_KeySequence.appendKey(event->key(), event->modifiers())) {
         stopRecording();
+    }
 
     updateOutput();
 }
@@ -136,10 +134,11 @@ void KeySequenceWidget::updateOutput()
 {
     QString s;
 
-    if (m_KeySequence.isMouseButton())
+    if (m_KeySequence.isMouseButton()) {
         s = mousePrefix() + m_KeySequence.toString() + mousePostfix();
-    else
+    } else {
         s = keyPrefix() + m_KeySequence.toString() + keyPostfix();
+    }
 
     setText(s);
 }

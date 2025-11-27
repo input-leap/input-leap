@@ -29,24 +29,24 @@
 #include <string.h>
 
 enum {
-    kExitSuccess      = 0, // successful completion
-    kExitFailed       = 1, // general failure
-    kExitTerminated   = 2, // killed by signal
-    kExitArgs         = 3, // bad arguments
-    kExitConfig       = 4, // cannot read configuration
-    kExitSubscription = 5  // subscription error
+    kExitSuccess = 0,     // successful completion
+    kExitFailed = 1,      // general failure
+    kExitTerminated = 2,  // killed by signal
+    kExitArgs = 3,        // bad arguments
+    kExitConfig = 4,      // cannot read configuration
+    kExitSubscription = 5 // subscription error
 };
 
 #if defined(__GNUC__)
-    #define INPUTLEAP_DEFINE_ATTRIBUTE_PRINTF 1
+#define INPUTLEAP_DEFINE_ATTRIBUTE_PRINTF 1
 #elif defined(__has_attribute)
-    #if __has_attribute(__format__)
-        #define INPUTLEAP_DEFINE_ATTRIBUTE_PRINTF 1
-    #endif
+#if __has_attribute(__format__)
+#define INPUTLEAP_DEFINE_ATTRIBUTE_PRINTF 1
+#endif
 #endif
 
 #ifdef INPUTLEAP_DEFINE_ATTRIBUTE_PRINTF
-    #define INPUTLEAP_ATTRIBUTE_PRINTF(x,y) __attribute__((__format__(__printf__,x,y)))
+#define INPUTLEAP_ATTRIBUTE_PRINTF(x, y) __attribute__((__format__(__printf__, x, y)))
 #else
-    #define INPUTLEAP_ATTRIBUTE_PRINTF(x,y)
+#define INPUTLEAP_ATTRIBUTE_PRINTF(x, y)
 #endif

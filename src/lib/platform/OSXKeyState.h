@@ -79,8 +79,7 @@ public:
     that was pressed or released, or 0 if the button doesn't map to a known
     KeyID.
     */
-    KeyButton mapKeyFromEvent(KeyIDs& ids,
-                            KeyModifierMask* maskOut, CGEventRef event) const;
+    KeyButton mapKeyFromEvent(KeyIDs& ids, KeyModifierMask* maskOut, CGEventRef event) const;
 
     //! Map key and mask to native values
     /*!
@@ -100,6 +99,7 @@ public:
     virtual void pollPressedKeys(KeyButtonSet& pressedKeys) const;
 
     CGEventFlags getModifierStateAsOSXFlags();
+
 protected:
     // KeyState overrides
     virtual void getKeyMap(inputleap::KeyMap& keyMap);
@@ -135,8 +135,7 @@ private:
     // option is acting as AltGr (i.e. it generates a glyph and there are
     // no command modifiers active) then we don't send the super modifier
     // to clients because they'd try to match it as a command modifier.
-    void adjustAltGrModifier(const KeyIDs& ids,
-                            KeyModifierMask* mask, bool isCommand) const;
+    void adjustAltGrModifier(const KeyIDs& ids, KeyModifierMask* mask, bool isCommand) const;
 
     // Maps an OS X virtual key id to a KeyButton.  This simply remaps
     // the ids so we don't use KeyButton 0.
@@ -158,9 +157,7 @@ private:
     // KeyButton 0 so we offset all OS X physical key ids by this much
     // when used as a KeyButton and by minus this much to map a KeyButton
     // to a physical button.
-    enum {
-        KeyButtonOffset = 1
-    };
+    enum { KeyButtonOffset = 1 };
 
     typedef std::map<CFDataRef, std::int32_t> GroupMap;
     typedef std::map<std::uint32_t, KeyID> VirtualKeyMap;

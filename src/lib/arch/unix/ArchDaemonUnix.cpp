@@ -18,16 +18,16 @@
 
 #include "arch/unix/ArchDaemonUnix.h"
 
-#include "arch/unix/XArchUnix.h"
 #include "arch/XArch.h"
+#include "arch/unix/XArchUnix.h"
 #include "base/Log.h"
 
-#include <unistd.h>
-#include <sys/types.h>
 #include <sys/stat.h>
-#include <fcntl.h>
-#include <errno.h>
+#include <sys/types.h>
 #include <cstdlib>
+#include <errno.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 #ifdef __APPLE__
 extern char** NXArgv;
@@ -45,14 +45,12 @@ ArchDaemonUnix::~ArchDaemonUnix()
     // do nothing
 }
 
-
 #ifdef __APPLE__
 
 // In Mac OS X, fork()'d child processes can't use most APIs (the frameworks
 // that InputLeap uses in fact prevent it and make the process just up and die),
 // so need to exec a copy of the program that doesn't fork so isn't limited.
-int
-execSelfNonDaemonized()
+int execSelfNonDaemonized()
 {
     char** selfArgv = NXArgv;
 
@@ -62,18 +60,19 @@ execSelfNonDaemonized()
     return 0;
 }
 
-bool alreadyDaemonized() {
+bool alreadyDaemonized()
+{
     return std::getenv("_INPUTLEAP_DAEMONIZED") != nullptr;
 }
 
 #endif
 
-int
-ArchDaemonUnix::daemonize(const char* name, DaemonFunc func)
+int ArchDaemonUnix::daemonize(const char* name, DaemonFunc func)
 {
 #ifdef __APPLE__
-    if (alreadyDaemonized())
+    if (alreadyDaemonized()) {
         return func(1, &name);
+    }
 #endif
 
     // fork so shell thinks we're done and so we're not a process
@@ -100,9 +99,10 @@ ArchDaemonUnix::daemonize(const char* name, DaemonFunc func)
     // chdir to root so we don't keep mounted filesystems points busy
     // TODO: this is a bit of a hack - can we find a better solution?
     int chdirErr = chdir("/");
-    if (chdirErr)
+    if (chdirErr) {
         // NB: file logging actually isn't working at this point!
         LOG_ERR("chdir error: %i", chdirErr);
+    }
 #endif
 
     // mask off permissions for any but owner

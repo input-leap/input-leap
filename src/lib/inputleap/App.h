@@ -19,13 +19,13 @@
 #pragma once
 
 #include "Fwd.h"
-#include "base/Fwd.h"
-#include "ipc/IpcClient.h"
-#include "inputleap/IApp.h"
-#include "base/Log.h"
 #include "base/EventQueue.h"
-#include "net/SocketMultiplexer.h"
+#include "base/Fwd.h"
+#include "base/Log.h"
 #include "common/common.h"
+#include "inputleap/IApp.h"
+#include "ipc/IpcClient.h"
+#include "net/SocketMultiplexer.h"
 #include <memory>
 
 #if SYSAPI_WIN32
@@ -38,7 +38,8 @@ namespace inputleap {
 
 class IArchTaskBarReceiver;
 
-typedef IArchTaskBarReceiver* (*CreateTaskBarReceiverFunc)(const BufferedLogOutputter*, IEventQueue* events);
+typedef IArchTaskBarReceiver* (*CreateTaskBarReceiverFunc)(const BufferedLogOutputter*,
+                                                           IEventQueue* events);
 
 class App : public IApp {
 public:
@@ -71,7 +72,11 @@ public:
     // TODO: this is old C code - use inheritance to normalize
     void (*m_bye)(int);
 
-    static App& instance() { assert(s_instance != nullptr); return *s_instance; }
+    static App& instance()
+    {
+        assert(s_instance != nullptr);
+        return *s_instance;
+    }
 
     // If --log was specified in args, then add a file logger.
     void setupFileLogging();
@@ -89,12 +94,15 @@ public:
 
     IArchTaskBarReceiver* taskBarReceiver() const override { return m_taskBarReceiver; }
 
-    void setByeFunc(void(*func)(int)) override { m_bye = func; }
+    void setByeFunc(void (*func)(int)) override { m_bye = func; }
     void bye(int error) override { m_bye(error); }
 
     IEventQueue* getEvents() const override { return m_events; }
 
-    void setSocketMultiplexer(std::unique_ptr<SocketMultiplexer>&& sm) { m_socketMultiplexer = std::move(sm); }
+    void setSocketMultiplexer(std::unique_ptr<SocketMultiplexer>&& sm)
+    {
+        m_socketMultiplexer = std::move(sm);
+    }
     SocketMultiplexer* getSocketMultiplexer() const { return m_socketMultiplexer.get(); }
 
     void setEvents(EventQueue& events) { m_events = &events; }
@@ -180,18 +188,16 @@ private:
 #if SYSAPI_UNIX
 
 // unix daemon mode args
-#  define HELP_SYS_ARGS \
-    " [--daemon|--no-daemon]"
-#  define HELP_SYS_INFO \
-    "  -f, --no-daemon          run in the foreground.\n"    \
+#define HELP_SYS_ARGS " [--daemon|--no-daemon]"
+#define HELP_SYS_INFO \
+    "  -f, --no-daemon          run in the foreground.\n" \
     "      --daemon             run as a daemon. (*)\n"
 
 #elif SYSAPI_WIN32
 
 // windows args
-#  define HELP_SYS_ARGS \
-    " [--exit-pause]"
-#  define HELP_SYS_INFO \
+#define HELP_SYS_ARGS " [--exit-pause]"
+#define HELP_SYS_INFO \
     "      --service <action>   manage the windows service, valid options are:\n" \
     "                             install/uninstall/start/stop\n" \
     "                             (obsolete, use input-leapd instead)\n" \

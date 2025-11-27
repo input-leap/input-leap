@@ -24,23 +24,20 @@
 
 namespace inputleap {
 
-void
-TestEventQueue::raiseQuitEvent()
+void TestEventQueue::raiseQuitEvent()
 {
     add_event(EventType::QUIT);
 }
 
-void
-TestEventQueue::initQuitTimeout(double timeout)
+void TestEventQueue::initQuitTimeout(double timeout)
 {
     assert(m_quitTimeoutTimer == nullptr);
     m_quitTimeoutTimer = newOneShotTimer(timeout, nullptr);
     add_handler(EventType::TIMER, m_quitTimeoutTimer,
-                [](const auto& e){ throw std::runtime_error("test event queue timeout"); });
+                [](const auto& e) { throw std::runtime_error("test event queue timeout"); });
 }
 
-void
-TestEventQueue::cleanupQuitTimeout()
+void TestEventQueue::cleanupQuitTimeout()
 {
     remove_handler(EventType::TIMER, m_quitTimeoutTimer);
     delete m_quitTimeoutTimer;

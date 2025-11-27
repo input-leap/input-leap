@@ -17,10 +17,10 @@
  */
 
 #include "inputleap/ProtocolUtil.h"
-#include "io/IStream.h"
 #include "base/Log.h"
-#include "inputleap/protocol_types.h"
 #include "inputleap/Exceptions.h"
+#include "inputleap/protocol_types.h"
+#include "io/IStream.h"
 
 #include <cctype>
 #include <cstring>
@@ -28,8 +28,7 @@
 
 namespace inputleap {
 
-void
-ProtocolUtil::writef(inputleap::IStream* stream, const char* fmt, ...)
+void ProtocolUtil::writef(inputleap::IStream* stream, const char* fmt, ...)
 {
     assert(stream != nullptr);
     assert(fmt != nullptr);
@@ -44,8 +43,7 @@ ProtocolUtil::writef(inputleap::IStream* stream, const char* fmt, ...)
     va_end(args);
 }
 
-bool
-ProtocolUtil::readf(inputleap::IStream* stream, const char* fmt, ...)
+bool ProtocolUtil::readf(inputleap::IStream* stream, const char* fmt, ...)
 {
     assert(stream != nullptr);
     assert(fmt != nullptr);
@@ -57,8 +55,7 @@ ProtocolUtil::readf(inputleap::IStream* stream, const char* fmt, ...)
     try {
         vreadf(stream, fmt, args);
         result = true;
-    }
-    catch (XIO&) {
+    } catch (XIO&) {
         result = false;
     }
     va_end(args);
@@ -86,15 +83,13 @@ void ProtocolUtil::vwritef(inputleap::IStream* stream, const char* fmt, std::uin
         LOG_DEBUG5("wrote %d bytes", size);
 
         delete[] buffer;
-    }
-    catch (XBase&) {
+    } catch (XBase&) {
         delete[] buffer;
         throw;
     }
 }
 
-void
-ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
+void ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
 {
     assert(stream != nullptr);
     assert(fmt != nullptr);
@@ -121,17 +116,16 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                     // 1 byte integer
                     *static_cast<std::uint8_t*>(v) = buffer[0];
                     LOG_DEBUG5("readf: read %d byte integer: %d (0x%x)", len,
-                         *static_cast<std::uint8_t*>(v), *static_cast<std::uint8_t*>(v));
+                               *static_cast<std::uint8_t*>(v), *static_cast<std::uint8_t*>(v));
                     break;
 
                 case 2:
                     // 2 byte integer
                     *static_cast<std::uint16_t*>(v) =
-                        static_cast<std::uint16_t>(
-                        (static_cast<std::uint16_t>(buffer[0]) << 8) |
-                         static_cast<std::uint16_t>(buffer[1]));
+                        static_cast<std::uint16_t>((static_cast<std::uint16_t>(buffer[0]) << 8) |
+                                                   static_cast<std::uint16_t>(buffer[1]));
                     LOG_DEBUG5("readf: read %d byte integer: %d (0x%x)", len,
-                         *static_cast<std::uint16_t*>(v), *static_cast<std::uint16_t*>(v));
+                               *static_cast<std::uint16_t*>(v), *static_cast<std::uint16_t*>(v));
                     break;
 
                 case 4:
@@ -139,10 +133,10 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                     *static_cast<std::uint32_t*>(v) =
                         (static_cast<std::uint32_t>(buffer[0]) << 24) |
                         (static_cast<std::uint32_t>(buffer[1]) << 16) |
-                        (static_cast<std::uint32_t>(buffer[2]) <<  8) |
-                         static_cast<std::uint32_t>(buffer[3]);
+                        (static_cast<std::uint32_t>(buffer[2]) << 8) |
+                        static_cast<std::uint32_t>(buffer[3]);
                     LOG_DEBUG5("readf: read %d byte integer: %d (0x%x)", len,
-                         *static_cast<std::uint32_t*>(v), *static_cast<std::uint32_t*>(v));
+                               *static_cast<std::uint32_t*>(v), *static_cast<std::uint32_t*>(v));
                     break;
                 default:
                     break;
@@ -159,8 +153,8 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                 read(stream, buffer, 4);
                 std::uint32_t n = (static_cast<std::uint32_t>(buffer[0]) << 24) |
                                   (static_cast<std::uint32_t>(buffer[1]) << 16) |
-                                  (static_cast<std::uint32_t>(buffer[2]) <<  8) |
-                                   static_cast<std::uint32_t>(buffer[3]);
+                                  (static_cast<std::uint32_t>(buffer[2]) << 8) |
+                                  static_cast<std::uint32_t>(buffer[3]);
 
                 if (n > PROTOCOL_MAX_LIST_LENGTH) {
                     throw XBadClient("Too long message received");
@@ -173,11 +167,10 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                     // 1 byte integer
                     for (std::uint32_t i = 0; i < n; ++i) {
                         read(stream, buffer, 1);
-                        static_cast<std::vector<std::uint8_t>*>(v)->push_back(
-                            buffer[0]);
+                        static_cast<std::vector<std::uint8_t>*>(v)->push_back(buffer[0]);
                         LOG_DEBUG5("readf: read %d byte integer[%d]: %d (0x%x)", len, i,
-                             static_cast<std::vector<std::uint8_t>*>(v)->back(),
-                             static_cast<std::vector<std::uint8_t>*>(v)->back());
+                                   static_cast<std::vector<std::uint8_t>*>(v)->back(),
+                                   static_cast<std::vector<std::uint8_t>*>(v)->back());
                     }
                     break;
 
@@ -186,12 +179,11 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                     for (std::uint32_t i = 0; i < n; ++i) {
                         read(stream, buffer, 2);
                         static_cast<std::vector<std::uint16_t>*>(v)->push_back(
-                            static_cast<std::uint16_t>(
-                            (static_cast<std::uint16_t>(buffer[0]) << 8) |
-                             static_cast<std::uint16_t>(buffer[1])));
+                            static_cast<std::uint16_t>((static_cast<std::uint16_t>(buffer[0]) << 8) |
+                                                       static_cast<std::uint16_t>(buffer[1])));
                         LOG_DEBUG5("readf: read %d byte integer[%d]: %d (0x%x)", len, i,
-                             static_cast<std::vector<std::uint16_t>*>(v)->back(),
-                             static_cast<std::vector<std::uint16_t>*>(v)->back());
+                                   static_cast<std::vector<std::uint16_t>*>(v)->back(),
+                                   static_cast<std::vector<std::uint16_t>*>(v)->back());
                     }
                     break;
 
@@ -202,11 +194,11 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                         static_cast<std::vector<std::uint32_t>*>(v)->push_back(
                             (static_cast<std::uint32_t>(buffer[0]) << 24) |
                             (static_cast<std::uint32_t>(buffer[1]) << 16) |
-                            (static_cast<std::uint32_t>(buffer[2]) <<  8) |
-                             static_cast<std::uint32_t>(buffer[3]));
+                            (static_cast<std::uint32_t>(buffer[2]) << 8) |
+                            static_cast<std::uint32_t>(buffer[3]));
                         LOG_DEBUG5("readf: read %d byte integer[%d]: %d (0x%x)", len, i,
-                             static_cast<std::vector<std::uint32_t>*>(v)->back(),
-                             static_cast<std::vector<std::uint32_t>*>(v)->back());
+                                   static_cast<std::vector<std::uint32_t>*>(v)->back(),
+                                   static_cast<std::vector<std::uint32_t>*>(v)->back());
                     }
                     break;
                 default:
@@ -223,8 +215,8 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                 read(stream, buffer, 4);
                 std::uint32_t str_len = (static_cast<std::uint32_t>(buffer[0]) << 24) |
                                         (static_cast<std::uint32_t>(buffer[1]) << 16) |
-                                        (static_cast<std::uint32_t>(buffer[2]) <<  8) |
-                                         static_cast<std::uint32_t>(buffer[3]);
+                                        (static_cast<std::uint32_t>(buffer[2]) << 8) |
+                                        static_cast<std::uint32_t>(buffer[3]);
 
                 if (str_len > PROTOCOL_MAX_STRING_LENGTH) {
                     throw XBadClient("Too long message received");
@@ -242,8 +234,7 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
                 // read the data
                 try {
                     read(stream, sBuffer, str_len);
-                }
-                catch (...) {
+                } catch (...) {
                     if (!useFixed) {
                         delete[] sBuffer;
                     }
@@ -273,8 +264,7 @@ ProtocolUtil::vreadf(inputleap::IStream* stream, const char* fmt, va_list args)
 
             // next format character
             ++fmt;
-        }
-        else {
+        } else {
             // read next character
             char buffer[1];
             read(stream, buffer, 1);
@@ -302,7 +292,7 @@ std::uint32_t ProtocolUtil::getLength(const char* fmt, va_list args)
             switch (*fmt) {
             case 'i':
                 assert(len == 1 || len == 2 || len == 4);
-                (void)va_arg(args, std::uint32_t);
+                (void) va_arg(args, std::uint32_t);
                 break;
 
             case 'I':
@@ -310,17 +300,17 @@ std::uint32_t ProtocolUtil::getLength(const char* fmt, va_list args)
                 switch (len) {
                 case 1:
                     len = 4 + static_cast<std::uint32_t>(
-                                (va_arg(args, std::vector<std::uint8_t>*))->size());
+                                  (va_arg(args, std::vector<std::uint8_t>*))->size());
                     break;
 
                 case 2:
                     len = 4 + 2 * static_cast<std::uint32_t>(
-                                (va_arg(args, std::vector<std::uint16_t>*))->size());
+                                      (va_arg(args, std::vector<std::uint16_t>*))->size());
                     break;
 
                 case 4:
                     len = 4 + 4 * static_cast<std::uint32_t>(
-                                (va_arg(args, std::vector<std::uint32_t>*))->size());
+                                      (va_arg(args, std::vector<std::uint32_t>*))->size());
                     break;
                 default:
                     break;
@@ -330,13 +320,13 @@ std::uint32_t ProtocolUtil::getLength(const char* fmt, va_list args)
             case 's':
                 assert(len == 0);
                 len = 4 + static_cast<std::uint32_t>((va_arg(args, std::string*))->size());
-                (void)va_arg(args, std::uint8_t*);
+                (void) va_arg(args, std::uint8_t*);
                 break;
 
             case 'S':
                 assert(len == 0);
                 len = 4 + va_arg(args, std::uint32_t);
-                (void)va_arg(args, std::uint8_t*);
+                (void) va_arg(args, std::uint8_t*);
                 break;
 
             case '%':
@@ -351,8 +341,7 @@ std::uint32_t ProtocolUtil::getLength(const char* fmt, va_list args)
             // accumulate size
             n += len;
             ++fmt;
-        }
-        else {
+        } else {
             // regular character
             ++n;
             ++fmt;
@@ -361,8 +350,7 @@ std::uint32_t ProtocolUtil::getLength(const char* fmt, va_list args)
     return n;
 }
 
-void
-ProtocolUtil::writef_void(void* buffer, const char* fmt, va_list args)
+void ProtocolUtil::writef_void(void* buffer, const char* fmt, va_list args)
 {
     std::uint8_t* dst = static_cast<std::uint8_t*>(buffer);
 
@@ -383,15 +371,15 @@ ProtocolUtil::writef_void(void* buffer, const char* fmt, va_list args)
                 case 2:
                     // 2 byte integer
                     *dst++ = static_cast<std::uint8_t>((v >> 8) & 0xff);
-                    *dst++ = static_cast<std::uint8_t>( v & 0xff);
+                    *dst++ = static_cast<std::uint8_t>(v & 0xff);
                     break;
 
                 case 4:
                     // 4 byte integer
                     *dst++ = static_cast<std::uint8_t>((v >> 24) & 0xff);
                     *dst++ = static_cast<std::uint8_t>((v >> 16) & 0xff);
-                    *dst++ = static_cast<std::uint8_t>((v >>  8) & 0xff);
-                    *dst++ = static_cast<std::uint8_t>( v & 0xff);
+                    *dst++ = static_cast<std::uint8_t>((v >> 8) & 0xff);
+                    *dst++ = static_cast<std::uint8_t>(v & 0xff);
                     break;
 
                 default:
@@ -410,8 +398,8 @@ ProtocolUtil::writef_void(void* buffer, const char* fmt, va_list args)
                     const std::uint32_t n = static_cast<std::uint32_t>(list->size());
                     *dst++ = static_cast<std::uint8_t>((n >> 24) & 0xff);
                     *dst++ = static_cast<std::uint8_t>((n >> 16) & 0xff);
-                    *dst++ = static_cast<std::uint8_t>((n >>  8) & 0xff);
-                    *dst++ = static_cast<std::uint8_t>( n & 0xff);
+                    *dst++ = static_cast<std::uint8_t>((n >> 8) & 0xff);
+                    *dst++ = static_cast<std::uint8_t>(n & 0xff);
                     for (std::uint32_t i = 0; i < n; ++i) {
                         *dst++ = (*list)[i];
                     }
@@ -425,12 +413,12 @@ ProtocolUtil::writef_void(void* buffer, const char* fmt, va_list args)
                     const std::uint32_t n = static_cast<std::uint32_t>(list->size());
                     *dst++ = static_cast<std::uint8_t>((n >> 24) & 0xff);
                     *dst++ = static_cast<std::uint8_t>((n >> 16) & 0xff);
-                    *dst++ = static_cast<std::uint8_t>((n >>  8) & 0xff);
-                    *dst++ = static_cast<std::uint8_t>( n & 0xff);
+                    *dst++ = static_cast<std::uint8_t>((n >> 8) & 0xff);
+                    *dst++ = static_cast<std::uint8_t>(n & 0xff);
                     for (std::uint32_t i = 0; i < n; ++i) {
                         const std::uint16_t v = (*list)[i];
                         *dst++ = static_cast<std::uint8_t>((v >> 8) & 0xff);
-                        *dst++ = static_cast<std::uint8_t>( v & 0xff);
+                        *dst++ = static_cast<std::uint8_t>(v & 0xff);
                     }
                     break;
                 }
@@ -442,14 +430,14 @@ ProtocolUtil::writef_void(void* buffer, const char* fmt, va_list args)
                     const std::uint32_t n = static_cast<std::uint32_t>(list->size());
                     *dst++ = static_cast<std::uint8_t>((n >> 24) & 0xff);
                     *dst++ = static_cast<std::uint8_t>((n >> 16) & 0xff);
-                    *dst++ = static_cast<std::uint8_t>((n >>  8) & 0xff);
-                    *dst++ = static_cast<std::uint8_t>( n & 0xff);
+                    *dst++ = static_cast<std::uint8_t>((n >> 8) & 0xff);
+                    *dst++ = static_cast<std::uint8_t>(n & 0xff);
                     for (std::uint32_t i = 0; i < n; ++i) {
                         const std::uint32_t v = (*list)[i];
                         *dst++ = static_cast<std::uint8_t>((v >> 24) & 0xff);
                         *dst++ = static_cast<std::uint8_t>((v >> 16) & 0xff);
-                        *dst++ = static_cast<std::uint8_t>((v >>  8) & 0xff);
-                        *dst++ = static_cast<std::uint8_t>( v & 0xff);
+                        *dst++ = static_cast<std::uint8_t>((v >> 8) & 0xff);
+                        *dst++ = static_cast<std::uint8_t>(v & 0xff);
                     }
                     break;
                 }
@@ -464,8 +452,9 @@ ProtocolUtil::writef_void(void* buffer, const char* fmt, va_list args)
             case 's': {
                 assert(len == 0);
                 const std::string* src = va_arg(args, std::string*);
-                const std::uint32_t str_len =
-                        (src != nullptr) ? static_cast<std::uint32_t>(src->size()) : 0;
+                const std::uint32_t str_len = (src != nullptr)
+                                                  ? static_cast<std::uint32_t>(src->size())
+                                                  : 0;
                 *dst++ = static_cast<std::uint8_t>((str_len >> 24) & 0xff);
                 *dst++ = static_cast<std::uint8_t>((str_len >> 16) & 0xff);
                 *dst++ = static_cast<std::uint8_t>((str_len >> 8) & 0xff);
@@ -501,8 +490,7 @@ ProtocolUtil::writef_void(void* buffer, const char* fmt, va_list args)
 
             // next format character
             ++fmt;
-        }
-        else {
+        } else {
             // copy regular character
             *dst++ = *fmt++;
         }
@@ -516,17 +504,39 @@ std::uint32_t ProtocolUtil::eatLength(const char** pfmt)
     for (;;) {
         std::uint32_t d;
         switch (*fmt) {
-        case '0': d = 0; break;
-        case '1': d = 1; break;
-        case '2': d = 2; break;
-        case '3': d = 3; break;
-        case '4': d = 4; break;
-        case '5': d = 5; break;
-        case '6': d = 6; break;
-        case '7': d = 7; break;
-        case '8': d = 8; break;
-        case '9': d = 9; break;
-        default: *pfmt = fmt; return n;
+        case '0':
+            d = 0;
+            break;
+        case '1':
+            d = 1;
+            break;
+        case '2':
+            d = 2;
+            break;
+        case '3':
+            d = 3;
+            break;
+        case '4':
+            d = 4;
+            break;
+        case '5':
+            d = 5;
+            break;
+        case '6':
+            d = 6;
+            break;
+        case '7':
+            d = 7;
+            break;
+        case '8':
+            d = 8;
+            break;
+        case '9':
+            d = 9;
+            break;
+        default:
+            *pfmt = fmt;
+            return n;
         }
         n = 10 * n + d;
         ++fmt;
@@ -551,10 +561,9 @@ void ProtocolUtil::read(inputleap::IStream* stream, void* vbuffer, std::uint32_t
 
         // prepare for next read
         buffer += n;
-        count  -= n;
+        count -= n;
     }
 }
-
 
 //
 // XIOReadMismatch

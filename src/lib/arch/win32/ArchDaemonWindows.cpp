@@ -17,20 +17,19 @@
  */
 
 #include "arch/win32/ArchDaemonWindows.h"
-#include "arch/win32/ArchMiscWindows.h"
-#include "arch/win32/XArchWindows.h"
 #include "arch/Arch.h"
 #include "arch/XArch.h"
+#include "arch/win32/ArchMiscWindows.h"
+#include "arch/win32/XArchWindows.h"
 #include "base/Time.h"
 #include <sstream>
 #include <vector>
 
 namespace inputleap {
 
-ArchDaemonWindows*        ArchDaemonWindows::s_daemon = nullptr;
+ArchDaemonWindows* ArchDaemonWindows::s_daemon = nullptr;
 
-ArchDaemonWindows::ArchDaemonWindows() :
-m_daemonThreadID(0)
+ArchDaemonWindows::ArchDaemonWindows() : m_daemonThreadID(0)
 {
     m_quitMessage = RegisterWindowMessage("InputLeapDaemonExit");
 }
@@ -40,45 +39,37 @@ ArchDaemonWindows::~ArchDaemonWindows()
     // do nothing
 }
 
-int
-ArchDaemonWindows::runDaemon(RunFunc runFunc)
+int ArchDaemonWindows::runDaemon(RunFunc runFunc)
 {
     assert(s_daemon != nullptr);
     return s_daemon->doRunDaemon(runFunc);
 }
 
-void
-ArchDaemonWindows::daemonRunning(bool running)
+void ArchDaemonWindows::daemonRunning(bool running)
 {
     if (s_daemon != nullptr) {
         s_daemon->doDaemonRunning(running);
     }
 }
 
-UINT
-ArchDaemonWindows::getDaemonQuitMessage()
+UINT ArchDaemonWindows::getDaemonQuitMessage()
 {
     if (s_daemon != nullptr) {
         return s_daemon->doGetDaemonQuitMessage();
-    }
-    else {
+    } else {
         return 0;
     }
 }
 
-void
-ArchDaemonWindows::daemonFailed(int result)
+void ArchDaemonWindows::daemonFailed(int result)
 {
     assert(s_daemon != nullptr);
     throw XArchDaemonRunFailed(result);
 }
 
-void
-ArchDaemonWindows::installDaemon(const char* name,
-                const char* description,
-                const char* pathname,
-                const char* commandLine,
-                const char* dependencies)
+void ArchDaemonWindows::installDaemon(const char* name, const char* description,
+                                      const char* pathname, const char* commandLine,
+                                      const char* dependencies)
 {
     // open service manager
     SC_HANDLE mgr = OpenSCManager(nullptr, nullptr, GENERIC_WRITE);
@@ -88,19 +79,10 @@ ArchDaemonWindows::installDaemon(const char* name,
     }
 
     // create the service
-    SC_HANDLE service = CreateService(mgr,
-                                      name,
-                                      name,
-                                      0,
+    SC_HANDLE service = CreateService(mgr, name, name, 0,
                                       SERVICE_WIN32_OWN_PROCESS | SERVICE_INTERACTIVE_PROCESS,
-                                      SERVICE_AUTO_START,
-                                      SERVICE_ERROR_NORMAL,
-                                      pathname,
-                                      nullptr,
-                                      nullptr,
-                                      dependencies,
-                                      nullptr,
-                                      nullptr);
+                                      SERVICE_AUTO_START, SERVICE_ERROR_NORMAL, pathname, nullptr,
+                                      nullptr, dependencies, nullptr, nullptr);
 
     if (service == nullptr) {
         // can't create service
@@ -109,8 +91,7 @@ ArchDaemonWindows::installDaemon(const char* name,
             CloseServiceHandle(mgr);
             throw XArchDaemonInstallFailed(error_code_to_string_windows(err));
         }
-    }
-    else {
+    } else {
         // done with service (but only try to close if not null)
         CloseServiceHandle(service);
     }
@@ -120,14 +101,13 @@ ArchDaemonWindows::installDaemon(const char* name,
 
     // open the registry key for this service
     HKEY key = openNTServicesKey();
-    key      = ArchMiscWindows::addKey(key, name);
+    key = ArchMiscWindows::addKey(key, name);
     if (key == nullptr) {
         // can't open key
         DWORD err = GetLastError();
         try {
             uninstallDaemon(name);
-        }
-        catch (...) {
+        } catch (...) {
             // ignore
         }
         throw XArchDaemonInstallFailed(error_code_to_string_windows(err));
@@ -144,8 +124,7 @@ ArchDaemonWindows::installDaemon(const char* name,
         ArchMiscWindows::closeKey(key);
         try {
             uninstallDaemon(name);
-        }
-        catch (...) {
+        } catch (...) {
             // ignore
         }
         throw XArchDaemonInstallFailed(error_code_to_string_windows(err));
@@ -156,12 +135,11 @@ ArchDaemonWindows::installDaemon(const char* name,
     ArchMiscWindows::closeKey(key);
 }
 
-void
-ArchDaemonWindows::uninstallDaemon(const char* name)
+void ArchDaemonWindows::uninstallDaemon(const char* name)
 {
     // remove parameters for this service.  ignore failures.
     HKEY key = openNTServicesKey();
-    key      = ArchMiscWindows::openKey(key, name);
+    key = ArchMiscWindows::openKey(key, name);
     if (key != nullptr) {
         ArchMiscWindows::deleteKey(key, _T("Parameters"));
         ArchMiscWindows::closeKey(key);
@@ -220,8 +198,7 @@ ArchDaemonWindows::uninstallDaemon(const char* name)
     }
 }
 
-int
-ArchDaemonWindows::daemonize(const char* name, DaemonFunc func)
+int ArchDaemonWindows::daemonize(const char* name, DaemonFunc func)
 {
     assert(name != nullptr);
     assert(func != nullptr);
@@ -249,8 +226,7 @@ ArchDaemonWindows::daemonize(const char* name, DaemonFunc func)
     return m_daemonResult;
 }
 
-bool
-ArchDaemonWindows::canInstallDaemon(const char* /*name*/)
+bool ArchDaemonWindows::canInstallDaemon(const char* /*name*/)
 {
     // check if we can open service manager for write
     SC_HANDLE mgr = OpenSCManager(nullptr, nullptr, GENERIC_WRITE);
@@ -266,8 +242,7 @@ ArchDaemonWindows::canInstallDaemon(const char* /*name*/)
     return (key != nullptr);
 }
 
-bool
-ArchDaemonWindows::isDaemonInstalled(const char* name)
+bool ArchDaemonWindows::isDaemonInstalled(const char* name)
 {
     // open service manager
     SC_HANDLE mgr = OpenSCManager(nullptr, nullptr, GENERIC_READ);
@@ -287,21 +262,15 @@ ArchDaemonWindows::isDaemonInstalled(const char* name)
     return (service != nullptr);
 }
 
-HKEY
-ArchDaemonWindows::openNTServicesKey()
+HKEY ArchDaemonWindows::openNTServicesKey()
 {
-    static const char* s_keyNames[] = {
-        _T("SYSTEM"),
-        _T("CurrentControlSet"),
-        _T("Services"),
-        nullptr
-    };
+    static const char* s_keyNames[] = {_T("SYSTEM"), _T("CurrentControlSet"), _T("Services"),
+                                       nullptr};
 
     return ArchMiscWindows::addKey(HKEY_LOCAL_MACHINE, s_keyNames);
 }
 
-bool
-ArchDaemonWindows::isRunState(DWORD state)
+bool ArchDaemonWindows::isRunState(DWORD state)
 {
     switch (state) {
     case SERVICE_START_PENDING:
@@ -314,8 +283,7 @@ ArchDaemonWindows::isRunState(DWORD state)
     }
 }
 
-int
-ArchDaemonWindows::doRunDaemon(RunFunc run)
+int ArchDaemonWindows::doRunDaemon(RunFunc run)
 {
     // should only be called from DaemonFunc
     assert(run != nullptr);
@@ -329,8 +297,7 @@ ArchDaemonWindows::doRunDaemon(RunFunc run)
     m_daemonThreadID = GetCurrentThreadId();
     while (m_serviceState != SERVICE_STOPPED) {
         // wait until we're told to start
-        while (!isRunState(m_serviceState) &&
-                m_serviceState != SERVICE_STOP_PENDING) {
+        while (!isRunState(m_serviceState) && m_serviceState != SERVICE_STOP_PENDING) {
             ARCH->wait_cond_var(service_cv_, lock, -1.0);
         }
 
@@ -339,8 +306,7 @@ ArchDaemonWindows::doRunDaemon(RunFunc run)
             lock.unlock();
             try {
                 result = run();
-            }
-            catch (...) {
+            } catch (...) {
                 lock.lock();
                 setStatusError(0);
                 m_serviceState = SERVICE_STOPPED;
@@ -354,8 +320,7 @@ ArchDaemonWindows::doRunDaemon(RunFunc run)
         // notify of new state
         if (m_serviceState == SERVICE_PAUSE_PENDING) {
             m_serviceState = SERVICE_PAUSED;
-        }
-        else {
+        } else {
             m_serviceState = SERVICE_STOPPED;
         }
         setStatus(m_serviceState);
@@ -364,8 +329,7 @@ ArchDaemonWindows::doRunDaemon(RunFunc run)
     return result;
 }
 
-void
-ArchDaemonWindows::doDaemonRunning(bool running)
+void ArchDaemonWindows::doDaemonRunning(bool running)
 {
     std::lock_guard<std::mutex> lock(service_mutex_);
     if (running) {
@@ -375,66 +339,56 @@ ArchDaemonWindows::doDaemonRunning(bool running)
     }
 }
 
-UINT
-ArchDaemonWindows::doGetDaemonQuitMessage()
+UINT ArchDaemonWindows::doGetDaemonQuitMessage()
 {
     return m_quitMessage;
 }
 
-void
-ArchDaemonWindows::setStatus(DWORD state)
+void ArchDaemonWindows::setStatus(DWORD state)
 {
     setStatus(state, 0, 0);
 }
 
-void
-ArchDaemonWindows::setStatus(DWORD state, DWORD step, DWORD waitHint)
+void ArchDaemonWindows::setStatus(DWORD state, DWORD step, DWORD waitHint)
 {
     assert(s_daemon != nullptr);
 
     SERVICE_STATUS status;
-    status.dwServiceType             = SERVICE_WIN32_OWN_PROCESS |
-                                        SERVICE_INTERACTIVE_PROCESS;
-    status.dwCurrentState            = state;
-    status.dwControlsAccepted        = SERVICE_ACCEPT_STOP |
-                                        SERVICE_ACCEPT_PAUSE_CONTINUE |
-                                        SERVICE_ACCEPT_SHUTDOWN;
-    status.dwWin32ExitCode           = NO_ERROR;
+    status.dwServiceType = SERVICE_WIN32_OWN_PROCESS | SERVICE_INTERACTIVE_PROCESS;
+    status.dwCurrentState = state;
+    status.dwControlsAccepted = SERVICE_ACCEPT_STOP | SERVICE_ACCEPT_PAUSE_CONTINUE |
+                                SERVICE_ACCEPT_SHUTDOWN;
+    status.dwWin32ExitCode = NO_ERROR;
     status.dwServiceSpecificExitCode = 0;
-    status.dwCheckPoint              = step;
-    status.dwWaitHint                = waitHint;
+    status.dwCheckPoint = step;
+    status.dwWaitHint = waitHint;
     SetServiceStatus(s_daemon->m_statusHandle, &status);
 }
 
-void
-ArchDaemonWindows::setStatusError(DWORD error)
+void ArchDaemonWindows::setStatusError(DWORD error)
 {
     assert(s_daemon != nullptr);
 
     SERVICE_STATUS status;
-    status.dwServiceType             = SERVICE_WIN32_OWN_PROCESS |
-                                        SERVICE_INTERACTIVE_PROCESS;
-    status.dwCurrentState            = SERVICE_STOPPED;
-    status.dwControlsAccepted        = SERVICE_ACCEPT_STOP |
-                                        SERVICE_ACCEPT_PAUSE_CONTINUE |
-                                        SERVICE_ACCEPT_SHUTDOWN;
-    status.dwWin32ExitCode           = ERROR_SERVICE_SPECIFIC_ERROR;
+    status.dwServiceType = SERVICE_WIN32_OWN_PROCESS | SERVICE_INTERACTIVE_PROCESS;
+    status.dwCurrentState = SERVICE_STOPPED;
+    status.dwControlsAccepted = SERVICE_ACCEPT_STOP | SERVICE_ACCEPT_PAUSE_CONTINUE |
+                                SERVICE_ACCEPT_SHUTDOWN;
+    status.dwWin32ExitCode = ERROR_SERVICE_SPECIFIC_ERROR;
     status.dwServiceSpecificExitCode = error;
-    status.dwCheckPoint              = 0;
-    status.dwWaitHint                = 0;
+    status.dwCheckPoint = 0;
+    status.dwWaitHint = 0;
     SetServiceStatus(s_daemon->m_statusHandle, &status);
 }
 
-void
-ArchDaemonWindows::serviceMain(DWORD argc, LPTSTR* argvIn)
+void ArchDaemonWindows::serviceMain(DWORD argc, LPTSTR* argvIn)
 {
     typedef std::vector<LPCTSTR> ArgList;
     typedef std::vector<std::string> Arguments;
     const char** argv = const_cast<const char**>(argvIn);
 
     // register our service handler function
-    m_statusHandle = RegisterServiceCtrlHandler(argv[0],
-                                &ArchDaemonWindows::serviceHandlerEntry);
+    m_statusHandle = RegisterServiceCtrlHandler(argv[0], &ArchDaemonWindows::serviceHandlerEntry);
     if (m_statusHandle == 0) {
         // cannot start as service
         m_daemonResult = -1;
@@ -454,11 +408,10 @@ ArchDaemonWindows::serviceMain(DWORD argc, LPTSTR* argvIn)
     if (argc <= 1) {
         // read command line
         HKEY key = openNTServicesKey();
-        key      = ArchMiscWindows::openKey(key, argvIn[0]);
-        key      = ArchMiscWindows::openKey(key, _T("Parameters"));
+        key = ArchMiscWindows::openKey(key, argvIn[0]);
+        key = ArchMiscWindows::openKey(key, _T("Parameters"));
         if (key != nullptr) {
-            commandLine = ArchMiscWindows::readValueString(key,
-                                                _T("CommandLine"));
+            commandLine = ArchMiscWindows::readValueString(key, _T("CommandLine"));
         }
 
         // if the command line isn't empty then parse and use it
@@ -475,9 +428,8 @@ ArchDaemonWindows::serviceMain(DWORD argc, LPTSTR* argvIn)
 
                     // whitespace must follow closing quote
                     if (e == std::string::npos ||
-                        (e + 1 != commandLine.size() &&
-                        commandLine[e + 1] != ' ' &&
-                        commandLine[e + 1] != '\t')) {
+                        (e + 1 != commandLine.size() && commandLine[e + 1] != ' ' &&
+                         commandLine[e + 1] != '\t')) {
                         args.clear();
                         break;
                     }
@@ -485,8 +437,7 @@ ArchDaemonWindows::serviceMain(DWORD argc, LPTSTR* argvIn)
                     // extract
                     args.push_back(commandLine.substr(i, e - i));
                     i = e + 1;
-                }
-                else {
+                } else {
                     // unquoted.  find next whitespace.
                     e = commandLine.find_first_of(" \t", i);
                     if (e == std::string::npos) {
@@ -511,7 +462,7 @@ ArchDaemonWindows::serviceMain(DWORD argc, LPTSTR* argvIn)
             }
 
             // adjust argc/argv
-            argc = (DWORD)myArgv.size();
+            argc = (DWORD) myArgv.size();
             argv = &myArgv[0];
         }
     }
@@ -521,12 +472,10 @@ ArchDaemonWindows::serviceMain(DWORD argc, LPTSTR* argvIn)
     try {
         // invoke daemon function
         m_daemonResult = m_daemonFunc(static_cast<int>(argc), argv);
-    }
-    catch (XArchDaemonRunFailed& e) {
+    } catch (XArchDaemonRunFailed& e) {
         setStatusError(e.m_result);
         m_daemonResult = -1;
-    }
-    catch (...) {
+    } catch (...) {
         setStatusError(1);
         m_daemonResult = -1;
     }
@@ -536,14 +485,12 @@ ArchDaemonWindows::serviceMain(DWORD argc, LPTSTR* argvIn)
     setStatus(m_serviceState, 0, 10000);
 }
 
-void WINAPI
-ArchDaemonWindows::serviceMainEntry(DWORD argc, LPTSTR* argv)
+void WINAPI ArchDaemonWindows::serviceMainEntry(DWORD argc, LPTSTR* argv)
 {
     s_daemon->serviceMain(argc, argv);
 }
 
-void
-ArchDaemonWindows::serviceHandler(DWORD ctrl)
+void ArchDaemonWindows::serviceHandler(DWORD ctrl)
 {
     std::unique_lock<std::mutex> lock(service_mutex_);
 
@@ -593,14 +540,12 @@ ArchDaemonWindows::serviceHandler(DWORD ctrl)
     }
 }
 
-void WINAPI
-ArchDaemonWindows::serviceHandlerEntry(DWORD ctrl)
+void WINAPI ArchDaemonWindows::serviceHandlerEntry(DWORD ctrl)
 {
     s_daemon->serviceHandler(ctrl);
 }
 
-void
-ArchDaemonWindows::start(const char* name)
+void ArchDaemonWindows::start(const char* name)
 {
     // open service manager
     SC_HANDLE mgr = OpenSCManager(nullptr, nullptr, GENERIC_READ);
@@ -609,8 +554,7 @@ ArchDaemonWindows::start(const char* name)
     }
 
     // open the service
-    SC_HANDLE service = OpenService(
-        mgr, name, SERVICE_START);
+    SC_HANDLE service = OpenService(mgr, name, SERVICE_START);
 
     if (service == nullptr) {
         CloseServiceHandle(mgr);
@@ -623,8 +567,7 @@ ArchDaemonWindows::start(const char* name)
     }
 }
 
-void
-ArchDaemonWindows::stop(const char* name)
+void ArchDaemonWindows::stop(const char* name)
 {
     // open service manager
     SC_HANDLE mgr = OpenSCManager(nullptr, nullptr, GENERIC_READ);
@@ -633,9 +576,7 @@ ArchDaemonWindows::stop(const char* name)
     }
 
     // open the service
-    SC_HANDLE service = OpenService(
-        mgr, name,
-        SERVICE_STOP | SERVICE_QUERY_STATUS);
+    SC_HANDLE service = OpenService(mgr, name, SERVICE_STOP | SERVICE_QUERY_STATUS);
 
     if (service == nullptr) {
         CloseServiceHandle(mgr);
@@ -652,8 +593,7 @@ ArchDaemonWindows::stop(const char* name)
     }
 }
 
-void
-ArchDaemonWindows::installDaemon()
+void ArchDaemonWindows::installDaemon()
 {
     // install default daemon if not already installed.
     if (!isDaemonInstalled(DEFAULT_DAEMON_NAME)) {
@@ -672,8 +612,7 @@ ArchDaemonWindows::installDaemon()
     start(DEFAULT_DAEMON_NAME);
 }
 
-void
-ArchDaemonWindows::uninstallDaemon()
+void ArchDaemonWindows::uninstallDaemon()
 {
     // remove service if installed.
     if (isDaemonInstalled(DEFAULT_DAEMON_NAME)) {

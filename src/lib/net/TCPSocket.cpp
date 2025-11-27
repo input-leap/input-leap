@@ -18,32 +18,30 @@
 
 #include "net/TCPSocket.h"
 
+#include "arch/Arch.h"
+#include "arch/XArch.h"
+#include "base/IEventQueue.h"
+#include "base/Log.h"
 #include "net/NetworkAddress.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TSocketMultiplexerMethodJob.h"
 #include "net/XSocket.h"
-#include "arch/Arch.h"
-#include "arch/XArch.h"
-#include "base/Log.h"
-#include "base/IEventQueue.h"
 
-#include <cstring>
 #include <cstdlib>
+#include <cstring>
 #include <memory>
 
 namespace inputleap {
 
 static const std::size_t MAX_INPUT_BUFFER_SIZE = 1024 * 1024;
 
-TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family) :
-    IDataSocket(events),
-    m_events(events),
-    m_socketMultiplexer(socketMultiplexer)
+TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer,
+                     IArchNetwork::EAddressFamily family) :
+    IDataSocket(events), m_events(events), m_socketMultiplexer(socketMultiplexer)
 {
     try {
         m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
-    }
-    catch (XArchNetwork& e) {
+    } catch (XArchNetwork& e) {
         throw XSocketCreate(e.what());
     }
 
@@ -53,10 +51,7 @@ TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, 
 }
 
 TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket) :
-    IDataSocket(events),
-    m_events(events),
-    m_socket(socket),
-    m_socketMultiplexer(socketMultiplexer)
+    IDataSocket(events), m_events(events), m_socket(socket), m_socketMultiplexer(socketMultiplexer)
 {
     assert(m_socket != nullptr);
 
@@ -72,28 +67,23 @@ TCPSocket::~TCPSocket()
 {
     try {
         close();
-    }
-    catch (...) {
+    } catch (...) {
         // ignore
     }
 }
 
-void
-TCPSocket::bind(const NetworkAddress& addr)
+void TCPSocket::bind(const NetworkAddress& addr)
 {
     try {
         ARCH->bindSocket(m_socket, addr.getAddress());
-    }
-    catch (XArchNetworkAddressInUse& e) {
+    } catch (XArchNetworkAddressInUse& e) {
         throw XSocketAddressInUse(e.what());
-    }
-    catch (XArchNetwork& e) {
+    } catch (XArchNetwork& e) {
         throw XSocketBind(e.what());
     }
 }
 
-void
-TCPSocket::close()
+void TCPSocket::close()
 {
     LOG_DEBUG("Closing socket: %p", m_socket);
 
@@ -114,8 +104,7 @@ TCPSocket::close()
         m_socket = nullptr;
         try {
             ARCH->closeSocket(socket);
-        }
-        catch (XArchNetwork& e) {
+        } catch (XArchNetwork& e) {
             // ignore, there's not much we can do
             LOG_WARN("error closing socket: %s", e.what());
         }
@@ -180,15 +169,13 @@ void TCPSocket::write(const void* buffer, std::uint32_t n)
     }
 }
 
-void
-TCPSocket::flush()
+void TCPSocket::flush()
 {
     std::unique_lock<std::mutex> lock(tcp_mutex_);
-    flushed_cv_.wait(lock, [this](){ return is_flushed_; });
+    flushed_cv_.wait(lock, [this]() { return is_flushed_; });
 }
 
-void
-TCPSocket::shutdownInput()
+void TCPSocket::shutdownInput()
 {
     bool useNewJob = false;
     {
@@ -197,8 +184,7 @@ TCPSocket::shutdownInput()
         // shutdown socket for reading
         try {
             ARCH->closeSocketForRead(m_socket);
-        }
-        catch (XArchNetwork&) {
+        } catch (XArchNetwork&) {
             // ignore
         }
 
@@ -214,8 +200,7 @@ TCPSocket::shutdownInput()
     }
 }
 
-void
-TCPSocket::shutdownOutput()
+void TCPSocket::shutdownOutput()
 {
     bool useNewJob = false;
     {
@@ -224,8 +209,7 @@ TCPSocket::shutdownOutput()
         // shutdown socket for writing
         try {
             ARCH->closeSocketForWrite(m_socket);
-        }
-        catch (XArchNetwork&) {
+        } catch (XArchNetwork&) {
             // ignore
         }
 
@@ -241,15 +225,13 @@ TCPSocket::shutdownOutput()
     }
 }
 
-bool
-TCPSocket::isReady() const
+bool TCPSocket::isReady() const
 {
     std::lock_guard<std::mutex> lock(tcp_mutex_);
     return (m_inputBuffer.getSize() > 0);
 }
 
-bool
-TCPSocket::isFatal() const
+bool TCPSocket::isFatal() const
 {
     // TCP sockets aren't ever left in a fatal state.
     LOG_ERR("isFatal() not valid for non-secure connections");
@@ -262,8 +244,7 @@ std::uint32_t TCPSocket::getSize() const
     return m_inputBuffer.getSize();
 }
 
-void
-TCPSocket::connect(const NetworkAddress& addr)
+void TCPSocket::connect(const NetworkAddress& addr)
 {
     {
         std::lock_guard<std::mutex> lock(tcp_mutex_);
@@ -278,47 +259,41 @@ TCPSocket::connect(const NetworkAddress& addr)
             if (ARCH->connectSocket(m_socket, addr.getAddress())) {
                 sendEvent(EventType::DATA_SOCKET_CONNECTED);
                 onConnected();
-            }
-            else {
+            } else {
                 // connection is in progress
                 m_writable = true;
             }
-        }
-        catch (XArchNetwork& e) {
+        } catch (XArchNetwork& e) {
             throw XSocketConnect(e.what());
         }
     }
     setJob(newJob());
 }
 
-void
-TCPSocket::init()
+void TCPSocket::init()
 {
     // default state
     m_connected = false;
-    m_readable  = false;
-    m_writable  = false;
+    m_readable = false;
+    m_writable = false;
 
     try {
         // turn off Nagle algorithm.  we send lots of very short messages
         // that should be sent without (much) delay.  for example, the
         // mouse motion messages are much less useful if they're delayed.
         ARCH->setNoDelayOnSocket(m_socket, true);
-    }
-    catch (XArchNetwork& e) {
+    } catch (XArchNetwork& e) {
         try {
             ARCH->closeSocket(m_socket);
             m_socket = nullptr;
-        }
-        catch (XArchNetwork&) {
+        } catch (XArchNetwork&) {
             // ignore
         }
         throw XSocketCreate(e.what());
     }
 }
 
-TCPSocket::EJobResult
-TCPSocket::doRead()
+TCPSocket::EJobResult TCPSocket::doRead()
 {
     std::uint8_t buffer[4096];
     memset(buffer, 0, sizeof(buffer));
@@ -344,8 +319,7 @@ TCPSocket::doRead()
         if (wasEmpty) {
             sendEvent(EventType::STREAM_INPUT_READY);
         }
-    }
-    else {
+    } else {
         // remote write end of stream hungup.  our input side
         // has therefore shutdown but don't flush our buffer
         // since there's still data to be read.
@@ -361,8 +335,7 @@ TCPSocket::doRead()
     return kRetry;
 }
 
-TCPSocket::EJobResult
-TCPSocket::doWrite()
+TCPSocket::EJobResult TCPSocket::doWrite()
 {
     // write data
     std::uint32_t bufferSize = 0;
@@ -398,10 +371,11 @@ void TCPSocket::setJob(std::unique_ptr<ISocketMultiplexerJob>&& job)
 MultiplexerJobStatus TCPSocket::newJobOrStopServicing()
 {
     auto new_job = newJob();
-    if (new_job)
+    if (new_job) {
         return {true, std::move(new_job)};
-    else
+    } else {
         return {false, {}};
+    }
 }
 
 std::unique_ptr<ISocketMultiplexerJob> TCPSocket::newJob()
@@ -410,31 +384,26 @@ std::unique_ptr<ISocketMultiplexerJob> TCPSocket::newJob()
 
     if (m_socket == nullptr) {
         return {};
-    }
-    else if (!m_connected) {
+    } else if (!m_connected) {
         assert(!m_readable);
         if (!(m_readable || m_writable)) {
             return {};
         }
-        return std::make_unique<TSocketMultiplexerMethodJob>(
-                    [this](auto j, auto r, auto w, auto e)
-                    { return serviceConnecting(j, r, w, e); },
-                    m_socket, m_readable, m_writable);
-    }
-    else {
+        return std::make_unique<TSocketMultiplexerMethodJob>([this](auto j, auto r, auto w, auto e) {
+            return serviceConnecting(j, r, w, e);
+        }, m_socket, m_readable, m_writable);
+    } else {
         auto writable = m_writable && (m_outputBuffer.getSize() > 0);
         if (!(m_readable || writable)) {
             return {};
         }
-        return std::make_unique<TSocketMultiplexerMethodJob>(
-                    [this](auto j, auto r, auto w, auto e)
-                    { return serviceConnected(j, r, w, e); },
-                    m_socket, m_readable, writable);
+        return std::make_unique<TSocketMultiplexerMethodJob>([this](auto j, auto r, auto w, auto e) {
+            return serviceConnected(j, r, w, e);
+        }, m_socket, m_readable, writable);
     }
 }
 
-void
-TCPSocket::sendConnectionFailedEvent(const char* msg)
+void TCPSocket::sendConnectionFailedEvent(const char* msg)
 {
     ConnectionFailedInfo info{msg};
     m_events->add_event(EventType::DATA_SOCKET_CONNECTION_FAILED, get_event_target(),
@@ -446,8 +415,7 @@ void TCPSocket::sendEvent(EventType type)
     m_events->add_event(type, get_event_target());
 }
 
-void
-TCPSocket::discardWrittenData(int bytesWrote)
+void TCPSocket::discardWrittenData(int bytesWrote)
 {
     m_outputBuffer.pop(bytesWrote);
     if (m_outputBuffer.getSize() == 0) {
@@ -457,23 +425,20 @@ TCPSocket::discardWrittenData(int bytesWrote)
     }
 }
 
-void
-TCPSocket::onConnected()
+void TCPSocket::onConnected()
 {
     m_connected = true;
-    m_readable  = true;
-    m_writable  = true;
+    m_readable = true;
+    m_writable = true;
 }
 
-void
-TCPSocket::onInputShutdown()
+void TCPSocket::onInputShutdown()
 {
     m_inputBuffer.pop(m_inputBuffer.getSize());
     m_readable = false;
 }
 
-void
-TCPSocket::onOutputShutdown()
+void TCPSocket::onOutputShutdown()
 {
     m_outputBuffer.pop(m_outputBuffer.getSize());
     m_writable = false;
@@ -483,8 +448,7 @@ TCPSocket::onOutputShutdown()
     flushed_cv_.notify_all();
 }
 
-void
-TCPSocket::onDisconnected()
+void TCPSocket::onDisconnected()
 {
     // disconnected
     onInputShutdown();
@@ -492,7 +456,8 @@ TCPSocket::onDisconnected()
     m_connected = false;
 }
 
-MultiplexerJobStatus TCPSocket::serviceConnecting(ISocketMultiplexerJob* job, bool, bool write, bool error)
+MultiplexerJobStatus TCPSocket::serviceConnecting(ISocketMultiplexerJob* job, bool, bool write,
+                                                  bool error)
 {
     (void) job;
 
@@ -519,8 +484,7 @@ MultiplexerJobStatus TCPSocket::serviceConnecting(ISocketMultiplexerJob* job, bo
         try {
             // connection may have failed or succeeded
             ARCH->throwErrorOnSocket(m_socket);
-        }
-        catch (XArchNetwork& e) {
+        } catch (XArchNetwork& e) {
             sendConnectionFailedEvent(e.what());
             onDisconnected();
             return newJobOrStopServicing();
@@ -536,8 +500,8 @@ MultiplexerJobStatus TCPSocket::serviceConnecting(ISocketMultiplexerJob* job, bo
     return {true, {}};
 }
 
-MultiplexerJobStatus TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
-                                                 bool read, bool write, bool error)
+MultiplexerJobStatus TCPSocket::serviceConnected(ISocketMultiplexerJob* job, bool read, bool write,
+                                                 bool error)
 {
     (void) job;
 
@@ -554,8 +518,7 @@ MultiplexerJobStatus TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
     if (write) {
         try {
             writeResult = doWrite();
-        }
-        catch (XArchNetworkShutdown&) {
+        } catch (XArchNetworkShutdown&) {
             // remote read end of stream hungup.  our output side
             // has therefore shutdown.
             onOutputShutdown();
@@ -565,14 +528,12 @@ MultiplexerJobStatus TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
                 m_connected = false;
             }
             writeResult = kNew;
-        }
-        catch (XArchNetworkDisconnected&) {
+        } catch (XArchNetworkDisconnected&) {
             // stream hungup
             onDisconnected();
             sendEvent(EventType::SOCKET_DISCONNECTED);
             writeResult = kNew;
-        }
-        catch (XArchNetwork& e) {
+        } catch (XArchNetwork& e) {
             // other write error
             LOG_WARN("error writing socket: %s", e.what());
             onDisconnected();
@@ -585,14 +546,12 @@ MultiplexerJobStatus TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
     if (read && m_readable) {
         try {
             readResult = doRead();
-        }
-        catch (XArchNetworkDisconnected&) {
+        } catch (XArchNetworkDisconnected&) {
             // stream hungup
             sendEvent(EventType::SOCKET_DISCONNECTED);
             onDisconnected();
             readResult = kNew;
-        }
-        catch (XArchNetwork& e) {
+        } catch (XArchNetwork& e) {
             // ignore other read error
             LOG_WARN("error reading socket: %s", e.what());
         }

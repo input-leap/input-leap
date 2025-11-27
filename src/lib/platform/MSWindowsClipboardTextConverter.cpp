@@ -32,8 +32,7 @@ MSWindowsClipboardTextConverter::~MSWindowsClipboardTextConverter()
     // do nothing
 }
 
-UINT
-MSWindowsClipboardTextConverter::getWin32Format() const
+UINT MSWindowsClipboardTextConverter::getWin32Format() const
 {
     return CF_TEXT;
 }

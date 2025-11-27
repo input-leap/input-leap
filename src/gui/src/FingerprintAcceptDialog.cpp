@@ -16,15 +16,13 @@
 */
 
 #include "FingerprintAcceptDialog.h"
-#include "ui_FingerprintAcceptDialog.h"
 #include "net/SecureUtils.h"
+#include "ui_FingerprintAcceptDialog.h"
 
-FingerprintAcceptDialog::FingerprintAcceptDialog(QWidget *parent,
-                                                 AppRole type,
-                                                 const inputleap::FingerprintData& fingerprint_sha1,
-                                                 const inputleap::FingerprintData& fingerprint_sha256) :
-    QDialog(parent),
-    ui_{std::make_unique<Ui::FingerprintAcceptDialog>()}
+FingerprintAcceptDialog::FingerprintAcceptDialog(
+    QWidget* parent, AppRole type, const inputleap::FingerprintData& fingerprint_sha1,
+    const inputleap::FingerprintData& fingerprint_sha256) :
+    QDialog(parent), ui_{std::make_unique<Ui::FingerprintAcceptDialog>()}
 {
     ui_->setupUi(this);
 
@@ -33,13 +31,13 @@ FingerprintAcceptDialog::FingerprintAcceptDialog(QWidget *parent,
         ui_->label_sha1_fingerprint_full->hide();
     } else {
         ui_->label_sha1_fingerprint_full->setText(
-                QString::fromStdString(inputleap::format_ssl_fingerprint(fingerprint_sha1.data)));
+            QString::fromStdString(inputleap::format_ssl_fingerprint(fingerprint_sha1.data)));
     }
 
     ui_->label_sha256_fingerprint_full->setText(
-            QString::fromStdString(inputleap::format_ssl_fingerprint_columns(fingerprint_sha256.data)));
+        QString::fromStdString(inputleap::format_ssl_fingerprint_columns(fingerprint_sha256.data)));
     ui_->label_sha256_fingerprint_randomart->setText(
-            QString::fromStdString(inputleap::create_fingerprint_randomart(fingerprint_sha256.data)));
+        QString::fromStdString(inputleap::create_fingerprint_randomart(fingerprint_sha256.data)));
 
     QString explanation;
     if (type == AppRole::Server) {

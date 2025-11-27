@@ -22,102 +22,67 @@
 #include <QString>
 #include <QVariant>
 
-class BaseConfig
-{
+class BaseConfig {
 public:
-    enum class Modifier {
-        DefaultMod = -1,
-        Shift,
-        Ctrl,
-        Alt,
-        Meta,
-        Super,
-        None,
-        Count
-    };
+    enum class Modifier { DefaultMod = -1, Shift, Ctrl, Alt, Meta, Super, None, Count };
 
-    enum class SwitchCorner {
-        TopLeft,
-        TopRight,
-        BottomLeft,
-        BottomRight,
-        Count
-    };
+    enum class SwitchCorner { TopLeft, TopRight, BottomLeft, BottomRight, Count };
 
-    enum class Fix {
-        CapsLock,
-        NumLock,
-        ScrollLock,
-        XTest,
-        PreserveFocus,
-        Count
-    };
+    enum class Fix { CapsLock, NumLock, ScrollLock, XTest, PreserveFocus, Count };
 
-    protected:
-        BaseConfig() {}
-        virtual ~BaseConfig() {}
+protected:
+    BaseConfig() {}
+    virtual ~BaseConfig() {}
 
-    protected:
-        template<class SettingType, class T>
-        void readSettings(QSettings& settings, QList<T>& array, const QString& arrayName,
-                          const T& deflt)
-        {
-            int entries = settings.beginReadArray(arrayName + "Array");
-            array.clear();
-            for (int i = 0; i < entries; i++)
-            {
-                settings.setArrayIndex(i);
-                QVariant v = settings.value(arrayName, static_cast<SettingType>(deflt));
-                array.append(static_cast<T>(v.value<SettingType>()));
-            }
-            settings.endArray();
+protected:
+    template<class SettingType, class T>
+    void readSettings(QSettings& settings, QList<T>& array, const QString& arrayName, const T& deflt)
+    {
+        int entries = settings.beginReadArray(arrayName + "Array");
+        array.clear();
+        for (int i = 0; i < entries; i++) {
+            settings.setArrayIndex(i);
+            QVariant v = settings.value(arrayName, static_cast<SettingType>(deflt));
+            array.append(static_cast<T>(v.value<SettingType>()));
         }
+        settings.endArray();
+    }
 
-        template<class SettingType, class T>
-        void readSettings(QSettings& settings, QList<T>& array, const QString& arrayName,
-                          const T& deflt, int entries)
-        {
-            Q_ASSERT(array.size() >= entries);
-            settings.beginReadArray(arrayName + "Array");
-            for (int i = 0; i < entries; i++)
-            {
-                settings.setArrayIndex(i);
-                QVariant v = settings.value(arrayName, static_cast<SettingType>(deflt));
-                array[i] = static_cast<T>(v.value<SettingType>());
-            }
-            settings.endArray();
+    template<class SettingType, class T>
+    void readSettings(QSettings& settings, QList<T>& array, const QString& arrayName,
+                      const T& deflt, int entries)
+    {
+        Q_ASSERT(array.size() >= entries);
+        settings.beginReadArray(arrayName + "Array");
+        for (int i = 0; i < entries; i++) {
+            settings.setArrayIndex(i);
+            QVariant v = settings.value(arrayName, static_cast<SettingType>(deflt));
+            array[i] = static_cast<T>(v.value<SettingType>());
         }
+        settings.endArray();
+    }
 
-        template<class SettingType, class T>
-        void writeSettings(QSettings& settings, const QList<T>& array,
-                           const QString& arrayName) const
-        {
-            settings.beginWriteArray(arrayName + "Array");
-            for (int i = 0; i < array.size(); i++)
-            {
-                settings.setArrayIndex(i);
-                settings.setValue(arrayName, static_cast<SettingType>(array[i]));
-            }
-            settings.endArray();
+    template<class SettingType, class T>
+    void writeSettings(QSettings& settings, const QList<T>& array, const QString& arrayName) const
+    {
+        settings.beginWriteArray(arrayName + "Array");
+        for (int i = 0; i < array.size(); i++) {
+            settings.setArrayIndex(i);
+            settings.setValue(arrayName, static_cast<SettingType>(array[i]));
         }
+        settings.endArray();
+    }
 
+public:
+    static const char* modifierName(Modifier idx) { return m_ModifierNames[static_cast<int>(idx)]; }
+    static const char* fixName(Fix idx) { return m_FixNames[static_cast<int>(idx)]; }
+    static const char* switchCornerName(SwitchCorner idx)
+    {
+        return m_SwitchCornerNames[static_cast<int>(idx)];
+    }
 
-    public:
-        static const char* modifierName(Modifier idx)
-        {
-            return m_ModifierNames[static_cast<int>(idx)];
-        }
-        static const char* fixName(Fix idx)
-        {
-            return m_FixNames[static_cast<int>(idx)];
-        }
-        static const char* switchCornerName(SwitchCorner idx)
-        {
-            return m_SwitchCornerNames[static_cast<int>(idx)];
-        }
-
-    private:
-        static const char* m_ModifierNames[];
-        static const char* m_FixNames[];
-        static const char* m_SwitchCornerNames[];
+private:
+    static const char* m_ModifierNames[];
+    static const char* m_FixNames[];
+    static const char* m_SwitchCornerNames[];
 };

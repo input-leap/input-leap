@@ -43,7 +43,7 @@ inline void store_little_endian_u16(std::uint8_t*& dst, std::uint16_t src)
 inline void store_little_endian_s32(std::uint8_t*& dst, std::int32_t src)
 {
     dst[0] = static_cast<std::uint8_t>(src & 0xffu);
-    dst[1] = static_cast<std::uint8_t>((src >>  8) & 0xffu);
+    dst[1] = static_cast<std::uint8_t>((src >> 8) & 0xffu);
     dst[2] = static_cast<std::uint8_t>((src >> 16) & 0xffu);
     dst[3] = static_cast<std::uint8_t>((src >> 24) & 0xffu);
     dst += 4;
@@ -52,7 +52,7 @@ inline void store_little_endian_s32(std::uint8_t*& dst, std::int32_t src)
 inline void store_little_endian_u32(std::uint8_t*& dst, std::uint32_t src)
 {
     dst[0] = static_cast<std::uint8_t>(src & 0xffu);
-    dst[1] = static_cast<std::uint8_t>((src >>  8) & 0xffu);
+    dst[1] = static_cast<std::uint8_t>((src >> 8) & 0xffu);
     dst[2] = static_cast<std::uint8_t>((src >> 16) & 0xffu);
     dst[3] = static_cast<std::uint8_t>((src >> 24) & 0xffu);
     dst += 4;
@@ -60,24 +60,22 @@ inline void store_little_endian_u32(std::uint8_t*& dst, std::uint32_t src)
 
 inline std::uint16_t load_little_endian_u16(const std::uint8_t* data)
 {
-    return static_cast<std::uint16_t>(data[0]) |
-            (static_cast<std::uint16_t>(data[1]) << 8);
+    return static_cast<std::uint16_t>(data[0]) | (static_cast<std::uint16_t>(data[1]) << 8);
 }
 
 inline std::int32_t load_little_endian_s32(const std::uint8_t* data)
 {
     return static_cast<std::int32_t>(static_cast<std::uint32_t>(data[0]) |
-            (static_cast<std::uint32_t>(data[1]) <<  8) |
-            (static_cast<std::uint32_t>(data[2]) << 16) |
-            (static_cast<std::uint32_t>(data[3]) << 24));
+                                     (static_cast<std::uint32_t>(data[1]) << 8) |
+                                     (static_cast<std::uint32_t>(data[2]) << 16) |
+                                     (static_cast<std::uint32_t>(data[3]) << 24));
 }
 
 inline std::uint32_t load_little_endian_u32(const std::uint8_t* data)
 {
-    return static_cast<std::uint32_t>(data[0]) |
-            (static_cast<std::uint32_t>(data[1]) <<  8) |
-            (static_cast<std::uint32_t>(data[2]) << 16) |
-            (static_cast<std::uint32_t>(data[3]) << 24);
+    return static_cast<std::uint32_t>(data[0]) | (static_cast<std::uint32_t>(data[1]) << 8) |
+           (static_cast<std::uint32_t>(data[2]) << 16) |
+           (static_cast<std::uint32_t>(data[3]) << 24);
 }
 
 } // namespace inputleap

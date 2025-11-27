@@ -20,9 +20,9 @@
 
 #include "config.h"
 
+#include "XWindowsImpl.h"
 #include "base/Fwd.h"
 #include "base/IEventQueueBuffer.h"
-#include "XWindowsImpl.h"
 
 #include <X11/Xlib.h>
 #include <mutex>
@@ -33,12 +33,11 @@ namespace inputleap {
 //! Event queue buffer for X11
 class XWindowsEventQueueBuffer : public IEventQueueBuffer {
 public:
-    XWindowsEventQueueBuffer(IXWindowsImpl* impl, Display*, Window,
-                             IEventQueue* events);
+    XWindowsEventQueueBuffer(IXWindowsImpl* impl, Display*, Window, IEventQueue* events);
     ~XWindowsEventQueueBuffer() override;
 
     // IEventQueueBuffer overrides
-    void init()  override { }
+    void init() override {}
     void waitForEvent(double timeout) override;
     Type getEvent(Event& event, std::uint32_t& dataID) override;
     bool addEvent(std::uint32_t dataID) override;
@@ -53,7 +52,7 @@ private:
     typedef std::vector<XEvent> EventList;
     IXWindowsImpl* m_impl;
 
-    mutable std::mutex  mutex_;
+    mutable std::mutex mutex_;
     Display* m_display;
     Window m_window;
     Atom m_userEvent;

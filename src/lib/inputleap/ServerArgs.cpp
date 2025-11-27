@@ -19,11 +19,6 @@
 
 namespace inputleap {
 
-ServerArgs::ServerArgs() :
-    m_configFile(),
-    m_config(nullptr),
-    m_screenChangeScript()
-{
-}
+ServerArgs::ServerArgs() : m_configFile(), m_config(nullptr), m_screenChangeScript() {}
 
 } // namespace inputleap

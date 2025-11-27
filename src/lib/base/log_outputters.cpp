@@ -39,76 +39,53 @@ StopLogOutputter::~StopLogOutputter()
     // do nothing
 }
 
-void
-StopLogOutputter::open(const char*)
+void StopLogOutputter::open(const char*)
 {
     // do nothing
 }
 
-void
-StopLogOutputter::close()
+void StopLogOutputter::close()
 {
     // do nothing
 }
 
-void
-StopLogOutputter::show(bool)
+void StopLogOutputter::show(bool)
 {
     // do nothing
 }
 
-bool
-StopLogOutputter::write(ELevel, const char*)
+bool StopLogOutputter::write(ELevel, const char*)
 {
     return false;
 }
-
 
 //
 // ConsoleLogOutputter
 //
 
-ConsoleLogOutputter::ConsoleLogOutputter()
-{
-}
+ConsoleLogOutputter::ConsoleLogOutputter() {}
 
-ConsoleLogOutputter::~ConsoleLogOutputter()
-{
-}
+ConsoleLogOutputter::~ConsoleLogOutputter() {}
 
-void
-ConsoleLogOutputter::open(const char* title)
-{
-}
+void ConsoleLogOutputter::open(const char* title) {}
 
-void
-ConsoleLogOutputter::close()
-{
-}
+void ConsoleLogOutputter::close() {}
 
-void
-ConsoleLogOutputter::show(bool showIfEmpty)
-{
-}
+void ConsoleLogOutputter::show(bool showIfEmpty) {}
 
-bool
-ConsoleLogOutputter::write(ELevel level, const char* msg)
+bool ConsoleLogOutputter::write(ELevel level, const char* msg)
 {
-    if ((level >= kFATAL) && (level <= kWARNING))
+    if ((level >= kFATAL) && (level <= kWARNING)) {
         std::cerr << msg << std::endl;
-    else
+    } else {
         std::cout << msg << std::endl;
+    }
 
     std::cout.flush();
     return true;
 }
 
-void
-ConsoleLogOutputter::flush()
-{
-
-}
-
+void ConsoleLogOutputter::flush() {}
 
 //
 // SystemLogOutputter
@@ -124,26 +101,22 @@ SystemLogOutputter::~SystemLogOutputter()
     // do nothing
 }
 
-void
-SystemLogOutputter::open(const char* title)
+void SystemLogOutputter::open(const char* title)
 {
     ARCH->openLog(title);
 }
 
-void
-SystemLogOutputter::close()
+void SystemLogOutputter::close()
 {
     ARCH->closeLog();
 }
 
-void
-SystemLogOutputter::show(bool showIfEmpty)
+void SystemLogOutputter::show(bool showIfEmpty)
 {
     ARCH->showLog(showIfEmpty);
 }
 
-bool
-SystemLogOutputter::write(ELevel level, const char* msg)
+bool SystemLogOutputter::write(ELevel level, const char* msg)
 {
     ARCH->writeLog(level, msg);
     return true;
@@ -153,8 +126,7 @@ SystemLogOutputter::write(ELevel level, const char* msg)
 // SystemLogger
 //
 
-SystemLogger::SystemLogger(const char* title, bool blockConsole) :
-    m_stop(nullptr)
+SystemLogger::SystemLogger(const char* title, bool blockConsole) : m_stop(nullptr)
 {
     // redirect log messages
     if (blockConsole) {
@@ -176,7 +148,6 @@ SystemLogger::~SystemLogger()
     }
 }
 
-
 //
 // BufferedLogOutputter
 //
@@ -192,39 +163,33 @@ BufferedLogOutputter::~BufferedLogOutputter()
     // do nothing
 }
 
-BufferedLogOutputter::const_iterator
-BufferedLogOutputter::begin() const
+BufferedLogOutputter::const_iterator BufferedLogOutputter::begin() const
 {
     return m_buffer.begin();
 }
 
-BufferedLogOutputter::const_iterator
-BufferedLogOutputter::end() const
+BufferedLogOutputter::const_iterator BufferedLogOutputter::end() const
 {
     return m_buffer.end();
 }
 
-void
-BufferedLogOutputter::open(const char*)
+void BufferedLogOutputter::open(const char*)
 {
     // do nothing
 }
 
-void
-BufferedLogOutputter::close()
+void BufferedLogOutputter::close()
 {
     // remove all elements from the buffer
     m_buffer.clear();
 }
 
-void
-BufferedLogOutputter::show(bool)
+void BufferedLogOutputter::show(bool)
 {
     // do nothing
 }
 
-bool
-BufferedLogOutputter::write(ELevel, const char* message)
+bool BufferedLogOutputter::write(ELevel, const char* message)
 {
     while (m_buffer.size() >= m_maxBufferSize) {
         m_buffer.pop_front();
@@ -232,7 +197,6 @@ BufferedLogOutputter::write(ELevel, const char* message)
     m_buffer.push_back(std::string(message));
     return true;
 }
-
 
 //
 // FileLogOutputter
@@ -243,19 +207,15 @@ FileLogOutputter::FileLogOutputter(const char* logFile)
     setLogFilename(logFile);
 }
 
-FileLogOutputter::~FileLogOutputter()
-{
-}
+FileLogOutputter::~FileLogOutputter() {}
 
-void
-FileLogOutputter::setLogFilename(const char* logFile)
+void FileLogOutputter::setLogFilename(const char* logFile)
 {
     assert(logFile != nullptr);
     m_fileName = logFile;
 }
 
-bool
-FileLogOutputter::write(ELevel level, const char *message)
+bool FileLogOutputter::write(ELevel level, const char* message)
 {
     (void) level;
 
@@ -283,12 +243,17 @@ FileLogOutputter::write(ELevel level, const char *message)
     return true;
 }
 
-void FileLogOutputter::open(const char *title) { (void) title; }
+void FileLogOutputter::open(const char* title)
+{
+    (void) title;
+}
 
-void
-FileLogOutputter::close() {}
+void FileLogOutputter::close() {}
 
-void FileLogOutputter::show(bool showIfEmpty) { (void) showIfEmpty; }
+void FileLogOutputter::show(bool showIfEmpty)
+{
+    (void) showIfEmpty;
+}
 
 //
 // MesssageBoxLogOutputter
@@ -304,28 +269,24 @@ MesssageBoxLogOutputter::~MesssageBoxLogOutputter()
     // do nothing
 }
 
-void
-MesssageBoxLogOutputter::open(const char* title)
+void MesssageBoxLogOutputter::open(const char* title)
 {
     (void) title;
     // do nothing
 }
 
-void
-MesssageBoxLogOutputter::close()
+void MesssageBoxLogOutputter::close()
 {
     // do nothing
 }
 
-void
-MesssageBoxLogOutputter::show(bool showIfEmpty)
+void MesssageBoxLogOutputter::show(bool showIfEmpty)
 {
     (void) showIfEmpty;
     // do nothing
 }
 
-bool
-MesssageBoxLogOutputter::write(ELevel level, const char* msg)
+bool MesssageBoxLogOutputter::write(ELevel level, const char* msg)
 {
     (void) msg;
     // don't spam user with messages.

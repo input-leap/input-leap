@@ -19,8 +19,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QTemporaryFile>
 
-struct TestKey
-{
+struct TestKey {
     int key = 0;
     int modifier = Qt::NoModifier;
 

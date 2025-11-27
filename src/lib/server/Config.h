@@ -18,31 +18,33 @@
 
 #pragma once
 
-#include "server/InputFilter.h"
-#include "inputleap/option_types.h"
-#include "inputleap/protocol_types.h"
-#include "inputleap/IPlatformScreen.h"
-#include "net/NetworkAddress.h"
 #include "base/Fwd.h"
 #include "base/String.h"
 #include "base/XBase.h"
+#include "inputleap/IPlatformScreen.h"
+#include "inputleap/option_types.h"
+#include "inputleap/protocol_types.h"
+#include "net/NetworkAddress.h"
+#include "server/InputFilter.h"
 
 #include <iosfwd>
 #include <map>
 #include <set>
 
-namespace inputleap { class Config; }
+namespace inputleap {
+class Config;
+}
 
 namespace std {
-template <>
+template<>
 struct iterator_traits<inputleap::Config> {
     typedef std::string value_type;
-    typedef ptrdiff_t                    difference_type;
-    typedef bidirectional_iterator_tag    iterator_category;
+    typedef ptrdiff_t difference_type;
+    typedef bidirectional_iterator_tag iterator_category;
     typedef std::string* pointer;
     typedef std::string& reference;
 };
-}
+} // namespace std
 
 namespace inputleap {
 
@@ -85,11 +87,11 @@ public:
         float inverseTransform(float x) const;
 
         // compares side and start of interval
-        bool            operator<(const CellEdge&) const;
+        bool operator<(const CellEdge&) const;
 
         // compares side and interval
-        bool            operator==(const CellEdge&) const;
-        bool            operator!=(const CellEdge&) const;
+        bool operator==(const CellEdge&) const;
+        bool operator!=(const CellEdge&) const;
 
     private:
         void init(const std::string& name, EDirection side, const Interval&);
@@ -128,11 +130,11 @@ private:
         bool hasEdge(const CellEdge&) const;
         bool overlaps(const CellEdge&) const;
 
-        bool getLink(EDirection side, float position,
-                            const CellEdge*& src, const CellEdge*& dst) const;
+        bool getLink(EDirection side, float position, const CellEdge*& src,
+                     const CellEdge*& dst) const;
 
-        bool            operator==(const Cell&) const;
-        bool            operator!=(const Cell&) const;
+        bool operator==(const Cell&) const;
+        bool operator!=(const Cell&) const;
 
         const_iterator begin() const;
         const_iterator end() const;
@@ -152,27 +154,32 @@ public:
     typedef NameMap::const_iterator all_const_iterator;
     class const_iterator : std::iterator_traits<Config> {
     public:
-        explicit const_iterator() : m_i() { }
-        explicit const_iterator(const internal_const_iterator& i) : m_i(i) { }
+        explicit const_iterator() : m_i() {}
+        explicit const_iterator(const internal_const_iterator& i) : m_i(i) {}
         const_iterator(const const_iterator&) = default;
         const_iterator(const_iterator&&) = default;
 
-        const_iterator&    operator=(const const_iterator& i) {
+        const_iterator& operator=(const const_iterator& i)
+        {
             m_i = i.m_i;
             return *this;
         }
         std::string operator*() { return m_i->first; }
         const std::string* operator->() { return &(m_i->first); }
-        const_iterator&    operator++() { ++m_i;  return *this; }
-        const_iterator    operator++(int) { return const_iterator(m_i++); }
-        const_iterator&    operator--() { --m_i;  return *this; }
-        const_iterator    operator--(int) { return const_iterator(m_i--); }
-        bool            operator==(const const_iterator& i) const {
-            return (m_i == i.m_i);
+        const_iterator& operator++()
+        {
+            ++m_i;
+            return *this;
         }
-        bool            operator!=(const const_iterator& i) const {
-            return (m_i != i.m_i);
+        const_iterator operator++(int) { return const_iterator(m_i++); }
+        const_iterator& operator--()
+        {
+            --m_i;
+            return *this;
         }
+        const_iterator operator--(int) { return const_iterator(m_i--); }
+        bool operator==(const const_iterator& i) const { return (m_i == i.m_i); }
+        bool operator!=(const const_iterator& i) const { return (m_i != i.m_i); }
 
     private:
         internal_const_iterator m_i;
@@ -306,10 +313,7 @@ public:
     bool removeOptions(const std::string& name);
 
     // Note, that the list of rules may be modified
-    virtual std::vector<InputFilter::Rule>& get_input_filter_rules()
-    {
-        return input_filter_rules_;
-    }
+    virtual std::vector<InputFilter::Rule>& get_input_filter_rules() { return input_filter_rules_; }
 
     //@}
     //! @name accessors
@@ -358,8 +362,8 @@ public:
     saves the position on the neighbor in \c positionOut if it's not
     \c nullptr.
     */
-    std::string getNeighbor(const std::string&, EDirection,
-                            float position, float* positionOut) const;
+    std::string getNeighbor(const std::string&, EDirection, float position,
+                            float* positionOut) const;
 
     //! Check for neighbor
     /*!
@@ -399,9 +403,9 @@ public:
     bool hasLockToScreenAction() const;
 
     //! Compare configurations
-    bool                operator==(const Config&) const;
+    bool operator==(const Config&) const;
     //! Compare configurations
-    bool                operator!=(const Config&) const;
+    bool operator!=(const Config&) const;
 
     //! Read configuration
     /*!
@@ -414,15 +418,13 @@ public:
     /*!
     Reads a configuration from a stream.  Throws XConfigRead on error.
     */
-    friend std::istream&
-                        operator>>(std::istream&, Config&);
+    friend std::istream& operator>>(std::istream&, Config&);
 
     //! Write configuration
     /*!
     Writes a configuration to a stream.
     */
-    friend std::ostream&
-                        operator<<(std::ostream&, const Config&);
+    friend std::ostream& operator<<(std::ostream&, const Config&);
 
     //! Get direction name
     /*!
@@ -479,7 +481,7 @@ public:
     bool readLine(std::string&);
     std::uint32_t getLineNumber() const;
 
-    bool                operator!() const;
+    bool operator!() const;
 
     OptionValue parseBoolean(const std::string&) const;
     OptionValue parseInt(const std::string&) const;
@@ -503,7 +505,7 @@ public:
 
 private:
     // not implemented
-    ConfigReadContext&    operator=(const ConfigReadContext&);
+    ConfigReadContext& operator=(const ConfigReadContext&);
 
     static std::string concatArgs(const ArgList& args);
 

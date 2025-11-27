@@ -40,8 +40,7 @@ Arch::~Arch()
 #endif
 }
 
-void
-Arch::init()
+void Arch::init()
 {
     ARCH_NETWORK::init();
 #if SYSAPI_WIN32
@@ -50,8 +49,7 @@ Arch::init()
 #endif
 }
 
-Arch*
-Arch::getInstance()
+Arch* Arch::getInstance()
 {
     assert(s_instance != nullptr);
     return s_instance;

@@ -17,42 +17,37 @@
  */
 
 #include "inputleap/win32/AppUtilWindows.h"
-#include "inputleap/Screen.h"
-#include "inputleap/ArgsBase.h"
-#include "inputleap/App.h"
-#include "inputleap/Exceptions.h"
-#include "platform/MSWindowsScreen.h"
-#include "arch/win32/XArchWindows.h"
-#include "arch/win32/ArchMiscWindows.h"
 #include "arch/IArchTaskBarReceiver.h"
-#include "base/Log.h"
-#include "base/log_outputters.h"
-#include "base/IEventQueue.h"
+#include "arch/win32/ArchMiscWindows.h"
+#include "arch/win32/XArchWindows.h"
 #include "base/Event.h"
 #include "base/EventQueue.h"
+#include "base/IEventQueue.h"
+#include "base/Log.h"
 #include "base/Time.h"
+#include "base/log_outputters.h"
 #include "common/Version.h"
+#include "inputleap/App.h"
+#include "inputleap/ArgsBase.h"
+#include "inputleap/Exceptions.h"
+#include "inputleap/Screen.h"
+#include "platform/MSWindowsScreen.h"
 
-#include <sstream>
-#include <iostream>
-#include <conio.h>
 #include <VersionHelpers.h>
+#include <conio.h>
+#include <iostream>
+#include <sstream>
 
 namespace inputleap {
 
-AppUtilWindows::AppUtilWindows(IEventQueue* events) :
-    m_events(events),
-    m_exitMode(kExitModeNormal)
+AppUtilWindows::AppUtilWindows(IEventQueue* events) : m_events(events), m_exitMode(kExitModeNormal)
 {
-    if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)consoleHandler, TRUE) == FALSE)
-    {
+    if (SetConsoleCtrlHandler((PHANDLER_ROUTINE) consoleHandler, TRUE) == FALSE) {
         throw std::runtime_error(error_code_to_string_windows(GetLastError()));
     }
 }
 
-AppUtilWindows::~AppUtilWindows()
-{
-}
+AppUtilWindows::~AppUtilWindows() {}
 
 BOOL WINAPI AppUtilWindows::consoleHandler(DWORD)
 {
@@ -62,15 +57,12 @@ BOOL WINAPI AppUtilWindows::consoleHandler(DWORD)
     return TRUE;
 }
 
-static
-int
-mainLoopStatic()
+static int mainLoopStatic()
 {
     return AppUtil::instance().app().mainLoop();
 }
 
-int
-AppUtilWindows::daemonNTMainLoop(int argc, const char** argv)
+int AppUtilWindows::daemonNTMainLoop(int argc, const char** argv)
 {
     app().initApp(argc, argv);
     debugServiceWait();
@@ -81,17 +73,15 @@ AppUtilWindows::daemonNTMainLoop(int argc, const char** argv)
     return ArchMiscWindows::runDaemon(mainLoopStatic);
 }
 
-void
-AppUtilWindows::exitApp(int code)
+void AppUtilWindows::exitApp(int code)
 {
     switch (m_exitMode) {
+    case kExitModeDaemon:
+        ArchMiscWindows::daemonFailed(code);
+        break;
 
-        case kExitModeDaemon:
-            ArchMiscWindows::daemonFailed(code);
-            break;
-
-        default:
-            throw XExitApp(code);
+    default:
+        throw XExitApp(code);
     }
 }
 
@@ -100,30 +90,24 @@ int daemonNTMainLoopStatic(int argc, const char** argv)
     return AppUtilWindows::instance().daemonNTMainLoop(argc, argv);
 }
 
-int
-AppUtilWindows::daemonNTStartup(int, char**)
+int AppUtilWindows::daemonNTStartup(int, char**)
 {
     SystemLogger sysLogger(app().daemonName(), false);
     m_exitMode = kExitModeDaemon;
     return ARCH->daemonize(app().daemonName(), daemonNTMainLoopStatic);
 }
 
-static
-int
-daemonNTStartupStatic(int argc, char** argv)
+static int daemonNTStartupStatic(int argc, char** argv)
 {
     return AppUtilWindows::instance().daemonNTStartup(argc, argv);
 }
 
-static
-int
-foregroundStartupStatic(int argc, char** argv)
+static int foregroundStartupStatic(int argc, char** argv)
 {
     return AppUtil::instance().app().foregroundStartup(argc, argv);
 }
 
-void
-AppUtilWindows::beforeAppExit()
+void AppUtilWindows::beforeAppExit()
 {
     // this can be handy for debugging, since the application is launched in
     // a new console window, and will normally close on exit (making it so
@@ -134,8 +118,7 @@ AppUtilWindows::beforeAppExit()
     }
 }
 
-int
-AppUtilWindows::run(int argc, char** argv)
+int AppUtilWindows::run(int argc, char** argv)
 {
     if (!IsWindowsXPSP3OrGreater()) {
         throw std::runtime_error("InputLeap only supports Windows XP SP3 and above.");
@@ -158,19 +141,15 @@ AppUtilWindows::run(int argc, char** argv)
     return app().runInner(argc, argv, nullptr, startup);
 }
 
-AppUtilWindows&
-AppUtilWindows::instance()
+AppUtilWindows& AppUtilWindows::instance()
 {
-    return (AppUtilWindows&)AppUtil::instance();
+    return (AppUtilWindows&) AppUtil::instance();
 }
 
-void
-AppUtilWindows::debugServiceWait()
+void AppUtilWindows::debugServiceWait()
 {
-    if (app().argsBase().m_debugServiceWait)
-    {
-        while(true)
-        {
+    if (app().argsBase().m_debugServiceWait) {
+        while (true) {
             // this code is only executed when the process is launched via the
             // windows service controller (and --debug-service-wait arg is
             // used). to debug, set a breakpoint on this line so that
@@ -181,8 +160,7 @@ AppUtilWindows::debugServiceWait()
     }
 }
 
-void
-AppUtilWindows::startNode()
+void AppUtilWindows::startNode()
 {
     app().startNode();
 }

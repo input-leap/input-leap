@@ -17,7 +17,4 @@
 
 #pragma once
 
-enum class AppRole {
-    Server,
-    Client
-};
+enum class AppRole { Server, Client };

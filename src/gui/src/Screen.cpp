@@ -21,16 +21,13 @@
 #include <QtCore>
 #include <QtGui>
 
-Screen::Screen() :
-    m_Pixmap(QPixmap(":res/icons/64x64/video-display.png")),
-    m_Swapped(false)
+Screen::Screen() : m_Pixmap(QPixmap(":res/icons/64x64/video-display.png")), m_Swapped(false)
 {
     init();
 }
 
 Screen::Screen(const QString& name) :
-    m_Pixmap(QPixmap(":res/icons/64x64/video-display.png")),
-    m_Swapped(false)
+    m_Pixmap(QPixmap(":res/icons/64x64/video-display.png")), m_Swapped(false)
 {
     init();
     setName(name);
@@ -47,22 +44,26 @@ void Screen::init()
 
     // m_Modifiers, m_SwitchCorners and m_Fixes are QLists we use like fixed-size arrays,
     // thus we need to make sure to fill them with the required number of elements.
-    for (int i = 0; i < static_cast<int>(Modifier::Count); i++)
+    for (int i = 0; i < static_cast<int>(Modifier::Count); i++) {
         modifiers() << static_cast<Modifier>(i);
+    }
 
-    for (int i = 0; i < static_cast<int>(SwitchCorner::Count); i++)
+    for (int i = 0; i < static_cast<int>(SwitchCorner::Count); i++) {
         switchCorners() << false;
+    }
 
-    for (int i = 0; i < static_cast<int>(Fix::Count); i++)
+    for (int i = 0; i < static_cast<int>(Fix::Count); i++) {
         fixes() << false;
+    }
 }
 
 void Screen::loadSettings(QSettings& settings)
 {
     setName(settings.value("name").toString());
 
-    if (name().isEmpty())
+    if (name().isEmpty()) {
         return;
+    }
 
     setSwitchCornerSize(settings.value("switchCornerSize").toInt());
 
@@ -78,8 +79,9 @@ void Screen::saveSettings(QSettings& settings) const
 {
     settings.setValue("name", name());
 
-    if (name().isEmpty())
+    if (name().isEmpty()) {
         return;
+    }
 
     settings.setValue("switchCornerSize", switchCornerSize());
 
@@ -121,8 +123,7 @@ QTextStream& Screen::writeScreensSection(QTextStream& outStream) const
 
 QTextStream& Screen::writeAliasesSection(QTextStream& outStream) const
 {
-    if (!aliases().isEmpty())
-    {
+    if (!aliases().isEmpty()) {
         outStream << "\t" << name() << ":\n";
 
         for (const QString& alias : aliases()) {
@@ -140,30 +141,18 @@ QDataStream& operator<<(QDataStream& outStream, const Screen& screen)
         modifiers.push_back(static_cast<int>(mod));
     }
 
-    return outStream
-        << screen.name()
-        << screen.switchCornerSize()
-        << screen.aliases()
-        << modifiers
-        << screen.switchCorners()
-        << screen.fixes()
-        ;
+    return outStream << screen.name() << screen.switchCornerSize() << screen.aliases() << modifiers
+                     << screen.switchCorners() << screen.fixes();
 }
 
 QDataStream& operator>>(QDataStream& inStream, Screen& screen)
 {
     QList<int> modifiers;
-    return inStream
-        >> screen.m_Name
-        >> screen.m_SwitchCornerSize
-        >> screen.m_Aliases
-        >> modifiers
-        >> screen.m_SwitchCorners
-        >> screen.m_Fixes
-        ;
+    return inStream >> screen.m_Name >> screen.m_SwitchCornerSize >> screen.m_Aliases >>
+           modifiers >> screen.m_SwitchCorners >> screen.m_Fixes;
 
     screen.m_Modifiers.clear();
-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     auto const mods = std::as_const(modifiers);
 #else
     auto const mods = qAsConst(modifiers);

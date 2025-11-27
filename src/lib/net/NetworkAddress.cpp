@@ -18,9 +18,9 @@
 
 #include "net/NetworkAddress.h"
 
-#include "net/XSocket.h"
 #include "arch/Arch.h"
 #include "arch/XArch.h"
+#include "net/XSocket.h"
 
 #include <cstdlib>
 
@@ -41,13 +41,15 @@ static bool parse_address(const std::string& address, std::string& host, int& po
     if (address[0] == '[') {
         // bracketed host possibly followed by port as :INTEGER
         auto endBracket = address.find(']', 1);
-        if (endBracket == std::string::npos)
+        if (endBracket == std::string::npos) {
             return false;
+        }
         host = address.substr(1, endBracket - 1);
         if (endBracket + 1 < address.length()) {
             // port follows (or garbage)
-            if (address[endBracket + 1] != ':')
+            if (address[endBracket + 1] != ':') {
                 return false;
+            }
             port = std::strtol(&address[endBracket + 2], nullptr, 10);
         }
     } else {
@@ -67,19 +69,13 @@ static bool parse_address(const std::string& address, std::string& host, int& po
 
 // name re-resolution adapted from a patch by Brent Priddy.
 
-NetworkAddress::NetworkAddress() :
-    m_address(nullptr),
-    m_hostname(),
-    m_port(0)
+NetworkAddress::NetworkAddress() : m_address(nullptr), m_hostname(), m_port(0)
 {
     // note -- make no calls to Network socket interface here;
     // we're often called prior to Network::init().
 }
 
-NetworkAddress::NetworkAddress(int port) :
-    m_address(nullptr),
-    m_hostname(),
-    m_port(port)
+NetworkAddress::NetworkAddress(int port) : m_address(nullptr), m_hostname(), m_port(port)
 {
     checkPort();
     m_address = ARCH->newAnyAddr(IArchNetwork::kINET);
@@ -95,13 +91,11 @@ NetworkAddress::NetworkAddress(const NetworkAddress& addr) :
 }
 
 NetworkAddress::NetworkAddress(const std::string& hostname, int port) :
-    m_address(nullptr),
-    m_hostname(hostname),
-    m_port(port)
+    m_address(nullptr), m_hostname(hostname), m_port(port)
 {
-    if (!parse_address(hostname, m_hostname, m_port))
-        throw XSocketAddress(XSocketAddress::kUnknown,
-            m_hostname, m_port);
+    if (!parse_address(hostname, m_hostname, m_port)) {
+        throw XSocketAddress(XSocketAddress::kUnknown, m_hostname, m_port);
+    }
     checkPort();
 }
 
@@ -112,8 +106,7 @@ NetworkAddress::~NetworkAddress()
     }
 }
 
-NetworkAddress&
-NetworkAddress::operator=(const NetworkAddress& addr)
+NetworkAddress& NetworkAddress::operator=(const NetworkAddress& addr)
 {
     ArchNetAddress newAddr = nullptr;
     if (addr.m_address != nullptr) {
@@ -122,14 +115,13 @@ NetworkAddress::operator=(const NetworkAddress& addr)
     if (m_address != nullptr) {
         ARCH->closeAddr(m_address);
     }
-    m_address  = newAddr;
+    m_address = newAddr;
     m_hostname = addr.m_hostname;
-    m_port     = addr.m_port;
+    m_port = addr.m_port;
     return *this;
 }
 
-void
-NetworkAddress::resolve()
+void NetworkAddress::resolve()
 {
     // discard previous address
     if (m_address != nullptr) {
@@ -142,21 +134,16 @@ NetworkAddress::resolve()
         // up the name.
         if (m_hostname.empty()) {
             m_address = ARCH->newAnyAddr(IArchNetwork::kINET6);
-        }
-        else {
+        } else {
             m_address = ARCH->nameToAddr(m_hostname);
         }
-    }
-    catch (XArchNetworkNameUnknown&) {
+    } catch (XArchNetworkNameUnknown&) {
         throw XSocketAddress(XSocketAddress::kNotFound, m_hostname, m_port);
-    }
-    catch (XArchNetworkNameNoAddress&) {
+    } catch (XArchNetworkNameNoAddress&) {
         throw XSocketAddress(XSocketAddress::kNoAddress, m_hostname, m_port);
-    }
-    catch (XArchNetworkNameUnsupported&) {
+    } catch (XArchNetworkNameUnsupported&) {
         throw XSocketAddress(XSocketAddress::kUnsupported, m_hostname, m_port);
-    }
-    catch (XArchNetworkName&) {
+    } catch (XArchNetworkName&) {
         throw XSocketAddress(XSocketAddress::kUnknown, m_hostname, m_port);
     }
 
@@ -164,32 +151,27 @@ NetworkAddress::resolve()
     ARCH->setAddrPort(m_address, m_port);
 }
 
-bool
-NetworkAddress::operator==(const NetworkAddress& addr) const
+bool NetworkAddress::operator==(const NetworkAddress& addr) const
 {
     return ARCH->isEqualAddr(m_address, addr.m_address);
 }
 
-bool
-NetworkAddress::operator!=(const NetworkAddress& addr) const
+bool NetworkAddress::operator!=(const NetworkAddress& addr) const
 {
     return !operator==(addr);
 }
 
-bool
-NetworkAddress::isValid() const
+bool NetworkAddress::isValid() const
 {
     return (m_address != nullptr);
 }
 
-const ArchNetAddress&
-NetworkAddress::getAddress() const
+const ArchNetAddress& NetworkAddress::getAddress() const
 {
     return m_address;
 }
 
-int
-NetworkAddress::getPort() const
+int NetworkAddress::getPort() const
 {
     return m_port;
 }
@@ -199,8 +181,7 @@ std::string NetworkAddress::getHostname() const
     return m_hostname;
 }
 
-void
-NetworkAddress::checkPort()
+void NetworkAddress::checkPort()
 {
     // check port number
     if (m_port <= 0 || m_port > 65535) {

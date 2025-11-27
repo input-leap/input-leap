@@ -22,8 +22,7 @@
 
 namespace inputleap {
 
-XWindowsClipboardUCS2Converter::XWindowsClipboardUCS2Converter(
-                Display* display, const char* name) :
+XWindowsClipboardUCS2Converter::XWindowsClipboardUCS2Converter(Display* display, const char* name) :
     m_atom(XInternAtom(display, name, False))
 {
     // do nothing
@@ -34,20 +33,17 @@ XWindowsClipboardUCS2Converter::~XWindowsClipboardUCS2Converter()
     // do nothing
 }
 
-IClipboard::EFormat
-XWindowsClipboardUCS2Converter::getFormat() const
+IClipboard::EFormat XWindowsClipboardUCS2Converter::getFormat() const
 {
     return IClipboard::kText;
 }
 
-Atom
-XWindowsClipboardUCS2Converter::getAtom() const
+Atom XWindowsClipboardUCS2Converter::getAtom() const
 {
     return m_atom;
 }
 
-int
-XWindowsClipboardUCS2Converter::getDataSize() const
+int XWindowsClipboardUCS2Converter::getDataSize() const
 {
     return 16;
 }

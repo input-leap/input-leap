@@ -33,16 +33,14 @@ ArchLogWindows::~ArchLogWindows()
     // do nothing
 }
 
-void
-ArchLogWindows::openLog(const char* name)
+void ArchLogWindows::openLog(const char* name)
 {
     if (m_eventLog == nullptr) {
         m_eventLog = RegisterEventSource(nullptr, name);
     }
 }
 
-void
-ArchLogWindows::closeLog()
+void ArchLogWindows::closeLog()
 {
     if (m_eventLog != nullptr) {
         DeregisterEventSource(m_eventLog);
@@ -50,14 +48,12 @@ ArchLogWindows::closeLog()
     }
 }
 
-void
-ArchLogWindows::showLog(bool)
+void ArchLogWindows::showLog(bool)
 {
     // do nothing
 }
 
-void
-ArchLogWindows::writeLog(ELevel level, const char* msg)
+void ArchLogWindows::writeLog(ELevel level, const char* msg)
 {
     if (m_eventLog != nullptr) {
         // convert priority
@@ -84,9 +80,8 @@ ArchLogWindows::writeLog(ELevel level, const char* msg)
         // level as the event category.
         ReportEvent(m_eventLog, type, static_cast<WORD>(level),
                     0, // event ID
-                    nullptr,
-                    0,
-                    (DWORD)strlen(msg) + 1, // raw data size
+                    nullptr, 0,
+                    (DWORD) strlen(msg) + 1, // raw data size
                     nullptr,
                     const_cast<char*>(msg)); // raw data
     }

@@ -20,10 +20,8 @@
 #include <QtNetwork>
 
 ZeroconfThread::ZeroconfThread(int socketDescriptor, QObject* parent) :
-    QThread(parent),
-    m_SocketDescriptor(socketDescriptor)
-{
-}
+    QThread(parent), m_SocketDescriptor(socketDescriptor)
+{}
 
 void ZeroconfThread::run()
 {

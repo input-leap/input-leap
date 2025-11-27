@@ -27,14 +27,12 @@ using ::testing::_;
 using ::testing::Invoke;
 using ::testing::NiceMock;
 
-bool
-client_stubParseGenericArgs(int, const char* const*, int&)
+bool client_stubParseGenericArgs(int, const char* const*, int&)
 {
     return false;
 }
 
-bool
-client_stubCheckUnexpectedArgs()
+bool client_stubCheckUnexpectedArgs()
 {
     return false;
 }
@@ -46,7 +44,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_yScrollArg_setYScroll)
     ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
     ClientArgs clientArgs;
     const int argc = 3;
-    const char* kYScrollCmd[argc] = { "stub", "--yscroll", "1" };
+    const char* kYScrollCmd[argc] = {"stub", "--yscroll", "1"};
 
     argParser.parseClientArgs(clientArgs, argc, kYScrollCmd);
 
@@ -60,7 +58,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_addressArg_set_listen_address)
     ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
     ClientArgs clientArgs;
     const int argc = 2;
-    const char* kAddressCmd[argc] = { "stub", "mock_address" };
+    const char* kAddressCmd[argc] = {"stub", "mock_address"};
 
     bool result = argParser.parseClientArgs(clientArgs, argc, kAddressCmd);
 
@@ -75,7 +73,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_noAddressArg_returnFalse)
     ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
     ClientArgs clientArgs;
     const int argc = 1;
-    const char* kNoAddressCmd[argc] = { "stub" };
+    const char* kNoAddressCmd[argc] = {"stub"};
 
     bool result = argParser.parseClientArgs(clientArgs, argc, kNoAddressCmd);
 
@@ -89,7 +87,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_unrecognizedArg_returnFalse)
     ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
     ClientArgs clientArgs;
     const int argc = 3;
-    const char* kUnrecognizedCmd[argc] = { "stub", "mock_arg", "mock_address"};
+    const char* kUnrecognizedCmd[argc] = {"stub", "mock_arg", "mock_address"};
 
     bool result = argParser.parseClientArgs(clientArgs, argc, kUnrecognizedCmd);
 

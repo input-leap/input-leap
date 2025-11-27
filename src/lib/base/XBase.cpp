@@ -26,14 +26,12 @@
 // XBase
 //
 
-XBase::XBase() :
-    std::runtime_error("")
+XBase::XBase() : std::runtime_error("")
 {
     // do nothing
 }
 
-XBase::XBase(const std::string& msg) :
-    std::runtime_error(msg)
+XBase::XBase(const std::string& msg) : std::runtime_error(msg)
 {
     // do nothing
 }
@@ -43,8 +41,7 @@ XBase::~XBase() noexcept
     // do nothing
 }
 
-const char*
-XBase::what() const noexcept
+const char* XBase::what() const noexcept
 {
     const char* what = std::runtime_error::what();
     if (strlen(what) == 0) {
@@ -65,8 +62,7 @@ std::string XBase::format(const char* /*id*/, const char* fmt, ...) const noexce
     va_start(args, fmt);
     try {
         result = inputleap::string::vformat(fmt, args);
-    }
-    catch (...) {
+    } catch (...) {
         // ignore
     }
     va_end(args);

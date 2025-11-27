@@ -28,7 +28,7 @@ namespace inputleap {
 */
 class IArchTaskBarReceiver {
 public:
-    virtual ~IArchTaskBarReceiver() { }
+    virtual ~IArchTaskBarReceiver() {}
 
     // Icon data is architecture dependent
     typedef void* Icon;

@@ -18,16 +18,14 @@
 
 #include "server/PrimaryClient.h"
 
-#include "inputleap/Screen.h"
-#include "inputleap/Clipboard.h"
 #include "base/Log.h"
+#include "inputleap/Clipboard.h"
+#include "inputleap/Screen.h"
 
 namespace inputleap {
 
 PrimaryClient::PrimaryClient(const std::string& name, inputleap::Screen* screen) :
-    BaseClientProxy(name),
-    m_screen(screen),
-    m_fakeInputCount(0)
+    BaseClientProxy(name), m_screen(screen), m_fakeInputCount(0)
 {
     // all clipboards are clean
     for (std::uint32_t i = 0; i < kClipboardEnd; ++i) {
@@ -55,16 +53,14 @@ void PrimaryClient::unregisterHotKey(std::uint32_t id)
     m_screen->unregisterHotKey(id);
 }
 
-void
-PrimaryClient::fakeInputBegin()
+void PrimaryClient::fakeInputBegin()
 {
     if (++m_fakeInputCount == 1) {
         m_screen->fakeInputBegin();
     }
 }
 
-void
-PrimaryClient::fakeInputEnd()
+void PrimaryClient::fakeInputEnd()
 {
     if (--m_fakeInputCount == 0) {
         m_screen->fakeInputEnd();
@@ -81,14 +77,12 @@ void PrimaryClient::getCursorCenter(std::int32_t& x, std::int32_t& y) const
     m_screen->getCursorCenter(x, y);
 }
 
-KeyModifierMask
-PrimaryClient::getToggleMask() const
+KeyModifierMask PrimaryClient::getToggleMask() const
 {
     return m_screen->pollActiveModifiers();
 }
 
-bool
-PrimaryClient::isLockedToScreen() const
+bool PrimaryClient::isLockedToScreen() const
 {
     return m_screen->isLockedToScreen();
 }
@@ -98,8 +92,7 @@ const EventTarget* PrimaryClient::get_event_target() const
     return m_screen->get_event_target();
 }
 
-bool
-PrimaryClient::getClipboard(ClipboardID id, IClipboard* clipboard) const
+bool PrimaryClient::getClipboard(ClipboardID id, IClipboard* clipboard) const
 {
     return m_screen->getClipboard(id, clipboard);
 }
@@ -115,14 +108,12 @@ void PrimaryClient::getCursorPos(std::int32_t& x, std::int32_t& y) const
     m_screen->getCursorPos(x, y);
 }
 
-void
-PrimaryClient::enable()
+void PrimaryClient::enable()
 {
     m_screen->enable();
 }
 
-void
-PrimaryClient::disable()
+void PrimaryClient::disable()
 {
     m_screen->disable();
 }
@@ -137,14 +128,12 @@ void PrimaryClient::enter(std::int32_t xAbs, std::int32_t yAbs, std::uint32_t se
     m_screen->enter(mask);
 }
 
-bool
-PrimaryClient::leave()
+bool PrimaryClient::leave()
 {
     return m_screen->leave();
 }
 
-void
-PrimaryClient::setClipboard(ClipboardID id, const IClipboard* clipboard)
+void PrimaryClient::setClipboard(ClipboardID id, const IClipboard* clipboard)
 {
     // ignore if this clipboard is already clean
     if (m_clipboardDirty[id]) {
@@ -156,8 +145,7 @@ PrimaryClient::setClipboard(ClipboardID id, const IClipboard* clipboard)
     }
 }
 
-void
-PrimaryClient::grabClipboard(ClipboardID id)
+void PrimaryClient::grabClipboard(ClipboardID id)
 {
     // grab clipboard
     m_screen->grabClipboard(id);
@@ -166,21 +154,19 @@ PrimaryClient::grabClipboard(ClipboardID id)
     m_clipboardDirty[id] = true;
 }
 
-void
-PrimaryClient::setClipboardDirty(ClipboardID id, bool dirty)
+void PrimaryClient::setClipboardDirty(ClipboardID id, bool dirty)
 {
     m_clipboardDirty[id] = dirty;
 }
 
-void
-PrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
+void PrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
 {
     if (m_fakeInputCount > 0) {
-// XXX -- don't forward keystrokes to primary screen for now
-        (void)key;
-        (void)mask;
-        (void)button;
-//        m_screen->keyDown(key, mask, button);
+        // XXX -- don't forward keystrokes to primary screen for now
+        (void) key;
+        (void) mask;
+        (void) button;
+        //        m_screen->keyDown(key, mask, button);
     }
 }
 
@@ -189,26 +175,23 @@ void PrimaryClient::keyRepeat(KeyID, KeyModifierMask, std::int32_t, KeyButton)
     // ignore
 }
 
-void
-PrimaryClient::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
+void PrimaryClient::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
 {
     if (m_fakeInputCount > 0) {
-// XXX -- don't forward keystrokes to primary screen for now
-        (void)key;
-        (void)mask;
-        (void)button;
-//        m_screen->keyUp(key, mask, button);
+        // XXX -- don't forward keystrokes to primary screen for now
+        (void) key;
+        (void) mask;
+        (void) button;
+        //        m_screen->keyUp(key, mask, button);
     }
 }
 
-void
-PrimaryClient::mouseDown(ButtonID)
+void PrimaryClient::mouseDown(ButtonID)
 {
     // ignore
 }
 
-void
-PrimaryClient::mouseUp(ButtonID)
+void PrimaryClient::mouseUp(ButtonID)
 {
     // ignore
 }
@@ -228,8 +211,7 @@ void PrimaryClient::mouseWheel(std::int32_t, std::int32_t)
     // ignore
 }
 
-void
-PrimaryClient::screensaver(bool)
+void PrimaryClient::screensaver(bool)
 {
     // ignore
 }
@@ -250,14 +232,12 @@ void PrimaryClient::file_chunk_sending(const FileChunk& chunk)
     // ignore
 }
 
-void
-PrimaryClient::resetOptions()
+void PrimaryClient::resetOptions()
 {
     m_screen->resetOptions();
 }
 
-void
-PrimaryClient::setOptions(const OptionsList& options)
+void PrimaryClient::setOptions(const OptionsList& options)
 {
     m_screen->setOptions(options);
 }

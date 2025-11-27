@@ -17,8 +17,8 @@
 
 #include "net/SecureUtils.h"
 
-#include <gtest/gtest.h>
 #include "test/global/TestUtils.h"
+#include <gtest/gtest.h>
 
 namespace inputleap {
 

@@ -14,15 +14,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <cassert>
 #include "platform/EiEventQueueBuffer.h"
+#include <cassert>
 
-#include "mt/Thread.h"
 #include "base/Event.h"
-#include "base/EventTypes.h"
-#include "base/Log.h"
 #include "base/EventQueueTimer.h"
+#include "base/EventTypes.h"
 #include "base/IEventQueue.h"
+#include "base/Log.h"
+#include "mt/Thread.h"
 
 #include <fcntl.h>
 #include <poll.h>
@@ -32,9 +32,8 @@
 
 namespace inputleap {
 
-EiEventQueueBuffer::EiEventQueueBuffer(EiScreen* screen, ei *ei, IEventQueue* events) :
-    ei_(ei_ref(ei)),
-    events_(events)
+EiEventQueueBuffer::EiEventQueueBuffer(EiScreen* screen, ei* ei, IEventQueue* events) :
+    ei_(ei_ref(ei)), events_(events)
 {
     // We need a pipe to signal ourselves when addEvent() is called
     int pipefd[2];
@@ -63,13 +62,12 @@ void EiEventQueueBuffer::waitForEvent(double timeout_in_ms)
     };
 
     struct pollfd pfds[POLLFD_COUNT];
-    pfds[EIFD].fd       = ei_get_fd(ei_);
-    pfds[EIFD].events   = POLLIN;
-    pfds[PIPEFD].fd     = pipe_r_;
+    pfds[EIFD].fd = ei_get_fd(ei_);
+    pfds[EIFD].events = POLLIN;
+    pfds[PIPEFD].fd = pipe_r_;
     pfds[PIPEFD].events = POLLIN;
 
-    int timeout = (timeout_in_ms < 0.0) ? -1 :
-                    static_cast<int>(1000.0 * timeout_in_ms);
+    int timeout = (timeout_in_ms < 0.0) ? -1 : static_cast<int>(1000.0 * timeout_in_ms);
 
     int retval = poll(pfds, POLLFD_COUNT, timeout);
     if (retval > 0) {

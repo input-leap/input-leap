@@ -24,8 +24,7 @@
 namespace inputleap {
 
 //! Convert to/from some text encoding
-class XWindowsClipboardPNGConverter :
-                public IXWindowsClipboardConverter {
+class XWindowsClipboardPNGConverter : public IXWindowsClipboardConverter {
 public:
     XWindowsClipboardPNGConverter(Display* display);
     ~XWindowsClipboardPNGConverter() override;

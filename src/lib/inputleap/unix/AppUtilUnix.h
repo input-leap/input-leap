@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "inputleap/AppUtil.h"
 #include "base/Fwd.h"
+#include "inputleap/AppUtil.h"
 
 #define ARCH_APP_UTIL AppUtilUnix
 

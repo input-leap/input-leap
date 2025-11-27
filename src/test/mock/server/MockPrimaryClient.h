@@ -25,8 +25,7 @@
 
 namespace inputleap {
 
-class MockPrimaryClient : public PrimaryClient
-{
+class MockPrimaryClient : public PrimaryClient {
 public:
     const EventTarget* get_event_target() const override { return this; }
     MOCK_CONST_METHOD2(getCursorPos, void(std::int32_t&, std::int32_t&));

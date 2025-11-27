@@ -51,8 +51,7 @@ public:
     //@{
 
     // maybe belongs on ISocketMultiplexer
-    static SocketMultiplexer*
-                        getInstance();
+    static SocketMultiplexer* getInstance();
 
     //@}
 

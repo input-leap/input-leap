@@ -17,20 +17,20 @@
  */
 
 #include "arch/win32/ArchTaskBarWindows.h"
-#include "arch/win32/ArchMiscWindows.h"
-#include "arch/IArchTaskBarReceiver.h"
 #include "arch/Arch.h"
+#include "arch/IArchTaskBarReceiver.h"
 #include "arch/XArch.h"
+#include "arch/win32/ArchMiscWindows.h"
 #include "inputleap/win32/AppUtilWindows.h"
 
-#include <string.h>
 #include <shellapi.h>
+#include <string.h>
 
-static const UINT        kAddReceiver     = WM_USER + 10;
-static const UINT        kRemoveReceiver  = WM_USER + 11;
-static const UINT        kUpdateReceiver  = WM_USER + 12;
-static const UINT        kNotifyReceiver  = WM_USER + 13;
-static const UINT        kFirstReceiverID = WM_USER + 14;
+static const UINT kAddReceiver = WM_USER + 10;
+static const UINT kRemoveReceiver = WM_USER + 11;
+static const UINT kUpdateReceiver = WM_USER + 12;
+static const UINT kNotifyReceiver = WM_USER + 13;
+static const UINT kFirstReceiverID = WM_USER + 14;
 
 namespace inputleap {
 
@@ -45,7 +45,7 @@ ArchTaskBarWindows::ArchTaskBarWindows() :
     m_nextID(kFirstReceiverID)
 {
     // save the singleton instance
-    s_instance    = this;
+    s_instance = this;
 }
 
 ArchTaskBarWindows::~ArchTaskBarWindows()
@@ -58,11 +58,10 @@ ArchTaskBarWindows::~ArchTaskBarWindows()
     s_instance = nullptr;
 }
 
-void
-ArchTaskBarWindows::init()
+void ArchTaskBarWindows::init()
 {
     // and a condition variable which uses the above mutex
-    m_ready       = false;
+    m_ready = false;
 
     // we're going to want to get a result from the thread we're
     // about to create to know if it initialized successfully.
@@ -80,23 +79,19 @@ ArchTaskBarWindows::init()
     while (!m_ready) {
         ARCH->wait_cond_var(cond_var_, lock, -1.0);
     }
-
 }
 
-void
-ArchTaskBarWindows::addDialog(HWND hwnd)
+void ArchTaskBarWindows::addDialog(HWND hwnd)
 {
     ArchMiscWindows::addDialog(hwnd);
 }
 
-void
-ArchTaskBarWindows::removeDialog(HWND hwnd)
+void ArchTaskBarWindows::removeDialog(HWND hwnd)
 {
     ArchMiscWindows::removeDialog(hwnd);
 }
 
-void
-ArchTaskBarWindows::addReceiver(IArchTaskBarReceiver* receiver)
+void ArchTaskBarWindows::addReceiver(IArchTaskBarReceiver* receiver)
 {
     // ignore bogus receiver
     if (receiver == nullptr) {
@@ -119,8 +114,7 @@ ArchTaskBarWindows::addReceiver(IArchTaskBarReceiver* receiver)
     PostMessage(m_hwnd, kAddReceiver, index->second.m_id, 0);
 }
 
-void
-ArchTaskBarWindows::removeReceiver(IArchTaskBarReceiver* receiver)
+void ArchTaskBarWindows::removeReceiver(IArchTaskBarReceiver* receiver)
 {
     // find receiver
     auto index = m_receivers.find(receiver);
@@ -139,8 +133,7 @@ ArchTaskBarWindows::removeReceiver(IArchTaskBarReceiver* receiver)
     m_receivers.erase(index);
 }
 
-void
-ArchTaskBarWindows::updateReceiver(IArchTaskBarReceiver* receiver)
+void ArchTaskBarWindows::updateReceiver(IArchTaskBarReceiver* receiver)
 {
     // find receiver
     auto index = m_receivers.find(receiver);
@@ -152,8 +145,7 @@ ArchTaskBarWindows::updateReceiver(IArchTaskBarReceiver* receiver)
     PostMessage(m_hwnd, kUpdateReceiver, index->second.m_id, 0);
 }
 
-UINT
-ArchTaskBarWindows::getNextID()
+UINT ArchTaskBarWindows::getNextID()
 {
     if (m_oldIDs.empty()) {
         return m_nextID++;
@@ -163,14 +155,12 @@ ArchTaskBarWindows::getNextID()
     return id;
 }
 
-void
-ArchTaskBarWindows::recycleID(UINT id)
+void ArchTaskBarWindows::recycleID(UINT id)
 {
     m_oldIDs.push_back(id);
 }
 
-void
-ArchTaskBarWindows::addIcon(UINT id)
+void ArchTaskBarWindows::addIcon(UINT id)
 {
     std::lock_guard<std::mutex> lock(mutex_);
     auto index = m_idTable.find(id);
@@ -179,15 +169,13 @@ ArchTaskBarWindows::addIcon(UINT id)
     }
 }
 
-void
-ArchTaskBarWindows::removeIcon(UINT id)
+void ArchTaskBarWindows::removeIcon(UINT id)
 {
     std::lock_guard<std::mutex> lock(mutex_);
     removeIconNoLock(id);
 }
 
-void
-ArchTaskBarWindows::updateIcon(UINT id)
+void ArchTaskBarWindows::updateIcon(UINT id)
 {
     std::lock_guard<std::mutex> lock(mutex_);
     auto index = m_idTable.find(id);
@@ -196,8 +184,7 @@ ArchTaskBarWindows::updateIcon(UINT id)
     }
 }
 
-void
-ArchTaskBarWindows::addAllIcons()
+void ArchTaskBarWindows::addAllIcons()
 {
     std::lock_guard<std::mutex> lock(mutex_);
     for (auto index = m_receivers.begin(); index != m_receivers.end(); ++index) {
@@ -205,8 +192,7 @@ ArchTaskBarWindows::addAllIcons()
     }
 }
 
-void
-ArchTaskBarWindows::removeAllIcons()
+void ArchTaskBarWindows::removeAllIcons()
 {
     std::lock_guard<std::mutex> lock(mutex_);
     for (auto index = m_receivers.begin(); index != m_receivers.end(); ++index) {
@@ -214,20 +200,18 @@ ArchTaskBarWindows::removeAllIcons()
     }
 }
 
-void
-ArchTaskBarWindows::modifyIconNoLock(
-                ReceiverToInfoMap::const_iterator index, DWORD taskBarMessage)
+void ArchTaskBarWindows::modifyIconNoLock(ReceiverToInfoMap::const_iterator index,
+                                          DWORD taskBarMessage)
 {
     // get receiver
-    UINT id                        = index->second.m_id;
+    UINT id = index->second.m_id;
     IArchTaskBarReceiver* receiver = index->first;
 
     // lock receiver so icon and tool tip are guaranteed to be consistent
     receiver->lock();
 
     // get icon data
-    HICON icon = static_cast<HICON>(
-                const_cast<IArchTaskBarReceiver::Icon>(receiver->getIcon()));
+    HICON icon = static_cast<HICON>(const_cast<IArchTaskBarReceiver::Icon>(receiver->getIcon()));
 
     // get tool tip
     std::string toolTip = receiver->getToolTip();
@@ -237,21 +221,20 @@ ArchTaskBarWindows::modifyIconNoLock(
 
     // prepare to add icon
     NOTIFYICONDATA data;
-    data.cbSize           = sizeof(NOTIFYICONDATA);
-    data.hWnd             = m_hwnd;
-    data.uID              = id;
-    data.uFlags           = NIF_MESSAGE;
+    data.cbSize = sizeof(NOTIFYICONDATA);
+    data.hWnd = m_hwnd;
+    data.uID = id;
+    data.uFlags = NIF_MESSAGE;
     data.uCallbackMessage = kNotifyReceiver;
-    data.hIcon            = icon;
+    data.hIcon = icon;
     if (icon != nullptr) {
         data.uFlags |= NIF_ICON;
     }
     if (!toolTip.empty()) {
         strncpy(data.szTip, toolTip.c_str(), sizeof(data.szTip));
         data.szTip[sizeof(data.szTip) - 1] = '\0';
-        data.uFlags                       |= NIF_TIP;
-    }
-    else {
+        data.uFlags |= NIF_TIP;
+    } else {
         data.szTip[0] = '\0';
     }
 
@@ -261,21 +244,18 @@ ArchTaskBarWindows::modifyIconNoLock(
     }
 }
 
-void
-ArchTaskBarWindows::removeIconNoLock(UINT id)
+void ArchTaskBarWindows::removeIconNoLock(UINT id)
 {
     NOTIFYICONDATA data;
     data.cbSize = sizeof(NOTIFYICONDATA);
-    data.hWnd   = m_hwnd;
-    data.uID    = id;
+    data.hWnd = m_hwnd;
+    data.uID = id;
     if (Shell_NotifyIcon(NIM_DELETE, &data) == 0) {
         // failed
     }
 }
 
-void
-ArchTaskBarWindows::handleIconMessage(
-                IArchTaskBarReceiver* receiver, LPARAM lParam)
+void ArchTaskBarWindows::handleIconMessage(IArchTaskBarReceiver* receiver, LPARAM lParam)
 {
     // process message
     switch (lParam) {
@@ -304,20 +284,18 @@ ArchTaskBarWindows::handleIconMessage(
     }
 }
 
-bool
-ArchTaskBarWindows::processDialogs(MSG* msg)
+bool ArchTaskBarWindows::processDialogs(MSG* msg)
 {
     return false;
 }
 
 LRESULT
-ArchTaskBarWindows::wndProc(HWND hwnd,
-                UINT msg, WPARAM wParam, LPARAM lParam)
+ArchTaskBarWindows::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     switch (msg) {
     case kNotifyReceiver: {
         // lookup receiver
-        auto index = m_idTable.find((UINT)wParam);
+        auto index = m_idTable.find((UINT) wParam);
         if (index != m_idTable.end()) {
             IArchTaskBarReceiver* receiver = index->second->first;
             handleIconMessage(receiver, lParam);
@@ -327,15 +305,15 @@ ArchTaskBarWindows::wndProc(HWND hwnd,
     }
 
     case kAddReceiver:
-        addIcon((UINT)wParam);
+        addIcon((UINT) wParam);
         break;
 
     case kRemoveReceiver:
-        removeIcon((UINT)wParam);
+        removeIcon((UINT) wParam);
         break;
 
     case kUpdateReceiver:
-        updateIcon((UINT)wParam);
+        updateIcon((UINT) wParam);
         break;
 
     default:
@@ -349,9 +327,7 @@ ArchTaskBarWindows::wndProc(HWND hwnd,
     return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
-LRESULT CALLBACK
-ArchTaskBarWindows::staticWndProc(HWND hwnd, UINT msg,
-                WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK ArchTaskBarWindows::staticWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     // if msg is WM_NCCREATE, extract the ArchTaskBarWindows* and put
     // it in the extra window data then forward the call.
@@ -359,11 +335,9 @@ ArchTaskBarWindows::staticWndProc(HWND hwnd, UINT msg,
     if (msg == WM_NCCREATE) {
         CREATESTRUCT* createInfo;
         createInfo = reinterpret_cast<CREATESTRUCT*>(lParam);
-        self       = static_cast<ArchTaskBarWindows*>(
-                                                createInfo->lpCreateParams);
+        self = static_cast<ArchTaskBarWindows*>(createInfo->lpCreateParams);
         SetWindowLongPtr(hwnd, 0, reinterpret_cast<LONG_PTR>(createInfo->lpCreateParams));
-    }
-    else {
+    } else {
         // get the extra window data and forward the call
         LONG_PTR data = GetWindowLongPtr(hwnd, 0);
         if (data != 0) {
@@ -374,45 +348,36 @@ ArchTaskBarWindows::staticWndProc(HWND hwnd, UINT msg,
     // forward the message
     if (self != nullptr) {
         return self->wndProc(hwnd, msg, wParam, lParam);
-    }
-    else {
+    } else {
         return DefWindowProc(hwnd, msg, wParam, lParam);
     }
 }
 
-void
-ArchTaskBarWindows::threadMainLoop()
+void ArchTaskBarWindows::threadMainLoop()
 {
     // register the task bar restart message
-    m_taskBarRestart        = RegisterWindowMessage(TEXT("TaskbarCreated"));
+    m_taskBarRestart = RegisterWindowMessage(TEXT("TaskbarCreated"));
 
     // register a window class
     LPCTSTR className = TEXT("InputLeapTaskBar");
     WNDCLASSEX classInfo;
-    classInfo.cbSize        = sizeof(classInfo);
-    classInfo.style         = CS_NOCLOSE;
-    classInfo.lpfnWndProc   = &ArchTaskBarWindows::staticWndProc;
-    classInfo.cbClsExtra    = 0;
-    classInfo.cbWndExtra    = sizeof(ArchTaskBarWindows*);
-    classInfo.hInstance     = instanceWin32();
+    classInfo.cbSize = sizeof(classInfo);
+    classInfo.style = CS_NOCLOSE;
+    classInfo.lpfnWndProc = &ArchTaskBarWindows::staticWndProc;
+    classInfo.cbClsExtra = 0;
+    classInfo.cbWndExtra = sizeof(ArchTaskBarWindows*);
+    classInfo.hInstance = instanceWin32();
     classInfo.hIcon = nullptr;
     classInfo.hCursor = nullptr;
     classInfo.hbrBackground = nullptr;
     classInfo.lpszMenuName = nullptr;
     classInfo.lpszClassName = className;
     classInfo.hIconSm = nullptr;
-    ATOM windowClass        = RegisterClassEx(&classInfo);
+    ATOM windowClass = RegisterClassEx(&classInfo);
 
     // create window
-    m_hwnd = CreateWindowEx(WS_EX_TOOLWINDOW,
-                            className,
-                            TEXT("InputLeap Task Bar"),
-                            WS_POPUP,
-                            0, 0, 1, 1,
-                            nullptr,
-                            nullptr,
-                            instanceWin32(),
-                            static_cast<void*>(this));
+    m_hwnd = CreateWindowEx(WS_EX_TOOLWINDOW, className, TEXT("InputLeap Task Bar"), WS_POPUP, 0, 0,
+                            1, 1, nullptr, nullptr, instanceWin32(), static_cast<void*>(this));
 
     // signal ready
     {

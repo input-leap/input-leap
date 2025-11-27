@@ -56,8 +56,7 @@ void PlatformScreenLoggingWrapper::leave()
 bool PlatformScreenLoggingWrapper::setClipboard(ClipboardID id, const IClipboard* clipboard)
 {
     bool result = screen_->setClipboard(id, clipboard);
-    LOG_DEBUG1("PlatformScreen::setClipboard() id=%d clipboard=%p => %d",
-         id, clipboard, result);
+    LOG_DEBUG1("PlatformScreen::setClipboard() id=%d clipboard=%p => %d", id, clipboard, result);
     return result;
 }
 
@@ -93,8 +92,7 @@ void PlatformScreenLoggingWrapper::resetOptions()
 
 void PlatformScreenLoggingWrapper::setOptions(const OptionsList& options)
 {
-    LOG_DEBUG1("PlatformScreen::setOptions() options.size()=%d",
-         static_cast<int>(options.size()));
+    LOG_DEBUG1("PlatformScreen::setOptions() options.size()=%d", static_cast<int>(options.size()));
     screen_->setOptions(options);
 }
 
@@ -147,7 +145,7 @@ bool PlatformScreenLoggingWrapper::isFakeDraggingStarted()
 void PlatformScreenLoggingWrapper::fakeDraggingFiles(DragFileList file_list)
 {
     LOG_DEBUG1("PlatformScreen::fakeDraggingFiles() file_list.size()=%d",
-         static_cast<int>(file_list.size()));
+               static_cast<int>(file_list.size()));
     screen_->fakeDraggingFiles(file_list);
 }
 
@@ -172,17 +170,15 @@ const EventTarget* PlatformScreenLoggingWrapper::get_event_target() const
 bool PlatformScreenLoggingWrapper::getClipboard(ClipboardID id, IClipboard* clipboard) const
 {
     auto result = screen_->getClipboard(id, clipboard);
-    LOG_DEBUG1("PlatformScreen::getClipboard() id=%d clipboard=%p => %d",
-         id, clipboard, result);
+    LOG_DEBUG1("PlatformScreen::getClipboard() id=%d clipboard=%p => %d", id, clipboard, result);
     return result;
 }
 
-void PlatformScreenLoggingWrapper::getShape(std::int32_t& x, std::int32_t& y,
-                                            std::int32_t& width, std::int32_t& height) const
+void PlatformScreenLoggingWrapper::getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width,
+                                            std::int32_t& height) const
 {
     screen_->getShape(x, y, width, height);
-    LOG_DEBUG1("PlatformScreen::getShape() => x=%d y=%d width=%d height=%d",
-         x, y, width, height);
+    LOG_DEBUG1("PlatformScreen::getShape() => x=%d y=%d width=%d height=%d", x, y, width, height);
 }
 
 void PlatformScreenLoggingWrapper::getCursorPos(std::int32_t& x, std::int32_t& y) const
@@ -238,8 +234,7 @@ std::int32_t PlatformScreenLoggingWrapper::getJumpZoneSize() const
 bool PlatformScreenLoggingWrapper::isAnyMouseButtonDown(std::uint32_t& button_id) const
 {
     auto result = screen_->isAnyMouseButtonDown(button_id);
-    LOG_DEBUG1("PlatformScreen::isAnyMouseButtonDown() => button_id=%d %d",
-         button_id, result);
+    LOG_DEBUG1("PlatformScreen::isAnyMouseButtonDown() => button_id=%d %d", button_id, result);
     return result;
 }
 
@@ -301,8 +296,8 @@ bool PlatformScreenLoggingWrapper::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
                                                  KeyButton button)
 {
     auto result = screen_->fakeKeyRepeat(id, mask, count, button);
-    LOG_DEBUG1("PlatformScreen::fakeKeyRepeat() id=%d mask=%d count=%d button=%d => %d",
-         id, mask, count, button, result);
+    LOG_DEBUG1("PlatformScreen::fakeKeyRepeat() id=%d mask=%d count=%d button=%d => %d", id, mask,
+               count, button, result);
     return result;
 }
 
@@ -364,8 +359,7 @@ std::int32_t PlatformScreenLoggingWrapper::pollActiveGroup() const
 void PlatformScreenLoggingWrapper::pollPressedKeys(KeyButtonSet& pressed_keys) const
 {
     screen_->pollPressedKeys(pressed_keys);
-    LOG_DEBUG1("PlatformScreen::pollPressedKeys() => pressed_keys.size()=%zd",
-         pressed_keys.size());
+    LOG_DEBUG1("PlatformScreen::pollPressedKeys() => pressed_keys.size()=%zd", pressed_keys.size());
 }
 
 void PlatformScreenLoggingWrapper::handle_system_event(const Event& event)

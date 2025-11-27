@@ -19,10 +19,10 @@
 
 #include "test/mock/ipc/MockIpcServer.h"
 
-#include "mt/Thread.h"
-#include "ipc/IpcLogOutputter.h"
-#include "common/common.h"
 #include "base/Time.h"
+#include "common/common.h"
+#include "ipc/IpcLogOutputter.h"
+#include "mt/Thread.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -33,10 +33,11 @@
 namespace inputleap {
 
 using ::testing::_;
-using ::testing::Return;
 using ::testing::AtLeast;
+using ::testing::Return;
 
-MATCHER_P(LogMessageHasString, str, "Match log line string") {
+MATCHER_P(LogMessageHasString, str, "Match log line string")
+{
     const IpcLogLineMessage& m = dynamic_cast<const IpcLogLineMessage&>(arg);
     return str.compare(m.logLine()) == 0;
 }

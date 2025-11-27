@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "test/mock/inputleap/MockEventQueue.h"
 #include "platform/XWindowsScreen.h"
+#include "test/mock/inputleap/MockEventQueue.h"
 
 #include <gtest/gtest.h>
 #include <cstdlib>
@@ -30,8 +30,9 @@ TEST(CXWindowsScreenTests, fakeMouseMove_nonPrimary_getCursorPosValuesCorrect)
 {
     const char* displayName = std::getenv("DISPLAY");
 
-    if (displayName == nullptr)
+    if (displayName == nullptr) {
         GTEST_SKIP() << "DISPLAY environment variable not set, skipping test";
+    }
 
     MockEventQueue eventQueue;
     EXPECT_CALL(eventQueue, add_handler(_, _, _)).Times(2);

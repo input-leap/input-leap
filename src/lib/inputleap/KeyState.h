@@ -44,8 +44,7 @@ public:
     primary screens only in response to local events.  For auto-repeat
     set \p down to \c true.  Overrides must forward to the superclass.
     */
-    virtual void onKey(KeyButton button, bool down,
-                            KeyModifierMask newState);
+    virtual void onKey(KeyButton button, bool down, KeyModifierMask newState);
 
     //! Post a key event
     /*!
@@ -101,8 +100,7 @@ protected:
     Returns the modifiers that are currently active according to our
     shadowed state.  The state may be modified.
     */
-    virtual KeyModifierMask&
-                        getActiveModifiersRValue();
+    virtual KeyModifierMask& getActiveModifiersRValue();
 
     //@}
     //! @name protected accessors
@@ -133,6 +131,7 @@ protected:
 private:
     typedef inputleap::KeyMap::Keystrokes Keystrokes;
     typedef inputleap::KeyMap::ModifierToKeys ModifierToKeys;
+
 public:
     struct AddActiveModifierContext {
     public:
@@ -149,8 +148,8 @@ public:
         AddActiveModifierContext(const AddActiveModifierContext&);
         AddActiveModifierContext& operator=(const AddActiveModifierContext&);
     };
-private:
 
+private:
     class ButtonToKeyLess {
     public:
         bool operator()(const inputleap::KeyMap::ButtonToKeyMap::value_type& a,
@@ -182,9 +181,8 @@ private:
     void fakeKeys(const Keystrokes&, std::uint32_t count);
 
     // update key state to match changes to modifiers
-    void updateModifierKeyState(KeyButton button,
-                            const ModifierToKeys& oldModifiers,
-                            const ModifierToKeys& newModifiers);
+    void updateModifierKeyState(KeyButton button, const ModifierToKeys& oldModifiers,
+                                const ModifierToKeys& newModifiers);
 
     // active modifiers collection callback
     static void addActiveModifierCB(KeyID id, std::int32_t group,

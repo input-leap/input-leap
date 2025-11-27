@@ -19,11 +19,11 @@
 #pragma once
 
 #include "inputleap/DragInformation.h"
-#include "inputleap/clipboard_types.h"
-#include "inputleap/IScreen.h"
-#include "inputleap/IPrimaryScreen.h"
-#include "inputleap/ISecondaryScreen.h"
 #include "inputleap/IKeyState.h"
+#include "inputleap/IPrimaryScreen.h"
+#include "inputleap/IScreen.h"
+#include "inputleap/ISecondaryScreen.h"
+#include "inputleap/clipboard_types.h"
 #include "inputleap/option_types.h"
 
 namespace inputleap {
@@ -35,8 +35,9 @@ screen implementations that are used by both primary and secondary
 screens.
 */
 class IPlatformScreen : public IScreen,
-                public IPrimaryScreen, public ISecondaryScreen,
-                public IKeyState {
+                        public IPrimaryScreen,
+                        public ISecondaryScreen,
+                        public IKeyState {
 public:
     //! @name manipulators
     //@{

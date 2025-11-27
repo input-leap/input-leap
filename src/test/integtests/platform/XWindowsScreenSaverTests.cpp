@@ -19,12 +19,12 @@
 // TODO: fix tests
 #if 0
 
-#include "test/mock/inputleap/MockEventQueue.h"
 #include "platform/XWindowsScreenSaver.h"
+#include "test/mock/inputleap/MockEventQueue.h"
 
+#include <X11/Xlib.h>
 #include <gtest/gtest.h>
 #include <cstdlib>
-#include <X11/Xlib.h>
 
 using ::testing::_;
 

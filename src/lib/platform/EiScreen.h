@@ -18,10 +18,10 @@
 
 #include "config.h"
 
-#include "inputleap/PlatformScreen.h"
 #include "inputleap/KeyMap.h"
-#include <set>
+#include "inputleap/PlatformScreen.h"
 #include <mutex>
+#include <set>
 #include <vector>
 
 #include <libei.h>
@@ -49,8 +49,8 @@ public:
     // IScreen overrides
     const EventTarget* get_event_target() const override;
     bool getClipboard(ClipboardID id, IClipboard*) const override;
-    void getShape(std::int32_t& x, std::int32_t& y,
-                  std::int32_t& width, std::int32_t& height) const override;
+    void getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width,
+                  std::int32_t& height) const override;
     void getCursorPos(std::int32_t& x, std::int32_t& y) const override;
 
     // IPrimaryScreen overrides
@@ -70,7 +70,6 @@ public:
     void fakeMouseRelativeMove(std::int32_t dx, std::int32_t dy) const override;
     void fakeMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const override;
     void fakeKey(std::uint32_t keycode, bool is_down) const;
-
 
     // IPlatformScreen overrides
     void enable() override;
@@ -92,7 +91,7 @@ protected:
     // IPlatformScreen overrides
     void handle_system_event(const Event& event) override;
     void handle_connected_to_eis_event(const Event& event);
-    void handle_portal_session_closed(const Event &event);
+    void handle_portal_session_closed(const Event& event);
     void updateButtons() override;
     IKeyState* getKeyState() const override;
 
@@ -105,23 +104,20 @@ private:
     void cleanup_ei();
     void send_event(EventType type, EventDataBase* data);
     ButtonID map_button_from_evdev(ei_event* event) const;
-    void on_key_event(ei_event *event);
-    void on_button_event(ei_event *event);
-    void send_wheel_events(ei_device *device, const int threshold, double dx, double dy, bool is_discrete);
+    void on_key_event(ei_event* event);
+    void on_button_event(ei_event* event);
+    void send_wheel_events(ei_device* device, const int threshold, double dx, double dy,
+                           bool is_discrete);
     void on_pointer_scroll_event(ei_event* event);
     void on_pointer_scroll_discrete_event(ei_event* event);
-    void on_motion_event(ei_event *event);
-    void on_abs_motion_event(ei_event *event);
+    void on_motion_event(ei_event* event);
+    void on_abs_motion_event(ei_event* event);
     bool on_hotkey(KeyID key, bool is_press, KeyModifierMask mask);
 
-    void handle_ei_log_event(ei* ei,
-                             ei_log_priority priority,
-                             const char* message,
+    void handle_ei_log_event(ei* ei, ei_log_priority priority, const char* message,
                              ei_log_context* context);
 
-    static void cb_handle_ei_log_event(ei* ei,
-                                       ei_log_priority priority,
-                                       const char* message,
+    static void cb_handle_ei_log_event(ei* ei, ei_log_priority priority, const char* message,
                                        ei_log_context* context)
     {
         auto screen = reinterpret_cast<EiScreen*>(ei_get_user_data(ei));
@@ -176,7 +172,7 @@ private:
 
     public:
         std::uint32_t mask_ = 0;
-        std::uint32_t id_ = 0;  // for registering the hotkey
+        std::uint32_t id_ = 0; // for registering the hotkey
     };
 
     class HotKeySet {

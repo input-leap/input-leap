@@ -69,10 +69,7 @@ public:
     };
 
     //! Supported socket types
-    enum ESocketType {
-        kDGRAM,
-        kSTREAM
-    };
+    enum ESocketType { kDGRAM, kSTREAM };
 
     //! Events for \c poll()
     /*!
@@ -80,10 +77,10 @@ public:
     bitwise operators.
     */
     enum {
-        kPOLLIN   = 1,        //!< Socket is readable
-        kPOLLOUT  = 2,        //!< Socket is writable
-        kPOLLERR  = 4,        //!< The socket is in an error state
-        kPOLLNVAL = 8        //!< The socket is invalid
+        kPOLLIN = 1,  //!< Socket is readable
+        kPOLLOUT = 2, //!< Socket is writable
+        kPOLLERR = 4, //!< The socket is in an error state
+        kPOLLNVAL = 8 //!< The socket is invalid
     };
 
     //! A socket query for \c poll()
@@ -214,8 +211,7 @@ public:
     \c len if the remote end disconnected or the internal buffers fill
     up.
     */
-    virtual size_t writeSocket(ArchSocket s,
-                            const void* buf, size_t len) = 0;
+    virtual size_t writeSocket(ArchSocket s, const void* buf, size_t len) = 0;
 
     //! Check error on socket
     /*!

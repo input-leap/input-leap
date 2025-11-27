@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include "arch/IArchMultithread.h"
 #include "EventTarget.h"
-#include "base/IEventQueue.h"
+#include "arch/IArchMultithread.h"
 #include "base/Event.h"
+#include "base/IEventQueue.h"
 #include "base/PriorityQueue.h"
 #include "base/Stopwatch.h"
 
@@ -70,8 +70,8 @@ private:
 private:
     class Timer {
     public:
-        Timer(EventQueueTimer*, double timeout, double initialTime,
-              const EventTarget* target, bool oneShot);
+        Timer(EventQueueTimer*, double timeout, double initialTime, const EventTarget* target,
+              bool oneShot);
         ~Timer();
 
         void reset();
@@ -125,9 +125,9 @@ private:
 
     std::shared_ptr<EventHandler> get_handler(EventType type, const EventTarget* target) const;
 
-    mutable std::mutex          ready_mutex_;
+    mutable std::mutex ready_mutex_;
     mutable std::condition_variable ready_cv_;
-    bool                        is_ready_ = false;
+    bool is_ready_ = false;
     std::queue<Event> m_pending;
 };
 

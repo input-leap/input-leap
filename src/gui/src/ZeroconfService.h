@@ -17,21 +17,20 @@
 
 #pragma once
 
-#include "ZeroconfServer.h"
 #include "ZeroconfRecord.h"
+#include "ZeroconfServer.h"
 
 #include <QtCore/QObject>
 
 #include <memory>
 
-typedef int32_t  DNSServiceErrorType;
+typedef int32_t DNSServiceErrorType;
 
 class ZeroconfRegister;
 class ZeroconfBrowser;
 class MainWindow;
 
-class ZeroconfService : public QObject
-{
+class ZeroconfService : public QObject {
     Q_OBJECT
 
 public:

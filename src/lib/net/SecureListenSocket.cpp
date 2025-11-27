@@ -18,29 +18,27 @@
 #include "SecureListenSocket.h"
 
 #include "SecureSocket.h"
-#include "net/NetworkAddress.h"
-#include "net/SocketMultiplexer.h"
 #include "arch/Arch.h"
 #include "arch/XArch.h"
-#include "common/DataDirectories.h"
 #include "base/String.h"
+#include "common/DataDirectories.h"
+#include "net/NetworkAddress.h"
+#include "net/SocketMultiplexer.h"
 
 namespace inputleap {
 
 SecureListenSocket::SecureListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer,
                                        IArchNetwork::EAddressFamily family,
                                        ConnectionSecurityLevel security_level) :
-    TCPListenSocket(events, socketMultiplexer, family),
-    security_level_{security_level}
-{
-}
+    TCPListenSocket(events, socketMultiplexer, family), security_level_{security_level}
+{}
 
 std::unique_ptr<IDataSocket> SecureListenSocket::accept()
 {
     std::unique_ptr<SecureSocket> socket;
     try {
         socket = std::make_unique<SecureSocket>(m_events, m_socketMultiplexer,
-                                                 ARCH->acceptSocket(m_socket, nullptr),
+                                                ARCH->acceptSocket(m_socket, nullptr),
                                                 security_level_);
         socket->initSsl(true);
         setListeningJob();
@@ -53,14 +51,12 @@ std::unique_ptr<IDataSocket> SecureListenSocket::accept()
         socket->secureAccept();
 
         return socket;
-    }
-    catch (XArchNetwork&) {
+    } catch (XArchNetwork&) {
         if (socket) {
             setListeningJob();
         }
         return nullptr;
-    }
-    catch (std::exception &ex) {
+    } catch (std::exception& ex) {
         if (socket) {
             setListeningJob();
         }

@@ -19,18 +19,18 @@
 #include "inputleap/App.h"
 #include "Screen.h"
 
+#include "base/EventQueue.h"
 #include "base/Log.h"
-#include "common/Version.h"
-#include "inputleap/protocol_types.h"
 #include "base/XBase.h"
 #include "base/log_outputters.h"
-#include "inputleap/Exceptions.h"
-#include "inputleap/ArgsBase.h"
-#include "ipc/IpcServerProxy.h"
-#include "ipc/IpcMessage.h"
-#include "ipc/Ipc.h"
-#include "base/EventQueue.h"
 #include "common/DataDirectories.h"
+#include "common/Version.h"
+#include "inputleap/ArgsBase.h"
+#include "inputleap/Exceptions.h"
+#include "inputleap/protocol_types.h"
+#include "ipc/Ipc.h"
+#include "ipc/IpcMessage.h"
+#include "ipc/IpcServerProxy.h"
 
 #if SYSAPI_WIN32
 #include "base/IEventQueue.h"
@@ -73,20 +73,19 @@ App::~App()
     delete m_args;
 }
 
-void
-App::version()
+void App::version()
 {
     std::cout << argsBase().m_exename << " " << kVersion << "\n";
-    std::cout <<"Protocol version " << kProtocolMajorVersion << "." << kProtocolMinorVersion << "\n";
+    std::cout << "Protocol version " << kProtocolMajorVersion << "." << kProtocolMinorVersion
+              << "\n";
     std::cout << kCopyright << "\n";
 }
 
-int
-App::run(int argc, char** argv)
+int App::run(int argc, char** argv)
 {
 #if MAC_OS_X_VERSION_10_7
     // dock hide only supported on lion :(
-    ProcessSerialNumber psn = { 0, kCurrentProcess };
+    ProcessSerialNumber psn = {0, kCurrentProcess};
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -104,17 +103,14 @@ App::run(int argc, char** argv)
 
     try {
         result = appUtil().run(argc, argv);
-    }
-    catch (XExitApp& e) {
+    } catch (XExitApp& e) {
         // instead of showing a nasty error, just exit with the error code.
         // not sure if i like this behaviour, but it's probably better than
         // using the exit(int) function!
         result = e.getCode();
-    }
-    catch (std::exception& e) {
+    } catch (std::exception& e) {
         LOG_CRIT("An error occurred: %s\n", e.what());
-    }
-    catch (...) {
+    } catch (...) {
         LOG_CRIT("An unknown error occurred.\n");
     }
 
@@ -123,8 +119,7 @@ App::run(int argc, char** argv)
     return result;
 }
 
-int
-App::daemonMainLoop(int, const char**)
+int App::daemonMainLoop(int, const char**)
 {
 #if SYSAPI_WIN32
     SystemLogger sysLogger(daemonName(), false);
@@ -134,8 +129,7 @@ App::daemonMainLoop(int, const char**)
     return mainLoop();
 }
 
-void
-App::setupFileLogging()
+void App::setupFileLogging()
 {
     if (argsBase().m_logFile != nullptr) {
         m_fileLog = new FileLogOutputter(argsBase().m_logFile);
@@ -144,19 +138,17 @@ App::setupFileLogging()
     }
 }
 
-void
-App::loggingFilterWarning()
+void App::loggingFilterWarning()
 {
     if (CLOG->getFilter() > CLOG->getConsoleMaxLevel()) {
         if (argsBase().m_logFile == nullptr) {
             LOG_WARN("log messages above %s are NOT sent to console (use file logging)",
-                CLOG->getFilterName(CLOG->getConsoleMaxLevel()));
+                     CLOG->getFilterName(CLOG->getConsoleMaxLevel()));
         }
     }
 }
 
-void
-App::initApp(int argc, const char** argv)
+void App::initApp(int argc, const char** argv)
 {
     // parse command line
     parseArgs(argc, argv);
@@ -165,8 +157,8 @@ App::initApp(int argc, const char** argv)
 
     // set log filter
     if (!CLOG->setFilter(argsBase().m_logFilter)) {
-        LOG_PRINT("%s: unrecognized log level `%s'" BYE,
-            argsBase().m_exename.c_str(), argsBase().m_logFilter, argsBase().m_exename.c_str());
+        LOG_PRINT("%s: unrecognized log level `%s'" BYE, argsBase().m_exename.c_str(),
+                  argsBase().m_logFilter, argsBase().m_exename.c_str());
         m_bye(kExitArgs);
     }
     loggingFilterWarning();
@@ -185,7 +177,6 @@ App::initApp(int argc, const char** argv)
     loadConfig();
 
     if (!argsBase().m_disableTray) {
-
         // create a log buffer so we can show the latest message
         // as a tray icon tooltip
         BufferedLogOutputter* logBuffer = new BufferedLogOutputter(1000);
@@ -193,13 +184,13 @@ App::initApp(int argc, const char** argv)
 
         // make the task bar receiver.  the user can control this app
         // through the task bar.
-        if (m_createTaskBarReceiver != nullptr)
+        if (m_createTaskBarReceiver != nullptr) {
             m_taskBarReceiver = m_createTaskBarReceiver(logBuffer, m_events);
+        }
     }
 }
 
-void
-App::initIpcClient()
+void App::initIpcClient()
 {
     m_ipcClient = new IpcClient(m_events, m_socketMultiplexer.get());
     m_ipcClient->connect();
@@ -208,8 +199,7 @@ App::initIpcClient()
                           [this](const auto& event) { handle_ipc_message(event); });
 }
 
-void
-App::cleanupIpcClient()
+void App::cleanupIpcClient()
 {
     m_ipcClient->disconnect();
     m_events->remove_handler(EventType::IPC_CLIENT_MESSAGE_RECEIVED, m_ipcClient);
@@ -240,19 +230,15 @@ void App::run_events_loop()
 // MinimalApp
 //
 
-MinimalApp::MinimalApp() :
-    App(nullptr, nullptr, new ArgsBase())
+MinimalApp::MinimalApp() : App(nullptr, nullptr, new ArgsBase())
 {
     m_arch.init();
     setEvents(m_events);
 }
 
-MinimalApp::~MinimalApp()
-{
-}
+MinimalApp::~MinimalApp() {}
 
-int
-MinimalApp::standardStartup(int argc, char** argv)
+int MinimalApp::standardStartup(int argc, char** argv)
 {
     (void) argc;
     (void) argv;
@@ -260,8 +246,7 @@ MinimalApp::standardStartup(int argc, char** argv)
     return 0;
 }
 
-int
-MinimalApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
+int MinimalApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 {
     (void) argc;
     (void) argv;
@@ -271,19 +256,14 @@ MinimalApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFun
     return 0;
 }
 
-void
-MinimalApp::startNode()
-{
-}
+void MinimalApp::startNode() {}
 
-int
-MinimalApp::mainLoop()
+int MinimalApp::mainLoop()
 {
     return 0;
 }
 
-int
-MinimalApp::foregroundStartup(int argc, char** argv)
+int MinimalApp::foregroundStartup(int argc, char** argv)
 {
     (void) argc;
     (void) argv;
@@ -296,10 +276,7 @@ std::unique_ptr<Screen> MinimalApp::create_screen()
     return nullptr;
 }
 
-void
-MinimalApp::loadConfig()
-{
-}
+void MinimalApp::loadConfig() {}
 
 bool MinimalApp::loadConfig(const std::string& pathname)
 {
@@ -308,20 +285,17 @@ bool MinimalApp::loadConfig(const std::string& pathname)
     return false;
 }
 
-const char*
-MinimalApp::daemonInfo() const
+const char* MinimalApp::daemonInfo() const
 {
     return "";
 }
 
-const char*
-MinimalApp::daemonName() const
+const char* MinimalApp::daemonName() const
 {
     return "";
 }
 
-void
-MinimalApp::parseArgs(int argc, const char* const* argv)
+void MinimalApp::parseArgs(int argc, const char* const* argv)
 {
     (void) argc;
     (void) argv;

@@ -17,33 +17,31 @@
  */
 
 #include "ServerConfig.h"
+#include "AddClientDialog.h"
 #include "Hotkey.h"
 #include "MainWindow.h"
-#include "AddClientDialog.h"
 
-#include <QtCore>
-#include <QMessageBox>
 #include <QAbstractButton>
+#include <QMessageBox>
 #include <QPushButton>
+#include <QtCore>
 
-static const struct
-{
-     int x;
-     int y;
-     const char* name;
-} neighbourDirs[] =
-{
-    {  1,  0, "right" },
-    { -1,  0, "left" },
-    {  0, -1, "up" },
-    {  0,  1, "down" },
+static const struct {
+    int x;
+    int y;
+    const char* name;
+} neighbourDirs[] = {
+    {1, 0, "right"},
+    {-1, 0, "left"},
+    {0, -1, "up"},
+    {0, 1, "down"},
 
 };
 
 const int serverDefaultIndex = 7;
 
-ServerConfig::ServerConfig(QSettings* settings, int numColumns, int numRows ,
-                QString serverName, MainWindow* mainWindow) :
+ServerConfig::ServerConfig(QSettings* settings, int numColumns, int numRows, QString serverName,
+                           MainWindow* mainWindow) :
     m_pSettings(settings),
     m_Screens(),
     m_NumColumns(numColumns),
@@ -68,8 +66,9 @@ ServerConfig::~ServerConfig()
 bool ServerConfig::save(const QString& fileName) const
 {
     QFile file(fileName);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         return false;
+    }
 
     save(file);
     file.close();
@@ -95,8 +94,9 @@ void ServerConfig::init()
 
     // There must always be screen objects for each cell in the screens QList. Unused screens
     // are identified by having an empty name.
-    for (int i = 0; i < numColumns() * numRows(); i++)
+    for (int i = 0; i < numColumns() * numRows(); i++) {
         addScreen(Screen());
+    }
 }
 
 void ServerConfig::saveSettings()
@@ -120,21 +120,19 @@ void ServerConfig::saveSettings()
     settings().setValue("ignoreAutoConfigClient", ignoreAutoConfigClient());
     settings().setValue("enableDragAndDrop", enableDragAndDrop());
     settings().setValue("clipboardSharing", clipboardSharing());
-    settings().setValue("clipboardSharingSize", (int)clipboardSharingSize());
+    settings().setValue("clipboardSharingSize", (int) clipboardSharingSize());
 
     writeSettings<bool>(settings(), switchCorners(), "switchCorner");
 
     settings().beginWriteArray("screens");
-    for (std::size_t i = 0; i < screens().size(); i++)
-    {
+    for (std::size_t i = 0; i < screens().size(); i++) {
         settings().setArrayIndex(static_cast<int>(i));
         screens()[i].saveSettings(settings());
     }
     settings().endArray();
 
     settings().beginWriteArray("hotkeys");
-    for (std::size_t i = 0; i < hotkeys().size(); i++)
-    {
+    for (std::size_t i = 0; i < hotkeys().size(); i++) {
         settings().setArrayIndex(static_cast<int>(i));
         hotkeys()[i].saveSettings(settings());
     }
@@ -166,24 +164,24 @@ void ServerConfig::loadSettings()
     setIgnoreAutoConfigClient(settings().value("ignoreAutoConfigClient").toBool());
     setEnableDragAndDrop(settings().value("enableDragAndDrop", true).toBool());
     setClipboardSharing(settings().value("clipboardSharing", true).toBool());
-    setClipboardSharingSize(settings().value("clipboardSharingSize",
-        (int) ServerConfig::defaultClipboardSharingSize()).toULongLong());
+    setClipboardSharingSize(settings()
+                                .value("clipboardSharingSize",
+                                       (int) ServerConfig::defaultClipboardSharingSize())
+                                .toULongLong());
 
     readSettings<bool>(settings(), switchCorners(), "switchCorner", false,
                        static_cast<int>(SwitchCorner::Count));
 
     std::size_t numScreens = settings().beginReadArray("screens");
     Q_ASSERT(numScreens <= screens().size());
-    for (std::size_t i = 0; i < numScreens; i++)
-    {
+    for (std::size_t i = 0; i < numScreens; i++) {
         settings().setArrayIndex(static_cast<int>(i));
         screens()[i].loadSettings(settings());
     }
     settings().endArray();
 
     int numHotkeys = settings().beginReadArray("hotkeys");
-    for (int i = 0; i < numHotkeys; i++)
-    {
+    for (int i = 0; i < numHotkeys; i++) {
         settings().setArrayIndex(i);
         Hotkey h;
         h.loadSettings(settings());
@@ -196,18 +194,21 @@ void ServerConfig::loadSettings()
 
 int ServerConfig::adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) const
 {
-    if (screens()[idx].isNull())
+    if (screens()[idx].isNull()) {
         return -1;
+    }
 
     // if we're at the left or right end of the table, don't find results going further left or right
-    if ((deltaColumn > 0 && (idx+1) % numColumns() == 0)
-            || (deltaColumn < 0 && idx % numColumns() == 0))
+    if ((deltaColumn > 0 && (idx + 1) % numColumns() == 0) ||
+        (deltaColumn < 0 && idx % numColumns() == 0)) {
         return -1;
+    }
 
     int arrayPos = idx + deltaColumn + deltaRow * numColumns();
 
-    if (arrayPos >= static_cast<int>(screens().size()) || arrayPos < 0)
+    if (arrayPos >= static_cast<int>(screens().size()) || arrayPos < 0) {
         return -1;
+    }
 
     return arrayPos;
 }
@@ -217,8 +218,9 @@ QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config)
     outStream << "section: screens\n";
 
     for (const Screen& s : config.screens()) {
-        if (!s.isNull())
+        if (!s.isNull()) {
             s.writeScreensSection(outStream);
+        }
     }
 
     outStream << "end\n\n";
@@ -226,46 +228,56 @@ QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config)
     outStream << "section: aliases\n";
 
     for (const Screen& s : config.screens()) {
-        if (!s.isNull())
+        if (!s.isNull()) {
             s.writeAliasesSection(outStream);
+        }
     }
 
     outStream << "end\n\n";
 
     outStream << "section: links\n";
 
-    for (std::size_t i = 0; i < config.screens().size(); i++)
-        if (!config.screens()[i].isNull())
-        {
+    for (std::size_t i = 0; i < config.screens().size(); i++) {
+        if (!config.screens()[i].isNull()) {
             outStream << "\t" << config.screens()[i].name() << ":\n";
 
-            for (unsigned int j = 0; j < sizeof(neighbourDirs) / sizeof(neighbourDirs[0]); j++)
-            {
-                int idx = config.adjacentScreenIndex(static_cast<int>(i),
-                                                     neighbourDirs[j].x, neighbourDirs[j].y);
-                if (idx != -1 && !config.screens()[idx].isNull())
-                    outStream << "\t\t" << neighbourDirs[j].name << " = " << config.screens()[idx].name() << "\n";
+            for (unsigned int j = 0; j < sizeof(neighbourDirs) / sizeof(neighbourDirs[0]); j++) {
+                int idx = config.adjacentScreenIndex(static_cast<int>(i), neighbourDirs[j].x,
+                                                     neighbourDirs[j].y);
+                if (idx != -1 && !config.screens()[idx].isNull()) {
+                    outStream << "\t\t" << neighbourDirs[j].name << " = "
+                              << config.screens()[idx].name() << "\n";
+                }
             }
         }
+    }
 
     outStream << "end\n\n";
 
     outStream << "section: options\n";
 
-    if (config.hasHeartbeat())
+    if (config.hasHeartbeat()) {
         outStream << "\t" << "heartbeat = " << config.heartbeat() << "\n";
+    }
 
-    outStream << "\t" << "relativeMouseMoves = " << (config.relativeMouseMoves() ? "true" : "false") << "\n";
-    outStream << "\t" << "screenSaverSync = " << (config.screenSaverSync() ? "true" : "false") << "\n";
-    outStream << "\t" << "win32KeepForeground = " << (config.win32KeepForeground() ? "true" : "false") << "\n";
-    outStream << "\t" << "clipboardSharing = " << (config.clipboardSharing() ? "true" : "false") << "\n";
+    outStream << "\t" << "relativeMouseMoves = " << (config.relativeMouseMoves() ? "true" : "false")
+              << "\n";
+    outStream << "\t" << "screenSaverSync = " << (config.screenSaverSync() ? "true" : "false")
+              << "\n";
+    outStream << "\t"
+              << "win32KeepForeground = " << (config.win32KeepForeground() ? "true" : "false")
+              << "\n";
+    outStream << "\t" << "clipboardSharing = " << (config.clipboardSharing() ? "true" : "false")
+              << "\n";
     outStream << "\t" << "clipboardSharingSize = " << config.clipboardSharingSize() << "\n";
 
-    if (config.hasSwitchDelay())
+    if (config.hasSwitchDelay()) {
         outStream << "\t" << "switchDelay = " << config.switchDelay() << "\n";
+    }
 
-    if (config.hasSwitchDoubleTap())
+    if (config.hasSwitchDoubleTap()) {
         outStream << "\t" << "switchDoubleTap = " << config.switchDoubleTap() << "\n";
+    }
 
     outStream << "\t" << "switchCorners = none ";
     for (int i = 0; i < config.switchCorners().size(); i++) {
@@ -292,8 +304,9 @@ int ServerConfig::numScreens() const
     int rval = 0;
 
     for (const Screen& s : screens()) {
-        if (!s.isNull())
+        if (!s.isNull()) {
             rval++;
+        }
     }
 
     return rval;
@@ -332,19 +345,15 @@ int ServerConfig::autoAddScreen(const QString name)
     if (result == kAddClientLeft) {
         offset = -1;
         dirIndex = 1;
-    }
-    else if (result == kAddClientUp) {
+    } else if (result == kAddClientUp) {
         offset = -5;
         dirIndex = 2;
-    }
-    else if (result == kAddClientDown) {
+    } else if (result == kAddClientDown) {
         offset = 5;
         dirIndex = 3;
     }
 
-
-    int idx = adjacentScreenIndex(startIndex, neighbourDirs[dirIndex].x,
-                    neighbourDirs[dirIndex].y);
+    int idx = adjacentScreenIndex(startIndex, neighbourDirs[dirIndex].x, neighbourDirs[dirIndex].y);
     while (idx != -1) {
         if (screens()[idx].isNull()) {
             m_Screens[idx].setName(name);
@@ -353,8 +362,7 @@ int ServerConfig::autoAddScreen(const QString name)
         }
 
         startIndex += offset;
-        idx = adjacentScreenIndex(startIndex, neighbourDirs[dirIndex].x,
-                    neighbourDirs[dirIndex].y);
+        idx = adjacentScreenIndex(startIndex, neighbourDirs[dirIndex].x, neighbourDirs[dirIndex].y);
     }
 
     if (!success) {
@@ -370,8 +378,7 @@ bool ServerConfig::findScreenName(const QString& name, int& index)
 {
     bool found = false;
     for (std::size_t i = 0; i < screens().size(); i++) {
-        if (!screens()[i].isNull() &&
-            screens()[i].name().compare(name) == 0) {
+        if (!screens()[i].isNull() && screens()[i].name().compare(name) == 0) {
             index = static_cast<int>(i);
             found = true;
             break;
@@ -409,7 +416,7 @@ int ServerConfig::showAddClientDialog(const QString& clientName)
     return result;
 }
 
-void::ServerConfig::addToFirstEmptyGrid(const QString &clientName)
+void ::ServerConfig::addToFirstEmptyGrid(const QString& clientName)
 {
     for (std::size_t i = 0; i < screens().size(); i++) {
         if (screens()[i].isNull()) {
@@ -419,12 +426,14 @@ void::ServerConfig::addToFirstEmptyGrid(const QString &clientName)
     }
 }
 
-size_t ServerConfig::defaultClipboardSharingSize() {
+size_t ServerConfig::defaultClipboardSharingSize()
+{
     return 100 * 1000 * 1000; // 100 MB
 }
 
-size_t ServerConfig::setClipboardSharingSize(size_t size) {
+size_t ServerConfig::setClipboardSharingSize(size_t size)
+{
     using std::swap;
-    swap (size, m_ClipboardSharingSize);
+    swap(size, m_ClipboardSharingSize);
     return size;
 }

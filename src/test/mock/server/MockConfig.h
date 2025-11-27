@@ -25,10 +25,9 @@
 
 namespace inputleap {
 
-class MockConfig : public Config
-{
+class MockConfig : public Config {
 public:
-    MockConfig() : Config() { }
+    MockConfig() : Config() {}
     MOCK_METHOD0(getInputFilter, InputFilter*());
     MOCK_CONST_METHOD1(isScreen, bool(const std::string&));
 };

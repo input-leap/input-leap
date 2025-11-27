@@ -19,11 +19,7 @@
 
 #include <QtCore/QSocketNotifier>
 
-ZeroconfBrowser::ZeroconfBrowser(QObject* parent) :
-    QObject(parent),
-    m_DnsServiceRef(nullptr)
-{
-}
+ZeroconfBrowser::ZeroconfBrowser(QObject* parent) : QObject(parent), m_DnsServiceRef(nullptr) {}
 
 ZeroconfBrowser::~ZeroconfBrowser()
 {
@@ -35,20 +31,19 @@ ZeroconfBrowser::~ZeroconfBrowser()
 
 void ZeroconfBrowser::browseForType(const QString& type)
 {
-    DNSServiceErrorType err = DNSServiceBrowse(&m_DnsServiceRef, 0, 0,
-        type.toUtf8().constData(), nullptr, browseReply, this);
+    DNSServiceErrorType err = DNSServiceBrowse(&m_DnsServiceRef, 0, 0, type.toUtf8().constData(),
+                                               nullptr, browseReply, this);
 
     if (err != kDNSServiceErr_NoError) {
         Q_EMIT error(err);
-    }
-    else {
+    } else {
         int sockFD = DNSServiceRefSockFD(m_DnsServiceRef);
         if (sockFD == -1) {
             Q_EMIT error(kDNSServiceErr_Invalid);
-        }
-        else {
+        } else {
             socket_ = std::make_unique<QSocketNotifier>(sockFD, QSocketNotifier::Read, this);
-            connect(socket_.get(), &QSocketNotifier::activated, this, &ZeroconfBrowser::socketReadyRead);
+            connect(socket_.get(), &QSocketNotifier::activated, this,
+                    &ZeroconfBrowser::socketReadyRead);
         }
     }
 }
@@ -61,22 +56,20 @@ void ZeroconfBrowser::socketReadyRead()
     }
 }
 
-void ZeroconfBrowser::browseReply(DNSServiceRef, DNSServiceFlags flags,
-            quint32, DNSServiceErrorType errorCode, const char* serviceName,
-            const char* regType, const char* replyDomain, void* context)
+void ZeroconfBrowser::browseReply(DNSServiceRef, DNSServiceFlags flags, quint32,
+                                  DNSServiceErrorType errorCode, const char* serviceName,
+                                  const char* regType, const char* replyDomain, void* context)
 {
     ZeroconfBrowser* browser = static_cast<ZeroconfBrowser*>(context);
     if (errorCode != kDNSServiceErr_NoError) {
         Q_EMIT browser->error(errorCode);
-    }
-    else {
+    } else {
         ZeroconfRecord record(serviceName, regType, replyDomain);
         if (flags & kDNSServiceFlagsAdd) {
             if (!browser->m_Records.contains(record)) {
                 browser->m_Records.append(record);
             }
-        }
-        else {
+        } else {
             browser->m_Records.removeAll(record);
         }
         if (!(flags & kDNSServiceFlagsMoreComing)) {

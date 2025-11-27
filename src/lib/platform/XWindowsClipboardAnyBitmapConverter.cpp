@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "base/BitUtilities.h"
 #include "platform/XWindowsClipboardAnyBitmapConverter.h"
+#include "base/BitUtilities.h"
 
 namespace inputleap {
 
@@ -47,14 +47,12 @@ XWindowsClipboardAnyBitmapConverter::~XWindowsClipboardAnyBitmapConverter()
     // do nothing
 }
 
-IClipboard::EFormat
-XWindowsClipboardAnyBitmapConverter::getFormat() const
+IClipboard::EFormat XWindowsClipboardAnyBitmapConverter::getFormat() const
 {
     return IClipboard::kBitmap;
 }
 
-int
-XWindowsClipboardAnyBitmapConverter::getDataSize() const
+int XWindowsClipboardAnyBitmapConverter::getDataSize() const
 {
     return 8;
 }
@@ -68,21 +66,20 @@ std::string XWindowsClipboardAnyBitmapConverter::fromIClipboard(const std::strin
     // fill BMP info header with native-endian data
     CBMPInfoHeader infoHeader;
     const std::uint8_t* rawBMPInfoHeader = reinterpret_cast<const std::uint8_t*>(bmp.data());
-    infoHeader.biSize             = load_little_endian_u32(rawBMPInfoHeader +  0);
-    infoHeader.biWidth            = load_little_endian_s32(rawBMPInfoHeader +  4);
-    infoHeader.biHeight           = load_little_endian_s32(rawBMPInfoHeader +  8);
-    infoHeader.biPlanes           = load_little_endian_u16(rawBMPInfoHeader + 12);
-    infoHeader.biBitCount         = load_little_endian_u16(rawBMPInfoHeader + 14);
-    infoHeader.biCompression      = load_little_endian_u32(rawBMPInfoHeader + 16);
-    infoHeader.biSizeImage        = load_little_endian_u32(rawBMPInfoHeader + 20);
-    infoHeader.biXPelsPerMeter    = load_little_endian_s32(rawBMPInfoHeader + 24);
-    infoHeader.biYPelsPerMeter    = load_little_endian_s32(rawBMPInfoHeader + 28);
-    infoHeader.biClrUsed          = load_little_endian_u32(rawBMPInfoHeader + 32);
-    infoHeader.biClrImportant     = load_little_endian_u32(rawBMPInfoHeader + 36);
+    infoHeader.biSize = load_little_endian_u32(rawBMPInfoHeader + 0);
+    infoHeader.biWidth = load_little_endian_s32(rawBMPInfoHeader + 4);
+    infoHeader.biHeight = load_little_endian_s32(rawBMPInfoHeader + 8);
+    infoHeader.biPlanes = load_little_endian_u16(rawBMPInfoHeader + 12);
+    infoHeader.biBitCount = load_little_endian_u16(rawBMPInfoHeader + 14);
+    infoHeader.biCompression = load_little_endian_u32(rawBMPInfoHeader + 16);
+    infoHeader.biSizeImage = load_little_endian_u32(rawBMPInfoHeader + 20);
+    infoHeader.biXPelsPerMeter = load_little_endian_s32(rawBMPInfoHeader + 24);
+    infoHeader.biYPelsPerMeter = load_little_endian_s32(rawBMPInfoHeader + 28);
+    infoHeader.biClrUsed = load_little_endian_u32(rawBMPInfoHeader + 32);
+    infoHeader.biClrImportant = load_little_endian_u32(rawBMPInfoHeader + 36);
 
     // check that format is acceptable
-    if (infoHeader.biSize != 40 ||
-        infoHeader.biWidth == 0 || infoHeader.biHeight == 0 ||
+    if (infoHeader.biSize != 40 || infoHeader.biWidth == 0 || infoHeader.biHeight == 0 ||
         infoHeader.biPlanes != 0 || infoHeader.biCompression != 0 ||
         (infoHeader.biBitCount != 24 && infoHeader.biBitCount != 32)) {
         return {};
@@ -91,12 +88,9 @@ std::string XWindowsClipboardAnyBitmapConverter::fromIClipboard(const std::strin
     // convert to image format
     const std::uint8_t* rawBMPPixels = rawBMPInfoHeader + 40;
     if (infoHeader.biBitCount == 24) {
-        return doBGRFromIClipboard(rawBMPPixels,
-                            infoHeader.biWidth, infoHeader.biHeight);
-    }
-    else {
-        return doBGRAFromIClipboard(rawBMPPixels,
-                            infoHeader.biWidth, infoHeader.biHeight);
+        return doBGRFromIClipboard(rawBMPPixels, infoHeader.biWidth, infoHeader.biHeight);
+    } else {
+        return doBGRAFromIClipboard(rawBMPPixels, infoHeader.biWidth, infoHeader.biHeight);
     }
 }
 
@@ -121,16 +115,15 @@ std::string XWindowsClipboardAnyBitmapConverter::toIClipboard(const std::string&
     store_little_endian_s32(dst, h);
     store_little_endian_u16(dst, 1);
     store_little_endian_u16(dst, depth);
-    store_little_endian_u32(dst, 0);        // BI_RGB
+    store_little_endian_u32(dst, 0); // BI_RGB
     store_little_endian_u32(dst, image.size());
-    store_little_endian_s32(dst, 2834);    // 72 dpi
-    store_little_endian_s32(dst, 2834);    // 72 dpi
+    store_little_endian_s32(dst, 2834); // 72 dpi
+    store_little_endian_s32(dst, 2834); // 72 dpi
     store_little_endian_u32(dst, 0);
     store_little_endian_u32(dst, 0);
 
     // construct image
-    return std::string(reinterpret_cast<const char*>(infoHeader),
-                       sizeof(infoHeader)) + rawBMP;
+    return std::string(reinterpret_cast<const char*>(infoHeader), sizeof(infoHeader)) + rawBMP;
 }
 
 } // namespace inputleap

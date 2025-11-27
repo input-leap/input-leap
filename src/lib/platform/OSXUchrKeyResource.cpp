@@ -22,11 +22,7 @@
 namespace inputleap {
 
 OSXUchrKeyResource::OSXUchrKeyResource(const void* resource, std::uint32_t keyboardType) :
-    m_m(nullptr),
-    m_cti(nullptr),
-    m_sdi(nullptr),
-    m_sri(nullptr),
-    m_st(nullptr)
+    m_m(nullptr), m_cti(nullptr), m_sdi(nullptr), m_sri(nullptr), m_st(nullptr)
 {
     m_resource = static_cast<const UCKeyboardLayout*>(resource);
     if (m_resource == nullptr) {
@@ -54,34 +50,29 @@ OSXUchrKeyResource::OSXUchrKeyResource(const void* resource, std::uint32_t keybo
 
     // get tables for keyboard type
     const std::uint8_t* const base = reinterpret_cast<const std::uint8_t*>(m_resource);
-    m_m   = reinterpret_cast<const UCKeyModifiersToTableNum*>(base +
-                                th->keyModifiersToTableNumOffset);
-    m_cti = reinterpret_cast<const UCKeyToCharTableIndex*>(base +
-                                th->keyToCharTableIndexOffset);
-    m_sdi = reinterpret_cast<const UCKeySequenceDataIndex*>(base +
-                                th->keySequenceDataIndexOffset);
+    m_m = reinterpret_cast<const UCKeyModifiersToTableNum*>(base + th->keyModifiersToTableNumOffset);
+    m_cti = reinterpret_cast<const UCKeyToCharTableIndex*>(base + th->keyToCharTableIndexOffset);
+    m_sdi = reinterpret_cast<const UCKeySequenceDataIndex*>(base + th->keySequenceDataIndexOffset);
     if (th->keyStateRecordsIndexOffset != 0) {
         m_sri = reinterpret_cast<const UCKeyStateRecordsIndex*>(base +
-                                th->keyStateRecordsIndexOffset);
+                                                                th->keyStateRecordsIndexOffset);
     }
     if (th->keyStateTerminatorsOffset != 0) {
-        m_st = reinterpret_cast<const UCKeyStateTerminators*>(base +
-                                th->keyStateTerminatorsOffset);
+        m_st = reinterpret_cast<const UCKeyStateTerminators*>(base + th->keyStateTerminatorsOffset);
     }
 
     // find the space key, but only if it can combine with dead keys.
     // a dead key followed by a space yields the non-dead version of
     // the dead key.
     m_spaceOutput = 0xffffu;
-    std::uint32_t table  = getTableForModifier(0);
+    std::uint32_t table = getTableForModifier(0);
     for (std::uint32_t button = 0, n = getNumButtons(); button < n; ++button) {
         KeyID id = getKey(table, button);
         if (id == 0x20) {
             UCKeyOutput c =
                 reinterpret_cast<const UCKeyOutput*>(base +
-                                m_cti->keyToCharTableOffsets[table])[button];
-            if ((c & kUCKeyOutputTestForIndexMask) ==
-                                kUCKeyOutputStateIndexMask) {
+                                                     m_cti->keyToCharTableOffsets[table])[button];
+            if ((c & kUCKeyOutputTestForIndexMask) == kUCKeyOutputStateIndexMask) {
                 m_spaceOutput = (c & kUCKeyOutputGetIndexMask);
                 break;
             }
@@ -89,8 +80,7 @@ OSXUchrKeyResource::OSXUchrKeyResource(const void* resource, std::uint32_t keybo
     }
 }
 
-bool
-OSXUchrKeyResource::isValid() const
+bool OSXUchrKeyResource::isValid() const
 {
     return (m_m != nullptr);
 }
@@ -117,8 +107,7 @@ std::uint32_t OSXUchrKeyResource::getTableForModifier(std::uint32_t mask) const
 {
     if (mask >= m_m->modifiersCount) {
         return m_m->defaultTableNum;
-    }
-    else {
+    } else {
         return m_m->tableNum[mask];
     }
 }
@@ -129,10 +118,10 @@ KeyID OSXUchrKeyResource::getKey(std::uint32_t table, std::uint32_t button) cons
     assert(button < getNumButtons());
 
     const std::uint8_t* const base = reinterpret_cast<const std::uint8_t*>(m_resource);
-    const UCKeyOutput* cPtr = reinterpret_cast<const UCKeyOutput*>(base +
-                                m_cti->keyToCharTableOffsets[table]);
+    const UCKeyOutput* cPtr =
+        reinterpret_cast<const UCKeyOutput*>(base + m_cti->keyToCharTableOffsets[table]);
 
-  const UCKeyOutput c = cPtr[button];
+    const UCKeyOutput c = cPtr[button];
 
     KeySequence keys;
     switch (c & kUCKeyOutputTestForIndexMask) {
@@ -204,21 +193,19 @@ bool OSXUchrKeyResource::getKeyRecord(KeySequence& keys, std::uint16_t index,
 {
     const std::uint8_t* const base = reinterpret_cast<const std::uint8_t*>(m_resource);
     const UCKeyStateRecord* sr =
-        reinterpret_cast<const UCKeyStateRecord*>(base +
-                                m_sri->keyStateRecordOffsets[index]);
+        reinterpret_cast<const UCKeyStateRecord*>(base + m_sri->keyStateRecordOffsets[index]);
     const UCKeyStateEntryTerminal* kset =
         reinterpret_cast<const UCKeyStateEntryTerminal*>(sr->stateEntryData);
 
     std::uint16_t nextState = 0;
-    bool found       = false;
+    bool found = false;
     if (state == 0) {
-        found     = true;
+        found = true;
         nextState = sr->stateZeroNextState;
         if (!addSequence(keys, sr->stateZeroCharData)) {
             return false;
         }
-    }
-    else {
+    } else {
         // we have a next entry
         switch (sr->stateEntryFormat) {
         case kUCKeyStateEntryTerminalFormat:
@@ -228,7 +215,7 @@ bool OSXUchrKeyResource::getKeyRecord(KeySequence& keys, std::uint16_t index,
                         return false;
                     }
                     nextState = 0;
-                    found     = true;
+                    found = true;
                     break;
                 }
             }
@@ -262,15 +249,12 @@ bool OSXUchrKeyResource::getKeyRecord(KeySequence& keys, std::uint16_t index,
     return true;
 }
 
-bool
-OSXUchrKeyResource::addSequence(
-    KeySequence& keys, UCKeyCharSeq c) const
+bool OSXUchrKeyResource::addSequence(KeySequence& keys, UCKeyCharSeq c) const
 {
     if ((c & kUCKeyOutputTestForIndexMask) == kUCKeyOutputSequenceIndexMask) {
         std::uint16_t index = (c & kUCKeyOutputGetIndexMask);
         if (index < m_sdi->charSequenceCount &&
-            m_sdi->charSequenceOffsets[index] !=
-                m_sdi->charSequenceOffsets[index + 1]) {
+            m_sdi->charSequenceOffsets[index] != m_sdi->charSequenceOffsets[index + 1]) {
             // XXX -- sequences not supported yet
             return false;
         }

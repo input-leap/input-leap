@@ -22,7 +22,7 @@ namespace inputleap {
 
 class INode {
 public:
-    virtual ~INode() { }
+    virtual ~INode() {}
 };
 
 } // namespace inputleap

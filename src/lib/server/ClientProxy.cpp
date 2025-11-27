@@ -23,15 +23,12 @@
 namespace inputleap {
 
 ClientProxy::ClientProxy(const std::string& name, std::unique_ptr<IClientConnection> backend) :
-    BaseClientProxy(name),
-    conn_{std::move(backend)}
-{
-}
+    BaseClientProxy(name), conn_{std::move(backend)}
+{}
 
 ClientProxy::~ClientProxy() = default;
 
-void
-ClientProxy::close(const char* msg)
+void ClientProxy::close(const char* msg)
 {
     // force the close to be sent before we return
     get_conn().flush();

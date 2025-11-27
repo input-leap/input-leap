@@ -19,11 +19,11 @@
 #pragma once
 
 #include "Fwd.h"
-#include "base/Fwd.h"
+#include "arch/IArchNetwork.h"
 #include "base/EventTarget.h"
+#include "base/Fwd.h"
 #include "net/IListenSocket.h"
 #include "net/ISocketMultiplexerJob.h"
-#include "arch/IArchNetwork.h"
 
 #include <mutex>
 
@@ -37,7 +37,8 @@ A listen socket using TCP.
 */
 class TCPListenSocket : public IListenSocket, public EventTarget {
 public:
-    TCPListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family);
+    TCPListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer,
+                    IArchNetwork::EAddressFamily family);
     virtual ~TCPListenSocket();
 
     // ISocket overrides

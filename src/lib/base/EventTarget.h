@@ -16,8 +16,8 @@
 
 #pragma once
 
-#include "Fwd.h"
 #include "EventTypes.h"
+#include "Fwd.h"
 #include <vector>
 
 namespace inputleap {
@@ -33,6 +33,7 @@ public:
 
     EventTarget(const EventTarget&) = delete;
     EventTarget& operator=(const EventTarget&) = delete;
+
 private:
     friend class EventQueue;
 

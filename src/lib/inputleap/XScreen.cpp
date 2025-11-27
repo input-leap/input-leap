@@ -25,7 +25,6 @@ std::string XScreenOpenFailure::getWhat() const noexcept
     return format("XScreenOpenFailure", "unable to open screen");
 }
 
-
 //
 // XScreenXInputFailure
 //
@@ -35,13 +34,11 @@ std::string XScreenXInputFailure::getWhat() const noexcept
     return "";
 }
 
-
 //
 // XScreenUnavailable
 //
 
-XScreenUnavailable::XScreenUnavailable(double timeUntilRetry) :
-    m_timeUntilRetry(timeUntilRetry)
+XScreenUnavailable::XScreenUnavailable(double timeUntilRetry) : m_timeUntilRetry(timeUntilRetry)
 {
     // do nothing
 }
@@ -51,8 +48,7 @@ XScreenUnavailable::~XScreenUnavailable() noexcept
     // do nothing
 }
 
-double
-XScreenUnavailable::getRetryTime() const
+double XScreenUnavailable::getRetryTime() const
 {
     return m_timeUntilRetry;
 }

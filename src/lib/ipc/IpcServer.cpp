@@ -18,14 +18,14 @@
 
 #include "ipc/IpcServer.h"
 
+#include "base/Event.h"
+#include "base/IEventQueue.h"
+#include "base/Log.h"
+#include "io/IStream.h"
 #include "ipc/Ipc.h"
 #include "ipc/IpcClientProxy.h"
 #include "ipc/IpcMessage.h"
 #include "net/IDataSocket.h"
-#include "io/IStream.h"
-#include "base/IEventQueue.h"
-#include "base/Event.h"
-#include "base/Log.h"
 
 namespace inputleap {
 
@@ -47,15 +47,14 @@ IpcServer::IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer, 
     init();
 }
 
-void
-IpcServer::init()
+void IpcServer::init()
 {
     socket_ = std::make_unique<TCPListenSocket>(m_events, m_socketMultiplexer, IArchNetwork::kINET);
 
     m_address.resolve();
 
     m_events->add_handler(EventType::LISTEN_SOCKET_CONNECTING, socket_.get(),
-                          [this](const auto& e){ handle_client_connecting(); });
+                          [this](const auto& e) { handle_client_connecting(); });
 }
 
 IpcServer::~IpcServer()
@@ -77,8 +76,7 @@ IpcServer::~IpcServer()
     }
 }
 
-void
-IpcServer::listen()
+void IpcServer::listen()
 {
     socket_->bind(m_address);
 }
@@ -100,9 +98,9 @@ void IpcServer::handle_client_connecting()
     }
 
     m_events->add_handler(EventType::IPC_CLIENT_PROXY_DISCONNECTED, proxy,
-                          [this](const auto& e){ handle_client_disconnected(e); });
+                          [this](const auto& e) { handle_client_disconnected(e); });
     m_events->add_handler(EventType::IPC_CLIENT_PROXY_MESSAGE_RECEIVED, proxy,
-                          [this](const auto& e){ handle_message_received(e); });
+                          [this](const auto& e) { handle_message_received(e); });
 
     m_events->add_event(EventType::IPC_SERVER_CLIENT_CONNECTED, this,
                         create_event_data<IpcClientProxy*>(proxy));
@@ -110,8 +108,8 @@ void IpcServer::handle_client_connecting()
 
 void IpcServer::handle_client_disconnected(const Event& e)
 {
-    IpcClientProxy* proxy = const_cast<IpcClientProxy*>(
-                static_cast<const IpcClientProxy*>(e.getTarget()));
+    IpcClientProxy* proxy =
+        const_cast<IpcClientProxy*>(static_cast<const IpcClientProxy*>(e.getTarget()));
 
     std::lock_guard<std::mutex> lock(m_clientsMutex);
     m_clients.remove(proxy);
@@ -127,16 +125,14 @@ void IpcServer::handle_message_received(const Event& e)
     m_events->add_event(std::move(event));
 }
 
-void
-IpcServer::deleteClient(IpcClientProxy* proxy)
+void IpcServer::deleteClient(IpcClientProxy* proxy)
 {
     m_events->remove_handler(EventType::IPC_CLIENT_PROXY_MESSAGE_RECEIVED, proxy);
     m_events->remove_handler(EventType::IPC_CLIENT_PROXY_DISCONNECTED, proxy);
     delete proxy;
 }
 
-bool
-IpcServer::hasClients(EIpcClientType clientType) const
+bool IpcServer::hasClients(EIpcClientType clientType) const
 {
     std::lock_guard<std::mutex> lock(m_clientsMutex);
 
@@ -157,8 +153,7 @@ IpcServer::hasClients(EIpcClientType clientType) const
     return false;
 }
 
-void
-IpcServer::send(const IpcMessage& message, EIpcClientType filterType)
+void IpcServer::send(const IpcMessage& message, EIpcClientType filterType)
 {
     std::lock_guard<std::mutex> lock(m_clientsMutex);
 

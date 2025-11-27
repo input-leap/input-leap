@@ -42,10 +42,8 @@ private:
     void processLaunched(ProcessSerialNumber psn);
     void processTerminated(ProcessSerialNumber psn);
 
-    static pascal OSStatus
-                        launchTerminationCallback(
-                            EventHandlerCallRef nextHandler,
-                            EventRef theEvent, void* userData);
+    static pascal OSStatus launchTerminationCallback(EventHandlerCallRef nextHandler,
+                                                     EventRef theEvent, void* userData);
 
 private:
     // the target for the events we generate

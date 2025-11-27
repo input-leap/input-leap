@@ -32,54 +32,38 @@ ArchDaemonNone::~ArchDaemonNone()
     // do nothing
 }
 
-void
-ArchDaemonNone::installDaemon(const char*,
-                const char*,
-                const char*,
-                const char*,
-                const char*)
+void ArchDaemonNone::installDaemon(const char*, const char*, const char*, const char*, const char*)
 {
     // do nothing
 }
 
-void
-ArchDaemonNone::uninstallDaemon(const char*)
+void ArchDaemonNone::uninstallDaemon(const char*)
 {
     // do nothing
 }
 
-int
-ArchDaemonNone::daemonize(const char* name, DaemonFunc func)
+int ArchDaemonNone::daemonize(const char* name, DaemonFunc func)
 {
     // simply forward the call to func.  obviously, this doesn't
     // do any daemonizing.
     return func(1, &name);
 }
 
-bool
-ArchDaemonNone::canInstallDaemon(const char*)
+bool ArchDaemonNone::canInstallDaemon(const char*)
 {
     return false;
 }
 
-bool
-ArchDaemonNone::isDaemonInstalled(const char*)
+bool ArchDaemonNone::isDaemonInstalled(const char*)
 {
     return false;
 }
 
-void
-ArchDaemonNone::installDaemon()
-{
-}
+void ArchDaemonNone::installDaemon() {}
 
-void
-ArchDaemonNone::uninstallDaemon()
-{
-}
+void ArchDaemonNone::uninstallDaemon() {}
 
-std::string
-ArchDaemonNone::commandLine() const
+std::string ArchDaemonNone::commandLine() const
 {
     return "";
 }

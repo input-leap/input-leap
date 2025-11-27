@@ -32,8 +32,7 @@ OSXClipboardAnyTextConverter::~OSXClipboardAnyTextConverter()
     // do nothing
 }
 
-IClipboard::EFormat
-OSXClipboardAnyTextConverter::getFormat() const
+IClipboard::EFormat OSXClipboardAnyTextConverter::getFormat() const
 {
     return IClipboard::kText;
 }
@@ -50,16 +49,12 @@ std::string OSXClipboardAnyTextConverter::toIClipboard(const std::string& data) 
     return convertLinefeedToUnix(doToIClipboard(data));
 }
 
-static
-bool
-isLF(char ch)
+static bool isLF(char ch)
 {
     return (ch == '\n');
 }
 
-static
-bool
-isCR(char ch)
+static bool isCR(char ch)
 {
     return (ch == '\r');
 }

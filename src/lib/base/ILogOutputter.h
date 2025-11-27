@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "base/Log.h"
 #include "base/ELevel.h"
+#include "base/Log.h"
 
 namespace inputleap {
 
@@ -31,7 +31,7 @@ directly or indirectly.
 */
 class ILogOutputter {
 public:
-    virtual ~ILogOutputter() { }
+    virtual ~ILogOutputter() {}
 
     //! @name manipulators
     //@{

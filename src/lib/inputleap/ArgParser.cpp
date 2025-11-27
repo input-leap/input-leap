@@ -17,13 +17,13 @@
 
 #include "inputleap/ArgParser.h"
 
-#include "inputleap/StreamChunker.h"
-#include "inputleap/App.h"
-#include "inputleap/ServerArgs.h"
-#include "inputleap/ClientArgs.h"
-#include "inputleap/ArgsBase.h"
 #include "base/Log.h"
 #include "base/String.h"
+#include "inputleap/App.h"
+#include "inputleap/ArgsBase.h"
+#include "inputleap/ClientArgs.h"
+#include "inputleap/ServerArgs.h"
+#include "inputleap/StreamChunker.h"
 #include "io/filesystem.h"
 
 #ifdef WINAPI_MSWINDOWS
@@ -32,8 +32,7 @@
 
 namespace inputleap {
 
-XArgvParserError::XArgvParserError(const char *fmt, ...) :
-    message("Unknown reason")
+XArgvParserError::XArgvParserError(const char* fmt, ...) : message("Unknown reason")
 {
     char buf[1024] = {0}; // we accept truncation of too long messages
     va_list args;
@@ -48,30 +47,30 @@ Argv::Argv(int argc, const char* const* argv) :
     // FIXME: we assume UTF-8 encoding, but on Windows this is not correct
     m_exename(inputleap::fs::u8path(argv[0]).filename().u8string())
 {
-    for (int i = 1; i < argc; i++)
+    for (int i = 1; i < argc; i++) {
         m_argv.push_back(argv[i]);
+    }
 }
 
-const char*
-Argv::shift()
+const char* Argv::shift()
 {
-    if (m_argv.empty())
+    if (m_argv.empty()) {
         return nullptr;
+    }
 
     auto a = m_argv.front();
     m_argv.pop_front();
     return a;
 }
 
-const char*
-Argv::shift(const char *name1, const char* name2, const char **optarg)
+const char* Argv::shift(const char* name1, const char* name2, const char** optarg)
 {
-    if (m_argv.empty())
+    if (m_argv.empty()) {
         return nullptr;
+    }
 
     auto a = m_argv.front();
-    if ((name1 != nullptr && strcmp(a, name1) == 0) ||
-        (name2 != nullptr && strcmp(a, name2) == 0)) {
+    if ((name1 != nullptr && strcmp(a, name1) == 0) || (name2 != nullptr && strcmp(a, name2) == 0)) {
         if (optarg != nullptr && m_argv.size() <= 1) {
             throw XArgvParserError("missing argument for `%s'", a);
         }
@@ -85,26 +84,21 @@ Argv::shift(const char *name1, const char* name2, const char **optarg)
     return nullptr;
 }
 
-bool
-Argv::contains(const char *name)
+bool Argv::contains(const char* name)
 {
     for (auto it = m_argv.begin(); it != m_argv.end(); it++) {
-        if (strcmp(*it, name) == 0)
+        if (strcmp(*it, name) == 0) {
             return true;
+        }
     }
     return false;
 }
 
-
 ArgsBase* ArgParser::m_argsBase = nullptr;
 
-ArgParser::ArgParser(App* app) :
-    m_app(app)
-{
-}
+ArgParser::ArgParser(App* app) : m_app(app) {}
 
-bool
-ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
+bool ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
 {
     setArgsBase(args);
 
@@ -121,27 +115,22 @@ ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
 #endif
 
         while (!a.empty()) {
-            const char *optarg = nullptr;
+            const char* optarg = nullptr;
 
             if (parsePlatformArg(args, a)) {
                 continue;
-            }
-            else if (parseGenericArgs(a)) {
+            } else if (parseGenericArgs(a)) {
                 continue;
-            }
-            else if (a.shift("-a", "--address", &optarg)) {
+            } else if (a.shift("-a", "--address", &optarg)) {
                 // save listen address
                 args.network_address = optarg;
-            }
-            else if (a.shift("-c", "--config", &optarg)) {
+            } else if (a.shift("-c", "--config", &optarg)) {
                 // save configuration file path
                 args.m_configFile = optarg;
-            }
-            else if (a.shift("--screen-change-script", nullptr, &optarg)) {
+            } else if (a.shift("--screen-change-script", nullptr, &optarg)) {
                 // save screen change script path
                 args.m_screenChangeScript = optarg;
-            }
-            else if (a.shift("--disable-client-cert-checking")) {
+            } else if (a.shift("--disable-client-cert-checking")) {
                 args.check_client_certificates = false;
             } else {
                 throw XArgvParserError("unrecognized option `%s'", a.peek());
@@ -155,8 +144,7 @@ ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
     return true;
 }
 
-bool
-ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
+bool ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
 {
     setArgsBase(args);
 
@@ -164,8 +152,9 @@ ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
     updateCommonArgs(a);
 
     try {
-        if (a.empty())
+        if (a.empty()) {
             throw XArgvParserError("a server address or name is required");
+        }
 
 #if defined(WINAPI_XWINDOWS) || defined(WINAPI_LIBEI)
         // Need to check for X11 vs libei first because the platform
@@ -176,19 +165,16 @@ ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
 #endif
 
         while (!a.empty()) {
-            const char *optarg = nullptr;
+            const char* optarg = nullptr;
 
             if (parsePlatformArg(args, a)) {
                 continue;
-            }
-            else if (parseGenericArgs(a)) {
+            } else if (parseGenericArgs(a)) {
                 continue;
-            }
-            else if (a.shift("--yscroll", nullptr, &optarg)) {
+            } else if (a.shift("--yscroll", nullptr, &optarg)) {
                 // define scroll
                 args.m_yscroll = atoi(optarg);
-            }
-            else if (a.size() == 1) {
+            } else if (a.size() == 1) {
                 args.network_address = a.shift();
                 return true;
             } else {
@@ -196,35 +182,33 @@ ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
             }
         }
 
-        if (args.network_address.empty())
+        if (args.network_address.empty()) {
             throw XArgvParserError("a server address or name is required");
+        }
 
     } catch (XArgvParserError e) {
         LOG_PRINT("%s: %s" BYE, a.exename().c_str(), e.message.c_str(), a.exename().c_str());
         return false;
     }
 
-    if (args.m_shouldExit)
+    if (args.m_shouldExit) {
         return true;
+    }
 
     return true;
 }
 
 #if WINAPI_MSWINDOWS
-bool
-ArgParser::parseMSWindowsArg(ArgsBase& argsBase, Argv& argv)
+bool ArgParser::parseMSWindowsArg(ArgsBase& argsBase, Argv& argv)
 {
     if (argv.shift("--service")) {
         LOG_WARN("obsolete argument --service, use input-leapd instead.");
         argsBase.m_shouldExit = true;
-    }
-    else if (argv.shift("--exit-pause")) {
+    } else if (argv.shift("--exit-pause")) {
         argsBase.m_pauseOnExit = true;
-    }
-    else if (argv.shift("--stop-on-desk-switch")) {
+    } else if (argv.shift("--stop-on-desk-switch")) {
         argsBase.m_stopOnDeskSwitch = true;
-    }
-    else {
+    } else {
         // option not supported here
         return false;
     }
@@ -234,8 +218,7 @@ ArgParser::parseMSWindowsArg(ArgsBase& argsBase, Argv& argv)
 #endif
 
 #if WINAPI_CARBON
-bool
-ArgParser::parseCarbonArg(ArgsBase& argsBase, Argv& argv)
+bool ArgParser::parseCarbonArg(ArgsBase& argsBase, Argv& argv)
 {
     // no options for carbon
     return false;
@@ -243,8 +226,7 @@ ArgParser::parseCarbonArg(ArgsBase& argsBase, Argv& argv)
 #endif
 
 #if WINAPI_XWINDOWS
-bool
-ArgParser::parseXWindowsArg(ArgsBase& argsBase, Argv& argv)
+bool ArgParser::parseXWindowsArg(ArgsBase& argsBase, Argv& argv)
 {
     const char* optarg = nullptr;
 
@@ -253,8 +235,7 @@ ArgParser::parseXWindowsArg(ArgsBase& argsBase, Argv& argv)
     } else if (argv.shift("-display", "--display", &optarg)) {
         // use alternative display
         argsBase.m_display = optarg;
-    }
-    else if (argv.shift("--no-xinitthreads")) {
+    } else if (argv.shift("--no-xinitthreads")) {
         LOG_NOTE("--no-xinitthreads is deprecated");
     } else {
         // option not supported here
@@ -321,8 +302,7 @@ bool ArgParser::use_x11(Argv& argv)
 }
 #endif
 
-bool
-ArgParser::parsePlatformArg(ArgsBase& argsBase, Argv& argv)
+bool ArgParser::parsePlatformArg(ArgsBase& argsBase, Argv& argv)
 {
 #if WINAPI_MSWINDOWS
     return parseMSWindowsArg(argsBase, argv);
@@ -332,91 +312,76 @@ ArgParser::parsePlatformArg(ArgsBase& argsBase, Argv& argv)
 #endif
 
 #if WINAPI_XWINDOWS
-    if (argsBase.use_x11)
+    if (argsBase.use_x11) {
         return parseXWindowsArg(argsBase, argv);
+    }
 #endif
 #if WINAPI_LIBEI
-    if (argsBase.use_ei)
+    if (argsBase.use_ei) {
         return parse_ei_arg(argsBase, argv);
+    }
 #endif
     return false;
 }
 
-bool
-ArgParser::parseGenericArgs(Argv& argv)
+bool ArgParser::parseGenericArgs(Argv& argv)
 {
-    const char *optarg = nullptr;
+    const char* optarg = nullptr;
 
     if (argv.shift("-d", "--debug", &optarg)) {
         // change logging level
         argsBase().m_logFilter = optarg;
-    }
-    else if (argv.shift("-l", "--log", &optarg)) {
+    } else if (argv.shift("-l", "--log", &optarg)) {
         argsBase().m_logFile = optarg;
-    }
-    else if (argv.shift("-f", "--no-daemon")) {
+    } else if (argv.shift("-f", "--no-daemon")) {
         // not a daemon
         argsBase().m_daemon = false;
-    }
-    else if (argv.shift("--daemon")) {
+    } else if (argv.shift("--daemon")) {
 #if SYSAPI_WIN32
         // suggest that user installs as a windows service. when launched as
         // service, process should automatically detect that it should run in
         // daemon mode.
-        throw XArgvParserError(
-            "the --daemon argument is not supported on windows. "
-            "instead, install %s as a service (--service install)",
-            argv.exename().c_str());
+        throw XArgvParserError("the --daemon argument is not supported on windows. "
+                               "instead, install %s as a service (--service install)",
+                               argv.exename().c_str());
 #else
         // daemonize
         argsBase().m_daemon = true;
 #endif
-    }
-    else if (argv.shift("-n", "--name", &optarg)) {
+    } else if (argv.shift("-n", "--name", &optarg)) {
         // save screen name
         argsBase().m_name = optarg;
-    }
-    else if (argv.shift("-1", "--no-restart")) {
+    } else if (argv.shift("-1", "--no-restart")) {
         // don't try to restart
         argsBase().m_restartable = false;
-    }
-    else if (argv.shift("--restart")) {
+    } else if (argv.shift("--restart")) {
         // try to restart
         argsBase().m_restartable = true;
-    }
-    else if (argv.shift("-z")) {
+    } else if (argv.shift("-z")) {
         argsBase().m_backend = true;
-    }
-    else if (argv.shift("--no-hooks")) {
+    } else if (argv.shift("--no-hooks")) {
         argsBase().m_noHooks = true;
-    }
-    else if (argv.shift("-h", "--help")) {
+    } else if (argv.shift("-h", "--help")) {
         if (m_app) {
             m_app->help();
         }
         argsBase().m_shouldExit = true;
-    }
-    else if (argv.shift("--version")) {
+    } else if (argv.shift("--version")) {
         if (m_app) {
             m_app->version();
         }
         argsBase().m_shouldExit = true;
-    }
-    else if (argv.shift("--no-tray")) {
+    } else if (argv.shift("--no-tray")) {
         argsBase().m_disableTray = true;
-    }
-    else if (argv.shift("--ipc")) {
+    } else if (argv.shift("--ipc")) {
         argsBase().m_enableIpc = true;
-    }
-    else if (argv.shift("--server")) {
+    } else if (argv.shift("--server")) {
         // HACK: stop error happening when using portable app.
         // FIXME: there is no portable InputLeap
-    }
-    else if (argv.shift("--client")) {
+    } else if (argv.shift("--client")) {
         // HACK: stop error happening when using portable app.
         // FIXME: there is no portable InputLeap.
-    }
-    else if (argv.shift("--enable-drag-drop")) {
+    } else if (argv.shift("--enable-drag-drop")) {
         bool useDragDrop = true;
 
 #ifdef WINAPI_XWINDOWS
@@ -429,23 +394,17 @@ ArgParser::parseGenericArgs(Argv& argv)
         if (useDragDrop) {
             argsBase().m_enableDragDrop = true;
         }
-    }
-    else if (argv.shift("--drop-dir")) {
+    } else if (argv.shift("--drop-dir")) {
         argsBase().m_dropTarget = argv.shift();
-    }
-    else if (argv.shift("--enable-crypto")) {
+    } else if (argv.shift("--enable-crypto")) {
         LOG_INFO("--enable-crypto is used by default. The option is deprecated.");
-    }
-    else if (argv.shift("--disable-crypto")) {
+    } else if (argv.shift("--disable-crypto")) {
         argsBase().m_enableCrypto = false;
-    }
-    else if (argv.shift("--profile-dir", nullptr, &optarg)) {
+    } else if (argv.shift("--profile-dir", nullptr, &optarg)) {
         argsBase().m_profileDirectory = inputleap::fs::u8path(optarg);
-    }
-    else if (argv.shift("--plugin-dir", nullptr, &optarg)) {
+    } else if (argv.shift("--plugin-dir", nullptr, &optarg)) {
         argsBase().m_pluginDirectory = inputleap::fs::u8path(optarg);
-    }
-    else {
+    } else {
         // option not supported here
         return false;
     }
@@ -456,7 +415,7 @@ ArgParser::parseGenericArgs(Argv& argv)
 void ArgParser::splitCommandString(std::string& command, std::vector<std::string>& argv)
 {
     if (command.empty()) {
-        return ;
+        return;
     }
 
     size_t leftDoubleQuote = 0;
@@ -472,8 +431,7 @@ void ArgParser::splitCommandString(std::string& command, std::vector<std::string
         // check if the space is between two double quotes
         if (space > leftDoubleQuote && space < rightDoubleQuote) {
             ignoreThisSpace = true;
-        }
-        else if (space > rightDoubleQuote) {
+        } else if (space > rightDoubleQuote) {
             searchDoubleQuotes(command, leftDoubleQuote, rightDoubleQuote, rightDoubleQuote + 1);
         }
 
@@ -487,8 +445,7 @@ void ArgParser::splitCommandString(std::string& command, std::vector<std::string
         // find next space
         if (ignoreThisSpace) {
             space = command.find(" ", rightDoubleQuote + 1);
-        }
-        else {
+        } else {
             startPos = space + 1;
             space = command.find(" ", startPos);
         }
@@ -499,7 +456,8 @@ void ArgParser::splitCommandString(std::string& command, std::vector<std::string
     argv.push_back(subString);
 }
 
-bool ArgParser::searchDoubleQuotes(std::string& command, size_t& left, size_t& right, size_t startPos)
+bool ArgParser::searchDoubleQuotes(std::string& command, size_t& left, size_t& right,
+                                   size_t startPos)
 {
     bool result = false;
     left = std::string::npos;
@@ -524,8 +482,7 @@ bool ArgParser::searchDoubleQuotes(std::string& command, size_t& left, size_t& r
 void ArgParser::removeDoubleQuotes(std::string& arg)
 {
     // if string is surrounded by double quotes, remove them
-    if (arg[0] == '\"' &&
-        arg[arg.size() - 1] == '\"') {
+    if (arg[0] == '\"' && arg[arg.size() - 1] == '\"') {
         arg = arg.substr(1, arg.size() - 2);
     }
 }
@@ -547,8 +504,8 @@ const char** ArgParser::getArgv(std::vector<std::string>& argsArray)
     return argv;
 }
 
-std::string ArgParser::assembleCommand(std::vector<std::string>& argsArray,
-                                       std::string ignoreArg, int parametersRequired)
+std::string ArgParser::assembleCommand(std::vector<std::string>& argsArray, std::string ignoreArg,
+                                       int parametersRequired)
 {
     std::string result;
 
@@ -577,8 +534,7 @@ std::string ArgParser::assembleCommand(std::vector<std::string>& argsArray,
     return result;
 }
 
-void
-ArgParser::updateCommonArgs(Argv &argv)
+void ArgParser::updateCommonArgs(Argv& argv)
 {
     argsBase().m_name = ARCH->getHostName();
     argsBase().m_exename = std::string(argv.exename());

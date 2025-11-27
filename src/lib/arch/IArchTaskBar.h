@@ -27,7 +27,7 @@ class IArchTaskBarReceiver;
 */
 class IArchTaskBar {
 public:
-    virtual ~IArchTaskBar() { }
+    virtual ~IArchTaskBar() {}
 
     //! @name manipulators
     //@{

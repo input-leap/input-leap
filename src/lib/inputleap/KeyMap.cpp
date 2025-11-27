@@ -17,8 +17,8 @@
  */
 
 #include "inputleap/KeyMap.h"
-#include "inputleap/key_types.h"
 #include "base/Log.h"
+#include "inputleap/key_types.h"
 
 #include <assert.h>
 #include <cctype>
@@ -31,19 +31,17 @@ KeyMap::NameToModifierMap* KeyMap::s_nameToModifierMap = nullptr;
 KeyMap::KeyToNameMap* KeyMap::s_keyToNameMap = nullptr;
 KeyMap::ModifierToNameMap* KeyMap::s_modifierToNameMap = nullptr;
 
-KeyMap::KeyMap() :
-    m_numGroups(0),
-    m_composeAcrossGroups(false)
+KeyMap::KeyMap() : m_numGroups(0), m_composeAcrossGroups(false)
 {
-    m_modifierKeyItem.m_id        = kKeyNone;
-    m_modifierKeyItem.m_group     = 0;
-    m_modifierKeyItem.m_button    = 0;
-    m_modifierKeyItem.m_required  = 0;
+    m_modifierKeyItem.m_id = kKeyNone;
+    m_modifierKeyItem.m_group = 0;
+    m_modifierKeyItem.m_button = 0;
+    m_modifierKeyItem.m_required = 0;
     m_modifierKeyItem.m_sensitive = 0;
     m_modifierKeyItem.m_generates = 0;
-    m_modifierKeyItem.m_dead      = false;
-    m_modifierKeyItem.m_lock      = false;
-    m_modifierKeyItem.m_client    = 0;
+    m_modifierKeyItem.m_dead = false;
+    m_modifierKeyItem.m_lock = false;
+    m_modifierKeyItem.m_client = 0;
 }
 
 KeyMap::~KeyMap()
@@ -51,23 +49,21 @@ KeyMap::~KeyMap()
     // do nothing
 }
 
-void
-KeyMap::swap(KeyMap& x)
+void KeyMap::swap(KeyMap& x)
 {
     m_keyIDMap.swap(x.m_keyIDMap);
     m_modifierKeys.swap(x.m_modifierKeys);
     m_halfDuplex.swap(x.m_halfDuplex);
     m_halfDuplexMods.swap(x.m_halfDuplexMods);
     std::int32_t tmp1 = m_numGroups;
-    m_numGroups   = x.m_numGroups;
+    m_numGroups = x.m_numGroups;
     x.m_numGroups = tmp1;
-    bool tmp2               = m_composeAcrossGroups;
-    m_composeAcrossGroups   = x.m_composeAcrossGroups;
+    bool tmp2 = m_composeAcrossGroups;
+    m_composeAcrossGroups = x.m_composeAcrossGroups;
     x.m_composeAcrossGroups = tmp2;
 }
 
-void
-KeyMap::addKeyEntry(const KeyItem& item)
+void KeyMap::addKeyEntry(const KeyItem& item)
 {
     // ignore kKeyNone
     if (item.m_id == kKeyNone) {
@@ -90,7 +86,7 @@ KeyMap::addKeyEntry(const KeyItem& item)
 
     // set group and dead key flag on the item
     KeyItem& newItem = items.back();
-    newItem.m_dead   = isDeadKey(item.m_id);
+    newItem.m_dead = isDeadKey(item.m_id);
 
     // mask the required bits with the sensitive bits
     newItem.m_required &= newItem.m_sensitive;
@@ -105,7 +101,9 @@ KeyMap::addKeyEntry(const KeyItem& item)
 
     // add item list
     entries.push_back(items);
-    LOG_DEBUG5("add key: %04x %d %03x %04x (%04x %04x %04x)%s", newItem.m_id, newItem.m_group, newItem.m_button, newItem.m_client, newItem.m_required, newItem.m_sensitive, newItem.m_generates, newItem.m_dead ? " dead" : "");
+    LOG_DEBUG5("add key: %04x %d %03x %04x (%04x %04x %04x)%s", newItem.m_id, newItem.m_group,
+               newItem.m_button, newItem.m_client, newItem.m_required, newItem.m_sensitive,
+               newItem.m_generates, newItem.m_dead ? " dead" : "");
 }
 
 void KeyMap::addKeyAliasEntry(KeyID targetID, std::int32_t group, KeyModifierMask targetRequired,
@@ -113,20 +111,18 @@ void KeyMap::addKeyAliasEntry(KeyID targetID, std::int32_t group, KeyModifierMas
                               KeyModifierMask sourceRequired, KeyModifierMask sourceSensitive)
 {
     // if we can already generate the target as desired then we're done.
-    if (findCompatibleKey(targetID, group, targetRequired,
-                                targetSensitive) != nullptr) {
+    if (findCompatibleKey(targetID, group, targetRequired, targetSensitive) != nullptr) {
         return;
     }
 
     // find a compatible source, preferably in the same group
     for (std::int32_t gd = 0, n = getNumGroups(); gd < n; ++gd) {
         std::int32_t eg = getEffectiveGroup(group, gd);
-        const KeyItemList* sourceEntry =
-            findCompatibleKey(sourceID, eg,
-                                sourceRequired, sourceSensitive);
+        const KeyItemList* sourceEntry = findCompatibleKey(sourceID, eg, sourceRequired,
+                                                           sourceSensitive);
         if (sourceEntry != nullptr && sourceEntry->size() == 1) {
             KeyMap::KeyItem targetItem = sourceEntry->back();
-            targetItem.m_id    = targetID;
+            targetItem.m_id = targetID;
             targetItem.m_group = eg;
             addKeyEntry(targetItem);
             break;
@@ -194,32 +190,27 @@ bool KeyMap::addKeyCombinationEntry(KeyID id, std::int32_t group, const KeyID* k
     return true;
 }
 
-void
-KeyMap::allowGroupSwitchDuringCompose()
+void KeyMap::allowGroupSwitchDuringCompose()
 {
     m_composeAcrossGroups = true;
 }
 
-void
-KeyMap::addHalfDuplexButton(KeyButton button)
+void KeyMap::addHalfDuplexButton(KeyButton button)
 {
     m_halfDuplex.insert(button);
 }
 
-void
-KeyMap::clearHalfDuplexModifiers()
+void KeyMap::clearHalfDuplexModifiers()
 {
     m_halfDuplexMods.clear();
 }
 
-void
-KeyMap::addHalfDuplexModifier(KeyID key)
+void KeyMap::addHalfDuplexModifier(KeyID key)
 {
     m_halfDuplexMods.insert(key);
 }
 
-void
-KeyMap::finish()
+void KeyMap::finish()
 {
     m_numGroups = findNumGroups();
 
@@ -232,8 +223,7 @@ KeyMap::finish()
     setModifierKeys();
 }
 
-void
-KeyMap::foreachKey(ForeachKeyCallback cb, void* userData)
+void KeyMap::foreachKey(ForeachKeyCallback cb, void* userData)
 {
     for (auto i = m_keyIDMap.begin(); i != m_keyIDMap.end(); ++i) {
         KeyGroupTable& groupTable = i->second;
@@ -242,8 +232,7 @@ KeyMap::foreachKey(ForeachKeyCallback cb, void* userData)
             for (size_t j = 0; j < entryList.size(); ++j) {
                 KeyItemList& itemList = entryList[j];
                 for (size_t k = 0; k < itemList.size(); ++k) {
-                    (*cb)(i->first, static_cast<std::int32_t>(group),
-                                itemList[k], userData);
+                    (*cb)(i->first, static_cast<std::int32_t>(group), itemList[k], userData);
                 }
             }
         }
@@ -255,14 +244,14 @@ const KeyMap::KeyItem* KeyMap::mapKey(Keystrokes& keys, KeyID id, std::int32_t g
                                       KeyModifierMask& currentState, KeyModifierMask desiredMask,
                                       bool isAutoRepeat) const
 {
-    LOG_DEBUG1("mapKey %04x (%d) with mask %04x, start state: %04x", id, id, desiredMask, currentState);
+    LOG_DEBUG1("mapKey %04x (%d) with mask %04x, start state: %04x", id, id, desiredMask,
+               currentState);
 
     // handle group change
     if (id == kKeyNextGroup) {
         keys.push_back(Keystroke(1, false, false));
         return nullptr;
-    }
-    else if (id == kKeyPrevGroup) {
+    } else if (id == kKeyPrevGroup) {
         keys.push_back(Keystroke(-1, false, false));
         return nullptr;
     }
@@ -283,13 +272,13 @@ const KeyMap::KeyItem* KeyMap::mapKey(Keystrokes& keys, KeyID id, std::int32_t g
     case kKeyCapsLock:
     case kKeyNumLock:
     case kKeyScrollLock:
-        item = mapModifierKey(keys, id, group, activeModifiers,
-                                currentState, desiredMask, isAutoRepeat);
+        item = mapModifierKey(keys, id, group, activeModifiers, currentState, desiredMask,
+                              isAutoRepeat);
         break;
 
     case kKeySetModifiers:
-        if (!keysForModifierState(0, group, activeModifiers, currentState,
-                                desiredMask, desiredMask, 0, keys)) {
+        if (!keysForModifierState(0, group, activeModifiers, currentState, desiredMask, desiredMask,
+                                  0, keys)) {
             LOG_DEBUG1("unable to set modifiers %04x", desiredMask);
             return nullptr;
         }
@@ -297,8 +286,7 @@ const KeyMap::KeyItem* KeyMap::mapKey(Keystrokes& keys, KeyID id, std::int32_t g
 
     case kKeyClearModifiers:
         if (!keysForModifierState(0, group, activeModifiers, currentState,
-                                currentState & ~desiredMask,
-                                desiredMask, 0, keys)) {
+                                  currentState & ~desiredMask, desiredMask, 0, keys)) {
             LOG_DEBUG1("unable to clear modifiers %04x", desiredMask);
             return nullptr;
         }
@@ -306,12 +294,11 @@ const KeyMap::KeyItem* KeyMap::mapKey(Keystrokes& keys, KeyID id, std::int32_t g
 
     default:
         if (isCommand(desiredMask)) {
-            item = mapCommandKey(keys, id, group, activeModifiers,
-                                currentState, desiredMask, isAutoRepeat);
-        }
-        else {
-            item = mapCharacterKey(keys, id, group, activeModifiers,
-                                currentState, desiredMask, isAutoRepeat);
+            item = mapCommandKey(keys, id, group, activeModifiers, currentState, desiredMask,
+                                 isAutoRepeat);
+        } else {
+            item = mapCharacterKey(keys, id, group, activeModifiers, currentState, desiredMask,
+                                   isAutoRepeat);
         }
         break;
     }
@@ -346,8 +333,7 @@ const KeyMap::KeyItemList* KeyMap::findCompatibleKey(KeyID id, std::int32_t grou
     const KeyEntryList& entries = i->second[group];
     for (size_t j = 0; j < entries.size(); ++j) {
         if ((entries[j].back().m_sensitive & sensitive) == 0 ||
-            (entries[j].back().m_required & sensitive) ==
-                (required & sensitive)) {
+            (entries[j].back().m_required & sensitive) == (required & sensitive)) {
             return &entries[j];
         }
     }
@@ -355,33 +341,26 @@ const KeyMap::KeyItemList* KeyMap::findCompatibleKey(KeyID id, std::int32_t grou
     return nullptr;
 }
 
-bool
-KeyMap::isHalfDuplex(KeyID key, KeyButton button) const
+bool KeyMap::isHalfDuplex(KeyID key, KeyButton button) const
 {
     return (m_halfDuplex.count(button) + m_halfDuplexMods.count(key) > 0);
 }
 
-bool
-KeyMap::isCommand(KeyModifierMask mask) const
+bool KeyMap::isCommand(KeyModifierMask mask) const
 {
     return ((mask & getCommandModifiers()) != 0);
 }
 
-KeyModifierMask
-KeyMap::getCommandModifiers() const
+KeyModifierMask KeyMap::getCommandModifiers() const
 {
     // we currently treat ctrl, alt, meta and super as command modifiers.
     // some platforms may have a more limited set (OS X only needs Alt)
     // but this works anyway.
-    return KeyModifierControl |
-            KeyModifierAlt    |
-            KeyModifierAltGr  |
-            KeyModifierMeta   |
-            KeyModifierSuper;
+    return KeyModifierControl | KeyModifierAlt | KeyModifierAltGr | KeyModifierMeta |
+           KeyModifierSuper;
 }
 
-void
-KeyMap::collectButtons(const ModifierToKeys& mods, ButtonToKeyMap& keys)
+void KeyMap::collectButtons(const ModifierToKeys& mods, ButtonToKeyMap& keys)
 {
     keys.clear();
     for (auto i = mods.begin(); i != mods.end(); ++i) {
@@ -389,11 +368,10 @@ KeyMap::collectButtons(const ModifierToKeys& mods, ButtonToKeyMap& keys)
     }
 }
 
-void
-KeyMap::initModifierKey(KeyItem& item)
+void KeyMap::initModifierKey(KeyItem& item)
 {
     item.m_generates = 0;
-    item.m_lock      = false;
+    item.m_lock = false;
     switch (item.m_id) {
     case kKeyShift_L:
     case kKeyShift_R:
@@ -426,17 +404,17 @@ KeyMap::initModifierKey(KeyItem& item)
 
     case kKeyCapsLock:
         item.m_generates = KeyModifierCapsLock;
-        item.m_lock      = true;
+        item.m_lock = true;
         break;
 
     case kKeyNumLock:
         item.m_generates = KeyModifierNumLock;
-        item.m_lock      = true;
+        item.m_lock = true;
         break;
 
     case kKeyScrollLock:
         item.m_generates = KeyModifierScrollLock;
-        item.m_lock      = true;
+        item.m_lock = true;
         break;
 
     default:
@@ -456,8 +434,7 @@ std::int32_t KeyMap::findNumGroups() const
     return static_cast<std::int32_t>(max);
 }
 
-void
-KeyMap::setModifierKeys()
+void KeyMap::setModifierKeys()
 {
     m_modifierKeys.clear();
     m_modifierKeys.resize(kKeyModifierNumBits * getNumGroups());
@@ -481,7 +458,8 @@ KeyMap::setModifierKeys()
                 for (std::int32_t b = 0; b < kKeyModifierNumBits; ++b) {
                     // skip if item doesn't generate bit b
                     if (((1u << b) & item.m_generates) != 0) {
-                        std::int32_t mIndex = static_cast<std::int32_t>(g) * kKeyModifierNumBits + b;
+                        std::int32_t mIndex = static_cast<std::int32_t>(g) * kKeyModifierNumBits +
+                                              b;
                         m_modifierKeys[mIndex].push_back(&item);
                     }
                 }
@@ -545,25 +523,22 @@ const KeyMap::KeyItem* KeyMap::mapCommandKey(Keystrokes& keys, KeyID id, std::in
 
     // make working copy of modifiers
     ModifierToKeys newModifiers = activeModifiers;
-    KeyModifierMask newState    = currentState;
+    KeyModifierMask newState = currentState;
     std::int32_t newGroup = group;
 
     // don't try to change CapsLock
-    desiredMask = (desiredMask & ~KeyModifierCapsLock) |
-                    (currentState & KeyModifierCapsLock);
+    desiredMask = (desiredMask & ~KeyModifierCapsLock) | (currentState & KeyModifierCapsLock);
 
     // add the key
-    if (!keysForKeyItem(*keyItem, newGroup, newModifiers,
-                            newState, desiredMask,
-                            s_overrideModifiers, isAutoRepeat, keys)) {
+    if (!keysForKeyItem(*keyItem, newGroup, newModifiers, newState, desiredMask,
+                        s_overrideModifiers, isAutoRepeat, keys)) {
         LOG_DEBUG1("can't map key");
         keys.clear();
         return nullptr;
     }
 
     // add keystrokes to restore modifier keys
-    if (!keysToRestoreModifiers(*keyItem, group, newModifiers, newState,
-                                activeModifiers, keys)) {
+    if (!keysToRestoreModifiers(*keyItem, group, newModifiers, newState, activeModifiers, keys)) {
         LOG_DEBUG1("failed to restore modifiers");
         keys.clear();
         return nullptr;
@@ -576,7 +551,7 @@ const KeyMap::KeyItem* KeyMap::mapCommandKey(Keystrokes& keys, KeyID id, std::in
 
     // save new modifiers
     activeModifiers = newModifiers;
-    currentState    = newState;
+    currentState = newState;
 
     return keyItem;
 }
@@ -596,14 +571,13 @@ const KeyMap::KeyItem* KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, std::
     const KeyGroupTable& keyGroupTable = i->second;
 
     // find best key in any group, starting with the active group
-    std::int32_t keyIndex  = -1;
+    std::int32_t keyIndex = -1;
     std::int32_t numGroups = getNumGroups();
     std::int32_t groupOffset;
     LOG_DEBUG1("find best:  %04x %04x", currentState, desiredMask);
     for (groupOffset = 0; groupOffset < numGroups; ++groupOffset) {
         std::int32_t effectiveGroup = getEffectiveGroup(group, groupOffset);
-        keyIndex = findBestKey(keyGroupTable[effectiveGroup],
-                                currentState, desiredMask);
+        keyIndex = findBestKey(keyGroupTable[effectiveGroup], currentState, desiredMask);
         if (keyIndex != -1) {
             LOG_DEBUG1("found key in group %d", effectiveGroup);
             break;
@@ -625,14 +599,13 @@ const KeyMap::KeyItem* KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, std::
 
     // make working copy of modifiers
     ModifierToKeys newModifiers = activeModifiers;
-    KeyModifierMask newState    = currentState;
+    KeyModifierMask newState = currentState;
     std::int32_t newGroup = group;
 
     // add each key
     for (size_t j = 0; j < itemList.size(); ++j) {
-        if (!keysForKeyItem(itemList[j], newGroup, newModifiers,
-                            newState, desiredMask,
-                            0, isAutoRepeat, keys)) {
+        if (!keysForKeyItem(itemList[j], newGroup, newModifiers, newState, desiredMask, 0,
+                            isAutoRepeat, keys)) {
             LOG_DEBUG1("can't map key");
             keys.clear();
             return nullptr;
@@ -640,8 +613,7 @@ const KeyMap::KeyItem* KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, std::
     }
 
     // add keystrokes to restore modifier keys
-    if (!keysToRestoreModifiers(keyItem, group, newModifiers, newState,
-                                activeModifiers, keys)) {
+    if (!keysToRestoreModifiers(keyItem, group, newModifiers, newState, activeModifiers, keys)) {
         LOG_DEBUG1("failed to restore modifiers");
         keys.clear();
         return nullptr;
@@ -654,7 +626,7 @@ const KeyMap::KeyItem* KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, std::
 
     // save new modifiers
     activeModifiers = newModifiers;
-    currentState    = newState;
+    currentState = newState;
 
     return &keyItem;
 }
@@ -664,8 +636,8 @@ const KeyMap::KeyItem* KeyMap::mapModifierKey(Keystrokes& keys, KeyID id, std::i
                                               KeyModifierMask& currentState,
                                               KeyModifierMask desiredMask, bool isAutoRepeat) const
 {
-    return mapCharacterKey(keys, id, group, activeModifiers,
-                                currentState, desiredMask, isAutoRepeat);
+    return mapCharacterKey(keys, id, group, activeModifiers, currentState, desiredMask,
+                           isAutoRepeat);
 }
 
 std::int32_t KeyMap::findBestKey(const KeyEntryList& entryList, KeyModifierMask /*currentState*/,
@@ -686,8 +658,7 @@ std::int32_t KeyMap::findBestKey(const KeyEntryList& entryList, KeyModifierMask 
     std::int32_t bestIndex = -1;
     for (std::int32_t i = 0; i < static_cast<std::int32_t>(entryList.size()); ++i) {
         const KeyItem& item = entryList[i].back();
-        KeyModifierMask change =
-            ((item.m_required ^ desiredState) & item.m_sensitive);
+        KeyModifierMask change = ((item.m_required ^ desiredState) & item.m_sensitive);
         std::int32_t n = getNumModifiers(change);
         if (n < bestCount) {
             bestCount = n;
@@ -695,13 +666,12 @@ std::int32_t KeyMap::findBestKey(const KeyEntryList& entryList, KeyModifierMask 
         }
     }
     if (bestIndex != -1) {
-        LOG_DEBUG1("best key index %d of %zd (%d modifiers)",
-             bestIndex + 1, entryList.size(), bestCount);
+        LOG_DEBUG1("best key index %d of %zd (%d modifiers)", bestIndex + 1, entryList.size(),
+                   bestCount);
     }
 
     return bestIndex;
 }
-
 
 const KeyMap::KeyItem* KeyMap::keyForModifier(KeyButton button, std::int32_t group,
                                               std::int32_t modifierBit) const
@@ -714,8 +684,7 @@ const KeyMap::KeyItem* KeyMap::keyForModifier(KeyButton button, std::int32_t gro
     // to generate a KeyID that's only bound the the given button.
     // this is important when a shift button is modified by shift;  we
     // must use the other shift button to do the shifting.
-    const ModifierKeyItemList& items =
-        m_modifierKeys[group * kKeyModifierNumBits + modifierBit];
+    const ModifierKeyItemList& items = m_modifierKeys[group * kKeyModifierNumBits + modifierBit];
     for (auto i = items.begin(); i != items.end(); ++i) {
         if ((*i)->m_button != button) {
             return (*i);
@@ -729,8 +698,8 @@ bool KeyMap::keysForKeyItem(const KeyItem& keyItem, std::int32_t& group,
                             KeyModifierMask desiredState, KeyModifierMask overrideModifiers,
                             bool isAutoRepeat, Keystrokes& keystrokes) const
 {
-    static const KeyModifierMask s_notRequiredMask =
-        KeyModifierAltGr | KeyModifierNumLock | KeyModifierScrollLock;
+    static const KeyModifierMask s_notRequiredMask = KeyModifierAltGr | KeyModifierNumLock |
+                                                     KeyModifierScrollLock;
 
     // add keystrokes to adjust the group
     if (group != keyItem.m_group) {
@@ -741,18 +710,15 @@ bool KeyMap::keysForKeyItem(const KeyItem& keyItem, std::int32_t& group,
     EKeystroke type;
     if (keyItem.m_dead) {
         // adjust modifiers for dead key
-        if (!keysForModifierState(keyItem.m_button, group,
-                                activeModifiers, currentState,
-                                keyItem.m_required, keyItem.m_sensitive,
-                                0, keystrokes)) {
+        if (!keysForModifierState(keyItem.m_button, group, activeModifiers, currentState,
+                                  keyItem.m_required, keyItem.m_sensitive, 0, keystrokes)) {
             LOG_DEBUG1("unable to match modifier state for dead key %d", keyItem.m_button);
             return false;
         }
 
         // press and release the dead key
         type = kKeystrokeClick;
-    }
-    else {
+    } else {
         // if this a command key then we don't have to match some of the
         // key's required modifiers.
         KeyModifierMask sensitive = keyItem.m_sensitive & ~overrideModifiers;
@@ -765,24 +731,23 @@ bool KeyMap::keysForKeyItem(const KeyItem& keyItem, std::int32_t& group,
         // the Shift_L button.
         // match key's required state
         LOG_DEBUG1("state: %04x,%04x,%04x", currentState, keyItem.m_required, sensitive);
-        if (!keysForModifierState(keyItem.m_button, group,
-                                activeModifiers, currentState,
-                                keyItem.m_required, sensitive,
-                                0, keystrokes)) {
-            LOG_DEBUG1("unable to match modifier state (%04x,%04x) for key %d", keyItem.m_required, keyItem.m_sensitive, keyItem.m_button);
+        if (!keysForModifierState(keyItem.m_button, group, activeModifiers, currentState,
+                                  keyItem.m_required, sensitive, 0, keystrokes)) {
+            LOG_DEBUG1("unable to match modifier state (%04x,%04x) for key %d", keyItem.m_required,
+                       keyItem.m_sensitive, keyItem.m_button);
             return false;
         }
 
         // match desiredState as closely as possible.  we must not
         // change any modifiers in keyItem.m_sensitive.  and if the key
         // is a modifier, we don't want to change that modifier.
-        LOG_DEBUG1("desired state: %04x %04x,%04x,%04x", desiredState, currentState, keyItem.m_required, keyItem.m_sensitive);
-        if (!keysForModifierState(keyItem.m_button, group,
-                                activeModifiers, currentState,
-                                desiredState,
-                                ~(sensitive | keyItem.m_generates),
-                                s_notRequiredMask, keystrokes)) {
-            LOG_DEBUG1("unable to match desired modifier state (%04x,%04x) for key %d", desiredState, ~keyItem.m_sensitive & 0xffffu, keyItem.m_button);
+        LOG_DEBUG1("desired state: %04x %04x,%04x,%04x", desiredState, currentState,
+                   keyItem.m_required, keyItem.m_sensitive);
+        if (!keysForModifierState(keyItem.m_button, group, activeModifiers, currentState,
+                                  desiredState, ~(sensitive | keyItem.m_generates),
+                                  s_notRequiredMask, keystrokes)) {
+            LOG_DEBUG1("unable to match desired modifier state (%04x,%04x) for key %d",
+                       desiredState, ~keyItem.m_sensitive & 0xffffu, keyItem.m_button);
             return false;
         }
 
@@ -816,8 +781,7 @@ bool KeyMap::keysToRestoreModifiers(const KeyItem& keyItem, std::int32_t,
             if (i->second.m_lock) {
                 type = kKeystrokeUnmodify;
             }
-            addKeystrokes(type, i->second,
-                                activeModifiers, currentState, keystrokes);
+            addKeystrokes(type, i->second, activeModifiers, currentState, keystrokes);
         }
     }
 
@@ -829,8 +793,7 @@ bool KeyMap::keysToRestoreModifiers(const KeyItem& keyItem, std::int32_t,
             if (i->second.m_lock) {
                 type = kKeystrokeModify;
             }
-            addKeystrokes(type, i->second,
-                                activeModifiers, currentState, keystrokes);
+            addKeystrokes(type, i->second, activeModifiers, currentState, keystrokes);
         }
     }
 
@@ -850,7 +813,8 @@ bool KeyMap::keysForModifierState(KeyButton button, std::int32_t group,
     // to work if the key itself is a modifier (the numlock toggle can
     // interfere) so we don't try to match at all.
     flipMask &= ~notRequiredMask;
-    LOG_DEBUG1("flip: %04x (%04x vs %04x in %04x - %04x)", flipMask, currentState, requiredState, sensitiveMask & 0xffffu, notRequiredMask & 0xffffu);
+    LOG_DEBUG1("flip: %04x (%04x vs %04x in %04x - %04x)", flipMask, currentState, requiredState,
+               sensitiveMask & 0xffffu, notRequiredMask & 0xffffu);
     if (flipMask == 0) {
         return true;
     }
@@ -861,7 +825,7 @@ bool KeyMap::keysForModifierState(KeyButton button, std::int32_t group,
     // we'll assume that modifiers with higher bits are affected by modifiers
     // with lower bits.  there's not much basis for that assumption except
     // that we're pretty sure shift isn't changed by other modifiers.
-    for (std::int32_t bit = kKeyModifierNumBits; bit-- > 0; ) {
+    for (std::int32_t bit = kKeyModifierNumBits; bit-- > 0;) {
         KeyModifierMask mask = (1u << bit);
         if ((flipMask & mask) == 0) {
             // modifier is already correct
@@ -877,8 +841,7 @@ bool KeyMap::keysForModifierState(KeyButton button, std::int32_t group,
             if ((mask & notRequiredMask) == 0) {
                 LOG_DEBUG1("no key for modifier %04x", mask);
                 return false;
-            }
-            else {
+            } else {
                 continue;
             }
         }
@@ -899,13 +862,11 @@ bool KeyMap::keysForModifierState(KeyButton button, std::int32_t group,
                 LOG_DEBUG1("modifier %04x modified by %04x", mask, sensitive);
                 return false;
             }
-            if (active && !keysForModifierState(button, group,
-                                activeModifiers, currentState,
-                                keyItem->m_required, sensitive,
-                                notRequiredMask, keystrokes)) {
+            if (active && !keysForModifierState(button, group, activeModifiers, currentState,
+                                                keyItem->m_required, sensitive, notRequiredMask,
+                                                keystrokes)) {
                 return false;
-            }
-            else if (!active) {
+            } else if (!active) {
                 // release the modifier
                 // XXX -- this doesn't work!  if Alt and Meta are mapped
                 // to one key and we want to release Meta we can't do
@@ -916,24 +877,21 @@ bool KeyMap::keysForModifierState(KeyButton button, std::int32_t group,
 
         // current state should match required state
         if ((currentState & sensitive) != (keyItem->m_required & sensitive)) {
-            LOG_DEBUG1("unable to match modifier state for modifier %04x (%04x vs %04x in %04x)", mask, currentState, keyItem->m_required, sensitive);
+            LOG_DEBUG1("unable to match modifier state for modifier %04x (%04x vs %04x in %04x)",
+                       mask, currentState, keyItem->m_required, sensitive);
             return false;
         }
 
         // add keystrokes
         EKeystroke type = active ? kKeystrokeModify : kKeystrokeUnmodify;
-        addKeystrokes(type, *keyItem, activeModifiers, currentState,
-                                keystrokes);
+        addKeystrokes(type, *keyItem, activeModifiers, currentState, keystrokes);
     }
 
     return true;
 }
 
-void
-KeyMap::addKeystrokes(EKeystroke type, const KeyItem& keyItem,
-                ModifierToKeys& activeModifiers,
-                KeyModifierMask& currentState,
-                Keystrokes& keystrokes) const
+void KeyMap::addKeystrokes(EKeystroke type, const KeyItem& keyItem, ModifierToKeys& activeModifiers,
+                           KeyModifierMask& currentState, Keystrokes& keystrokes) const
 {
     KeyButton button = keyItem.m_button;
     std::uint32_t data = keyItem.m_client;
@@ -943,11 +901,9 @@ KeyMap::addKeystrokes(EKeystroke type, const KeyItem& keyItem,
         if (keyItem.m_generates != 0) {
             if (!keyItem.m_lock || (currentState & keyItem.m_generates) == 0) {
                 // add modifier key and activate modifier
-                activeModifiers.insert(std::make_pair(
-                                    keyItem.m_generates, keyItem));
+                activeModifiers.insert(std::make_pair(keyItem.m_generates, keyItem));
                 currentState |= keyItem.m_generates;
-            }
-            else {
+            } else {
                 // deactivate locking modifier
                 activeModifiers.erase(keyItem.m_generates);
                 currentState &= ~keyItem.m_generates;
@@ -976,12 +932,12 @@ KeyMap::addKeystrokes(EKeystroke type, const KeyItem& keyItem,
 
     case kKeystrokeRepeat:
         keystrokes.push_back(Keystroke(button, false, true, data));
-        keystrokes.push_back(Keystroke(button,  true, true, data));
+        keystrokes.push_back(Keystroke(button, true, true, data));
         // no modifier changes on key repeat
         break;
 
     case kKeystrokeClick:
-        keystrokes.push_back(Keystroke(button,  true, false, data));
+        keystrokes.push_back(Keystroke(button, true, false, data));
         keystrokes.push_back(Keystroke(button, false, false, data));
         // no modifier changes on key click
         break;
@@ -993,39 +949,33 @@ KeyMap::addKeystrokes(EKeystroke type, const KeyItem& keyItem,
             if (m_halfDuplex.count(button) > 0) {
                 if (type == kKeystrokeModify) {
                     // turn half-duplex toggle on (press)
-                    keystrokes.push_back(Keystroke(button,  true, false, data));
-                }
-                else {
+                    keystrokes.push_back(Keystroke(button, true, false, data));
+                } else {
                     // turn half-duplex toggle off (release)
                     keystrokes.push_back(Keystroke(button, false, false, data));
                 }
-            }
-            else {
+            } else {
                 // toggle (click)
-                keystrokes.push_back(Keystroke(button,  true, false, data));
+                keystrokes.push_back(Keystroke(button, true, false, data));
                 keystrokes.push_back(Keystroke(button, false, false, data));
             }
-        }
-        else if (type == kKeystrokeModify) {
+        } else if (type == kKeystrokeModify) {
             // press modifier
             keystrokes.push_back(Keystroke(button, true, false, data));
-        }
-        else {
+        } else {
             // release all the keys that generate the modifier that are
             // currently down
             auto range = activeModifiers.equal_range(keyItem.m_generates);
             for (auto i = range.first; i != range.second; ++i) {
-                keystrokes.push_back(Keystroke(i->second.m_button,
-                                false, false, i->second.m_client));
+                keystrokes.push_back(Keystroke(i->second.m_button, false, false,
+                                               i->second.m_client));
             }
         }
 
         if (type == kKeystrokeModify) {
-            activeModifiers.insert(std::make_pair(
-                                keyItem.m_generates, keyItem));
+            activeModifiers.insert(std::make_pair(keyItem.m_generates, keyItem));
             currentState |= keyItem.m_generates;
-        }
-        else {
+        } else {
             activeModifiers.erase(keyItem.m_generates);
             currentState &= ~keyItem.m_generates;
         }
@@ -1046,14 +996,12 @@ std::int32_t KeyMap::getNumModifiers(KeyModifierMask state)
     return n;
 }
 
-bool
-KeyMap::isDeadKey(KeyID key)
+bool KeyMap::isDeadKey(KeyID key)
 {
     return (key == kKeyCompose || (key >= 0x0300 && key <= 0x036f));
 }
 
-KeyID
-KeyMap::getDeadKey(KeyID key)
+KeyID KeyMap::getDeadKey(KeyID key)
 {
     if (isDeadKey(key)) {
         // already dead
@@ -1131,12 +1079,10 @@ std::string KeyMap::formatKey(KeyID key, KeyModifierMask mask)
         // XXX -- we're assuming ASCII here
         else if (key >= 33 && key < 127) {
             x += static_cast<char>(key);
-        }
-        else {
+        } else {
             x += inputleap::string::sprintf("\\u%04x", key);
         }
-    }
-    else if (!x.empty()) {
+    } else if (!x.empty()) {
         // remove trailing '+'
         x.erase(x.size() - 1);
     }
@@ -1160,16 +1106,14 @@ bool KeyMap::parseKey(const std::string& x, KeyID& key)
             return false;
         }
         key = static_cast<KeyID>(x[0]);
-    }
-    else if (x.size() == 6 && x[0] == '\\' && x[1] == 'u') {
+    } else if (x.size() == 6 && x[0] == '\\' && x[1] == 'u') {
         // escaped unicode (\uXXXX where XXXX is a hex number)
         char* end;
         key = static_cast<KeyID>(strtol(x.c_str() + 2, &end, 16));
         if (*end != '\0') {
             return false;
         }
-    }
-    else if (!x.empty()) {
+    } else if (!x.empty()) {
         // unknown key
         return false;
     }
@@ -1203,16 +1147,14 @@ bool KeyMap::parseModifiers(std::string& x, KeyModifierMask& mask)
                 return false;
             }
             mask |= mod;
-        }
-        else {
+        } else {
             // unknown string
             x.erase(0, tb);
             tb = x.find_first_not_of(" \t");
             te = x.find_last_not_of(" \t");
             if (tb == std::string::npos) {
                 x = "";
-            }
-            else {
+            } else {
                 x = x.substr(tb, te - tb + 1);
             }
             return true;
@@ -1234,8 +1176,7 @@ bool KeyMap::parseModifiers(std::string& x, KeyModifierMask& mask)
     return true;
 }
 
-void
-KeyMap::initKeyNameMaps()
+void KeyMap::initKeyNameMaps()
 {
     // initialize tables
     if (s_nameToKeyMap == nullptr) {
@@ -1243,39 +1184,30 @@ KeyMap::initKeyNameMaps()
         s_keyToNameMap = new KeyToNameMap;
         for (const KeyNameMapEntry* i = kKeyNameMap; i->m_name != nullptr; ++i) {
             (*s_nameToKeyMap)[i->m_name] = i->m_id;
-            (*s_keyToNameMap)[i->m_id]   = i->m_name;
+            (*s_keyToNameMap)[i->m_id] = i->m_name;
         }
     }
     if (s_nameToModifierMap == nullptr) {
         s_nameToModifierMap = new NameToModifierMap;
         s_modifierToNameMap = new ModifierToNameMap;
-        for (const KeyModifierNameMapEntry* i = kModifierNameMap;
-                                i->m_name != nullptr; ++i) {
+        for (const KeyModifierNameMapEntry* i = kModifierNameMap; i->m_name != nullptr; ++i) {
             (*s_nameToModifierMap)[i->m_name] = i->m_mask;
             (*s_modifierToNameMap)[i->m_mask] = i->m_name;
         }
     }
 }
 
-
 //
 // KeyMap::KeyItem
 //
 
-bool
-KeyMap::KeyItem::operator==(const KeyItem& x) const
+bool KeyMap::KeyItem::operator==(const KeyItem& x) const
 {
-    return (m_id        == x.m_id        &&
-            m_group     == x.m_group     &&
-            m_button    == x.m_button    &&
-            m_required  == x.m_required  &&
-            m_sensitive == x.m_sensitive &&
-            m_generates == x.m_generates &&
-            m_dead      == x.m_dead      &&
-            m_lock      == x.m_lock      &&
-            m_client    == x.m_client);
+    return (m_id == x.m_id && m_group == x.m_group && m_button == x.m_button &&
+            m_required == x.m_required && m_sensitive == x.m_sensitive &&
+            m_generates == x.m_generates && m_dead == x.m_dead && m_lock == x.m_lock &&
+            m_client == x.m_client);
 }
-
 
 //
 // KeyMap::Keystroke
@@ -1285,17 +1217,16 @@ KeyMap::Keystroke::Keystroke(KeyButton button, bool press, bool repeat, std::uin
     m_type(kButton)
 {
     m_data.m_button.m_button = button;
-    m_data.m_button.m_press  = press;
+    m_data.m_button.m_press = press;
     m_data.m_button.m_repeat = repeat;
     m_data.m_button.m_client = data;
 }
 
-KeyMap::Keystroke::Keystroke(std::int32_t group, bool absolute, bool restore) :
-    m_type(kGroup)
+KeyMap::Keystroke::Keystroke(std::int32_t group, bool absolute, bool restore) : m_type(kGroup)
 {
-    m_data.m_group.m_group    = group;
+    m_data.m_group.m_group = group;
     m_data.m_group.m_absolute = absolute;
-    m_data.m_group.m_restore  = restore;
+    m_data.m_group.m_restore = restore;
 }
 
-}
+} // namespace inputleap

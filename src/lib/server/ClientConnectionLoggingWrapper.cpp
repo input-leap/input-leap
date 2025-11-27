@@ -25,9 +25,8 @@
 namespace inputleap {
 
 ClientConnectionLoggingWrapper::ClientConnectionLoggingWrapper(
-        const std::string& name, std::unique_ptr<IClientConnection> conn) :
-    name_{name},
-    conn_{std::move(conn)}
+    const std::string& name, std::unique_ptr<IClientConnection> conn) :
+    name_{name}, conn_{std::move(conn)}
 {}
 
 ClientConnectionLoggingWrapper::~ClientConnectionLoggingWrapper() = default;
@@ -51,8 +50,7 @@ void ClientConnectionLoggingWrapper::send_query_info_1_6()
 void ClientConnectionLoggingWrapper::send_enter_1_6(std::int32_t x_abs, std::int32_t y_abs,
                                                     std::uint32_t seq_num, KeyModifierMask mask)
 {
-    LOG_DEBUG1("send enter to \"%s\", %d,%d %d %04x", name_.c_str(), x_abs, y_abs,
-         seq_num, mask);
+    LOG_DEBUG1("send enter to \"%s\", %d,%d %d %04x", name_.c_str(), x_abs, y_abs, seq_num, mask);
     conn_->send_enter_1_6(x_abs, y_abs, seq_num, mask);
 }
 
@@ -65,16 +63,16 @@ void ClientConnectionLoggingWrapper::send_leave_1_6()
 void ClientConnectionLoggingWrapper::send_key_down_1_6(KeyID key, KeyModifierMask mask,
                                                        KeyButton button)
 {
-    LOG_DEBUG1("send key down to \"%s\" id=%d, mask=0x%04x, button=0x%04x",
-         name_.c_str(), key, mask, button);
+    LOG_DEBUG1("send key down to \"%s\" id=%d, mask=0x%04x, button=0x%04x", name_.c_str(), key,
+               mask, button);
     conn_->send_key_down_1_6(key, mask, button);
 }
 
 void ClientConnectionLoggingWrapper::send_key_up_1_6(KeyID key, KeyModifierMask mask,
                                                      KeyButton button)
 {
-    LOG_DEBUG1("send key up to \"%s\" id=%d, mask=0x%04x, button=0x%04x",
-         name_.c_str(), key, mask, button);
+    LOG_DEBUG1("send key up to \"%s\" id=%d, mask=0x%04x, button=0x%04x", name_.c_str(), key, mask,
+               button);
     conn_->send_key_up_1_6(key, mask, button);
 }
 
@@ -82,7 +80,7 @@ void ClientConnectionLoggingWrapper::send_key_repeat_1_6(KeyID key, KeyModifierM
                                                          std::int32_t count, KeyButton button)
 {
     LOG_DEBUG1("send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d, button=0x%04x",
-         name_.c_str(), key, mask, count, button);
+               name_.c_str(), key, mask, count, button);
     conn_->send_key_repeat_1_6(key, mask, count, button);
 }
 

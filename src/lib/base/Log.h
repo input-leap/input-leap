@@ -19,13 +19,13 @@
 #pragma once
 
 #include "Fwd.h"
-#include "arch/IArchMultithread.h"
 #include "arch/Arch.h"
+#include "arch/IArchMultithread.h"
 #include "common/common.h"
 
-#include <stdarg.h>
 #include <list>
 #include <mutex>
+#include <stdarg.h>
 
 #define CLOG (Log::getInstance())
 #define BYE "\nTry `%s --help' for more information."
@@ -107,9 +107,7 @@ public:
     neither the file nor the line are printed.
     */
     INPUTLEAP_ATTRIBUTE_PRINTF(5, 6)
-    void print(ELevel priority,
-               const char* file, int line,
-               const char* format, ...);
+    void print(ELevel priority, const char* file, int line, const char* format, ...);
 
     //! Get the minimum priority level.
     int getFilter() const;
@@ -134,7 +132,7 @@ private:
 private:
     typedef std::list<ILogOutputter*> OutputterList;
 
-    static Log*        s_log;
+    static Log* s_log;
 
     mutable std::mutex m_mutex;
     OutputterList m_outputters;
@@ -160,7 +158,9 @@ which includes the filename and line number.
 */
 
 #if defined(NOLOGGING)
-#define LOG(...) do { } while(0)
+#define LOG(...) \
+    do { \
+    } while (0)
 #elif defined(NDEBUG)
 #define LOG(pri_, ...) CLOG->print(pri_, nullptr, 0, __VA_ARGS__)
 #else
@@ -172,13 +172,13 @@ which includes the filename and line number.
 // end, then we resort to using non-numerical chars. this still works (since
 // to deduce the number we subtract octal \060, so '/' is -1, and ':' is 10
 
-#define LOG_PRINT(...)  LOG(kPRINT, __VA_ARGS__)
-#define LOG_CRIT(...)   LOG(kFATAL, __VA_ARGS__)
-#define LOG_ERR(...)    LOG(kERROR, __VA_ARGS__)
-#define LOG_WARN(...)   LOG(kWARNING, __VA_ARGS__)
-#define LOG_NOTE(...)   LOG(kNOTE, __VA_ARGS__)
-#define LOG_INFO(...)   LOG(kINFO, __VA_ARGS__)
-#define LOG_DEBUG(...)  LOG(kDEBUG, __VA_ARGS__)
+#define LOG_PRINT(...) LOG(kPRINT, __VA_ARGS__)
+#define LOG_CRIT(...) LOG(kFATAL, __VA_ARGS__)
+#define LOG_ERR(...) LOG(kERROR, __VA_ARGS__)
+#define LOG_WARN(...) LOG(kWARNING, __VA_ARGS__)
+#define LOG_NOTE(...) LOG(kNOTE, __VA_ARGS__)
+#define LOG_INFO(...) LOG(kINFO, __VA_ARGS__)
+#define LOG_DEBUG(...) LOG(kDEBUG, __VA_ARGS__)
 #define LOG_DEBUG1(...) LOG(kDEBUG1, __VA_ARGS__)
 #define LOG_DEBUG2(...) LOG(kDEBUG2, __VA_ARGS__)
 #define LOG_DEBUG3(...) LOG(kDEBUG3, __VA_ARGS__)

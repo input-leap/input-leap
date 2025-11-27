@@ -20,18 +20,16 @@
 #include "EventQueueTimer.h"
 
 #include "arch/Arch.h"
-#include "base/SimpleEventQueueBuffer.h"
-#include "base/Stopwatch.h"
 #include "base/EventTypes.h"
 #include "base/Log.h"
+#include "base/SimpleEventQueueBuffer.h"
+#include "base/Stopwatch.h"
 #include "base/XBase.h"
 
 namespace inputleap {
 
 // interrupt handler.  this just adds a quit event to the queue.
-static
-void
-interrupt(Arch::ESignal, void* data)
+static void interrupt(Arch::ESignal, void* data)
 {
     EventQueue* events = static_cast<EventQueue*>(data);
     events->add_event(EventType::QUIT);
@@ -54,8 +52,7 @@ EventQueue::~EventQueue()
     }
 }
 
-void
-EventQueue::loop()
+void EventQueue::loop()
 {
     buffer_->init();
     {
@@ -107,8 +104,7 @@ void EventQueue::set_buffer(std::unique_ptr<IEventQueueBuffer> buffer)
     }
 }
 
-bool
-EventQueue::getEvent(Event& event, double timeout)
+bool EventQueue::getEvent(Event& event, double timeout)
 {
     Stopwatch timer(true);
 retry:
@@ -153,12 +149,11 @@ retry:
     case IEventQueueBuffer::kSystem:
         return true;
 
-    case IEventQueueBuffer::kUser:
-        {
-            std::lock_guard<std::mutex> lock(mutex_);
-            event = removeEvent(dataID);
-            return true;
-        }
+    case IEventQueueBuffer::kUser: {
+        std::lock_guard<std::mutex> lock(mutex_);
+        event = removeEvent(dataID);
+        return true;
+    }
 
     default:
         assert(0 && "invalid event type");
@@ -166,8 +161,7 @@ retry:
     }
 }
 
-bool
-EventQueue::dispatchEvent(const Event& event)
+bool EventQueue::dispatchEvent(const Event& event)
 {
     auto* target = event.getTarget();
 
@@ -201,8 +195,7 @@ void EventQueue::add_event(Event&& event)
     if ((event.getFlags() & Event::kDeliverImmediately) != 0) {
         dispatchEvent(event);
         Event::deleteData(event);
-    }
-    else if (!is_ready_) {
+    } else if (!is_ready_) {
         m_pending.push(std::move(event));
     } else {
         add_event_to_buffer(std::move(event));
@@ -237,8 +230,7 @@ EventQueueTimer* EventQueue::newTimer(double duration, const EventTarget* target
     // initial duration is requested duration plus whatever's on
     // the clock currently because the latter will be subtracted
     // the next time we check for timers.
-    m_timerQueue.push(Timer(timer, duration,
-                            duration + m_time.getTime(), target, false));
+    m_timerQueue.push(Timer(timer, duration, duration + m_time.getTime(), target, false));
     return timer;
 }
 
@@ -255,13 +247,11 @@ EventQueueTimer* EventQueue::newOneShotTimer(double duration, const EventTarget*
     // initial duration is requested duration plus whatever's on
     // the clock currently because the latter will be subtracted
     // the next time we check for timers.
-    m_timerQueue.push(Timer(timer, duration,
-                            duration + m_time.getTime(), target, true));
+    m_timerQueue.push(Timer(timer, duration, duration + m_time.getTime(), target, true));
     return timer;
 }
 
-void
-EventQueue::deleteTimer(EventQueueTimer* timer)
+void EventQueue::deleteTimer(EventQueueTimer* timer)
 {
     {
         std::lock_guard<std::mutex> lock(mutex_);
@@ -330,8 +320,8 @@ void EventQueue::remove_handlers(const EventTarget* target)
     target->event_queue_ = nullptr;
 }
 
-std::shared_ptr<EventQueue::EventHandler>
-    EventQueue::get_handler(EventType type, const EventTarget* target) const
+std::shared_ptr<EventQueue::EventHandler> EventQueue::get_handler(EventType type,
+                                                                  const EventTarget* target) const
 {
     std::lock_guard<std::mutex> lock(mutex_);
     auto index = m_handlers.find(target);
@@ -353,8 +343,7 @@ std::uint32_t EventQueue::save_event(Event&& event)
         // reuse an id
         id = m_oldEventIDs.back();
         m_oldEventIDs.pop_back();
-    }
-    else {
+    } else {
         // make a new id
         id = static_cast<std::uint32_t>(m_events.size());
     }
@@ -382,8 +371,7 @@ Event EventQueue::removeEvent(std::uint32_t eventID)
     return event;
 }
 
-bool
-EventQueue::hasTimerExpired(Event& event)
+bool EventQueue::hasTimerExpired(Event& event)
 {
     // return true if there's a timer in the timer priority queue that
     // has expired.  if returning true then fill in event appropriately
@@ -424,8 +412,7 @@ EventQueue::hasTimerExpired(Event& event)
     return true;
 }
 
-double
-EventQueue::getNextTimerTimeout() const
+double EventQueue::getNextTimerTimeout() const
 {
     // return -1 if no timers, 0 if the top timer has expired, otherwise
     // the time until the top timer in the timer priority queue will
@@ -444,12 +431,11 @@ const EventTarget* EventQueue::getSystemTarget()
     return &system_target_;
 }
 
-void
-EventQueue::waitForReady() const
+void EventQueue::waitForReady() const
 {
     std::unique_lock<std::mutex> lock(ready_mutex_);
 
-    if (!ready_cv_.wait_for(lock, std::chrono::seconds{10}, [this](){ return is_ready_; })) {
+    if (!ready_cv_.wait_for(lock, std::chrono::seconds{10}, [this]() { return is_ready_; })) {
         throw std::runtime_error("event queue is not ready within 5 sec");
     }
 }
@@ -458,13 +444,9 @@ EventQueue::waitForReady() const
 // EventQueue::Timer
 //
 
-EventQueue::Timer::Timer(EventQueueTimer* timer, double timeout,
-                         double initialTime, const EventTarget* target, bool oneShot) :
-    m_timer(timer),
-    m_timeout(timeout),
-    target_(target),
-    m_oneShot(oneShot),
-    m_time(initialTime)
+EventQueue::Timer::Timer(EventQueueTimer* timer, double timeout, double initialTime,
+                         const EventTarget* target, bool oneShot) :
+    m_timer(timer), m_timeout(timeout), target_(target), m_oneShot(oneShot), m_time(initialTime)
 {
     assert(m_timeout > 0.0);
 }
@@ -474,14 +456,12 @@ EventQueue::Timer::~Timer()
     // do nothing
 }
 
-void
-EventQueue::Timer::reset()
+void EventQueue::Timer::reset()
 {
     m_time = m_timeout;
 }
 
-EventQueue::Timer&
-EventQueue::Timer::operator-=(double dt)
+EventQueue::Timer& EventQueue::Timer::operator-=(double dt)
 {
     m_time -= dt;
     return *this;
@@ -492,20 +472,17 @@ EventQueue::Timer::operator double() const
     return m_time;
 }
 
-bool
-EventQueue::Timer::isOneShot() const
+bool EventQueue::Timer::isOneShot() const
 {
     return m_oneShot;
 }
 
-EventQueueTimer*
-EventQueue::Timer::getTimer() const
+EventQueueTimer* EventQueue::Timer::getTimer() const
 {
     return m_timer;
 }
 
-void
-EventQueue::Timer::fillEvent(TimerEvent& event) const
+void EventQueue::Timer::fillEvent(TimerEvent& event) const
 {
     event.m_timer = m_timer;
     event.m_count = 0;
@@ -514,8 +491,7 @@ EventQueue::Timer::fillEvent(TimerEvent& event) const
     }
 }
 
-bool
-EventQueue::Timer::operator<(const Timer& t) const
+bool EventQueue::Timer::operator<(const Timer& t) const
 {
     return m_time < t.m_time;
 }

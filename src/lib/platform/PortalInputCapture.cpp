@@ -21,8 +21,8 @@
 #include "base/Log.h"
 #include "platform/PortalInputCapture.h"
 
-#include <sys/un.h> // for EIS fd hack, remove
 #include <sys/socket.h> // for EIS fd hack, remove
+#include <sys/un.h>     // for EIS fd hack, remove
 
 namespace inputleap {
 
@@ -36,16 +36,12 @@ enum signals {
 };
 
 PortalInputCapture::PortalInputCapture(EiScreen* screen, IEventQueue* events) :
-    screen_(screen),
-    events_(events),
-    portal_(xdp_portal_new()),
-    signals_(_N_SIGNALS)
+    screen_(screen), events_(events), portal_(xdp_portal_new()), signals_(_N_SIGNALS)
 {
     glib_main_loop_ = g_main_loop_new(nullptr, true);
-    glib_thread_ = std::make_unique<Thread>([this](){ glib_thread(); });
+    glib_thread_ = std::make_unique<Thread>([this]() { glib_thread(); });
 
-    auto init_capture_cb = [](gpointer data) -> gboolean
-    {
+    auto init_capture_cb = [](gpointer data) -> gboolean {
         return reinterpret_cast<PortalInputCapture*>(data)->init_input_capture_session();
     };
 
@@ -54,8 +50,9 @@ PortalInputCapture::PortalInputCapture(EiScreen* screen, IEventQueue* events) :
 
 PortalInputCapture::~PortalInputCapture()
 {
-    if (g_main_loop_is_running(glib_main_loop_))
+    if (g_main_loop_is_running(glib_main_loop_)) {
         g_main_loop_quit(glib_main_loop_);
+    }
 
     if (glib_thread_) {
         glib_thread_->cancel();
@@ -67,7 +64,7 @@ PortalInputCapture::~PortalInputCapture()
     }
 
     if (session_) {
-        XdpSession *parent_session = xdp_input_capture_session_get_session(session_);
+        XdpSession* parent_session = xdp_input_capture_session_get_session(session_);
         g_signal_handler_disconnect(G_OBJECT(parent_session), signals_[SESSION_CLOSED]);
         g_signal_handler_disconnect(session_, signals_[DISABLED]);
         g_signal_handler_disconnect(session_, signals_[ACTIVATED]);
@@ -97,7 +94,7 @@ int PortalInputCapture::fake_eis_fd()
         return -1;
     }
 
-    auto sock = socket(AF_UNIX, SOCK_STREAM|SOCK_NONBLOCK, 0);
+    auto sock = socket(AF_UNIX, SOCK_STREAM | SOCK_NONBLOCK, 0);
 
     // Dealing with the socket directly because nothing in lib/... supports
     // AF_UNIX and I'm too lazy to fix all this for a temporary hack
@@ -108,7 +105,7 @@ int PortalInputCapture::fake_eis_fd()
     };
     std::snprintf(addr.sun_path, sizeof(addr.sun_path), "%s", path);
 
-    auto result = connect(fd, (struct sockaddr*)&addr, sizeof(addr));
+    auto result = connect(fd, (struct sockaddr*) &addr, sizeof(addr));
     if (result != 0) {
         LOG_DEBUG("Faked EIS fd failed: %s", strerror(errno));
     }
@@ -143,17 +140,17 @@ void PortalInputCapture::cb_init_input_capture_session(GObject* object, GAsyncRe
 
     auto fd = xdp_input_capture_session_connect_to_eis(session, &error);
     if (fd < 0) {
-            LOG_ERR("Failed to connect to EIS: %s", error->message);
+        LOG_ERR("Failed to connect to EIS: %s", error->message);
 
-            // FIXME: Development hack to avoid having to assemble all parts just for
-            // testing this code.
-            fd = fake_eis_fd();
+        // FIXME: Development hack to avoid having to assemble all parts just for
+        // testing this code.
+        fd = fake_eis_fd();
 
-            if (fd < 0) {
-                g_main_loop_quit(glib_main_loop_);
-                events_->add_event(EventType::QUIT);
-                return;
-            }
+        if (fd < 0) {
+            g_main_loop_quit(glib_main_loop_);
+            events_->add_event(EventType::QUIT);
+            return;
+        }
     }
     // Socket ownership is transferred to the EiScreen
     events_->add_event(EventType::EI_SCREEN_CONNECTED_TO_EIS, screen_->get_event_target(),
@@ -161,22 +158,17 @@ void PortalInputCapture::cb_init_input_capture_session(GObject* object, GAsyncRe
 
     // FIXME: the lambda trick doesn't work here for unknown reasons, we need
     // the static function
-    signals_[DISABLED] = g_signal_connect(G_OBJECT(session), "disabled",
-                                          G_CALLBACK(cb_disabled_cb),
+    signals_[DISABLED] = g_signal_connect(G_OBJECT(session), "disabled", G_CALLBACK(cb_disabled_cb),
                                           this);
     signals_[ACTIVATED] = g_signal_connect(G_OBJECT(session_), "activated",
-                                            G_CALLBACK(cb_activated_cb),
-                                            this);
+                                           G_CALLBACK(cb_activated_cb), this);
     signals_[DEACTIVATED] = g_signal_connect(G_OBJECT(session_), "deactivated",
-                                              G_CALLBACK(cb_deactivated_cb),
-                                              this);
+                                             G_CALLBACK(cb_deactivated_cb), this);
     signals_[ZONES_CHANGED] = g_signal_connect(G_OBJECT(session_), "zones-changed",
-                                                G_CALLBACK(cb_zones_changed_cb),
-                                                this);
-    XdpSession *parent_session = xdp_input_capture_session_get_session(session);
+                                               G_CALLBACK(cb_zones_changed_cb), this);
+    XdpSession* parent_session = xdp_input_capture_session_get_session(session);
     signals_[SESSION_CLOSED] = g_signal_connect(G_OBJECT(parent_session), "closed",
-                                                G_CALLBACK(cb_session_closed_cb),
-                                                this);
+                                                G_CALLBACK(cb_session_closed_cb), this);
 
     cb_zones_changed(session_, nullptr);
 }
@@ -196,7 +188,8 @@ void PortalInputCapture::cb_set_pointer_barriers(GObject* object, GAsyncResult* 
                 if (*elem == it->data) {
                     int x1, x2, y1, y2;
 
-                    g_object_get(G_OBJECT(*elem), "x1", &x1, "x2", &x2, "y1", &y1, "y2", &y2, nullptr);
+                    g_object_get(G_OBJECT(*elem), "x1", &x1, "x2", &x2, "y1", &y1, "y2", &y2,
+                                 nullptr);
 
                     LOG_WARN("Failed to apply barrier %d (%d/%d-%d/%d)", id, x1, y1, x2, y2);
                     g_object_unref(*elem);
@@ -210,21 +203,20 @@ void PortalInputCapture::cb_set_pointer_barriers(GObject* object, GAsyncResult* 
     g_list_free_full(failed_list, g_object_unref);
 
     enable();
-
 }
 
 gboolean PortalInputCapture::init_input_capture_session()
 {
     LOG_DEBUG("Setting up the InputCapture session");
     xdp_portal_create_input_capture_session(
-                portal_,
-                nullptr, // parent
-                static_cast<XdpInputCapability>(XDP_INPUT_CAPABILITY_KEYBOARD | XDP_INPUT_CAPABILITY_POINTER),
-                nullptr, // cancellable
-                [](GObject *obj, GAsyncResult *res, gpointer data) {
-                reinterpret_cast<PortalInputCapture*>(data)->cb_init_input_capture_session(obj, res);
-                },
-                this);
+        portal_,
+        nullptr, // parent
+        static_cast<XdpInputCapability>(XDP_INPUT_CAPABILITY_KEYBOARD |
+                                        XDP_INPUT_CAPABILITY_POINTER),
+        nullptr, // cancellable
+        [](GObject* obj, GAsyncResult* res, gpointer data) {
+        reinterpret_cast<PortalInputCapture*>(data)->cb_init_input_capture_session(obj, res);
+    }, this);
 
     return false;
 }
@@ -265,8 +257,9 @@ void PortalInputCapture::cb_disabled(XdpInputCaptureSession* session, GVariant* 
 {
     LOG_DEBUG("PortalInputCapture::cb_disabled");
 
-    if (!enabled_)
+    if (!enabled_) {
         return; // Nothing to do
+    }
 
     enabled_ = false;
     is_active_ = false;
@@ -275,12 +268,10 @@ void PortalInputCapture::cb_disabled(XdpInputCaptureSession* session, GVariant* 
     // But we don't know *why* we got disabled (and it's doubtfull we ever will), so
     // we just assume that the zones will change or something and we can re-enable again
     // ... very soon
-    g_timeout_add(1000,
-                  [](gpointer data) -> gboolean {
-                      reinterpret_cast<PortalInputCapture*>(data)->enable();
-                  return false;
-                  },
-                  this);
+    g_timeout_add(1000, [](gpointer data) -> gboolean {
+        reinterpret_cast<PortalInputCapture*>(data)->enable();
+        return false;
+    }, this);
 }
 
 void PortalInputCapture::cb_activated(XdpInputCaptureSession* session, std::uint32_t activation_id,
@@ -295,8 +286,7 @@ void PortalInputCapture::cb_activated(XdpInputCaptureSession* session, std::uint
         } else {
             LOG_WARN("Failed to get cursor_position");
         }
-    }
-    else {
+    } else {
         LOG_WARN("Activation has no options!");
     }
     activation_id_ = activation_id;
@@ -312,15 +302,16 @@ void PortalInputCapture::cb_deactivated(XdpInputCaptureSession* session,
 
 void PortalInputCapture::cb_zones_changed(XdpInputCaptureSession* session, GVariant* options)
 {
-    for (auto b : barriers_)
+    for (auto b : barriers_) {
         g_object_unref(b);
+    }
     barriers_.clear();
 
     auto zones = xdp_input_capture_session_get_zones(session);
     while (zones != nullptr) {
         guint w, h;
         gint x, y;
-        g_object_get(zones->data, "width", &w, "height", &h, "x", &x, "y", &y, nullptr  );
+        g_object_get(zones->data, "width", &w, "height", &h, "x", &x, "y", &y, nullptr);
 
         LOG_DEBUG("Zone at %dx%d@%d,%d", w, h, x, y);
 
@@ -338,13 +329,8 @@ void PortalInputCapture::cb_zones_changed(XdpInputCaptureSession* session, GVari
         y2 = y;
         LOG_DEBUG("Barrier (top) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2);
         barriers_.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(
-                            g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER,
-                                         "id", id,
-                                         "x1", x1,
-                                         "y1", y1,
-                                         "x2", x2,
-                                         "y2", y2,
-                                         nullptr)));
+            g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER, "id", id, "x1", x1, "y1", y1, "x2",
+                         x2, "y2", y2, nullptr)));
         id = barriers_.size() + 1;
         x1 = x + w;
         y1 = y;
@@ -352,13 +338,8 @@ void PortalInputCapture::cb_zones_changed(XdpInputCaptureSession* session, GVari
         y2 = y + h - 1;
         LOG_DEBUG("Barrier (right) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2);
         barriers_.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(
-                            g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER,
-                                         "id", id,
-                                         "x1", x1,
-                                         "y1", y1,
-                                         "x2", x2,
-                                         "y2", y2,
-                                         nullptr)));
+            g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER, "id", id, "x1", x1, "y1", y1, "x2",
+                         x2, "y2", y2, nullptr)));
         id = barriers_.size() + 1;
         x1 = x;
         y1 = y;
@@ -366,13 +347,8 @@ void PortalInputCapture::cb_zones_changed(XdpInputCaptureSession* session, GVari
         y2 = y + h - 1;
         LOG_DEBUG("Barrier (left) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2);
         barriers_.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(
-                            g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER,
-                                         "id", id,
-                                         "x1", x1,
-                                         "y1", y1,
-                                         "x2", x2,
-                                         "y2", y2,
-                                         nullptr)));
+            g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER, "id", id, "x1", x1, "y1", y1, "x2",
+                         x2, "y2", y2, nullptr)));
         id = barriers_.size() + 1;
         x1 = x;
         y1 = y + h;
@@ -380,30 +356,23 @@ void PortalInputCapture::cb_zones_changed(XdpInputCaptureSession* session, GVari
         y2 = y + h;
         LOG_DEBUG("Barrier (bottom) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2);
         barriers_.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(
-                            g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER,
-                                         "id", id,
-                                         "x1", x1,
-                                         "y1", y1,
-                                         "x2", x2,
-                                         "y2", y2,
-                                         nullptr)));
+            g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER, "id", id, "x1", x1, "y1", y1, "x2",
+                         x2, "y2", y2, nullptr)));
         zones = zones->next;
     }
 
     GList* list = nullptr;
-    for (auto const &b : barriers_) {
+    for (const auto& b : barriers_) {
         list = g_list_append(list, b);
     }
 
-    xdp_input_capture_session_set_pointer_barriers(
-                session_,
-                list,
-                nullptr, // cancellable
-                [](GObject *obj, GAsyncResult *res, gpointer data)
-                {
-                    reinterpret_cast<PortalInputCapture*>(data)->cb_set_pointer_barriers(obj, res);
-                },
-                this);
+    xdp_input_capture_session_set_pointer_barriers(session_, list,
+                                                   nullptr, // cancellable
+                                                   [](GObject* obj, GAsyncResult* res,
+                                                      gpointer data) {
+        reinterpret_cast<PortalInputCapture*>(data)->cb_set_pointer_barriers(obj, res);
+    },
+                                                   this);
 }
 
 void PortalInputCapture::glib_thread()

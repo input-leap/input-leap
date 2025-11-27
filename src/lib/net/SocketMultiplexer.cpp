@@ -18,11 +18,11 @@
 
 #include "net/SocketMultiplexer.h"
 
-#include "net/ISocketMultiplexerJob.h"
-#include "mt/Thread.h"
 #include "arch/Arch.h"
 #include "arch/XArch.h"
 #include "base/Log.h"
+#include "mt/Thread.h"
+#include "net/ISocketMultiplexerJob.h"
 #include <vector>
 
 namespace inputleap {
@@ -44,15 +44,11 @@ public:
     bool isCursor() const override { return true; }
 };
 
-
 SocketMultiplexer::SocketMultiplexer() :
-    m_thread(nullptr),
-    m_update(false),
-    m_jobListLocker(nullptr),
-    m_jobListLockLocker(nullptr)
+    m_thread(nullptr), m_update(false), m_jobListLocker(nullptr), m_jobListLockLocker(nullptr)
 {
     // start thread
-    m_thread = new Thread([this](){ service_thread(); });
+    m_thread = new Thread([this]() { service_thread(); });
 }
 
 SocketMultiplexer::~SocketMultiplexer()
@@ -91,10 +87,9 @@ void SocketMultiplexer::addSocket(ISocket* socket, std::unique_ptr<ISocketMultip
         // the list continue to match the order of jobs in pfds in
         // service_thread().
         JobCursor j = m_socketJobs.insert(m_socketJobs.end(), std::move(job));
-        m_update     = true;
+        m_update = true;
         m_socketJobMap.insert(std::make_pair(socket, j));
-    }
-    else {
+    } else {
         *(i->second) = std::move(job);
         m_update = true;
     }
@@ -103,8 +98,7 @@ void SocketMultiplexer::addSocket(ISocket* socket, std::unique_ptr<ISocketMultip
     unlockJobList();
 }
 
-void
-SocketMultiplexer::removeSocket(ISocket* socket)
+void SocketMultiplexer::removeSocket(ISocket* socket)
 {
     assert(socket != nullptr);
 
@@ -144,7 +138,7 @@ void SocketMultiplexer::service_thread()
         // wait until there are jobs to handle
         {
             std::unique_lock<std::mutex> lock(mutex_);
-            cv_jobs_ready_.wait(lock, [this](){ return jobs_are_ready_; });
+            cv_jobs_ready_.wait(lock, [this]() { return jobs_are_ready_; });
         }
 
         // lock the job list
@@ -157,7 +151,7 @@ void SocketMultiplexer::service_thread()
             pfds.clear();
             pfds.reserve(m_socketJobMap.size());
 
-            JobCursor cursor    = newCursor();
+            JobCursor cursor = newCursor();
             JobCursor jobCursor = nextCursor(cursor);
             while (jobCursor != m_socketJobs.end()) {
                 if (*jobCursor) {
@@ -181,12 +175,10 @@ void SocketMultiplexer::service_thread()
             // check for status
             if (!pfds.empty()) {
                 poll_status = ARCH->pollSocket(&pfds[0], static_cast<int>(pfds.size()), -1);
-            }
-            else {
+            } else {
                 poll_status = 0;
             }
-        }
-        catch (XArchNetwork& e) {
+        } catch (XArchNetwork& e) {
             LOG_WARN("error in socket multiplexer: %s", e.what());
             poll_status = 0;
         }
@@ -195,16 +187,16 @@ void SocketMultiplexer::service_thread()
             // iterate over socket jobs, invoking each and saving the
             // new job.
             std::uint32_t i = 0;
-            JobCursor cursor    = newCursor();
+            JobCursor cursor = newCursor();
             JobCursor jobCursor = nextCursor(cursor);
             while (i < pfds.size() && jobCursor != m_socketJobs.end()) {
                 if (*jobCursor != nullptr) {
                     // get poll state
                     unsigned short revents = pfds[i].m_revents;
-                    bool read  = ((revents & IArchNetwork::kPOLLIN) != 0);
+                    bool read = ((revents & IArchNetwork::kPOLLIN) != 0);
                     bool write = ((revents & IArchNetwork::kPOLLOUT) != 0);
-                    bool error = ((revents & (IArchNetwork::kPOLLERR |
-                                              IArchNetwork::kPOLLNVAL)) != 0);
+                    bool error = ((revents & (IArchNetwork::kPOLLERR | IArchNetwork::kPOLLNVAL)) !=
+                                  0);
 
                     // run job
                     MultiplexerJobStatus status = (*jobCursor)->run(read, write, error);
@@ -228,14 +220,12 @@ void SocketMultiplexer::service_thread()
         }
 
         // delete any removed socket jobs
-        for (SocketJobMap::iterator i = m_socketJobMap.begin();
-                            i != m_socketJobMap.end();) {
+        for (SocketJobMap::iterator i = m_socketJobMap.begin(); i != m_socketJobMap.end();) {
             if (*(i->second) == nullptr) {
                 m_socketJobs.erase(i->second);
                 m_socketJobMap.erase(i++);
                 m_update = true;
-            }
-            else {
+            } else {
                 ++i;
             }
         }
@@ -245,15 +235,13 @@ void SocketMultiplexer::service_thread()
     }
 }
 
-SocketMultiplexer::JobCursor
-SocketMultiplexer::newCursor()
+SocketMultiplexer::JobCursor SocketMultiplexer::newCursor()
 {
     std::lock_guard<std::mutex> lock(mutex_);
     return m_socketJobs.insert(m_socketJobs.begin(), std::make_unique<CursorMultiplexerJob>());
 }
 
-SocketMultiplexer::JobCursor
-SocketMultiplexer::nextCursor(JobCursor cursor)
+SocketMultiplexer::JobCursor SocketMultiplexer::nextCursor(JobCursor cursor)
 {
     std::lock_guard<std::mutex> lock(mutex_);
     JobCursor j = m_socketJobs.end();
@@ -271,28 +259,25 @@ SocketMultiplexer::nextCursor(JobCursor cursor)
     return j;
 }
 
-void
-SocketMultiplexer::deleteCursor(JobCursor cursor)
+void SocketMultiplexer::deleteCursor(JobCursor cursor)
 {
     std::lock_guard<std::mutex> lock(mutex_);
     m_socketJobs.erase(cursor);
 }
 
-void
-SocketMultiplexer::lockJobListLock()
+void SocketMultiplexer::lockJobListLock()
 {
     std::unique_lock<std::mutex> lock(mutex_);
 
     // wait for the lock on the lock
-    cv_job_list_lock_locked_.wait(lock, [this](){ return !job_list_lock_lock_is_locked_; });
+    cv_job_list_lock_locked_.wait(lock, [this]() { return !job_list_lock_lock_is_locked_; });
 
     // take ownership of the lock on the lock
     job_list_lock_lock_is_locked_ = true;
-    m_jobListLockLocker  = new Thread(Thread::getCurrentThread());
+    m_jobListLockLocker = new Thread(Thread::getCurrentThread());
 }
 
-void
-SocketMultiplexer::lockJobList()
+void SocketMultiplexer::lockJobList()
 {
     std::unique_lock<std::mutex> lock(mutex_);
 
@@ -304,7 +289,7 @@ SocketMultiplexer::lockJobList()
 
     // take ownership of the lock
     jobs_list_lock_is_locked_ = true;
-    m_jobListLocker     = m_jobListLockLocker;
+    m_jobListLocker = m_jobListLockLocker;
     m_jobListLockLocker = nullptr;
 
     // release the lock on the lock
@@ -312,8 +297,7 @@ SocketMultiplexer::lockJobList()
     cv_job_list_lock_locked_.notify_all();
 }
 
-void
-SocketMultiplexer::unlockJobList()
+void SocketMultiplexer::unlockJobList()
 {
     std::lock_guard<std::mutex> lock(mutex_);
 

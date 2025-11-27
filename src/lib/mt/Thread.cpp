@@ -18,16 +18,16 @@
 
 #include "mt/Thread.h"
 
-#include "mt/XMT.h"
-#include "mt/XThread.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
+#include "mt/XMT.h"
+#include "mt/XThread.h"
 
 namespace inputleap {
 
 Thread::Thread(const std::function<void()>& fun)
 {
-    m_thread = ARCH->newThread([=](){ threadFunc(fun); });
+    m_thread = ARCH->newThread([=]() { threadFunc(fun); });
     if (m_thread == nullptr) {
         throw XMTThreadUnavailable();
     }
@@ -48,8 +48,7 @@ Thread::~Thread()
     ARCH->closeThread(m_thread);
 }
 
-Thread&
-Thread::operator=(const Thread& thread)
+Thread& Thread::operator=(const Thread& thread)
 {
     // copy given thread and release ours
     ArchThread copy = ARCH->copyThread(thread.m_thread);
@@ -61,63 +60,53 @@ Thread::operator=(const Thread& thread)
     return *this;
 }
 
-void
-Thread::exit(void* result)
+void Thread::exit(void* result)
 {
     (void) result;
     throw XThreadExit();
 }
 
-void
-Thread::cancel()
+void Thread::cancel()
 {
     ARCH->cancelThread(m_thread);
 }
 
-void
-Thread::setPriority(int n)
+void Thread::setPriority(int n)
 {
     ARCH->setPriorityOfThread(m_thread, n);
 }
 
-void
-Thread::unblockPollSocket()
+void Thread::unblockPollSocket()
 {
     ARCH->unblockPollSocket(m_thread);
 }
 
-Thread
-Thread::getCurrentThread()
+Thread Thread::getCurrentThread()
 {
     return Thread(ARCH->newCurrentThread());
 }
 
-void
-Thread::testCancel()
+void Thread::testCancel()
 {
     ARCH->testCancelThread();
 }
 
-bool
-Thread::wait(double timeout) const
+bool Thread::wait(double timeout) const
 {
     return ARCH->wait(m_thread, timeout);
 }
 
-IArchMultithread::ThreadID
-Thread::getID() const
+IArchMultithread::ThreadID Thread::getID() const
 {
     return ARCH->getIDOfThread(m_thread);
 }
 
-bool
-Thread::operator==(const Thread& thread) const
+bool Thread::operator==(const Thread& thread) const
 {
     return ARCH->isSameThread(m_thread, thread.m_thread);
 }
 
-bool
-Thread::operator!=(const Thread& thread) const
+bool Thread::operator!=(const Thread& thread) const
 {
     return !ARCH->isSameThread(m_thread, thread.m_thread);
 }
@@ -137,20 +126,16 @@ void Thread::threadFunc(const std::function<void()>& func)
         LOG_DEBUG1("thread 0x%08x entry", id);
         func();
         LOG_DEBUG1("thread 0x%08x exit", id);
-    }
-    catch (XThreadCancel&) {
+    } catch (XThreadCancel&) {
         // client called cancel()
         LOG_DEBUG1("caught cancel on thread 0x%08x", id);
         throw;
-    }
-    catch (XThreadExit&) {
+    } catch (XThreadExit&) {
         LOG_DEBUG1("caught exit on thread 0x%08x", id);
-    }
-    catch (XBase& e) {
+    } catch (XBase& e) {
         LOG_ERR("exception on thread 0x%08x: %s", id, e.what());
         throw;
-    }
-    catch (...) {
+    } catch (...) {
         LOG_ERR("exception on thread 0x%08x: <unknown>", id);
         throw;
     }

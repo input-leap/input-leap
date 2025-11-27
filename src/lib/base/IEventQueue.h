@@ -38,12 +38,12 @@ class IEventQueue {
 public:
     using EventHandler = std::function<void(const Event&)>;
 
-    virtual ~IEventQueue() { }
+    virtual ~IEventQueue() {}
 
     class TimerEvent {
     public:
         EventQueueTimer* m_timer; //!< The timer
-        std::uint32_t m_count; //!< Number of repeats
+        std::uint32_t m_count;    //!< Number of repeats
     };
 
     //! @name manipulators
@@ -86,8 +86,7 @@ public:
 
     /// A helper wrapper for cases when an event is created immediately
     void add_event(EventType type, const EventTarget* target = nullptr,
-                   EventDataBase* data = nullptr,
-                   Event::Flags flags = Event::kNone)
+                   EventDataBase* data = nullptr, Event::Flags flags = Event::kNone)
     {
         add_event(Event(type, target, data, flags));
     }

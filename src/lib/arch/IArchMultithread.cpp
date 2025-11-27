@@ -44,8 +44,9 @@ bool IArchMultithread::wait_cond_var(std::condition_variable& cv,
     // check for cancel again
     testCancelThread();
 
-    if (ret == std::cv_status::no_timeout)
+    if (ret == std::cv_status::no_timeout) {
         return true;
+    }
     return false;
 }
 

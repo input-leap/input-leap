@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include "server/ClientProxy.h"
 #include "base/Fwd.h"
 #include "inputleap/Clipboard.h"
 #include "inputleap/protocol_types.h"
+#include "server/ClientProxy.h"
 
 namespace inputleap {
 

@@ -73,7 +73,7 @@ public:
     makes this thread object refer to another thread.  It does \b not
     start a new thread.
     */
-    Thread&            operator=(const Thread&);
+    Thread& operator=(const Thread&);
 
     //! Terminate the calling thread
     /*!
@@ -172,20 +172,19 @@ public:
     check if two Thread objects refer to the same thread.  Use
     operator==() for that.
     */
-    IArchMultithread::ThreadID
-                        getID() const;
+    IArchMultithread::ThreadID getID() const;
 
     //! Compare thread handles
     /*!
     Returns true if two Thread objects refer to the same thread.
     */
-    bool                operator==(const Thread&) const;
+    bool operator==(const Thread&) const;
 
     //! Compare thread handles
     /*!
     Returns true if two Thread objects do not refer to the same thread.
     */
-    bool                operator!=(const Thread&) const;
+    bool operator!=(const Thread&) const;
 
     //@}
 

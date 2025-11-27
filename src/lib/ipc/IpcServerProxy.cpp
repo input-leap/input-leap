@@ -18,20 +18,19 @@
 
 #include "ipc/IpcServerProxy.h"
 
-#include "ipc/IpcMessage.h"
-#include "ipc/Ipc.h"
+#include "base/Log.h"
 #include "inputleap/ProtocolUtil.h"
 #include "io/IStream.h"
-#include "base/Log.h"
+#include "ipc/Ipc.h"
+#include "ipc/IpcMessage.h"
 
 namespace inputleap {
 
 IpcServerProxy::IpcServerProxy(inputleap::IStream& stream, IEventQueue* events) :
-    m_stream(stream),
-    m_events(events)
+    m_stream(stream), m_events(events)
 {
     m_events->add_handler(EventType::STREAM_INPUT_READY, stream.get_event_target(),
-                          [this](const auto& e){ handle_data(); });
+                          [this](const auto& e) { handle_data(); });
 }
 
 IpcServerProxy::~IpcServerProxy()
@@ -46,18 +45,14 @@ void IpcServerProxy::handle_data()
     std::uint8_t code[4];
     std::uint32_t n = m_stream.read(code, 4);
     while (n != 0) {
-
-        LOG_DEBUG("ipc read: %c%c%c%c",
-            code[0], code[1], code[2], code[3]);
+        LOG_DEBUG("ipc read: %c%c%c%c", code[0], code[1], code[2], code[3]);
 
         EventDataBase* event_data = nullptr;
         if (memcmp(code, kIpcMsgLogLine, 4) == 0) {
             event_data = create_event_data<IpcLogLineMessage>(parseLogLine());
-        }
-        else if (memcmp(code, kIpcMsgShutdown, 4) == 0) {
+        } else if (memcmp(code, kIpcMsgShutdown, 4) == 0) {
             event_data = create_event_data<IpcShutdownMessage>(IpcShutdownMessage{});
-        }
-        else {
+        } else {
             LOG_ERR("invalid ipc message");
             disconnect();
         }
@@ -70,8 +65,7 @@ void IpcServerProxy::handle_data()
     LOG_DEBUG("finished ipc handle data");
 }
 
-void
-IpcServerProxy::send(const IpcMessage& message)
+void IpcServerProxy::send(const IpcMessage& message)
 {
     LOG_DEBUG4("ipc write: %d", message.type());
 
@@ -104,8 +98,7 @@ IpcLogLineMessage IpcServerProxy::parseLogLine()
     return IpcLogLineMessage(logLine);
 }
 
-void
-IpcServerProxy::disconnect()
+void IpcServerProxy::disconnect()
 {
     LOG_DEBUG("ipc disconnect, closing stream");
     m_stream.close();

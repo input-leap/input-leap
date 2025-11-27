@@ -20,7 +20,8 @@ namespace inputleap {
 
 // Event.h
 class EventDataBase;
-template<class T> class EventData;
+template<class T>
+class EventData;
 class Event;
 
 // EventQueue.h

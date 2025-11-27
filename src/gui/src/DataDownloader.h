@@ -17,14 +17,13 @@
 
 #pragma once
 
-#include <QObject>
 #include <QByteArray>
 #include <QNetworkAccessManager>
-#include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QObject>
 
-class DataDownloader : public QObject
-{
+class DataDownloader : public QObject {
     Q_OBJECT
 
 public:

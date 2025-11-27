@@ -17,8 +17,8 @@
 
 #pragma once
 
-#include "inputleap/clipboard_types.h"
 #include "base/Fwd.h"
+#include "inputleap/clipboard_types.h"
 
 #include <string>
 
@@ -33,8 +33,8 @@ public:
     static void interruptFile();
 
 private:
-    static bool            s_isChunkingFile;
-    static bool            s_interruptFile;
+    static bool s_isChunkingFile;
+    static bool s_interruptFile;
 };
 
 } // namespace inputleap

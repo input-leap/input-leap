@@ -30,11 +30,14 @@ bool FingerprintData::operator==(const FingerprintData& other) const
 const char* fingerprint_type_to_string(FingerprintType type)
 {
     switch (type) {
-        case FingerprintType::INVALID: return "invalid";
-        case FingerprintType::SHA1: return "sha1";
-        case FingerprintType::SHA256: return "sha256";
-        default:
-            break;
+    case FingerprintType::INVALID:
+        return "invalid";
+    case FingerprintType::SHA1:
+        return "sha1";
+    case FingerprintType::SHA256:
+        return "sha256";
+    default:
+        break;
     }
     return "invalid";
 }

@@ -47,6 +47,7 @@ protected:
     the format string and returns the result.
     */
     virtual std::string format(const char* id, const char* defaultFormat, ...) const noexcept;
+
 private:
     mutable std::string m_what;
 };
@@ -57,13 +58,13 @@ Convenience macro to subclass from XBase (or a subclass of it),
 providing the c'tor taking a const std::string&.  getWhat() is not
 declared.
 */
-#define XBASE_SUBCLASS(name_, super_)                                    \
-class name_ : public super_ {                                            \
-public:                                                                    \
-    name_() : super_() { }                                                \
-    name_(const std::string& msg) : super_(msg) { }                            \
-    virtual ~name_() noexcept { }                                        \
-}
+#define XBASE_SUBCLASS(name_, super_) \
+    class name_ : public super_ { \
+    public: \
+        name_() : super_() {} \
+        name_(const std::string& msg) : super_(msg) {} \
+        virtual ~name_() noexcept {} \
+    }
 
 /*!
 \def XBASE_SUBCLASS
@@ -71,16 +72,16 @@ Convenience macro to subclass from XBase (or a subclass of it),
 providing the c'tor taking a const std::string&.  getWhat() must be
 implemented.
 */
-#define XBASE_SUBCLASS_WHAT(name_, super_)                                \
-class name_ : public super_ {                                            \
-public:                                                                    \
-    name_() : super_() { }                                                \
-    name_(const std::string& msg) : super_(msg) { }                            \
-    virtual ~name_() noexcept { }                                        \
-                                                                        \
-protected:                                                                \
-    std::string getWhat() const noexcept override;                        \
-}
+#define XBASE_SUBCLASS_WHAT(name_, super_) \
+    class name_ : public super_ { \
+    public: \
+        name_() : super_() {} \
+        name_(const std::string& msg) : super_(msg) {} \
+        virtual ~name_() noexcept {} \
+\
+    protected: \
+        std::string getWhat() const noexcept override; \
+    }
 
 /*!
 \def XBASE_SUBCLASS_FORMAT
@@ -90,35 +91,34 @@ to call getWhat() when first called;  getWhat() can format the
 error message and can call what() to get the message passed to the
 c'tor.
 */
-#define XBASE_SUBCLASS_FORMAT(name_, super_)                            \
-class name_ : public super_ {                                            \
-private:                                                                \
-    enum EState { kFirst, kFormat, kDone };                                \
-                                                                        \
-public:                                                                    \
-    name_() : super_(), m_state(kDone) { }                                \
-    name_(const std::string& msg) : super_(msg), m_state(kFirst) { }        \
-    virtual ~name_() noexcept { }                                        \
-                                                                        \
-    const char* what() const noexcept override                          \
-    {                                                                    \
-        if (m_state == kFirst) {                                        \
-            m_state = kFormat;                                            \
-            m_formatted = getWhat();                                    \
-            m_state = kDone;                                            \
-        }                                                                \
-        if (m_state == kDone) {                                            \
-            return m_formatted.c_str();                                    \
-        }                                                                \
-        else {                                                            \
-            return super_::what();                                        \
-        }                                                                \
-    }                                                                    \
-                                                                        \
-protected:                                                                \
-    std::string getWhat() const noexcept override;                        \
-                                                                        \
-private:                                                                \
-    mutable EState m_state;                                \
-    mutable std::string m_formatted;                            \
-}
+#define XBASE_SUBCLASS_FORMAT(name_, super_) \
+    class name_ : public super_ { \
+    private: \
+        enum EState { kFirst, kFormat, kDone }; \
+\
+    public: \
+        name_() : super_(), m_state(kDone) {} \
+        name_(const std::string& msg) : super_(msg), m_state(kFirst) {} \
+        virtual ~name_() noexcept {} \
+\
+        const char* what() const noexcept override \
+        { \
+            if (m_state == kFirst) { \
+                m_state = kFormat; \
+                m_formatted = getWhat(); \
+                m_state = kDone; \
+            } \
+            if (m_state == kDone) { \
+                return m_formatted.c_str(); \
+            } else { \
+                return super_::what(); \
+            } \
+        } \
+\
+    protected: \
+        std::string getWhat() const noexcept override; \
+\
+    private: \
+        mutable EState m_state; \
+        mutable std::string m_formatted; \
+    }

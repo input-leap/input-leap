@@ -28,11 +28,11 @@ This priority queue is the same as a standard priority queue except:
 it sorts by std::greater, it has a forward iterator through the elements
 (which can appear in any order), and its contents can be swapped.
 */
-template <class T, class Container = std::vector<T>,
+template<class T, class Container = std::vector<T>,
 #if defined(_MSC_VER)
-            class Compare = std::greater<Container::value_type> >
+         class Compare = std::greater<Container::value_type> >
 #else
-            class Compare = std::greater<typename Container::value_type> >
+         class Compare = std::greater<typename Container::value_type> >
 #endif
 class PriorityQueue {
 public:
@@ -42,9 +42,9 @@ public:
     typedef typename Container::const_iterator const_iterator;
     typedef Container container_type;
 
-    PriorityQueue() { }
+    PriorityQueue() {}
     PriorityQueue(Container& swappedIn) { swap(swappedIn); }
-    ~PriorityQueue() { }
+    ~PriorityQueue() {}
 
     //! @name manipulators
     //@{
@@ -71,22 +71,13 @@ public:
     }
 
     //! Get start iterator
-    iterator begin()
-    {
-        return c.begin();
-    }
+    iterator begin() { return c.begin(); }
 
     //! Get end iterator
-    iterator end()
-    {
-        return c.end();
-    }
+    iterator end() { return c.end(); }
 
     //! Swap contents with another priority queue
-    void swap(PriorityQueue<T, Container, Compare>& q)
-    {
-        c.swap(q.c);
-    }
+    void swap(PriorityQueue<T, Container, Compare>& q) { c.swap(q.c); }
 
     //! Swap contents with another container
     void swap(Container& c2)
@@ -100,38 +91,23 @@ public:
     //@{
 
     //! Returns true if there are no elements
-    bool empty() const
-    {
-        return c.empty();
-    }
+    bool empty() const { return c.empty(); }
 
     //! Returns the number of elements
-    size_type size() const
-    {
-        return c.size();
-    }
+    size_type size() const { return c.size(); }
 
     //! Returns the head element
-    const value_type& top() const
-    {
-        return c.front();
-    }
+    const value_type& top() const { return c.front(); }
 
     //! Get start iterator
-    const_iterator begin() const
-    {
-        return c.begin();
-    }
+    const_iterator begin() const { return c.begin(); }
 
     //! Get end iterator
-    const_iterator end() const
-    {
-        return c.end();
-    }
+    const_iterator end() const { return c.end(); }
 
     //@}
 
 private:
-    Container            c;
-    Compare                comp;
+    Container c;
+    Compare comp;
 };

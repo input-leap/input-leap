@@ -23,8 +23,7 @@
 
 namespace inputleap {
 
-bool
-IPrimaryScreen::ButtonInfo::equal(const ButtonInfo* a, const ButtonInfo* b)
+bool IPrimaryScreen::ButtonInfo::equal(const ButtonInfo* a, const ButtonInfo* b)
 {
     return (a->m_button == b->m_button && a->m_mask == b->m_mask);
 }

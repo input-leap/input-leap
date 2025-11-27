@@ -23,7 +23,7 @@ namespace inputleap {
 
 class TestEventQueue : public EventQueue {
 public:
-    TestEventQueue() : m_quitTimeoutTimer(nullptr) { }
+    TestEventQueue() : m_quitTimeoutTimer(nullptr) {}
 
     using IEventQueue::add_event;
 

@@ -19,9 +19,6 @@
 
 namespace inputleap {
 
-ClientArgs::ClientArgs() :
-    m_yscroll(0)
-{
-}
+ClientArgs::ClientArgs() : m_yscroll(0) {}
 
 } // namespace inputleap

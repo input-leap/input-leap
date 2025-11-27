@@ -16,10 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "inputleap/ServerApp.h"
 #include "arch/Arch.h"
-#include "base/Log.h"
 #include "base/EventQueue.h"
+#include "base/Log.h"
+#include "inputleap/ServerApp.h"
 
 #if WINAPI_MSWINDOWS
 #include "MSWindowsServerTaskBarReceiver.h"

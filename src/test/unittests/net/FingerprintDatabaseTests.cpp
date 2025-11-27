@@ -44,10 +44,10 @@ AB:CD:EF:00:01:02:03:04:05:06:07:08:09:10:11:12:13:14:15:16
     db.read_stream(stream);
 
     std::vector<FingerprintData> expected = {
-        { "algo1", { 1, 2, 3, 4, 0xab } },
-        { "algo2", { 3, 4, 5, 6, 0xab } },
-        { "sha1", { 0xab, 0xcd, 0xef, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-                    0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16 } },
+        {"algo1", {1, 2, 3, 4, 0xab}},
+        {"algo2", {3, 4, 5, 6, 0xab}},
+        {"sha1", {0xab, 0xcd, 0xef, 0,    1,    2,    3,    4,    5,    6,
+                  7,    8,    9,    0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16}},
     };
     ASSERT_EQ(db.fingerprints(), expected);
 }
@@ -57,8 +57,8 @@ TEST(FingerprintDatabase, write)
     std::ostringstream stream;
 
     FingerprintDatabase db;
-    db.add_trusted({ "algo1", { 1, 2, 3, 4, 0xab } });
-    db.add_trusted({ "algo2", { 3, 4, 5, 6, 0xab } });
+    db.add_trusted({"algo1", {1, 2, 3, 4, 0xab}});
+    db.add_trusted({"algo2", {3, 4, 5, 6, 0xab}});
     db.write_stream(stream);
 
     ASSERT_EQ(stream.str(), R"(v2:algo1:01020304ab
@@ -69,7 +69,7 @@ v2:algo2:03040506ab
 TEST(FingerprintDatabase, clear)
 {
     FingerprintDatabase db;
-    db.add_trusted({ "algo1", { 1, 2, 3, 4, 0xab } });
+    db.add_trusted({"algo1", {1, 2, 3, 4, 0xab}});
     db.clear();
     ASSERT_TRUE(db.fingerprints().empty());
 }
@@ -77,19 +77,19 @@ TEST(FingerprintDatabase, clear)
 TEST(FingerprintDatabase, add_trusted_no_duplicates)
 {
     FingerprintDatabase db;
-    db.add_trusted({ "algo1", { 1, 2, 3, 4, 0xab } });
-    db.add_trusted({ "algo2", { 3, 4, 5, 6, 0xab } });
-    db.add_trusted({ "algo1", { 1, 2, 3, 4, 0xab } });
+    db.add_trusted({"algo1", {1, 2, 3, 4, 0xab}});
+    db.add_trusted({"algo2", {3, 4, 5, 6, 0xab}});
+    db.add_trusted({"algo1", {1, 2, 3, 4, 0xab}});
     ASSERT_EQ(db.fingerprints().size(), 2u);
 }
 
 TEST(FingerprintDatabase, is_trusted)
 {
     FingerprintDatabase db;
-    db.add_trusted({ "algo1", { 1, 2, 3, 4, 0xab } });
-    ASSERT_TRUE(db.is_trusted({ "algo1", { 1, 2, 3, 4, 0xab } }));
-    ASSERT_FALSE(db.is_trusted({ "algo2", { 1, 2, 3, 4, 0xab } }));
-    ASSERT_FALSE(db.is_trusted({ "algo1", { 1, 2, 3, 4, 0xac } }));
+    db.add_trusted({"algo1", {1, 2, 3, 4, 0xab}});
+    ASSERT_TRUE(db.is_trusted({"algo1", {1, 2, 3, 4, 0xab}}));
+    ASSERT_FALSE(db.is_trusted({"algo2", {1, 2, 3, 4, 0xab}}));
+    ASSERT_FALSE(db.is_trusted({"algo1", {1, 2, 3, 4, 0xac}}));
 }
 
 } // namespace inputleap

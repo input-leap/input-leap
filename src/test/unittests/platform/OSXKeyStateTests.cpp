@@ -16,12 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "test/mock/inputleap/MockKeyMap.h"
-#include "test/mock/inputleap/MockEventQueue.h"
 #include "platform/OSXKeyState.h"
+#include "test/mock/inputleap/MockEventQueue.h"
+#include "test/mock/inputleap/MockKeyMap.h"
 
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 namespace inputleap {
 

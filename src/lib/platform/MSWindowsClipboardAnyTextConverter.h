@@ -23,8 +23,7 @@
 namespace inputleap {
 
 //! Convert to/from some text encoding
-class MSWindowsClipboardAnyTextConverter :
-                public IMSWindowsClipboardConverter {
+class MSWindowsClipboardAnyTextConverter : public IMSWindowsClipboardConverter {
 public:
     MSWindowsClipboardAnyTextConverter();
     virtual ~MSWindowsClipboardAnyTextConverter();

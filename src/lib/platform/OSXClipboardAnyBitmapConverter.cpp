@@ -31,8 +31,7 @@ OSXClipboardAnyBitmapConverter::~OSXClipboardAnyBitmapConverter()
     // do nothing
 }
 
-IClipboard::EFormat
-OSXClipboardAnyBitmapConverter::getFormat() const
+IClipboard::EFormat OSXClipboardAnyBitmapConverter::getFormat() const
 {
     return IClipboard::kBitmap;
 }

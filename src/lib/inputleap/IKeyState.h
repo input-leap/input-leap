@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include "inputleap/key_types.h"
 #include "base/Event.h"
-#include "base/IEventQueue.h"
 #include "base/EventTypes.h"
+#include "base/IEventQueue.h"
+#include "inputleap/key_types.h"
 #include <set>
 
 namespace inputleap {
@@ -33,11 +33,9 @@ to synthesize key events.
 */
 class IKeyState {
 public:
-    virtual ~IKeyState() { }
+    virtual ~IKeyState() {}
 
-    enum {
-        kNumButtons = 0x200
-    };
+    enum { kNumButtons = 0x200 };
 
     //! Key event data
     class KeyInfo {
@@ -45,10 +43,7 @@ public:
         KeyInfo() = default;
 
         KeyInfo(KeyID key, KeyModifierMask mask, KeyButton button, std::int32_t count) :
-            m_key{key},
-            m_mask{mask},
-            m_button{button},
-            m_count{count}
+            m_key{key}, m_mask{mask}, m_button{button}, m_count{count}
         {}
 
         static KeyInfo create(KeyID, KeyModifierMask, KeyButton, std::int32_t count,
@@ -104,8 +99,7 @@ public:
     /*!
     Synthesizes a key press event and updates the key state.
     */
-    virtual void fakeKeyDown(KeyID id, KeyModifierMask mask,
-                            KeyButton button) = 0;
+    virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button) = 0;
 
     //! Fake a key repeat
     /*!
@@ -157,16 +151,14 @@ public:
     Returns the modifiers that are currently active according to our
     shadowed state.
     */
-    virtual KeyModifierMask
-                        getActiveModifiers() const = 0;
+    virtual KeyModifierMask getActiveModifiers() const = 0;
 
     //! Get the active modifiers from OS
     /*!
     Returns the modifiers that are currently active according to the
     operating system.
     */
-    virtual KeyModifierMask
-                        pollActiveModifiers() const = 0;
+    virtual KeyModifierMask pollActiveModifiers() const = 0;
 
     //! Get the active keyboard layout from OS
     /*!

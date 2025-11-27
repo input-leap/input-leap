@@ -29,11 +29,9 @@ public:
     virtual ~OSXClipboardBMPConverter();
 
     // IMSWindowsClipboardConverter overrides
-    virtual IClipboard::EFormat
-                        getFormat() const;
+    virtual IClipboard::EFormat getFormat() const;
 
-    virtual CFStringRef
-                        getOSXFormat() const;
+    virtual CFStringRef getOSXFormat() const;
 
     // OSXClipboardAnyBMPConverter overrides
     virtual std::string fromIClipboard(const std::string&) const;

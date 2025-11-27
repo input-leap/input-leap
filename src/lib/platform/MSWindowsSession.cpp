@@ -18,24 +18,18 @@
 #include "platform/MSWindowsSession.h"
 
 #include "arch/win32/XArchWindows.h"
-#include "inputleap/Exceptions.h"
 #include "base/Log.h"
+#include "inputleap/Exceptions.h"
 
 #include <Wtsapi32.h>
 
 namespace inputleap {
 
-MSWindowsSession::MSWindowsSession() :
-    m_activeSessionId(-1)
-{
-}
+MSWindowsSession::MSWindowsSession() : m_activeSessionId(-1) {}
 
-MSWindowsSession::~MSWindowsSession()
-{
-}
+MSWindowsSession::~MSWindowsSession() {}
 
-bool
-MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = nullptr)
+bool MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = nullptr)
 {
     // first we need to take a snapshot of the running processes
     HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -60,14 +54,11 @@ MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = nullptr
 
     // now just iterate until we can find winlogon.exe pid
     DWORD pid = 0;
-    while(gotEntry) {
-
+    while (gotEntry) {
         // make sure we're not checking the system process
         if (entry.th32ProcessID != 0) {
-
             DWORD processSessionId;
-            BOOL pidToSidRet = ProcessIdToSessionId(
-                entry.th32ProcessID, &processSessionId);
+            BOOL pidToSidRet = ProcessIdToSessionId(entry.th32ProcessID, &processSessionId);
 
             if (!pidToSidRet) {
                 // if we can not acquire session associated with a specified process,
@@ -75,11 +66,9 @@ MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = nullptr
                 LOG_ERR("could not get session id for process id %i", entry.th32ProcessID);
                 gotEntry = nextProcessEntry(snapshot, &entry);
                 continue;
-            }
-            else {
+            } else {
                 // only pay attention to processes in the active session
                 if (processSessionId == m_activeSessionId) {
-
                     // store the names so we can record them for debug
                     nameList.push_back(entry.szExeFile);
 
@@ -88,7 +77,6 @@ MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = nullptr
                     }
                 }
             }
-
         }
 
         // now move on to the next entry (if we're not at the end)
@@ -96,14 +84,12 @@ MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = nullptr
     }
 
     std::string nameListJoin;
-    for (auto it = nameList.begin();
-        it != nameList.end(); it++) {
-            nameListJoin.append(*it);
-            nameListJoin.append(", ");
+    for (auto it = nameList.begin(); it != nameList.end(); it++) {
+        nameListJoin.append(*it);
+        nameListJoin.append(", ");
     }
 
-    LOG_DEBUG("processes in session %d: %s",
-        m_activeSessionId, nameListJoin.c_str());
+    LOG_DEBUG("processes in session %d: %s", m_activeSessionId, nameListJoin.c_str());
 
     CloseHandle(snapshot);
 
@@ -114,8 +100,7 @@ MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = nullptr
             *process = OpenProcess(MAXIMUM_ALLOWED, FALSE, pid);
         }
         return true;
-    }
-    else {
+    } else {
         LOG_DEBUG("did not find %s in session %i", name, m_activeSessionId);
         return false;
     }
@@ -131,10 +116,8 @@ MSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security)
     }
 
     HANDLE newToken;
-    if (!DuplicateTokenEx(
-        sourceToken, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS, security,
-        SecurityImpersonation, TokenPrimary, &newToken)) {
-
+    if (!DuplicateTokenEx(sourceToken, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS, security,
+                          SecurityImpersonation, TokenPrimary, &newToken)) {
         LOG_ERR("could not duplicate token");
         throw std::runtime_error(error_code_to_string_windows(GetLastError()));
     }
@@ -143,28 +126,22 @@ MSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security)
     return newToken;
 }
 
-BOOL
-MSWindowsSession::hasChanged()
+BOOL MSWindowsSession::hasChanged()
 {
     return (m_activeSessionId != WTSGetActiveConsoleSessionId());
 }
 
-void
-MSWindowsSession::updateActiveSession()
+void MSWindowsSession::updateActiveSession()
 {
     m_activeSessionId = WTSGetActiveConsoleSessionId();
 }
 
-
-BOOL
-MSWindowsSession::nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry)
+BOOL MSWindowsSession::nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry)
 {
     BOOL gotEntry = Process32Next(snapshot, entry);
     if (!gotEntry) {
-
         DWORD err = GetLastError();
         if (err != ERROR_NO_MORE_FILES) {
-
             // only worry about error if it's not the end of the snapshot
             LOG_ERR("could not get next process entry");
             throw std::runtime_error(error_code_to_string_windows(GetLastError()));
@@ -182,13 +159,12 @@ std::string MSWindowsSession::getActiveDesktopName()
         if (hd != nullptr) {
             DWORD size;
             GetUserObjectInformation(hd, UOI_NAME, nullptr, 0, &size);
-            TCHAR* name = (TCHAR*)alloca(size + sizeof(TCHAR));
+            TCHAR* name = (TCHAR*) alloca(size + sizeof(TCHAR));
             GetUserObjectInformation(hd, UOI_NAME, name, size, &size);
             result = name;
             CloseDesktop(hd);
         }
-    }
-    catch (std::exception& error) {
+    } catch (std::exception& error) {
         LOG_ERR("failed to get active desktop name: %s", error.what());
     }
 

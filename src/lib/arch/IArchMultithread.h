@@ -18,9 +18,9 @@
 
 #pragma once
 
+#include <condition_variable>
 #include <functional>
 #include <mutex>
-#include <condition_variable>
 
 namespace inputleap {
 
@@ -48,7 +48,7 @@ inline std::chrono::nanoseconds seconds_to_chrono(double seconds)
 */
 class IArchMultithread {
 public:
-    virtual ~IArchMultithread() { }
+    virtual ~IArchMultithread() {}
 
     //! Type of thread entry point
     typedef void (*ThreadFunc)(void*);
@@ -60,14 +60,14 @@ public:
     ignored.
     */
     enum ESignal {
-        kINTERRUPT,        //!< Interrupt (e.g. Ctrl+C)
-        kTERMINATE,        //!< Terminate (e.g. Ctrl+Break)
-        kHANGUP,        //!< Hangup (SIGHUP)
-        kUSER,            //!< User (SIGUSR2)
+        kINTERRUPT, //!< Interrupt (e.g. Ctrl+C)
+        kTERMINATE, //!< Terminate (e.g. Ctrl+Break)
+        kHANGUP,    //!< Hangup (SIGHUP)
+        kUSER,      //!< User (SIGUSR2)
         kNUM_SIGNALS
     };
     //! Type of signal handler function
-    typedef void        (*SignalFunc)(ESignal, void* userData);
+    typedef void (*SignalFunc)(ESignal, void* userData);
 
     //! @name manipulators
     //@{
@@ -188,8 +188,7 @@ public:
     Sets the function to call on receipt of an external interrupt.
     By default and when \p func is nullptr, the main thread is cancelled.
     */
-    virtual void setSignalHandler(ESignal, SignalFunc func,
-                            void* userData) = 0;
+    virtual void setSignalHandler(ESignal, SignalFunc func, void* userData) = 0;
 
     //! Invoke the signal handler
     /*!

@@ -32,14 +32,12 @@ OSXClipboardHTMLConverter::~OSXClipboardHTMLConverter()
     // do nothing
 }
 
-IClipboard::EFormat
-OSXClipboardHTMLConverter::getFormat() const
+IClipboard::EFormat OSXClipboardHTMLConverter::getFormat() const
 {
     return IClipboard::kHTML;
 }
 
-CFStringRef
-OSXClipboardHTMLConverter::getOSXFormat() const
+CFStringRef OSXClipboardHTMLConverter::getOSXFormat() const
 {
     return CFSTR("public.html");
 }
@@ -48,9 +46,8 @@ std::string OSXClipboardHTMLConverter::convertString(const std::string& data,
                                                      CFStringEncoding fromEncoding,
                                                      CFStringEncoding toEncoding)
 {
-    CFStringRef stringRef = CFStringCreateWithCString(
-                                kCFAllocatorDefault,
-                                data.c_str(), fromEncoding);
+    CFStringRef stringRef = CFStringCreateWithCString(kCFAllocatorDefault, data.c_str(),
+                                                      fromEncoding);
 
     if (stringRef == nullptr) {
         return {};
@@ -68,8 +65,8 @@ std::string OSXClipboardHTMLConverter::convertString(const std::string& data,
         return {};
     }
 
-    CFStringGetBytes(stringRef, entireString, toEncoding,
-                     0, false, (std::uint8_t*)buffer, buffSize, nullptr);
+    CFStringGetBytes(stringRef, entireString, toEncoding, 0, false, (std::uint8_t*) buffer,
+                     buffSize, nullptr);
 
     std::string result(buffer, buffSize);
 
@@ -81,14 +78,12 @@ std::string OSXClipboardHTMLConverter::convertString(const std::string& data,
 
 std::string OSXClipboardHTMLConverter::doFromIClipboard(const std::string& data) const
 {
-    return convertString(data, kCFStringEncodingUTF8,
-                CFStringGetSystemEncoding());
+    return convertString(data, kCFStringEncodingUTF8, CFStringGetSystemEncoding());
 }
 
 std::string OSXClipboardHTMLConverter::doToIClipboard(const std::string& data) const
 {
-    return convertString(data, CFStringGetSystemEncoding(),
-                kCFStringEncodingUTF8);
+    return convertString(data, CFStringGetSystemEncoding(), kCFStringEncodingUTF8);
 }
 
 } // namespace inputleap

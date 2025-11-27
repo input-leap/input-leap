@@ -21,53 +21,30 @@
 
 namespace inputleap {
 
-IpcMessage::IpcMessage(std::uint8_t type) :
-    m_type(type)
-{
-}
+IpcMessage::IpcMessage(std::uint8_t type) : m_type(type) {}
 
-IpcMessage::~IpcMessage()
-{
-}
+IpcMessage::~IpcMessage() {}
 
 IpcHelloMessage::IpcHelloMessage(EIpcClientType clientType) :
-    IpcMessage(kIpcHello),
-    m_clientType(clientType)
-{
-}
+    IpcMessage(kIpcHello), m_clientType(clientType)
+{}
 
-IpcHelloMessage::~IpcHelloMessage()
-{
-}
+IpcHelloMessage::~IpcHelloMessage() {}
 
-IpcShutdownMessage::IpcShutdownMessage() :
-IpcMessage(kIpcShutdown)
-{
-}
+IpcShutdownMessage::IpcShutdownMessage() : IpcMessage(kIpcShutdown) {}
 
-IpcShutdownMessage::~IpcShutdownMessage()
-{
-}
+IpcShutdownMessage::~IpcShutdownMessage() {}
 
 IpcLogLineMessage::IpcLogLineMessage(const std::string& logLine) :
-    IpcMessage(kIpcLogLine),
-    m_logLine(logLine)
-{
-}
+    IpcMessage(kIpcLogLine), m_logLine(logLine)
+{}
 
-IpcLogLineMessage::~IpcLogLineMessage()
-{
-}
+IpcLogLineMessage::~IpcLogLineMessage() {}
 
 IpcCommandMessage::IpcCommandMessage(const std::string& command, bool elevate) :
-    IpcMessage(kIpcCommand),
-    m_command(command),
-    m_elevate(elevate)
-{
-}
+    IpcMessage(kIpcCommand), m_command(command), m_elevate(elevate)
+{}
 
-IpcCommandMessage::~IpcCommandMessage()
-{
-}
+IpcCommandMessage::~IpcCommandMessage() {}
 
 } // namespace inputleap

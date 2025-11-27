@@ -18,28 +18,28 @@
 
 #include "inputleap/ClientApp.h"
 
-#include "client/Client.h"
-#include "inputleap/ArgParser.h"
 #include "PlatformScreenLoggingWrapper.h"
-#include "inputleap/protocol_types.h"
-#include "inputleap/Screen.h"
-#include "inputleap/XScreen.h"
-#include "inputleap/ClientArgs.h"
-#include "net/NetworkAddress.h"
-#include "net/TCPSocketFactory.h"
-#include "net/SocketMultiplexer.h"
-#include "net/XSocket.h"
-#include "mt/Thread.h"
-#include "arch/IArchTaskBarReceiver.h"
 #include "arch/Arch.h"
-#include "base/String.h"
+#include "arch/IArchTaskBarReceiver.h"
 #include "base/Event.h"
+#include "base/EventQueue.h"
 #include "base/EventQueueTimer.h"
 #include "base/IEventQueue.h"
-#include "base/log_outputters.h"
-#include "base/EventQueue.h"
 #include "base/Log.h"
+#include "base/String.h"
+#include "base/log_outputters.h"
+#include "client/Client.h"
 #include "common/Version.h"
+#include "inputleap/ArgParser.h"
+#include "inputleap/ClientArgs.h"
+#include "inputleap/Screen.h"
+#include "inputleap/XScreen.h"
+#include "inputleap/protocol_types.h"
+#include "mt/Thread.h"
+#include "net/NetworkAddress.h"
+#include "net/SocketMultiplexer.h"
+#include "net/TCPSocketFactory.h"
+#include "net/XSocket.h"
 
 #if WINAPI_MSWINDOWS
 #include "platform/MSWindowsScreen.h"
@@ -59,8 +59,8 @@
 #endif
 
 #include <iostream>
-#include <stdio.h>
 #include <sstream>
+#include <stdio.h>
 
 #define RETRY_TIME 1.0
 
@@ -71,37 +71,31 @@ ClientApp::ClientApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBa
     m_client(nullptr),
     m_clientScreen(nullptr),
     m_serverAddress(nullptr)
-{
-}
+{}
 
-ClientApp::~ClientApp()
-{
-}
+ClientApp::~ClientApp() {}
 
-void
-ClientApp::parseArgs(int argc, const char* const* argv)
+void ClientApp::parseArgs(int argc, const char* const* argv)
 {
     ArgParser argParser(this);
     bool result = argParser.parseClientArgs(args(), argc, argv);
 
     if (!result || args().m_shouldExit) {
         m_bye(kExitArgs);
-    }
-    else {
+    } else {
         // save server address
         if (!args().network_address.empty()) {
             try {
                 *m_serverAddress = NetworkAddress(args().network_address, kDefaultPort);
                 m_serverAddress->resolve();
-            }
-            catch (XSocketAddress& e) {
+            } catch (XSocketAddress& e) {
                 // allow an address that we can't look up if we're restartable.
                 // we'll try to resolve the address each time we connect to the
                 // server.  a bad port will never get better.  patch by Brent
                 // Priddy.
                 if (!args().m_restartable || e.getError() == XSocketAddress::kBadPort) {
-                    LOG_PRINT("%s: %s" BYE,
-                        args().m_exename.c_str(), e.what(), args().m_exename.c_str());
+                    LOG_PRINT("%s: %s" BYE, args().m_exename.c_str(), e.what(),
+                              args().m_exename.c_str());
                     m_bye(kExitFailed);
                 }
             }
@@ -109,8 +103,7 @@ ClientApp::parseArgs(int argc, const char* const* argv)
     }
 }
 
-void
-ClientApp::help()
+void ClientApp::help()
 {
     std::ostringstream buffer;
     buffer << "Start the InputLeap client and connect to a remote server component.\n"
@@ -122,8 +115,7 @@ ClientApp::help()
 #ifdef WINAPI_LIBEI
            << " [--use-ei]"
 #endif
-           << HELP_SYS_ARGS
-           << HELP_COMMON_ARGS << " <server-address>\n"
+           << HELP_SYS_ARGS << HELP_COMMON_ARGS << " <server-address>\n"
            << "\n"
            << "Options:\n"
            << HELP_COMMON_INFO_1
@@ -133,14 +125,14 @@ ClientApp::help()
 #endif
 #ifdef WINAPI_LIBEI
            << "      --use-ei             use the EI backend\n"
-           << "      --disable-portal     do not use the org.freedesktop.portal.RemoteDesktop portal,\n"
+           << "      --disable-portal     do not use the org.freedesktop.portal.RemoteDesktop "
+              "portal,\n"
            << "                           connect to $LIBEI_SOCKET directly\n"
 #endif
            << HELP_SYS_INFO
            << "      --yscroll <delta>    defines the vertical scrolling delta, which is\n"
            << "                           120 by default.\n"
-           << HELP_COMMON_INFO_2
-           << "\n"
+           << HELP_COMMON_INFO_2 << "\n"
            << "Default options are marked with a *\n"
            << "\n"
            << "The server address is of the form: [<hostname>][:<port>]. The hostname\n"
@@ -151,8 +143,7 @@ ClientApp::help()
     LOG_PRINT("%s", buffer.str().c_str());
 }
 
-const char*
-ClientApp::daemonName() const
+const char* ClientApp::daemonName() const
 {
 #if SYSAPI_WIN32
     return "InputLeap Client";
@@ -161,8 +152,7 @@ ClientApp::daemonName() const
 #endif
 }
 
-const char*
-ClientApp::daemonInfo() const
+const char* ClientApp::daemonInfo() const
 {
 #if SYSAPI_WIN32
     return "Allows another computer to share it's keyboard and mouse with this computer.";
@@ -180,32 +170,25 @@ std::unique_ptr<Screen> ClientApp::create_screen()
     return std::make_unique<Screen>(std::move(plat_screen), m_events);
 }
 
-void
-ClientApp::updateStatus()
+void ClientApp::updateStatus()
 {
     updateStatus("");
 }
 
-
 void ClientApp::updateStatus(const std::string& msg)
 {
-    if (m_taskBarReceiver)
-    {
+    if (m_taskBarReceiver) {
         m_taskBarReceiver->updateStatus(m_client, msg);
     }
 }
 
-
-void
-ClientApp::resetRestartTimeout()
+void ClientApp::resetRestartTimeout()
 {
     // retry time can nolonger be changed
     //s_retryTime = 0.0;
 }
 
-
-double
-ClientApp::nextRestartTimeout()
+double ClientApp::nextRestartTimeout()
 {
     // retry at a constant rate (Issue 52)
     return RETRY_TIME;
@@ -226,13 +209,11 @@ ClientApp::nextRestartTimeout()
     */
 }
 
-
 void ClientApp::handle_screen_error()
 {
     LOG_CRIT("error on screen");
     m_events->add_event(EventType::QUIT);
 }
-
 
 std::unique_ptr<Screen> ClientApp::open_client_screen()
 {
@@ -242,12 +223,11 @@ std::unique_ptr<Screen> ClientApp::open_client_screen()
     }
     screen->setEnableDragDrop(argsBase().m_enableDragDrop);
     m_events->add_handler(EventType::SCREEN_ERROR, screen->get_event_target(),
-                          [this](const auto& e){ handle_screen_error(); });
+                          [this](const auto& e) { handle_screen_error(); });
     return screen;
 }
 
-void
-ClientApp::handle_client_restart(const Event&, EventQueueTimer* timer)
+void ClientApp::handle_client_restart(const Event&, EventQueueTimer* timer)
 {
     // discard old timer
     m_events->remove_handler(EventType::TIMER, timer);
@@ -257,17 +237,15 @@ ClientApp::handle_client_restart(const Event&, EventQueueTimer* timer)
     startClient();
 }
 
-
-void
-ClientApp::scheduleClientRestart(double retryTime)
+void ClientApp::scheduleClientRestart(double retryTime)
 {
     // install a timer and handler to retry later
     LOG_DEBUG("retry in %.0f seconds", retryTime);
     EventQueueTimer* timer = m_events->newOneShotTimer(retryTime, nullptr);
-    m_events->add_handler(EventType::TIMER, timer,
-                          [this, timer](const Event& event) { handle_client_restart(event, timer); });
+    m_events->add_handler(EventType::TIMER, timer, [this, timer](const Event& event) {
+        handle_client_restart(event, timer);
+    });
 }
-
 
 void ClientApp::handle_client_connected()
 {
@@ -278,7 +256,6 @@ void ClientApp::handle_client_connected()
     updateStatus();
 }
 
-
 void ClientApp::handle_client_failed(const Event& e)
 {
     const auto& info = e.get_data_as<Client::FailInfo>();
@@ -287,8 +264,7 @@ void ClientApp::handle_client_failed(const Event& e)
     if (!args().m_restartable || !info.m_retry) {
         LOG_ERR("failed to connect to server: %s", info.m_what.c_str());
         m_events->add_event(EventType::QUIT);
-    }
-    else {
+    } else {
         LOG_WARN("failed to connect to server: %s", info.m_what.c_str());
         if (!m_suspended) {
             scheduleClientRestart(nextRestartTimeout());
@@ -296,14 +272,12 @@ void ClientApp::handle_client_failed(const Event& e)
     }
 }
 
-
 void ClientApp::handle_client_disconnected()
 {
     LOG_NOTE("disconnected from server");
     if (!args().m_restartable) {
         m_events->add_event(EventType::QUIT);
-    }
-    else if (!m_suspended) {
+    } else if (!m_suspended) {
         scheduleClientRestart(nextRestartTimeout());
     }
     updateStatus();
@@ -312,13 +286,9 @@ void ClientApp::handle_client_disconnected()
 Client* ClientApp::openClient(const std::string& name, const NetworkAddress& address,
                               inputleap::Screen* screen)
 {
-    Client* client = new Client(
-        m_events,
-        name,
-        address,
-        new TCPSocketFactory(m_events, getSocketMultiplexer()),
-        screen,
-        args());
+    Client* client = new Client(m_events, name, address,
+                                new TCPSocketFactory(m_events, getSocketMultiplexer()), screen,
+                                args());
 
     try {
         m_events->add_handler(EventType::CLIENT_CONNECTED, client->get_event_target(),
@@ -328,7 +298,7 @@ Client* ClientApp::openClient(const std::string& name, const NetworkAddress& add
         m_events->add_handler(EventType::CLIENT_DISCONNECTED, client->get_event_target(),
                               [this](const auto& e) { handle_client_disconnected(); });
 
-    } catch (std::bad_alloc &ba) {
+    } catch (std::bad_alloc& ba) {
         delete client;
         throw ba;
     }
@@ -336,9 +306,7 @@ Client* ClientApp::openClient(const std::string& name, const NetworkAddress& add
     return client;
 }
 
-
-void
-ClientApp::closeClient(Client* client)
+void ClientApp::closeClient(Client* client)
 {
     if (client == nullptr) {
         return;
@@ -350,8 +318,7 @@ ClientApp::closeClient(Client* client)
     delete client;
 }
 
-int
-ClientApp::foregroundStartup(int argc, char** argv)
+int ClientApp::foregroundStartup(int argc, char** argv)
 {
     initApp(argc, argv);
 
@@ -359,8 +326,7 @@ ClientApp::foregroundStartup(int argc, char** argv)
     return mainLoop();
 }
 
-bool
-ClientApp::startClient()
+bool ClientApp::startClient()
 {
     double retryTime;
     std::unique_ptr<Screen> client_screen;
@@ -376,19 +342,16 @@ ClientApp::startClient()
 
         updateStatus();
         return true;
-    }
-    catch (XScreenUnavailable& e) {
+    } catch (XScreenUnavailable& e) {
         LOG_WARN("secondary screen unavailable: %s", e.what());
         updateStatus(std::string("secondary screen unavailable: ") + e.what());
         m_clientScreen.reset();
         retryTime = e.getRetryTime();
-    }
-    catch (XScreenOpenFailure& e) {
+    } catch (XScreenOpenFailure& e) {
         LOG_CRIT("failed to start client: %s", e.what());
         m_clientScreen.reset();
         return false;
-    }
-    catch (XBase& e) {
+    } catch (XBase& e) {
         LOG_CRIT("failed to start client: %s", e.what());
         m_clientScreen.reset();
         return false;
@@ -397,25 +360,20 @@ ClientApp::startClient()
     if (args().m_restartable) {
         scheduleClientRestart(retryTime);
         return true;
-    }
-    else {
+    } else {
         // don't try again
         return false;
     }
 }
 
-
-void
-ClientApp::stopClient()
+void ClientApp::stopClient()
 {
     closeClient(m_client);
     m_client = nullptr;
     m_clientScreen.reset();
 }
 
-
-int
-ClientApp::mainLoop()
+int ClientApp::mainLoop()
 {
     // create socket multiplexer.  this must happen after daemonization
     // on unix because threads evaporate across a fork().
@@ -437,11 +395,10 @@ ClientApp::mainLoop()
 
 #if defined(MAC_OS_X_VERSION_10_7)
 
-    Thread thread([this](){ run_events_loop(); });
+    Thread thread([this]() { run_events_loop(); });
 
     // wait until carbon loop is ready
-    OSXScreen* screen = dynamic_cast<OSXScreen*>(
-        m_clientScreen->getPlatformScreen());
+    OSXScreen* screen = dynamic_cast<OSXScreen*>(m_clientScreen->getPlatformScreen());
     screen->waitForCarbonLoop();
 
     runCocoaApp();
@@ -464,29 +421,24 @@ ClientApp::mainLoop()
     return kExitSuccess;
 }
 
-static
-int
-daemonMainLoopStatic(int argc, const char** argv)
+static int daemonMainLoopStatic(int argc, const char** argv)
 {
     return ClientApp::instance().daemonMainLoop(argc, argv);
 }
 
-int
-ClientApp::standardStartup(int argc, char** argv)
+int ClientApp::standardStartup(int argc, char** argv)
 {
     initApp(argc, argv);
 
     // daemonize if requested
     if (args().m_daemon) {
         return ARCH->daemonize(daemonName(), &daemonMainLoopStatic);
-    }
-    else {
+    } else {
         return mainLoop();
     }
 }
 
-int
-ClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
+int ClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 {
     // general initialization
     m_serverAddress = new NetworkAddress;
@@ -498,15 +450,11 @@ ClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc
     }
 
     int result;
-    try
-    {
+    try {
         // run
         result = startup(argc, argv);
-    }
-    catch (...)
-    {
-        if (m_taskBarReceiver)
-        {
+    } catch (...) {
+        if (m_taskBarReceiver) {
             // done with task bar receiver
             delete m_taskBarReceiver;
         }
@@ -519,8 +467,7 @@ ClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc
     return result;
 }
 
-void
-ClientApp::startNode()
+void ClientApp::startNode()
 {
     // start the client.  if this return false then we've failed and
     // we shouldn't retry.

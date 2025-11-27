@@ -19,8 +19,8 @@
 #pragma once
 
 #include "base/Fwd.h"
-#include "inputleap/ServerTaskBarReceiver.h"
 #include "common/win32/winapi.h"
+#include "inputleap/ServerTaskBarReceiver.h"
 
 namespace inputleap {
 
@@ -49,11 +49,8 @@ private:
     void createWindow();
     void destroyWindow();
 
-    BOOL dlgProc(HWND hwnd,
-                            UINT msg, WPARAM wParam, LPARAM lParam);
-    static BOOL CALLBACK
-                        staticDlgProc(HWND hwnd,
-                            UINT msg, WPARAM wParam, LPARAM lParam);
+    BOOL dlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+    static BOOL CALLBACK staticDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 private:
     HINSTANCE m_appInstance;
@@ -63,7 +60,7 @@ private:
     const BufferedLogOutputter* m_logBuffer;
     IEventQueue* m_events;
 
-    static const UINT    s_stateToIconID[];
+    static const UINT s_stateToIconID[];
 };
 
 } // namespace inputleap

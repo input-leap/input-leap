@@ -20,32 +20,30 @@
 #include <QDialog>
 #include <memory>
 
-namespace Ui
-{
-    class LogWindow;
+namespace Ui {
+class LogWindow;
 }
 
-class LogWindow : public QDialog
-{
+class LogWindow : public QDialog {
     Q_OBJECT
 
-    public:
-        LogWindow(QWidget *parent);
-        ~LogWindow() override;
+public:
+    LogWindow(QWidget* parent);
+    ~LogWindow() override;
 
-        void startNewInstance();
+    void startNewInstance();
 
-        void appendRaw(const QString& text);
-        void appendInfo(const QString& text);
-        void appendDebug(const QString& text);
-        void appendError(const QString& text);
+    void appendRaw(const QString& text);
+    void appendInfo(const QString& text);
+    void appendDebug(const QString& text);
+    void appendError(const QString& text);
 
-    private slots:
-        void on_m_pButtonHide_clicked();
-        void on_m_pButtonClearLog_clicked();
+private slots:
+    void on_m_pButtonHide_clicked();
+    void on_m_pButtonClearLog_clicked();
 
-    private:
-        std::unique_ptr<Ui::LogWindow> ui_;
-        QString buffer_;
-        void flushBuffer();
+private:
+    std::unique_ptr<Ui::LogWindow> ui_;
+    QString buffer_;
+    void flushBuffer();
 };

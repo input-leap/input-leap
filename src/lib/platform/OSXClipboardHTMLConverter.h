@@ -29,8 +29,7 @@ public:
     virtual ~OSXClipboardHTMLConverter();
 
     // IMSWindowsClipboardConverter overrides
-    virtual IClipboard::EFormat
-                        getFormat() const;
+    virtual IClipboard::EFormat getFormat() const;
 
     virtual CFStringRef getOSXFormat() const;
 

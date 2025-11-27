@@ -15,21 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "arch/Arch.h"
 #include "base/String.h"
+#include "arch/Arch.h"
 #include "common/common.h"
 
+#include <algorithm>
 #include <cctype>
+#include <cerrno>
+#include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <algorithm>
-#include <stdio.h>
-#include <cstdarg>
-#include <sstream>
 #include <iomanip>
-#include <algorithm>
-#include <cerrno>
+#include <sstream>
+#include <stdio.h>
 #include <vector>
 
 namespace inputleap {
@@ -41,40 +40,61 @@ namespace {
 int hex_to_number(char ch)
 {
     switch (ch) {
-        case '0': return 0;
-        case '1': return 1;
-        case '2': return 2;
-        case '3': return 3;
-        case '4': return 4;
-        case '5': return 5;
-        case '6': return 6;
-        case '7': return 7;
-        case '8': return 8;
-        case '9': return 9;
+    case '0':
+        return 0;
+    case '1':
+        return 1;
+    case '2':
+        return 2;
+    case '3':
+        return 3;
+    case '4':
+        return 4;
+    case '5':
+        return 5;
+    case '6':
+        return 6;
+    case '7':
+        return 7;
+    case '8':
+        return 8;
+    case '9':
+        return 9;
 
-        case 'a': return 10;
-        case 'b': return 11;
-        case 'c': return 12;
-        case 'd': return 13;
-        case 'e': return 14;
-        case 'f': return 15;
+    case 'a':
+        return 10;
+    case 'b':
+        return 11;
+    case 'c':
+        return 12;
+    case 'd':
+        return 13;
+    case 'e':
+        return 14;
+    case 'f':
+        return 15;
 
-        case 'A': return 10;
-        case 'B': return 11;
-        case 'C': return 12;
-        case 'D': return 13;
-        case 'E': return 14;
-        case 'F': return 15;
-        default:
-            break;
+    case 'A':
+        return 10;
+    case 'B':
+        return 11;
+    case 'C':
+        return 12;
+    case 'D':
+        return 13;
+    case 'E':
+        return 14;
+    case 'F':
+        return 15;
+    default:
+        break;
     }
     return -1;
 }
 
 } // namespace
 
-std::string
-format(const char* fmt, ...)
+std::string format(const char* fmt, ...)
 {
     va_list args;
     va_start(args, fmt);
@@ -83,8 +103,7 @@ format(const char* fmt, ...)
     return result;
 }
 
-std::string
-vformat(const char* fmt, va_list args)
+std::string vformat(const char* fmt, va_list args)
 {
     // find highest indexed substitution and the locations of substitutions
     std::vector<size_t> pos;
@@ -96,14 +115,12 @@ vformat(const char* fmt, va_list args)
             ++scan;
             if (*scan == '\0') {
                 break;
-            }
-            else if (*scan == '%') {
+            } else if (*scan == '%') {
                 // literal
                 index.push_back(0);
                 pos.push_back(static_cast<size_t>((scan - 1) - fmt));
                 width.push_back(2);
-            }
-            else if (*scan == '{') {
+            } else if (*scan == '{') {
                 // get argument index
                 char* end;
                 errno = 0;
@@ -111,8 +128,7 @@ vformat(const char* fmt, va_list args)
                 if (errno || (i < 0) || (*end != '}')) {
                     // invalid index -- ignore
                     scan = end - 1; // BUG if there are digits?
-                }
-                else {
+                } else {
                     index.push_back(i);
                     pos.push_back(static_cast<size_t>((scan - 1) - fmt));
                     width.push_back(static_cast<size_t>((end - scan) + 2));
@@ -121,8 +137,7 @@ vformat(const char* fmt, va_list args)
                     }
                     scan = end;
                 }
-            }
-            else {
+            } else {
                 // improper escape -- ignore
             }
         }
@@ -162,8 +177,7 @@ vformat(const char* fmt, va_list args)
     return result;
 }
 
-std::string
-sprintf(const char* fmt, ...)
+std::string sprintf(const char* fmt, ...)
 {
     char tmp[1024];
     char* buffer = tmp;
@@ -181,7 +195,7 @@ sprintf(const char* fmt, ...)
             if (buffer != tmp) {
                 delete[] buffer;
             }
-            len   *= 2;
+            len *= 2;
             buffer = new char[len];
         }
 
@@ -198,21 +212,16 @@ sprintf(const char* fmt, ...)
     return result;
 }
 
-void
-findReplaceAll(
-    std::string& subject,
-    const std::string& find,
-    const std::string& replace)
+void findReplaceAll(std::string& subject, const std::string& find, const std::string& replace)
 {
     size_t pos = 0;
     while ((pos = subject.find(find, pos)) != std::string::npos) {
-         subject.replace(pos, find.length(), replace);
-         pos += replace.length();
+        subject.replace(pos, find.length(), replace);
+        pos += replace.length();
     }
 }
 
-std::string
-removeFileExt(std::string filename)
+std::string removeFileExt(std::string filename)
 {
     size_t dot = filename.find_last_of('.');
 
@@ -261,28 +270,24 @@ std::vector<std::uint8_t> from_hex(const std::string& data)
     return result;
 }
 
-void
-uppercase(std::string& subject)
+void uppercase(std::string& subject)
 {
     std::transform(subject.begin(), subject.end(), subject.begin(), ::toupper);
 }
 
-void
-removeChar(std::string& subject, const char c)
+void removeChar(std::string& subject, const char c)
 {
     subject.erase(std::remove(subject.begin(), subject.end(), c), subject.end());
 }
 
-std::string
-sizeTypeToString(size_t n)
+std::string sizeTypeToString(size_t n)
 {
     std::stringstream ss;
     ss << n;
     return ss.str();
 }
 
-size_t
-stringToSizeType(std::string string)
+size_t stringToSizeType(std::string string)
 {
     std::istringstream iss(string);
     size_t value;
@@ -290,15 +295,14 @@ stringToSizeType(std::string string)
     return value;
 }
 
-std::vector<std::string>
-splitString(std::string string, const char c)
+std::vector<std::string> splitString(std::string string, const char c)
 {
     std::vector<std::string> results;
 
     size_t head = 0;
     size_t separator = string.find(c);
     while (separator != std::string::npos) {
-        if (head!=separator) {
+        if (head != separator) {
             results.push_back(string.substr(head, separator - head));
         }
         head = separator + 1;
@@ -316,40 +320,33 @@ splitString(std::string string, const char c)
 // CaselessCmp
 //
 
-bool CaselessCmp::cmpEqual(const std::string::value_type& a,
-                           const std::string::value_type& b)
+bool CaselessCmp::cmpEqual(const std::string::value_type& a, const std::string::value_type& b)
 {
     // should use std::tolower but not in all versions of libstdc++ have it
     return tolower(a) == tolower(b);
 }
 
-bool CaselessCmp::cmpLess(const std::string::value_type& a,
-                          const std::string::value_type& b)
+bool CaselessCmp::cmpLess(const std::string::value_type& a, const std::string::value_type& b)
 {
     // should use std::tolower but not in all versions of libstdc++ have it
     return tolower(a) < tolower(b);
 }
 
-bool
-CaselessCmp::less(const std::string& a, const std::string& b)
+bool CaselessCmp::less(const std::string& a, const std::string& b)
 {
-    return std::lexicographical_compare(
-        a.begin(), a.end(),
-        b.begin(), b.end(),
-        &inputleap::string::CaselessCmp::cmpLess);
+    return std::lexicographical_compare(a.begin(), a.end(), b.begin(), b.end(),
+                                        &inputleap::string::CaselessCmp::cmpLess);
 }
 
-bool
-CaselessCmp::equal(const std::string& a, const std::string& b)
+bool CaselessCmp::equal(const std::string& a, const std::string& b)
 {
     return !(less(a, b) || less(b, a));
 }
 
-bool
-CaselessCmp::operator()(const std::string& a, const std::string& b) const
+bool CaselessCmp::operator()(const std::string& a, const std::string& b) const
 {
     return less(a, b);
 }
 
-}
-}
+} // namespace string
+} // namespace inputleap

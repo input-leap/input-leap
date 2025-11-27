@@ -18,11 +18,11 @@
 
 #pragma once
 
-#include "inputleap/INode.h"
 #include "arch/IArchTaskBarReceiver.h"
-#include "base/log_outputters.h"
-#include "base/EventTypes.h"
 #include "base/Event.h"
+#include "base/EventTypes.h"
+#include "base/log_outputters.h"
+#include "inputleap/INode.h"
 #include <vector>
 
 namespace inputleap {
@@ -51,13 +51,7 @@ public:
 
 protected:
     typedef std::vector<std::string> Clients;
-    enum EState {
-        kNotRunning,
-        kNotWorking,
-        kNotConnected,
-        kConnected,
-        kMaxState
-    };
+    enum EState { kNotRunning, kNotWorking, kNotConnected, kConnected, kMaxState };
 
     //! Get status
     EState getStatus() const;
@@ -88,6 +82,7 @@ private:
     IEventQueue* m_events;
 };
 
-IArchTaskBarReceiver* createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events);
+IArchTaskBarReceiver* createTaskBarReceiver(const BufferedLogOutputter* logBuffer,
+                                            IEventQueue* events);
 
 } // namespace inputleap

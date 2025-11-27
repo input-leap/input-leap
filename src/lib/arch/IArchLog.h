@@ -25,7 +25,7 @@
 */
 class IArchLog {
 public:
-    virtual ~IArchLog() { }
+    virtual ~IArchLog() {}
 
     //! @name manipulators
     //@{

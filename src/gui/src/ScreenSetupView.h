@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include <QTableView>
 #include <QFlags>
+#include <QTableView>
 
 #include "Screen.h"
 
@@ -29,32 +29,32 @@ class QResizeEvent;
 class QDragEnterEvent;
 class ScreenSetupModel;
 
-class ScreenSetupView : public QTableView
-{
+class ScreenSetupView : public QTableView {
     Q_OBJECT
 
-    public:
-        ScreenSetupView(QWidget* parent);
+public:
+    ScreenSetupView(QWidget* parent);
 
-    public:
-        void setModel(QAbstractItemModel* model) override;
-        ScreenSetupModel* model() const;
+public:
+    void setModel(QAbstractItemModel* model) override;
+    ScreenSetupModel* model() const;
 
-    protected:
-        void mouseDoubleClickEvent(QMouseEvent*) override;
-        void keyPressEvent(QKeyEvent*) override;
-        void setTableSize();
-        void resizeEvent(QResizeEvent*) override;
-        void dragEnterEvent(QDragEnterEvent* event) override;
-        void dragMoveEvent(QDragMoveEvent* event) override;
-        void startDrag(Qt::DropActions supportedActions) override;
+protected:
+    void mouseDoubleClickEvent(QMouseEvent*) override;
+    void keyPressEvent(QKeyEvent*) override;
+    void setTableSize();
+    void resizeEvent(QResizeEvent*) override;
+    void dragEnterEvent(QDragEnterEvent* event) override;
+    void dragMoveEvent(QDragMoveEvent* event) override;
+    void startDrag(Qt::DropActions supportedActions) override;
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-        void initViewItemOption(QStyleOptionViewItem *option) const override;
+    void initViewItemOption(QStyleOptionViewItem* option) const override;
 #else
-        QStyleOptionViewItem viewOptions() const override;
+    QStyleOptionViewItem viewOptions() const override;
 #endif
-        void scrollTo(const QModelIndex&, ScrollHint) override {}
-    private:
-        void enter(const QModelIndex&);
-        void remove(const QModelIndex&);
+    void scrollTo(const QModelIndex&, ScrollHint) override {}
+
+private:
+    void enter(const QModelIndex&);
+    void remove(const QModelIndex&);
 };

@@ -36,16 +36,8 @@ const char AppConfig::log_dir_[] = "/var/log/";
 
 const ElevateMode defaultElevateMode = ElevateAsNeeded;
 
-static const char* logLevelNames[] =
-{
-    "ERROR",
-    "WARNING",
-    "NOTE",
-    "INFO",
-    "DEBUG",
-    "DEBUG1",
-    "DEBUG2"
-};
+static const char* logLevelNames[] = {"ERROR", "WARNING", "NOTE",  "INFO",
+                                      "DEBUG", "DEBUG1",  "DEBUG2"};
 
 AppConfig::AppConfig(QSettings* settings) :
     m_pSettings(settings),
@@ -73,17 +65,35 @@ AppConfig::~AppConfig()
     saveSettings();
 }
 
-const QString &AppConfig::screenName() const { return m_ScreenName; }
+const QString& AppConfig::screenName() const
+{
+    return m_ScreenName;
+}
 
-int AppConfig::port() const { return m_Port; }
+int AppConfig::port() const
+{
+    return m_Port;
+}
 
-const QString &AppConfig::networkInterface() const { return m_Interface; }
+const QString& AppConfig::networkInterface() const
+{
+    return m_Interface;
+}
 
-int AppConfig::logLevel() const { return m_LogLevel; }
+int AppConfig::logLevel() const
+{
+    return m_LogLevel;
+}
 
-bool AppConfig::logToFile() const { return m_LogToFile; }
+bool AppConfig::logToFile() const
+{
+    return m_LogToFile;
+}
 
-const QString &AppConfig::logFilename() const { return m_LogFilename; }
+const QString& AppConfig::logFilename() const
+{
+    return m_LogFilename;
+}
 
 QString AppConfig::log_dir() const
 {
@@ -107,8 +117,7 @@ void AppConfig::persistLogDir()
     QDir dir = log_dir();
 
     // persist the log directory
-    if (!dir.exists())
-    {
+    if (!dir.exists()) {
         dir.mkpath(dir.path());
     }
 }
@@ -128,15 +137,30 @@ QString AppConfig::logLevelText() const
     return logLevelNames[logLevel()];
 }
 
-ProcessMode AppConfig::processMode() const { return m_ProcessMode; }
+ProcessMode AppConfig::processMode() const
+{
+    return m_ProcessMode;
+}
 
-bool AppConfig::wizardShouldRun() const { return m_WizardLastRun < kWizardVersion; }
+bool AppConfig::wizardShouldRun() const
+{
+    return m_WizardLastRun < kWizardVersion;
+}
 
-const QString &AppConfig::language() const { return m_Language; }
+const QString& AppConfig::language() const
+{
+    return m_Language;
+}
 
-bool AppConfig::startedBefore() const { return m_StartedBefore; }
+bool AppConfig::startedBefore() const
+{
+    return m_StartedBefore;
+}
 
-bool AppConfig::autoConfig() const { return m_AutoConfig; }
+bool AppConfig::autoConfig() const
+{
+    return m_AutoConfig;
+}
 
 void AppConfig::loadSettings()
 {
@@ -152,8 +176,8 @@ void AppConfig::loadSettings()
     m_AutoConfig = settings().value("autoConfig", true).toBool();
     QVariant elevateMode = settings().value("elevateModeEnum");
     if (!elevateMode.isValid()) {
-        elevateMode = settings().value ("elevateMode",
-                                        QVariant(static_cast<int>(defaultElevateMode)));
+        elevateMode = settings().value("elevateMode",
+                                       QVariant(static_cast<int>(defaultElevateMode)));
     }
     m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
     m_AutoConfigPrompted = settings().value("autoConfigPrompted", false).toBool();
@@ -190,56 +214,137 @@ void AppConfig::saveSettings()
     settings().sync();
 }
 
-QSettings &AppConfig::settings() { return *m_pSettings; }
+QSettings& AppConfig::settings()
+{
+    return *m_pSettings;
+}
 
-void AppConfig::setScreenName(const QString &s) { m_ScreenName = s; }
+void AppConfig::setScreenName(const QString& s)
+{
+    m_ScreenName = s;
+}
 
-void AppConfig::setPort(int i) { m_Port = i; }
+void AppConfig::setPort(int i)
+{
+    m_Port = i;
+}
 
-void AppConfig::setNetworkInterface(const QString &s) { m_Interface = s; }
+void AppConfig::setNetworkInterface(const QString& s)
+{
+    m_Interface = s;
+}
 
-void AppConfig::setLogLevel(int i) { m_LogLevel = i; }
+void AppConfig::setLogLevel(int i)
+{
+    m_LogLevel = i;
+}
 
-void AppConfig::setLogToFile(bool b) { m_LogToFile = b; }
+void AppConfig::setLogToFile(bool b)
+{
+    m_LogToFile = b;
+}
 
-void AppConfig::setLogFilename(const QString &s) { m_LogFilename = s; }
+void AppConfig::setLogFilename(const QString& s)
+{
+    m_LogFilename = s;
+}
 
-void AppConfig::setWizardHasRun() { m_WizardLastRun = kWizardVersion; }
+void AppConfig::setWizardHasRun()
+{
+    m_WizardLastRun = kWizardVersion;
+}
 
-void AppConfig::setLanguage(const QString language) { m_Language = language; }
+void AppConfig::setLanguage(const QString language)
+{
+    m_Language = language;
+}
 
-void AppConfig::setStartedBefore(bool b) { m_StartedBefore = b; }
+void AppConfig::setStartedBefore(bool b)
+{
+    m_StartedBefore = b;
+}
 
-void AppConfig::setElevateMode(ElevateMode em) { m_ElevateMode = em; }
+void AppConfig::setElevateMode(ElevateMode em)
+{
+    m_ElevateMode = em;
+}
 
-void AppConfig::setAutoConfig(bool autoConfig) { m_AutoConfig = autoConfig; }
+void AppConfig::setAutoConfig(bool autoConfig)
+{
+    m_AutoConfig = autoConfig;
+}
 
-bool AppConfig::autoConfigPrompted() { return m_AutoConfigPrompted; }
+bool AppConfig::autoConfigPrompted()
+{
+    return m_AutoConfigPrompted;
+}
 
-void AppConfig::setAutoConfigPrompted(bool prompted) { m_AutoConfigPrompted = prompted; }
+void AppConfig::setAutoConfigPrompted(bool prompted)
+{
+    m_AutoConfigPrompted = prompted;
+}
 
-QString AppConfig::server_name() const { return server_name_; }
+QString AppConfig::server_name() const
+{
+    return server_name_;
+}
 
-QString AppConfig::client_name() const { return client_name_; }
+QString AppConfig::client_name() const
+{
+    return client_name_;
+}
 
-ElevateMode AppConfig::elevateMode() { return m_ElevateMode; }
+ElevateMode AppConfig::elevateMode()
+{
+    return m_ElevateMode;
+}
 
-void AppConfig::setCryptoEnabled(bool e) { m_CryptoEnabled = e; }
+void AppConfig::setCryptoEnabled(bool e)
+{
+    m_CryptoEnabled = e;
+}
 
-bool AppConfig::getCryptoEnabled() const { return m_CryptoEnabled; }
+bool AppConfig::getCryptoEnabled() const
+{
+    return m_CryptoEnabled;
+}
 
-void AppConfig::setRequireClientCertificate(bool e) { m_RequireClientCertificate = e; }
+void AppConfig::setRequireClientCertificate(bool e)
+{
+    m_RequireClientCertificate = e;
+}
 
-bool AppConfig::getRequireClientCertificate() const { return m_RequireClientCertificate; }
+bool AppConfig::getRequireClientCertificate() const
+{
+    return m_RequireClientCertificate;
+}
 
-void AppConfig::setAutoHide(bool b) { m_AutoHide = b; }
+void AppConfig::setAutoHide(bool b)
+{
+    m_AutoHide = b;
+}
 
-bool AppConfig::getAutoHide() { return m_AutoHide; }
+bool AppConfig::getAutoHide()
+{
+    return m_AutoHide;
+}
 
-void AppConfig::setAutoStart(bool b) { m_AutoStart = b; }
+void AppConfig::setAutoStart(bool b)
+{
+    m_AutoStart = b;
+}
 
-bool AppConfig::getAutoStart() { return m_AutoStart; }
+bool AppConfig::getAutoStart()
+{
+    return m_AutoStart;
+}
 
-void AppConfig::setMinimizeToTray(bool b) { m_MinimizeToTray = b; }
+void AppConfig::setMinimizeToTray(bool b)
+{
+    m_MinimizeToTray = b;
+}
 
-bool AppConfig::getMinimizeToTray() { return m_MinimizeToTray; }
+bool AppConfig::getMinimizeToTray()
+{
+    return m_MinimizeToTray;
+}

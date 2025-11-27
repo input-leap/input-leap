@@ -36,14 +36,14 @@ public:
         }
     }
 
-    final_action(final_action&& other) noexcept :
-        callable_{std::move(other.callable_)}
+    final_action(final_action&& other) noexcept : callable_{std::move(other.callable_)}
     {
         std::swap(invoked_, other.invoked_);
     }
 
     final_action(const final_action&) = delete;
     final_action& operator=(const final_action&) = delete;
+
 private:
     bool invoked_ = false;
     Callable callable_;

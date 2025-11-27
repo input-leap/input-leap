@@ -1,0 +1,119 @@
+name: Create release
+on:
+    workflow_dispatch:
+      inputs:
+        version:
+          description: 'Version'
+          required: true
+        
+        # TODO fetch latest artifact with release tag?
+        artifacts_run_id:
+          description: 'Artifacts Run ID'
+          required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      # TODO can it be more restrictive?
+      contents: write # Grant write permissions for pushing tags and creating releases
+      discussions: write # Grant write permissions for creating discussions
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    # todo warning in case of already existing ver?
+    - name: Update version
+      run: |
+        IFS='.' read -r major minor patch <<< "${{ inputs.version }}"
+        sed -i -E "s|^set\s*\(\s*InputLeap_VERSION_MAJOR\s+[0-9]+\s*\)|set(InputLeap_VERSION_MAJOR ${major})|" cmake/Version.cmake
+        sed -i -E "s|^set\s*\(\s*InputLeap_VERSION_MINOR\s+[0-9]+\s*\)|set(InputLeap_VERSION_MINOR ${minor})|" cmake/Version.cmake
+        sed -i -E "s|^set\s*\(\s*InputLeap_VERSION_PATCH\s+[0-9]+\s*\)|set(InputLeap_VERSION_PATCH ${patch})|" cmake/Version.cmake
+    
+    - name: Generate changelog
+      id: changelog
+      run: |
+        python3 -m pip install towncrier
+        towncrier build --version=v${{ inputs.version }} --yes
+        changelog_content=$(towncrier build --version=v${{ inputs.version }} --draft)
+        {
+          echo 'changelog<<EOF'
+          echo "$changelog_content"
+          echo 'EOF'
+        } >> $GITHUB_OUTPUT
+
+    - name: Commit and push changes
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+        # Add and commit the changed file(s)
+        git add doc/* cmake/Version.cmake
+        git commit -m "v${{ inputs.version }}" || echo "No changes to commit"
+
+        # Push to the current branch
+        git push origin HEAD
+
+    - name: Fetch releases from workflow
+      uses: actions/download-artifact@v4
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        run-id: ${{ inputs.artifacts_run_id }}
+        repository: input-leap/input-leap
+        path: tmp
+
+    - name: Prepare releases
+      run: |
+        mkdir -p rel
+        cd tmp
+
+        # Ubuntu 24-04
+        mv input-leap-deb-ubuntu-24-04/input-leap_*_amd64.deb \
+        ../rel/InputLeap_${{ inputs.version }}_ubuntu_24-04.deb \
+        || true
+
+        # Ubuntu 24-10
+        mv input-leap-deb-ubuntu-24-10/input-leap_*_amd64.deb \
+        ../rel/InputLeap_${{ inputs.version }}_ubuntu_24-10.deb \
+        || true
+
+        # Flatpak
+        mv input-leap-flatpak-x86_64/input-leap.flatpak \
+        ../rel/InputLeap_${{ inputs.version }}_flatpak_x86_64.flatpak \
+        || true
+
+        # Fedora
+        rm input-leap-rpms-fedora/x86_64/input-leap-debug*  # Remove debug stuff to find the release RPM
+        mv input-leap-rpms-fedora/x86_64/input-leap-*-*.fc40.x86_64.rpm \
+        ../rel/InputLeap_${{ inputs.version }}_fedora_fc40_x86_64.rpm \
+        || true
+
+        # macOS
+        mv macOS-Apple_Silicon-installer/InputLeap-*-release.dmg \
+        ../rel/InputLeap_${{ inputs.version }}_macOS_AppleSilicon.dmg \
+        || true
+
+        mv macOS-x86_64-installer/InputLeap-*-release.dmg \
+        ../rel/InputLeap_${{ inputs.version }}_macOS_x86_64.dmg \
+        || true
+
+        # Windows
+        mv windows-installer-Windows/InputLeap-Setup-${{ inputs.version }}-release.exe \
+        ../rel/InputLeap_${{ inputs.version }}_Windows.exe \
+        || true
+
+    - name: Create release
+      uses: softprops/action-gh-release@v2
+      with:
+        name: v${{ inputs.version}}
+        tag_name: v${{ inputs.version}}
+        body: ${{ steps.changelog.outputs.changelog }}
+        files: rel/*
+
+    - name: Create a new GitHub Discussion
+      uses: abirismyname/create-discussion@main   
+      with:
+        title: v${{ inputs.version}}
+        body: ${{ steps.changelog.outputs.changelog }}
+        category-name: Announcements             
+        github-token: ${{ secrets.GITHUB_TOKEN }}

@@ -21,27 +21,34 @@
 #include "base/Fwd.h"
 #include "base/IEventQueueBuffer.h"
 
-#include <Carbon/Carbon.h>
+#include <dispatch/dispatch.h>
+#include <mutex>
+#include <condition_variable>
+#include <queue>
 
 namespace inputleap {
 
 //! Event queue buffer for OS X
-class OSXEventQueueBuffer : public IEventQueueBuffer {
+class OSXEventQueueBuffer : public IEventQueueBuffer
+{
 public:
     OSXEventQueueBuffer(IEventQueue* eventQueue);
     virtual ~OSXEventQueueBuffer();
 
     // IEventQueueBuffer overrides
-    virtual void init();
-    virtual void waitForEvent(double timeout);
-    virtual Type getEvent(Event& event, std::uint32_t& dataID);
-    virtual bool addEvent(std::uint32_t dataID);
-    virtual bool isEmpty() const;
+    virtual void init() override;
+    virtual void waitForEvent(double timeout) override;
+    virtual Type getEvent(Event& event, std::uint32_t& dataID) override;
+    virtual bool addEvent(std::uint32_t dataID) override;
+    virtual bool isEmpty() const override;
 
 private:
-    EventRef m_event;
     IEventQueue* m_eventQueue;
-    EventQueueRef m_carbonEventQueue;
+
+    // Thread-safe queue of “pending” user events (the dataID)
+    mutable std::mutex m_mutex;
+    std::condition_variable m_cond;
+    std::queue<std::uint32_t> m_dataQueue;
 };
 
 } // namespace inputleap

@@ -24,6 +24,9 @@ option(INPUTLEAP_USE_EXTERNAL_GTEST "Use external installation of Google Test fr
 option(INPUTLEAP_BUILD_X11 "Build with XWindows support" ON)
 option(INPUTLEAP_BUILD_LIBEI "Build with libei support" OFF)
 option(INPUTLEAP_BUILD_GULRAK_FILESYSTEM "Use internal filesystem library" OFF)
+option(INPUTLEAP_DEPLOY_FLATPAK_SCRIPT "Deploy Flatpak script [Experimental]" OFF)
+option(INPUTLEAP_RELEASE_BUILD "This is an official release" OFF)
+
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set (CMAKE_CXX_EXTENSIONS OFF)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -46,6 +49,15 @@ endif()
 
 include (cmake/Version.cmake)
 include (cmake/Package.cmake)
+
+if (NOT INPUTLEAP_VERSION_STAGE)
+    set (INPUTLEAP_VERSION_STAGE "Debug")
+endif()
+
+if (INPUTLEAP_RELEASE_BUILD)
+    add_definitions (-DINPUTLEAP_RELEASE_BUILD=1)
+    set (INPUTLEAP_RELEASE_BUILD 1)
+endif()
 
 # TODO: Find out why we need these, and remove them
 if (COMMAND cmake_policy)

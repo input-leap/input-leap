@@ -46,6 +46,7 @@
 #include <QFileDialog>
 #include <QDesktopServices>
 #include <QRegularExpression>
+#include <QStandardPaths>
 
 #if defined(Q_OS_MAC)
 #include <ApplicationServices/ApplicationServices.h>
@@ -329,7 +330,7 @@ void MainWindow::loadSettings()
 
     ui_->m_pGroupServer->setChecked(settings().value("groupServerChecked", false).toBool());
     ui_->m_pLineEditConfigFile->setText(settings().value("configFile",
-                                                    QDir::homePath() + "/" + APP_CONFIG_NAME).toString());
+                                                    QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/" + APP_CONFIG_NAME).toString());
     ui_->m_pGroupClient->setChecked(settings().value("groupClientChecked", true).toBool());
     ui_->m_pLineEditHostname->setText(settings().value("serverHostname").toString());
 }

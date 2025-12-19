@@ -23,7 +23,7 @@
 
 namespace inputleap {
 
-OSXEventQueueBuffer::OSXEventQueueBuffer(IEventQueue* events) : 
+OSXEventQueueBuffer::OSXEventQueueBuffer(IEventQueue* events) :
     m_event(nullptr),
     m_eventQueue(events),
     m_carbonEventQueue(nullptr)

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "platform/OSXEventQueueBuffer. h"
+#include "platform/OSXEventQueueBuffer.h"
 
 #include "base/Event.h"
 #include "base/IEventQueue.h"

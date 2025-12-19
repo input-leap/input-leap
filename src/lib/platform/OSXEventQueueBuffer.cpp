@@ -16,14 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "platform/OSXEventQueueBuffer.h"
+#include "platform/OSXEventQueueBuffer. h"
 
 #include "base/Event.h"
 #include "base/IEventQueue.h"
 
 namespace inputleap {
 
-OSXEventQueueBuffer::OSXEventQueueBuffer(IEventQueue* events) :
+OSXEventQueueBuffer::OSXEventQueueBuffer(IEventQueue* events) : 
     m_event(nullptr),
     m_eventQueue(events),
     m_carbonEventQueue(nullptr)
@@ -117,6 +117,12 @@ OSXEventQueueBuffer::isEmpty() const
 {
     EventRef event;
     OSStatus status = ReceiveNextEvent(0, nullptr, 0.0, false, &event);
+    
+    // Release the event if one was retrieved to prevent memory leak
+    if (status == noErr && event != nullptr) {
+        ReleaseEvent(event);
+    }
+    
     return (status == eventLoopTimedOutErr);
 }
 

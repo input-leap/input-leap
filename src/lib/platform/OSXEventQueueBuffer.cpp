@@ -117,6 +117,12 @@ OSXEventQueueBuffer::isEmpty() const
 {
     EventRef event;
     OSStatus status = ReceiveNextEvent(0, nullptr, 0.0, false, &event);
+    
+    // Release the event if one was retrieved to prevent memory leak
+    if (status == noErr && event != nullptr) {
+        ReleaseEvent(event);
+    }
+    
     return (status == eventLoopTimedOutErr);
 }
 

@@ -23,6 +23,7 @@ add_subdirectory(client)
 add_subdirectory(server)
 
 if (WIN32)
+    add_subdirectory(windrophelper)
     add_subdirectory(daemon)
 endif()
 

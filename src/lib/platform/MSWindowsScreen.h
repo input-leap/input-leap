@@ -336,8 +336,6 @@ private:
 
     mutable std::string m_dropTargetPath;
 
-    MSWindowsDropTarget* m_dropTarget;
-    HWND m_dropWindow;
     const int m_dropWindowSize;
 
     Thread* m_sendDragThread;

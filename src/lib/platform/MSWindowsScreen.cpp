@@ -18,6 +18,7 @@
  */
 
 #include "platform/MSWindowsScreen.h"
+#include "platform/MSWindowsImpersonation.h"
 
 #include "platform/MSWindowsDropTarget.h"
 #include "client/Client.h"
@@ -116,7 +117,6 @@ MSWindowsScreen::MSWindowsScreen(
     m_hasMouse(GetSystemMetrics(SM_MOUSEPRESENT) != 0),
     m_showingMouse(false),
     m_events(events),
-    m_dropWindow(nullptr),
     m_dropWindowSize(20)
 {
     assert(s_windowInstance != nullptr);
@@ -140,11 +140,6 @@ MSWindowsScreen::MSWindowsScreen(
         forceShowCursor();
         LOG_DEBUG("screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : "");
         LOG_DEBUG("window is 0x%08x", m_window);
-
-        OleInitialize(0);
-        m_dropWindow = createDropWindow(m_class, "DropWindow");
-        m_dropTarget = new MSWindowsDropTarget();
-        RegisterDragDrop(m_dropWindow, m_dropTarget);
     }
     catch (...) {
         delete m_keyState;
@@ -176,12 +171,6 @@ MSWindowsScreen::~MSWindowsScreen()
     delete m_screensaver;
     destroyWindow(m_window);
     destroyClass(m_class);
-
-    RevokeDragDrop(m_dropWindow);
-    m_dropTarget->Release();
-    OleUninitialize();
-    destroyWindow(m_dropWindow);
-
     s_screen = nullptr;
 }
 
@@ -1824,8 +1813,8 @@ MSWindowsScreen::fakeDraggingFiles(DragFileList fileList)
 
 std::string& MSWindowsScreen::getDraggingFilename()
 {
+    // Contains LLM generated code.
     if (m_draggingStarted) {
-        m_dropTarget->clearDraggingFilename();
         m_draggingFilename.clear();
 
         int halfSize = m_dropWindowSize / 2;
@@ -1834,44 +1823,130 @@ std::string& MSWindowsScreen::getDraggingFilename()
         std::int32_t yPos = m_isPrimary ? m_yCursor : m_yCenter;
         xPos = (xPos - halfSize) < 0 ? 0 : xPos - halfSize;
         yPos = (yPos - halfSize) < 0 ? 0 : yPos - halfSize;
-        SetWindowPos(
-            m_dropWindow,
-            HWND_TOPMOST,
-            xPos,
-            yPos,
-            m_dropWindowSize,
-            m_dropWindowSize,
-            SWP_SHOWWINDOW);
 
-        // TODO: fake these keys properly
-        inputleap::this_thread_sleep(.05f); // A tiny sleep here makes the DragEnter event on m_dropWindow trigger much more consistently
-        fakeKeyDown(kKeyEscape, 8192, 1);
-        fakeKeyUp(1);
-        fakeMouseButton(kButtonLeft, false);
+        // Get user token to launch helper as user
+        enablePrivilege(SE_TCB_NAME);
+        DWORD sessionId = getActiveConsoleSessionId();
+        HANDLE hToken = sessionId ? getUserTokenFromSession(sessionId) : NULL;
 
-        std::string filename;
-        DOUBLE timeout = inputleap::current_time_seconds() + .5f;
-        while (inputleap::current_time_seconds() < timeout) {
-            inputleap::this_thread_sleep(.05f);
-            filename = m_dropTarget->getDraggingFilename();
-            if (!filename.empty()) {
-                break;
-            }
+        if (!hToken) {
+            LOG_ERR("failed to get user token for drop helper");
+            return m_draggingFilename;
         }
 
-        ShowWindow(m_dropWindow, SW_HIDE);
+        ScopedHandle token(hToken);
 
-        if (!filename.empty()) {
-            if (DragInformation::isFileValid(filename)) {
-                m_draggingFilename = filename;
+        // Get full path to helper executable (same directory as current exe)
+        char exePath[MAX_PATH];
+        char helperPath[MAX_PATH];
+        GetModuleFileName(nullptr, exePath, MAX_PATH);
+
+        // Remove executable name, keep directory
+        char* lastSlash = strrchr(exePath, '\\');
+        if (lastSlash) {
+            *(lastSlash + 1) = '\0';
+        }
+
+        // Build full path to helper
+        snprintf(helperPath, sizeof(helperPath), "%sinput-leapdh.exe", exePath);
+
+        // Build command line for helper
+        char cmdLine[256];
+        int timeout = 5000, testMode = 1;
+        snprintf(cmdLine, sizeof(cmdLine), "%s %d %d %d %d %d",
+            helperPath, xPos, yPos, m_dropWindowSize, timeout, testMode);
+
+        POINT cursorPos;
+        GetCursorPos(&cursorPos);
+        LOG_DEBUG("Cursor position: %d %d", cursorPos.x, cursorPos.y);
+
+        // Create pipes for stdout and stderr
+        HANDLE hStdoutRead, hStdoutWrite;
+        HANDLE hStderrRead, hStderrWrite;
+        SECURITY_ATTRIBUTES sa = { sizeof(sa), nullptr, TRUE };
+
+        if (!CreatePipe(&hStdoutRead, &hStdoutWrite, &sa, 0)) {
+            LOG_ERR("failed to create stdout pipe for drop helper");
+            return m_draggingFilename;
+        }
+
+        if (!CreatePipe(&hStderrRead, &hStderrWrite, &sa, 0)) {
+            CloseHandle(hStdoutRead);
+            CloseHandle(hStdoutWrite);
+            LOG_ERR("failed to create stderr pipe for drop helper");
+            return m_draggingFilename;
+        }
+
+        ScopedHandle stdoutRead(hStdoutRead);
+        ScopedHandle stderrRead(hStderrRead);
+
+        // Launch helper as user
+        STARTUPINFO si = {};
+        si.cb = sizeof(si);
+        si.dwFlags = STARTF_USESTDHANDLES;
+        si.hStdOutput = hStdoutWrite;
+        si.hStdError = hStderrWrite;
+        si.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
+
+        PROCESS_INFORMATION pi = {};
+
+        {
+            ScopedHandle stdoutWrite(hStdoutWrite);
+            ScopedHandle stderrWrite(hStderrWrite);
+
+            if (!CreateProcessAsUser(hToken, nullptr, cmdLine, nullptr, nullptr,
+                TRUE, CREATE_NO_WINDOW, nullptr, nullptr,
+                &si, &pi)) {
+                LOG_ERR("failed to launch drop helper as user, error=%d", GetLastError());
+                return m_draggingFilename;
+            }
+
+            GetCursorPos(&cursorPos);
+            LOG_DEBUG("Cursor position: %d %d", cursorPos.x, cursorPos.y);
+
+            ScopedHandle hProcess(pi.hProcess);
+            ScopedHandle hThread(pi.hThread);
+
+            LOG_DEBUG("launched drop helper process as user");
+
+            // TODO: fake these keys properly
+            inputleap::this_thread_sleep(.2f); // Give window time to initialize
+            fakeKeyDown(kKeyEscape, 8192, 1);
+            fakeKeyUp(1);
+            fakeMouseButton(kButtonLeft, false);
+            
+            // Wait for helper to finish (max 1 second)
+            WaitForSingleObject(pi.hProcess, timeout + 500); //TODO timing?
+
+        } // Pipes close here, allowing reads to complete
+
+        // Read stderr for diagnostics
+        char stderrBuffer[4096] = {};
+        DWORD stderrBytesRead = 0;
+        if (ReadFile(hStderrRead, stderrBuffer, sizeof(stderrBuffer) - 1, &stderrBytesRead, nullptr) && stderrBytesRead > 0) {
+            stderrBuffer[stderrBytesRead] = '\0';
+            LOG_DEBUG("drop helper stderr: %s", stderrBuffer);
+        }
+
+        // Read filename from stdout
+        char buffer[MAX_PATH] = {};
+        DWORD bytesRead = 0;
+        if (ReadFile(hStdoutRead, buffer, sizeof(buffer) - 1, &bytesRead, nullptr) && bytesRead > 0) {
+            buffer[bytesRead] = '\0';
+            if (DragInformation::isFileValid(buffer)) {
+                m_draggingFilename = buffer;
+                LOG_DEBUG("captured drag filename from helper: %s", buffer);
             }
             else {
-                LOG_ERR("drag file name is invalid: %s", filename.c_str());
+                LOG_ERR("drag file name from helper is invalid: %s", buffer);
             }
+        }
+        else {
+            LOG_ERR("failed to read filename from drop helper");
         }
 
         if (m_draggingFilename.empty()) {
-            LOG_ERR("failed to get drag file name from OLE");
+            LOG_ERR("failed to get drag file name from drop helper");
         }
     }
 
@@ -1882,15 +1957,15 @@ const std::string&
 MSWindowsScreen::getDropTarget() const
 {
     if (m_dropTargetPath.empty()) {
-        // SHGetFolderPath is deprecated in vista, but use it for xp support.
-        char desktopPath[MAX_PATH];
-        if (SUCCEEDED(SHGetFolderPath(nullptr, CSIDL_DESKTOP, nullptr, 0, desktopPath))) {
-            m_dropTargetPath = std::string(desktopPath);
-            LOG_INFO("using desktop for drop target: %s", m_dropTargetPath.c_str());
+        // LLM generated code
+        std::string desktopPath = getInteractiveUserDesktopPath();
+
+        if (desktopPath.empty()) {
+            LOG_ERR("failed to get desktop path, no drop target available");
         }
-        else {
-            LOG_ERR("failed to get desktop path, no drop target available, error=%d", GetLastError());
-        }
+
+        m_dropTargetPath = desktopPath;
+        LOG_DEBUG("using desktop path for drop target: %s", desktopPath.c_str());
     }
     return m_dropTargetPath;
 }

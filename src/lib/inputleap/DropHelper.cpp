@@ -22,6 +22,12 @@
 
 #include <fstream>
 
+// LLM generated code
+#ifdef SYSAPI_WIN32
+#include "platform/MSWindowsImpersonation.h"
+#endif
+
+
 namespace inputleap {
 
 void
@@ -30,6 +36,20 @@ DropHelper::writeToDir(const std::string& destination, DragFileList& fileList, s
     LOG_DEBUG("dropping file, files=%zi target=%s", fileList.size(), destination.c_str());
 
     if (!destination.empty() && fileList.size() > 0) {
+        // LLM generated code
+#ifdef SYSAPI_WIN32
+        // Impersonate user on Windows so file is owned by them, not SYSTEM
+        enablePrivilege(SE_TCB_NAME);
+        DWORD sessionId = getActiveConsoleSessionId();
+        HANDLE hToken = sessionId ? getUserTokenFromSession(sessionId) : NULL;
+        ScopedHandle token(hToken);
+        ScopedImpersonation impersonate(hToken);
+
+        if (!impersonate.isActive()) {
+            LOG_ERR("drop file failed: could not impersonate user");
+        }
+#endif
+
         std::fstream file;
         std::string dropTarget = destination;
 #ifdef SYSAPI_WIN32
@@ -49,6 +69,8 @@ DropHelper::writeToDir(const std::string& destination, DragFileList& fileList, s
         LOG_INFO("dropped file \"%s\" in \"%s\"", fileList.at(0).getFilename().c_str(), destination.c_str());
 
         fileList.clear();
+
+        // LLM generated code: ScopedImpersonation destructor reverts to SYSTEM automatically
     }
     else {
         LOG_ERR("drop file failed: drop target is empty");

@@ -1493,11 +1493,20 @@ OSXScreen::updateScreenShape()
 		return;
 	}
 
-	// get smallest rect enclosing all display rects
+	// get smallest rect enclosing all display rects and individual monitors
 	CGRect totalBounds = CGRectZero;
+	m_monitors.clear();
 	for (CGDisplayCount i = 0; i < displayCount; ++i) {
 		CGRect bounds = CGDisplayBounds(displays[i]);
 		totalBounds   = CGRectUnion(totalBounds, bounds);
+
+		MonitorInfo info;
+		info.m_x = static_cast<std::int32_t>(bounds.origin.x);
+		info.m_y = static_cast<std::int32_t>(bounds.origin.y);
+		info.m_w = static_cast<std::int32_t>(bounds.size.width);
+		info.m_h = static_cast<std::int32_t>(bounds.size.height);
+		info.m_index = static_cast<std::uint32_t>(i);
+		m_monitors.push_back(info);
 	}
 
 	// get shape of default screen
@@ -1513,12 +1522,36 @@ OSXScreen::updateScreenShape()
   m_yCenter = (rect.origin.y + rect.size.height) / 2;
 
 	delete[] displays;
+
+	LOG_DEBUG("enumerated %zu monitors", m_monitors.size());
+	for (const auto& mon : m_monitors) {
+		LOG_DEBUG("  monitor %u: %d,%d %dx%d",
+				  mon.m_index, mon.m_x, mon.m_y, mon.m_w, mon.m_h);
+	}
+
+	// fall back to single monitor if enumeration failed
+	if (m_monitors.empty()) {
+		MonitorInfo info;
+		info.m_x = m_x;
+		info.m_y = m_y;
+		info.m_w = m_w;
+		info.m_h = m_h;
+		info.m_index = 0;
+		m_monitors.push_back(info);
+	}
+
 	// We want to notify the peer screen whether we are primary screen or not
     sendEvent(EventType::SCREEN_SHAPE_CHANGED);
 
 	LOG_DEBUG("screen shape: center=%d,%d size=%dx%d on %u %s",
          m_x, m_y, m_w, m_h, displayCount,
          (displayCount == 1) ? "display" : "displays");
+}
+
+std::vector<MonitorInfo>
+OSXScreen::getMonitors() const
+{
+	return m_monitors;
 }
 
 #pragma mark -

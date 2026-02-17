@@ -19,9 +19,12 @@
 #pragma once
 
 #include "inputleap/clipboard_types.h"
+#include "inputleap/protocol_types.h"
 #include "inputleap/Fwd.h"
 #include "base/Event.h"
 #include "base/EventTypes.h"
+
+#include <vector>
 
 namespace inputleap {
 
@@ -68,6 +71,24 @@ public:
     Return the current position of the cursor in \c x and \c y.
     */
     virtual void getCursorPos(std::int32_t& x, std::int32_t& y) const = 0;
+
+    //! Get individual monitor geometries
+    /*!
+    Return the list of individual physical monitors.  The default
+    implementation returns a single monitor matching getShape().
+    */
+    virtual std::vector<MonitorInfo> getMonitors() const
+    {
+        std::int32_t x, y, w, h;
+        getShape(x, y, w, h);
+        MonitorInfo info;
+        info.m_x = x;
+        info.m_y = y;
+        info.m_w = w;
+        info.m_h = h;
+        info.m_index = 0;
+        return { info };
+    }
 
     //@}
 };

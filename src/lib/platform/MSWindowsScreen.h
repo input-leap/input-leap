@@ -23,9 +23,11 @@
 #include "platform/MSWindowsHook.h"
 #include "inputleap/PlatformScreen.h"
 #include "inputleap/DragInformation.h"
+#include "inputleap/protocol_types.h"
 #include "platform/synwinhk.h"
 #include <map>
 #include <string>
+#include <vector>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -76,6 +78,7 @@ public:
     virtual void getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width,
                           std::int32_t& height) const;
     virtual void getCursorPos(std::int32_t& x, std::int32_t& y) const;
+    std::vector<MonitorInfo> getMonitors() const override;
 
     // IPrimaryScreen overrides
     virtual void reconfigure(std::uint32_t activeSides);
@@ -265,6 +268,9 @@ private:
 
     // true if system appears to have multiple monitors
     bool m_multimon;
+
+    // individual monitor geometries
+    std::vector<MonitorInfo> m_monitors;
 
     // last mouse position
     std::int32_t m_xCursor, m_yCursor;

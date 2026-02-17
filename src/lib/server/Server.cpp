@@ -701,6 +701,103 @@ BaseClientProxy* Server::mapToNeighbor(BaseClientProxy* src, EDirection srcSide,
 	return dst;
 }
 
+bool Server::isAtOuterEdge(BaseClientProxy* client, std::int32_t x,
+                           std::int32_t y, EDirection dir) const
+{
+    auto monitors = client->getMonitors();
+
+    // single monitor or empty: always at outer edge (legacy behavior)
+    if (monitors.size() <= 1) {
+        return true;
+    }
+
+    // find which monitor contains the cursor position
+    const MonitorInfo* curMon = nullptr;
+    for (const auto& mon : monitors) {
+        if (x >= mon.m_x && x < mon.m_x + mon.m_w &&
+            y >= mon.m_y && y < mon.m_y + mon.m_h) {
+            curMon = &mon;
+            break;
+        }
+    }
+
+    if (curMon == nullptr) {
+        // cursor not on any monitor (e.g. in a gap) -- treat as outer edge
+        return true;
+    }
+
+    // adjacency tolerance in pixels for non-contiguous arrangements
+    const std::int32_t kTolerance = 2;
+
+    // check if any other monitor is adjacent in the given direction
+    for (const auto& mon : monitors) {
+        if (&mon == curMon) {
+            continue;
+        }
+
+        switch (dir) {
+        case kLeft:
+            // another monitor is to our left if its right edge touches our left edge
+            // and there's vertical overlap
+            if (std::abs((mon.m_x + mon.m_w) - curMon->m_x) <= kTolerance &&
+                mon.m_y < curMon->m_y + curMon->m_h &&
+                mon.m_y + mon.m_h > curMon->m_y) {
+                // check if cursor y is within the adjacent monitor's vertical span
+                if (y >= mon.m_y && y < mon.m_y + mon.m_h) {
+                    LOG_DEBUG("inter-monitor seam detected: left edge of monitor %u "
+                              "at (%d,%d)", curMon->m_index, x, y);
+                    return false;
+                }
+            }
+            break;
+
+        case kRight:
+            // another monitor is to our right if its left edge touches our right edge
+            if (std::abs(mon.m_x - (curMon->m_x + curMon->m_w)) <= kTolerance &&
+                mon.m_y < curMon->m_y + curMon->m_h &&
+                mon.m_y + mon.m_h > curMon->m_y) {
+                if (y >= mon.m_y && y < mon.m_y + mon.m_h) {
+                    LOG_DEBUG("inter-monitor seam detected: right edge of monitor %u "
+                              "at (%d,%d)", curMon->m_index, x, y);
+                    return false;
+                }
+            }
+            break;
+
+        case kTop:
+            // another monitor is above if its bottom edge touches our top edge
+            if (std::abs((mon.m_y + mon.m_h) - curMon->m_y) <= kTolerance &&
+                mon.m_x < curMon->m_x + curMon->m_w &&
+                mon.m_x + mon.m_w > curMon->m_x) {
+                if (x >= mon.m_x && x < mon.m_x + mon.m_w) {
+                    LOG_DEBUG("inter-monitor seam detected: top edge of monitor %u "
+                              "at (%d,%d)", curMon->m_index, x, y);
+                    return false;
+                }
+            }
+            break;
+
+        case kBottom:
+            // another monitor is below if its top edge touches our bottom edge
+            if (std::abs(mon.m_y - (curMon->m_y + curMon->m_h)) <= kTolerance &&
+                mon.m_x < curMon->m_x + curMon->m_w &&
+                mon.m_x + mon.m_w > curMon->m_x) {
+                if (x >= mon.m_x && x < mon.m_x + mon.m_w) {
+                    LOG_DEBUG("inter-monitor seam detected: bottom edge of monitor %u "
+                              "at (%d,%d)", curMon->m_index, x, y);
+                    return false;
+                }
+            }
+            break;
+
+        default:
+            break;
+        }
+    }
+
+    return true;
+}
+
 void Server::avoidJumpZone(BaseClientProxy* dst, EDirection dir, std::int32_t& x,
                            std::int32_t& y) const
 {
@@ -1728,6 +1825,15 @@ bool Server::onMouseMovePrimary(std::int32_t x, std::int32_t y)
 		if (dir == kNoDirection) {
 			continue;
 		}
+
+		// suppress switch at inter-monitor seams (cursor at edge
+		// between two physical monitors on the same machine)
+		if (!isAtOuterEdge(m_active, xc, yc, dir)) {
+			LOG_DEBUG("suppressing screen switch at inter-monitor seam "
+					  "dir=%d at (%d,%d)", dir, xc, yc);
+			continue;
+		}
+
 		x = xs[i], y = ys[i];
 
 		// get jump destination

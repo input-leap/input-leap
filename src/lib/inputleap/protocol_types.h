@@ -21,6 +21,7 @@
 #include "base/EventTypes.h"
 
 #include <cstdint>
+#include <vector>
 
 namespace inputleap {
 
@@ -283,6 +284,11 @@ extern const char*        kMsgDFileTransfer;
 // of each object's directory.
 extern const char*        kMsgDDragInfo;
 
+// monitor layout:  secondary -> primary
+// $1 = number of monitors, followed by per-monitor x, y, w, h.
+// sent after kMsgDInfo.  old clients/servers ignore the unknown message.
+extern const char*        kMsgDMonitors;
+
 //
 // query codes
 //
@@ -316,6 +322,18 @@ extern const char*        kMsgEBad;
 //
 // structures
 //
+
+//! Individual monitor geometry
+/*!
+This struct contains the geometry of a single physical monitor.
+*/
+struct MonitorInfo {
+    std::int32_t m_x = 0;
+    std::int32_t m_y = 0;
+    std::int32_t m_w = 0;
+    std::int32_t m_h = 0;
+    std::uint32_t m_index = 0;
+};
 
 //! Screen information
 /*!

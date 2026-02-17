@@ -52,6 +52,7 @@ public:
     void getShape(std::int32_t& x, std::int32_t& y,
                   std::int32_t& width, std::int32_t& height) const override;
     void getCursorPos(std::int32_t& x, std::int32_t& y) const override;
+    std::vector<MonitorInfo> getMonitors() const override;
 
     // IPrimaryScreen overrides
     void reconfigure(std::uint32_t activeSides) override;
@@ -150,6 +151,9 @@ private:
     std::uint32_t y_ = 0;
     std::uint32_t w_ = 0;
     std::uint32_t h_ = 0;
+
+    // individual monitor geometries
+    std::vector<MonitorInfo> monitors_;
 
     // true if mouse has entered the screen
     bool is_on_screen_;

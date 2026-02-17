@@ -210,6 +210,9 @@ bool ClientProxy1_6::parseHandshakeMessage(const std::uint8_t* code)
             return true;
         }
     }
+    else if (memcmp(code, kMsgDMonitors, 4) == 0) {
+        return recvMonitors();
+    }
     return false;
 }
 
@@ -236,6 +239,9 @@ bool ClientProxy1_6::parseMessage(const std::uint8_t* code)
         // discard no-ops
         LOG_DEBUG2("no-op from %s", getName().c_str());
         return true;
+    }
+    else if (memcmp(code, kMsgDMonitors, 4) == 0) {
+        return recvMonitors();
     }
     else if (memcmp(code, kMsgCClipboard, 4) == 0) {
         return recvGrabClipboard();
@@ -290,6 +296,33 @@ void ClientProxy1_6::getCursorPos(std::int32_t& x, std::int32_t& y) const
     // note -- this returns the cursor pos from when we last got client info
     x = m_info.m_mx;
     y = m_info.m_my;
+}
+
+std::vector<MonitorInfo> ClientProxy1_6::getMonitors() const
+{
+    if (!m_monitors.empty()) {
+        return m_monitors;
+    }
+    // fall back to single monitor from bounding rect
+    MonitorInfo info;
+    info.m_x = m_info.m_x;
+    info.m_y = m_info.m_y;
+    info.m_w = m_info.m_w;
+    info.m_h = m_info.m_h;
+    info.m_index = 0;
+    return { info };
+}
+
+void ClientProxy1_6::setMonitors(const std::vector<MonitorInfo>& monitors)
+{
+    m_monitors = monitors;
+    LOG_DEBUG("received %zu monitors from client \"%s\"",
+              monitors.size(), getName().c_str());
+    for (std::uint32_t i = 0; i < monitors.size(); ++i) {
+        LOG_DEBUG("  monitor %u: %d,%d %dx%d", i,
+                  monitors[i].m_x, monitors[i].m_y,
+                  monitors[i].m_w, monitors[i].m_h);
+    }
 }
 
 void ClientProxy1_6::enter(std::int32_t xAbs, std::int32_t yAbs, std::uint32_t seqNum,
@@ -535,6 +568,40 @@ void ClientProxy1_6::dragInfoReceived()
     ProtocolUtil::readf(getStream(), kMsgDDragInfo + 4, &fileNum, &content);
 
     m_server->dragInfoReceived(fileNum, content);
+}
+
+bool ClientProxy1_6::recvMonitors()
+{
+    // read monitor count (2 bytes, stored as uint16)
+    std::uint16_t count;
+    if (!ProtocolUtil::readf(getStream(), "%2i", &count)) {
+        return false;
+    }
+
+    if (count > PROTOCOL_MAX_LIST_LENGTH) {
+        LOG_ERR("invalid monitor count %u from client \"%s\"",
+                count, getName().c_str());
+        return false;
+    }
+
+    std::vector<MonitorInfo> monitors;
+    monitors.reserve(count);
+    for (std::uint16_t i = 0; i < count; ++i) {
+        std::int32_t x, y, w, h;
+        if (!ProtocolUtil::readf(getStream(), "%4i%4i%4i%4i", &x, &y, &w, &h)) {
+            return false;
+        }
+        MonitorInfo info;
+        info.m_x = x;
+        info.m_y = y;
+        info.m_w = w;
+        info.m_h = h;
+        info.m_index = static_cast<std::uint32_t>(i);
+        monitors.push_back(info);
+    }
+
+    setMonitors(monitors);
+    return true;
 }
 
 ClientProxy1_6::ClientClipboard::ClientClipboard() :

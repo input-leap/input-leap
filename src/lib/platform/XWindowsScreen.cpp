@@ -941,6 +941,7 @@ XWindowsScreen::saveShape()
 	// we warp the pointer to the center of the first physical
 	// screen instead of the logical screen.
 	m_xinerama = false;
+	m_monitors.clear();
 	int eventBase, errorBase;
     if (m_impl->XineramaQueryExtension(m_display, &eventBase, &errorBase) &&
         m_impl->XineramaIsActive(m_display)) {
@@ -955,9 +956,44 @@ XWindowsScreen::saveShape()
 				m_xCenter  = screens[0].x_org + (screens[0].width  >> 1);
 				m_yCenter  = screens[0].y_org + (screens[0].height >> 1);
 			}
+
+			// store individual monitor rects
+			for (int i = 0; i < numScreens; ++i) {
+				MonitorInfo info;
+				info.m_x = screens[i].x_org;
+				info.m_y = screens[i].y_org;
+				info.m_w = screens[i].width;
+				info.m_h = screens[i].height;
+				info.m_index = static_cast<std::uint32_t>(i);
+				m_monitors.push_back(info);
+			}
+
 			XFree(screens);
 		}
 	}
+
+	LOG_DEBUG("enumerated %zu monitors", m_monitors.size());
+	for (const auto& mon : m_monitors) {
+		LOG_DEBUG("  monitor %u: %d,%d %dx%d",
+				  mon.m_index, mon.m_x, mon.m_y, mon.m_w, mon.m_h);
+	}
+
+	// fall back to single monitor if Xinerama unavailable or failed
+	if (m_monitors.empty()) {
+		MonitorInfo info;
+		info.m_x = m_x;
+		info.m_y = m_y;
+		info.m_w = m_w;
+		info.m_h = m_h;
+		info.m_index = 0;
+		m_monitors.push_back(info);
+	}
+}
+
+std::vector<MonitorInfo>
+XWindowsScreen::getMonitors() const
+{
+	return m_monitors;
 }
 
 Window

@@ -472,6 +472,11 @@ void Screen::getCursorPos(std::int32_t& x, std::int32_t& y) const
     m_screen->getCursorPos(x, y);
 }
 
+std::vector<MonitorInfo> Screen::getMonitors() const
+{
+    return m_screen->getMonitors();
+}
+
 void
 Screen::enablePrimary()
 {

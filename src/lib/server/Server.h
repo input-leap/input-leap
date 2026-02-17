@@ -237,6 +237,13 @@ private:
     BaseClientProxy* mapToNeighbor(BaseClientProxy*, EDirection, std::int32_t& x,
                                    std::int32_t& y) const;
 
+    // returns true if the cursor at (x, y) is at a true outer edge
+    // of the client's monitor layout in the given direction.
+    // returns false if the edge is an inter-monitor seam (adjacent
+    // monitor exists in that direction on the same machine).
+    bool isAtOuterEdge(BaseClientProxy* client, std::int32_t x,
+                       std::int32_t y, EDirection dir) const;
+
     // adjusts x and y or neither to avoid ending up in a jump zone
     // after entering the client in the given direction.
     void avoidJumpZone(BaseClientProxy*, EDirection, std::int32_t& x, std::int32_t& y) const;

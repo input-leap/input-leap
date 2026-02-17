@@ -63,6 +63,7 @@ public:
     virtual void getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width,
                           std::int32_t& height) const;
     virtual void getCursorPos(std::int32_t& x, std::int32_t& y) const;
+    std::vector<MonitorInfo> getMonitors() const override;
 
     // IPrimaryScreen overrides
     virtual void reconfigure(std::uint32_t activeSides);
@@ -261,6 +262,9 @@ private:
     std::int32_t m_x, m_y;
     std::int32_t m_w, m_h;
     std::int32_t m_xCenter, m_yCenter;
+
+    // individual monitor geometries
+    std::vector<MonitorInfo> m_monitors;
 
     // mouse state
     mutable std::int32_t m_xCursor, m_yCursor;

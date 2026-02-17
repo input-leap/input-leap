@@ -427,6 +427,8 @@ void EiScreen::update_shape()
     h_ = 1;
     x_ = std::numeric_limits<uint32_t>::max();
     y_ = std::numeric_limits<uint32_t>::max();
+    monitors_.clear();
+    std::uint32_t monitorIndex = 0;
     for (auto it = ei_devices_.begin(); it != ei_devices_.end(); it++) {
         auto idx = 0;
         struct ei_region *r;
@@ -435,14 +437,45 @@ void EiScreen::update_shape()
             y_ = std::min(ei_region_get_y(r), y_);
             w_ = std::max(ei_region_get_x(r) + ei_region_get_width(r), w_);
             h_ = std::max(ei_region_get_y(r) + ei_region_get_height(r), h_);
+
+            MonitorInfo info;
+            info.m_x = static_cast<std::int32_t>(ei_region_get_x(r));
+            info.m_y = static_cast<std::int32_t>(ei_region_get_y(r));
+            info.m_w = static_cast<std::int32_t>(ei_region_get_width(r));
+            info.m_h = static_cast<std::int32_t>(ei_region_get_height(r));
+            info.m_index = monitorIndex++;
+            monitors_.push_back(info);
         }
     }
 
     LOG_NOTE("Logical output size: %dx%d@%d.%d", w_, h_, x_, y_);
+    LOG_DEBUG("enumerated %zu monitors", monitors_.size());
+    for (const auto& mon : monitors_) {
+        LOG_DEBUG("  monitor %u: %d,%d %dx%d",
+                  mon.m_index, mon.m_x, mon.m_y, mon.m_w, mon.m_h);
+    }
+
+    // fall back to single monitor if enumeration produced nothing
+    if (monitors_.empty()) {
+        MonitorInfo info;
+        info.m_x = static_cast<std::int32_t>(x_);
+        info.m_y = static_cast<std::int32_t>(y_);
+        info.m_w = static_cast<std::int32_t>(w_);
+        info.m_h = static_cast<std::int32_t>(h_);
+        info.m_index = 0;
+        monitors_.push_back(info);
+    }
+
     cursor_x_ = x_ + w_ / 2;
     cursor_y_ = y_ + h_ / 2;
 
     send_event(EventType::SCREEN_SHAPE_CHANGED, nullptr);
+}
+
+std::vector<MonitorInfo>
+EiScreen::getMonitors() const
+{
+    return monitors_;
 }
 
 void EiScreen::add_device(struct ei_device *device)

@@ -299,6 +299,7 @@ public:
     void getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width,
                   std::int32_t& height) const override;
     void getCursorPos(std::int32_t& x, std::int32_t& y) const override;
+    std::vector<MonitorInfo> getMonitors() const override;
 
     IPlatformScreen* getPlatformScreen() { return m_screen.get(); }
 

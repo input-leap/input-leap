@@ -390,6 +390,29 @@ ServerProxy::sendInfo(const ClientInfo& info)
                                 info.m_x, info.m_y,
                                 info.m_w, info.m_h, 0,
                                 info.m_mx, info.m_my);
+
+    // send individual monitor geometries after DInfo
+    sendMonitors();
+}
+
+void
+ServerProxy::sendMonitors()
+{
+    auto monitors = m_client->getMonitors();
+    std::uint16_t count = static_cast<std::uint16_t>(monitors.size());
+    LOG_DEBUG1("sending %u monitors", count);
+
+    // write message code (DMON) + count
+    ProtocolUtil::writef(m_stream, kMsgDMonitors,
+                         static_cast<std::int32_t>(count));
+
+    // write each monitor: x, y, w, h as 4-byte integers
+    for (const auto& mon : monitors) {
+        ProtocolUtil::writef(m_stream, "%4i%4i%4i%4i",
+                             mon.m_x, mon.m_y, mon.m_w, mon.m_h);
+        LOG_DEBUG1("  monitor %u: %d,%d %dx%d",
+                   mon.m_index, mon.m_x, mon.m_y, mon.m_w, mon.m_h);
+    }
 }
 
 KeyID

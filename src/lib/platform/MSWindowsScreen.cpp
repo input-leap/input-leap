@@ -1535,6 +1535,23 @@ MSWindowsScreen::ignore() const
     return (m_mark != m_markReceived);
 }
 
+static BOOL CALLBACK enumMonitorProc(HMONITOR hMonitor, HDC, LPRECT, LPARAM lParam)
+{
+    auto* monitors = reinterpret_cast<std::vector<MonitorInfo>*>(lParam);
+    MONITORINFO mi;
+    mi.cbSize = sizeof(mi);
+    if (GetMonitorInfo(hMonitor, &mi)) {
+        MonitorInfo info;
+        info.m_x = mi.rcMonitor.left;
+        info.m_y = mi.rcMonitor.top;
+        info.m_w = mi.rcMonitor.right - mi.rcMonitor.left;
+        info.m_h = mi.rcMonitor.bottom - mi.rcMonitor.top;
+        info.m_index = static_cast<std::uint32_t>(monitors->size());
+        monitors->push_back(info);
+    }
+    return TRUE;
+}
+
 void
 MSWindowsScreen::updateScreenShape()
 {
@@ -1550,8 +1567,35 @@ MSWindowsScreen::updateScreenShape()
     m_multimon = (m_w != GetSystemMetrics(SM_CXSCREEN) ||
                   m_h != GetSystemMetrics(SM_CYSCREEN));
 
+    // enumerate individual monitors
+    m_monitors.clear();
+    EnumDisplayMonitors(nullptr, nullptr, enumMonitorProc,
+                        reinterpret_cast<LPARAM>(&m_monitors));
+    LOG_DEBUG("enumerated %zu monitors", m_monitors.size());
+    for (const auto& mon : m_monitors) {
+        LOG_DEBUG("  monitor %u: %d,%d %dx%d",
+                  mon.m_index, mon.m_x, mon.m_y, mon.m_w, mon.m_h);
+    }
+
+    // fall back to single monitor if enumeration failed
+    if (m_monitors.empty()) {
+        MonitorInfo info;
+        info.m_x = m_x;
+        info.m_y = m_y;
+        info.m_w = m_w;
+        info.m_h = m_h;
+        info.m_index = 0;
+        m_monitors.push_back(info);
+    }
+
     // tell the desks
     m_desks->setShape(m_x, m_y, m_w, m_h, m_xCenter, m_yCenter, m_multimon);
+}
+
+std::vector<MonitorInfo>
+MSWindowsScreen::getMonitors() const
+{
+    return m_monitors;
 }
 
 void MSWindowsScreen::handle_fixes()

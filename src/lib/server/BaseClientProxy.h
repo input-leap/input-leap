@@ -21,6 +21,8 @@
 #include "base/EventTarget.h"
 #include "inputleap/Fwd.h"
 #include "inputleap/IClient.h"
+#include "inputleap/protocol_types.h"
+#include <vector>
 
 namespace inputleap {
 
@@ -62,6 +64,16 @@ public:
     virtual bool isPrimary() const { return false; }
 
     //@}
+
+    //! Get per-monitor geometry
+    virtual std::vector<MonitorInfo> getMonitors() const
+    {
+        std::int32_t x, y, w, h;
+        getShape(x, y, w, h);
+        MonitorInfo info;
+        info.m_x = x; info.m_y = y; info.m_w = w; info.m_h = h; info.m_index = 0;
+        return { info };
+    }
 
     // IClient overrides
     virtual void sendDragInfo(std::uint32_t fileCount, const char* info, size_t size) = 0;

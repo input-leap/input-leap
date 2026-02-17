@@ -44,6 +44,8 @@ public:
     void getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width,
                   std::int32_t& height) const override;
     void getCursorPos(std::int32_t& x, std::int32_t& y) const override;
+    std::vector<MonitorInfo> getMonitors() const override;
+    void setMonitors(const std::vector<MonitorInfo>& monitors);
 
     // IClient overrides
     void enter(std::int32_t xAbs, std::int32_t yAbs, std::uint32_t seqNum, KeyModifierMask mask,
@@ -80,6 +82,7 @@ protected:
 
     void fileChunkReceived();
     void dragInfoReceived();
+    bool recvMonitors();
 
 private:
     void disconnect();
@@ -111,6 +114,7 @@ protected:
     typedef bool (ClientProxy1_6::*MessageParser)(const std::uint8_t*);
 
     ClientInfo m_info;
+    std::vector<MonitorInfo> m_monitors;
     double m_heartbeatAlarm;
     EventQueueTimer* m_heartbeatTimer;
     MessageParser m_parser;

@@ -53,6 +53,7 @@ public:
     bool getClipboard(ClipboardID id, IClipboard*) const override;
     void getShape(std::int32_t& x, std::int32_t& y, std::int32_t& width, std::int32_t& height) const override;
     void getCursorPos(std::int32_t& x, std::int32_t& y) const override;
+    std::vector<MonitorInfo> getMonitors() const override;
 
     // IPrimaryScreen overrides
     void reconfigure(std::uint32_t activeSides) override;
@@ -244,6 +245,9 @@ private:
     // a screen other than screen 0.
     bool m_xtestIsXineramaUnaware;
     bool m_xinerama;
+
+    // individual monitor geometries
+    std::vector<MonitorInfo> m_monitors;
 
     // stuff to work around lost focus issues on certain systems
     // (ie: a MythTV front-end).

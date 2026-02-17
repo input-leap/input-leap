@@ -182,6 +182,14 @@ public:
     \c get_event_target().
     */
     virtual void handle_system_event(const Event& event) = 0;
+
+    //! Get per-monitor geometry
+    /*!
+    Returns the list of individual monitor rectangles. The default
+    implementation in IScreen returns a single monitor from getShape().
+    Platform screens should override to return actual monitor geometry.
+    */
+    using IScreen::getMonitors;
 };
 
 } // namespace inputleap

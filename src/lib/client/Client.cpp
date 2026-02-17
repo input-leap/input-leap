@@ -226,6 +226,11 @@ void Client::getCursorPos(std::int32_t& x, std::int32_t& y) const
     m_screen->getCursorPos(x, y);
 }
 
+std::vector<MonitorInfo> Client::getMonitors() const
+{
+    return m_screen->getMonitors();
+}
+
 void Client::enter(std::int32_t xAbs, std::int32_t yAbs, std::uint32_t, KeyModifierMask mask, bool)
 {
     m_active = true;

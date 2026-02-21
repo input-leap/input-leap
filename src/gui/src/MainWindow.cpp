@@ -338,7 +338,11 @@ void MainWindow::initConnections()
 {
     connect(ui_->m_pActionMinimize, &QAction::triggered, this, &MainWindow::hide);
     connect(ui_->m_pComboServerList, &QComboBox::currentTextChanged, this, &MainWindow::comboServerList_currentIndexChanged);
-    connect(ui_->m_pActionRestore, &QAction::triggered, this, &MainWindow::showNormal);
+    connect(ui_->m_pActionRestore, &QAction::triggered, this, [this]() {
+        showNormal();
+        raise();
+        activateWindow();
+    });
     connect(ui_->m_pActionStartCmdApp, &QAction::triggered, this, &MainWindow::start_cmd_app);
     connect(ui_->m_pActionStopCmdApp, &QAction::triggered, this, &MainWindow::stop_cmd_app);
     connect(ui_->m_pActionShowLog, &QAction::triggered, this, &MainWindow::showLogWindow);

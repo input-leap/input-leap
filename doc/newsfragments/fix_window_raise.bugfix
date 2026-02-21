@@ -1,0 +1,1 @@
+Fix bug where showing the main window from the tray icon would show the window hidden behind the current application.

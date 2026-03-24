@@ -175,8 +175,9 @@ if (UNIX)
             pkg_check_modules(GLIB2 REQUIRED glib-2.0 gio-2.0)
             pkg_check_modules(LIBPORTAL REQUIRED libportal)
             find_library(LIBM m)
+            find_package(ZLIB REQUIRED)
             include_directories(${LIBEI_INCLUDE_DIRS} ${LIBXKBCOMMON_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS} ${LIBPORTAL_INCLUDE_DIRS} ${LIBM_INCLUDE_DIRS})
-            list(APPEND libs ${LIBEI_LINK_LIBRARIES} ${LIBXKBCOMMON_LINK_LIBRARIES} ${GLIB2_LINK_LIBRARIES} ${LIBPORTAL_LINK_LIBRARIES} ${LIBM_LIBRARIES})
+            list(APPEND libs ${LIBEI_LINK_LIBRARIES} ${LIBXKBCOMMON_LINK_LIBRARIES} ${GLIB2_LINK_LIBRARIES} ${LIBPORTAL_LINK_LIBRARIES} ${LIBM_LIBRARIES} ZLIB::ZLIB)
 
             # libportal 0.7 has xdp_session_connect_to_eis but it doesn't have remote desktop session restore or
             # the inputcapture code, so let's check for explicit functions that bits depending on what we have

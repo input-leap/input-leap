@@ -64,6 +64,8 @@ EiScreen::EiScreen(bool is_primary, IEventQueue* events, bool use_portal) :
 #else
             throw std::invalid_argument("Missing libportal InputCapture portal support");
 #endif
+            // Create a RemoteDesktop session just for clipboard support on primary
+            portal_remote_desktop_ = new PortalRemoteDesktop(this, events_, true);
         } else {
             events_->add_handler(EventType::EI_SESSION_CLOSED, get_event_target(),
                                  [this](const auto& e){ handle_portal_session_closed(e); });
@@ -169,7 +171,9 @@ const EventTarget* EiScreen::get_event_target() const
 
 bool EiScreen::getClipboard(ClipboardID id, IClipboard* clipboard) const
 {
-    return false;
+    if (!portal_remote_desktop_)
+        return false;
+    return portal_remote_desktop_->getClipboard(id, clipboard);
 }
 
 void EiScreen::getShape(int32_t& x, int32_t& y, int32_t& w, int32_t& h) const
@@ -376,7 +380,9 @@ void EiScreen::leave()
 
 bool EiScreen::setClipboard(ClipboardID id, const IClipboard* clipboard)
 {
-    return false;
+    if (!portal_remote_desktop_)
+        return false;
+    return portal_remote_desktop_->setClipboard(id, clipboard);
 }
 
 void EiScreen::checkClipboards()
@@ -519,6 +525,14 @@ void EiScreen::remove_device(struct ei_device *device)
 void EiScreen::send_event(EventType type, EventDataBase* data)
 {
     events_->add_event(type, get_event_target(), data);
+}
+
+void EiScreen::sendClipboardEvent(EventType type, ClipboardID id)
+{
+    ClipboardInfo info;
+    info.m_id = id;
+    info.m_sequenceNumber = sequence_number_;
+    send_event(type, create_event_data<ClipboardInfo>(info));
 }
 
 ButtonID EiScreen::map_button_from_evdev(ei_event* event) const

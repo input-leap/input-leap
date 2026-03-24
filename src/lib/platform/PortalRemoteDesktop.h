@@ -20,9 +20,16 @@
 
 #include "mt/Thread.h"
 #include "platform/EiScreen.h"
+#include "inputleap/Clipboard.h"
+#include "inputleap/clipboard_types.h"
 
 #include <glib.h>
+#include <gio/gio.h>
 #include <libportal/portal.h>
+
+#include <mutex>
+#include <string>
+#include <vector>
 
 #if !HAVE_LIBPORTAL_OUTPUT_NONE
 // Added in libportal ad82a74 Jun 2022, not yet released in libportal 0.6
@@ -34,8 +41,14 @@ namespace inputleap {
 
 class PortalRemoteDesktop {
 public:
-    PortalRemoteDesktop(EiScreen *screen, IEventQueue *events);
+    /// @param clipboard_only If true, skip EIS connection (used on primary screen
+    ///        where InputCapture handles input but we need RemoteDesktop for clipboard)
+    PortalRemoteDesktop(EiScreen *screen, IEventQueue *events, bool clipboard_only = false);
     ~PortalRemoteDesktop();
+
+    /// Clipboard support via org.freedesktop.portal.Clipboard
+    bool getClipboard(ClipboardID id, IClipboard* clipboard);
+    bool setClipboard(ClipboardID id, const IClipboard* clipboard);
 
 private:
     void glib_thread();
@@ -54,6 +67,51 @@ private:
 
     int fake_eis_fd();
 
+    // Clipboard via XDG Portal DBus
+    void request_clipboard();
+    void cleanup_clipboard();
+
+    void on_selection_owner_changed(GDBusConnection* connection,
+                                    const gchar* sender_name,
+                                    const gchar* object_path,
+                                    const gchar* interface_name,
+                                    const gchar* signal_name,
+                                    GVariant* parameters);
+    void on_selection_transfer(GDBusConnection* connection,
+                               const gchar* sender_name,
+                               const gchar* object_path,
+                               const gchar* interface_name,
+                               const gchar* signal_name,
+                               GVariant* parameters);
+
+    static void cb_selection_owner_changed(GDBusConnection* connection,
+                                           const gchar* sender_name,
+                                           const gchar* object_path,
+                                           const gchar* interface_name,
+                                           const gchar* signal_name,
+                                           GVariant* parameters,
+                                           gpointer user_data)
+    {
+        reinterpret_cast<PortalRemoteDesktop*>(user_data)
+            ->on_selection_owner_changed(connection, sender_name, object_path,
+                                         interface_name, signal_name, parameters);
+    }
+
+    static void cb_selection_transfer(GDBusConnection* connection,
+                                      const gchar* sender_name,
+                                      const gchar* object_path,
+                                      const gchar* interface_name,
+                                      const gchar* signal_name,
+                                      GVariant* parameters,
+                                      gpointer user_data)
+    {
+        reinterpret_cast<PortalRemoteDesktop*>(user_data)
+            ->on_selection_transfer(connection, sender_name, object_path,
+                                    interface_name, signal_name, parameters);
+    }
+
+    std::string read_mime_type_from_portal(const std::string& mime_type);
+
 private:
     EiScreen* screen_;
     IEventQueue* events_;
@@ -67,6 +125,18 @@ private:
 
     guint session_signal_id_ = 0;
     guint session_iteration_ = 0; /// The number of successful sessions we've had already
+    bool clipboard_only_ = false;
+
+    // Clipboard state
+    GDBusConnection* dbus_connection_ = nullptr;
+    std::string session_handle_;
+    guint selection_owner_changed_sub_ = 0;
+    guint selection_transfer_sub_ = 0;
+    std::mutex clipboard_mutex_;
+    Clipboard stored_clipboard_;
+    std::vector<std::string> available_mime_types_;
+    bool clipboard_enabled_ = false;
+    bool we_own_clipboard_ = false;
 };
 
 } // namespace inputleap

@@ -33,7 +33,6 @@ struct ei_device;
 
 namespace inputleap {
 
-class EiClipboard;
 class EiKeyState;
 class PortalRemoteDesktop;
 #if HAVE_LIBPORTAL_INPUTCAPTURE
@@ -70,6 +69,9 @@ public:
     void fakeMouseRelativeMove(std::int32_t dx, std::int32_t dy) const override;
     void fakeMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const override;
     void fakeKey(std::uint32_t keycode, bool is_down) const;
+
+    // Clipboard event helper (called from PortalRemoteDesktop)
+    void sendClipboardEvent(EventType type, ClipboardID id);
 
 
     // IPlatformScreen overrides

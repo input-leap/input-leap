@@ -1,0 +1,1 @@
+Fix missing HAVE_LIBPORTAL_INPUTCAPTURE guard in EiScreen.cpp causing build failures on Ubuntu 24.04/24.10 with libei enabled.

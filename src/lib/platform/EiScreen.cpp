@@ -790,6 +790,7 @@ void EiScreen::handle_system_event(const Event& sysevent)
                 LOG_WARN("disconnected from eis, will afterwards commence attempt to reconnect");
                 if (is_primary_) {
                     LOG_DEBUG("re-allocating portal input capture connection and releasing active captures");
+#if HAVE_LIBPORTAL_INPUTCAPTURE
                     if (portal_input_capture_) {
                         if (portal_input_capture_->is_active()) {
                             portal_input_capture_->release();
@@ -797,6 +798,7 @@ void EiScreen::handle_system_event(const Event& sysevent)
                         delete portal_input_capture_;
                         portal_input_capture_ = new PortalInputCapture(this, this->events_);
                     }
+#endif
                 }
                 this->handle_portal_session_closed(sysevent);
                 break;

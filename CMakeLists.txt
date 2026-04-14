@@ -308,6 +308,11 @@ elseif (UNIX AND NOT APPLE)
     configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/rpm ${CMAKE_BINARY_DIR}/rpm)
     install(FILES res/io.github.input_leap.input-leap.svg DESTINATION share/icons/hicolor/scalable/apps)
     install(FILES res/io.github.input_leap.input-leap.desktop DESTINATION share/applications)
+    install(FILES
+        src/gui/res/icons/symbolic/input-leap-connected-symbolic.svg
+        src/gui/res/icons/symbolic/input-leap-disconnected-symbolic.svg
+        src/gui/res/icons/symbolic/input-leap-transfering-symbolic.svg
+        DESTINATION share/icons/hicolor/symbolic/apps)
 endif()
 
 #

@@ -85,6 +85,15 @@ const char* icon_file_for_connection_state(AppConnectionState state)
         case AppConnectionState::CONNECTED:    return ":/res/icons/128x128/input-leap-connected-mask.png";
         case AppConnectionState::TRANSFERRING: return ":/res/icons/128x128/input-leap-transfering-mask.png";
     }
+#elif defined(Q_OS_LINUX)
+    // White monochrome icons for GNOME/Ubuntu system tray (dark panel)
+    switch (state) {
+        default:
+        case AppConnectionState::DISCONNECTED: return ":/res/icons/128x128/input-leap-disconnected-white.png";
+        case AppConnectionState::CONNECTING:   return ":/res/icons/128x128/input-leap-disconnected-white.png";
+        case AppConnectionState::CONNECTED:    return ":/res/icons/128x128/input-leap-connected-white.png";
+        case AppConnectionState::TRANSFERRING: return ":/res/icons/128x128/input-leap-transfering-white.png";
+    }
 #else
     switch (state) {
         default:
@@ -98,6 +107,16 @@ const char* icon_file_for_connection_state(AppConnectionState state)
 
 const char* icon_name_for_connection_state(AppConnectionState state)
 {
+#if defined(Q_OS_LINUX)
+    // Use freedesktop symbolic icon naming so GNOME renders them as monochrome
+    switch (state) {
+        default:
+        case AppConnectionState::DISCONNECTED: return "input-leap-disconnected-symbolic";
+        case AppConnectionState::CONNECTING:   return "input-leap-disconnected-symbolic";
+        case AppConnectionState::CONNECTED:    return "input-leap-connected-symbolic";
+        case AppConnectionState::TRANSFERRING: return "input-leap-transfering-symbolic";
+    }
+#else
     switch (state) {
         default:
         case AppConnectionState::DISCONNECTED: return "input-leap-disconnected";
@@ -105,6 +124,7 @@ const char* icon_name_for_connection_state(AppConnectionState state)
         case AppConnectionState::CONNECTED: return "input-leap-connected";
         case AppConnectionState::TRANSFERRING: return "input-leap-transfering";
     }
+#endif
 }
 
 static const char* APP_LARGE_ICON = ":/res/icons/256x256/input-leap.png";

@@ -55,5 +55,11 @@
         <file>icons/128x128/input-leap-connected-mask.png</file>
         <file>icons/128x128/input-leap-disconnected-mask.png</file>
         <file>icons/128x128/input-leap-transfering-mask.png</file>
+        <file>icons/128x128/input-leap-connected-white.png</file>
+        <file>icons/128x128/input-leap-disconnected-white.png</file>
+        <file>icons/128x128/input-leap-transfering-white.png</file>
+        <file>icons/symbolic/input-leap-connected-symbolic.svg</file>
+        <file>icons/symbolic/input-leap-disconnected-symbolic.svg</file>
+        <file>icons/symbolic/input-leap-transfering-symbolic.svg</file>
     </qresource>
 </RCC>

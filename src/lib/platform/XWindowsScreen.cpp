@@ -295,7 +295,13 @@ bool XWindowsScreen::canLeave()
     // raise and show the window, required to grab mouse and keyboard
     m_impl->XMapRaised(m_display, m_window);
     // see if grabbing the mouse and keyboard, if primary, is possible
-    return !(m_isPrimary && !grabMouseAndKeyboard());
+    if (m_isPrimary && !grabMouseAndKeyboard()) {
+        // grab failed -- hide the window we just raised so the cursor
+        // does not disappear behind the blank-cursor overlay window
+        m_impl->XUnmapWindow(m_display, m_window);
+        return false;
+    }
+    return true;
 }
 
 void XWindowsScreen::leave()

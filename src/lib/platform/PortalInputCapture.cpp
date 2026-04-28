@@ -306,15 +306,17 @@ void PortalInputCapture::cb_activated(XdpInputCaptureSession* session, std::uint
     // returning to primary.
     screen_->notify_input_capture_activated((int32_t)x, (int32_t)y);
 
-    // Safety watchdog: if the server did not switch to a secondary screen within
-    // 1 second (e.g. no adjacent screen on this side), release the capture so
-    // the cursor is never permanently frozen at a hot-corner.
-    // We must NOT release when is_on_screen()=false — that means the server DID
-    // switch and the capture is intentionally kept active during secondary control.
-    g_timeout_add(1000, [](gpointer data) -> gboolean {
+    // Safety watchdog: if the server did not switch to a secondary screen,
+    // release the capture so the cursor is never frozen at a hot-corner or an
+    // edge with no neighbour screen. 150 ms is enough for the server event loop
+    // to process the motion event and call leave() (which takes <10 ms in
+    // practice). We must NOT release when is_on_screen()=false — that means
+    // the server DID switch and the capture must stay active during secondary
+    // control.
+    g_timeout_add(150, [](gpointer data) -> gboolean {
         auto* self = reinterpret_cast<PortalInputCapture*>(data);
         if (self->is_active_ && self->screen_->is_on_screen()) {
-            LOG_WARN("InputCapture: safety-releasing stuck capture (no adjacent screen)");
+            LOG_DEBUG("InputCapture: releasing capture (no switch within 150 ms)");
             self->release();
         }
         return G_SOURCE_REMOVE;

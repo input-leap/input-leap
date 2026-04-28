@@ -38,6 +38,7 @@ public:
     void release();
     void release(double x, double y);
     bool is_active() const { return is_active_; }
+    void set_active_sides(std::uint32_t sides);
 
 private:
     void glib_thread();
@@ -96,6 +97,7 @@ private:
     bool enabled_ = false;
     bool is_active_ = false;
     std::uint32_t activation_id_ = 0;
+    std::uint32_t active_sides_ = 0; // no barriers until reconfigure() sets the active sides
 
     std::vector<XdpInputCapturePointerBarrier*> barriers_;
 };

@@ -1,4 +1,0 @@
-Fixed a bug on X11/Xorg where the mouse cursor would intermittently
-disappear (become invisible) on the server screen. This happened when
-the grab-window overlay was raised but the pointer grab subsequently
-timed out: the blank-cursor window was left mapped, hiding the cursor.

@@ -18,7 +18,9 @@
 
 #include "platform/EiEventQueueBuffer.h"
 #include "platform/PortalRemoteDesktop.h"
+#if HAVE_LIBPORTAL_INPUTCAPTURE
 #include "platform/PortalInputCapture.h"
+#endif
 #include "platform/EiKeyState.h"
 #include "inputleap/Clipboard.h"
 #include "inputleap/KeyMap.h"
@@ -28,6 +30,7 @@
 #include "base/Log.h"
 #include "base/Stopwatch.h"
 #include "base/IEventQueue.h"
+#include "inputleap/protocol_types.h"
 
 #include <cmath>
 #include <cstring>
@@ -186,15 +189,32 @@ void EiScreen::getCursorPos(int32_t& x, int32_t& y) const
     y = cursor_y_;
 }
 
-void EiScreen::reconfigure(uint32_t)
+void EiScreen::reconfigure(uint32_t activeSides)
 {
-    // do nothing
+#if HAVE_LIBPORTAL_INPUTCAPTURE
+    if (is_primary_ && portal_input_capture_)
+        portal_input_capture_->set_active_sides(activeSides);
+#else
+    (void)activeSides;
+#endif
 }
 
 void EiScreen::warpCursor(int32_t x, int32_t y)
 {
     cursor_x_ = x;
     cursor_y_ = y;
+}
+
+void EiScreen::notify_input_capture_activated(int32_t x, int32_t y)
+{
+    // Called from PortalInputCapture's glib thread. events_->add_event is thread-safe.
+    cursor_x_ = x;
+    cursor_y_ = y;
+    if (!is_on_screen_)
+        return; // already switched to secondary; don't confuse the server
+    events_->add_event(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY,
+                       get_event_target(),
+                       create_event_data<MotionInfo>(MotionInfo{x, y}));
 }
 
 std::uint32_t EiScreen::registerHotKey(KeyID key, KeyModifierMask mask)
@@ -278,11 +298,20 @@ void EiScreen::fakeMouseMove(int32_t x, int32_t y)
         return;
     }
 
-    if (!ei_abs_)
-        return;
+    if (ei_abs_) {
+        ei_device_pointer_motion_absolute(ei_abs_, x, y);
+        ei_device_frame(ei_abs_, ei_now(ei_));
+    } else if (ei_pointer_) {
+        auto dx = x - cursor_x_;
+        auto dy = y - cursor_y_;
+        if (dx || dy) {
+            ei_device_pointer_motion(ei_pointer_, dx, dy);
+            ei_device_frame(ei_pointer_, ei_now(ei_));
+        }
+    }
 
-    ei_device_pointer_motion_absolute(ei_abs_, x, y);
-    ei_device_frame(ei_abs_, ei_now(ei_));
+    cursor_x_ = x;
+    cursor_y_ = y;
 }
 
 void EiScreen::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
@@ -341,11 +370,11 @@ void EiScreen::enter()
         }
         if (ei_abs_) {
             ei_device_start_emulating(ei_abs_, sequence_number_);
-            fakeMouseMove(cursor_x_, cursor_y_);
         }
+        fakeMouseMove(cursor_x_, cursor_y_);
     }
 #if HAVE_LIBPORTAL_INPUTCAPTURE
-    else {
+    else if (portal_input_capture_ && portal_input_capture_->is_active()) {
         LOG_DEBUG("Releasing input capture at (cursor_x_,cursor_y_) = (%i,%i)",
              cursor_x_, cursor_y_);
         portal_input_capture_->release(cursor_x_, cursor_y_);
@@ -370,6 +399,10 @@ void EiScreen::leave()
             ei_device_stop_emulating(ei_abs_);
         }
     }
+    // InputCapture is intentionally NOT released here. Keep the capture active
+    // during secondary control so the physical cursor stays at the barrier and
+    // EIS continues delivering motion/button events to us. The capture is
+    // released in enter() when the cursor returns to the primary screen.
 
     is_on_screen_ = false;
 }
@@ -685,16 +718,17 @@ void EiScreen::on_motion_event(ei_event* event)
     double dy = ei_event_pointer_get_dy(event);
 
     if (is_on_screen_) {
+        // Accumulate relative motion to track the actual cursor position on
+        // the primary screen. On Wayland/EI the compositor does not send us
+        // absolute coordinates, so we must integrate the deltas ourselves.
+        cursor_x_ = std::clamp(cursor_x_ + (int32_t)std::lround(dx),
+                               (int32_t)x_, (int32_t)(x_ + w_ - 1));
+        cursor_y_ = std::clamp(cursor_y_ + (int32_t)std::lround(dy),
+                               (int32_t)y_, (int32_t)(y_ + h_ - 1));
         LOG_DEBUG("on_motion_event on primary at (cursor_x_,cursor_y_)=(%i,%i)",
              cursor_x_, cursor_y_);
         send_event(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY,
                    create_event_data<MotionInfo>(MotionInfo{cursor_x_, cursor_y_}));
-
-#if HAVE_LIBPORTAL_INPUTCAPTURE
-         if (portal_input_capture_->is_active()) {
-             portal_input_capture_->release();
-         }
-#endif
     } else {
         buffer_dx += dx;
         buffer_dy += dy;
@@ -729,8 +763,10 @@ void EiScreen::handle_connected_to_eis_event(const Event& event)
 
 void EiScreen::handle_portal_session_closed(const Event &event)
 {
-    // Portal may or may EI_EVENT_DISCONNECT us before sending the DBus Closed signal
-    // Let's clean up either way.
+    // Portal may or may not EI_EVENT_DISCONNECT us before sending the DBus Closed signal.
+    // Reset is_on_screen_ so that EI_EVENT_DEVICE_RESUMED on reconnect does not call
+    // start_emulating before the server has authorized entry into this screen.
+    is_on_screen_ = is_primary_;
     cleanup_ei();
     init_ei();
 }
@@ -790,6 +826,7 @@ void EiScreen::handle_system_event(const Event& sysevent)
                 LOG_WARN("disconnected from eis, will afterwards commence attempt to reconnect");
                 if (is_primary_) {
                     LOG_DEBUG("re-allocating portal input capture connection and releasing active captures");
+#if HAVE_LIBPORTAL_INPUTCAPTURE
                     if (portal_input_capture_) {
                         if (portal_input_capture_->is_active()) {
                             portal_input_capture_->release();
@@ -797,6 +834,7 @@ void EiScreen::handle_system_event(const Event& sysevent)
                         delete portal_input_capture_;
                         portal_input_capture_ = new PortalInputCapture(this, this->events_);
                     }
+#endif
                 }
                 this->handle_portal_session_closed(sysevent);
                 break;

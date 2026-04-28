@@ -56,6 +56,10 @@ public:
     // IPrimaryScreen overrides
     void reconfigure(std::uint32_t activeSides) override;
     void warpCursor(std::int32_t x, std::int32_t y) override;
+    // Called from PortalInputCapture glib thread when capture activates.
+    // Posts a motion event so the server evaluates screen-switching.
+    void notify_input_capture_activated(std::int32_t x, std::int32_t y);
+    bool is_on_screen() const { return is_on_screen_; }
     std::uint32_t registerHotKey(KeyID key, KeyModifierMask mask) override;
     void unregisterHotKey(std::uint32_t id) override;
     void fakeInputBegin() override;

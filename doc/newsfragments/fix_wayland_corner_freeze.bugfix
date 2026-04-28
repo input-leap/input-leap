@@ -1,0 +1,12 @@
+Fix several Wayland server bugs on Ubuntu 26.04 GNOME: (1) moving the cursor
+to a screen corner with no adjacent client could permanently freeze the cursor
+because InputCapture barriers were installed on all four edges by default —
+barriers are now installed only for sides reported active by the server via
+reconfigure(); (2) a safety watchdog releases any stuck InputCapture after
+1 second when there is no adjacent screen (hot-corner), but no longer fires
+during normal secondary-screen control so it cannot interrupt ongoing input
+forwarding; (3) the InputCapture session is kept active throughout secondary
+control — the physical cursor stays at the barrier and all EI motion and button
+events continue flowing to InputLeap, eliminating cursor oscillation and clicks
+incorrectly returning to the primary screen; (4) cursor position on the primary
+screen is tracked correctly by accumulating EI relative-motion events.

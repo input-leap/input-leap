@@ -18,6 +18,7 @@
 
 #include "config.h"
 
+#include "io/filesystem.h"
 #include "mt/Thread.h"
 #include "platform/EiScreen.h"
 
@@ -41,6 +42,8 @@ private:
     void glib_thread();
     gboolean timeout_handler();
     gboolean init_remote_desktop_session();
+    void load_restore_token();
+    void save_restore_token();
     void cb_init_remote_desktop_session(GObject* object, GAsyncResult* res);
     void cb_session_started(GObject* object, GAsyncResult* res);
     void cb_session_closed(XdpSession* session);
@@ -67,6 +70,7 @@ private:
 
     guint session_signal_id_ = 0;
     guint session_iteration_ = 0; /// The number of successful sessions we've had already
+    bool reconnect_pending_ = false; /// Prevents overlapping reconnect attempts
 };
 
 } // namespace inputleap

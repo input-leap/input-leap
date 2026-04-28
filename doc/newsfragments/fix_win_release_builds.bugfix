@@ -1,1 +1,0 @@
-Fix Windows release builds by making installer “product version” numerical only.

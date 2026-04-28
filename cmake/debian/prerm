@@ -1,0 +1,7 @@
+#!/bin/sh
+set -e
+
+# Stop any running input-leap processes before removing/upgrading.
+pkill -x input-leaps 2>/dev/null || true
+pkill -x input-leapc 2>/dev/null || true
+pkill -x input-leap  2>/dev/null || true

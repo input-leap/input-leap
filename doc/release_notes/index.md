@@ -3,6 +3,26 @@ Release notes
 
 [comment]: <> (towncrier release notes start)
 
+InputLeap `3.0.6` ( `2026-04-28` )
+================================
+
+Bug fixes
+---------
+
+- Fixed several Wayland server bugs on GNOME/Ubuntu 26.04: (1) moving the cursor to a screen corner with no adjacent client could permanently freeze the cursor because InputCapture barriers were installed on all four edges by default — barriers are now installed only on sides reported active by the server; (2) a safety watchdog releases any stuck InputCapture after 1 second when there is no adjacent screen, but no longer fires during normal secondary-screen control so it cannot interrupt ongoing input forwarding; (3) the InputCapture session is now kept active throughout secondary-screen control — the physical cursor stays at the barrier and all EI motion and button events continue flowing, eliminating cursor oscillation, mid-screen jumps back to primary, and clicks that erroneously returned to the primary screen; (4) cursor position on the primary screen is tracked correctly by accumulating EI relative-motion events.
+- Fixed two Wayland client bugs on GNOME/Ubuntu 26.04: (1) the RemoteDesktop portal restore token was stored as a borrowed pointer that became dangling after session close, causing a rapid portal reconnect loop that flooded GNOME Shell with DBus calls, making the dock unresponsive and the remote-desktop indicator flicker; (2) `is_on_screen_` was not reset on portal disconnect, causing the EI client to start emulating input immediately on reconnect without server authorization.
+- Fix bug where UI names and '.ui' paths in language files are incorrect and not displaying correctly.
+- Fix InputLeap server inputs stuck when EIS reconnect to client after invalid EIS protocol.
+- Fixed .deb package dependencies for Ubuntu 26.04 LTS (Resolute): Qt6 runtime libraries dropped the `t64` suffix (e.g. `libqt6gui6` instead of `libqt6gui6t64`), making the previous package uninstallable. The package is now built natively on Ubuntu 26.04 with Wayland (libei/libportal) support enabled by default.
+- Fix Wayland client input not being injected when the portal session is established after the screen is entered. Also fix mouse movement on compositors that do not provide an absolute pointer device.
+- Fixed repeated Wayland portal permission prompt on reconnect: the RemoteDesktop portal session token is now persisted to disk (`~/.config/InputLeap/portal-restore-token`) using `XDP_PERSIST_MODE_PERSISTENT`, so the system no longer asks for approval every time Input Leap reconnects or restarts.
+- Fix Windows release builds by making installer “product version” numerical only.
+- Fixed a bug on X11/Xorg where the mouse cursor would intermittently disappear (become invisible) on the server screen. This happened when the grab-window overlay was raised but the pointer grab subsequently timed out: the blank-cursor window was left mapped, hiding the cursor.
+
+Features
+--------
+
+- Use monochrome white tray icons on Linux to match Ubuntu GNOME's system tray style. Symbolic SVG icons are installed to the freedesktop hicolor theme and used via QIcon::fromTheme on Linux.
 InputLeap `3.0.3` ( `2025-06-13` )
 ================================
 

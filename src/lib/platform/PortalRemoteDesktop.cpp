@@ -15,10 +15,12 @@
 */
 
 #include "base/Log.h"
+#include "common/DataDirectories.h"
 #include "platform/PortalRemoteDesktop.h"
 
 #include <sys/un.h> // for EIS fd hack, remove
 #include <sys/socket.h> // for EIS fd hack, remove
+#include <fstream>
 
 namespace inputleap {
 
@@ -31,6 +33,7 @@ PortalRemoteDesktop::PortalRemoteDesktop(EiScreen *screen,
     glib_main_loop_ = g_main_loop_new(nullptr, true);
     glib_thread_ = new Thread([this](){ glib_thread(); });
 
+    load_restore_token();
     reconnect(0);
 }
 
@@ -65,6 +68,12 @@ gboolean PortalRemoteDesktop::timeout_handler()
 
 void PortalRemoteDesktop::reconnect(unsigned int timeout)
 {
+    if (reconnect_pending_) {
+        LOG_DEBUG("RemoteDesktop reconnect already pending, skipping duplicate");
+        return;
+    }
+    reconnect_pending_ = true;
+
     auto init_cb = [](gpointer data) -> gboolean
     {
         return reinterpret_cast<PortalRemoteDesktop*>(data)->init_remote_desktop_session();
@@ -101,7 +110,12 @@ void PortalRemoteDesktop::cb_session_started(GObject* object, GAsyncResult* res)
         return;
     }
 
-    session_restore_token_ = xdp_session_get_restore_token(session);
+    free(session_restore_token_);
+    // xdp_session_get_restore_token() is transfer-none (borrowed from session_).
+    // We must strdup so the token survives g_clear_object(&session_) in cb_session_closed.
+    const char *tok = xdp_session_get_restore_token(session);
+    session_restore_token_ = tok ? strdup(tok) : nullptr;
+    save_restore_token();
 
     // ConnectToEIS requires version 2 of the xdg-desktop-portal (and the same
     // version in the impl.portal), i.e. you'll need an updated compositor on
@@ -180,6 +194,7 @@ xdp_portal_create_remote_desktop_session_full(XdpPortal              *portal,
 
 gboolean PortalRemoteDesktop::init_remote_desktop_session()
 {
+    reconnect_pending_ = false;
     LOG_DEBUG("Setting up the RemoteDesktop session with restore token %s", session_restore_token_);
     xdp_portal_create_remote_desktop_session_full(
                 portal_,
@@ -187,7 +202,7 @@ gboolean PortalRemoteDesktop::init_remote_desktop_session()
                 XDP_OUTPUT_NONE,
                 XDP_REMOTE_DESKTOP_FLAG_NONE,
                 XDP_CURSOR_MODE_HIDDEN,
-                XDP_PERSIST_MODE_TRANSIENT,
+                XDP_PERSIST_MODE_PERSISTENT,
                 session_restore_token_,
                 nullptr, // cancellable
                 [](GObject *obj, GAsyncResult *res, gpointer data) {
@@ -196,6 +211,35 @@ gboolean PortalRemoteDesktop::init_remote_desktop_session()
                 this);
 
     return false; // don't reschedule
+}
+
+static fs::path token_path()
+{
+    return DataDirectories::profile() / "portal-restore-token";
+}
+
+void PortalRemoteDesktop::load_restore_token()
+{
+    std::ifstream f(token_path());
+    if (!f.is_open())
+        return;
+    std::string token;
+    if (std::getline(f, token) && !token.empty()) {
+        free(session_restore_token_);
+        session_restore_token_ = strdup(token.c_str());
+        LOG_DEBUG("Loaded portal restore token");
+    }
+}
+
+void PortalRemoteDesktop::save_restore_token()
+{
+    if (!session_restore_token_)
+        return;
+    auto path = token_path();
+    fs::create_directories(path.parent_path());
+    std::ofstream f(path);
+    if (f.is_open())
+        f << session_restore_token_ << "\n";
 }
 
 void PortalRemoteDesktop::glib_thread()

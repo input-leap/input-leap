@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+
+# Stop any running input-leap processes before installing/upgrading.
+pkill -x input-leaps 2>/dev/null || true
+pkill -x input-leapc 2>/dev/null || true
+pkill -x input-leap  2>/dev/null || true
+
+case "$1" in
+    install)
+        # Fresh install: if a conflicting version is present in a broken/residual
+        # state (not fully installed), purge it so dpkg starts clean.
+        STATUS=$(dpkg-query -W -f='${Status}' input-leap 2>/dev/null || true)
+        case "$STATUS" in
+            *"config-files"*|*"half-installed"*|*"unpacked"*)
+                dpkg --purge input-leap 2>/dev/null || true
+                ;;
+        esac
+        ;;
+esac

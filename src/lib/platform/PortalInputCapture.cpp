@@ -19,6 +19,7 @@
 #if HAVE_LIBPORTAL_INPUTCAPTURE
 
 #include "base/Log.h"
+#include "inputleap/protocol_types.h"
 #include "platform/PortalInputCapture.h"
 
 #include <sys/un.h> // for EIS fd hack, remove
@@ -288,19 +289,38 @@ void PortalInputCapture::cb_activated(XdpInputCaptureSession* session, std::uint
 {
     LOG_DEBUG("PortalInputCapture::cb_activated() activation_id=%d", activation_id);
 
+    gdouble x = 0, y = 0;
     if (options) {
-        gdouble x, y;
-        if (g_variant_lookup(options, "cursor_position", "(dd)", &x, &y)) {
-            screen_->warpCursor((int) x, (int) y);
-        } else {
+        if (!g_variant_lookup(options, "cursor_position", "(dd)", &x, &y))
             LOG_WARN("Failed to get cursor_position");
-        }
-    }
-    else {
+    } else {
         LOG_WARN("Activation has no options!");
     }
+
     activation_id_ = activation_id;
     is_active_ = true;
+
+    // Notify the server where the cursor is. The server calls leave() on the
+    // primary when it switches to a secondary; leave() does NOT release the capture
+    // (the cursor stays at the barrier). The capture is released in enter() when
+    // returning to primary.
+    screen_->notify_input_capture_activated((int32_t)x, (int32_t)y);
+
+    // Safety watchdog: if the server did not switch to a secondary screen,
+    // release the capture so the cursor is never frozen at a hot-corner or an
+    // edge with no neighbour screen. 150 ms is enough for the server event loop
+    // to process the motion event and call leave() (which takes <10 ms in
+    // practice). We must NOT release when is_on_screen()=false — that means
+    // the server DID switch and the capture must stay active during secondary
+    // control.
+    g_timeout_add(150, [](gpointer data) -> gboolean {
+        auto* self = reinterpret_cast<PortalInputCapture*>(data);
+        if (self->is_active_ && self->screen_->is_on_screen()) {
+            LOG_DEBUG("InputCapture: releasing capture (no switch within 150 ms)");
+            self->release();
+        }
+        return G_SOURCE_REMOVE;
+    }, this);
 }
 
 void PortalInputCapture::cb_deactivated(XdpInputCaptureSession* session,
@@ -326,67 +346,29 @@ void PortalInputCapture::cb_zones_changed(XdpInputCaptureSession* session, GVari
 
         int x1, x2, y1, y2;
 
-        // Hardcoded behaviour: our pointer barriers are always at the edges of all zones.
-        // Since the implementation is supposed to reject the ones in the wrong
-        // place, we can just install barriers everywhere and let EIS figure it out.
-        // Also a lot easier to implement for now though it doesn't cover
-        // differently-sized screens...
-        auto id = barriers_.size() + 1;
-        x1 = x;
-        y1 = y;
-        x2 = x + w - 1;
-        y2 = y;
-        LOG_DEBUG("Barrier (top) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2);
-        barriers_.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(
-                            g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER,
-                                         "id", id,
-                                         "x1", x1,
-                                         "y1", y1,
-                                         "x2", x2,
-                                         "y2", y2,
-                                         nullptr)));
-        id = barriers_.size() + 1;
-        x1 = x + w;
-        y1 = y;
-        x2 = x + w;
-        y2 = y + h - 1;
-        LOG_DEBUG("Barrier (right) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2);
-        barriers_.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(
-                            g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER,
-                                         "id", id,
-                                         "x1", x1,
-                                         "y1", y1,
-                                         "x2", x2,
-                                         "y2", y2,
-                                         nullptr)));
-        id = barriers_.size() + 1;
-        x1 = x;
-        y1 = y;
-        x2 = x;
-        y2 = y + h - 1;
-        LOG_DEBUG("Barrier (left) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2);
-        barriers_.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(
-                            g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER,
-                                         "id", id,
-                                         "x1", x1,
-                                         "y1", y1,
-                                         "x2", x2,
-                                         "y2", y2,
-                                         nullptr)));
-        id = barriers_.size() + 1;
-        x1 = x;
-        y1 = y + h;
-        x2 = x + w - 1;
-        y2 = y + h;
-        LOG_DEBUG("Barrier (bottom) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2);
-        barriers_.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(
-                            g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER,
-                                         "id", id,
-                                         "x1", x1,
-                                         "y1", y1,
-                                         "x2", x2,
-                                         "y2", y2,
-                                         nullptr)));
+        // Install barriers only where active_sides_ indicates a client screen is present.
+        // This prevents capturing the cursor at edges with no adjacent screen (e.g. the
+        // GNOME top panel) which would cause it to appear stuck.
+        auto add_barrier = [&](const char* name, int bx1, int by1, int bx2, int by2) {
+            auto id = barriers_.size() + 1;
+            LOG_DEBUG("Barrier (%s) %zd at %d,%d-%d,%d", name, id, bx1, by1, bx2, by2);
+            barriers_.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(
+                g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER,
+                             "id", (guint)id,
+                             "x1", bx1, "y1", by1,
+                             "x2", bx2, "y2", by2,
+                             nullptr)));
+        };
+
+        if (active_sides_ & kTopMask)
+            add_barrier("top",    x,     y,     x+w-1, y);
+        if (active_sides_ & kRightMask)
+            add_barrier("right",  x+w,   y,     x+w,   y+h-1);
+        if (active_sides_ & kLeftMask)
+            add_barrier("left",   x,     y,     x,     y+h-1);
+        if (active_sides_ & kBottomMask)
+            add_barrier("bottom", x,     y+h,   x+w-1, y+h);
+
         zones = zones->next;
     }
 
@@ -404,6 +386,21 @@ void PortalInputCapture::cb_zones_changed(XdpInputCaptureSession* session, GVari
                     reinterpret_cast<PortalInputCapture*>(data)->cb_set_pointer_barriers(obj, res);
                 },
                 this);
+}
+
+void PortalInputCapture::set_active_sides(std::uint32_t sides)
+{
+    active_sides_ = sides;
+    if (!session_)
+        return;
+    // Reschedule barrier setup in the glib thread since cb_zones_changed uses glib objects.
+    auto* self = this;
+    g_idle_add([](gpointer data) -> gboolean {
+        auto* capture = reinterpret_cast<PortalInputCapture*>(data);
+        if (capture->session_)
+            capture->cb_zones_changed(capture->session_, nullptr);
+        return G_SOURCE_REMOVE;
+    }, self);
 }
 
 void PortalInputCapture::glib_thread()

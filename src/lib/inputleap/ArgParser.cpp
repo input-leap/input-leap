@@ -306,14 +306,20 @@ bool ArgParser::use_x11(Argv& argv)
         return false;
     }
 
-    // DISPLAY is basically always set (Xwayland uses it too).
-    // So let's assume if WAYLAND_DISPLAY is present or LIBEI_SOCKET
-    // we probably have a machine that wants to use that.
-    // Otherwise, fall back to X11.
-    // A better check would be to check for the XWAYLAND extension, could add
-    // that in the future (at the time of writing no released X server supports
-    // it).
-    if (std::getenv("WAYLAND_DISPLAY") || std::getenv("LIBEI_SOCKET")) {
+    // XDG_SESSION_TYPE is the most reliable indicator: set explicitly by the
+    // login manager (GDM/SDDM) to "wayland" or "x11". Prefer it over
+    // WAYLAND_DISPLAY which is also set in XWayland (X11 apps under Wayland).
+    auto xdg_type = std::getenv("XDG_SESSION_TYPE");
+    if (xdg_type) {
+        if (std::string(xdg_type) == "wayland")
+            return false;
+        if (std::string(xdg_type) == "x11")
+            return true;
+    }
+
+    // Fallback: LIBEI_SOCKET means libei is explicitly available.
+    // WAYLAND_DISPLAY alone is not sufficient (set by XWayland too).
+    if (std::getenv("LIBEI_SOCKET")) {
         return false;
     }
 

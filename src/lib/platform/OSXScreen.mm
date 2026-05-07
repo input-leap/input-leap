@@ -31,6 +31,7 @@
 #include "inputleap/Clipboard.h"
 #include "inputleap/KeyMap.h"
 #include "inputleap/ClientApp.h"
+#include "inputleap/protocol_types.h"
 #include "mt/Thread.h"
 #include "arch/XArch.h"
 #include "base/Log.h"
@@ -52,8 +53,28 @@ constexpr int INPUT_LEAP_MOUSE_SCROLL_AXIS_X = 'saxx';
 constexpr int INPUT_LEAP_MOUSE_SCROLL_AXIS_Y = 'saxy';
 
 enum {
-	kCarbonLoopWaitTimeout = 10
+	kCarbonLoopWaitTimeout = 10,
+	kPrimaryMotionEdgeBand = 64
 };
+
+static CGEventMask inputEventMask()
+{
+	return CGEventMaskBit(kCGEventLeftMouseDown) |
+		CGEventMaskBit(kCGEventLeftMouseUp) |
+		CGEventMaskBit(kCGEventRightMouseDown) |
+		CGEventMaskBit(kCGEventRightMouseUp) |
+		CGEventMaskBit(kCGEventOtherMouseDown) |
+		CGEventMaskBit(kCGEventOtherMouseUp) |
+		CGEventMaskBit(kCGEventMouseMoved) |
+		CGEventMaskBit(kCGEventLeftMouseDragged) |
+		CGEventMaskBit(kCGEventRightMouseDragged) |
+		CGEventMaskBit(kCGEventOtherMouseDragged) |
+		CGEventMaskBit(kCGEventScrollWheel) |
+		CGEventMaskBit(kCGEventKeyDown) |
+		CGEventMaskBit(kCGEventKeyUp) |
+		CGEventMaskBit(kCGEventFlagsChanged) |
+		CGEventMaskBit(NX_SYSDEFINED);
+}
 
 // TODO: upgrade deprecated function usage in these functions.
 void setZeroSuppressionInterval();
@@ -78,6 +99,7 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 	m_isPrimary(isPrimary),
 	m_isOnScreen(m_isPrimary),
 	m_cursorPosValid(false),
+	m_activeSides(kNoDirMask),
 	MouseButtonEventMap(NumButtonIDs),
 	m_cursorHidden(false),
 	m_dragNumButtonsDown(0),
@@ -97,6 +119,7 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 	m_activeModifierHotKeyMask(0),
 	m_eventTapPort(nullptr),
 	m_eventTapRLSR(nullptr),
+	m_eventTapIsPassive(false),
 	m_lastClickTime(0),
 	m_clickState(1),
 	m_lastSingleClickXCursor(0),
@@ -239,9 +262,10 @@ void OSXScreen::getCursorPos(std::int32_t& x, std::int32_t& y) const
 	CFRelease(event);
 }
 
-void OSXScreen::reconfigure(std::uint32_t)
+void OSXScreen::reconfigure(std::uint32_t activeSides)
 {
-	// do nothing
+	LOG_DEBUG("active sides: %x", activeSides);
+	m_activeSides = activeSides;
 }
 
 void OSXScreen::warpCursor(std::int32_t x, std::int32_t y)
@@ -720,13 +744,7 @@ OSXScreen::enable()
                           [this](const auto& e){ handle_clipboard_check(); });
 
 	if (m_isPrimary) {
-		// FIXME -- start watching jump zones
-
-		// kCGEventTapOptionDefault = 0x00000000 (Missing in 10.4, so specified literally)
-		m_eventTapPort = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault,
-										kCGEventMaskForAllEvents,
-										handleCGInputEvent,
-										this);
+		installEventTap(kCGEventTapOptionListenOnly, handleCGInputEvent, true);
 	}
 	else {
 		// FIXME -- prevent system from entering power save mode
@@ -741,22 +759,8 @@ OSXScreen::enable()
                 // there may be a better way to do this, but we register an event handler even if we're
                 // not on the primary display (acting as a client). This way, if a local event comes in
                 // (either keyboard or mouse), we can make sure to show the cursor if we've hidden it.
-		m_eventTapPort = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault,
-										kCGEventMaskForAllEvents,
-										handleCGInputEventSecondary,
-										this);
+		installEventTap(kCGEventTapOptionDefault, handleCGInputEventSecondary, false);
 	}
-
-	if (!m_eventTapPort) {
-		LOG_ERR("failed to create quartz event tap");
-	}
-
-	m_eventTapRLSR = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTapPort, 0);
-	if (!m_eventTapRLSR) {
-		LOG_ERR("failed to create a CFRunLoopSourceRef for the quartz event tap");
-	}
-
-	CFRunLoopAddSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
 }
 
 void
@@ -768,17 +772,7 @@ OSXScreen::disable()
 
 	// FIXME -- stop watching jump zones, stop capturing input
 
-	if (m_eventTapRLSR) {
-		CFRunLoopRemoveSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
-		CFRelease(m_eventTapRLSR);
-		m_eventTapRLSR = nullptr;
-	}
-
-	if (m_eventTapPort) {
-		CGEventTapEnable(m_eventTapPort, false);
-		CFRelease(m_eventTapPort);
-		m_eventTapPort = nullptr;
-	}
+	uninstallEventTap();
 	// FIXME -- allow system to enter power saving mode
 
 	// disable drag handling
@@ -806,6 +800,7 @@ OSXScreen::enter()
 
 	if (m_isPrimary) {
 		setZeroSuppressionInterval();
+		updateEventTapMode();
 	}
 	else {
 		// reset buttons
@@ -873,6 +868,7 @@ OSXScreen::leave()
 
 	// now off screen
 	m_isOnScreen = false;
+	updateEventTapMode();
 }
 
 bool
@@ -945,6 +941,63 @@ bool
 OSXScreen::isPrimary() const
 {
 	return m_isPrimary;
+}
+
+void OSXScreen::installEventTap(CGEventTapOptions options, CGEventTapCallBack callback, bool passive)
+{
+	m_eventTapPort = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, options,
+									  inputEventMask(),
+									  callback,
+									  this);
+
+	if (!m_eventTapPort) {
+		LOG_ERR("failed to create quartz event tap");
+		return;
+	}
+
+	m_eventTapRLSR = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTapPort, 0);
+	if (!m_eventTapRLSR) {
+		LOG_ERR("failed to create a CFRunLoopSourceRef for the quartz event tap");
+		CFRelease(m_eventTapPort);
+		m_eventTapPort = nullptr;
+		return;
+	}
+
+	CFRunLoopAddSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
+	m_eventTapIsPassive = passive;
+}
+
+void OSXScreen::uninstallEventTap()
+{
+	if (m_eventTapRLSR) {
+		CFRunLoopRemoveSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
+		CFRelease(m_eventTapRLSR);
+		m_eventTapRLSR = nullptr;
+	}
+
+	if (m_eventTapPort) {
+		CGEventTapEnable(m_eventTapPort, false);
+		CFRelease(m_eventTapPort);
+		m_eventTapPort = nullptr;
+	}
+}
+
+void OSXScreen::updateEventTapMode()
+{
+	if (!m_isPrimary || m_eventTapPort == nullptr) {
+		return;
+	}
+
+	const bool passive = m_isOnScreen;
+	if (m_eventTapIsPassive == passive) {
+		return;
+	}
+
+	uninstallEventTap();
+	installEventTap(passive ? kCGEventTapOptionListenOnly : kCGEventTapOptionDefault,
+					handleCGInputEvent,
+					passive);
+	LOG_DEBUG("quartz event tap mode: %s", passive ? "listen-only" : "default");
 }
 
 void OSXScreen::sendEvent(EventType type, EventDataBase* data) const
@@ -1061,9 +1114,12 @@ OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 	m_yCursor = (std::int32_t)my;
 
 	if (m_isOnScreen) {
-		// motion on primary screen
-		sendEvent(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY,
-				  create_event_data<MotionInfo>(MotionInfo{m_xCursor, m_yCursor}));
+		// Motion on the primary screen is only useful to the server
+		// near a linked edge, where it can trigger screen switching.
+		if (isNearActivePrimarySide(mx, my)) {
+			sendEvent(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY,
+					  create_event_data<MotionInfo>(MotionInfo{m_xCursor, m_yCursor}));
+		}
 		if (m_buttonState.test(0)) {
 			m_draggingStarted = true;
 		}
@@ -1108,6 +1164,38 @@ OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 		}
 	}
 	return true;
+}
+
+bool OSXScreen::isNearActivePrimarySide(CGFloat mx, CGFloat my) const
+{
+	if (m_activeSides == kNoDirMask) {
+		return false;
+	}
+
+	// Keep a band beyond the one-pixel jump zone so delayed and
+	// double-tap switch modes still observe the cursor leaving an edge.
+	std::int32_t edgeBand = getJumpZoneSize();
+	if (edgeBand < kPrimaryMotionEdgeBand) {
+		edgeBand = kPrimaryMotionEdgeBand;
+	}
+
+	const std::int32_t x = static_cast<std::int32_t>(mx);
+	const std::int32_t y = static_cast<std::int32_t>(my);
+
+	if ((m_activeSides & kLeftMask) != 0 && x < m_x + edgeBand) {
+		return true;
+	}
+	if ((m_activeSides & kRightMask) != 0 && x >= m_x + m_w - edgeBand) {
+		return true;
+	}
+	if ((m_activeSides & kTopMask) != 0 && y < m_y + edgeBand) {
+		return true;
+	}
+	if ((m_activeSides & kBottomMask) != 0 && y >= m_y + m_h - edgeBand) {
+		return true;
+	}
+
+	return false;
 }
 
 bool OSXScreen::onMouseButton(bool pressed, std::uint16_t macButton)

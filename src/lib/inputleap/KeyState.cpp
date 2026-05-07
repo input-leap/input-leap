@@ -20,11 +20,23 @@
 #include "base/Log.h"
 
 #include <cstring>
+#include <cstdlib>
 #include <algorithm>
 #include <iterator>
 #include <list>
 
 namespace inputleap {
+
+namespace {
+
+bool lowLatencyInputEnabled()
+{
+    return std::getenv("INPUTLEAP_LOW_LATENCY_INPUT") != nullptr ||
+           std::getenv("INPUTLEAP_LOW_LATENCY_MOUSE") != nullptr ||
+           std::getenv("INPUTLEAP_DISABLE_LOW_LATENCY_INPUT") == nullptr;
+}
+
+} // namespace
 
 static const KeyButton kButtonMask = static_cast<KeyButton>(IKeyState::kNumButtons - 1);
 
@@ -445,29 +457,32 @@ KeyState::onKey(KeyButton button, bool down, KeyModifierMask newState)
 void KeyState::sendKeyEvent(const EventTarget* target, bool press, bool isAutoRepeat, KeyID key,
                             KeyModifierMask mask, std::int32_t count, KeyButton button)
 {
+    static const bool s_lowLatencyInput = lowLatencyInputEnabled();
+    const Event::Flags flags = s_lowLatencyInput ? Event::kDeliverImmediately : Event::kNone;
+
     if (m_keyMap.isHalfDuplex(key, button)) {
         if (isAutoRepeat) {
             // ignore auto-repeat on half-duplex keys
         }
         else {
             m_events->add_event(EventType::KEY_STATE_KEY_DOWN, target,
-                                create_event_data<KeyInfo>(KeyInfo(key, mask, button, 1)));
+                                create_event_data<KeyInfo>(KeyInfo(key, mask, button, 1)), flags);
             m_events->add_event(EventType::KEY_STATE_KEY_UP, target,
-                                create_event_data<KeyInfo>(KeyInfo(key, mask, button, 1)));
+                                create_event_data<KeyInfo>(KeyInfo(key, mask, button, 1)), flags);
         }
     }
     else {
         if (isAutoRepeat) {
             m_events->add_event(EventType::KEY_STATE_KEY_REPEAT, target,
-                                create_event_data<KeyInfo>(KeyInfo(key, mask, button, count)));
+                                create_event_data<KeyInfo>(KeyInfo(key, mask, button, count)), flags);
         }
         else if (press) {
             m_events->add_event(EventType::KEY_STATE_KEY_DOWN, target,
-                                create_event_data<KeyInfo>(KeyInfo(key, mask, button, 1)));
+                                create_event_data<KeyInfo>(KeyInfo(key, mask, button, 1)), flags);
         }
         else {
             m_events->add_event(EventType::KEY_STATE_KEY_UP, target,
-                                create_event_data<KeyInfo>(KeyInfo(key, mask, button, 1)));
+                                create_event_data<KeyInfo>(KeyInfo(key, mask, button, 1)), flags);
         }
     }
 }

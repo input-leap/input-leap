@@ -157,7 +157,7 @@ void AppConfig::loadSettings()
     }
     m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
     m_AutoConfigPrompted = settings().value("autoConfigPrompted", false).toBool();
-    m_CryptoEnabled = settings().value("cryptoEnabled", true).toBool();
+    m_CryptoEnabled = settings().value("cryptoEnabled", false).toBool();
     // TODO: set default value of requireClientCertificate to true on InputLeap 3.0.0
     m_RequireClientCertificate = settings().value("requireClientCertificate", false).toBool();
     m_AutoHide = settings().value("autoHide", false).toBool();

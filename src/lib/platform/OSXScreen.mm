@@ -42,6 +42,7 @@
 #include <AvailabilityMacros.h>
 #include <IOKit/hidsystem/event_status_driver.h>
 #include <AppKit/NSEvent.h>
+#include <cstdlib>
 
 namespace inputleap {
 
@@ -56,6 +57,12 @@ enum {
 
 // TODO: upgrade deprecated function usage in these functions.
 void setZeroSuppressionInterval();
+static bool lowLatencyInputEnabled()
+{
+	return std::getenv("INPUTLEAP_LOW_LATENCY_INPUT") != nullptr ||
+		std::getenv("INPUTLEAP_LOW_LATENCY_MOUSE") != nullptr ||
+		std::getenv("INPUTLEAP_DISABLE_LOW_LATENCY_INPUT") == nullptr;
+}
 void avoidSupression();
 void logCursorVisibility();
 void avoidHesitatingCursor();
@@ -243,6 +250,7 @@ void OSXScreen::warpCursor(std::int32_t x, std::int32_t y)
 	CGPoint pos;
 	pos.x = x;
 	pos.y = y;
+
 	CGWarpMouseCursorPosition(pos);
 
 	// save new cursor position
@@ -790,8 +798,8 @@ OSXScreen::disable()
 void
 OSXScreen::enter()
 {
-    // Mark as on screen so other events are handled as on screen.
-    // Mitigates https://github.com/input-leap/input-leap/issues/1043 from the bogus movement check
+	// Mark as on screen so other events are handled as on screen.
+	// Mitigates https://github.com/input-leap/input-leap/issues/1043 from the bogus movement check
 	m_isOnScreen = true;
 
 	showCursor();
@@ -941,7 +949,15 @@ OSXScreen::isPrimary() const
 
 void OSXScreen::sendEvent(EventType type, EventDataBase* data) const
 {
-    m_events->add_event(type, get_event_target(), data);
+	static const bool s_lowLatencyInput = lowLatencyInputEnabled();
+	const bool deliverImmediately =
+		s_lowLatencyInput &&
+		(type == EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY ||
+		 type == EventType::PRIMARY_SCREEN_BUTTON_DOWN ||
+		 type == EventType::PRIMARY_SCREEN_BUTTON_UP ||
+		 type == EventType::PRIMARY_SCREEN_WHEEL);
+	const Event::Flags flags = deliverImmediately ? Event::kDeliverImmediately : Event::kNone;
+	m_events->add_event(type, get_event_target(), data, flags);
 }
 
 void OSXScreen::sendClipboardEvent(EventType type, ClipboardID id) const
@@ -1036,18 +1052,18 @@ OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 	CGFloat x = mx - m_xCursor;
 	CGFloat y = my - m_yCursor;
 
-	if ((x == 0 && y == 0) || (mx == m_xCenter && mx == m_yCenter)) {
+	if ((x == 0 && y == 0) || (mx == m_xCenter && my == m_yCenter)) {
 		return true;
 	}
 
 	// save position to compute delta of next motion
-    m_xCursor = (std::int32_t)mx;
-    m_yCursor = (std::int32_t)my;
+	m_xCursor = (std::int32_t)mx;
+	m_yCursor = (std::int32_t)my;
 
 	if (m_isOnScreen) {
 		// motion on primary screen
-        sendEvent(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY,
-                  create_event_data<MotionInfo>(MotionInfo{m_xCursor, m_yCursor}));
+		sendEvent(EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY,
+				  create_event_data<MotionInfo>(MotionInfo{m_xCursor, m_yCursor}));
 		if (m_buttonState.test(0)) {
 			m_draggingStarted = true;
 		}
@@ -1062,7 +1078,7 @@ OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 		// it's probably a bogus motion that we want to
 		// ignore (see warpCursorNoFlush() for a further
 		// description).
-        static std::int32_t bogusZoneSize = 10;
+		static std::int32_t bogusZoneSize = 10;
 		if (-x + bogusZoneSize > m_xCenter - m_x ||
 			 x + bogusZoneSize > m_x + m_w - m_xCenter ||
 			-y + bogusZoneSize > m_yCenter - m_y ||
@@ -1079,17 +1095,18 @@ OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 			m_yFractionalMove += y;
 
 			// Return the integer part
-            std::int32_t intX = (std::int32_t)m_xFractionalMove;
-            std::int32_t intY = (std::int32_t)m_yFractionalMove;
+			std::int32_t intX = (std::int32_t)m_xFractionalMove;
+			std::int32_t intY = (std::int32_t)m_yFractionalMove;
 
 			// And keep only the fractional part
 			m_xFractionalMove -= intX;
 			m_yFractionalMove -= intY;
-            sendEvent(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY,
-                      create_event_data<MotionInfo>(MotionInfo{intX, intY}));
+			if (intX != 0 || intY != 0) {
+				sendEvent(EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY,
+						  create_event_data<MotionInfo>(MotionInfo{intX, intY}));
+			}
 		}
 	}
-
 	return true;
 }
 
@@ -2076,7 +2093,7 @@ avoidHesitatingCursor()
 	// This used to be necessary to get smooth mouse motion on other screens,
 	// but now is just to avoid a hesitating cursor when transitioning to
 	// the primary (this) screen.
-	CGSetLocalEventsSuppressionInterval(0.0001);
+	CGSetLocalEventsSuppressionInterval(0.0);
 }
 
 #pragma GCC diagnostic error "-Wdeprecated-declarations"

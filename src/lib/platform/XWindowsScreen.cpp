@@ -229,7 +229,7 @@ XWindowsScreen::disable()
 
 	// restore auto-repeat state
 	if (!m_isPrimary && m_autoRepeat) {
-		//XAutoRepeatOn(m_display);
+		XAutoRepeatOn(m_display);
 	}
 }
 
@@ -283,7 +283,7 @@ XWindowsScreen::enter()
 		// turn off auto-repeat.  we do this so fake key press events don't
 		// cause the local server to generate their own auto-repeats of
 		// those keys.
-		//XAutoRepeatOff(m_display);
+		XAutoRepeatOff(m_display);
 	}
 
 	// now on screen
@@ -307,7 +307,7 @@ void XWindowsScreen::leave()
 		// the X server when the auto-repeat configuration is changed so
 		// we can't track the desired configuration.
 		if (m_autoRepeat) {
-			//XAutoRepeatOn(m_display);
+			XAutoRepeatOn(m_display);
 		}
 
 		// move hider window under the cursor center

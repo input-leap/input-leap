@@ -33,9 +33,21 @@
 #include "base/EventQueueTimer.h"
 #include "base/XBase.h"
 
+#include <cstdlib>
 #include <memory>
 
 namespace inputleap {
+
+namespace {
+
+bool lowLatencyInputEnabled()
+{
+    return std::getenv("INPUTLEAP_LOW_LATENCY_INPUT") != nullptr ||
+           std::getenv("INPUTLEAP_LOW_LATENCY_MOUSE") != nullptr ||
+           std::getenv("INPUTLEAP_DISABLE_LOW_LATENCY_INPUT") == nullptr;
+}
+
+} // namespace
 
 ServerProxy::ServerProxy(Client* client, inputleap::IStream* stream, IEventQueue* events) :
     m_client(client),
@@ -703,9 +715,15 @@ ServerProxy::mouseMove()
     // note if we should ignore the move
     ignore = m_ignoreMouse;
 
-    // compress mouse motion events if more input follows
-    if (!ignore && !m_compressMouse && m_stream->isReady()) {
-        m_compressMouse = true;
+    static const bool s_noMouseCompression = lowLatencyInputEnabled();
+    if (s_noMouseCompression) {
+        m_compressMouse = false;
+    }
+    else {
+        // compress mouse motion events if more input follows
+        if (!ignore && !m_compressMouse && m_stream->isReady()) {
+            m_compressMouse = true;
+        }
     }
 
     // if compressing then ignore the motion but record it
@@ -736,9 +754,15 @@ ServerProxy::mouseRelativeMove()
     // note if we should ignore the move
     ignore = m_ignoreMouse;
 
-    // compress mouse motion events if more input follows
-    if (!ignore && !m_compressMouseRelative && m_stream->isReady()) {
-        m_compressMouseRelative = true;
+    static const bool s_noMouseCompression = lowLatencyInputEnabled();
+    if (s_noMouseCompression) {
+        m_compressMouseRelative = false;
+    }
+    else {
+        // compress mouse motion events if more input follows
+        if (!ignore && !m_compressMouseRelative && m_stream->isReady()) {
+            m_compressMouseRelative = true;
+        }
     }
 
     // if compressing then ignore the motion but record it

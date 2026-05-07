@@ -113,12 +113,11 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
     // Instead we poll for a brief period of time (so if events
     // queued locally in the xlib buffer can be processed)
     // and continue doing this until timeout is reached.
-    // The human eye can notice 60hz (ansi) which is 16ms, however
-    // we want to give the cpu a chance s owe up this to 25ms
-#define TIMEOUT_DELAY 25
+    // Keep this short so locally queued X events do not add visible input lag.
+#define TIMEOUT_DELAY 1
 
     while (((dtimeout < 0.0) || (remaining > 0)) && getPendingCountLocked() == 0 && retval == 0) {
-        retval = poll(pfds, 2, TIMEOUT_DELAY); //16ms = 60hz, but we make it > to play nicely with the cpu
+        retval = poll(pfds, 2, TIMEOUT_DELAY);
         if (pfds[1].revents & POLLIN) {
             read_response = read(m_pipefd[0], buf, 15);
             if (read_response < 0)

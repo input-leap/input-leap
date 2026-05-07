@@ -112,6 +112,9 @@ private:
     void updateScreenShape();
     void updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags);
     void postMouseEvent(CGPoint&) const;
+    void installEventTap(CGEventTapOptions options, CGEventTapCallBack callback, bool passive);
+    void uninstallEventTap();
+    void updateEventTapMode();
 
     // convenience function to send events
     void sendEvent(EventType type, EventDataBase* = nullptr) const;
@@ -119,6 +122,7 @@ private:
 
     // message handlers
     bool onMouseMove(CGFloat mx, CGFloat my);
+    bool isNearActivePrimarySide(CGFloat mx, CGFloat my) const;
     // mouse button handler.  pressed is true if this is a mousedown
     // event, false if it is a mouseup event.  macButton is the index
     // of the button pressed using the mac button mapping.
@@ -265,6 +269,7 @@ private:
     // mouse state
     mutable std::int32_t m_xCursor, m_yCursor;
     mutable bool m_cursorPosValid;
+    std::uint32_t m_activeSides;
 
     /* FIXME: this data structure is explicitly marked mutable due
        to a need to track the state of buttons since the remote
@@ -329,6 +334,7 @@ private:
     // Quartz input event support
     CFMachPortRef m_eventTapPort;
     CFRunLoopSourceRef m_eventTapRLSR;
+    bool m_eventTapIsPassive;
 
     // for double click coalescing.
     double m_lastClickTime;

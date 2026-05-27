@@ -1,3 +1,17 @@
+# SeamGate
+
+> **SeamGate is a fork of [Input Leap](https://github.com/input-leap/input-leap),
+> currently in initial setup.** The project is being established with a
+> quality-first, test-driven approach — modern C++20 foundations, incremental
+> Rust migration, and full cross-platform support (Windows, macOS, Linux X11,
+> Linux Wayland). This README will be updated as the project matures.
+>
+> Track progress: [Project Charter](doc/PROJECT_CHARTER.md) &nbsp;·&nbsp;
+> [Issues](https://github.com/digital-michael/seamgate/issues) &nbsp;·&nbsp;
+> [Upstream: Input Leap](https://github.com/input-leap/input-leap)
+
+---
+
 # Input Leap
 
 <!-- add badges: flatpak, snap, GitHub Actions -->

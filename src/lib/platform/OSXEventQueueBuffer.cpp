@@ -43,6 +43,9 @@ void
 OSXEventQueueBuffer::init()
 {
     m_carbonEventQueue = GetCurrentEventQueue();
+    if (m_carbonEventQueue == nullptr) {
+        m_carbonEventQueue = GetMainEventQueue();
+    }
 }
 
 void
@@ -99,10 +102,23 @@ bool OSXEventQueueBuffer::addEvent(std::uint32_t dataID)
 
     if (error == noErr) {
 
-        assert(m_carbonEventQueue != nullptr);
+        // addEvent() can be called from a thread other than the one that ran
+        // init() (e.g. the CGEventTap callback thread). In that case the queue
+        // captured in init() may be null or stale, so fall back to the main
+        // event queue, which Carbon guarantees to be valid. Guarding at
+        // runtime instead of via assert() (which is compiled out in release
+        // builds and caused a null-pointer SIGSEGV in PostEventToQueue).
+        EventQueueRef queue = m_carbonEventQueue;
+        if (queue == nullptr) {
+            queue = GetMainEventQueue();
+        }
+        if (queue == nullptr) {
+            ReleaseEvent(event);
+            return false;
+        }
 
         error = PostEventToQueue(
-            m_carbonEventQueue,
+            queue,
             event,
             kEventPriorityStandard);
 

@@ -1,0 +1,4 @@
+macOS: fixed a server crash (SIGSEGV in PostEventToQueue) when the Carbon
+event queue captured at init time was null or belonged to another thread;
+addEvent() now falls back to the main event queue and guards at runtime
+instead of relying on an assert that is compiled out in release builds.

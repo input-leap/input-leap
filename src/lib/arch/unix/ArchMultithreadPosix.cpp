@@ -20,6 +20,7 @@
 
 #include "arch/Arch.h"
 #include "arch/XArch.h"
+#include "base/Log.h"
 #include "base/Time.h"
 
 #include <signal.h>
@@ -551,13 +552,22 @@ ArchMultithreadPosix::doThreadFunc(ArchThread thread)
         // client called cancel()
     }
     catch (...) {
-        // note -- don't catch (...) to avoid masking bugs
         {
             std::lock_guard<std::mutex> lock(m_threadMutex);
             thread->m_exited = true;
         }
         closeThread(thread);
-        throw;
+        // Log the exception type before swallowing — rethrowing in a pthread
+        // thread function calls std::terminate() which kills the whole process.
+        try {
+            throw;
+        }
+        catch (const std::exception& e) {
+            LOG_ERR("unhandled exception in thread: %s", e.what());
+        }
+        catch (...) {
+            LOG_ERR("unhandled unknown exception in thread");
+        }
     }
 
     // thread has exited

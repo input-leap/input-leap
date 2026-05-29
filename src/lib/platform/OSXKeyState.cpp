@@ -851,23 +851,31 @@ OSXKeyState::getGroups(GroupList& groups) const
     CFStringRef values[] = { kTISCategoryKeyboardInputSource };
     CFDictionaryRef dict = CFDictionaryCreate(nullptr, (const void **)keys, (const void **)values, 1, nullptr, nullptr);
     CFArrayRef kbds = TISCreateInputSourceList(dict, false);
+    CFRelease(dict);
+
+    if (kbds == nullptr) {
+        LOG_DEBUG1("TISCreateInputSourceList returned null");
+        return false;
+    }
+
     n = CFArrayGetCount(kbds);
     gotLayouts = (n != 0);
 
     if (!gotLayouts) {
         LOG_DEBUG1("can't get keyboard layouts");
+        CFRelease(kbds);
         return false;
     }
 
     // get each layout
+    // kbds is intentionally not released here: the TISInputSourceRef pointers
+    // stored in `groups` are non-retained references into kbds. Releasing kbds
+    // would free the backing objects and leave dangling pointers in m_groups.
     groups.clear();
     for (CFIndex i = 0; i < n; ++i) {
-        bool addToGroups = true;
         TISInputSourceRef keyboardLayout =
             (TISInputSourceRef)CFArrayGetValueAtIndex(kbds, i);
-
-        if (addToGroups)
-            groups.push_back(keyboardLayout);
+        groups.push_back(keyboardLayout);
     }
     return true;
 }

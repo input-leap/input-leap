@@ -106,8 +106,8 @@ static const KeyEntry    s_controlKeys[] = {
     { kKeyAlt_R,             kVK_RightOption }, // 61
     { kKeySuper_L,               kVK_Command }, // 55
     { kKeySuper_R,          kVK_RightCommand }, // 54
-    { kKeyMeta_L,                kVK_Command }, // 55
-    { kKeyMeta_R,           kVK_RightCommand }, // 54
+    // kKeyMeta_L/R removed: duplicate Command mapping conflicts with kKeySuper_L/R,
+    // dropping the Command modifier on macOS clients (issue #2370)
 
     // toggle modifiers
     { kKeyNumLock,      kVK_ANSI_KeypadClear },
